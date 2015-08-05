@@ -1,0 +1,20 @@
+{
+  "name": "DeviceWareClient",
+  "version": "0.0.0",
+  "main": "Main.js",
+  "authors": [
+    "Xavier Bustamante Talavera"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-advanced-searchbox": "~1.1.1",
+    "ui-router": "~0.2.15"
+  }
+}
