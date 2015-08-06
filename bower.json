@@ -16,5 +16,8 @@
   "dependencies": {
     "angular-advanced-searchbox": "~1.1.1",
     "ui-router": "~0.2.15"
+  },
+  "resolutions": {
+    "jquery": ">= 1.9.1"
   }
 }

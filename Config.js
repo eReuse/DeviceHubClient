@@ -4,4 +4,5 @@
 angular.module('Config', [])
     .constant('config', {
         appName: 'DeviceWare',
+        url: 'http://127.0.0.1:5000'
     });

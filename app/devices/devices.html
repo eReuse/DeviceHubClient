@@ -1,4 +1,13 @@
 <div>
-    <nav ng-controller="DevicesNavCtrl as DsNvCtrl" ng-include="'app/devices/nav.html'"></nav>
+    <nav ng-controller="DevicesNavCtrl as DsNvCtrl">
+        <tabset justified="true">
+            <tab
+                    ng-repeat="t in DsNvCtrl.tabs"
+                    heading="{{t.heading}}"
+                    select="DsNvCtrl.go(t.route)"
+                    active="t.active">
+            </tab>
+        </tabset>
+    </nav>
 </div>
-Devices
+<div ui-view></div>
