@@ -11,11 +11,15 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    ".idea"
   ],
   "dependencies": {
     "angular-advanced-searchbox": "~1.1.1",
-    "ui-router": "~0.2.15"
+    "ui-router": "~0.2.15",
+    "angular-ui-layout": "~1.0.5",
+    "restangular": "~1.5.1",
+    "lodash": "~3.10.1"
   },
   "resolutions": {
     "jquery": ">= 1.9.1"
