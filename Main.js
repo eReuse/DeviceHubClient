@@ -8,7 +8,7 @@ angular.module('Main',['ui.router','Config','Devices'] )
             url:'/devices',
             templateUrl:'app/devices/devices.html',
             abstract: true,
-            controller:'DevicesCtrl as DsCtrl'
+
         });
         $urlRouterProvider.otherwise("/devices")
     })

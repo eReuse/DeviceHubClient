@@ -1,35 +1,50 @@
 /**
  * Created by busta on 6/8/2015.
  */
-angular.module('DeviceList', ['restangular'])
-    .controller('DeviceListCtrl', ['Restangular', function(Restangular){
-        var self = this;
-        var baseDevices = Restangular.all('devices');
-        baseDevices.getList().then(function(devices){
-            self.devices = devices;
-        });
-        /*this.devices = [
-            {'_id': 'adfaew23', '@type': 'Computer', 'hid':'dell-4387453C'},
-            {'_id': 'adfaew23', '@type': 'Computer', 'hid':'dell-4387453C'},
-            {'_id': 'adfaew23', '@type': 'Computer', 'hid':'dell-4387453C'}
-        ]*/
-    }])
-    .config(['RestangularProvider',function(RestangularProvider){
-        RestangularProvider.setBaseUrl('http://127.0.0.1:5000');
-        RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
-            var extractedData;
-            // .. to look for getList operations
-            if (operation === "getList") {
-                // .. and handle the data and meta data
-                extractedData = data._items;
-                extractedData._meta = data._meta;
-            } else {
-                extractedData = data.data;
-            }
-            return extractedData;
-        });
+angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'])
+    .constant('deviceListWidgetConfig',{
+        defaultSearchParams : [
+            { key: "hid", name: "hid", placeholder: "Hid..." },
+            { key: "@type", name: "Type", placeholder: "City..." },
+            { key: "max_results", name: "Max Results", placeholder: "Nº of results..." }
+        ]
+    })
+    .directive('deviceListWidget', ['$state','$stateParams','deviceListWidgetConfig','Restangular','$rootScope', function($state,$stateParams,deviceListWidgetConfig,Restangular,$rootScope){
+        /**
+         * Gets a new list of devices from the server and updates scope.
+         */
+        var getDevices = function(params, $scope){
+            var baseDevices = Restangular.all('devices');
+            baseDevices.getList(params).then(function(devices){
+                $scope.devices = devices;
+            });
+        };
+        var deviceSelected = function(device){
+            $rootScope.$broadcast('deviceSelected@deviceListWidget',device);
+        };
+       return {
+           templateUrl: 'app/devices/list/list.html',
+           restrict: 'AE',
+           scope: {
+               options: '='
+           },
+           link: function($scope, $element, $attrs){
+               $scope.availableSearchParams = deviceListWidgetConfig.defaultSearchParams;
+               $scope.$watch(function(){return $stateParams;},function(newValue, oldValue){
+                   getDevices(newValue,$scope);    //Whenever the state params change, we get new values (triggers at the beginning too)
+               });
+               $scope.deviceSelected = deviceSelected;
 
-    }]);
-    /*.factory('ListService', ['Restangular', function(Restangular){
-        Restangular.all('')
-    }]);*/
+           }
+       };
+    }])
+;
+/*
+.controller('DeviceListCtrl', ['Restangular', function(Restangular){
+    var self = this;
+    var baseDevices = Restangular.all('devices');
+    baseDevices.getList().then(function(devices){
+        self.devices = devices;
+    });
+}]);
+*/

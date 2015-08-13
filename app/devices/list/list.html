@@ -1,5 +1,11 @@
-<ul class="list-group">
-    <a class="list-group-item" ng-repeat="device in DeLtCtrl.devices">
+<nit-advanced-searchbox
+        ng-model="searchParams"
+        parameters="availableSearchParams"
+        placeholder="Search..."
+        template-url="bower_components/angular-advanced-searchbox/angular-advanced-searchbox.html">
+</nit-advanced-searchbox>
+<ul class="list-group" id="deviceList">
+    <a class="list-group-item" ng-repeat="device in devices" ng-click="deviceSelected(device)">
         {{device._id}}, {{device.hid}}, {{device['@type']}}
     </a>
 </ul>
