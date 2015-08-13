@@ -1,7 +1,7 @@
 /**
  * Created by busta on 5/8/2015.
  */
-angular.module('Devices',['ui.bootstrap', 'ui.layout', 'DeviceList'] )
+angular.module('Devices',['ui.bootstrap', 'ui.layout', 'DeviceList','Device'] )
     .config(
     function($urlRouterProvider,$stateProvider){
         $stateProvider.state('devices.add',{
@@ -10,28 +10,21 @@ angular.module('Devices',['ui.bootstrap', 'ui.layout', 'DeviceList'] )
         }).state('devices.show',{
             url:'?max_results',
             templateUrl:'app/devices/pages/list.html',
-            controller: function ($scope, $state){
-                $scope.$on('deviceSelected@deviceListWidget',
-                    function(event, device){$state.go('devices.show.full',{_id: device._id})});
-            }
-        }).state('devices.show.initial',{
-            template: 'Select a device.'
+            controller: 'DevicesCtrl as DsCl'
         })
-        .state('devices.show.full',{
-            template: 'This is a full device with {{id}}',
-            controller: function($scope,$stateParams){
-                $scope.id = $stateParams._id;
-            },
-            params: {
-                _id: null
-            }
-        });
+    })
+    .controller('DevicesCtrl',function ($scope, $state){
+        var self = this;
+        self.id = {_id: null, hid: null}; //@todo implement hid
+        $scope.$on('deviceSelected@deviceListWidget',
+            function(event, device){self.id._id = device._id}
+        );
     })
     .controller('DevicesNavCtrl',function($scope, $state){
         var self = this;
         //Tab trick from http://odetocode.com/blogs/scott/archive/2014/04/14/deep-linking-a-tabbed-ui-with-angularjs.aspx
         this.tabs = [
-            {heading: 'List devices', route: 'devices.show.initial', active: false},
+            {heading: 'List devices', route: 'devices.show', active: false},
             {heading: 'Create a device', route: 'devices.add', active: false}
         ];
 

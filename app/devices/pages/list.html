@@ -2,9 +2,10 @@
     <div ui-layout="{ flow : 'column', dividerSize: 8 }" style="top: 3em;">
         <div ui-layout-container size="55%" min-size="30%">
             <device-list-widget params='{max_results: 25}'></device-list-widget>
+            {{DsCl._id}}
         </div>
-        <div ui-layout-container>
-            <div ui-view min-size="20%"></div>
+        <div ui-layout-container min-size="20%">
+            <device-page-widget id='DsCl.id'></device-page-widget>
         </div>
     </div>
 </div>

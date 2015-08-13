@@ -1,0 +1,15 @@
+<article>
+    <div ng-if="id._id != null">
+        <tabset>
+            <tab ng-repeat="tab in tabs" select="tab.getContent()">
+                <tab-heading>
+                    <i class="{{tab.uiClass}}"></i>&nbsp;{{tab.heading}}
+                </tab-heading>
+                <div ng-switch="tab.heading">
+                    <div ng-switch-when="Show"><device-view-full-widget device="actualTab.device"></device-view-full-widget></div>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+    <div ng-if="id._id == null">Select a device.</div>
+</article>

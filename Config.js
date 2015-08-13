@@ -11,14 +11,23 @@ angular.module('Config', ['restangular'])
         RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
             var extractedData;
             // .. to look for getList operations
-            if (operation === "getList") {
-                // .. and handle the data and meta data
-                extractedData = data._items;
-                extractedData._meta = data._meta;
-            } else {
-                extractedData = data.data;
+            switch(operation){
+                case 'getList':
+                    extractedData = data._items;
+                    extractedData._meta = data._meta;
+                    break;
+                case 'get':
+                    extractedData = data;
+                    break;
             }
             return extractedData;
         });
+        RestangularProvider.setRestangularFields({
+           selfLink: '_links.self.href',
+            id: "_id"
+        });
+        RestangularProvider.setErrorInterceptor(function(response, deferred, responseHandler){
+            console.log(response);
+        })
 
     }]);
