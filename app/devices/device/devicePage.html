@@ -6,7 +6,8 @@
                     <i class="{{tab.uiClass}}"></i>&nbsp;{{tab.heading}}
                 </tab-heading>
                 <div ng-switch="tab.heading">
-                    <div ng-switch-when="Show"><device-view-full-widget device="actualTab.device"></device-view-full-widget></div>
+                    <div ng-switch-when="Show"><device-view-full-widget id="id"></device-view-full-widget></div>
+                    <div ng-switch-when="Events"><events-per-device-view-full-widget id="id"></events-per-device-view-full-widget></div>
                 </div>
             </tab>
         </tabset>

@@ -1,0 +1,5 @@
+<ul class="list-group" id="deviceList">
+    <li class="list-group-item" ng-repeat="event in events" itemscope itemtype="http://www.ereuse.org/schema#Event">
+        <small><span itemprop="@id">{{event._id}}</span>, <em>{{event._created}}</em></small>
+    </li>
+</ul>

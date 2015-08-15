@@ -8,21 +8,9 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap'])
         // Cuando Angular detecta un nuevo objeto en una directiva llama a digest y la recarga, volviendo a llamar x()
         // y causando un bucle infinito. Usa las propiedades de los objetos.
         var tabs = [
-            {uiClass: 'glyphicon glyphicon-info-sign', heading: 'Show',
-                getContent: function(){
-                    actualTab.device = Restangular.one('devices',id._id).get().$object;
-                    actualTab.reGetContent = tabs[0].getContent;
-                }},
-            {uiClass: 'glyphicon glyphicon-edit', heading: 'Edit',
-                getContent: function(){
-                    actualTab.device = 'Editing...';
-                    actualTab.reGetContent = tabs[1].getContent;
-                }},
-            {uiClass: 'glyphicon glyphicon-map-marker', heading: 'Workflow',
-                getContent: function(){
-                    actualTab.content = 'removing...';
-                    actualTab.reGetContent = tabs[2].getContent;
-                }}
+            {uiClass: 'glyphicon glyphicon-info-sign', heading: 'Show'},
+            {uiClass: 'glyphicon glyphicon-edit', heading: 'Edit'},
+            {uiClass: 'glyphicon glyphicon-map-marker', heading: 'Events'}
         ];
         return {
             templateUrl: 'app/devices/device/devicePage.html',
@@ -34,23 +22,21 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap'])
                 id = $scope.id;
                 $scope.actualTab = actualTab;
                 $scope.tabs = tabs;
-
-                //If hid changes we need to reload the tab.
-                $scope.$watch(function(){return $scope.id._id;},function(newValue, oldValue){
-                    if(oldValue._id !== null) actualTab.reGetContent();
-                })
             }
         }
     }])
     .directive('deviceViewFullWidget',['Restangular', function(Restangular){
+        //if needed, this can be splitted into view (which gets the device) and theme (which just outputs the html given a device)
         return{
             templateUrl: 'app/devices/device/deviceViewFull.html',
-            restrict: 'AE',
+            restrict: 'E',
             scope:{
-                device: '='
+                id: '='
             },
             link: function($scope, $element, $attrs){
-
+                $scope.$watch(function(){return $scope.id._id;},function(newValue, oldValue){
+                    $scope.device = Restangular.one('devices',$scope.id._id).get().$object;
+                });
             }
         }
     }]);

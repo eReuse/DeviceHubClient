@@ -4,19 +4,23 @@
 angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'])
     .constant('deviceListWidgetConfig',{
         defaultSearchParams : [
+            { key: "_id", name: "id", placeholder: "id..." },
             { key: "hid", name: "hid", placeholder: "Hid..." },
             { key: "@type", name: "Type", placeholder: "City..." },
             { key: "max_results", name: "Max Results", placeholder: "Nº of results..." }
         ]
     })
-    .directive('deviceListWidget', ['$state','$stateParams','deviceListWidgetConfig','Restangular','$rootScope',
-        function($state,$stateParams,deviceListWidgetConfig,Restangular,$rootScope){
+/**
+ * @todo let the directive optionally change the state when user writes at search input. Do when restangular hits version 1.0 and
+ * dynamic params do this easier.
+ */
+    .directive('deviceListWidget', ['$state','$stateParams','deviceListWidgetConfig','Restangular','$rootScope','$location',
+        function($state,$stateParams,deviceListWidgetConfig,Restangular,$rootScope,$location){
             /**
              * Gets a new list of devices from the server and updates scope.
              */
             var getDevices = function(params, $scope){
-                var baseDevices = Restangular.all('devices');
-                baseDevices.getList(params).then(function(devices){
+                Restangular.all('devices').getList(params).then(function(devices){
                     $scope.devices = devices;
                 });
             };
@@ -27,15 +31,19 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
                templateUrl: 'app/devices/list/list.html',
                restrict: 'AE',
                scope: {
-                   options: '='
+                   params: '='
                },
                link: function($scope, $element, $attrs){
                    $scope.availableSearchParams = deviceListWidgetConfig.defaultSearchParams;
-                   $scope.$watch(function(){return $stateParams;},function(newValue, oldValue){
+                   $scope.$watchCollection(function(){return $scope.params;},function(newValue, oldValue){
                        getDevices(newValue,$scope);    //Whenever the state params change, we get new values (triggers at the beginning too)
                    });
-                   $scope.deviceSelected = deviceSelected;
+                   $scope.$watchCollection(function(){return $scope.searchParams;},function(newValue, oldValue){
+                       if(newValue != undefined) getDevices({where: newValue},$scope);
+                   });
 
+
+                   $scope.deviceSelected = deviceSelected;
                }
        };
     }])

@@ -28,6 +28,9 @@ angular.module('Config', ['restangular'])
         });
         RestangularProvider.setErrorInterceptor(function(response, deferred, responseHandler){
             console.log(response);
-        })
+        });
+    /*    RestangularProvider.addFullRequestInterceptor(function(element, operation, what, url, headers, params){
+            console.log(element);
+        });*/
 
     }]);
