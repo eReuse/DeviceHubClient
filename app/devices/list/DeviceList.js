@@ -7,7 +7,7 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
             { key: "_id", name: "id", placeholder: "id..." },
             { key: "hid", name: "hid", placeholder: "Hid..." },
             { key: "@type", name: "Type", placeholder: "City..." },
-            { key: "max_results", name: "Max Results", placeholder: "Nº of results..." }
+            { key: "max_results", name: "Max Results", placeholder: "Nï¿½ of results..." }
         ]
     })
 /**
@@ -35,9 +35,9 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
                },
                link: function($scope, $element, $attrs){
                    $scope.availableSearchParams = deviceListWidgetConfig.defaultSearchParams;
-                   $scope.$watchCollection(function(){return $scope.params;},function(newValue, oldValue){
-                       getDevices(newValue,$scope);    //Whenever the state params change, we get new values (triggers at the beginning too)
-                   });
+                   /*$scope.$watchCollection(function(){return $scope.params;},function(newValue, oldValue){
+                       getDevices({where: newValue},$scope);    //Whenever the state params change, we get new values (triggers at the beginning too)
+                   });*/
                    $scope.$watchCollection(function(){return $scope.searchParams;},function(newValue, oldValue){
                        if(newValue != undefined) getDevices({where: newValue},$scope);
                    });
