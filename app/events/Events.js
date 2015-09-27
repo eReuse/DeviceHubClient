@@ -11,7 +11,9 @@ angular.module('Events', ['Config','ui.router','ui.bootstrap'])
             },
             link: function($scope, $element, $attrs){
                 $scope.$watch(function(){return $scope.id._id;},function(newValue, oldValue){
-                    $scope.events = Restangular.one('devices',newValue).getList('events').$object;
+                    var data = {where: JSON.stringify({'$or':[{device: newValue}, {components:{'$in': [newValue]}}]})};
+                    $scope.events = Restangular.all('events').getList(data).$object;
+                    // $scope.events = Restangular.one('devices',newValue).getList('events').$object;
                 });
             }
         }
