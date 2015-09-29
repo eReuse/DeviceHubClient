@@ -1,3 +1,20 @@
 .ui-splitbar{
     background-color:  #ddd;
 }
+
+/**We correct overflow scrolling in device widget page**/
+#ui-layout-container-device-page{
+    overflow: hidden;
+}
+#ui-layout-container-device-page > device-page-widget, #ui-layout-container-device-page > device-page-widget > article,
+#ui-layout-container-device-page > device-page-widget > article > div.ng-scope,
+#ui-layout-container-device-page > device-page-widget > article > div.ng-scope > div.ng-isolate-scope,
+#ui-layout-container-device-page > device-page-widget > article > div.ng-scope > div.ng-isolate-scope > div.tab-content{
+    width: inherit;
+}
+
+#ui-layout-container-device-page > device-page-widget > article > div.ng-scope > div.ng-isolate-scope > div.tab-content{
+    overflow-y: auto;
+    height: 97%;
+    position: absolute;
+}

@@ -1,0 +1,21 @@
+<article class="event" itemscope itemtype="http://www.ereuse.org/schema#Event">
+    <div ng-switch="event['@type']">
+        <div ng-switch-when="Register"><event-with-components-view-teaser-content-widget event="event" id="id"></event-with-components-view-teaser-content-widget></div>
+        <div ng-switch-when="Add"><event-with-components-view-teaser-content-widget event="event" id="id"></event-with-components-view-teaser-content-widget></div>
+        <div ng-switch-when="Remove"><event-with-components-view-teaser-content-widget event="event" id="id"></event-with-components-view-teaser-content-widget></div>
+        <div ng-switch-when="Snapshot"><snapshot-view-teaser-content-widget snapshot="event" id="id"></snapshot-view-teaser-content-widget></div>
+        <div ng-switch-default>
+            <h3><span ng-if="" itemprop="device">{{event.device}}</span>: <span itemprop="@type">{{event['@type']}}</span></h3>
+        </div>
+    </div>
+    <footer>
+        <small>
+            Created in <span itemprop="created">{{event._created}}</span>
+            Id: <span itemprop="@id">{{event._id}}</span>
+        </small>
+        <details>
+            <summary>Technical info</summary>
+            <pre style="word-break: break-word;">{{event}}</pre>
+        </details>
+    </footer>
+</article>

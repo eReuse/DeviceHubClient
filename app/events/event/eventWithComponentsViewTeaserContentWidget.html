@@ -1,0 +1,11 @@
+<div ng-if="id._id == event.device">
+    <h3>{{name}} components:</h3>
+    <ul class="list-group" itemprop="components">
+        <li class="list-group-item" ng-repeat="component in event.components" itemprop="component">
+            {{component}}
+        </li>
+    </ul>
+</div>
+<div ng-if="id._id != event.device">
+    <h3>{{name}} to computer <span itemprop="device">{{event.device}}</span></h3>
+</div>

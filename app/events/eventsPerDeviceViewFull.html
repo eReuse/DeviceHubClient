@@ -1,6 +1,5 @@
 <ul class="list-group" id="deviceList">
-    <li class="list-group-item" ng-repeat="event in events" itemscope itemtype="http://www.ereuse.org/schema#Event">
-        <small><span itemprop="@id">{{event._id}}</span>,<em>{{event['@type']}}</em></small>
-        <pre style="word-break: break-word;">{{event}}</pre>
+    <li class="list-group-item" ng-repeat="event in events">
+        <event-view-teaser-widget event="event" id="id"></event-view-teaser-widget>
     </li>
 </ul>
