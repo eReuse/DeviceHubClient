@@ -1,6 +1,7 @@
 <article class="device" itemscope itemtype="http://www.ereuse.org/schema#Device">
-    <div>
         <h3><span itemprop="@type">{{device['@type']}}</span> <span itemprop="hid">{{device.hid}}</span></h3>
         <small><span itemprop="@id">{{device._id}}</span>, <em>{{device._created}}</em></small>
-    </div>
+        <div ng-if="device['@type'] == 'Computer'">
+
+        </div>
 </article>

@@ -3,17 +3,18 @@
  */
 
 
-angular.module('Event', ['Config','ui.bootstrap'])
+angular.module('Event', ['Config','ui.bootstrap','door3.css'])
     .directive('eventViewTeaserWidget',[function(){
         return{
             templateUrl: 'app/events/event/eventViewTeaser.html',
             restrict: 'E',
+            css: 'app/events/event/eventViewTeaser.css',
             scope:{
                 event: '=',
                 id: '='  //Optional. The id of the actual device. Stylish purposes.
             },
             link: function($scope, $element, $attrs){
-
+                console.log('event view teaser widget');
             }
         }
     }])
@@ -30,7 +31,7 @@ angular.module('Event', ['Config','ui.bootstrap'])
             }
         }
     }])
-    .directive('snapshotViewTeaserContentWidget',[function(){
+    .directive('snapshotViewTeaserContentWidget',[function($templateCache){
         return{
             templateUrl: 'app/events/event/snapshotViewTeaserContentWidget.html',
             restrict: 'E',
@@ -40,7 +41,7 @@ angular.module('Event', ['Config','ui.bootstrap'])
                 id: '='
             },
             link: function($scope, $element, $attrs){
-
+            //    $scope.template = $templateCache.get('app/events/event/eventViewTeaser.html');
             }
         }
     }]);

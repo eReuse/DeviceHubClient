@@ -1,1 +1,6 @@
-Snapshot!
+<h3>Snapshot:</h3>
+<ul class="list-group" id="deviceList">
+    <li class="list-group-item" ng-repeat="event in snapshot.events">
+        <div ng-include="'app/events/event/eventViewTeaser.html'"></div>
+    </li>
+</ul>

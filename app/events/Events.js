@@ -1,18 +1,41 @@
 /**
  * Created by busta on 10/8/2015.
  */
-angular.module('Events', ['Config','ui.router','ui.bootstrap','Event'])
-    .directive('eventsPerDeviceViewFullWidget',['Restangular',function(Restangular){
+angular.module('Events', ['Config', 'ui.router', 'ui.bootstrap', 'Event'])
+    .directive('eventsPerDeviceViewFullWidget', ['Restangular', function (Restangular) {
+        var self = this;
+        this.subsanizeEvents = function (events) {
+            var snapshots = [];
+            events.forEach(function (event) {
+                if (event['@type'] == 'Snapshot') snapshots.push(event);
+            });
+            snapshots.forEach(function (snapshot) {
+                snapshot.fullEvents = [];
+                snapshot.events.forEach(function (event) {
+                    for (var i = 0; i < events.length; i++)
+                        if (events[i]['_id'] == event['_id']) events.splice(i);
+                })
+            });
+            return events.concat(snapshots);
+        };
         return {
             templateUrl: 'app/events/eventsPerDeviceViewFull.html',
             restrict: 'E',
             scope: {
                 id: '='
             },
-            link: function($scope, $element, $attrs){
-                $scope.$watch(function(){return $scope.id._id;},function(newValue, oldValue){
-                    var data = {where: JSON.stringify({'$or':[{device: newValue}, {components:{'$in': [newValue]}}]})};
-                    $scope.events = Restangular.all('events').getList(data).$object;
+            link: function ($scope, $element, $attrs) {
+                $scope.$watch(function () {
+                    return $scope.id._id;
+                }, function (newValue, oldValue) {
+                    var data = {
+                        where: JSON.stringify({'$or': [{device: newValue}, {components: {'$in': [newValue]}}]}),
+                        embedded: JSON.stringify({events: 1, device: 1, components: 1})
+                    };
+                    Restangular.all('events').getList(data).then(function (events) {
+                        $scope.events = self.subsanizeEvents(events);
+                        //$scope.events = events;
+                    });
                     // $scope.events = Restangular.one('devices',newValue).getList('events').$object;
 
                 });
