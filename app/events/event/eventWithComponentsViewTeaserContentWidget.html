@@ -7,5 +7,8 @@
     </ul>
 </div>
 <div ng-if="id._id != event.device">
-    <h3>{{name}} to computer <span itemprop="device">{{event.device}}</span></h3>
+    <h3>{{name}}
+        <span ng-if="event.components.indexOf(id._id) == -1">{{id._id}}</span>
+        {{preposition}} computer <span itemprop="device">{{event.device}}</span>
+    </h3>
 </div>

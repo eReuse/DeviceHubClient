@@ -1,7 +1,38 @@
 <article class="device" itemscope itemtype="http://www.ereuse.org/schema#Device">
-        <h3><span itemprop="@type">{{device['@type']}}</span> <span itemprop="hid">{{device.hid}}</span></h3>
-        <small><span itemprop="@id">{{device._id}}</span>, <em>{{device._created}}</em></small>
-        <div ng-if="device['@type'] == 'Computer'">
-
+    <header ng-if="!teaser">
+        <h3><device-icon type="{{device['@type']}}" subtype="{{device.type}}"></device-icon>{{device.hid}}</h3>
+    </header>
+        <div class="row">
+                <div class="col-xs-6">
+                        <table class="table table-striped">
+                                <thead><tr><th>General</th></tr></thead>
+                                <tbody>
+                                        <tr><td>Identifier</td><td>{{device.id}}</td></tr>
+                                        <tr><td>Hardware Identifier (HID)</td><td itemprop="hid">{{device.hid}}</td></tr>
+                                        <tr><td>Type of device</td><td itemprop="@type">{{device['@type']}}</td></tr>
+                                        <tr><td>Model</td><td itemprop="model">{{device.model}}</td></tr>
+                                        <tr><td>Serial number</td><td itemprop="serialNumber">{{device.serialNumber}}</td></tr>
+                                        <tr><td>Created in</td><td>{{device._created}}</td></tr>
+                                        <tr><td>Last updated in</td><td>{{device._updated}}</td></tr>
+                                </tbody>
+                        </table>
+                </div>
+                <div ng-switch="device['@type']">
+                     <div ng-switch-when="Computer"><computer-view-full-content-widget computer="device"></computer-view-full-content-widget></div>
+                     <div ng-switch-default><component-view-full-content-widget component="device"></component-view-full-content-widget></div>
+                </div>
+                <div ng-if="device.hasOwnProperty('weight') ||device.hasOwnProperty('width')" class="col-xs-6">
+                        <table class="table table-striped">
+                                <thead><tr><th>Physical information</th></tr></thead>
+                                <tbody>
+                                        <tr><td>Weight</td><td itemprop="weight">{{device.weight}}</td></tr>
+                                        <tr><td>Width</td><td itemprop="width">{{device.width}}</td></tr>
+                                </tbody>
+                        </table>
+                </div>
         </div>
+        <details>
+                <summary>Technical info</summary>
+                <pre style="word-break: break-word;">{{device}}</pre>
+        </details>
 </article>

@@ -28,6 +28,7 @@ angular.module('Event', ['Config','ui.bootstrap','door3.css'])
             },
             link: function($scope, $element, $attrs){
                 $scope.name = $scope.event['@type'] == 'Remove'? 'Removed' : $scope.event['@type'] + 'ed';
+                $scope.preposition = $scope.name == 'Removed'? 'from' : 'to'
             }
         }
     }])

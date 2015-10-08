@@ -30,13 +30,51 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events'])
         return{
             templateUrl: 'app/devices/device/deviceViewFull.html',
             restrict: 'E',
+            css: 'app/devices/device/device.css',
             scope:{
-                id: '='
+                id: '=',
+                teaser: '=' //Optional. Defaults to false (Full view)
             },
             link: function($scope, $element, $attrs){
+                $scope.teaser = $scope.teaser || false;
                 $scope.$watch(function(){return $scope.id._id;},function(newValue, oldValue){
-                    $scope.device = Restangular.one('devices',$scope.id._id).get().$object;
+                    $scope.device = Restangular.one('devices',$scope.id._id).get({embedded:JSON.stringify({components: 1})}).$object;
                 });
+            }
+        }
+    }])
+    .directive('computerViewFullContentWidget',[function(Restangular){
+        //if needed, this can be splitted into view (which gets the device) and theme (which just outputs the html given a device)
+        return{
+            templateUrl: 'app/devices/device/computerViewFullContentWidget.html',
+            restrict: 'E',
+            scope:{
+                computer: '='
+            },
+            link: function($scope, $element, $attrs){
+                $scope.teaser = true;
+            }
+        }
+    }])
+    .directive('componentViewFullContentWidget',[function(Restangular){
+        //if needed, this can be splitted into view (which gets the device) and theme (which just outputs the html given a device)
+        return{
+            templateUrl: 'app/devices/device/componentViewFullContentWidget.html',
+            restrict: 'E',
+            scope:{
+                component: '='
+            },
+            link: function($scope, $element, $attrs){
+            }
+        }
+    }]).directive('deviceIcon',[function(Restangular){
+        return{
+            template: '<img src="app/devices/device/icons/{{type}}-{{subtype}}.png" onerror="this.src=\'app/devices/device/icons/default.png\'"/>',
+            css: 'app/devices/device/icons/icons.css',
+            restrict: 'E',
+            scope:{
+                type: '@',
+                subtype: '@'
             }
         }
     }]);

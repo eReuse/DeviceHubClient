@@ -1,0 +1,25 @@
+<div class="col-xs-6">
+    <table class="table table-striped">
+        <thead><tr><th>{{component['@type']}}</th></tr></thead>
+        <tbody ng-if="component['@type'] == 'NetworkAdapter'">
+            <tr><td>Speed</td><td itemprop="speed">{{component.speed}} Mbps</td></tr>
+        </tbody>
+        <tbody ng-if="component['@type'] == 'RamModule'">
+            <tr><td>Clock</td><td itemprop="clock">{{component.clock}} Mhz</td></tr>
+            <tr><td>Size</td><td itemprop="size">{{component.size}} Mhz</td></tr>
+        </tbody>
+        <tbody ng-if="component['@type'] == 'Processor'">
+            <tr><td>Speed</td><td itemprop="speed">{{component.speed}} Ghz</td></tr>
+            <tr><td>Number of cores</td><td itemprop="numberOfCores">{{component.numberOfCores}}</td></tr>
+            <tr><td>Bus clock</td><td itemprop="busClock">{{component.busClock}} Ghz</td></tr>
+            <tr><td>Address</td><td itemprop="address">{{component.address}}</td></tr>
+        </tbody>
+        <tbody ng-if="component['@type'] == 'HardDrive'">
+            <tr><td>Size</td><td itemprop="size">{{component.size}} MB</td></tr>
+            <tr><td>Interface</td><td itemprop="interface">{{component.interface}}</td></tr>
+        </tbody>
+        <tbody ng-if="component['@type'] == 'GraphicCard'">
+            <tr><td>Memory</td><td itemprop="memory">{{component.memory}} GB</td></tr>
+        </tbody>
+    </table>
+</div>

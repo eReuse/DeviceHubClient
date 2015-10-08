@@ -1,7 +1,7 @@
 /**
  * Created by busta on 6/8/2015.
  */
-angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'])
+angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router', 'checklist-model','ngAnimate','ui.bootstrap'])
     .constant('deviceListWidgetConfig',{
         defaultSearchParams : [
             { key: "_id", name: "id", placeholder: "id..." },
@@ -14,8 +14,8 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
  * @todo let the directive optionally change the state when user writes at search input. Do when restangular hits version 1.0 and
  * dynamic params do this easier.
  */
-    .directive('deviceListWidget', ['$state','$stateParams','deviceListWidgetConfig','Restangular','$rootScope','$location',
-        function($state,$stateParams,deviceListWidgetConfig,Restangular,$rootScope,$location){
+    .directive('deviceListWidget', ['$state','$stateParams','deviceListWidgetConfig','Restangular','$rootScope','$location','$modal',
+        function($state,$stateParams,deviceListWidgetConfig,Restangular,$rootScope,$location,$modal){
             /**
              * Gets a new list of devices from the server and updates scope.
              */
@@ -34,6 +34,7 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
                    params: '='
                },
                link: function($scope, $element, $attrs){
+                   $scope.selectedDevices = [];
                    $scope.availableSearchParams = deviceListWidgetConfig.defaultSearchParams;
                    /*$scope.$watchCollection(function(){return $scope.params;},function(newValue, oldValue){
                        getDevices({where: newValue},$scope);    //Whenever the state params change, we get new values (triggers at the beginning too)
@@ -44,10 +45,47 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
 
 
                    $scope.deviceSelected = deviceSelected;
+
+                   $scope.$watchCollection(function(){return $scope.selectedDevices}, function(newValues, oldValues){
+                       $('device-list-widget input:checked').parents('tr').addClass('info');
+                       $('device-list-widget input:not(checked)').parents('tr').removeClass('info');
+                   });
+
+                   $scope.openModal = function(type){
+                       var modalInstance = $modal.open({
+                           animation: true,
+                           templateUrl: 'app/devices/list/modal.html',
+                           controller: 'DevicesListModalCtrl',
+                           size: 'lg',
+                           keyboard: true,
+                           windowClass: 'modal-xl',
+                           resolve: {
+                               devices: function(){return $scope.selectedDevices},
+                               type: function(){return type}
+                           }
+                       });
+                       modalInstance.result.then(function (selectedItem) {
+                           $scope.selected = selectedItem;
+                       }, function () {
+                          // $log.info('Modal dismissed at: ' + new Date());
+                       });
+                   };
+
                }
        };
     }])
-;
+    .controller('DevicesListModalCtrl', ['$scope','$modalInstance','devices','type', function($scope,$modalInstance,devices,type){
+        $scope.devices = devices;
+        $scope.type = type;
+        $scope.ok = function () {
+            $modalInstance.close($scope.selected.item);
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }])
+    ;
 /*
 .controller('DeviceListCtrl', ['Restangular', function(Restangular){
     var self = this;
