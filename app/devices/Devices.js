@@ -26,8 +26,7 @@ angular.module('Devices',['ui.bootstrap', 'ui.layout', 'DeviceList','Device'] )
         var self = this;
         //Tab trick from http://odetocode.com/blogs/scott/archive/2014/04/14/deep-linking-a-tabbed-ui-with-angularjs.aspx
         this.tabs = [
-            {heading: 'List devices', route: 'devices.show', active: false},
-            {heading: 'Create a device', route: 'devices.add', active: false}
+            {heading: 'List devices', route: 'devices.show', active: false}
         ];
 
         this.go = function(route){

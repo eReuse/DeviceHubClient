@@ -19,6 +19,8 @@ angular.module('Config', ['restangular'])
                 case 'get':
                     extractedData = data;
                     break;
+                default:
+                    extractedData = data;
             }
             return extractedData;
         });
@@ -29,6 +31,7 @@ angular.module('Config', ['restangular'])
         RestangularProvider.setErrorInterceptor(function(response, deferred, responseHandler){
             console.log(response);
         });
+        RestangularProvider.setDefaultHeaders({"Content-Type": "application/json", Accept: "application/json"});
     /*    RestangularProvider.addFullRequestInterceptor(function(element, operation, what, url, headers, params){
             console.log(element);
         });*/

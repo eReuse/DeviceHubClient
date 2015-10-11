@@ -59,6 +59,7 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
                            size: 'lg',
                            keyboard: true,
                            windowClass: 'modal-xl',
+                           backdrop : 'static',
                            resolve: {
                                devices: function(){return $scope.selectedDevices},
                                type: function(){return type}
@@ -70,17 +71,16 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
                           // $log.info('Modal dismissed at: ' + new Date());
                        });
                    };
-
                }
        };
     }])
     .controller('DevicesListModalCtrl', ['$scope','$modalInstance','devices','type', function($scope,$modalInstance,devices,type){
         $scope.devices = devices;
         $scope.type = type;
+        $scope.title = type;
         $scope.ok = function () {
             $modalInstance.close($scope.selected.item);
         };
-
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };

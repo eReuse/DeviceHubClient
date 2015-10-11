@@ -1,6 +1,7 @@
 <div>
     <nav ng-controller="DevicesNavCtrl as DsNvCtrl">
-        <tabset justified="true">
+        <register-button-widget style="float: right"></register-button-widget>
+        <tabset>
             <tab
                     ng-repeat="t in DsNvCtrl.tabs"
                     heading="{{t.heading}}"
@@ -8,6 +9,7 @@
                     active="t.active">
             </tab>
         </tabset>
+
     </nav>
 </div>
 <div ui-view></div>

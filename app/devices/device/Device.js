@@ -1,7 +1,7 @@
 /**
  * Created by busta on 10/8/2015.
  */
-angular.module('Device', ['Config','ui.router','ui.bootstrap','Events'])
+angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimate'])
     .directive('devicePageWidget',['Restangular',function(Restangular){
         var id; //Si queremos que el binding funcione al asignar valores debemos asignar objetos para hacerlo por referencia
         var actualTab = {device: null}; //no se puede hacer {{x()}} en una directiva siendo x = f(){return {} };
@@ -76,5 +76,114 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events'])
                 type: '@',
                 subtype: '@'
             }
+        }
+    }]).directive('registerButtonWidget',['Restangular','$modal', function(Restangular, $modal){
+        return{
+            templateUrl: 'app/devices/device/registerButtonWidget.html',
+            restrict: 'E',
+            scope:{},
+            link: function($scope, $element, $attrs){
+                $scope.openModal = function(type){
+                    var modalInstance = $modal.open({
+                        animation: true,
+                        templateUrl: 'app/devices/device/registerModal.html',
+                        controller: 'registerModalCtrl',
+                        size: 'lg',
+                        keyboard: true,
+                        windowClass: 'modal-xl',
+                        backdrop : 'static',
+                        resolve: {
+                            type: function(){return type}
+                        }
+                    });
+                    modalInstance.result.then(function (selectedItem) {
+                        $scope.selected = selectedItem;
+                    }, function () {
+                        // $log.info('Modal dismissed at: ' + new Date());
+                    });
+                };
+            }
+        }
+    }])
+    .controller('registerModalCtrl', ['$scope','$modalInstance','Restangular','type', function($scope,$modalInstance,Restangular,type){
+        var self = this;
+        $scope.type = type;
+        $scope.title = type;
+        $scope.uploaded = 0;
+        $scope.files = false;
+        $scope.results = [];
+        $scope.active = '';
+        $scope.upload = function(){
+            $scope.files = false;
+            $scope.results = [];
+            var fu = document.getElementById('select-files');
+            if(fu.files && fu.files[0]) {
+                $scope.files = fu.files.length;
+                $scope.uploaded = 0;
+                $scope.active = 'active';
+                self.iterativeUpload(fu.files,0);
+            }
+        };
+        $scope.done = function () {
+            $modalInstance.dismiss('cancel');
+        };
+
+        this.iterativeUpload = function(files,i){
+            if(files && i < files.length){
+                var reader = new FileReader();
+                reader.onloadend = (function(file){
+                    return function(e) {
+                        //file.name
+                        var content = e.target.result;
+                        Restangular.all('snapshot').post(content).then(function (response) {
+                            $scope.$evalAsync(function(s){
+                                if(i == files.length-1) s.active = '';
+                                var result = {fileName: file.name, answer:response};
+                                s.results.push(result);
+                                ++s.uploaded;
+                            });
+                            self.iterativeUpload(files, i + 1);
+                        }, function (answer) {
+                            $scope.$evalAsync(function(s){
+                                if(i == files.length-1) s.active = '';
+                                var result = {fileName: file.name,
+                                    answer:answer.data._error.code +',' + answer.data._error.message,
+                                    css:'warning'};
+                                s.results.push(result);
+                                ++s.uploaded;
+                            });
+                            self.iterativeUpload(files, i + 1);
+                        });
+                    }
+                })(files[i]);
+                reader.readAsText(files[i]);
+            }
+        };
+
+        this.getFiles = function(){
+            var fu = document.getElementById('select-files');
+
+            if(fu.files && fu.files[0]){
+                $scope.files = fu.files.length;
+                $scope.uploaded = 0;
+                for(var i = 0; i < fu.files.length; i++){
+                    var reader = new FileReader();
+                    reader.onloadend = (function(file){
+                        return function(e){
+                            self.uploadFiles(e.target.result, file.name);
+                        };
+                    })(fu.files[i]);
+                    reader.readAsText(fu.files[i]);
+                }
+            }
+        };
+        this.uploadFiles = function(file, name){
+            Restangular.all('snapshot').post(file).then(function(){
+                ++$scope.uploaded;
+                $scope.$apply();
+            }, function(){
+                ++$scope.uploaded;
+                $scope.$apply();
+            });
         }
     }]);

@@ -1,10 +1,4 @@
-
-
-
-
-<div class="modal-header">
-    <h3 class="modal-title">{{type}}</h3>
-</div>
+<div ng-include="'app/resources/modal/header.html'"></div>
 <div class="modal-body">
     <ul>
         <li ng-repeat="device in devices">
@@ -12,7 +6,4 @@
         </li>
     </ul>
 </div>
-<div class="modal-footer">
-    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-</div>
+<div ng-include="'app/resources/modal/footer-ok-cancel.html'"></div>
