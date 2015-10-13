@@ -105,7 +105,7 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimat
             }
         }
     }])
-    .controller('registerModalCtrl', ['$scope','$modalInstance','Restangular','type', function($scope,$modalInstance,Restangular,type){
+    .controller('registerModalCtrl', ['$scope','$modalInstance','Restangular','type','$rootScope', function($scope,$modalInstance,Restangular,type,$rootScope){
         var self = this;
         $scope.type = type;
         $scope.title = type;
@@ -137,7 +137,10 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimat
                         var content = e.target.result;
                         Restangular.all('snapshot').post(content).then(function (response) {
                             $scope.$evalAsync(function(s){
-                                if(i == files.length-1) s.active = '';
+                                if(i == files.length-1){
+                                    $rootScope.$broadcast('refresh@deviceListWidget');
+                                    s.active = '';
+                                }
                                 var result = {fileName: file.name, answer:response};
                                 s.results.push(result);
                                 ++s.uploaded;
@@ -145,9 +148,12 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimat
                             self.iterativeUpload(files, i + 1);
                         }, function (answer) {
                             $scope.$evalAsync(function(s){
-                                if(i == files.length-1) s.active = '';
+                                if(i == files.length-1){
+                                    $rootScope.$broadcast('refresh@deviceListWidget');
+                                    s.active = '';
+                                }
                                 var result = {fileName: file.name,
-                                    answer:answer.data._error.code +',' + answer.data._error.message,
+                                    answer:answer.data,
                                     css:'warning'};
                                 s.results.push(result);
                                 ++s.uploaded;
@@ -159,31 +165,4 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimat
                 reader.readAsText(files[i]);
             }
         };
-
-        this.getFiles = function(){
-            var fu = document.getElementById('select-files');
-
-            if(fu.files && fu.files[0]){
-                $scope.files = fu.files.length;
-                $scope.uploaded = 0;
-                for(var i = 0; i < fu.files.length; i++){
-                    var reader = new FileReader();
-                    reader.onloadend = (function(file){
-                        return function(e){
-                            self.uploadFiles(e.target.result, file.name);
-                        };
-                    })(fu.files[i]);
-                    reader.readAsText(fu.files[i]);
-                }
-            }
-        };
-        this.uploadFiles = function(file, name){
-            Restangular.all('snapshot').post(file).then(function(){
-                ++$scope.uploaded;
-                $scope.$apply();
-            }, function(){
-                ++$scope.uploaded;
-                $scope.$apply();
-            });
-        }
     }]);

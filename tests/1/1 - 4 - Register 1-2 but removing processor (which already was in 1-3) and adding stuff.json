@@ -1,0 +1,23 @@
+{
+  "device": {
+    "manufacturer": "p2m",
+    "serialNumber": "p2s",
+    "@type": "Computer",
+    "type": "Microtower"
+  },
+  "secured": false,
+  "@type": "Snapshot",
+  "components":[
+    {
+      "manufacturer": "p2c1m",
+      "serialNumber": "p2c2s",
+      "@type": "Motherboard"
+    },
+    {
+      "manufacturer": "p2c3m",
+      "serialNumber": "p2c3s",
+      "speed": 1000,
+      "@type": "NetworkAdapter"
+    }
+  ]
+}

@@ -43,6 +43,10 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
                        if(newValue != undefined) getDevices({where: newValue},$scope);
                    });
 
+                   $scope.$on('refresh@deviceListWidget', function(){
+                       getDevices($scope.searchParams, $scope);
+                   });
+
 
                    $scope.deviceSelected = deviceSelected;
 

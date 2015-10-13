@@ -5,21 +5,15 @@ angular.module('Events', ['Config', 'ui.router', 'ui.bootstrap', 'Event', 'angul
     .directive('eventsPerDeviceViewFullWidget', ['Restangular', function (Restangular) {
         var self = this;
         this.subsanizeEvents = function (events) {
-            var snapshots = [];
-            events.forEach(function (event, index) {
-                if (event['@type'] == 'Snapshot'){
-                    snapshots.push(event);
-                    events.splice(index,1);
+            events.forEach(function (event) {
+                if (event['@type'] == 'Snapshot'){  //for every snapshot
+                    event.events.forEach(function (subEvent) {  //we get its full events
+                        for (var i = 0; i < events.length; i++) //and we remove them from the general event list
+                            if (events[i]['_id'] == subEvent['_id']) events.splice(i,1);
+                    });
                 }
             });
-            snapshots.forEach(function (snapshot) {
-                snapshot.fullEvents = [];
-                snapshot.events.forEach(function (event) {
-                    for (var i = 0; i < events.length; i++)
-                        if (events[i]['_id'] == event['_id']) events.splice(i,1);
-                })
-            });
-            return events.concat(snapshots);
+            return events;
         };
         return {
             templateUrl: 'app/events/eventsPerDeviceViewFull.html',
