@@ -34,7 +34,6 @@ angular.module('Events', ['Config', 'ui.router', 'ui.bootstrap', 'Event', 'angul
                         //$scope.events = events;
                     });
                     // $scope.events = Restangular.one('devices',newValue).getList('events').$object;
-
                 });
             }
         }

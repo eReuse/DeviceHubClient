@@ -1,7 +1,7 @@
 /**
  * Created by busta on 5/8/2015.
  */
-angular.module('Devices',['ui.bootstrap', 'ui.layout', 'DeviceList','Device'] )
+angular.module('Devices',['ui.bootstrap', 'ui.layout', 'DeviceList','Device','Account'] )
     .config(
     function($urlRouterProvider,$stateProvider){
         $stateProvider.state('devices.add',{

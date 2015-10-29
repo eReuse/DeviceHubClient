@@ -4,7 +4,11 @@
 angular.module('Config', ['restangular'])
     .constant('config', {
         appName: 'DeviceWare',
-        url: 'http://127.0.0.1:5000'
+        url: 'http://127.0.0.1:5000',
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+        }
     })
     .config(['RestangularProvider','config',function(RestangularProvider,config){
         RestangularProvider.setBaseUrl(config.url);
@@ -31,7 +35,7 @@ angular.module('Config', ['restangular'])
         RestangularProvider.setErrorInterceptor(function(response, deferred, responseHandler){
             console.log(response);
         });
-        RestangularProvider.setDefaultHeaders({"Content-Type": "application/json", Accept: "application/json"});
+        RestangularProvider.setDefaultHeaders(config.headers);
     /*    RestangularProvider.addFullRequestInterceptor(function(element, operation, what, url, headers, params){
             console.log(element);
         });*/
