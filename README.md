@@ -1,7 +1,8 @@
-====== DeviceHub Client ======
+#DeviceHub Client
 A client for [DeviceHub](/eReuse/DeviceHub) made in Angular.
 
-===== Installing instructions =====
+##Installing instructions
+
 
 1.  Install bower. You will need to install before [node](https://github.com/nodejs/node-v0.x-archive/wiki/Installing-Node.js-via-package-manager), npm and git.
 2.  Download this project from github.
