@@ -22,7 +22,9 @@
     "lodash": "~3.10.1",
     "angular-timeline": "~1.5.2",
     "checklist-model": "~0.6.0",
-    "angular-ui-router-anim-in-out": "~1.0.2"
+    "angular-css": "~1.0.7",
+    "angular-animate": "~1.4.7",
+    "angular": "~1.4.7"
   },
   "resolutions": {
     "jquery": ">= 1.9.1"
