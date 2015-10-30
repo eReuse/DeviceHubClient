@@ -1,5 +1,5 @@
 #DeviceHub Client
-A client for [DeviceHub](/eReuse/DeviceHub) made in Angular.
+A client for [DeviceHub](https://github.com/eReuse/DeviceHub) made in Angular.
 
 ##Installing instructions
 
