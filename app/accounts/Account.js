@@ -8,7 +8,7 @@ angular.module('Account', ['Authentication','ui.bootstrap'])
             restrict: 'E',
             scope: {},
             link: function ($scope, $element, $attrs) {
-                $scope.account = Session.account;
+                $scope.account = Session.getAccount();
                 $scope.openModal = function (type) {
                     var modalInstance = $modal.open({
                         animation: true,
@@ -39,16 +39,27 @@ angular.module('Account', ['Authentication','ui.bootstrap'])
     }])
     .controller('userModalCtrl', ['$scope','$modalInstance','Restangular','Session', function($scope,$modalInstance,Restangular,Session){
         //$scope.account = Session.account;
-        $scope.account = $.extend(true, {}, Session.account);
-        $scope.title = $scope.account.hasOwnProperty('name')? $scope.account.name : $scope.account.email;
+        $scope.account = $.extend(true, {}, Session.getAccount());
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
-        $scope.ok = function(){
-            Session.account = Restangular.one('users',$scope._id).put({
-                email: $scope.email,
-                password: $scope.password,
-                name: $scope.name
-            });
+        $scope.ok = function() {
+            $("#accountForm").submit();
+        };
+        $scope.update = function(account){
+            //We will copy stuff to Session once it is validated through the server.
+             Restangular.one('accounts',Session.getAccount()._id).customOperation('patch','',{},{},{
+                email: account.email,
+                password: account.password,
+                name: account.name
+            }).then(function(){
+                 Session.update(account.email, account.password, account.name);
+             }, function(data){
+                 alert('Verify that the data is correct and try again.');
+             });
+        };
+        $scope.logout = function(){
+            Session.destroy();
+            location.reload();
         }
     }]);

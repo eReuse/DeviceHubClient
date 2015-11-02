@@ -7,39 +7,57 @@ angular.module('Authentication',['ui.router','Config'])
             email: '',
             password: ''
         };
-        $scope.login = function (credentials) {
-            AuthService.login(credentials).then(function (user) {
+        $scope.saveInBrowser = false;
+        $scope.login = function (credentials, saveInBrowser) {
+            AuthService.login(credentials, saveInBrowser).then(function (user) {
                 $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                 $state.go('devices.show');
             }, function () {
                 $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+                alert("The email or password is incorrect " + String.fromCharCode(0xD83D, 0xDE22));
             });
         };
     })
     .service('Session', function () {
-        this.account = null;
-        this.create = function(account){
-            this.account = account;
+        this._account = null;
+        this.saveInBrowser = true;
+        this.create = function(account, saveInBrowser){
+            this._account = account;
+            if(this.saveInBrowser) this.setInBrowser();
         };
         this.destroy = function(){
-            this.account = null;
+            this._account = null;
+            localStorage.clear();
         };
+        this.getAccount = function(){
+            if(this._account == null) this._account = JSON.parse(localStorage.getItem('account'));
+            return this._account;
+        };
+        this.update = function(email, password, name){
+            this._account.email = email;
+            this._account.password = password;
+            this._account.name = name;
+            if(this.saveInBrowser) this.setInBrowser();
+        };
+        this.setInBrowser = function(){
+            localStorage.setItem("account", JSON.stringify(this._account));
+        }
     })
     .factory('AuthService', function (Restangular, Session, config) {
         var authService = {};
 
-        authService.login = function (credentials) {
+        authService.login = function (credentials, saveInBrowser) {
             return Restangular.all("login").post(credentials).then(function(account){
-                    Session.create(account);
+                    Session.create(account, saveInBrowser);
                     var headers = config.headers;
-                    headers['Authorization'] = 'Basic ' + Session.account.token;
+                    headers['Authorization'] = 'Basic ' + Session.getAccount().token;
                     Restangular.setDefaultHeaders(headers);
                     return account;
                 }
             );
         };
         authService.isAuthenticated = function () {
-            return !!Session.account;
+            return Session.getAccount() != null;
         };
 
         /**
@@ -52,7 +70,7 @@ angular.module('Authentication',['ui.router','Config'])
                 authorizedRoles = [authorizedRoles];
             }
             return (authService.isAuthenticated() &&
-            authorizedRoles.indexOf(Session.account.role) !== -1);
+            authorizedRoles.indexOf(Session.getAccount().role) !== -1);
         };
 
         return authService;

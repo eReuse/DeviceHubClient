@@ -34,3 +34,8 @@ footer{
 footer img{
     height: 5em;
 }
+
+#saveInBrowser{
+    width: auto;
+    height: auto;
+}

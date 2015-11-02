@@ -1,8 +1,8 @@
 <div class="modal-header">
-    <h3 class="modal-title"><account-role role="{{account.role}}"></account-role>&nbsp;{{title}}</h3>
+    <h3 class="modal-title"><account-role role="{{account.role}}"></account-role>&nbsp;{{account.name}}</h3>
 </div>
 <div class="modal-body" ng-switch="type">
-    <form name="accountForm" class="form-horizontal" ng-submit="update(account)" novalidate show-validation>
+    <form id="accountForm" name="accountForm" class="form-horizontal" ng-submit="update(account)" show-validation>
         <div class="form-group">
             <label for="email" class="col-xs-2">Email</label>
             <div class="col-xs-10">
@@ -29,4 +29,8 @@
         </div>
     </form>
 </div>
-<div ng-include="'app/resources/modal/footer-ok-cancel.html'"></div>
+<div class="modal-footer">
+    <button type="submit" form="accountForm" class="btn btn-primary">Update Account</button>
+    <button class="btn btn-info" type="button" ng-click="logout()">Log out</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>
