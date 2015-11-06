@@ -10,20 +10,19 @@ angular.module('Authentication',['ui.router','Config'])
         $scope.saveInBrowser = false;
         $scope.login = function (credentials, saveInBrowser) {
             AuthService.login(credentials, saveInBrowser).then(function (user) {
-                $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                 $state.go('devices.show');
             }, function () {
-                $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
                 alert("The email or password is incorrect " + String.fromCharCode(0xD83D, 0xDE22));
             });
         };
     })
-    .service('Session', function () {
+    .service('Session', function (config, Restangular) {
         this._account = null;
         this.saveInBrowser = true;
         this.create = function(account, saveInBrowser){
             this._account = account;
             if(this.saveInBrowser) this.setInBrowser();
+            this.setAuthHeader();
         };
         this.destroy = function(){
             this._account = null;
@@ -31,6 +30,7 @@ angular.module('Authentication',['ui.router','Config'])
         };
         this.getAccount = function(){
             if(this._account == null) this._account = JSON.parse(localStorage.getItem('account'));
+            if(this._account != null) this.setAuthHeader();
             return this._account;
         };
         this.update = function(email, password, name){
@@ -41,17 +41,19 @@ angular.module('Authentication',['ui.router','Config'])
         };
         this.setInBrowser = function(){
             localStorage.setItem("account", JSON.stringify(this._account));
+        };
+        this.setAuthHeader = function(){
+            var headers = config.headers;
+            headers['Authorization'] = 'Basic ' + this._account.token;
+            Restangular.setDefaultHeaders(headers);
         }
     })
-    .factory('AuthService', function (Restangular, Session, config) {
+    .factory('AuthService', function (Restangular, Session) {
         var authService = {};
 
         authService.login = function (credentials, saveInBrowser) {
             return Restangular.all("login").post(credentials).then(function(account){
                     Session.create(account, saveInBrowser);
-                    var headers = config.headers;
-                    headers['Authorization'] = 'Basic ' + Session.getAccount().token;
-                    Restangular.setDefaultHeaders(headers);
                     return account;
                 }
             );
@@ -84,16 +86,17 @@ angular.module('Authentication',['ui.router','Config'])
         $rootScope.$on('$stateChangeStart', function (event, next) {
             if(next.name != 'login'){
                 if (AuthService.isAuthenticated()) {
-                    if(next.data.hasOwnProperty('authorizedRoles')
-                        && !AuthService.isAuthorized(next.data.authorizedRoles)){
-                        // user is not allowed
-                        alert("You are not allowed to do so. Contact the admin.");
-                        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+                    try{
+                        if(!AuthService.isAuthorized(next.data.authorizedRoles)){
+                            alert("You are not allowed to do so. Contact the admin.");
+                            $state.transitionTo('login');
+                            $location.path('/login');
+                        }
                     }
+                    catch(err){}
                 }
                 else{
                     // user is not logged in
-                    $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
                     $state.transitionTo('login');
                     $location.path('/login');
                 }

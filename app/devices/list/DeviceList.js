@@ -1,13 +1,21 @@
 /**
  * Created by busta on 6/8/2015.
  */
-angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router', 'checklist-model','ngAnimate','ui.bootstrap'])
+angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router', 'checklist-model','ngAnimate','ui.bootstrap', 'Label'])
     .constant('deviceListWidgetConfig',{
         defaultSearchParams : [
             { key: "_id", name: "id", placeholder: "id..." },
             { key: "hid", name: "hid", placeholder: "Hid..." },
-            { key: "@type", name: "Type", placeholder: "City..." },
-            { key: "max_results", name: "Max Results", placeholder: "N� of results..." }
+            { key: "@type", name: "Type", placeholder: "Computer, HardDrive, Monitor..." },
+            { key: 'type', name: "Subtype", placeholder: "Desktop, TFT..."},
+            { key: 'serialNumber', name:'Serial Number', placeholder: "S/N..."},
+            { key: 'totalMemory', name: 'Total of RAM', placeholder: "In Gigabytes..."},
+            //{ key: 'event', name: 'Type of event', placeholder: "Devices with this event..."}, todo
+            { key: 'byUser', name: 'Author', placeholder: "email or name of the author..."}, //todo
+            { key: '_created', name: 'Registered in', placeholder: "YYYY-MM-DD" },
+            { key: '_updated', name: 'Last updated in', placeholder: "YYYY-MM-DD"},
+            { key: '_created|>', name: 'Registered in before', placeholder: "YYYY-MM-DD"},  //todo
+            { key: '_created|<', name: 'Registered in after', placeholder: "YYYY-MM-DD"} //todo
         ]
     })
 /**
@@ -47,6 +55,13 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
                        getDevices($scope.searchParams, $scope);
                    });
 
+                   $scope.$on('selectedPlace@placeNavWidget', function(event, place_id){
+                       $scope.searchParams.place = place_id;  //The watchCollection will detect changes
+                   });
+
+                   $scope.$on('unselectedPlace@placeNavWidget', function(){
+                      delete $scope.searchParams.place;
+                   });
 
                    $scope.deviceSelected = deviceSelected;
 

@@ -1,9 +1,14 @@
 <div ng-include="'app/resources/modal/header.html'"></div>
 <div class="modal-body">
-    <ul>
+    <div ng-switch="type">
+        <div ng-switch-when="label">
+            <label-list-widget devices="devices"></label-list-widget>
+        </div>
+    </div>
+    <!--<ul>
         <li ng-repeat="device in devices">
             <pre>{{device}}</pre>
         </li>
-    </ul>
+    </ul>-->
 </div>
 <div ng-include="'app/resources/modal/footer-ok-cancel.html'"></div>

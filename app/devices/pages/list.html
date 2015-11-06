@@ -1,11 +1,5 @@
-<div class="container">
-    <div ui-layout="{ flow : 'column', dividerSize: 8 }" style="top: 3em;">
-        <div ui-layout-container size="55%" min-size="30%">
-            <device-list-widget params='{where:{max_results: 25}}'></device-list-widget>
-            {{DsCl._id}}
-        </div>
-        <div ui-layout-container min-size="20%" id="ui-layout-container-device-page">
-            <device-page-widget id='DsCl.id'></device-page-widget>
-        </div>
-    </div>
+<div class="row">
+        <place-nav-widget class="col-xs-2"></place-nav-widget>
+        <device-list-widget class="col-xs-5" params='{where:{max_results: 25}}'></device-list-widget>
+        <device-page-widget id='DsCl.id' class="col-xs-5"></device-page-widget>
 </div>

@@ -16,9 +16,9 @@
         <script type="text/javascript" src="bower_components/ui-router/release/angular-ui-router.js"></script>
         <script src="bower_components/angular-css/angular-css.min.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="bower_components/angular-ui-layout/ui-layout.css"/>
+        <!--<link rel="stylesheet" type="text/css" href="bower_components/angular-ui-layout/ui-layout.css"/>
         <script type="text/javascript" src="bower_components/raf/index.js"></script>
-        <script type="text/javascript" src="bower_components/angular-ui-layout/ui-layout.js"></script>
+        <script type="text/javascript" src="bower_components/angular-ui-layout/ui-layout.js"></script>-->
 
             <script type="text/javascript" src="bower_components/checklist-model/checklist-model.js"></script>
         <link rel="stylesheet" href="bower_components/angular-advanced-searchbox/dist/angular-advanced-searchbox.min.css">
@@ -27,27 +27,42 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/restangular/1.5.1/restangular.js"></script>
 
-
+        <script src="resources/qrcode.js"></script>
+        <script src="bower_components/angular-qrcode/angular-qrcode.js"></script>
         <link rel="stylesheet" href="bower_components/angular-timeline/dist/angular-timeline.css"/>
         <script src="bower_components/angular-timeline/dist/angular-timeline.js"></script>
 
+        <script src="bower_components/angular-bootstrap-nav-tree/dist/abn_tree_directive.js"></script>
+        <link rel="stylesheet" type="text/css" href="bower_components/angular-bootstrap-nav-tree/dist/abn_tree.css"/>
 
+        <!-- Angular google maps -->
+        <script src='//maps.googleapis.com/maps/api/js?sensor=false' defer></script>
+        <script src="bower_components/lodash/lodash.min.js" defer></script>
+        <script src="bower_components/angular-simple-logger/dist/angular-simple-logger.min.js" defer></script>
+        <script src="bower_components/angular-google-maps/dist/angular-google-maps.min.js" defer></script>
+        <script src="bower_components/angular-google-maps/dist/angular-google-maps_dev_mapped.min.js" defer></script>
+        <script src="bower_components/ngGeolocation/ngGeolocation.min.js" defer></script>
 
 
             <link rel="stylesheet" type="text/css" href="app/main.css"/>
-        <link rel="stylesheet" type="text/css" href="app/devices/pages/show.css"/>
             <script type="text/javascript" src="app/accounts/Authentication.js"></script>
         <script type="text/javascript" src="Config.js"></script>
             <script type="text/javascript" src="app/accounts/Account.js"></script>
+        <script type="text/javascript" src="app/devices/label/Label.js"></script>
 
             <script type="text/javascript" src="app/events/event/Event.js"></script>
         <script type="text/javascript" src="app/events/Events.js"></script>
+        <script type="text/javascript" src="app/places/Places.js"></script>
         <script type="text/javascript" src="app/devices/device/Device.js"></script>
         <script type="text/javascript" src="app/devices/list/DeviceList.js"></script>
         <script type="text/javascript" src="app/devices/Devices.js"></script>
 
 
         <script type="text/javascript" src="Main.js"></script>
+
+    <script type="text/javascript" src="app/devices/label/html2canvas.js" defer></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js" defer></script>
+    <script type="text/javascript" src="app/devices/label/LabelsToPdf.js" defer></script>
 	</head>
 	<body ng-app="Main" ng-controller="MainCtrl as Mc">
         <!--<header ng-controller="HeaderCtrl as Hr" ng-include="'app/header/header.html'"></header>-->

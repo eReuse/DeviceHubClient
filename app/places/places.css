@@ -1,0 +1,9 @@
+place-nav-widget .list-group-item i{
+    display: none;
+}
+
+place-nav-widget .list-group-item:hover i{
+    display: block;
+}
+
+.angular-google-map-container { height: 100%; }
