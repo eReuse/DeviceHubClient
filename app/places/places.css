@@ -6,4 +6,7 @@ place-nav-widget .list-group-item:hover i{
     display: block;
 }
 
-.angular-google-map-container { height: 100%; }
+.angular-google-map-container { height: 500px; }
+@media screen and (max-height: 700px) {
+    .angular-google-map-container { height: 300px; }
+}

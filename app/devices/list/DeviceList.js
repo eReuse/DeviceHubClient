@@ -97,6 +97,7 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
         $scope.devices = devices;
         $scope.type = type;
         $scope.title = type;
+        $scope.event = {'@type': type, devices:devices}; //Just useful for some actions, rubbish for others.
         $scope.ok = function () {
             $modalInstance.close($scope.selected.item);
         };

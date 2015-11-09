@@ -5,13 +5,16 @@
 
 angular.module('Places',['ui.bootstrap','Device','ngAnimate','uiGmapgoogle-maps', 'ngGeolocation'] )
     .directive('placeNavWidget', ['Restangular','$rootScope','$modal', function (Restangular, $rootScope,$modal) {
+        var getPlaces = function(){
+          return Restangular.all('places').getList().$object;
+        };
         return {
             templateUrl: 'app/places/placeNavWidget.html',
             restrict: 'E',
             scope:{},
             css: 'app/places/places.css',
             link: function ($scope, $element, $attrs) {
-                $scope.places = Restangular.all('places').getList().$object;
+                $scope.places = getPlaces();
                 $scope.broadcastSelectedPlace = function(place_id){
                     if ($scope.isSelected(place_id)){
                         $rootScope.$broadcast('unselectedPlace@placeNavWidget');
@@ -22,6 +25,10 @@ angular.module('Places',['ui.bootstrap','Device','ngAnimate','uiGmapgoogle-maps'
                         $scope.selected_id = place_id;
                     }
                 };
+                $scope.$on('refresh@placeNavWidget', function(){
+                    $scope.places = getPlaces();
+                });
+
                 $scope.isSelected = function(place_id){
                     return place_id == $scope.selected_id;
                 };
@@ -52,6 +59,8 @@ angular.module('Places',['ui.bootstrap','Device','ngAnimate','uiGmapgoogle-maps'
         try{$scope.title = 'Place ' + $scope.place['_id']}
         catch(err){$scope.title = 'Create a new place'}
         $scope.map = null;
+        $scope.newPlace = {};
+        var useArea = false;
 
 
         /*$scope.map = {
@@ -74,16 +83,16 @@ angular.module('Places',['ui.bootstrap','Device','ngAnimate','uiGmapgoogle-maps'
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude
                 },
-                zoom: 20
+                zoom: 19
             };
-            var margin = 0.0001;
+            var margin = 0.0002;
             $scope.polygons = [
                 {
                     id: 1,
                     path: [
                         {
-                            latitude: position.coords.latitude-margin,
-                            longitude: position.coords.longitude-margin
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
                         },
                         {
                             latitude: position.coords.latitude,
@@ -92,6 +101,10 @@ angular.module('Places',['ui.bootstrap','Device','ngAnimate','uiGmapgoogle-maps'
                         {
                             latitude: position.coords.latitude+margin,
                             longitude: position.coords.longitude+margin
+                        },
+                        {
+                            latitude: position.coords.latitude+margin,
+                            longitude: position.coords.longitude
                         }
                     ],
                     stroke: {
@@ -109,10 +122,41 @@ angular.module('Places',['ui.bootstrap','Device','ngAnimate','uiGmapgoogle-maps'
                 }
             ];
         });
-        $scope.ok = function(){
-
+        $scope.upload = function(newPlace, polygons){
+            console.log(newPlace);
+            console.log(polygons[0].path);
+            console.log(parseGMapCoordinatesToGeoJson(polygons[0].path));
+            console.log($scope.useArea);
+            var data = { //byUser is set by default
+                label: newPlace.label,
+                '@type': 'Place',
+                type: newPlace.type
+            };
+            if(useArea){
+                data.geo = {
+                    type: 'Polygon',
+                        coordinates: parseGMapCoordinatesToGeoJson(polygons[0].path)
+                }
+            }
+            Restangular.all('places').post(data).then(function(data){
+                $rootScope.$broadcast('refresh@placeNavWidget');
+                $scope.cancel();
+            }, function(error){
+                alert(error._error.message);
+            })
         };
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
+        $scope.area = function(value){
+            useArea = value;
+        };
+        var parseGMapCoordinatesToGeoJson = function(coords){
+            var geojson = [];
+            coords.forEach(function(coord, index, array){
+                geojson.push([coord.longitude, coord.latitude])
+            });
+            geojson.push([coords[0].longitude, coords[0].latitude]); //GeoJSON needs the 1st and last coordinate to be the same
+            return [geojson];  //GeoJSON holds a double list, for multipolygon (which we do not use)
+        }
     }]);

@@ -49,8 +49,28 @@ td{
 
 .modal-xl > .modal-dialog{
     width: 95% !important;
+    margin-bottom: 0 !important;
+}
+.modal-body{
+    overflow: auto;
+    max-height: 73vh;
+}
+
+@media screen and (max-height: 600px) {
+    .modal-body{
+        max-height: 50vh;
+    }
 }
 
 pre{
     word-break: break-word;
+}
+
+.form-group.required .control-label:after {
+    content:"*";
+    color:red;
+}
+
+button[ng-click], a[ng-click], small[ng-click]{
+    cursor: pointer;
 }

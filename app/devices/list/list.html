@@ -5,16 +5,29 @@
         template-url="bower_components/angular-advanced-searchbox/angular-advanced-searchbox.html">
 </nit-advanced-searchbox>
 <div ng-show="selectedDevices.length > 0" style="text-align: center" >
-    <div class="btn-group">
-        <button type="button" class="btn btn-primary" ng-click="openModal('label')">
+    <div class="btn-group"dropdown is-open="status.isopen1">
+        <button type="button" class="btn btn-primary" ng-click="openModal('Label')">
             Label
         </button>
-        <button type="button" class="btn btn-primary" ng-click="openModal('addState')">
-            Add new state
+        <button id="single-button1" type="button" class="btn btn-primary" dropdown-toggle ng-click="openModal('addState')">
+            New event<span class="caret"></span>
         </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="single-button1">
+            <!--<li role="menuitem"><a ng-click="openModal('Receive')">Receive</a></li>
+            <li role="menuitem"><a ng-click="openModal('Locate')">Locate</a></li>-->
+        </ul>
+    </div>
+    <div class="btn-group" dropdown is-open="status.isopen1">
+        <button id="single-button" type="button" class="btn btn-primary" dropdown-toggle>
+            More actions<span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+            <li class="divider"></li>
+            <li role="menuitem"><a href="#">Delete</a></li>
+        </ul>
     </div>
     <div class="btn-group" dropdown is-open="status.isopen">
-        <button id="single-button" type="button" class="btn btn-primary" dropdown-toggle>
+        <button type="button" class="btn btn-primary" dropdown-toggle>
             More actions<span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">

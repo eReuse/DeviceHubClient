@@ -19,6 +19,7 @@ angular.module('Authentication',['ui.router','Config'])
     .service('Session', function (config, Restangular) {
         this._account = null;
         this.saveInBrowser = true;
+        this.first_time = true;
         this.create = function(account, saveInBrowser){
             this._account = account;
             if(this.saveInBrowser) this.setInBrowser();
@@ -30,7 +31,7 @@ angular.module('Authentication',['ui.router','Config'])
         };
         this.getAccount = function(){
             if(this._account == null) this._account = JSON.parse(localStorage.getItem('account'));
-            if(this._account != null) this.setAuthHeader();
+            if(this._account != null && this.first_time) this.setAuthHeader();
             return this._account;
         };
         this.update = function(email, password, name){
@@ -44,8 +45,14 @@ angular.module('Authentication',['ui.router','Config'])
         };
         this.setAuthHeader = function(){
             var headers = config.headers;
+            this.first_time = false;
+            var self = this;
             headers['Authorization'] = 'Basic ' + this._account.token;
             Restangular.setDefaultHeaders(headers);
+            Restangular.addRequestInterceptor(function(element, operation, what, url){
+                if (operation == 'POST') element.byUser = self._account._id;
+                return element;
+            })
         }
     })
     .factory('AuthService', function (Restangular, Session) {

@@ -1,8 +1,11 @@
 <div ng-include="'app/resources/modal/header.html'"></div>
 <div class="modal-body">
     <div ng-switch="type">
-        <div ng-switch-when="label">
+        <div ng-switch-when="Label">
             <label-list-widget devices="devices"></label-list-widget>
+        </div>
+        <div ng-switch-when="Receive">
+            <event-edit-fullscreen-widget event="event"></event-edit-fullscreen-widget>
         </div>
     </div>
     <!--<ul>
