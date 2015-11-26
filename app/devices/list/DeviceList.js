@@ -44,6 +44,10 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
                link: function($scope, $element, $attrs){
                    $scope.selectedDevices = [];
                    $scope.availableSearchParams = deviceListWidgetConfig.defaultSearchParams;
+                   $scope.searchParams = {
+                     '@type': 'Computer'
+                   };
+
                    /*$scope.$watchCollection(function(){return $scope.params;},function(newValue, oldValue){
                        getDevices({where: newValue},$scope);    //Whenever the state params change, we get new values (triggers at the beginning too)
                    });*/
@@ -61,6 +65,9 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
 
                    $scope.$on('unselectedPlace@placeNavWidget', function(){
                       delete $scope.searchParams.place;
+                   });
+                   $scope.$on('get@placeNavWidget', function(places){
+                      $scope.places = places;
                    });
 
                    $scope.deviceSelected = deviceSelected;

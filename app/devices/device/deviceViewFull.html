@@ -1,9 +1,9 @@
 <article class="device" itemscope itemtype="http://www.ereuse.org/schema#Device">
     <header ng-if="!teaser">
-        <h3><device-icon type="{{device['@type']}}" subtype="{{device.type}}"></device-icon>{{device.hid}}</h3>
+        <h3><device-icon icon="{{device['icon']}}"></device-icon>{{device.hid}}</h3>
     </header>
         <div class="row">
-                <div class="col-xs-6">
+                <div class="col-xs-12 col-lg-5">
                         <table class="table table-striped">
                                 <thead><tr><th>General</th></tr></thead>
                                 <tbody>
@@ -21,7 +21,7 @@
                      <div ng-switch-when="Computer"><computer-view-full-content-widget computer="device"></computer-view-full-content-widget></div>
                      <div ng-switch-default><component-view-full-content-widget component="device"></component-view-full-content-widget></div>
                 </div>
-                <div ng-if="device.hasOwnProperty('weight') ||device.hasOwnProperty('width')" class="col-xs-6">
+                <div ng-if="device.hasOwnProperty('weight') ||device.hasOwnProperty('width')" class="col-xs-12 col-lg-6">
                         <table class="table table-striped">
                                 <thead><tr><th>Physical information</th></tr></thead>
                                 <tbody>

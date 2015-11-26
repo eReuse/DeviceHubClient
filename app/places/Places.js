@@ -5,16 +5,19 @@
 
 angular.module('Places',['ui.bootstrap','Device','ngAnimate','uiGmapgoogle-maps', 'ngGeolocation'] )
     .directive('placeNavWidget', ['Restangular','$rootScope','$modal', function (Restangular, $rootScope,$modal) {
-        var getPlaces = function(){
-          return Restangular.all('places').getList().$object;
-        };
         return {
             templateUrl: 'app/places/placeNavWidget.html',
             restrict: 'E',
             scope:{},
             css: 'app/places/places.css',
             link: function ($scope, $element, $attrs) {
-                $scope.places = getPlaces();
+                var getPlaces = function(){
+                    Restangular.all('places').getList().then(function(data){
+                        $scope.places = data;
+                        $rootScope.$broadcast('get@placeNavWidget', data);
+                    });
+                };
+                getPlaces();
                 $scope.broadcastSelectedPlace = function(place_id){
                     if ($scope.isSelected(place_id)){
                         $rootScope.$broadcast('unselectedPlace@placeNavWidget');
@@ -26,8 +29,14 @@ angular.module('Places',['ui.bootstrap','Device','ngAnimate','uiGmapgoogle-maps'
                     }
                 };
                 $scope.$on('refresh@placeNavWidget', function(){
-                    $scope.places = getPlaces();
+                    getPlaces();
                 });
+
+                //$scope.$watchCollection($scope.places)
+
+
+
+
 
                 $scope.isSelected = function(place_id){
                     return place_id == $scope.selected_id;
@@ -55,64 +64,23 @@ angular.module('Places',['ui.bootstrap','Device','ngAnimate','uiGmapgoogle-maps'
         }
     }])
     .controller('placeModalCtrl', ['$scope','$modalInstance','Restangular','place','$rootScope','$geolocation', function($scope,$modalInstance,Restangular,place,$rootScope,$geolocation) {
-        $scope.place = place;
-        try{$scope.title = 'Place ' + $scope.place['_id']}
-        catch(err){$scope.title = 'Create a new place'}
-        $scope.map = null;
-        $scope.newPlace = {};
-        var useArea = false;
+        var configMap = function(center, path, st){
 
-
-        /*$scope.map = {
-            center: {
-                latitude: 45,
-                longitude: -73
-            },
-            zoom: 8
-        };*/
-
-
-
-        $geolocation.getCurrentPosition({
-            timeout: 60000,
-            maximumAge: 250,
-            enableHighAccuracy: true
-        }).then(function(position) {
             $scope.map = {
-                center: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
-                },
+                center: center,
                 zoom: 19
             };
-            var margin = 0.0002;
+
             $scope.polygons = [
                 {
                     id: 1,
-                    path: [
-                        {
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude
-                        },
-                        {
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude+margin
-                        },
-                        {
-                            latitude: position.coords.latitude+margin,
-                            longitude: position.coords.longitude+margin
-                        },
-                        {
-                            latitude: position.coords.latitude+margin,
-                            longitude: position.coords.longitude
-                        }
-                    ],
+                    path: path,
                     stroke: {
                         color: '#6060FB',
                         weight: 3
                     },
-                    editable: true,
-                    draggable: true,
+                    editable: st,
+                    draggable: st,
                     geodesic: false,
                     visible: true,
                     fill: {
@@ -121,7 +89,65 @@ angular.module('Places',['ui.bootstrap','Device','ngAnimate','uiGmapgoogle-maps'
                     }
                 }
             ];
-        });
+        };
+
+        var getPosition = function(){
+            $geolocation.getCurrentPosition({
+                timeout: 60000,
+                maximumAge: 250,
+                enableHighAccuracy: true
+            }).then(function(position) {
+                var margin = 0.0002;
+                var path = [
+                    {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    },
+                    {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude+margin
+                    },
+                    {
+                        latitude: position.coords.latitude+margin,
+                        longitude: position.coords.longitude+margin
+                    },
+                    {
+                        latitude: position.coords.latitude+margin,
+                        longitude: position.coords.longitude
+                    }
+                ];
+                var center = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                };
+                configMap(center, path, true);
+            });
+
+
+        };
+
+        var getCenter = function(geo){
+            var bounds = new google.maps.LatLngBounds();
+            for (var i = 0; i<geo.length; i++) {
+                bounds.extend(new google.maps.LatLng(geo[i].latitude, geo[i].longitude));
+            }
+            return bounds.getCenter();
+        };
+
+        var useArea = false;
+        if(place && place._id){
+            $scope.newPlace = $.extend({}, place);
+            $scope.title = 'Place ' + $scope.newPlace.label;
+            var center = getCenter($scope.newPlace.geo);
+            configMap({latitude: center.lat(), longitude: center.lng()}, $scope.newPlace.geo, false);
+            useArea = true;
+        }else{
+            $scope.title = 'Create a new place';
+            $scope.map = null;  //Map will take some time to load
+            $scope.newPlace = {};
+            getPosition(); //Configures map with user position and predefined polygon
+        }
+
         $scope.upload = function(newPlace, polygons){
             console.log(newPlace);
             console.log(polygons[0].path);
@@ -138,7 +164,8 @@ angular.module('Places',['ui.bootstrap','Device','ngAnimate','uiGmapgoogle-maps'
                         coordinates: parseGMapCoordinatesToGeoJson(polygons[0].path)
                 }
             }
-            Restangular.all('places').post(data).then(function(data){
+            var promise = place && place._id? place.patch(data) : Restangular.all('places').post(data);
+            promise.then(function(data){
                 $rootScope.$broadcast('refresh@placeNavWidget');
                 $scope.cancel();
             }, function(error){

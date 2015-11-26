@@ -54,6 +54,13 @@ angular.module('Event', ['Config','ui.bootstrap','door3.css'])
          * - If we are creating the event, event just needs '@type'.
          * - If we are editing the event, it has to be the Restangularized version with _id.
          */
+        var acceptedKeys = ['message', 'incidence', 'geo', 'receiver', 'receiverEmail', 'receiverName', 'acceptedConditions'
+        , 'type', '@type', 'devices'];
+        var removeUnacceptedKeys = function(event){
+            Object.keys(event).forEach(function(key, index, array){
+                if(acceptedKeys.indexOf(key) <= -1) delete event[key];
+            });
+        };
         return{
             templateUrl: 'app/events/event/eventEditFullScreenWidget.html',
             restrict: 'E',
@@ -61,13 +68,42 @@ angular.module('Event', ['Config','ui.bootstrap','door3.css'])
                 event: '='
             },
             link: function($scope, $element, $attrs){
-                $scope.newEvent = $.extend({}, ('_id' in $scope.event)? $scope.event.plain() : event);  //Duplicate object.
+                $scope.newEvent = $.extend({}, ('_id' in $scope.event)? $scope.event.plain() : $scope.event);  //Duplicate object.
+                $scope.newEvent.devices.forEach(function(device, index, array){
+                    $scope.newEvent.devices[index] = device._id;
+                });
+               // $scope.newEvent = $.extend({},$scope.event.plain());
+
+                removeUnacceptedKeys($scope.newEvent);
+                $scope.checkDependency = function(){
+                    if ((!$scope.newEvent.receiverName && !$scope.newEvent.receiverEmail)
+                    || ($scope.newEvent.receiverName && $scope.newEvent.receiverEmail))
+                        document.getElementById('receiverName').setCustomValidity('');
+                    else document.getElementById('receiverName').setCustomValidity('You need to add a name and an e-mail, or select an user.');
+                };
+                $scope.oneOrAnother = function(){
+                    var message = 'You need to select a receiver, or write the email and name.';
+                    if($scope.newEvent.receiver
+                        || $scope.newEvent.receiverEmail
+                        || $scope.newEvent.receiverName) document.getElementById('receiver').setCustomValidity('');
+                    else document.getElementById('receiver').setCustomValidity(message);
+                };
+                setTimeout($scope.oneOrAnother, 100);
                 $scope.upload = function(newEvent){
-                    var promise = ('_id' in $scope.event)? $scope.event.patch(newEvent) : Restangular.all($scope.event['@type']).post(newEvent);
+                    var promise = ('_id' in $scope.event)? $scope.event.patch(newEvent) : Restangular.all('events/'+$scope.event['@type'].toLowerCase()).post(newEvent);
                     promise.then(function(data){
                         $rootScope.$broadcast('successful@eventEditFullscreenWidget');
                     }, function(data){
-                        alert(data._error.message);
+                        try{
+                            var message = data.data._error.message + ': ';
+                            for(var key in data.data._issues) {
+                                if (data.data._issues.hasOwnProperty(key) && key != 'type') {
+                                    message += data.data._issues[key];
+                                }
+                            }
+                            alert(message);
+                        }
+                        catch(err){alert(data.data._error.message)}
                     });
                 };
             }

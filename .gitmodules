@@ -1,0 +1,3 @@
+[submodule "resources/angular-fill-height-directive"]
+	path = resources/angular-fill-height-directive
+	url = https://github.com/anthonychu/angular-fill-height-directive

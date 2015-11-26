@@ -64,6 +64,7 @@ td{
 
 pre{
     word-break: break-word;
+    max-width: 60em;
 }
 
 .form-group.required .control-label:after {
@@ -73,4 +74,31 @@ pre{
 
 button[ng-click], a[ng-click], small[ng-click]{
     cursor: pointer;
+}
+
+#footer{
+    line-height:2;
+    position: fixed;
+    bottom: 0;
+    margin: 0 1em 0 1em;
+}
+[class*=col-]{
+    padding-left: 0.25vw;
+    padding-right: 0.25vw;
+}
+.row{
+    margin-left: -0.25vw;
+    margin-right: -0.25vw;
+}
+/*Could go in devices/css*/
+#device-page [fill-height] article, device-list-widget [fill-height]>div, place-nav-widget [fill-height]>div{
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+device-list-widget tr td:first-child{
+    white-space: nowrap;
+}
+device-list-widget tr td{
+    padding: 1vh !important;
 }

@@ -14,4 +14,7 @@
         </li>
     </ul>-->
 </div>
-<div ng-include="'app/resources/modal/footer-ok-cancel.html'"></div>
+<div class="modal-footer">
+    <button ng-if="type != 'Label'" type="submit" form="eventForm" class="btn btn-primary">Apply</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>

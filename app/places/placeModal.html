@@ -33,7 +33,8 @@
     </form>
 </div>
 <div class="modal-footer">
-    <button type="submit" form="placeForm" class="btn btn-primary" ng-click="area(true)">Create place with the selected area</button>
-    <button type="submit" form="placeForm" class="btn btn-primary" ng-click="area(false)">Create place without an area</button>
+    <button ng-if="!newPlace._id" type="submit" form="placeForm" class="btn btn-primary" ng-click="area(true)">Create place with the selected area</button>
+    <button ng-if="!newPlace._id" type="submit" form="placeForm" class="btn btn-primary" ng-click="area(false)">Create place without an area</button>
+    <button ng-if="newPlace._id" type="submit" form="placeForm" class="btn btn-primary" ng-click="area(false)">Update place</button>
     <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
 </div>

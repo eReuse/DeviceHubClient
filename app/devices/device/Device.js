@@ -1,7 +1,7 @@
 /**
  * Created by busta on 10/8/2015.
  */
-angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimate'])
+angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimate','fillHeight'])
     .directive('devicePageWidget',['Restangular',function(Restangular){
         var id; //Si queremos que el binding funcione al asignar valores debemos asignar objetos para hacerlo por referencia
         var actualTab = {device: null}; //no se puede hacer {{x()}} en una directiva siendo x = f(){return {} };
@@ -67,14 +67,16 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimat
             link: function($scope, $element, $attrs){
             }
         }
-    }]).directive('deviceIcon',[function(Restangular){
+    }]).directive('deviceIcon',['Restangular', 'config',function(Restangular,config){
         return{
-            template: '<img src="app/devices/device/icons/{{type}}-{{subtype}}.png" onerror="this.src=\'app/devices/device/icons/default.png\'"/>',
+            template: '<img src="{{url}}"/>',
             css: 'app/devices/device/icons/icons.css',
             restrict: 'E',
             scope:{
-                type: '@',
-                subtype: '@'
+                icon: '@'
+            },
+            link: function($scope){
+                $scope.url = config.url + '/' + $scope.icon
             }
         }
     }]).directive('registerButtonWidget',['Restangular','$modal', function(Restangular, $modal){

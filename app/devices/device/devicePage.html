@@ -1,4 +1,4 @@
-<article>
+<article id="device-page">
     <div ng-if="id._id != null">
         <tabset>
             <tab ng-repeat="tab in tabs" select="tab.getContent()">
@@ -6,8 +6,16 @@
                     <i class="{{tab.uiClass}}"></i>&nbsp;{{tab.heading}}
                 </tab-heading>
                 <div ng-switch="tab.heading">
-                    <div ng-switch-when="Show"><device-view-full-widget id="id"></device-view-full-widget></div>
-                    <div ng-switch-when="Events"><events-per-device-view-full-widget id="id"></events-per-device-view-full-widget></div>
+                    <div ng-switch-when="Show">
+                        <div fill-height additional-padding="87" footer-element-id="footer">
+                            <device-view-full-widget id="id"></device-view-full-widget>
+                        </div>
+                    </div>
+                    <div ng-switch-when="Events">
+                        <div fill-height additional-padding="87" footer-element-id="footer">
+                            <events-per-device-view-full-widget id="id"></events-per-device-view-full-widget>
+                        </div>
+                    </div>
                 </div>
             </tab>
         </tabset>
