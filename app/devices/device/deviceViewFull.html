@@ -19,6 +19,7 @@
                 </div>
                 <div ng-switch="device['@type']">
                      <div ng-switch-when="Computer"><computer-view-full-content-widget computer="device"></computer-view-full-content-widget></div>
+                     <div ng-switch-when="HardDrive"><hard-drive-view-full-content-widget hard-drive="device"></hard-drive-view-full-content-widget></div>
                      <div ng-switch-default><component-view-full-content-widget component="device"></component-view-full-content-widget></div>
                 </div>
                 <div ng-if="device.hasOwnProperty('weight') ||device.hasOwnProperty('width')" class="col-xs-12 col-lg-6">

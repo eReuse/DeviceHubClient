@@ -14,10 +14,6 @@
             <tr><td>Bus clock</td><td itemprop="busClock">{{component.busClock}} Ghz</td></tr>
             <tr><td>Address</td><td itemprop="address">{{component.address}}</td></tr>
         </tbody>
-        <tbody ng-if="component['@type'] == 'HardDrive'">
-            <tr><td>Size</td><td itemprop="size">{{component.size}} MB</td></tr>
-            <tr><td>Interface</td><td itemprop="interface">{{component.interface}}</td></tr>
-        </tbody>
         <tbody ng-if="component['@type'] == 'GraphicCard'">
             <tr><td>Memory</td><td itemprop="memory">{{component.memory}} GB</td></tr>
         </tbody>

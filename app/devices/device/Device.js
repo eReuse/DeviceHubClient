@@ -63,20 +63,28 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimat
             restrict: 'E',
             scope:{
                 component: '='
-            },
-            link: function($scope, $element, $attrs){
+            }
+        }
+
+    }]).directive('hardDriveViewFullContentWidget',[function(Restangular){
+        //if needed, this can be splitted into view (which gets the device) and theme (which just outputs the html given a device)
+        return{
+            templateUrl: 'app/devices/device/hardDriveViewFullContentWidget.html',
+            restrict: 'E',
+            scope:{
+                hardDrive: '='
             }
         }
     }]).directive('deviceIcon',['Restangular', 'config',function(Restangular,config){
         return{
-            template: '<img src="{{url}}"/>',
-            css: 'app/devices/device/icons/icons.css',
+            template: '<img src="{{domain}}/{{icon}}"/>',
+            css: 'app/devices/device/icons.css',
             restrict: 'E',
             scope:{
                 icon: '@'
             },
             link: function($scope){
-                $scope.url = config.url + '/' + $scope.icon
+                $scope.domain = config.url;
             }
         }
     }]).directive('registerButtonWidget',['Restangular','$modal', function(Restangular, $modal){

@@ -3,7 +3,11 @@
  */
 function getLabelsInPdf(){
     $firstLabel = $('#labels .labelWidget:first');
-    var pdf = new jsPDF('l','mm',[parseInt($firstLabel.css('width')),parseInt($firstLabel.css('height'))]);
+    //var width = parseInt($firstLabel.css('width'));
+    //var height = parseInt($firstLabel.css('height'));
+    var width = parseInt($('#width').val());
+    var height = parseInt($('#height').val());
+    var pdf = new jsPDF('l','mm',[width,height]);
     var get_label = function(i){
         var $labels = $('#labels .labelWidget');
         if(i < $labels.length){

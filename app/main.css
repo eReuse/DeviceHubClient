@@ -102,3 +102,7 @@ device-list-widget tr td:first-child{
 device-list-widget tr td{
     padding: 1vh !important;
 }
+.main-row{
+    margin-left: -15px;
+    margin-right: -15px;
+}

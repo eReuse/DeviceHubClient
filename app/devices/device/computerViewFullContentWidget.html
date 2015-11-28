@@ -7,7 +7,7 @@
         </tbody>
     </table>
 </div>
-<div class="col-xs-12 col-lg-7">
+<!--<div class="col-xs-12 col-lg-7">
     <table class="table table-striped">
         <thead><tr><th>Components</th></tr></thead>
         <tbody>
@@ -16,11 +16,16 @@
             </tr>
         </tbody>
     </table>
-</div>
+</div>-->
 <div class="col-xs-12">
-    <h3>Detail of components</h3>
-    <div ng-repeat="device in computer.components">
-        <h4>{{device['@type']}}</h4>
-        <div ng-include="'app/devices/device/deviceViewFull.html'"></div>
-    </div>
+    <h3>Components</h3>
+    <accordion class="row">
+        <accordion-group ng-repeat="device in computer.components">
+            <accordion-heading>
+                {{device['@type']}}: {{device._id}}, <em>{{device.manufacturer}} {{device.model}}</em>
+            </accordion-heading>
+            <h4>{{device['@type']}}</h4>
+            <div ng-include="'app/devices/device/deviceViewFull.html'"></div>
+        </accordion-group>
+    </accordion>
 </div>

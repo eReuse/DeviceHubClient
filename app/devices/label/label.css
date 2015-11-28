@@ -5,3 +5,23 @@
 .labelWidget img{
     width: 100%;
 }
+.labelWidget>div{
+    margin-top: 1%;
+}
+.labelWidget>div>*{
+    display: inline-block;
+}
+.labelWidget qrcode{
+    margin-left: 1%;
+    margin-right: 1%;
+}
+.labelWidget table{
+    width: 64%;
+    font-size: 18px;
+}
+.labelWidget table tr>td:last-child{
+    text-align: right;
+}
+.labelWidget table tr:last-child>td:last-child{
+    font-size: 16px;
+}
