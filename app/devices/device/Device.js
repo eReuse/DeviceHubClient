@@ -148,7 +148,7 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimat
                         Restangular.all('snapshot').post(content).then(function (response) {
                             $scope.$evalAsync(function(s){
                                 if(i == files.length-1){
-                                    $rootScope.$broadcast('refresh@deviceListWidget');
+                                    $rootScope.$broadcast('refresh@deviceListWidget', true);
                                     s.active = '';
                                 }
                                 var result = {fileName: file.name, answer:response};
@@ -159,7 +159,7 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimat
                         }, function (answer) {
                             $scope.$evalAsync(function(s){
                                 if(i == files.length-1){
-                                    $rootScope.$broadcast('refresh@deviceListWidget');
+                                    $rootScope.$broadcast('refresh@deviceListWidget', true);
                                     s.active = '';
                                 }
                                 var result = {fileName: file.name,

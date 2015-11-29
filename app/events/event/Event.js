@@ -54,8 +54,8 @@ angular.module('Event', ['Config','ui.bootstrap','door3.css'])
          * - If we are creating the event, event just needs '@type'.
          * - If we are editing the event, it has to be the Restangularized version with _id.
          */
-        var acceptedKeys = ['message', 'incidence', 'geo', 'receiver', 'receiverEmail', 'receiverName', 'acceptedConditions'
-        , 'type', '@type', 'devices'];
+        var acceptedKeys = ['message', 'incidence', 'geo', 'receiver', 'unregisteredReceiver', 'acceptedConditions'
+        , 'type', '@type', 'devices', 'transferProperty', 'receiverIsOrganization'];
         var removeUnacceptedKeys = function(event){
             Object.keys(event).forEach(function(key, index, array){
                 if(acceptedKeys.indexOf(key) <= -1) delete event[key];
@@ -73,9 +73,13 @@ angular.module('Event', ['Config','ui.bootstrap','door3.css'])
                     $scope.newEvent.devices[index] = device._id;
                 });
                // $scope.newEvent = $.extend({},$scope.event.plain());
-
                 removeUnacceptedKeys($scope.newEvent);
-                $scope.checkDependency = function(){
+                $scope.newEvent.transferProperty = true;
+                $scope.unregisteredReceiver = {};
+
+
+
+                /*$scope.checkDependency = function(){
                     if ((!$scope.newEvent.receiverName && !$scope.newEvent.receiverEmail)
                     || ($scope.newEvent.receiverName && $scope.newEvent.receiverEmail))
                         document.getElementById('receiverName').setCustomValidity('');
@@ -87,6 +91,11 @@ angular.module('Event', ['Config','ui.bootstrap','door3.css'])
                         || $scope.newEvent.receiverEmail
                         || $scope.newEvent.receiverName) document.getElementById('receiver').setCustomValidity('');
                     else document.getElementById('receiver').setCustomValidity(message);
+                };*/
+                $scope.receiverIsOrganization = function () {
+                    if($scope.newEvent.receiverIsOrganization){
+                        console.log($scope.newEvent)
+                    }
                 };
                 setTimeout($scope.oneOrAnother, 100);
                 $scope.upload = function(newEvent){

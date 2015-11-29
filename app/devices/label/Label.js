@@ -29,8 +29,8 @@ angular.module('Label', ['monospaced.qrcode','ui.bootstrap','ngAnimate', 'Config
             css: 'app/devices/label/label.css',
             link: function ($scope, $element, $attrs) {
                 $scope.set = {
-                    width: 86,
-                    height: 56
+                    width: 97,
+                    height: 59
                 };
                 $scope.logo = 'app/resources/ereuse.png';
                 setImageGetter($scope);
@@ -49,7 +49,7 @@ angular.module('Label', ['monospaced.qrcode','ui.bootstrap','ngAnimate', 'Config
                 logo: '@'
             },
             link: function ($scope, $element, $attrs) {
-                $scope.code = config.url + '/' + $scope.device._links.self.href;
+                $scope.code =  $scope.device._links.self.href;
             }
         }
     }]);

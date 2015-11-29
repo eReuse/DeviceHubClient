@@ -1,4 +1,7 @@
 {
   "name": "application-name",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "dependencies": {
+    "angular-fill-height-directive": "git+https://github.com/anthonychu/angular-fill-height-directive.git"
+  }
 }

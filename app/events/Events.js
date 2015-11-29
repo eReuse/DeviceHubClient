@@ -18,6 +18,7 @@ angular.module('Events', ['Config', 'ui.router', 'ui.bootstrap', 'Event', 'angul
         return {
             templateUrl: 'app/events/eventsPerDeviceViewFull.html',
             restrict: 'E',
+            css: 'app/events/events.css',
             scope: {
                 id: '='
             },
@@ -26,8 +27,8 @@ angular.module('Events', ['Config', 'ui.router', 'ui.bootstrap', 'Event', 'angul
                     return $scope.id._id;
                 }, function (newValue, oldValue) {
                     var data = {
-                        where: JSON.stringify({'$or': [{device: newValue}, {components: {'$in': [newValue]}}]}),
-                        embedded: JSON.stringify({events: 1}) //todo , device: 1, components: 1
+                        where: JSON.stringify({'$or': [{devices: {'$in': [newValue]}}, {device: newValue}, {components: {'$in': [newValue]}}]}),
+                        embedded: JSON.stringify({events: 1})
                     };
                     Restangular.all('events').getList(data).then(function (events) {
                         $scope.events = self.subsanizeEvents(events);

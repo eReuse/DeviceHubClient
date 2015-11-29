@@ -1,9 +1,12 @@
+<article>
 <timeline>
     <timeline-event ng-repeat="event in events">
         <timeline-badge ng-switch="event['@type']" class="info">
             <i ng-switch-when="Snapshot" class="glyphicon glyphicon-camera"></i>
             <i ng-switch-when="Add" class="glyphicon glyphicon-plus"></i>
             <i ng-switch-when="Remove" class="glyphicon glyphicon-minus"></i>
+            <i ng-switch-when="Allocate" class="glyphicon glyphicon-hand-right"></i>
+            <i ng-switch-when="Receive" class="glyphicon glyphicon-gift"></i>
             <i ng-switch-default class="glyphicon glyphicon-tag"></i>
         </timeline-badge>
         <timeline-panel class="info">
@@ -11,9 +14,7 @@
         </timeline-panel>
     </timeline-event>
 </timeline>
-
-
-
+</article>
 
 
 

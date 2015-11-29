@@ -5,6 +5,9 @@
         template-url="bower_components/angular-advanced-searchbox/angular-advanced-searchbox.html">
 </nit-advanced-searchbox>
     <div ng-show="selectedDevices.length > 0" style="text-align: center" >
+        <span uib-tooltip-template="'app/devices/list/selectedDevices.html'" tooltip-placement="bottom">
+            {{selectedDevices.length}} devices <i ng-click="unselectDevices()" class="glyphicon glyphicon-remove-circle"></i>
+        </span>
         <div class="btn-group"dropdown is-open="status.isopen1">
             <button type="button" class="btn btn-primary" ng-click="openModal('Label')">
                 Label
@@ -41,8 +44,7 @@
                         <input type="checkbox" checklist-model="selectedDevices" checklist-value="device">
                     </td>
                     <td>
-                        <span ng-if="device.hasOwnProperty('hid')">{{device.hid}}</span>
-                        <span ng-if="!device.hasOwnProperty('hid')">{{device._id}}</span>
+                        {{device._id}}<span ng-if="device.hasOwnProperty('hid')">: {{device.hid}}</span>
                     </td>
                     <td>{{device.model}}</td>
                     <td><device-icon icon="{{device['icon']}}"></device-icon></td>

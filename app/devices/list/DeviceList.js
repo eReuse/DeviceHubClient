@@ -9,13 +9,13 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
             { key: "@type", name: "Type", placeholder: "Computer, HardDrive, Monitor..." },
             { key: 'type', name: "Subtype", placeholder: "Desktop, TFT..."},
             { key: 'serialNumber', name:'Serial Number', placeholder: "S/N..."},
-            { key: 'totalMemory', name: 'Total of RAM', placeholder: "In Gigabytes..."},
+           // { key: 'totalMemory', name: 'Total of RAM', placeholder: "In Gigabytes..."},
             //{ key: 'event', name: 'Type of event', placeholder: "Devices with this event..."}, todo
-            { key: 'byUser', name: 'Author', placeholder: "email or name of the author..."}, //todo
-            { key: '_created', name: 'Registered in', placeholder: "YYYY-MM-DD" },
-            { key: '_updated', name: 'Last updated in', placeholder: "YYYY-MM-DD"},
-            { key: '_created|>', name: 'Registered in before', placeholder: "YYYY-MM-DD"},  //todo
-            { key: '_created|<', name: 'Registered in after', placeholder: "YYYY-MM-DD"} //todo
+           // { key: 'byUser', name: 'Author', placeholder: "email or name of the author..."}, //todo
+           // { key: '_created', name: 'Registered in', placeholder: "YYYY-MM-DD" },
+           // { key: '_updated', name: 'Last updated in', placeholder: "YYYY-MM-DD"},
+           // { key: '_created|>', name: 'Registered in before', placeholder: "YYYY-MM-DD"},  //todo
+           // { key: '_created|<', name: 'Registered in after', placeholder: "YYYY-MM-DD"} //todo
         ]
     })
 /**
@@ -55,8 +55,9 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
                        if(newValue != undefined) getDevices({where: newValue},$scope);
                    });
 
-                   $scope.$on('refresh@deviceListWidget', function(){
+                   $scope.$on('refresh@deviceListWidget', function(disableSelection){
                        getDevices($scope.searchParams, $scope);
+                       if(disableSelection) $scope.unselectDevices()
                    });
 
                    $scope.$on('selectedPlace@placeNavWidget', function(event, place_id){
@@ -77,6 +78,10 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
                        $('device-list-widget input:not(checked)').parents('tr').removeClass('info');
                    });
 
+                   $scope.unselectDevices = function(){
+                       $scope.selectedDevices.length = 0;
+                   };
+
                    $scope.openModal = function(type){
                        var modalInstance = $modal.open({
                            animation: true,
@@ -95,6 +100,7 @@ angular.module('DeviceList', ['Config', 'angular-advanced-searchbox','ui.router'
                            $scope.selected = selectedItem;
                        }, function () {
                           // $log.info('Modal dismissed at: ' + new Date());
+                           $scope.unselectDevices(); // todo fix so it doesn't need to unselect
                        });
                    };
                }
