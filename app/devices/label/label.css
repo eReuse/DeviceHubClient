@@ -24,6 +24,8 @@
 .labelWidget table{
     width: 64%;
     font-size: 18px;
+    font-weight: bold;
+    font-family: "Arial Black", sans-serif;
 }
 .labelWidget table tr>td:last-child{
     text-align: right;

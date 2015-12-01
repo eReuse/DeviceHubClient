@@ -49,7 +49,7 @@ angular.module('Label', ['monospaced.qrcode','ui.bootstrap','ngAnimate', 'Config
                 logo: '@'
             },
             link: function ($scope, $element, $attrs) {
-                $scope.code =  $scope.device._links.self.href;
+                $scope.code = $scope.device._links.self.href;
             }
         }
     }]);
