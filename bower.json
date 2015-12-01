@@ -27,7 +27,7 @@
     "angular-bootstrap-nav-tree": "*",
     "angular-qrcode": "~6.1.3",
     "angular-google-maps": "~2.2.1",
-    "angular-sanitize": "~1.4.7",
+    "angular-sanitize": "~1.4.8",
     "ngGeolocation": "~0.0.8",
     "jquery": "~2.1.4",
     "angular-bootstrap": "~0.14.3"

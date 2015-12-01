@@ -30,5 +30,8 @@
     width: 100%;
 }
 .labelWidget table tr:last-child>td:last-child{
-    font-size: 20px;
+    font-size: 13px;
+}
+.labelWidget table tr:not(:first-child){
+    border-top: 1px solid;
 }

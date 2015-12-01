@@ -1,7 +1,7 @@
 <article class="labelWidget" ng-style="{width: width+'mm', height:height+'mm'}">
-    <div><img src="{{logo}}"/></div>
+    <div><img ng-src="{{logo}}"/></div>
     <div>
-        <qrcode data="{{code}}" error-correction-level="M" size="100"></qrcode>
+        <qrcode data="{{code}}" error-correction-level="Q" size="100"></qrcode>
         <table>
             <tr><td>ID</td><td>{{device._id}}</td></tr>
             <tr><td>Label</td><td>{{device.labelId}}</td></tr>

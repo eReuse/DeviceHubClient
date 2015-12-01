@@ -1,7 +1,7 @@
 /**
  * Created by busta on 10/8/2015.
  */
-angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimate','fillHeight'])
+angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimate','fillHeight', 'ngSanitize'])
     .directive('devicePageWidget',['Restangular',function(Restangular){
         var id; //Si queremos que el binding funcione al asignar valores debemos asignar objetos para hacerlo por referencia
         var actualTab = {device: null}; //no se puede hacer {{x()}} en una directiva siendo x = f(){return {} };
@@ -77,7 +77,7 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimat
         }
     }]).directive('deviceIcon',['Restangular', 'config',function(Restangular,config){
         return{
-            template: '<img src="{{domain}}/{{icon}}"/>',
+            template: '<img ng-if="icon.length > 0" ng-src="{{domain}}/{{icon}}"/>',
             css: 'app/devices/device/icons.css',
             restrict: 'E',
             scope:{
