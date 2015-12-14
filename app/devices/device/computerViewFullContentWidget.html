@@ -19,13 +19,13 @@
 </div>-->
 <div class="col-xs-12">
     <h3>Components</h3>
-    <accordion class="row">
-        <accordion-group ng-repeat="device in computer.components">
-            <accordion-heading>
+    <div uib-accordion class="row">
+        <div uib-accordion-group ng-repeat="device in computer.components">
+            <header uib-accordion-heading>
                 {{device['@type']}}: {{device._id}}, <em>{{device.manufacturer}} {{device.model}}</em>
-            </accordion-heading>
+            </header>
             <h4>{{device['@type']}}</h4>
             <div ng-include="'app/devices/device/deviceViewFull.html'"></div>
-        </accordion-group>
-    </accordion>
+        </div>
+    </div>
 </div>

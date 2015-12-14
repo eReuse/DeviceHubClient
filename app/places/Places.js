@@ -4,7 +4,7 @@
 
 
 angular.module('Places',['ui.bootstrap','Device','ngAnimate','uiGmapgoogle-maps', 'ngGeolocation'] )
-    .directive('placeNavWidget', ['Restangular','$rootScope','$modal', function (Restangular, $rootScope,$modal) {
+    .directive('placeNavWidget', ['Restangular','$rootScope','$uibModal', function (Restangular, $rootScope, $uibModal) {
         return {
             templateUrl: 'app/places/placeNavWidget.html',
             restrict: 'E',
@@ -42,7 +42,7 @@ angular.module('Places',['ui.bootstrap','Device','ngAnimate','uiGmapgoogle-maps'
                     return place_id == $scope.selected_id;
                 };
                 $scope.openModal = function(place){
-                    var modalInstance = $modal.open({
+                    var modalInstance = $uibModal.open({
                         animation: true,
                         templateUrl: 'app/places/placeModal.html',
                         controller: 'placeModalCtrl',
@@ -63,7 +63,7 @@ angular.module('Places',['ui.bootstrap','Device','ngAnimate','uiGmapgoogle-maps'
             }
         }
     }])
-    .controller('placeModalCtrl', ['$scope','$modalInstance','Restangular','place','$rootScope','$geolocation', function($scope,$modalInstance,Restangular,place,$rootScope,$geolocation) {
+    .controller('placeModalCtrl', ['$scope','$uibModalInstance','Restangular','place','$rootScope','$geolocation', function($scope,$uibModalInstance,Restangular,place,$rootScope,$geolocation) {
         var configMap = function(center, path, st){
 
             $scope.map = {
@@ -173,7 +173,7 @@ angular.module('Places',['ui.bootstrap','Device','ngAnimate','uiGmapgoogle-maps'
             })
         };
         $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         };
         $scope.area = function(value){
             useArea = value;

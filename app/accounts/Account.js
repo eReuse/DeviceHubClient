@@ -2,7 +2,7 @@
  * Created by busta on 29/10/2015.
  */
 angular.module('Account', ['Authentication','ui.bootstrap'])
-    .directive('userButtonWidget',['Session','$modal', function(Session, $modal){
+    .directive('userButtonWidget',['Session','$uibModal', function(Session, $uibModal){
         return {
             templateUrl: 'app/accounts/userButtonWidget.html',
             restrict: 'E',
@@ -10,7 +10,7 @@ angular.module('Account', ['Authentication','ui.bootstrap'])
             link: function ($scope, $element, $attrs) {
                 $scope.account = Session.getAccount();
                 $scope.openModal = function (type) {
-                    var modalInstance = $modal.open({
+                    var modalInstance = $uibModal.open({
                         animation: true,
                         templateUrl: 'app/accounts/userModal.html',
                         controller: 'userModalCtrl',
@@ -28,7 +28,7 @@ angular.module('Account', ['Authentication','ui.bootstrap'])
             }
         }
     }])
-    .directive('accountRole',['Session','$modal', function(Session, $modal){
+    .directive('accountRole',['Session','$uibModal', function(Session, $uibModal){
         return {
             templateUrl: 'app/accounts/accountRole.html',
             restrict: 'E',
@@ -37,11 +37,11 @@ angular.module('Account', ['Authentication','ui.bootstrap'])
             }
         }
     }])
-    .controller('userModalCtrl', ['$scope','$modalInstance','Restangular','Session', function($scope,$modalInstance,Restangular,Session){
+    .controller('userModalCtrl', ['$scope','$uibModalInstance','Restangular','Session', function($scope,$uibModalInstance,Restangular,Session){
         //$scope.account = Session.account;
         $scope.account = $.extend(true, {}, Session.getAccount());
         $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         };
         $scope.ok = function() {
             $("#accountForm").submit();

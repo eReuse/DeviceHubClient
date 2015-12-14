@@ -38,7 +38,12 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimat
             link: function($scope, $element, $attrs){
                 $scope.teaser = $scope.teaser || false;
                 $scope.$watch(function(){return $scope.id._id;},function(newValue, oldValue){
-                    $scope.device = Restangular.one('devices',$scope.id._id).get({embedded:JSON.stringify({components: 1})}).$object;
+                    Restangular.one('devices',$scope.id._id).get({embedded:JSON.stringify({components: 0})}).then(function(device){
+                       $scope.device = device;
+                        for(var i = 0; i < $scope.device.components.length; i++)
+                            $scope.device.components[i] = Restangular.one('devices', $scope.device.components[i]).get().$object;
+                    });
+
                 });
             }
         }
@@ -87,14 +92,14 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimat
                 $scope.domain = config.url;
             }
         }
-    }]).directive('registerButtonWidget',['Restangular','$modal', function(Restangular, $modal){
+    }]).directive('registerButtonWidget',['Restangular','$uibModal', function(Restangular, $uibModal){
         return{
             templateUrl: 'app/devices/device/registerButtonWidget.html',
             restrict: 'E',
             scope:{},
             link: function($scope, $element, $attrs){
                 $scope.openModal = function(type){
-                    var modalInstance = $modal.open({
+                    var modalInstance = $uibModal.open({
                         animation: true,
                         templateUrl: 'app/devices/device/registerModal.html',
                         controller: 'registerModalCtrl',
@@ -115,7 +120,7 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimat
             }
         }
     }])
-    .controller('registerModalCtrl', ['$scope','$modalInstance','Restangular','type','$rootScope', function($scope,$modalInstance,Restangular,type,$rootScope){
+    .controller('registerModalCtrl', ['$scope','$uibModalInstance','Restangular','type','$rootScope', function($scope,$uibModalInstance,Restangular,type,$rootScope){
         var self = this;
         $scope.type = type;
         $scope.title = type;
@@ -135,7 +140,7 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimat
             }
         };
         $scope.done = function () {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         };
 
         this.iterativeUpload = function(files,i){
@@ -151,19 +156,19 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimat
                                     $rootScope.$broadcast('refresh@deviceListWidget', true);
                                     s.active = '';
                                 }
-                                var result = {fileName: file.name, answer:response};
+                                var result = {fileName: file.name, answer:'Success', _id: response._id};
                                 s.results.push(result);
                                 ++s.uploaded;
                             });
                             self.iterativeUpload(files, i + 1);
-                        }, function (answer) {
+                        }, function (response) {
                             $scope.$evalAsync(function(s){
                                 if(i == files.length-1){
                                     $rootScope.$broadcast('refresh@deviceListWidget', true);
                                     s.active = '';
                                 }
                                 var result = {fileName: file.name,
-                                    answer:answer.data,
+                                    answer:humanize_response(response.data),
                                     css:'warning'};
                                 s.results.push(result);
                                 ++s.uploaded;
@@ -175,4 +180,15 @@ angular.module('Device', ['Config','ui.router','ui.bootstrap','Events','ngAnimat
                 reader.readAsText(files[i]);
             }
         };
+
+        var humanize_response = function(response){
+            var text = '';
+            if('_issues' in response){
+                if('hid' in response._issues &&  response._issues.hid.indexOf('NotUnique') != -1
+                    || '_id' in response._issues && response._issues._id.indexOf('NotUnique') != -1
+                    || 'pid' in response._issues && response._issues.pid.indexOf('NotUnique') != -1)
+                    text += 'By now, you cannot register an existing computer. We are working to get that soon.';
+            }
+            return text;
+        }
     }]);

@@ -15,7 +15,6 @@
     ".idea"
   ],
   "dependencies": {
-    "angular-advanced-searchbox": "~1.1.1",
     "ui-router": "~0.2.15",
     "restangular": "~1.5.1",
     "lodash": "~3.10.1",
@@ -30,9 +29,14 @@
     "angular-sanitize": "~1.4.8",
     "ngGeolocation": "~0.0.8",
     "jquery": "~2.1.4",
-    "angular-bootstrap": "~0.14.3"
+    "angular-bootstrap": "~0.14.3",
+    "angular-advanced-searchbox": "~1.1.1"
   },
   "resolutions": {
-    "jquery": ">= 1.9.1"
+    "jquery": ">= 1.9.1",
+    "angular": ">= 1.3.0",
+    "angular-sanitize": "~1.4.8",
+    "webcomponentsjs": "0.7.19",
+    "angular-bootstrap": "~0.14.3"
   }
 }

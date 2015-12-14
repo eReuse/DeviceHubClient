@@ -10,7 +10,8 @@ angular.module('Devices',['ui.bootstrap', 'DeviceList','Device','Account', 'Plac
         }).state('devices.show',{
             url:'?max_results',
             templateUrl:'app/devices/pages/list.html',
-            controller: 'DevicesCtrl as DsCl'
+            controller: 'DevicesCtrl as DsCl',
+            css: 'app/devices/list/list.css'
         })
     })
     .controller('DevicesCtrl',function ($scope, $state){

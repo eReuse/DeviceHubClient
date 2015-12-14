@@ -1,7 +1,7 @@
 <article id="device-page">
     <div ng-if="id._id != null">
-        <tabset>
-            <tab ng-repeat="tab in tabs" select="tab.getContent()">
+        <uib-tabset>
+            <uib-tab ng-repeat="tab in tabs" select="tab.getContent()">
                 <tab-heading>
                     <i class="{{tab.uiClass}}"></i>&nbsp;{{tab.heading}}
                 </tab-heading>
@@ -17,8 +17,8 @@
                         </div>
                     </div>
                 </div>
-            </tab>
-        </tabset>
+            </uib-tab>
+        </uib-tabset>
     </div>
     <div ng-if="id._id == null">Select a device.</div>
 </article>

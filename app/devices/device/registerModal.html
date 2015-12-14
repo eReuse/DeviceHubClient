@@ -11,10 +11,10 @@
         </div>
         <div ng-show="results.length > 0">
             <table class="table stripped">
-                <thead><tr><th>File name</th><th>Identifier</th><th>Result</th></tr></thead>
+                <thead><tr><th>File name</th><th>Snapshot Id</th><th>Result</th></tr></thead>
                 <tbody>
                     <tr ng-repeat="result in results" ng-class="result.css">
-                        <td>{{result.fileName}}</td><td>{{result.answer._id}}</td><td><pre>{{result.answer}}</pre></td>
+                        <td>{{result.fileName}}</td><td>{{result._id}}</td><td>{{result.answer}}</td>
                     </tr>
                 </tbody>
             </table>
