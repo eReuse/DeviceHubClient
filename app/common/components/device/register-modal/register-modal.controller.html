@@ -1,0 +1,29 @@
+<div ng-include="'common/elements/modal/header.html'"></div>
+<div class="modal-body">
+    <div class="form-inline">
+        <div class="form-group">
+            <label for="select-files">Select files to upload</label>
+            <input  type="file" class="file" multiple accept=".json" id="select-files"/>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit" id="upload-files" ng-click="upload()">Upload files</button>
+        </div>
+    </div>
+    <div ng-if="files !== false">
+        <uib-progressbar class="progress-striped" ng-class="active" type="success" value="uploaded" max="files"></uib-progressbar>
+    </div>
+    <div ng-show="results.error.length > 0 || results.success.length > 0">
+        <table class="table stripped">
+            <thead><tr><th>File name</th><th>Snapshot Id</th><th>Result</th></tr></thead>
+            <tbody>
+                <tr ng-repeat="result in results.error" class="warning">
+                    <td>{{result.fileName}}</td><td>{{result._id}}</td><td>{{result.answer}}</td>
+                </tr>
+                <tr ng-repeat="result in results.success" class="success">
+                    <td>{{result.fileName}}</td><td>{{result._id}}</td><td>{{result.answer}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div ng-include="'common/elements/modal/done.html'"></div>

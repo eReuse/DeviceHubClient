@@ -1,0 +1,10 @@
+<user-button style="float: right"></user-button>
+<register-button style="float: right"></register-button>
+<uib-tabset>
+    <uib-tab
+            ng-repeat="tab in tabs"
+            heading="{{tab.heading}}"
+            select="go(tab.route)"
+            active="t.active">
+    </uib-tab>
+</uib-tabset>

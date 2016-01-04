@@ -1,0 +1,9 @@
+/*Directives for the fill-height to work*/
+.device [fill-height]>*>article,
+device-list [fill-height]>div,
+place-nav [fill-height]>div,
+[fill-height] events-per-device>article{
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

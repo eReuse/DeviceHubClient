@@ -1,0 +1,58 @@
+<nit-advanced-searchbox
+        ng-model="searchParams"
+        parameters="availableSearchParams"
+        placeholder="Search..."
+        template-url="'common/components/device-list/search.html'"
+        parameters-display-limit="200">
+</nit-advanced-searchbox>
+    <div ng-show="selectedDevices.length > 0" style="text-align: center" id="selectedMenu">
+        <span uib-tooltip-template="'common/components/device-list/selected-devices.uib-tooltip-template.html'" tooltip-placement="bottom">
+            {{selectedDevices.length}} devices <i ng-click="unselectDevices()" class="glyphicon glyphicon-remove-circle"></i>
+        </span>
+        <div class="btn-group" uib-dropdown>
+            <button type="button" class="btn btn-primary" ng-click="openModal('Label')">
+                Label
+            </button>
+            <button id="single-button1" type="button" class="btn btn-primary" uib-dropdown-toggle>
+                New event<span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="single-button1">
+                <li role="menuitem"><a ng-click="openModal('Receive')">Receive</a></li>
+                <!--<li role="menuitem"><a ng-click="openModal('Locate')">Locate</a></li>-->
+            </ul>
+        </div>
+        <!--<div class="btn-group" dropdown is-open="status.isopen">
+            <button type="button" class="btn btn-primary" dropdown-toggle>
+                More actions<span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+                <li class="divider"></li>
+                <li role="menuitem"><a href="#">Delete</a></li>
+            </ul>
+        </div>-->
+    </div>
+<div fill-height additional-padding="{{87+20}}">
+    <div>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th></th><th>Id</th><th>Label</th><th>Model</th><th>Registered in</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="device in devices" ng-click="deviceSelected(device)" ng-class="{success: isSelected(device._id)}">
+                    <td>
+                        <input type="checkbox" checklist-model="selectedDevices" checklist-value="device" ng-click="$event.stopPropagation();">
+                    </td>
+                    <td>{{device._id}}</td>
+                    <td>{{device.label}}</td>
+                    <td>{{device.model}}</td>
+                    <td>{{device._created}}</td>
+                    <td><device-icon icon="{{device['icon']}}"></device-icon></td>
+
+                </tr>
+            </tbody>
+            <tr></tr>
+        </table>
+        </div>
+</div>

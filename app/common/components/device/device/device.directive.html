@@ -1,0 +1,24 @@
+<article class="device">
+    <div ng-if="id._id != null">
+        <uib-tabset>
+            <uib-tab ng-repeat="tab in tabs" select="tab.getContent()">
+                <tab-heading>
+                    <i class="{{tab.uiClass}}"></i>&nbsp;{{tab.heading}}
+                </tab-heading>
+                <div ng-switch="tab.heading">
+                    <div ng-switch-when="Show">
+                        <div fill-height additional-padding="87">
+                            <device-view device="device"></device-view>
+                        </div>
+                    </div>
+                    <div ng-switch-when="Events">
+                        <div fill-height additional-padding="87">
+                            <events-per-device device="device"></events-per-device>
+                        </div>
+                    </div>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+    <div ng-if="id._id == null">Select a device.</div>
+</article>

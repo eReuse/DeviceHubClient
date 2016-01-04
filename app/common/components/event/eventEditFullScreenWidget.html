@@ -1,0 +1,4 @@
+<form name="eventForm" id="eventForm" class="form-horizontal"
+      ng-submit="upload(newEvent)" show-validation
+      ng-include="'common/components/event/forms/'+ event['@type'].toLowerCase() +'.html'">
+</form>
