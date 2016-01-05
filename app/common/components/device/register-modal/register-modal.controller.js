@@ -24,6 +24,14 @@ function registerModalCtrl($scope,$uibModalInstance,Restangular,type,$rootScope)
     $scope.done = function () {
         $uibModalInstance.dismiss('cancel');
     };
+    $scope.$on('modal.closing', function(event, reason, closed){
+        var problem = false;
+        for(var i = 0; i < $scope.results.error.length && !problem; i++)
+            if(!$scope.results.error[i].solved)
+                problem = true;
+        if(problem && !confirm("There are still computers to be reviewed. Are you sure you want to leave?"))
+            event.preventDefault();
+    })
 }
 
 function iterativeUpload(Restangular, $rootScope, $scope,  files, i){
@@ -34,10 +42,10 @@ function iterativeUpload(Restangular, $rootScope, $scope,  files, i){
                 //file.name
                 var content = e.target.result;
                 Restangular.all('snapshot').post(content).then(function (response) {
-                    processAnswer($rootScope, files.length, file.name, response, $scope, false, i);
+                    processAnswer($rootScope, files.length, file.name, response, $scope, false, i, content);
                     iterativeUpload(Restangular,$rootScope, $scope, files, i + 1);
                 }, function (response) {
-                    processAnswer($rootScope, files.length, file.name, response, $scope, true, i);
+                    processAnswer($rootScope, files.length, file.name, response, $scope, true, i, content);
                     iterativeUpload(Restangular,$rootScope, $scope,  files, i + 1);
                 });
             }
@@ -46,7 +54,7 @@ function iterativeUpload(Restangular, $rootScope, $scope,  files, i){
     }
 }
 
-function processAnswer($rootScope, fileLength, fileName, response, $scope, error, i){
+function processAnswer($rootScope, fileLength, fileName, response, $scope, error, i, fileContent){
     $scope.$evalAsync(function(s){
         if(i == fileLength-1){
             $rootScope.$broadcast('refresh@deviceListWidget', true);
@@ -56,24 +64,13 @@ function processAnswer($rootScope, fileLength, fileName, response, $scope, error
             fileName: fileName,
             _id: response._id
         };
-        if(error) {
-            s.results.error.push(result);
-            result.answer = humanizeResponse(response.data);
-        }
+        if(error)
+            s.results.error.push({fileName: fileName, fileContent: JSON.parse(fileContent), error: response.data, solved: false});
         else s.results.success.push(result);
         ++s.uploaded;
     });
 }
 
-function humanizeResponse(response){
-    var text = '';
-    if('_issues' in response){
-        if('hid' in response._issues &&  response._issues.hid.indexOf('NotUnique') != -1
-            || '_id' in response._issues && response._issues._id.indexOf('NotUnique') != -1
-            || 'pid' in response._issues && response._issues.pid.indexOf('NotUnique') != -1)
-            text += 'By now, you cannot register an existing computer. We are working to get that soon.';
-    }
-    return text;
-}
+
 
 module.exports = registerModalCtrl;

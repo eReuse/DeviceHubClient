@@ -1,7 +1,7 @@
 'use strict';
 
 function registerButton($uibModal){
-    return{
+    return {
         templateUrl: window.COMPONENTS + '/device/register-button/register-button.directive.html',
         restrict: 'E',
         scope:{},

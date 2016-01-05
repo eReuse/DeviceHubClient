@@ -69,7 +69,7 @@ module.exports = angular.module('common.components.device',
     .directive('deviceIcon', require('./device-icon/device-icon.directive.js'))
     /**
      * @ngdoc directive
-     * @name registerButton
+     * @name registerErrorProcessor
      * @description
      * Shows a button that lets the user to register a device. This directive calls registerModalCtrl.
      */
@@ -81,4 +81,11 @@ module.exports = angular.module('common.components.device',
      * Lets users upload snapshots in json (from DeviceInventory) to the server, helping with the process and
      * showing the results.
      */
-    .controller('registerModalCtrl', require('./register-modal/register-modal.controller.js'));
+    .controller('registerModalCtrl', require('./register-modal/register-modal.controller.js'))
+    /**
+     * @ngdoc directive
+     * @name registerErrorProcessor
+     * @description
+     * Shows a button that lets the user to register a device. This directive calls registerModalCtrl.
+     */
+    .directive('registerErrorProcessor', require('./register-error-processor/register-error-processor.directive.js'));

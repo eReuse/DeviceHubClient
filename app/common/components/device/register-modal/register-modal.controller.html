@@ -12,18 +12,30 @@
     <div ng-if="files !== false">
         <uib-progressbar class="progress-striped" ng-class="active" type="success" value="uploaded" max="files"></uib-progressbar>
     </div>
-    <div ng-show="results.error.length > 0 || results.success.length > 0">
-        <table class="table stripped">
-            <thead><tr><th>File name</th><th>Snapshot Id</th><th>Result</th></tr></thead>
-            <tbody>
-                <tr ng-repeat="result in results.error" class="warning">
-                    <td>{{result.fileName}}</td><td>{{result._id}}</td><td>{{result.answer}}</td>
-                </tr>
-                <tr ng-repeat="result in results.success" class="success">
-                    <td>{{result.fileName}}</td><td>{{result._id}}</td><td>{{result.answer}}</td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="row">
+        <div ng-if="results.error.length > 0" class="col-xs-12 col-lg-8">
+            <h3>Errors</h3>
+            <ul class="list-group">
+                <li ng-repeat="result in results.error" class="list-group-item">
+                    <h4 class="list-group-item-heading">{{result.fileName}}</h4>
+                    <register-error-processor
+                            file-name="{{result.fileName}}"
+                            file-content="result.fileContent"
+                            error="result.error"
+                            solved="result"> <!-- We keep wanna keep the reference -->
+                    </register-error-processor>
+                </li>
+            </ul>
+        </div>
+        <div ng-if="results.success.length > 0" class="col-xs-12 col-lg-4">
+            <h3>Successfully registered devices</h3>
+            <ul class="list-group">
+                <li ng-repeat="result in results.success" class="list-group-item">
+                    <h4 class="list-group-item-heading">{{result.fileName}}</h4>
+                    Identifier: {{result._id}}
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 <div ng-include="'common/elements/modal/done.html'"></div>
