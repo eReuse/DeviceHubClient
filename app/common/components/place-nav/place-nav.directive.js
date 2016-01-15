@@ -22,9 +22,8 @@ function placeNavDirective (Restangular, $rootScope, $uibModal) {
                     $scope.selected_id = place_id;
                 }
             };
-            $scope.$on('refresh@placeNavWidget', function () {
-                getPlaces();
-            });
+            $scope.$on('refresh@placeNavWidget', getPlaces);
+            $scope.$on('refresh@deviceHub', getPlaces);
 
             //$scope.$watchCollection($scope.places)
 

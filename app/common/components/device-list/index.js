@@ -32,4 +32,10 @@ module.exports = angular.module('common.components.list',
      * @ngdoc directive
      * @name deviceListModalCtrl
      */
-    .controller('deviceListModalCtrl', require('./device-list-modal.controller.js'));
+    .controller('deviceListModalCtrl', require('./device-list-modal.controller.js'))
+    /**
+     * @ngdoc service
+     * @name getDevices
+     * @return Restangular's promise, filled with all the devices
+     */
+    .service('getDevices', require('./get-devices.service.js'));

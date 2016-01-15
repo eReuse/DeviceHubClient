@@ -11,7 +11,7 @@ function authServiceFactory(Restangular, session) {
         );
     };
     authService.isAuthenticated = function () {
-        return session.getAccount() != null;
+        return session.isAccountSet();
     };
 
     /**

@@ -11,5 +11,6 @@ module.exports = angular.module('common.components',
         require('./device-label').name,
         require('./nav').name,
         require('./place-nav').name,
-        require('./show-validation.js').name
+        require('./show-validation.js').name,
+        require('./authentication').name
     ]);

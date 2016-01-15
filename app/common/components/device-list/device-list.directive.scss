@@ -1,0 +1,7 @@
+device-list tr td{
+  padding: 1vh !important;
+
+  :first-child{
+    white-space: nowrap;
+  }
+}

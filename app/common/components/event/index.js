@@ -16,7 +16,6 @@ module.exports = angular.module('common.components.event',
                 id: '='  //Optional. The id of the actual device. Stylish purposes.
             },
             link: function($scope, $element, $attrs){
-                console.log('event view teaser widget');
             }
         }
     }])

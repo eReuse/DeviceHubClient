@@ -173,9 +173,6 @@ gulp.task('images', function() {
     return gulp.src(filePath.assets.images.src)
         .on('error', handleError)
         .pipe(gulp.dest(filePath.assets.images.dest))
-        .pipe(notify({
-            message: 'Images copied'
-        }))
 });
 
 // =======================================================================
@@ -184,9 +181,6 @@ gulp.task('images', function() {
 gulp.task('copyIndex', function() {
     return gulp.src(filePath.copyIndex.src)
         .pipe(gulp.dest(filePath.build.dest))
-        .pipe(notify({
-            message: 'index.html successfully copied'
-        }))
 });
 
 // =======================================================================
@@ -195,9 +189,6 @@ gulp.task('copyIndex', function() {
 gulp.task('copyFavicon', function() {
     return gulp.src(filePath.copyFavicon.src)
         .pipe(gulp.dest(filePath.build.dest))
-        .pipe(notify({
-            message: 'favicon successfully copied'
-        }));
 });
 
 // =======================================================================
@@ -259,6 +250,11 @@ gulp.task('vendorCSS', function(){
         .pipe(gulp.dest(filePath.destination))
 });
 
+gulp.task('notify', function(){
+    return gulp.src(filePath.copyIndex.src)
+        .pipe(notify("Done!"));
+});
+
 
 // =======================================================================
 // Sequential Build Rendering
@@ -270,6 +266,7 @@ gulp.task('build-dev', function(callback) {
         // images and vendor tasks are removed to speed up build time. Use "gulp build" to do a full re-build of the dev app.
         ['templates'],
         ['bundle-dev', 'copyIndex', 'sass'],
+        ['notify'],
         callback
     );
 });
@@ -280,6 +277,7 @@ gulp.task('build', function(callback) {
         ['clean'],
         ['templates'],
         ['bundle-dev', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex'],
+        ['notify'],
         callback
     );
 });
@@ -291,6 +289,7 @@ gulp.task('build-prod', function(callback) {
         ['templates'],
         ['bundle-prod', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex'],
         ['server'],
+        ['notify'],
         callback
     );
 });

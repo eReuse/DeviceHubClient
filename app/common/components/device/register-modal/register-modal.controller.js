@@ -57,7 +57,7 @@ function iterativeUpload(Restangular, $rootScope, $scope,  files, i){
 function processAnswer($rootScope, fileLength, fileName, response, $scope, error, i, fileContent){
     $scope.$evalAsync(function(s){
         if(i == fileLength-1){
-            $rootScope.$broadcast('refresh@deviceListWidget', true);
+            $rootScope.$broadcast('refresh@deviceList');
             s.active = '';
         }
         var result = {
