@@ -1,6 +1,6 @@
 'use strict';
 function getDevices(Restangular, deviceListConfig) {
-    this.getDevices = function(searchParams){
+    this.getDevices = function(searchParams, page){
         var where =  $.extend({}, searchParams);
         Object.keys(where).forEach(function(key,index) {
             try{
@@ -35,7 +35,7 @@ function getDevices(Restangular, deviceListConfig) {
             catch(err){}
         });
 
-        return Restangular.all('devices').getList({where: where, embedded: JSON.stringify({components: 0})});
+        return Restangular.all('devices').getList({where: where, embedded: JSON.stringify({components: 0}), page: page});
     }
 }
 

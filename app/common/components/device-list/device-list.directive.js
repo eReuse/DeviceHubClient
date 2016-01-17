@@ -1,11 +1,14 @@
 'use strict';
 
+var DEFAULT_SEARCH_PARAMS = {
+    '@type': 'Computer'
+};
+var PAGINATION = 30;
+
 /**
  * Gets a new list of devices from the server and updates scope.
  */
 function list(deviceListConfig, $rootScope, $uibModal, getDevices){
-
-
     return {
         templateUrl: window.COMPONENTS + '/device-list/device-list.directive.html',
         restrict: 'AE',
@@ -13,21 +16,18 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices){
             params: '='
         },
         link: function($scope, $element, $attrs){
-            var _getDevices = getDevicesFactory(getDevices, $scope, $rootScope);
-            var refresh = refreshFactory(_getDevices, $scope);
-
-
             $scope.selectedDevices = [];
             $scope.availableSearchParams = deviceListConfig.defaultSearchParams;
-            $scope.searchParams = {
-                '@type': 'Computer'
-            };
+            $scope.searchParams = angular.copy(DEFAULT_SEARCH_PARAMS);
+
+            var _getDevices = $scope.getDevices = getDevicesFactory(getDevices, $scope, $rootScope);
+            var refresh = refreshFactory(_getDevices, $scope);
 
             /*$scope.$watchCollection(function(){return $scope.params;},function(newValue, oldValue){
              getDevices({where: newValue},$scope);    //Whenever the state params change, we get new values (triggers at the beginning too)
              });*/
-            $scope.$watchCollection(function(){return $scope.searchParams;},function(newValue, oldValue){
-                if(newValue != undefined) _getDevices(newValue);
+            $scope.$watchCollection(function(){return $scope.searchParams}, function(newValue, oldValue){
+                if(newValue != undefined) _getDevices(false, false);
             });
 
             $scope.$on('refresh@deviceList', refresh);
@@ -95,19 +95,34 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices){
 
 function refreshFactory(getDevices, $scope){
     return function (){
-        getDevices($scope.searchParams, true);
+        getDevices(true, false);
     }
 }
 
 function getDevicesFactory(getDevices, $scope, $rootScope){
-    return function (searchParams, disableSelection){
-        getDevices.getDevices(searchParams).then(function(devices){
-            $scope.devices = devices;
-        });
-        if(disableSelection){
-            $scope.unselectDevices();
-            $rootScope.$broadcast('deviceDeselected@deviceList');
+    var page = 1;
+    $scope.busy = true; //We prevent from infinitescroll load at the first time
+    $scope.moreData = true;
+    return function (reset, add_more){
+        if(add_more){
+            if(!$scope.moreData || $scope.busy) return;
+            $scope.busy = true; //Needs to be called asap
+            ++page;
         }
+        else{
+            $scope.busy = true;
+            if(reset){
+                $scope.unselectDevices();
+                $rootScope.$broadcast('deviceDeselected@deviceList');
+            }
+            page = 1;
+        }
+        getDevices.getDevices($scope.searchParams, page).then(function(devices){
+            if(add_more) $scope.devices = $scope.devices.concat(devices);
+            else $scope.devices = devices;
+            $scope.busy = false;
+            $scope.moreData = devices._meta.page * devices._meta.max_results < devices._meta.total;
+        });
     }
 }
 

@@ -54,5 +54,8 @@
             </tbody>
             <tr></tr>
         </table>
+        <div class="text-center" ng-show="!busy && moreData">
+            <button class="btn btn-default" ng-click="getDevices(false,true)">Load more</button>
+        </div>
         </div>
 </div>
