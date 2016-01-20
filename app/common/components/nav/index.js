@@ -11,6 +11,7 @@ module.exports = angular.module('common.components.nav',
     [
         require('./../account').name,
         require('./../device').name,
+        require('./../tools').name,
         'ui.router'
     ])
     /**

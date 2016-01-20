@@ -48,6 +48,10 @@ var filePath = {
     copyFavicon: {
         src: './app/common/favicon/*'
     },
+    copyFonts: {
+        src: './fonts/*',
+        dest: './dist/fonts'
+    },
     vendorCSS: {
         src: [
             './resources/bootstrap.min.css',
@@ -142,7 +146,8 @@ gulp.task('bundle-dev', function () {
 
 gulp.task('bundle-prod', function () {
     'use strict';
-    configureBundle(true);
+    bundle.bundler = browserify(bundle.conf);
+    bundle.prod = true;
     return rebundle();
 });
 
@@ -160,10 +165,7 @@ gulp.task('vendorJS', function() {
         .on('error', handleError)
         .pipe(buffer())
         .pipe(uglify())
-        .pipe(gulp.dest(filePath.build.dest))
-        .pipe(notify({
-            message: 'VendorJS task complete'
-        }));
+        .pipe(gulp.dest(filePath.build.dest));
 });
 
 // =======================================================================
@@ -181,6 +183,14 @@ gulp.task('images', function() {
 gulp.task('copyIndex', function() {
     return gulp.src(filePath.copyIndex.src)
         .pipe(gulp.dest(filePath.build.dest))
+});
+
+// =======================================================================
+// Copy Fonts
+// =======================================================================
+gulp.task('copyFonts', function() {
+    return gulp.src(filePath.copyFonts.src)
+        .pipe(gulp.dest(filePath.copyFonts.dest))
 });
 
 // =======================================================================
@@ -276,7 +286,7 @@ gulp.task('build', function(callback) {
     runSequence(
         ['clean'],
         ['templates'],
-        ['bundle-dev', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex'],
+        ['bundle-dev', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex', 'copyFonts'],
         ['notify'],
         callback
     );
@@ -287,8 +297,7 @@ gulp.task('build-prod', function(callback) {
     runSequence(
         ['clean'],
         ['templates'],
-        ['bundle-prod', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex'],
-        ['server'],
+        ['bundle-prod', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex', 'copyFonts'],
         ['notify'],
         callback
     );

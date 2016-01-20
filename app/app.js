@@ -1,9 +1,8 @@
 'use strict';
 
-/** We set this variables to use in paths. GLOBAL object is only available in nodejs. window only in browsers. **/
-window.COMMON = '/DeviceHubClient/app/common';
-window.COMPONENTS = '/DeviceHubClient/app/common/components';
-window.VIEWS = '/DeviceHubClient/app/views';
+window.COMMON = 'common';
+window.COMPONENTS = 'common/components';
+window.VIEWS = 'views';
 
 window.$ = window.jQuery = require('jquery'); //We globally load jQuery
 window._ = require('lodash');
@@ -36,7 +35,7 @@ module.exports = angular.module('deviceHub',[
             });
             $urlRouterProvider.otherwise("/devices")
         })
-    .controller('deviceHubCtrl',['CONSTANTS', function(CONSTANTS){
+    .controller('deviceHubCtrl',function($templateCache){
         $('#intro-spinner').remove();
-        this.appName = CONSTANTS.appName;
-    }]);
+        window.tc = $templateCache;
+    });

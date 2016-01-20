@@ -1,0 +1,5 @@
+/*Stop bouncing on iOS and Mac*/
+html{
+  height: 100%;
+  overflow: hidden;
+}

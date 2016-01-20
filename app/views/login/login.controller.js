@@ -1,10 +1,11 @@
 'use strict';
 
-function loginController($scope, $state, authService) {
+function loginController($scope, $state, authService, CONSTANTS) {
     $scope.credentials = {
         email: '',
         password: ''
     };
+    $scope.APP_NAME = CONSTANTS.appName;
     $scope.saveInBrowser = false;
     $scope.login = function (credentials, saveInBrowser) {
         authService.login(credentials, saveInBrowser).then(function (user) {

@@ -20,8 +20,10 @@ function shieldStatesRun($rootScope, $state, $location, authService) {
             }
             else{
                 // user is not logged in
-                $state.transitionTo('login');
-                $location.path('/login');
+                event.preventDefault();
+                $state.go('login');
+                //$state.transitionTo('login');
+                //$location.path('/login');
             }
         }
     });

@@ -12,5 +12,6 @@ module.exports = angular.module('common.components',
         require('./nav').name,
         require('./place-nav').name,
         require('./show-validation.js').name,
-        require('./authentication').name
+        require('./authentication').name,
+        require('./tools').name
     ]);
