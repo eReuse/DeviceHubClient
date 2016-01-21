@@ -19,6 +19,7 @@ var buffer = require('vinyl-buffer');
 var sourcemaps = require('gulp-sourcemaps');
 var notify = require('gulp-notify');
 var templateCache = require('gulp-angular-templatecache');
+var del = require('del');
 
 
 var filePath = {
@@ -185,6 +186,7 @@ gulp.task('copyIndex', function() {
         .pipe(gulp.dest(filePath.build.dest))
 });
 
+
 // =======================================================================
 // Copy Fonts
 // =======================================================================
@@ -219,6 +221,13 @@ gulp.task('clean', function() {
     .pipe(clean({
         force: true
     }))
+});
+
+gulp.task('afterClean', function() {
+    return del([
+        filePath.destination + '/templates.js',
+        filePath.assets.images.dest + '/spinner.scss'
+    ]);
 });
 
 gulp.task('templates', function () {
@@ -276,7 +285,7 @@ gulp.task('build-dev', function(callback) {
         // images and vendor tasks are removed to speed up build time. Use "gulp build" to do a full re-build of the dev app.
         ['templates'],
         ['bundle-dev', 'copyIndex', 'sass'],
-        ['notify'],
+        ['notify', 'afterClean'],
         callback
     );
 });
@@ -286,8 +295,8 @@ gulp.task('build', function(callback) {
     runSequence(
         ['clean'],
         ['templates'],
-        ['bundle-dev', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex', 'copyFonts'],
-        ['notify'],
+        ['bundle-dev', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex'],
+        ['afterClean', 'notify'],
         callback
     );
 });
@@ -297,8 +306,8 @@ gulp.task('build-prod', function(callback) {
     runSequence(
         ['clean'],
         ['templates'],
-        ['bundle-prod', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex', 'copyFonts'],
-        ['notify'],
+        ['bundle-prod', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex'],
+        ['notify', 'afterClean'],
         callback
     );
 });
