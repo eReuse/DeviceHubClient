@@ -1,7 +1,8 @@
 'use strict';
+var sjv = require('simple-js-validator');
 var ACCOUNT_STORAGE = 'account';
 
-function session(CONSTANTS, Restangular, $rootScope) {
+function session(configureResources) {
     this._account = {};
     this.saveInBrowser = true;
     this.first_time = true;
@@ -10,20 +11,21 @@ function session(CONSTANTS, Restangular, $rootScope) {
         this.saveInBrowser = saveInBrowser;
         this.setActiveDefaultDatabase();
         this.setInBrowser(this.saveInBrowser);
-        this.setAuthHeader();
+        configureResources.setAuthHeader(account);
+        configureResources.configureSchema();
     };
     this.destroy = function(){
-        this.removeActiveDatabase();
+        configureResources.removeActiveDatabase(this._account);
         this._account.length = 0;
         localStorage.clear();
         sessionStorage.clear();
     };
     this.isAccountSet = function(){
-        return !jQuery.isEmptyObject(this.getAccount());
+        return sjv.isNotEmpty(this.getAccount())
     };
 
     this._isAccountSet = function(){
-        return !jQuery.isEmptyObject(this._account);
+        return sjv.isNotEmpty(this._account)
     };
     this.getAccount = function(){
         if(!this._isAccountSet()) {
@@ -33,8 +35,9 @@ function session(CONSTANTS, Restangular, $rootScope) {
             else angular.copy(JSON.parse(item), this._account);
         }
         if(this._isAccountSet() && this.first_time){
-            this.setAuthHeader();
+            configureResources.setAuthHeader(this._account);
             this.setActiveDefaultDatabase();
+            configureResources.configureSchema();
             this.first_time = false;
         }
         return this._account;
@@ -49,39 +52,13 @@ function session(CONSTANTS, Restangular, $rootScope) {
         var storage = persistence? localStorage : sessionStorage;
         storage.setItem(ACCOUNT_STORAGE, JSON.stringify(this._account));
     };
-    this.setAuthHeader = function(){
-        var headers = CONSTANTS.headers;
-        var self = this;
-        headers['Authorization'] = 'Basic ' + this._account.token;
-        Restangular.setDefaultHeaders(headers);
-        Restangular.addRequestInterceptor(function(element, operation, what, url){
-            if (operation == 'POST') element.byUser = self._account._id;
-            return element;
-        })
-    };
     this.setActiveDefaultDatabase = function(){
-        this.setActiveDatabase(
+        configureResources.setActiveDatabase(
             'defaultDatabase' in this._account? this._account.defaultDatabase : this._account.databases[0],
-            false
+            false,
+            this._account
         );
     };
-
-    /**
-     * Sets the active database to what is introduced
-     * @param newDatabase
-     * @param refresh bool Optional. If true, broadcasts a message for components to refresh
-     */
-    this.setActiveDatabase = function(newDatabase, refresh){
-        if(this._account.databases.indexOf(newDatabase) == -1) throw 'User is not authorized to access ' + newDatabase;
-        this._account.activeDatabase = newDatabase;
-        Restangular.setBaseUrl(CONSTANTS.url + '/' + this._account.activeDatabase);
-        if(refresh) $rootScope.$broadcast('refresh@deviceHub');
-    };
-
-    this.removeActiveDatabase = function(){
-        delete this._account.activeDatabase;
-        Restangular.setBaseUrl(CONSTANTS.url);
-    }
 }
 
 module.exports = session;

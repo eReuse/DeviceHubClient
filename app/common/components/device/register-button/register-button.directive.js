@@ -8,13 +8,8 @@ function registerButton($uibModal){
         link: function($scope, $element, $attrs){
             $scope.openModal = function(type){
                 var modalInstance = $uibModal.open({
-                    animation: true,
                     templateUrl: window.COMPONENTS + '/device/register-modal/register-modal.controller.html',
                     controller: 'registerModalCtrl',
-                    size: 'lg',
-                    keyboard: true,
-                    windowClass: 'modal-xl',
-                    backdrop : 'static',
                     resolve: {
                         type: function(){return type}
                     }

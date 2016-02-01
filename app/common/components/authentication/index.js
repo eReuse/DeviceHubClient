@@ -7,7 +7,8 @@ module.exports = angular.module('common.components.authentication',
     [
         //require('./../../config').name,
         'restangular',
-        'ui.router'
+        'ui.router',
+        require('./../../config').name
     ])
     .service('session', require('./session.service.js'))
     .factory('authService', require('./auth-service.factory.js'))

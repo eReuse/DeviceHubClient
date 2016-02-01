@@ -15,7 +15,8 @@ module.exports = angular.module('common.components.list',
         'ui.router',
         'checklist-model',
         'ngAnimate',
-        require('./../device-label').name
+        require('./../device-label').name,
+        require('./../event').name
     ])
     /**
      * @ngdoc constant

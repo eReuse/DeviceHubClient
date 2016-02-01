@@ -79,7 +79,10 @@ var filePath = {
             './node_modules/angular-google-maps/dist/angular-google-maps.js',
             './node_modules/angular-qrcode/angular-qrcode.js',
             './bower_components/angular-timeline/dist/angular-timeline.js',
-            './node_modules/ui-router/release/angular-ui-router.js'
+            './node_modules/ui-router/release/angular-ui-router.js',
+            './node_modules/angular-formly/dist/formly.js',
+            './node_modules/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js',
+            './node_modules/simple-js-validator/lib/simple.js.validator.js'
         ],
         src1: [
             'angular',

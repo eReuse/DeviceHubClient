@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        <span ng-if="defined">
+            <event-icon event-type="{{model['@type']}}"></event-icon>
+        </span>
+        {{model['@type']}}
+    </h3>
+</div>
+<div class="modal-body">
+    <form-schema
+            model="model"
+            options="options"
+            status="status"
+    ></form-schema>
+</div>
+<div class="modal-footer">
+    <span ng-if="status.error"><i class="glyphicon glyphicon-alert"></i>Cannot submit. Check the form and repair the errors.</span>
+    <span ng-if="status.working" class="spinner"></span>
+    <button type="submit" form="form-schema" class="btn btn-primary">Submit</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>

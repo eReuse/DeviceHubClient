@@ -1,6 +1,6 @@
 'use strict';
 
-function eventsPerDevice(Restangular) {
+function eventsPerDevice(Restangular, event) {
     return {
         templateUrl: window.COMPONENTS + '/events-per-device/events-per-device.directive.html',
         restrict: 'E',
@@ -8,6 +8,7 @@ function eventsPerDevice(Restangular) {
             device: '='
         },
         link: function ($scope, $element, $attrs) {
+            $scope.EVENTS = event.EVENTS;
             $scope.$watch(function () {
                 return $scope.device._id;
             }, function (newValue, oldValue) {

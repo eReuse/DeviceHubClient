@@ -13,23 +13,8 @@
             <button type="button" class="btn btn-primary" ng-click="openModal('Label')">
                 Label
             </button>
-            <!--<button id="single-button1" type="button" class="btn btn-primary" uib-dropdown-toggle>
-                New event<span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="single-button1">
-                <li role="menuitem"><a ng-click="openModal('Receive')">Receive</a></li>
-                <!--<li role="menuitem"><a ng-click="openModal('Locate')">Locate</a></li>
-            </ul>-->
         </div>
-        <!--<div class="btn-group" dropdown is-open="status.isopen">
-            <button type="button" class="btn btn-primary" dropdown-toggle>
-                More actions<span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
-                <li class="divider"></li>
-                <li role="menuitem"><a href="#">Delete</a></li>
-            </ul>
-        </div>-->
+        <!--<manual-events-button devices="selectedDevices"></manual-events-button>-->
     </div>
 <div fill-height additional-padding="{{87+20}}">
     <div>
@@ -42,14 +27,16 @@
             <tbody>
                 <tr ng-repeat="device in devices" ng-click="deviceSelected(device)" ng-class="{success: isSelected(device._id)}">
                     <td>
-                        <input type="checkbox" checklist-model="selectedDevices" checklist-value="device" ng-click="$event.stopPropagation();">
+                        <input type="checkbox"
+                               checklist-model="selectedDevices"
+                               checklist-value="device"
+                               ng-click="$event.stopPropagation(); broadcastSelection()">
                     </td>
                     <td>{{device._id}}</td>
                     <td>{{device.label}}</td>
                     <td>{{device.model}}</td>
-                    <td>{{device._created}}</td>
+                    <td>{{device._created | date}}</td>
                     <td><device-icon icon="{{device['icon']}}"></device-icon></td>
-
                 </tr>
             </tbody>
             <tr></tr>

@@ -7,6 +7,9 @@ module.exports = angular.module('common.components.event',
         require('app/common/config').name,
         'ui.bootstrap'
     ])
+    .factory('event', require('./event.factory.js'))
+    .directive('eventIcon', require('./event-icon/event-icon.directive.js'))
+    .directive('manualEventsButton', require('./manual-events-button/manual-events-button.directive.js'))
     .directive('eventViewTeaserWidget',[function(){
         return{
             templateUrl: window.COMPONENTS + '/event/eventViewTeaser.html',

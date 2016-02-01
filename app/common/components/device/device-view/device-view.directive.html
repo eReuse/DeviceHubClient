@@ -12,8 +12,8 @@
                 <tr><td>Type of device</td><td itemprop="@type">{{device['@type']}}</td></tr>
                 <tr><td>Model</td><td itemprop="model">{{device.model}}</td></tr>
                 <tr><td>Serial number</td><td itemprop="serialNumber">{{device.serialNumber}}</td></tr>
-                <tr><td>Created in</td><td>{{device._created}}</td></tr>
-                <tr><td>Last updated in</td><td>{{device._updated}}</td></tr>
+                <tr><td>Created in</td><td>{{device._created | date : 'short'}}</td></tr>
+                <tr><td>Last updated in</td><td>{{device._updated | date : 'short'}}</td></tr>
                 </tbody>
             </table>
         </div>

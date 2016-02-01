@@ -10,8 +10,10 @@ module.exports = angular.module('common.components',
         require('./events-per-device').name,
         require('./device-label').name,
         require('./nav').name,
-        require('./place-nav').name,
+        require('./place').name,
         require('./show-validation.js').name,
         require('./authentication').name,
-        require('./tools').name
+        require('./tools').name,
+        require('./forms').name,
+        require('./geo').name
     ]);

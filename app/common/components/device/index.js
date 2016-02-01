@@ -15,7 +15,8 @@ module.exports = angular.module('common.components.device',
         'fillHeight',
         'ngSanitize',
         require('./../device-list').name,
-        'RecursionHelper'
+        'RecursionHelper',
+        'restangular'
     ])
     /**
      * @ngdoc directive
@@ -61,7 +62,7 @@ module.exports = angular.module('common.components.device',
     .directive('hardDriveView', require('./hard-drive-view/hard-drive-view.directive.js'))
     /**
      * @ngdoc directive
-     * @name deviceIcon
+     * @name placeIcon
      * @description
      * Gets and shows the icon that represents a device.
      * @param str icon Name of the icon to show. This is the @type of the device.

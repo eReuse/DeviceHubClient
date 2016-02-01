@@ -10,8 +10,10 @@ module.exports = angular.module('common.components.placeNav',
             'ui.bootstrap',
             'ngAnimate',
             'uiGmapgoogle-maps',
-            'ngGeolocation'
+            'ngGeolocation',
+            require('./../forms').name
         ]
     )
-    .directive('placeNav', require('./place-nav.directive.js'))
-    .controller('placeModalCtrl', require('./place-modal.controller.js'));
+    .directive('placeIcon', require('./place-icon.directive.js'))
+    .directive('createPlace', require('./create-place/create-place.directive.js'))
+    .directive('placeNav', require('./place-nav.directive.js'));

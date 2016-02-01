@@ -9,13 +9,8 @@ function userButton(session, $uibModal) {
             $scope.account = session.getAccount();
             $scope.openModal = function (type) {
                 var modalInstance = $uibModal.open({
-                    animation: true,
                     templateUrl: window.COMPONENTS + '/account/user-modal/user-modal.controller.html',
-                    controller: 'userModalCtrl',
-                    size: 'lg',
-                    keyboard: true,
-                    windowClass: 'modal-xl',
-                    backdrop: 'static'
+                    controller: 'userModalCtrl'
                 });
                 modalInstance.result.then(function (selectedItem) {
                     $scope.selected = selectedItem;

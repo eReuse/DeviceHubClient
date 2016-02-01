@@ -32,9 +32,6 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices){
 
             $scope.$on('refresh@deviceList', refresh);
             $scope.$on('refresh@deviceHub', refresh);
-            $scope.$on('get@placeNavWidget', function(places){
-                $scope.places = places;
-            });
 
             $scope.$on('selectedPlace@placeNavWidget', function(event, place_id){
                 $scope.searchParams.place = place_id;  //The watchCollection will detect changes
@@ -43,9 +40,10 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices){
             $scope.$on('unselectedPlace@placeNavWidget', function(){
                 delete $scope.searchParams.place;
             });
-            $scope.$on('get@placeNavWidget', function(places){
-                $scope.places = places;
-            });
+
+            $scope.broadcastSelection = function(){
+                $rootScope.$broadcast('selectedDevices@deviceList', $scope.selectedDevices);
+            };
 
 
             $scope.deviceSelected = function(device){
@@ -69,13 +67,8 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices){
 
             $scope.openModal = function(type){
                 var modalInstance = $uibModal.open({
-                    animation: true,
                     templateUrl: window.COMPONENTS + '/device-list/device-list-modal.controller.html',
                     controller: 'deviceListModalCtrl',
-                    size: 'lg',
-                    keyboard: true,
-                    windowClass: 'modal-xl',
-                    backdrop : 'static',
                     resolve: {
                         devices: function(){return $scope.selectedDevices},
                         type: function(){return type}
@@ -95,6 +88,7 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices){
 
 function refreshFactory(getDevices, $scope){
     return function (){
+        delete $scope.searchParams.place;
         getDevices(true, false);
     }
 }

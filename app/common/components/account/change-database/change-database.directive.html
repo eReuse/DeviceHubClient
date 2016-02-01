@@ -4,7 +4,7 @@
     </button>
     <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="single-button">
         <li role="menuitem" ng-repeat="database in session._account.databases">
-            <a ng-click="session.setActiveDatabase(database, true)">
+            <a ng-click="configureResources.setActiveDatabase(database, true, session._account)">
                 {{database}}
             </a>
         </li>
