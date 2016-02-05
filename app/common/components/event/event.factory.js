@@ -1,6 +1,6 @@
 'use strict';
 
-function event(){
+function event(schema){
     this.EVENTS = {
         Snapshot: {glyphicon: 'camera'},
         Add: {glyphicon: 'plus'},
@@ -10,6 +10,7 @@ function event(){
         Locate: {glyphicon: 'map-marker', manual: true},
         Default: {glyphicon: 'tag'}
     };
+    this.schema = schema.schema;
     return this;
 }
 

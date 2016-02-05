@@ -57,10 +57,10 @@ var filePath = {
         src: [
             './resources/bootstrap.min.css',
             './resources/animate.min.css',
-            './bower_components/angular-advanced-searchbox/dist/angular-advanced-searchbox.min.css',
             './bower_components/angular-timeline/dist/angular-timeline.css',
             './bower_components/angular-timeline/dist/angular-timeline-bootstrap.css',
-            './bower_components/angular-bootstrap-nav-tree/dist/abn_tree.css'
+            './bower_components/angular-bootstrap-nav-tree/dist/abn_tree.css',
+            './node_modules/jsonformatter/dist/json-formatter.min.css'
         ]
     },
     vendorJS: {
@@ -82,7 +82,8 @@ var filePath = {
             './node_modules/ui-router/release/angular-ui-router.js',
             './node_modules/angular-formly/dist/formly.js',
             './node_modules/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js',
-            './node_modules/simple-js-validator/lib/simple.js.validator.js'
+            './node_modules/simple-js-validator/lib/simple.js.validator.js',
+            './node_modules/jsonformatter/dist/json-formatter.js'
         ],
         src1: [
             'angular',

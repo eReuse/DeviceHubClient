@@ -1,6 +1,6 @@
 'use strict';
 
-function deviceView(Restangular, RecursionHelper){
+function deviceView(RecursionHelper){
 
     //if needed, this can be splitted into view (which gets the device) and theme (which just outputs the html given a device)
     return{

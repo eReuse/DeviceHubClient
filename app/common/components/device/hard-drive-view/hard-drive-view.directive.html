@@ -7,20 +7,14 @@
         </tbody>
     </table>
 </div>
-<div class="col-xs-12">
-    <h3>Tests</h3>
-    <div class="row">
-        <div ng-repeat="test in hardDrive.tests" class="col-xs-12 col-xs-offset-0 col-lg-10 col-lg-offset-1">
-                <table class="table table-striped">
-                    <tbody>
-                        <tr><td>Incidence</td><td>{{test.incidence}}</td></tr>
-                        <tr><td>Lifetime</td><td>{{test.lifetime}}</td></tr>
-                        <tr><td>Status</td><td>{{test.status}}</td></tr>
-                        <tr><td>Type</td><td>{{test.type}}</td></tr>
-                        <tr><td>By user</td><td>{{test.byUser}}</td></tr>
-                        <tr><td>Date</td><td>{{test._created}}</td></tr>
-                    </tbody>
-                </table>
+<div class="col-xs-12" ng-if="hardDrive.tests.length > 0 || hardDrive.erasures > 0">
+    <h3>Tests and erasures</h3>
+    <div uib-accordion class="row">
+        <div uib-accordion-group ng-repeat="event in [].concat(hardDrive.erasures, hardDrive.tests)">
+            <header uib-accordion-heading>
+                <event-easy-explanation event="event" id="hardDrive"></event-easy-explanation>
+            </header>
+            <event-view event="event" teaser="teaser" id="hardDrive"></event-view>
         </div>
     </div>
 </div>

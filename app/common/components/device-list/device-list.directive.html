@@ -35,7 +35,7 @@
                     <td>{{device._id}}</td>
                     <td>{{device.label}}</td>
                     <td>{{device.model}}</td>
-                    <td>{{device._created | date}}</td>
+                    <td>{{device._created | date : 'short'}}</td>
                     <td><device-icon icon="{{device['icon']}}"></device-icon></td>
                 </tr>
             </tbody>

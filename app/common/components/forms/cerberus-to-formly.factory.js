@@ -15,7 +15,7 @@ function parseFactory(schema){
         var doNotUse = options.doNotUse.concat(DO_NOT_USE);
         var form = [];
         var type = model['@type'];  //todo duplicated code in form-schema.directive.js
-        var resourceName = Case.snake(type);
+        var resourceName = Case.kebab(type);
         resourceName = resourceName == 'place'? 'places' : resourceName; //todo solve. Except devices, events, places everything else is singular
         for(var fieldName in schema[resourceName]) {
             if (doNotUse.indexOf(fieldName) == -1) {
@@ -26,7 +26,7 @@ function parseFactory(schema){
                     form.push(generateField(fieldName, subSchema, model, doNotUse));
             }
         }
-        form.sort(compare);
+        form.sort(schema.compareSink);
         setExcludes(form, model, $scope, options.excludeLabels || []);
         removeSink(form);
         or(form, model);
@@ -147,11 +147,7 @@ function getSelectOptions(allowed){
     return options;
 }
 
-function compare(a, b){
-    if(a.sink > b.sink) return -1;
-    else if(a.sink < b.sink) return 1;
-    else return 0;
-}
+
 
 function removeSink(form){
     form.forEach(function(field){

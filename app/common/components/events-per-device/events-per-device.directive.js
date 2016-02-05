@@ -8,19 +8,23 @@ function eventsPerDevice(Restangular, event) {
             device: '='
         },
         link: function ($scope, $element, $attrs) {
+            $scope.id = {};
             $scope.EVENTS = event.EVENTS;
             $scope.$watch(function () {
                 return $scope.device._id;
             }, function (newValue, oldValue) {
-                var data = {
-                    where: JSON.stringify({'$or': [{devices: {'$in': [newValue]}}, {device: newValue}, {components: {'$in': [newValue]}}]}),
-                    embedded: JSON.stringify({events: 1})
-                };
-                Restangular.all('events').getList(data).then(function (events) {
-                    $scope.events = subsanizeEvents(events);
-                    //$scope.events = events;
-                });
-                // $scope.events = Restangular.one('devices',newValue).getList('events').$object;
+                if(angular.isDefined(newValue)) {
+                    $scope.id._id = newValue;
+                    var data = {
+                        where: JSON.stringify({'$or': [{devices: {'$in': [newValue]}}, {device: newValue}, {components: {'$in': [newValue]}}]}),
+                        embedded: JSON.stringify({events: 1})
+                    };
+                    Restangular.all('events').getList(data).then(function (events) {
+                        $scope.events = subsanizeEvents(events);
+                        //$scope.events = events;
+                    });
+                    // $scope.events = Restangular.one('devices',newValue).getList('events').$object;
+                }
             });
         }
     }

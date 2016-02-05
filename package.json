@@ -33,6 +33,7 @@
     "gulp-streamify": "^1.0.2",
     "gulp-uglify": "^1.5.1",
     "jquery": "^2.1.4",
+    "jsonformatter": "^0.4.2",
     "jspdf-browserify": "^1.0.272",
     "lodash": "^3.10.1",
     "opener": "^1.4.1",
