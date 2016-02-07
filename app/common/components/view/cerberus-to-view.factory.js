@@ -32,6 +32,7 @@ function generateField(value, fieldSchema, fieldName){
     var field = {
         name: Case.title(fieldName),
         value: '',
+        unitCode: fieldSchema.unitCode,
         sink: fieldSchema.sink || 0
     };
     if(sjv.isDefined(value)){
