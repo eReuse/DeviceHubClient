@@ -113,13 +113,17 @@ function getTypeAndSetTypeOptions(fieldSchema, options, model){
             case 'objectid':
                 switch(fieldSchema.data_relation.resource){ //We do not use case 'devices' as they are not part
                     case 'accounts':
-                        options.type = 'email';
+                        options.resourceName = 'accounts';
                         options.label = "Account's e-mail";
-                        return 'input';
+                        options.labelFieldName = 'email';
+                        options.filterFieldName = 'email';
+                        return 'typeahead';
                     case 'places':
-                        //todo places
+                        options.resourceName = 'places';
                         options.label = "Identifier of the place";
-                        return 'input';
+                        options.labelFieldName = 'label';
+                        options.filterFieldName = 'label';
+                        return 'typeahead';
                     default: throw NO_TYPE_ERROR;
 
                 }
