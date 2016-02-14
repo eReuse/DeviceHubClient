@@ -5,10 +5,6 @@ function configureResources(schema, Restangular, CONSTANTS, $rootScope) {
         var headers = CONSTANTS.headers;
         headers['Authorization'] = 'Basic ' + account.token;
         Restangular.setDefaultHeaders(headers);
-        Restangular.addRequestInterceptor(function(element, operation, what, url){
-            if (operation == 'POST') element.byUser = account._id;
-            return element;
-        })
     };
 
     /**
@@ -37,6 +33,16 @@ function configureResources(schema, Restangular, CONSTANTS, $rootScope) {
                     else parse(data, schema.schema[what]);
                 }
                 return data;
+            });
+            Restangular.addRequestInterceptor(function(originalElement, operation, what, url){
+                var element = angular.copy(originalElement);
+                if (operation == 'post')
+                    for(var fieldName in element)
+                        if(element[fieldName] instanceof Date){
+                            var datetime = element[fieldName].toISOString();
+                            element[fieldName] = datetime.substring(0, datetime.indexOf('.'))
+                        }
+                return element;
             });
             $rootScope.$broadcast('load@configureResources');
         });

@@ -60,7 +60,8 @@ var filePath = {
             './bower_components/angular-timeline/dist/angular-timeline.css',
             './bower_components/angular-timeline/dist/angular-timeline-bootstrap.css',
             './bower_components/angular-bootstrap-nav-tree/dist/abn_tree.css',
-            './node_modules/jsonformatter/dist/json-formatter.min.css'
+            './node_modules/jsonformatter/dist/json-formatter.min.css',
+            './node_modules/angular-ui-notification/dist/angular-ui-notification.css'
         ]
     },
     vendorJS: {
@@ -83,7 +84,8 @@ var filePath = {
             './node_modules/angular-formly/dist/formly.js',
             './node_modules/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js',
             './node_modules/simple-js-validator/lib/simple.js.validator.js',
-            './node_modules/jsonformatter/dist/json-formatter.js'
+            './node_modules/jsonformatter/dist/json-formatter.js',
+            './node_modules/angular-ui-notification/dist/angular-ui-notification.js'
         ],
         src1: [
             'angular',

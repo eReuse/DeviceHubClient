@@ -1,5 +1,5 @@
 'use strict';
-function placeNavDirective (Restangular, $rootScope, $uibModal) {
+function placeNavDirective (Restangular, $rootScope, Notification) {
     return {
         templateUrl: window.COMPONENTS + '/place/place-nav.directive.html',
         restrict: 'E',
@@ -50,9 +50,10 @@ function placeNavDirective (Restangular, $rootScope, $uibModal) {
 
                 place.patch(dataToSend).then(function(){
                     $rootScope.$broadcast('refresh@deviceList');
+                    Notification.success('Devices moved to place '+ place.label + '.')
                 }, function(data){
                     console.log(data);
-                    alert('We could not move the computers');
+                    Notification.error('We could not move the computers.');
                 });
             };
 

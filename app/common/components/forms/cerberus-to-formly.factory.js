@@ -6,11 +6,11 @@ var DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url']; //todo 
 var COMMON_OPTIONS = ['min', 'max', 'required', 'minlength', 'maxlength', 'readonly', 'description'];
 
 function cerberusToFormly(schema){
-    this.parse = parseFactory(schema.schema);
+    this.parse = parseFactory(schema.schema, schema.compareSink);
     return this;
 }
 
-function parseFactory(schema){
+function parseFactory(schema, compareSink){
     return function (model, $scope, options){
         var doNotUse = options.doNotUse.concat(DO_NOT_USE);
         var form = [];
@@ -26,7 +26,7 @@ function parseFactory(schema){
                     form.push(generateField(fieldName, subSchema, model, doNotUse));
             }
         }
-        form.sort(schema.compareSink);
+        form.sort(compareSink);
         setExcludes(form, model, $scope, options.excludeLabels || []);
         removeSink(form);
         or(form, model);
@@ -95,8 +95,7 @@ function getTypeAndSetTypeOptions(fieldSchema, options, model){
                 else
                     return 'input';
             case 'datetime':
-                options.type = 'date';
-                return 'input';
+                return 'datepicker';
             case 'list':
                 if('schema' in fieldSchema && 'data_relation' in fieldSchema.schema){
                     if(fieldSchema.schema.data_relation.resource == 'devices'){
@@ -111,21 +110,20 @@ function getTypeAndSetTypeOptions(fieldSchema, options, model){
                 }
                 throw NO_TYPE_ERROR;
             case 'objectid':
-                switch(fieldSchema.data_relation.resource){ //We do not use case 'devices' as they are not part
+                options.resourceName = fieldSchema.data_relation.resource;
+                options.keyFieldName = fieldSchema.data_relation.field;
+                switch(options.resourceName){ //We do not use case 'devices' as they are not part
                     case 'accounts':
-                        options.resourceName = 'accounts';
                         options.label = "Account's e-mail";
                         options.labelFieldName = 'email';
                         options.filterFieldName = 'email';
                         return 'typeahead';
                     case 'places':
-                        options.resourceName = 'places';
                         options.label = "Identifier of the place";
                         options.labelFieldName = 'label';
                         options.filterFieldName = 'label';
                         return 'typeahead';
                     default: throw NO_TYPE_ERROR;
-
                 }
             case 'email':
                 options.type = 'email';

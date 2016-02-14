@@ -13,9 +13,20 @@
             status="status"
     ></form-schema>
 </div>
-<div class="modal-footer">
-    <span ng-if="status.error"><i class="glyphicon glyphicon-alert"></i>Cannot submit. Check the form and repair the errors.</span>
-    <span ng-if="status.working" class="spinner"></span>
-    <button type="submit" form="form-schema" class="btn btn-primary">Submit</button>
-    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+<div class="modal-footer row">
+    <div ng-if="status.working"><div class="spinner"></div></div>
+    <div class="col-xs-7">
+        <div class="text-left" ng-show="isNotEmpty(status.errorListFromServer)">
+            <i class="glyphicon glyphicon-alert"></i>
+            Cannot submit. Fix the following errors:
+            <ul>
+                <li ng-repeat="(key, value) in status.errorListFromServer">{{key}}: {{value}}</li>
+            </ul>
+        </div>
+        <div ng-if="status.error"><i class="glyphicon glyphicon-alert"></i>Cannot submit. Check the form and repair the errors.</div>
+    </div>
+    <div class="col-xs-5" ng-show="!status.working">
+        <button type="submit" form="form-schema" class="btn btn-primary">Submit</button>
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+    </div>
 </div>

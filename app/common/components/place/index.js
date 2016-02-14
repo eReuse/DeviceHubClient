@@ -4,6 +4,7 @@ require('angular-animate');
 require('angular-simple-logger'); //Required by angular-google-maps
 require('angular-google-maps');
 require('bower_components/ngGeolocation/ngGeolocation.js');
+require('angular-ui-notification');
 
 module.exports = angular.module('common.components.placeNav',
         [
@@ -11,7 +12,8 @@ module.exports = angular.module('common.components.placeNav',
             'ngAnimate',
             'uiGmapgoogle-maps',
             'ngGeolocation',
-            require('./../forms').name
+            require('./../forms').name,
+            'ui-notification'
         ]
     )
     .directive('placeIcon', require('./place-icon.directive.js'))
