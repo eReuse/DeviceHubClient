@@ -20,10 +20,12 @@ function parseFactory(schema, compareSink){
         for(var fieldName in schema[resourceName]) {
             if (doNotUse.indexOf(fieldName) == -1) {
                 var subSchema = schema[resourceName][fieldName];
-                if (subSchema.type == 'dict' && 'schema' in subSchema)
-                    form.push(generateFieldGroup(fieldName, subSchema, model, doNotUse));
-                else
-                    form.push(generateField(fieldName, subSchema, model, doNotUse));
+                if (!subSchema.readonly){
+                    if (subSchema.type == 'dict' && 'schema' in subSchema)
+                        form.push(generateFieldGroup(fieldName, subSchema, model, doNotUse));
+                    else
+                        form.push(generateField(fieldName, subSchema, model, doNotUse));
+                }
             }
         }
         form.sort(compareSink);
