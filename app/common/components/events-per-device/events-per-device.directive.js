@@ -16,7 +16,12 @@ function eventsPerDevice(Restangular, event) {
                 if(angular.isDefined(newValue)) {
                     $scope.id._id = newValue;
                     var data = {
-                        where: JSON.stringify({'$or': [{devices: {'$in': [newValue]}}, {device: newValue}, {components: {'$in': [newValue]}}]}),
+                        where: JSON.stringify({'$or': [
+                            {devices: {'$in': [newValue]}},
+                            {device: newValue},
+                            {components: {'$in': [newValue]}},
+                            {parent: newValue}
+                        ]}),
                         embedded: JSON.stringify({events: 1})
                     };
                     Restangular.all('events').getList(data).then(function (events) {
