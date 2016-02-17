@@ -165,15 +165,20 @@ function removeSink(form){
 function setExcludes(form, model, $scope, excludeLabels){
     form.forEach(function(field, i){
         if('excludes' in field){
-            var toggleKey = 'exclude_' + field.key;
-            var toggle = {
-                key: toggleKey,
-                type: 'checkbox',
-                templateOptions: {
-                    label: excludeLabels[field.key]
-                }
-            };
-            field.hideExpression = '!model.' + toggleKey;
+            var toggleKey;
+            if(field.type == 'checkbox') //boolean
+                toggleKey = field.key;
+            else{
+                toggleKey = 'exclude_' + field.key;
+                var toggle = {
+                    key: toggleKey,
+                    type: 'checkbox',
+                    templateOptions: {
+                        label: excludeLabels[field.key]
+                    }
+                };
+                field.hideExpression = '!model.' + toggleKey;
+            }
             var positions = [i];
             setExcludesWatch(field, $scope);
             form.forEach(function(excludedField, j){
@@ -184,7 +189,8 @@ function setExcludes(form, model, $scope, excludeLabels){
                 }
             });
             delete field.excludes;
-            form.splice(Math.min.apply(null, positions), 0, toggle);
+            if(field.type != 'checkbox')
+                form.splice(Math.min.apply(null, positions), 0, toggle);
         }
     });
 }
