@@ -1,6 +1,7 @@
 'use strict';
-var Case = require('case');
+
 var sjv = require('simple-js-validator');
+var utils = require('./../utils.js');
 
 var DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url']; //todo use geo as google maps
 var COMMON_OPTIONS = ['min', 'max', 'required', 'minlength', 'maxlength', 'readonly', 'description'];
@@ -14,12 +15,10 @@ function parseFactory(schema, compareSink){
     return function (model, $scope, options){
         var doNotUse = options.doNotUse.concat(DO_NOT_USE);
         var form = [];
-        var type = model['@type'];  //todo duplicated code in form-schema.directive.js
-        var resourceName = Case.kebab(type);
-        resourceName = resourceName == 'place'? 'places' : resourceName; //todo solve. Except devices, events, places everything else is singular
-        for(var fieldName in schema[resourceName]) {
+        var resourceUrlName = utils.getUrlResourceName(utils.getResourceName(model['@type']));
+        for(var fieldName in schema[resourceUrlName]) {
             if (doNotUse.indexOf(fieldName) == -1) {
-                var subSchema = schema[resourceName][fieldName];
+                var subSchema = schema[resourceUrlName][fieldName];
                 if (!subSchema.readonly){
                     if (subSchema.type == 'dict' && 'schema' in subSchema)
                         form.push(generateFieldGroup(fieldName, subSchema, model, doNotUse));
@@ -43,7 +42,7 @@ function generateFieldGroup(fieldName, subSchema, model, doNotUse){
         sink: subSchema.sink || 0
     };
     field.fieldGroup.push({
-        template: '<h4>' + Case.title(fieldName) + '</h4>'
+        template: '<h4>' + utils.humanize(fieldName) + '</h4>'
     });
     for(var childFieldName in subSchema.schema)
         if (doNotUse.indexOf(childFieldName) == -1)
@@ -53,7 +52,7 @@ function generateFieldGroup(fieldName, subSchema, model, doNotUse){
 
 function generateField(fieldName, subSchema, model, doNotUse){
     var options = {
-        label: Case.title(fieldName)
+        label: utils.humanize(fieldName)
     };
     var type = getTypeAndSetTypeOptions(subSchema, options, model);
     var field = {
@@ -144,7 +143,7 @@ function getSelectOptions(allowed){
     var options = [];
     for(var i = 0; i < allowed.length; i++){
         options.push({
-            name: Case.title(allowed[i]),
+            name: utils.humanize(allowed[i]),
             value: allowed[i]
         })
     }

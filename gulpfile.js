@@ -85,7 +85,8 @@ var filePath = {
             './node_modules/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js',
             './node_modules/simple-js-validator/lib/simple.js.validator.js',
             './node_modules/jsonformatter/dist/json-formatter.js',
-            './node_modules/angular-ui-notification/dist/angular-ui-notification.js'
+            './node_modules/angular-ui-notification/dist/angular-ui-notification.js',
+            './node_modules/pluralize/pluralize.js'
         ],
         src1: [
             'angular',

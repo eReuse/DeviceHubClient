@@ -1,6 +1,6 @@
 'use strict';
 
-var Case = require('case');
+var utils = require('./../utils.js');
 var sjv = require('simple-js-validator');
 var filters = {};
 
@@ -16,8 +16,7 @@ function cerberusToView(schema, dateFilter, numberFilter){
 function parseFactory(schema){
     return function (model){
         var fields = [];
-        var resourceName = Case.kebab(model['@type']);
-        var resourceSchema = schema.schema[resourceName];
+        var resourceSchema = schema.schema[utils.getUrlResourceName(utils.getResourceName(model['@type']))];
         for(var fieldName in resourceSchema)
             if(fieldName in model && DO_NOT_USE.indexOf(fieldName) == -1)
                 fields.push(generateField(model[fieldName], resourceSchema[fieldName], fieldName));
@@ -30,7 +29,7 @@ function parseFactory(schema){
 
 function generateField(value, fieldSchema, fieldName){
     var field = {
-        name: Case.title(fieldName),
+        name: utils.humanize(fieldName),
         value: '',
         unitCode: fieldSchema.unitCode,
         sink: fieldSchema.sink || 0

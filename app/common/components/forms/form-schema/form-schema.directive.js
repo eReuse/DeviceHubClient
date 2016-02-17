@@ -1,8 +1,8 @@
 'use strict';
-var Case = require('case');
-var sjv = require('simple-js-validator');
+var utils = require('./../../utils.js');
+var EVENTS;
 
-function formSchema(cerberusToFormly, Restangular, $rootScope, Notification){
+function formSchema(cerberusToFormly, Restangular, $rootScope, Notification, event){
     return{
         templateUrl: window.COMPONENTS + '/forms/form-schema/form-schema.directive.html',
         restrict: 'E',
@@ -12,6 +12,7 @@ function formSchema(cerberusToFormly, Restangular, $rootScope, Notification){
             status: '=' //list
         },
         link: function($scope){
+            EVENTS = event.EVENTS;
             $scope.form;
             $scope.fields = cerberusToFormly.parse($scope.model, $scope, setOptions($scope.model['@type'], $scope.options));
             $scope.submit = submitFactory($scope.fields, $scope.form, $scope.status, Restangular, $rootScope, Notification);
@@ -49,21 +50,9 @@ function remove_helper_values(model){
 
 function upload(Restangular, model, $rootScope){
     var type = model['@type'];  //todo duplicate code in cerberus-to-formly.factory.js
-    var events = [ //todo take this from schema
-        "Add",
-        "Register",
-        "Snapshot",
-        "Remove",
-        "Receive",
-        "TestHardDrive",
-        "Allocate",
-        "Locate",
-        "EraseBasic"
-    ];
-    var prepend = events.indexOf(type) != -1? 'events' : '';
-    var resourceName = Case.snake(type);
-    resourceName = resourceName == 'place'? 'places' : resourceName;
-    return Restangular.all(prepend).all(resourceName).post(model).then(function(data){
+    var prepend = Object.keys(EVENTS).indexOf(type) != -1? 'events' : '';
+    var resourceName = utils.getResourceName(type);
+    return Restangular.all(prepend).all(utils.getUrlResourceName(resourceName)).post(model).then(function(data){
         $rootScope.$broadcast('refresh@' + resourceName);
         return data;
     });
@@ -71,8 +60,7 @@ function upload(Restangular, model, $rootScope){
 
 function setOptions(type, options){
     return {
-        doNotUse: 'doNotUse' in options? options.doNotUse :
-            (type == 'Allocate' || type == 'Receive' || type == 'Locate'? ['geo'] : []),
+        doNotUse: 'doNotUse' in options? options.doNotUse : EVENTS[type].doNotUse,
         excludeLabels: { //In fact we do not need to pass always all labels, just the ones we want to use
             receiver: 'Check if the receiver has already an account',
             to: 'Check if the new possessor has already an account'

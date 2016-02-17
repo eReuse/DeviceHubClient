@@ -38,6 +38,7 @@
     "jspdf-browserify": "^1.0.272",
     "lodash": "^3.10.1",
     "opener": "^1.4.1",
+    "pluralize": "^1.2.1",
     "restangular": "^1.5.1",
     "run-sequence": "^1.1.5",
     "simple-js-validator": "^0.11.3",
