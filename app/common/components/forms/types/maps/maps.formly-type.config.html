@@ -1,10 +1,10 @@
 <div>
-    <input type="checkbox" ng-checked="enabled" ng-click="toggle()">Set an area
+    <input ng-disabled="to.disabled" type="checkbox" ng-checked="enabled" ng-click="toggle()">Set an area
     <div ng-if="enabled">
         <maps
-                geo-json="{{to.geoJSON}}"
                 get-user-position="{{to.getUserPosition}}"
                 coordinates="model[options.key]"
+                disabled="to.disabled"
         ></maps>
     </div>
 </div>

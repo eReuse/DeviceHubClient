@@ -1,4 +1,5 @@
 'use strict';
+var utils = require('./../components/utils.js');
 
 function configureResources(schema, Restangular, CONSTANTS, $rootScope) {
     this.setAuthHeader = function(account){
@@ -35,13 +36,19 @@ function configureResources(schema, Restangular, CONSTANTS, $rootScope) {
                 return data;
             });
             Restangular.addRequestInterceptor(function(originalElement, operation, what, url){
-                var element = angular.copy(originalElement);
+                var element = utils.copy(originalElement);
                 if (operation == 'post')
                     for(var fieldName in element)
                         if(element[fieldName] instanceof Date){
                             var datetime = element[fieldName].toISOString();
                             element[fieldName] = datetime.substring(0, datetime.indexOf('.'))
                         }
+                if(operation == 'put')
+                    for (fieldName in element)
+                        if(fieldName == '_created'
+                        || fieldName == '_updated'
+                        || fieldName == '_links')
+                            delete element[fieldName];
                 return element;
             });
             $rootScope.$broadcast('load@configureResources');

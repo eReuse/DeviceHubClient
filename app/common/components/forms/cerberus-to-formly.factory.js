@@ -3,7 +3,7 @@
 var sjv = require('simple-js-validator');
 var utils = require('./../utils.js');
 
-var DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url']; //todo use geo as google maps
+var DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url'];
 var COMMON_OPTIONS = ['min', 'max', 'required', 'minlength', 'maxlength', 'readonly', 'description'];
 
 function cerberusToFormly(schema){
@@ -13,7 +13,8 @@ function cerberusToFormly(schema){
 
 function parseFactory(schema, compareSink){
     return function (model, $scope, options){
-        var doNotUse = options.doNotUse.concat(DO_NOT_USE);
+        var isAModification = '_id' in model; //Remember, defaults are taken from the schema
+        var doNotUse = 'doNotUse' in options? options.doNotUse.concat(DO_NOT_USE) : DO_NOT_USE;
         var form = [];
         var resourceUrlName = utils.getUrlResourceName(utils.getResourceName(model['@type']));
         for(var fieldName in schema[resourceUrlName]) {
@@ -21,21 +22,22 @@ function parseFactory(schema, compareSink){
                 var subSchema = schema[resourceUrlName][fieldName];
                 if (!subSchema.readonly){
                     if (subSchema.type == 'dict' && 'schema' in subSchema)
-                        form.push(generateFieldGroup(fieldName, subSchema, model, doNotUse));
+                        form.push(generateFieldGroup(fieldName, subSchema, model, doNotUse, isAModification));
                     else
-                        form.push(generateField(fieldName, subSchema, model, doNotUse));
+                        form.push(generateField(fieldName, subSchema, model, doNotUse, isAModification));
                 }
             }
         }
         form.sort(compareSink);
         setExcludes(form, model, $scope, options.excludeLabels || []);
+        options.nonModifiable = generateNonModifiableArray(form);
         removeSink(form);
         or(form, model);
         return form;
     }
 }
 
-function generateFieldGroup(fieldName, subSchema, model, doNotUse){
+function generateFieldGroup(fieldName, subSchema, model, doNotUse, isAModification){
     var field = {
         fieldGroup: [],
         key: fieldName, //If doesn't work for exclude, use data: {id: } or something like
@@ -46,11 +48,11 @@ function generateFieldGroup(fieldName, subSchema, model, doNotUse){
     });
     for(var childFieldName in subSchema.schema)
         if (doNotUse.indexOf(childFieldName) == -1)
-            field.fieldGroup.push(generateField(childFieldName, subSchema.schema[childFieldName], model, doNotUse));
+            field.fieldGroup.push(generateField(childFieldName, subSchema.schema[childFieldName], model, doNotUse, isAModification));
     return field;
 }
 
-function generateField(fieldName, subSchema, model, doNotUse){
+function generateField(fieldName, subSchema, model, doNotUse, isAModification){
     var options = {
         label: utils.humanize(fieldName)
     };
@@ -69,6 +71,11 @@ function generateField(fieldName, subSchema, model, doNotUse){
         if(!fieldName in model || angular.isUndefined(model[fieldName]))
             model[fieldName] = subSchema.default;
     }
+    if ('modifiable' in subSchema && !subSchema.modifiable && isAModification){
+        field.templateOptions.disabled = true;
+        field.nonModifiable = true;
+    }
+
     if('excludes' in subSchema)
         field.excludes = subSchema.excludes;  //temporal value
     if('or' in subSchema)
@@ -234,6 +241,17 @@ function atLeastOneNotEmpty(model, keysToCheck){
         }
     }
     return false;
+}
+
+function generateNonModifiableArray(form){
+    var array = [];
+    form.forEach(function(field){
+        if(field.nonModifiable){
+            array.push(field.key);
+            delete field.nonModifiable;
+        }
+    })
+    return array;
 }
 
 module.exports = cerberusToFormly;

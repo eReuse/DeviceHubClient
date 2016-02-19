@@ -18,4 +18,5 @@ module.exports = angular.module('common.components.placeNav',
     )
     .directive('placeIcon', require('./place-icon.directive.js'))
     .directive('createPlace', require('./create-place/create-place.directive.js'))
+    .directive('editPlace', require('./edit-place/edit-place.directive.js'))
     .directive('placeNav', require('./place-nav.directive.js'));

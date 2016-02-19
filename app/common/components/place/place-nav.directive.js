@@ -1,4 +1,5 @@
 'use strict';
+
 function placeNavDirective (Restangular, $rootScope, Notification) {
     return {
         templateUrl: window.COMPONENTS + '/place/place-nav.directive.html',
@@ -24,32 +25,35 @@ function placeNavDirective (Restangular, $rootScope, Notification) {
                 }
 
             };
-            $scope.$on('refresh@places', getPlaces);
+            $scope.$on('refresh@place', getPlaces);
             $scope.$on('refresh@deviceHub', getPlaces);
             $scope.$on('selectedDevices@deviceList', function(event, devices){
                $scope.devices = devices;
             });
 
             $scope.moveDevices = function(place, newDevices){
-                var oldDevices = place.devices || [];
-                var ids = [];
-                var error=false; //todo fix this. Use devices in places without embedding
-                oldDevices.concat(newDevices).forEach(function(device){
+                var ids = angular.copy(place.devices) || [];
+                var error=false;
+                newDevices.forEach(function(device){
                     if(device['@type'] != 'Computer'){
-                        alert('For now, you can just move computers. Deselect any other device.');
+                        Notification.error('For now, you can just move computers. Deselect any other device.');
                         error=true;
                     }
-                    ids.push(device._id)
                 });
+                ids = _.union(ids, _.map(newDevices, '_id'));
+                if(_.isEqual(place.devices, ids)){
+                    Notification.warning('All the devices are already in the place, so we are not moving them.');
+                    error=true;
+                }
                 if(error) return;
                 var dataToSend = {
                     '@type': 'Place',
                     'devices': ids,
                     '_id': place._id
                 };
-
                 place.patch(dataToSend).then(function(){
                     $rootScope.$broadcast('refresh@deviceList');
+                    place.devices = ids; //We update the local copy of place with the new devices
                     Notification.success('Devices moved to place '+ place.label + '.')
                 }, function(data){
                     console.log(data);

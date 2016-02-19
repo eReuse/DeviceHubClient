@@ -14,7 +14,7 @@ function formModal($scope, $uibModalInstance, options, model, event){
         $uibModalInstance.dismiss('cancel');
     };
     $scope.$watch(function(){return $scope.status.done}, function(newV){
-        if(newV) $scope.cancel();
+        if(newV) $uibModalInstance.close('success');
     })
 
 }

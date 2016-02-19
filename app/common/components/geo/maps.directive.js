@@ -1,28 +1,37 @@
 'use strict';
 var sjv = require('simple-js-validator');
 
-function maps(geolocation, geoParsers, $q){
+function maps(geolocation, geoParsers, uiGmapGoogleMapApi){
     return {
         templateUrl: window.COMPONENTS + '/geo/maps.directive.html',
         restrict: 'E',
         scope: {
-            geoJSON: '@', //todo use actually the value. Now we suppose is true always.
             getUserPosition: '@',
-            coordinates: '=' //In geoJSON
+            coordinates: '=', //In geoJSON
+            disabled: '='
         },
         link: function ($scope, $element, $attrs) {
+            $scope.disabled = $scope.disabled || false;
             $scope.mapConfig = null; //Map will take some time to load
             var useUserPosition = $scope.getUserPosition == "true";
             if(sjv.isNotEmpty($scope.coordinates.coordinates)){
-                var center = getCenter(coords.maps);
-                $scope.mapConfig = getMapConfig({latitude: center.lat(), longitude: center.lng()}, $scope.coordinates, false);
+                uiGmapGoogleMapApi.then(function() { //Once the api is loaded
+                    var center = getCenter($scope.coordinates.coordinates);
+                    $scope.mapConfig = getMapConfig({
+                        latitude: center.lat(),
+                        longitude: center.lng()
+                    }, $scope.coordinates, !$scope.disabled);
+                })
             }
             else {
                 $scope.newPlace = {};
                 if(useUserPosition){
                     getUserPosition(true, geolocation).then(function(){
                         angular.copy(geoParsers.mapPolygonToGeoJSON(geolocation.path), $scope.coordinates);
-                        $scope.mapConfig = getMapConfig(geolocation.center, $scope.coordinates, true);
+                        uiGmapGoogleMapApi.then(function(){
+                            $scope.mapConfig = getMapConfig(geolocation.center, $scope.coordinates, !$scope.disabled);
+                        });
+
                     });
                 }
             }
@@ -65,10 +74,12 @@ function getMapConfig(center, path, st){
     }
 }
 
-function getCenter(geo){
+function getCenter(geoJsonPolygon){
     var bounds = new google.maps.LatLngBounds();
-    for (var i = 0; i<geo.length; i++)
-        bounds.extend(new google.maps.LatLng(geo[i].latitude, geo[i].longitude));
+    var firstRing = geoJsonPolygon[0];
+    firstRing.forEach(function(coords){
+        bounds.extend(new google.maps.LatLng(coords[1], coords[0]))
+    });
     return bounds.getCenter();
 }
 

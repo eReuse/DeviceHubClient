@@ -1,13 +1,29 @@
 'use strict';
 var Case = require('case');
 var pluralize = require('pluralize');
+require('angular');
 
 
 var utils = {
     humanize: humanize,
     getResourceName: getResourceName,
-    getUrlResourceName: getUrlResourceName
+    getUrlResourceName: getUrlResourceName,
+    copy: copy
 };
+
+/**
+ * Tries to copy a value using an own 'clone' property of it, or uses the angular standard way of doing it.
+ * @param value
+ * @returns {*}
+ */
+function copy(value){
+    try{
+        return value.clone();
+    }
+    catch(err){
+        return angular.copy(value);
+    }
+}
 
 function humanize(text){
     /**

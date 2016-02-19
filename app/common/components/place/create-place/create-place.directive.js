@@ -21,7 +21,7 @@ function openModalFactory($uibModal){
             controller: 'formModalCtrl',
             resolve: {
                 model: function(){ return {'@type': 'Place'}},
-                options: function(){ return {doNotUse: 'devices'}}
+                options: function(){ return {doNotUse: ['devices']}}
             }
         })
     }

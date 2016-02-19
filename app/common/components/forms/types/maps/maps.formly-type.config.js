@@ -8,14 +8,12 @@ function maps(formlyConfigProvider){
         apiCheck: function(check){
             return {
                 templateOptions: {
-                    geoJSON: check.bool,
                     getUserPosition: check.bool
                 }
             }
         },
         defaultOptions: {
             templateOptions: {
-                geoJSON: true,
                 getUserPosition: true
             }
         },
