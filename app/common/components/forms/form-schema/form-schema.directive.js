@@ -1,6 +1,11 @@
 'use strict';
 var utils = require('./../../utils.js');
 var EVENTS;
+var OPERATION = {
+    put: 'updated',
+    post: 'created',
+    delete: 'deleted'
+};
 
 function formSchema(cerberusToFormly, Restangular, $rootScope, Notification, event){
     return{
@@ -18,7 +23,9 @@ function formSchema(cerberusToFormly, Restangular, $rootScope, Notification, eve
             $scope.fields = cerberusToFormly.parse($scope.model, $scope, options); //parse adds 'nonModifiable' to options
             $scope.submit = submitFactory($scope.fields, $scope.form, $scope.status, Restangular, $rootScope, Notification);
             window.model = $scope.model;
-            window.forom = $scope.form;
+            window.form = $scope.form;
+            $scope.options.canDelete = 'remove' in $scope.model;
+            $scope.options.delete = deleteFactory($scope.model, $rootScope, $scope.status, Notification);
         }
     }
 }
@@ -30,14 +37,10 @@ function submitFactory(fields, form, status, Restangular, $rootScope, Notificati
             status.working = true;
             var model = utils.copy(originalModel); //We are going to change stuff in model
             remove_helper_values(model);
-            upload(Restangular, model, $rootScope).then(function(response){
-                status.working = false;
-                status.done = true;
-                Notification.success(response['@type'] + ' ' + ('label' in response? response.label : response._id) + ' successfully created.');
-            }, function(response){
-                status.working = false;
-                status.errorListFromServer = response.data._issues;
-            });
+            upload(Restangular, model, $rootScope).then(
+                succeedSubmissionFactory($rootScope, status, Notification, OPERATION['put' in model? 'put' : 'post'], model),
+                failedSubmissionFactory(status)
+            )
         }
         else status.error = true;
     }
@@ -49,16 +52,33 @@ function remove_helper_values(model){
             delete model[fieldName];
 }
 
-function upload(Restangular, model, $rootScope){
+function upload(Restangular, model){
     var type = model['@type'];
     var prepend = type in EVENTS? 'events' : '';
     var resourceName = utils.getResourceName(type);
-    var promise = 'put' in model?
+    return 'put' in model?
         model.put() : Restangular.all(prepend).all(utils.getUrlResourceName(resourceName)).post(model);
-    return promise.then(function(data){
-        $rootScope.$broadcast('refresh@' + resourceName);
-        return data;
-    });
+}
+
+function succeedSubmissionFactory($rootScope, status, Notification, operationName, model){
+    return function (response){
+        var resource = _.isUndefined(response)? model : response; //DELETE operations do not answer with the result
+        $rootScope.$broadcast('refresh@' + utils.getResourceName(resource['@type']));
+        status.working = false;
+        status.done = true;
+        Notification.success(
+            utils.humanize(resource['@type'])
+            + ' ' + ('label' in resource? resource.label : resource._id)
+            + ' successfully ' + operationName + '.'
+        );
+    }
+}
+
+function failedSubmissionFactory(status){
+    return function (response){
+        status.working = false;
+        status.errorListFromServer = response.data._issues;
+    }
 }
 
 function setOptions(type, options){
@@ -87,6 +107,17 @@ function isValid(form, schema){
             catch (err){}
         });
         return valid;
+    }
+}
+
+function deleteFactory(model, $rootScope, status, Notification){
+    return function (){
+        if(confirm("Are you sure you want to delete it?")){
+            model.remove().then(
+                succeedSubmissionFactory($rootScope, status, Notification, OPERATION.delete, model),
+                failedSubmissionFactory(status)
+            )
+        }
     }
 }
 

@@ -10,7 +10,7 @@ function createPlace($uibModal, $rootScope){
             place: '='
         },
         link: function ($scope) {
-            $scope.openModal = openModalFactory($uibModal, $scope.place);
+            $scope.openModal = openModalFactory($uibModal, $scope.place, $rootScope);
         }
     }
 }

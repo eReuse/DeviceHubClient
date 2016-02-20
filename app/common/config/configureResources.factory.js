@@ -31,7 +31,7 @@ function configureResources(schema, Restangular, CONSTANTS, $rootScope) {
                     if(operation == 'getList')
                         for(var i = 0; i < data.length; i++)
                             parse(data[i], schema.schema[what]);
-                    else parse(data, schema.schema[what]);
+                    else if(response.status != 204) parse(data, schema.schema[what]);
                 }
                 return data;
             });
