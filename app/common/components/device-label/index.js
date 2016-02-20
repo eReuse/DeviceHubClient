@@ -11,7 +11,8 @@ module.exports = angular.module('common.components.deviceLabel',
     [
         'monospaced.qrcode',
         'ui.bootstrap',
-        'ngAnimate'
+        'ngAnimate',
+        require('./../../constants').name
     ])
     /**
      * @ngdoc directive

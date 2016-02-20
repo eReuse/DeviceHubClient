@@ -1,6 +1,9 @@
 <div id="login">
     <form name="loginForm" class="form-horizontal" ng-submit="login(credentials, saveInBrowser)" show-validation>
-        <h1>{{APP_NAME}}</h1>
+        <h1>
+            <span ng-if="!showSiteLogo">{{APP_NAME}}</span>
+            <img ng-if="showSiteLogo" ng-src="{{siteLogo}}"/>
+        </h1>
         <div class="form-group">
             <label for="email" class="col-xs-3">Email</label>
             <div class="col-xs-9">
@@ -25,6 +28,6 @@
         <!--<button type="submit" class="btn btn-info">Register</button>-->
     </form>
     <footer class="row">
-        <img src="common/assets/ereuse-logo.svg"/>
+        <img ng-src="{{eReuseLogo}}"/>
     </footer>
 </div>

@@ -6,6 +6,10 @@ function loginController($scope, $state, authService, CONSTANTS) {
         password: ''
     };
     $scope.APP_NAME = CONSTANTS.appName;
+    $scope.siteLogo = CONSTANTS.siteLogo;
+    $scope.eReuseLogo = CONSTANTS.eReuseLogo;
+    $scope.showSiteLogo = CONSTANTS.showSiteLogo;
+    $('#login').css({'background-image': 'url("' + CONSTANTS.loginBackgroundImage + '")'});
     $scope.saveInBrowser = false;
     $scope.login = function (credentials, saveInBrowser) {
         authService.login(credentials, saveInBrowser).then(function (user) {

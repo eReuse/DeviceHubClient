@@ -1,6 +1,6 @@
 'use strict';
 
-function labelList(){
+function labelList(CONSTANTS){
     var labelsToPdf = require('./labels-to-pdf.js');
     var setImageGetter = function($scope){
         $('#logoUpload').change(function () {
@@ -26,7 +26,7 @@ function labelList(){
                 width: 97,
                 height: 59
             };
-            $scope.logo = 'common/assets/ereuse-logo.svg';
+            $scope.logo = CONSTANTS.siteLogo;
             setImageGetter($scope);
             $scope.print = labelsToPdf;
         }
