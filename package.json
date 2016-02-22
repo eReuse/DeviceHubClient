@@ -5,6 +5,7 @@
     "angular": "^1.4.8",
     "angular-animate": "^1.4.8",
     "angular-bootstrap-nav-tree": "^0.2.1",
+    "angular-chart.js": "^0.8.8",
     "angular-fill-height-directive": "git+https://github.com/anthonychu/angular-fill-height-directive.git",
     "angular-formly": "^7.5.0",
     "angular-formly-templates-bootstrap": "^6.2.0",

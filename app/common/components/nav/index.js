@@ -34,7 +34,8 @@ module.exports = angular.module('common.components.nav',
             restrict: 'E',
             link: function($scope){
                 $scope.tabs = [
-                    {heading: 'List devices', route: 'index.devices.show', active: false}
+                    {heading: 'Devices', route: 'index.devices.show', active: true, glyphicon: 'phone'},
+                    {heading: 'Reports', route: 'index.reports', active: false, glyphicon: 'file'}
                 ];
                 $scope.go = go;
                 $scope.$on("$stateChangeSuccess", function() {

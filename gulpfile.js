@@ -61,7 +61,9 @@ var filePath = {
             './bower_components/angular-timeline/dist/angular-timeline-bootstrap.css',
             './bower_components/angular-bootstrap-nav-tree/dist/abn_tree.css',
             './node_modules/jsonformatter/dist/json-formatter.min.css',
-            './node_modules/angular-ui-notification/dist/angular-ui-notification.css'
+            './node_modules/angular-ui-notification/dist/angular-ui-notification.css',
+            './bower_components/angular-dashboard-framework/angular-dashboard-framework.css',
+            './node_modules/angular-chart.js/dist/angular-chart.css'
         ]
     },
     vendorJS: {
@@ -86,7 +88,12 @@ var filePath = {
             './node_modules/simple-js-validator/lib/simple.js.validator.js',
             './node_modules/jsonformatter/dist/json-formatter.js',
             './node_modules/angular-ui-notification/dist/angular-ui-notification.js',
-            './node_modules/pluralize/pluralize.js'
+            './node_modules/pluralize/pluralize.js',
+            './bower_components/angular-dashboard-framework/dist/angular-dashboard-framework.js',
+            './bower_components/Sortable/Sortable.js',
+            './bower_components/adf-structures-base/dist/adf-structures-base.js',
+            './node_modules/angular-chart.js/angular-chart.js',
+            './node_modules/chart.js/Chart.js'
         ],
         src1: [
             'angular',

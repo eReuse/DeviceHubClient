@@ -15,7 +15,10 @@ function restangularConfig (RestangularProvider, CONSTANTS){
                 extractedData._meta = data._meta;
                 break;
             case 'get':
-                data._links.self.href = CONSTANTS.url + '/' + data._links.self.href;
+                try{
+                    data._links.self.href = CONSTANTS.url + '/' + data._links.self.href;
+                }
+                catch (err){}
                 extractedData = data;
                 break;
             default:

@@ -6,6 +6,7 @@ window.VIEWS = 'views';
 
 window.$ = window.jQuery = require('jquery'); //We globally load jQuery
 window._ = require('lodash');
+window.Sortable = require('bower_components/Sortable/Sortable.js');
 
 require('angular');
 require('ui-router');
@@ -32,6 +33,10 @@ module.exports = angular.module('deviceHub',[
                 url:'/login',
                 templateUrl: 'views/login/login.controller.html',
                 controller: 'loginCtrl as LnCl'
+            }).state('index.reports',{
+                url: '/reports',
+                templateUrl: 'views/reports/reports.controller.html',
+                controller: 'reportsCtrl as RsCl'
             });
             $urlRouterProvider.otherwise("/devices")
         })

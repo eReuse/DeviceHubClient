@@ -9,5 +9,6 @@
 module.exports = angular.module('views',
     [
         require('./devices').name,
-        require('./login').name
+        require('./login').name,
+        require('./reports').name
     ]);
