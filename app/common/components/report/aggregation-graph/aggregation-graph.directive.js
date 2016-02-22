@@ -7,10 +7,12 @@ function aggregationGraph(Restangular){
         scope: {
             params: '=',
             resourceName: '@',
+            method: '@',
             type: '@'
         },
         link: function ($scope, $element, $attrs) {
-            $scope.model = window.gg = Restangular.all('aggregate').one($scope.resourceName).get($scope.params).$object;
+            $scope.model = Restangular.all('aggregations').all($scope.resourceName)
+                .one($scope.method).get($scope.params).$object;
         }
     }
 

@@ -1,0 +1,28 @@
+<form role="form">
+    <div class="form-group">
+        <label for="subject">Subject</label>
+        <select class="form-control" id="subject" ng-model="config.subject">
+            <option value="receiverOrganization">Organization of the receiver</option>
+            <option value="receiver">The user who received it.</option>
+            <option value="byUser">The user who did the event.</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="event">Event</label>
+        <select class="form-control" id="event" ng-model="config.event">
+            <option value="Receive">Receive</option>
+            <option value="Register">Register</option>
+            <option value="Recycle">Recycle</option>
+            <option value="Allocate">Allocate</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="receiverType">Receiver Type (only for Receiver event)</label>
+        <select class="form-control" id="receiverType" ng-model="config.receiverType">
+            <option value="FinalUser">Final User</option>
+            <option value="CollectionPoint">Collection Point</option>
+            <option value="RecyclingPoint">Recycling Point</option>
+        </select>
+    </div>
+    <input type="hidden" ng-model="config.method" value="number_devices_events"/>
+</form>

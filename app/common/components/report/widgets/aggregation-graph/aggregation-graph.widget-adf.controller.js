@@ -2,7 +2,16 @@
 
 
 function aggregationGraphWidgetAdfController($scope, config){
-    $scope.params = {method: config.method || 'number_devices_events'};
+    if(!('event' in config)){
+        angular.copy({
+            subject: 'receiverOrganization',
+            event: 'Receive',
+            receiverType: 'CollectionPoint'
+        }, config);
+    }
+    $scope.params = window.cg = config;
+    $scope.method = 'number_devices_events';
+    window.sco = $scope;
     $scope.resourceName = 'events';
 }
 
