@@ -12,9 +12,9 @@ function event(schema){
         Locate: {glyphicon: 'map-marker', manual: true, doNotUse: generalDoNotUse},
         Deallocate: {glyphicon: 'hand-left', manual: true, doNotUse: generalDoNotUse},
         Ready: {glyphicon: 'ok', manual: true, doNotUse: generalDoNotUse},
-        Repair: {glyphicon: 'repeat', manual: true, doNotUse: generalDoNotUse},
-        ToPrepare: {glyphicon: 'wrench', manual: true, to: true, doNotUse: generalDoNotUse},
-        ToRepair: {glyphicon: 'repeat', manual: true, to: true, doNotUse: generalDoNotUse},
+        Repair: {glyphicon: 'wrench', manual: true, doNotUse: generalDoNotUse},
+        ToPrepare: {glyphicon: 'repeat', manual: true, to: true, doNotUse: generalDoNotUse},
+        ToRepair: {glyphicon: 'wrench', manual: true, to: true, doNotUse: generalDoNotUse},
         ToRecycle: {glyphicon: 'tree-deciduous', manual: true, to: true, doNotUse: generalDoNotUse},
         Recycle: {glyphicon: 'tree-deciduous', manual: true, doNotUse: generalDoNotUse}
     };
