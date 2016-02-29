@@ -9,7 +9,8 @@ module.exports = angular.module('views.devices',
         require('./../../common/components/device').name,
         require('./../../common/components/device-list').name,
         require('./../../common/components/account').name,
-        require('./../../common/components/authentication').name
+        require('./../../common/components/authentication').name,
+        require('./../../common/config').name
     ])
     .config(
         function($urlRouterProvider,$stateProvider){

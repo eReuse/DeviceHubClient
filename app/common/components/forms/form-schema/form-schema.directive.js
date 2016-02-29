@@ -63,7 +63,7 @@ function upload(Restangular, model){
 function succeedSubmissionFactory($rootScope, status, Notification, operationName, model){
     return function (response){
         var resource = _.isUndefined(response)? model : response; //DELETE operations do not answer with the result
-        $rootScope.$broadcast('refresh@' + utils.getResourceName(resource['@type']));
+        $rootScope.$broadcast('refresh@' + utils.getResourceName(model['@type']));
         status.working = false;
         status.done = true;
         Notification.success(

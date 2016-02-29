@@ -40,7 +40,8 @@ module.exports = angular.module('deviceHub',[
             });
             $urlRouterProvider.otherwise("/devices")
         })
-    .controller('deviceHubCtrl',function($templateCache){
+    .controller('deviceHubCtrl',function($templateCache, CONSTANTS){
         $('#intro-spinner').remove();
         window.tc = $templateCache;
+        window.document.title = CONSTANTS.appName;
     });

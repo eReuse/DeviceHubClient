@@ -5,9 +5,11 @@ function schema(CONSTANTS, Restangular) {
     this.schema = null;
     this.compareSink = compareSink;
     this.getFromServer = function(){
-        self.promise = Restangular.oneUrl('schema', CONSTANTS.url + '/schema').get().then(function(data){
-             self.schema = data;
-        });
+        if (!('promise' in self)) {
+            self.promise = Restangular.oneUrl('schema', CONSTANTS.url + '/schema').get().then(function (data) {
+                self.schema = data;
+            });
+        }
         return self.promise;
     };
     return this;

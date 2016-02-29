@@ -10,7 +10,7 @@ function aggregationGraphWidgetAdfController($scope, config){
         }, config);
     }
     $scope.params = window.cg = config;
-    $scope.method = 'number_devices_events';
+    $scope.method = 'devices_per_event_subject_month';
     window.sco = $scope;
     $scope.resourceName = 'events';
 }

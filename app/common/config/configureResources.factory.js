@@ -2,6 +2,7 @@
 var utils = require('./../components/utils.js');
 
 function configureResources(schema, Restangular, CONSTANTS, $rootScope) {
+    var self = this;
     this.setAuthHeader = function(account){
         var headers = CONSTANTS.headers;
         headers['Authorization'] = 'Basic ' + account.token;
@@ -25,7 +26,9 @@ function configureResources(schema, Restangular, CONSTANTS, $rootScope) {
         Restangular.setBaseUrl(CONSTANTS.url);
     };
     this.configureSchema = function (){
-        schema.getFromServer().then(function(){
+        if ('promise' in self)
+            return self.promise;
+        self.promise = schema.getFromServer().then(function(){
             Restangular.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
                 if(what in schema.schema){
                     if(operation == 'getList')
@@ -51,7 +54,6 @@ function configureResources(schema, Restangular, CONSTANTS, $rootScope) {
                             delete element[fieldName];
                 return element;
             });
-            $rootScope.$broadcast('load@configureResources');
         });
     };
     return this;

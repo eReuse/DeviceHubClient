@@ -1,6 +1,6 @@
 'use strict';
 
-function devicesController ($scope){
+function devicesController ($scope, configureResources){
     var self = this;
     self.load = true;
     self.id = {_id: null, hid: null}; //@todo implement hid
@@ -12,9 +12,9 @@ function devicesController ($scope){
     $scope.$on('deviceDeselected@deviceList', function(){
         self.id._id = null;
     });
-    $scope.$on('load@configureResources', function(){
+    configureResources.configureSchema().then(function(){
         self.load = true;
-    });
+    })
 }
 
 module.exports = devicesController;
