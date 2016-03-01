@@ -9,7 +9,7 @@ function tableView(){
             model: '='
         },
         link:function($scope){
-            $scope.model.forEach(function(field){
+            _.forEach($scope.model, function(field){
                 field.showAsJson =
                     Object.prototype.toString.call(field.value) == '[object Object]' || angular.isArray(field.value);
             });

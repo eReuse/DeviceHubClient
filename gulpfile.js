@@ -93,7 +93,9 @@ var filePath = {
             './bower_components/Sortable/Sortable.js',
             './bower_components/adf-structures-base/dist/adf-structures-base.js',
             './node_modules/angular-chart.js/angular-chart.js',
-            './node_modules/chart.js/Chart.js'
+            './node_modules/chart.js/Chart.js',
+            './node_modules/lodash/lodash.js',
+            './app/common/components/device-label/label/qrcode.js'
         ],
         src1: [
             'angular',
