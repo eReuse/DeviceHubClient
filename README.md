@@ -22,7 +22,7 @@ We wanted to do a simple but powerful way to work with the devices. Just "click 
 
 ![How to work with devices](screenshots/work-with-devices.png)
 
-So many events can be confusing. Click them to know what they do.
+So many events can be confusing. Click them to know what they do. You can get more *techy* info [here](https://wiki.ereuse.org/arch:events).
 
 For example, you can label the devices. This is important to fast locate them after.
 
