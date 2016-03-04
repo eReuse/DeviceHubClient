@@ -1,5 +1,8 @@
 <article>
-<timeline side="left">
+    <div ng-show="loading">
+        <div class="spinner"></div>
+    </div>
+<timeline side="left" ng-hide="loading">
     <timeline-event ng-repeat="event in events">
         <timeline-badge class="info">
             <event-icon event-type="{{event['@type']}}"></event-icon>

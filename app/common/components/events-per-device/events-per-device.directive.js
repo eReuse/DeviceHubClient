@@ -14,6 +14,7 @@ function eventsPerDevice(Restangular, event) {
                 return $scope.device._id;
             }, function (newValue, oldValue) {
                 if(angular.isDefined(newValue)) {
+                    $scope.loading = true;
                     $scope.id._id = newValue;
                     var data = {
                         where: JSON.stringify({'$or': [
@@ -26,6 +27,7 @@ function eventsPerDevice(Restangular, event) {
                     };
                     Restangular.all('events').getList(data).then(function (events) {
                         $scope.events = subsanizeEvents(events);
+                        $scope.loading = false;
                         //$scope.events = events;
                     });
                     // $scope.events = Restangular.one('devices',newValue).getList('events').$object;
