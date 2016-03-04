@@ -5,7 +5,12 @@
         template-url="'common/components/device-list/search.html'"
         parameters-display-limit="200">
 </nit-advanced-searchbox>
-    <div ng-show="selectedDevices.length > 0" style="text-align: center" id="selectedMenu">
+    <div
+            ng-show="selectedDevices.length > 0"
+            style="text-align: center"
+            id="selectedMenu"
+            class="ani-show"
+    >
         <span uib-tooltip-template="'common/components/device-list/selected-devices.uib-tooltip-template.html'" tooltip-placement="bottom">
             {{selectedDevices.length}} devices <i ng-click="unselectDevices()" class="glyphicon glyphicon-remove-circle"></i>
         </span>
@@ -25,7 +30,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="device in devices" ng-click="deviceSelected(device)" ng-class="{success: isSelected(device._id)}">
+                <tr
+                        ng-repeat="device in devices"
+                        ng-click="deviceSelected(device)"
+                        ng-class="{success: isSelected(device._id)}"
+                        class="ani-default"
+                >
                     <td>
                         <input type="checkbox"
                                checklist-model="selectedDevices"

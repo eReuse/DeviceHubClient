@@ -20,7 +20,11 @@
 <div class="col-xs-12">
     <h3>Components</h3>
     <div uib-accordion class="row">
-        <div uib-accordion-group ng-repeat="device in computer.components">
+        <div
+                uib-accordion-group
+                ng-repeat="device in computer.components"
+                class="ani-default animated"
+        >
             <header uib-accordion-heading>
                 {{device['@type']}}: {{device._id}}, <em>{{device.manufacturer}} {{device.model}}</em>
             </header>

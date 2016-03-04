@@ -16,7 +16,8 @@ module.exports = angular.module('deviceHub',[
         'ui.router',
         require('./common').name,
         require('./views').name,
-        require('dist/templates.js').name
+        require('dist/templates.js').name,
+        require('angular-animate')
     ])
     .config(
         function($urlRouterProvider,$stateProvider){
