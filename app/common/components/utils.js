@@ -14,7 +14,8 @@ var utils = {
     getResourceNameFromUrlRN: getResourceNameFromUrlRN,
     getTitle: getTitle,
     applyAfterScrolling: applyAfterScrolling,
-    isEvent: isEvent
+    isEvent: isEvent,
+    parseDate: parseDate
 };
 
 /**
@@ -71,17 +72,27 @@ function isEvent(type){
     return type in event({}).EVENTS;
 }
 
+/**
+ * Executes $apply() after the element has scrolled.
+ * @param element DOM element to detect the scroll
+ * @param $scope $scope The scope which to execute apply()
+ */
 function applyAfterScrolling(element, $scope){
-    /**
-     * Executes $apply() after the element has scrolled.
-     * @type {null}
-     * @private
-     */
     $(element).scroll(function(){
         $.doTimeout( 'scroll', 250, function(){
             $scope.$apply();
         });
     });
+}
+
+/**
+ * Returns the string representation of a date following the server's representation
+ * @param oldDate Date
+ * @returns {string}
+ */
+function parseDate(oldDate){
+    var datetime = oldDate.toISOString();
+    return datetime.substring(0, datetime.indexOf('.'))
 }
 
 module.exports = utils;

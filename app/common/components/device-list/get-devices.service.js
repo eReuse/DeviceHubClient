@@ -1,11 +1,14 @@
 'use strict';
+
+var utils = require('./../utils.js');
+
 function getDevices(Restangular, deviceListConfig) {
     this.getDevices = function(searchParams, page){
         var where =  $.extend({}, searchParams);
         Object.keys(where).forEach(function(key,index) {
             try{
                 var setting = deviceListConfig.defaultSearchParams.filter(function(x){return x.key == key})[0];
-                if('date' in setting) where[key] = where[key].toUTCString();
+                if('date' in setting) where[key] = utils.parseDate(where[key]);
                 if('methods' in setting){
                     setting.methods.forEach(function(method, index, array){
                         where[key] = method(where[key])
@@ -35,7 +38,7 @@ function getDevices(Restangular, deviceListConfig) {
             catch(err){}
         });
 
-        return Restangular.all('devices').getList({where: where, embedded: JSON.stringify({components: 0}), page: page});
+        return Restangular.all('devices').getList({where: where, page: page});
     }
 }
 

@@ -42,10 +42,8 @@ function configureResources(schema, Restangular, CONSTANTS, $rootScope) {
                 var element = utils.copy(originalElement);
                 if (operation == 'post')
                     for(var fieldName in element)
-                        if(element[fieldName] instanceof Date){
-                            var datetime = element[fieldName].toISOString();
-                            element[fieldName] = datetime.substring(0, datetime.indexOf('.'))
-                        }
+                        if(element[fieldName] instanceof Date)
+                            element[fieldName] = utils.parseDate(element[fieldName]);
                 if(operation == 'put')
                     for (fieldName in element)
                         if(fieldName == '_created'
