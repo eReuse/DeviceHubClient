@@ -1,6 +1,8 @@
 'use strict';
 var Case = require('case');
 var pluralize = require('pluralize');
+var event = require('./event/event.factory.js');
+require('bower_components/Boxer/jquery.ba-dotimeout.js');
 require('angular');
 
 
@@ -8,7 +10,11 @@ var utils = {
     humanize: humanize,
     getResourceName: getResourceName,
     getUrlResourceName: getUrlResourceName,
-    copy: copy
+    copy: copy,
+    getResourceNameFromUrlRN: getResourceNameFromUrlRN,
+    getTitle: getTitle,
+    applyAfterScrolling: applyAfterScrolling,
+    isEvent: isEvent
 };
 
 /**
@@ -44,9 +50,38 @@ function getUrlResourceName(resourceName){
     /**
      * Given a DeviceHub's resource name, builds the equivalent to use in an url.
      */
-
-    return RESOURCES_WITH_PLURAL.indexOf(resourceName) != -1? pluralize.plural(resourceName) : resourceName;
+    return _.includes(RESOURCES_WITH_PLURAL, resourceName)? pluralize.plural(resourceName) : resourceName;
 }
 
+function getResourceNameFromUrlRN(urlResourceName){
+    return pluralize.singular(urlResourceName);
+}
+
+function getTitle(resource){
+    var text = '';
+    text += resource.label || '';
+    if(text == '')
+        text += resource.email || '';
+    if(text == '')
+        text += resource._id;
+    return utils.humanize(resource['@type']) + ' ' + text
+}
+
+function isEvent(type){
+    return type in event({}).EVENTS;
+}
+
+function applyAfterScrolling(element, $scope){
+    /**
+     * Executes $apply() after the element has scrolled.
+     * @type {null}
+     * @private
+     */
+    $(element).scroll(function(){
+        $.doTimeout( 'scroll', 250, function(){
+            $scope.$apply();
+        });
+    });
+}
 
 module.exports = utils;

@@ -1,26 +1,17 @@
 <article class="device">
-    <div ng-if="id._id != null">
-        <uib-tabset>
-            <uib-tab ng-repeat="tab in tabs" active="tab.isActive">
-                <tab-heading>
+    <div ng-if="device._id != null">
+        <uib-tabset active="activeTab">
+            <uib-tab ng-repeat="tab in tabs" select="setActive(tab)">
+                <uib-tab-heading>
                     <i class="{{tab.uiClass}}"></i>&nbsp;{{tab.heading}}
-                </tab-heading>
+                </uib-tab-heading>
                 <div ng-if="tab.isActive">
-                    <div ng-switch="tab.heading">
-                        <div ng-switch-when="Show">
-                            <div fill-height>
-                                <device-view device="device"></device-view>
-                            </div>
-                        </div>
-                        <div ng-switch-when="Events">
-                            <div fill-height>
-                                <events-per-device device="device"></events-per-device>
-                            </div>
-                        </div>
+                    <div fill-height additional-padding="57" ng-include="tab.templateUrl">
+
                     </div>
                 </div>
             </uib-tab>
         </uib-tabset>
     </div>
-    <div ng-if="id._id == null" id="no-device"><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Select a device.</div>
+    <div ng-if="device._id == null" id="no-device"><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Select a device.</div>
 </article>

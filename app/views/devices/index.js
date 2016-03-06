@@ -1,11 +1,10 @@
 'use strict';
-require('angular-ui-bootstrap');
 /**
  * Represents the main devices view
  */
 module.exports = angular.module('views.devices',
     [
-        'ui.bootstrap',
+        require('angular-ui-bootstrap'),
         require('./../../common/components/device').name,
         require('./../../common/components/device-list').name,
         require('./../../common/components/account').name,

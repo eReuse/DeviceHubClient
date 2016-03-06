@@ -16,7 +16,8 @@ module.exports = angular.module('common.components.device',
         'ngSanitize',
         require('./../device-list').name,
         'RecursionHelper',
-        'restangular'
+        'restangular',
+        require('./../view').name
     ])
     /**
      * @ngdoc directive
@@ -36,30 +37,6 @@ module.exports = angular.module('common.components.device',
      * to be able to watch over it, and load a new device when the _id changes.
      */
     .directive('deviceView', require('./device-view/device-view.directive.js'))
-    /**
-     * @ngdoc directive
-     * @name computerView
-     * @description
-     * Specific method for deviceView, intended for use with devices of @type == "Computer".
-     * @param obj computer full computer object.
-     */
-    .directive('computerView', require('./computer-view/computer-view.directive.js'))
-    /**
-     * @ngdoc directive
-     * @name componentView
-     * @description
-     * Specific method for components.
-     * @param obj computer full component object.
-     */
-    .directive('componentView', require('./component-view/component-view.directive.js'))
-    /**
-     * @ngdoc directive
-     * @name hardDriveView
-     * @description
-     * Specific method for hard drives. Appends the certificates.
-     * @param obj hardDrive full computer object.
-     */
-    .directive('hardDriveView', require('./hard-drive-view/hard-drive-view.directive.js'))
     /**
      * @ngdoc directive
      * @name placeIcon

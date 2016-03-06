@@ -1,12 +1,8 @@
 <div>
-    The user {{snapshot.byUser}} uploaded a Snapshot JSON file at {{snapshot._created | date}},
+    The user <resource-button resource-id="snapshot.byUser" url-resource-name="'accounts'"></resource-button>
+     uploaded a Snapshot JSON file at {{snapshot._created | date}},
     and the following changes were performed:
-    <div uib-accordion class="row">
-        <div uib-accordion-group ng-repeat="subEvent in snapshot.events">
-            <header uib-accordion-heading>
-                <event-easy-explanation event="subEvent" id="id"></event-easy-explanation>
-            </header>
-            <event-view event="subEvent" teaser="teaser" id="id"></event-view>
-        </div>
+    <div ng-repeat="subEventId in snapshot.events">
+        <resource-button parent-id="id" resource-id="subEventId" url-resource-name="'events'"></resource-button>
     </div>
 </div>

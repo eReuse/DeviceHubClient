@@ -4,6 +4,6 @@
                    id="{{id + '_'+ $index}}"
                    ng-model="multiCheckbox.checked[$index]"
                    ng-change="multiCheckbox.change()">
-           {{option._id}}: {{option.manufacturer}} {{option.model}}
+            <resource-button resource-id="option._id" url-resource-name="'devices'"></resource-button>
         </label>
 </div>

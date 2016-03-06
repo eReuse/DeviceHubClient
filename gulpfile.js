@@ -73,7 +73,7 @@ var filePath = {
             './node_modules/angular-sanitize/angular-sanitize.js',
             './node_modules/angular-fill-height-directive/src/fill-height.js',
             './node_modules/angular-simple-logger/dist/index.js',
-            './node_modules/angular-ui-bootstrap/ui-bootstrap.js',
+            './node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
             './node_modules/checklist-model/checklist-model.js',
             './node_modules/jquery/dist/jquery.js',
             './node_modules/bootstrap/dist/js/bootstrap.js',
@@ -95,7 +95,10 @@ var filePath = {
             './node_modules/angular-chart.js/angular-chart.js',
             './node_modules/chart.js/Chart.js',
             './node_modules/lodash/lodash.js',
-            './app/common/components/device-label/label/qrcode.js'
+            './app/common/components/device-label/label/qrcode.js',
+            //'./node_modules/angular-strap/dist/angular-strap.js',
+            //'./node_modules/angular-strap/dist/angular-strap.tpl.js',
+            './bower_components/Boxer/jquery.ba-dotimeout.js'
         ],
         src1: [
             'angular',

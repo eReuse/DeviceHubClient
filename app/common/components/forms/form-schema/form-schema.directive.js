@@ -66,11 +66,7 @@ function succeedSubmissionFactory($rootScope, status, Notification, operationNam
         $rootScope.$broadcast('refresh@' + utils.getResourceName(model['@type']));
         status.working = false;
         status.done = true;
-        Notification.success(
-            utils.humanize(resource['@type'])
-            + ' ' + ('label' in resource? resource.label : resource._id)
-            + ' successfully ' + operationName + '.'
-        );
+        Notification.success(utils.getTitle(resource) + ' successfully ' + operationName + '.');
     }
 }
 

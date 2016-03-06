@@ -1,0 +1,19 @@
+<button
+        ng-click="get_plac"
+        uib-popover-template="popover.templateUrl"
+        popover-title="{{popover.title}}"
+        type="button"
+        class="btn btn-primary btn-xs"
+        popover-is-open="popover.isOpen"
+        popover-trigger="click"
+        popover-append-to-body="true"
+        popover-placement="auto left"
+
+>
+      <div ng-if="isEvent">
+            <event-easy-explanation event="resource" id="parentId" use-resource-button="false"></event-easy-explanation>
+      </div>
+      <div ng-hide="isEvent">
+            {{popover.title}}
+      </div>
+</button>

@@ -2,24 +2,27 @@
     <span ng-if="event.components && event.components.indexOf(id._id) != -1">
         This component has been {{name}} {{preposition}} {{event.device}}.
     </span>
-    <span ng-if="id._id == event.device">
-        <span ng-if="event.components">
-            <span ng-if="event.components.length > 1">
-                The components <span ng-repeat="component in event.components">{{component}}, </span>
-                have been {{name}} {{preposition}} this computer.
+    <span ng-if="id._id == event.device && event.components">
+        <span ng-if="event.components.length > 1">
+            The components
+            <span ng-repeat="componentId in event.components">
+                <resource-button ng-if='useRB' resource-id="componentId" url-resource-name="'devices'"></resource-button>
+                <span ng-hide="useRB">{{componentId}}</span>
             </span>
-            <span ng-if="event.components.length == 1">
-                The component {{event.components[0]}} has been {{name}} {{preposition}} this computer.
-            </span>
-            <span ng-if="event.components.length == 0">
-                The device has been {{name}}.
-            </span>
+            <br/>
+            have been {{name}} {{preposition}} this computer.
+        </span>
+        <span ng-if="event.components.length == 1">
+            The component {{event.components[0]}} has been {{name}} {{preposition}} this computer.
+        </span>
+        <span ng-if="event.components.length == 0">
+            The device has been {{name}}.
         </span>
     </span>
     <span ng-if="id._id != event.device && event['@type'] != 'Snapshot'">
         {{name}} was performed {{preposition}} {{event.device}}.
     </span>
-        <span ng-if="id._id == event.device && event['@type'] != 'Snapshot'">
+        <!--<span ng-if="id._id == event.device && event['@type'] != 'Snapshot'">
             {{name}} at {{event._created | date : 'short'}}
-    </span>
+    </span>-->
 </div>

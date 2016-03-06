@@ -1,17 +1,29 @@
 <table class="table table-striped table-hover">
-    <thead>
+    <thead ng-hide="_teaser">
         <tr>
             <th>Name</th><th>Value</th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="field in model">
+        <tr ng-repeat="field in model | filter: filterTeaser ">
             <td>{{field.name}}</td>
-            <td ng-if="field.showAsJson">
+            <td ng-if="field.showAsJson && field.data_relation == undefined">
                 <json-formatter json="field.value"></json-formatter>
             </td>
-            <td ng-if="!field.showAsJson">
+            <td ng-if="!field.showAsJson && field.data_relation == undefined" >
                 {{field.value}}&nbsp;{{field.unitCode}}
+            </td>
+            <td ng-if="field.data_relation != undefined">
+                <div ng-if="$root._.isArray(field.value)">
+                    <span
+                            ng-repeat="value in field.value"
+                    >
+                        <resource-button resource-id="value" url-resource-name="field.data_relation.resource"></resource-button>
+                    </span>
+                </div>
+                <div ng-if="!$root._.isArray(field.value)">
+                    <resource-button resource-id="field.value" url-resource-name="field.data_relation.resource"></resource-button>
+                </div>
             </td>
         </tr>
     </tbody>

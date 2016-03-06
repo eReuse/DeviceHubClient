@@ -22,8 +22,7 @@ function eventsPerDevice(Restangular, event) {
                             {device: newValue},
                             {components: {'$in': [newValue]}},
                             {parent: newValue}
-                        ]}),
-                        embedded: JSON.stringify({events: 1})
+                        ]})
                     };
                     Restangular.all('events').getList(data).then(function (events) {
                         $scope.events = subsanizeEvents(events);
@@ -40,9 +39,9 @@ function eventsPerDevice(Restangular, event) {
 var subsanizeEvents = function (events) {
     events.forEach(function (event) {
         if (event['@type'] == 'Snapshot'){  //for every snapshot
-            event.events.forEach(function (subEvent) {  //we get its full events
+            event.events.forEach(function (subEventId) {  //we get its full events
                 for (var i = 0; i < events.length; i++) //and we remove them from the general event list
-                    if (events[i]['_id'] == subEvent['_id']) events.splice(i,1);
+                    if (events[i]['_id'] == subEventId) events.splice(i,1);
             });
         }
     });

@@ -1,7 +1,13 @@
 <div ui-view>
     <div class="row main-row">
         <place-nav class="col-xs-1"></place-nav>
-        <device-list class="col-xs-5" params='{where:{max_results: 25}}'></device-list>
-        <device id='DsCl.id' class="col-xs-6"></device>
+        <device-list
+                device-change="DsCl.deviceApi.showDevice(device)"
+                class="col-xs-5"
+        ></device-list>
+        <device
+                api='DsCl.deviceApi'
+                class="col-xs-6"
+        ></device>
     </div>
 </div>

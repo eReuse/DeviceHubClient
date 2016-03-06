@@ -13,19 +13,17 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices){
         templateUrl: window.COMPONENTS + '/device-list/device-list.directive.html',
         restrict: 'AE',
         scope: {
-            params: '='
+            deviceChange: '&'
         },
         link: function($scope, $element, $attrs){
             $scope.selectedDevices = [];
             $scope.availableSearchParams = deviceListConfig.defaultSearchParams;
+            $scope.actualDevice = {};
             $scope.searchParams = angular.copy(DEFAULT_SEARCH_PARAMS);
 
             var _getDevices = $scope.getDevices = getDevicesFactory(getDevices, $scope, $rootScope);
             var refresh = refreshFactory(_getDevices, $scope);
 
-            /*$scope.$watchCollection(function(){return $scope.params;},function(newValue, oldValue){
-             getDevices({where: newValue},$scope);    //Whenever the state params change, we get new values (triggers at the beginning too)
-             });*/
             $scope.$watchCollection(function(){return $scope.searchParams}, function(newValue, oldValue){
                 if(newValue != undefined) _getDevices(false, false);
             });
@@ -47,8 +45,8 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices){
 
 
             $scope.deviceSelected = function(device){
-                $rootScope.$broadcast('deviceSelected@deviceList',device);
-                $scope.actualDevice = device;
+                angular.copy(device, $scope.actualDevice);
+                $scope.deviceChange({device: $scope.actualDevice});
             };
 
             $scope.$watchCollection(function(){return $scope.selectedDevices}, function(newValues, oldValues){
@@ -58,11 +56,11 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices){
 
             $scope.unselectDevices = function(){
                 $scope.selectedDevices.length = 0;
-                $scope.actualDevice = null;
+                $scope.actualDevice = {};
             };
 
             $scope.isSelected = function(device_id){
-                return $scope.actualDevice && (device_id ==  $scope.actualDevice._id);
+                return !_.isEmpty($scope.actualDevice) && device_id == $scope.actualDevice._id;
             };
 
             $scope.openModal = function(type){
