@@ -17,6 +17,7 @@
     "angular-simple-logger": "^0.1.5",
     "angular-ui-bootstrap": "^1.2.2",
     "angular-ui-notification": "^0.1.0",
+    "angular-ui-router": "^0.2.18",
     "api-check": "^7.5.5",
     "bootstrap": "^3.3.6",
     "browserify": "^12.0.1",
@@ -43,7 +44,6 @@
     "restangular": "^1.5.2",
     "run-sequence": "^1.1.5",
     "simple-js-validator": "^0.11.3",
-    "ui-router": "^0.2.15",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.6.1"

@@ -24,7 +24,11 @@ var del = require('del');
 
 var filePath = {
     destination: './dist',
-    build: {dest: './dist'},
+    build: {
+        dest: './dist',
+        jsDest: './dist/js',
+        cssDest: './dist/css'
+    },
     browserify: {
         src: './app/app.js',
         paths: ['./']
@@ -82,7 +86,7 @@ var filePath = {
             './node_modules/angular-google-maps/dist/angular-google-maps.js',
             './node_modules/angular-qrcode/angular-qrcode.js',
             './bower_components/angular-timeline/dist/angular-timeline.js',
-            './node_modules/ui-router/release/angular-ui-router.js',
+            './node_modules/angular-ui-router/release/angular-ui-router.js',
             './node_modules/angular-formly/dist/formly.js',
             './node_modules/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js',
             './node_modules/simple-js-validator/lib/simple.js.validator.js',
@@ -147,7 +151,7 @@ function rebundle() {
         .pipe(gulpif(bundle.prod, streamify(uglify({
             mangle: false
         }))))
-        .pipe(gulp.dest(filePath.build.dest));
+        .pipe(gulp.dest(filePath.build.jsDest));
 }
 
 function configureBundle(prod) {
@@ -185,7 +189,7 @@ gulp.task('vendorJS', function() {
         .on('error', handleError)
         .pipe(buffer())
         .pipe(uglify())
-        .pipe(gulp.dest(filePath.build.dest));
+        .pipe(gulp.dest(filePath.build.jsDest));
 });
 
 // =======================================================================
@@ -278,14 +282,14 @@ gulp.task('sass', function() {
         outputStyle: 'compressed'
     }).on('error', sass.logError))
     .pipe(concat('app.css'))
-    .pipe(gulp.dest(filePath.destination))
+    .pipe(gulp.dest(filePath.build.cssDest))
 });
 
 gulp.task('vendorCSS', function(){
     return gulp.src(filePath.vendorCSS.src)
         .pipe(concat('vendor.css'))
         .on('error', sass.logError)
-        .pipe(gulp.dest(filePath.destination))
+        .pipe(gulp.dest(filePath.build.cssDest))
 });
 
 gulp.task('notify', function(){
@@ -314,7 +318,7 @@ gulp.task('build', function(callback) {
     runSequence(
         ['clean'],
         ['templates'],
-        ['bundle-dev', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex'],
+        ['bundle-dev', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex', 'copyFonts'],
         ['afterClean', 'notify'],
         callback
     );
@@ -325,7 +329,7 @@ gulp.task('build-prod', function(callback) {
     runSequence(
         ['clean'],
         ['templates'],
-        ['bundle-prod', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex'],
+        ['bundle-prod', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex', 'copyFonts'],
         ['notify', 'afterClean'],
         callback
     );

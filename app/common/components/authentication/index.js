@@ -1,6 +1,6 @@
 'use strict';
 
-require('ui-router');
+require('angular-ui-router');
 require('restangular');
 
 module.exports = angular.module('common.components.authentication',

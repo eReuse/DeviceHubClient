@@ -1,6 +1,6 @@
 'use strict';
 
-require('ui-router');
+require('angular-ui-router');
 /**
  * Represents the main devices view
  */

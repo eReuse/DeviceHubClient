@@ -9,7 +9,7 @@ window._ = require('lodash');
 window.Sortable = require('bower_components/Sortable/Sortable.js');
 
 require('angular');
-require('ui-router');
+require('angular-ui-router');
 
 
 module.exports = angular.module('deviceHub',[

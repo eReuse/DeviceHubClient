@@ -16,6 +16,7 @@ module.exports = angular.module('common.config',
     .config(require('./restangular.config.js'))
     .config(require('./modal.config.js'))
     .config(require('./json-formatter.config.js'))
+    .config(require('./html5.config.js'))
     .config(require('./ui-notification.config.js'))
     .factory('configureResources', require('./configureResources.factory.js'))
     .factory('schema', require('./schema.factory.js'))

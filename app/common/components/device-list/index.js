@@ -3,7 +3,7 @@
 require('angular-ui-bootstrap');
 //require('bower_components/angular-advanced-searchbox/dist/angular-advanced-searchbox.js');
 require('./angular-advanced-searchbox-ereuse.js');
-require('ui-router');
+require('angular-ui-router');
 require('checklist-model');
 require('angular-animate');
 

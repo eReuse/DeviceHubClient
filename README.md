@@ -50,7 +50,7 @@ This is just a sneak peak of some things DeviceHub(Client) can do.
     bower install bower.json
     ```
     This will install the dependencies of the project.
-4. If using apache, an example config is (will need to update with html5 mode):
+4. If using Apache 2, an example config is:
     ```
     <VirtualHost *:80>
         ServerName www.example.com
@@ -62,17 +62,28 @@ This is just a sneak peak of some things DeviceHub(Client) can do.
             Allow from all
             Require all granted
 
-           # RewriteEngine on
-
-           # # Don't rewrite files or directories
-           # RewriteCond %{REQUEST_FILENAME} -f [OR]
-           # RewriteCond %{REQUEST_FILENAME} -d
-           # RewriteRule ^ - [L]
-
-           # # Rewrite everything else to index.html to allow html5 state links
-           # RewriteRule ^ index.html [L]
+            <IfModule rewrite.c>
+                # Optional. HTML5 mode
+                RewriteEngine on
+    
+                # Don't rewrite files or directories
+                RewriteCond %{REQUEST_FILENAME} -f [OR]
+                RewriteCond %{REQUEST_FILENAME} -d
+                RewriteRule ^ - [L]
+    
+                # Rewrite everything else to index.html to allow html5 state links
+                RewriteRule ^ index.html [L]
+            </IfModule>
+            
+            <IfModule mod_expires.c>
+                # Optional. Cache control
+                ExpiresActive On
+                ExpiresDefault "access plus 2 hours"
+            </IfModule>
         </Directory>
         #LogLevel debug
     </VirtualHost>
   ```
+  This config includes the necessary to work with HTML5 mode, and using a cache. Use [this page](http://www.control-escape.com/web/configuring-apache2-debian.html)
+   to know how to install the modules.
 5.  Set the url in the constants of Config.js to whatever URL the DeviceHub is in.
