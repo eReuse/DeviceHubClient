@@ -1,11 +1,10 @@
-<article class="labelWidget" ng-style="{width: width+'mm', height:height+'mm'}">
+<article class="labelWidget" ng-style="{width: width+'mm', height:height+'mm'}" ng-class="{'no-logo': !useLogo}">
     <div><img ng-src="{{logo}}"/></div>
     <div>
-        <qrcode data="{{code}}" error-correction-level="Q" size="100" version="5"></qrcode>
+        <qrcode data="{{code}}" error-correction-level="Q" size="110" version="5"></qrcode>
         <table>
             <tr><td>ID</td><td>{{device._id}}</td></tr>
             <tr><td><i class="glyphicon glyphicon-tag"></i></td><td>{{device.labelId}}</td></tr>
-            <tr><td>HID</td><td>{{device.hid}}</td></tr>
         </table>
     </div>
 </article>

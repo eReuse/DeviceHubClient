@@ -50,3 +50,10 @@ button[ng-click], a[ng-click], small[ng-click]{
 .main-row{
     margin: 0 !important;
 }
+
+.glyphicon{
+    margin-right: 0.1em;
+    &.glyphicon-tags{
+        margin-right: 0.3em;
+    }
+}

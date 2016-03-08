@@ -8,7 +8,8 @@ function label(){
             device: '=',
             width: '@',
             height: '@',
-            logo: '@'
+            logo: '@',
+            useLogo: '='
         },
         link: function ($scope, $element, $attrs) {
             $scope.code = $scope.device._links.self.href;

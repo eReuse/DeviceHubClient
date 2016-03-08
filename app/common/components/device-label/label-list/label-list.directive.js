@@ -24,11 +24,21 @@ function labelList(CONSTANTS){
         link: function ($scope, $element, $attrs) {
             $scope.set = {
                 width: 97,
-                height: 59
+                height: 59,
+                useLogo: true
             };
+            var oldHeight = $scope.set.height;
             $scope.logo = CONSTANTS.siteLogo;
             setImageGetter($scope);
             $scope.print = labelsToPdf;
+            $scope.$watch('set.useLogo', function(newV){
+                if(newV == false){
+                    oldHeight = $scope.set.height;
+                    $scope.set.height = 32;
+                }
+                else
+                    $scope.set.height = oldHeight;
+            })
         }
     }
 }

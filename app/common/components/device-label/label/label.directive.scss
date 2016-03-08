@@ -2,6 +2,7 @@
   width: 20em;
   background-color: white;
   border: 1px solid grey;
+  overflow: hidden;
   img {
     max-width: 100%;
     max-height: 100%;
@@ -14,7 +15,7 @@
     display: inline-block;
   }
   qrcode, table {
-    vertical-align: top;
+    vertical-align: middle;
   }
   qrcode {
     margin-left: 1%;
@@ -22,20 +23,25 @@
   }
   table {
     width: 64%;
-    font-size: 18px;
+    font-size: 19px;
     font-weight: bold;
     font-family: "Arial Black", sans-serif;
     tr {
       &:not(:first-child) td:last-child {
         border-top: 1px solid;
       }
-      &:last-child > td:last-child {
-        font-size: 13px;
-      }
       > td:last-child {
         text-align: right;
         width: 100%;
       }
+    }
+  }
+  &.no-logo{
+    > div:first-child{
+      display: none;
+    }
+    > div:last-child{
+      margin-top: 1mm;
     }
   }
 }
