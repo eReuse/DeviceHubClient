@@ -14,10 +14,14 @@ function getDevices(Restangular, deviceListConfig) {
                         where[key] = method(where[key])
                     });
                 }
+                if('boolean' in setting){
+                    where[key] = where[key] == 'Yes'
+                }
                 if('comparison' in setting){
                     switch (setting.comparison){
                         case '<=': where[key] = {$lte: where[key]}; break;
                         case '>=': where[key] = {$gte: where[key]}; break;
+                        case '=': where[key] = where[key]; break;
                     }
                 }
                 else where[key] = {$regex: '^' + where[key], $options: 'ix'}; //We perform equality, but getting all words starting (the ^) with what we write

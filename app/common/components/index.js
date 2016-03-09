@@ -17,5 +17,6 @@ module.exports = angular.module('common.components',
         require('./forms').name,
         require('./geo').name,
         require('./view').name,
-        require('./report').name
+        require('./report').name,
+        require('./index-button').name
     ]);

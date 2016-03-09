@@ -37,6 +37,7 @@ var CONFIG = (function(){
             // { key: 'byUser', name: 'Author', placeholder: "email or name of the author..."}, //todo
             // { key: '_created', name: 'Registered in', placeholder: "YYYY-MM-DD" },
             // { key: '_updated', name: 'Last updated in', placeholder: "YYYY-MM-DD"},
+            {key: 'public', name: 'Is public', select: ['Yes', 'No'], boolean: true, comparison: '='},
             {
                 key: '_created',
                 name: 'Registered in before or eq',

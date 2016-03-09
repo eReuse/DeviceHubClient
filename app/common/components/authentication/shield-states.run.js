@@ -5,7 +5,7 @@
  * - If an user is not logged in, go to /login.
  * - If user has no access, show alert. todo: prevent user from doing action
  */
-function shieldStatesRun($rootScope, $state, $location, authService) {
+function shieldStatesRun($rootScope, $state, $location, authService, configureResources) {
     $rootScope.$on('$stateChangeStart', function (event, next) {
         if(next.name != 'login'){
             if (authService.isAuthenticated()) { //This call triggers the account loading
@@ -21,6 +21,7 @@ function shieldStatesRun($rootScope, $state, $location, authService) {
             else{
                 if(next.name == 'fullDevice') return;
                 // user is not logged in
+                configureResources.removeActiveDatabase({});
                 event.preventDefault();
                 $state.go('login');
                 //$state.transitionTo('login');

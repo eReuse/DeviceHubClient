@@ -2,7 +2,7 @@
 
 require('angular-ui-bootstrap');
 
-module.exports = angular.module('common.components.tools',
+module.exports = angular.module('common.components.indexButton',
     [
         'ui.bootstrap',
         require('./../../constants').name
@@ -13,4 +13,4 @@ module.exports = angular.module('common.components.tools',
      * @description
      * Access method to redirect users to different websites related to the tools
      */
-    .directive('toolsButton', require('./tools-button.directive.js'));
+    .directive('indexButton', require('./index-button.directive.js'));
