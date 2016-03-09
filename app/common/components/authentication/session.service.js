@@ -50,7 +50,10 @@ function session(configureResources) {
     };
     this.setInBrowser = function(persistence){
         var storage = persistence? localStorage : sessionStorage;
-        storage.setItem(ACCOUNT_STORAGE, JSON.stringify(this._account));
+        try{ //Private mode in safari causes an exception
+            storage.setItem(ACCOUNT_STORAGE, JSON.stringify(this._account));
+        } catch(err){}
+
     };
     this.setActiveDefaultDatabase = function(){
         configureResources.setActiveDatabase(

@@ -18,6 +18,13 @@ function loginController($scope, $state, authService, CONSTANTS) {
             alert("The email or password is incorrect " + String.fromCharCode(0xD83D, 0xDE22));
         });
     };
+    try{
+        //Tries if can save the user in the browser
+        localStorage.setItem('___test', '1');
+    }
+    catch(err){
+        $scope.cannotSave = true;
+    }
 }
 
 module.exports = loginController;
