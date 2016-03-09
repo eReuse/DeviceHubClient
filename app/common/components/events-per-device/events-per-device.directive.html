@@ -2,14 +2,17 @@
     <div ng-show="loading">
         <div class="spinner"></div>
     </div>
-<timeline side="left" ng-hide="loading">
-    <timeline-event ng-repeat="event in events">
-        <timeline-badge class="info">
-            <event-icon event-type="{{event['@type']}}"></event-icon>
-        </timeline-badge>
-        <timeline-panel class="info">
-            <event-view event="event" id="id"></event-view>
-        </timeline-panel>
-    </timeline-event>
-</timeline>
+    <timeline side="left" ng-hide="loading || error">
+        <timeline-event ng-repeat="event in events">
+            <timeline-badge class="info">
+                <event-icon event-type="{{event['@type']}}"></event-icon>
+            </timeline-badge>
+            <timeline-panel class="info">
+                <event-view event="event" id="id"></event-view>
+            </timeline-panel>
+        </timeline-event>
+    </timeline>
+    <uib-alert class="alert alert-danger" ng-show="error == 401">
+        You are not authorized to see events.
+    </uib-alert>
 </article>

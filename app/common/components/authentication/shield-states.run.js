@@ -8,7 +8,7 @@
 function shieldStatesRun($rootScope, $state, $location, authService) {
     $rootScope.$on('$stateChangeStart', function (event, next) {
         if(next.name != 'login'){
-            if (authService.isAuthenticated()) {
+            if (authService.isAuthenticated()) { //This call triggers the account loading
                 try{
                     if(!authService.isAuthorized(next.data.authorizedRoles)){
                         alert("You are not allowed to do so. Contact the admin.");
@@ -19,6 +19,7 @@ function shieldStatesRun($rootScope, $state, $location, authService) {
                 catch(err){}
             }
             else{
+                if(next.name == 'fullDevice') return;
                 // user is not logged in
                 event.preventDefault();
                 $state.go('login');

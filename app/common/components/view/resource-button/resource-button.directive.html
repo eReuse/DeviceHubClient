@@ -1,5 +1,5 @@
 <button
-        ng-click="get_plac"
+        ng-hide="error"
         uib-popover-template="popover.templateUrl"
         popover-title="{{popover.title}}"
         type="button"
@@ -17,3 +17,4 @@
             {{popover.title}}
       </div>
 </button>
+<i ng-show="error" class="glyphicon glyphicon-ban-circle"></i>

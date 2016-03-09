@@ -22,13 +22,15 @@ function resourceButton(Restangular, account, RecursionHelper){
                     $scope.popover.title = utils.getTitle($scope.resource);
                     $scope.isEvent = utils.isEvent(resource['@type']);
                 });
+                promise.catch(function(error){
+                   $scope.error = true;
+                });
                 $scope.resourceName = utils.getResourceNameFromUrlRN($scope.urlResourceName);
                 $scope.popover = {
                     templateUrl: PATH + 'resource-button.popover.directive.html',
                     isOpen: false,
                     placement: 'left'
                 };
-                window.sc = $scope;
                 utils.applyAfterScrolling('device-view .device', $scope);
             });
         }

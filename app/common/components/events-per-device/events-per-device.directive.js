@@ -27,9 +27,11 @@ function eventsPerDevice(Restangular, event) {
                     Restangular.all('events').getList(data).then(function (events) {
                         $scope.events = subsanizeEvents(events);
                         $scope.loading = false;
-                        //$scope.events = events;
+                    }).catch(function(error){
+                        $scope.error = error.status;
+                        $scope.loading = false;
+                        if(error.status != 401) throw Error(error);
                     });
-                    // $scope.events = Restangular.one('devices',newValue).getList('events').$object;
                 }
             });
         }

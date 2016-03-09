@@ -10,6 +10,11 @@ function authServiceFactory(Restangular, session) {
             }
         );
     };
+    /**
+     * Checks if the user is authenticated. The method will automatically load the account, if this was saved
+     * in the browser.
+     * @returns bool
+     */
     authService.isAuthenticated = function () {
         return session.isAccountSet();
     };

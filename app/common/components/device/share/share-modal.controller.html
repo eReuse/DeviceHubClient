@@ -1,0 +1,24 @@
+<div ng-include="header"></div>
+<div class="modal-body">
+    <table class="table table-striped table-hover">
+        <thead>
+            <th>Is public</th><th>Device</th><th>URL</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="device in model.devices">
+                <td>
+                    <input class="device-list-checkbox"
+                           type="checkbox"
+                           ng-model="device.public"
+                           ng-change="patchPublic(device)"
+                    >
+                </td>
+                <td>
+                    <resource-button resource-id="device._id" url-resource-name="'devices'"></resource-button>
+                </td>
+                <td>{{device._links.self.href}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div ng-include="footer"></div>

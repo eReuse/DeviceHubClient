@@ -23,6 +23,9 @@ function parseFactory(schema, UNIT_CODES){
         fields.sort(schema.compareSink);
         fields.push({name: 'Updated', value: filters.dateFilter(model._updated, 'short')});
         fields.push({name: 'Created', value: filters.dateFilter(model._created, 'short')});
+        try{
+            fields.push({name: 'URL', value: model._links.self.href});
+        } catch (error){}
         return fields;
     }
 }

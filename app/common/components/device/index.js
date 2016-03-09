@@ -17,7 +17,8 @@ module.exports = angular.module('common.components.device',
         require('./../device-list').name,
         'RecursionHelper',
         'restangular',
-        require('./../view').name
+        require('./../view').name,
+        require('./../authentication').name
     ])
     /**
      * @ngdoc directive
@@ -66,4 +67,6 @@ module.exports = angular.module('common.components.device',
      * @description
      * Shows a button that lets the user to register a device. This directive calls registerModalCtrl.
      */
-    .directive('registerErrorProcessor', require('./register-error-processor/register-error-processor.directive.js'));
+    .directive('registerErrorProcessor', require('./register-error-processor/register-error-processor.directive.js'))
+    .directive('share', require('./share/share.directive.js'))
+    .controller('shareModalCtrl', require('./share/share-modal.controller.js'));

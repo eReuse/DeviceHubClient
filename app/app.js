@@ -30,6 +30,10 @@ module.exports = angular.module('deviceHub',[
                 url:'/devices',
                 templateUrl: 'views/devices/devices.controller.html',
                 abstract: true
+            }).state('fullDevice',{
+                url:'/:db/devices/:id',
+                templateUrl: 'views/full-device/full-device.controller.html',
+                controller: 'fullDeviceCtrl as FeCl'
             }).state('login',{
                 url:'/login',
                 templateUrl: 'views/login/login.controller.html',

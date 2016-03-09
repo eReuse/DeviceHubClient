@@ -16,7 +16,6 @@ function configureResources(schema, Restangular, CONSTANTS, $rootScope) {
      * @param account User account in session
      */
     this.setActiveDatabase = function(newDatabase, refresh, account){
-        if(account.databases.indexOf(newDatabase) == -1) throw 'User is not authorized to access ' + newDatabase;
         account.activeDatabase = newDatabase;
         Restangular.setBaseUrl(CONSTANTS.url + '/' + account.activeDatabase);
         if(refresh) $rootScope.$broadcast('refresh@deviceHub');
@@ -53,6 +52,7 @@ function configureResources(schema, Restangular, CONSTANTS, $rootScope) {
                 return element;
             });
         });
+        return self.promise;
     };
     return this;
 }
