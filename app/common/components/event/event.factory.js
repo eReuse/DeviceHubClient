@@ -70,6 +70,9 @@ function event(schema){
             Recycle: {
                 glyphicon: 'tree-deciduous', manual: true, doNotUse: generalDoNotUse,
                 shortDesc: "The devices have been successfully recycled."
+            },
+            ProveUsage: {
+                glyphicon: 'flag', doNotUse: []
             }
         },
         schema: schema.schema
