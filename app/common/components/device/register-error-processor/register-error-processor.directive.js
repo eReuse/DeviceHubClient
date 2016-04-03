@@ -31,13 +31,21 @@ function showError($scope, error){
     $scope.templateUrl = needsId(error) || $scope.cannotCreateId? TEMPLATE_NEEDS_ID_URL : TEMPLATE;
 }
 
-function needsId(error){
-    try{ return error._issues._id.indexOf('NeedsId') != -1 }
+function needsId(errors){
+    /**
+     * @param errors An object with the following structure: {_issues:{_id: ['stringRepresentingObject', ...]}} This
+     * method will return false if the structure is not followed.
+     */
+    try{ return _.find(errors._issues._id, function (error) {return _.includes(error, 'NeedsId') }) }
     catch(error){ return false }
 }
 
-function cannotCreateId(error){
-    try{ return error._issues._id.indexOf('CannotCreateId') != -1 }
+function cannotCreateId(errors){
+    /**
+     * @param errors An object with the following structure: {_issues:{_id: ['stringRepresentingObject', ...]}} This
+     * method will return false if the structure is not followed.
+     */
+    try{ return _.find(errors._issues._id, function (error) {return _.includes(error, 'CannotCreateId')}) }
     catch(error){ return false }
 }
 
@@ -56,7 +64,7 @@ function insert(Restangular, $scope, snapshot){
 }
 
 function submit(Restangular, $scope, snapshot){
-    Restangular.all('snapshot').post(snapshot).then(function(){
+    Restangular.all('events/snapshot').post(snapshot).then(function(){
         resultOk($scope);
     }, function(response){
         delete snapshot.device._id; //We leave the snapshot in original state
