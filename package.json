@@ -1,6 +1,7 @@
 {
   "name": "devicehubclient",
   "version": "0.0.1",
+  "main": "dist/angular-ui-router.js",
   "dependencies": {
     "angular": "^1.4.8",
     "angular-animate": "^1.5.0",
