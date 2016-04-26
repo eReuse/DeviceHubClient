@@ -25,7 +25,9 @@ function labelList(CONSTANTS){
             $scope.set = {
                 width: 97,
                 height: 59,
-                useLogo: true
+                useLogo: true,
+                leftPadding: 0,
+                topPadding: 0
             };
             var oldHeight = $scope.set.height;
             $scope.logo = CONSTANTS.siteLogo;

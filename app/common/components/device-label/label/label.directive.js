@@ -9,7 +9,9 @@ function label(){
             width: '@',
             height: '@',
             logo: '@',
-            useLogo: '='
+            useLogo: '=',
+            leftPadding: '@',
+            topPadding: '@'
         },
         link: function ($scope, $element, $attrs) {
             $scope.code = $scope.device._links.self.href;

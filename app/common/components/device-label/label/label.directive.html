@@ -1,4 +1,8 @@
-<article class="labelWidget" ng-style="{width: width+'mm', height:height+'mm'}" ng-class="{'no-logo': !useLogo}">
+<article
+        class="labelWidget"
+        ng-style="{width: width+'mm', height:height+'mm', 'padding-left': leftPadding+'mm', 'padding-top': topPadding+'mm'}"
+        ng-class="{'no-logo': !useLogo}"
+>
     <div><img ng-src="{{logo}}"/></div>
     <div>
         <qrcode data="{{code}}" error-correction-level="Q" size="110" version="5"></qrcode>
