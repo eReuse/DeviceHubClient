@@ -10,7 +10,6 @@ module.exports = angular.module('common.components.indexButton',
     /**
      * @ngdoc directive
      * @name indexButton
-     * @description
-     * Access method to redirect users to different websites related to the tools
+     * @description Access method to redirect users to different websites related to the tools
      */
     .directive('indexButton', require('./index-button.directive.js'));

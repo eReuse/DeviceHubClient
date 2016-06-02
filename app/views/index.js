@@ -1,10 +1,9 @@
 'use strict';
 
 /**
- * @ngdoc module
+ * @overview
  * @name views
- * @description
- * Aggregates all the views of the project, with the controllers, etc.
+ * @description Aggregates all the views of the project, with the controllers, etc.
  */
 module.exports = angular.module('views',
     [

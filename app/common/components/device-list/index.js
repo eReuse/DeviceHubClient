@@ -19,9 +19,7 @@ module.exports = angular.module('common.components.list',
         require('./../event').name
     ])
     /**
-     * @ngdoc constant
      * @name deviceListConfig
-     * @description
      */
     .constant('deviceListConfig', require('./CONFIG.js'))
     /**
@@ -37,6 +35,6 @@ module.exports = angular.module('common.components.list',
     /**
      * @ngdoc service
      * @name getDevices
-     * @return Restangular's promise, filled with all the devices
+     * @returns {Promise} Restangular's promise, filled with all the devices
      */
     .service('getDevices', require('./get-devices.service.js'));

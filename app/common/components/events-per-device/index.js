@@ -16,9 +16,8 @@ module.exports = angular.module('common.components.eventsPerDevice',
     /**
      * @ngdoc directive
      * @name eventsPerDevice
-     * @description
-     * Shows a chronology of events for a given device.
-     * @param obj id Object with one property: _id, which is a string identifying the device. We use an object
+     * @description Shows a chronology of events for a given device.
+     * @param {Object} id Object with one property: _id, which is a string identifying the device. We use an object
      * to be able to watch over it, and load a new device when the _id changes.
      */
     .directive('eventsPerDevice', require('./events-per-device.directive.js'));

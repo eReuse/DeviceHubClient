@@ -228,7 +228,7 @@ function or(form, model){
 function atLeastOneNotEmpty(model, keysToCheck){
     /**
      * Returns true if at least one of the values in model is not empty. Recursive.
-     * @param keysToCheck array|null Optional. If set it will check only for the given keys.
+     * @param {?Array} keysToCheck Optional. If set it will check only for the given keys.
      */
     for(var key in model){
         if((angular.isUndefined(keysToCheck) || keysToCheck.indexOf(key) != -1) && sjv.isNotEmpty(model[key])){

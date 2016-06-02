@@ -23,8 +23,8 @@ module.exports = function() {
 
   /**
    * qrcode
-   * @param typeNumber 1 to 10
-   * @param errorCorrectLevel 'L','M','Q','H'
+   * @param {number} typeNumber 1 to 10
+   * @param {string} errorCorrectLevel 'L','M','Q','H'
    */
   var qrcode = function(typeNumber, errorCorrectLevel) {
 
@@ -485,9 +485,9 @@ module.exports = function() {
   //---------------------------------------------------------------------
 
   /**
-   * @param unicodeData base64 string of byte array.
+   * @param {string} unicodeData base64 string of byte array.
    * [16bit Unicode],[16bit Bytes], ...
-   * @param numChars
+   * @param {number} numChars
    */
   qrcode.createStringToBytes = function(unicodeData, numChars) {
 

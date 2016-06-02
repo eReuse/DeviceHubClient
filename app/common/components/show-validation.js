@@ -2,10 +2,9 @@
 
 
 /**
- * @ngdoc module
+ * @overview
  * @name Show Validation
- * @description
- * Shows real-time invalid styled for HTML5 input.
+ * @description Shows real-time invalid styled for HTML5 input.
  */
 module.exports = angular.module('common.directives.showValidation', [])
     .directive('showValidation', [function() {

@@ -2,9 +2,8 @@
 require('angular-ui-router');
 
 /**
- * @ngdoc module
+ * @overview
  * @name nav
- * @description
  * Has Nav directive.
  */
 module.exports = angular.module('common.components.nav',
@@ -17,9 +16,7 @@ module.exports = angular.module('common.components.nav',
     /**
      * @ngdoc directive
      * @name dhNavNav
-     * @description
-     * Controls the tab main menu, changing the view accordingly.
-     *
+     * @description Controls the tab main menu, changing the view accordingly.
      * Tab trick from http://odetocode.com/blogs/scott/archive/2014/04/14/deep-linking-a-tabbed-ui-with-angularjs.aspx
      */
     .directive('navigation', function($state){

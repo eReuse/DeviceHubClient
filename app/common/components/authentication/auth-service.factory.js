@@ -13,7 +13,7 @@ function authServiceFactory(Restangular, session) {
     /**
      * Checks if the user is authenticated. The method will automatically load the account, if this was saved
      * in the browser.
-     * @returns bool
+     * @returns {boolean}
      */
     authService.isAuthenticated = function () {
         return session.isAccountSet();
@@ -21,7 +21,7 @@ function authServiceFactory(Restangular, session) {
 
     /**
      * Answers if the user is logged in and is one of the given roles.
-     * @param authorizedRoles Array Roles to check the user against
+     * @param {Array} authorizedRoles Roles to check the user against
      * @returns {boolean}
      */
     authService.isAuthorized = function (authorizedRoles) {

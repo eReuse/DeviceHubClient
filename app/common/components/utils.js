@@ -74,8 +74,8 @@ function isEvent(type){
 
 /**
  * Executes $apply() after the element has scrolled.
- * @param element DOM element to detect the scroll
- * @param $scope $scope The scope which to execute apply()
+ * @param {Object} element DOM element to detect the scroll
+ * @param {$scope} $scope The scope which to execute apply()
  */
 function applyAfterScrolling(element, $scope){
     $(element).scroll(function(){
@@ -87,7 +87,7 @@ function applyAfterScrolling(element, $scope){
 
 /**
  * Returns the string representation of a date following the server's representation
- * @param oldDate Date
+ * @param {Date} oldDate
  * @returns {string}
  */
 function parseDate(oldDate){

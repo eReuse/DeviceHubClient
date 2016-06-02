@@ -20,7 +20,7 @@ var sourcemaps = require('gulp-sourcemaps');
 var notify = require('gulp-notify');
 var templateCache = require('gulp-angular-templatecache');
 var del = require('del');
-
+var shell = require('gulp-shell');
 
 var filePath = {
     destination: './dist',
@@ -333,4 +333,15 @@ gulp.task('build-prod', function(callback) {
         ['notify', 'afterClean'],
         callback
     );
+});
+
+// =======================================================================
+// Documentation
+// =======================================================================
+
+gulp.task('docs', [], function () {
+    var gulpDocs = require('gulp-ngdocs');
+    return gulp.src('./app/**/*.js')
+        .pipe(gulpDocs.process())
+        .pipe(gulp.dest('./docs'));
 });

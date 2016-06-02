@@ -3,7 +3,7 @@
 /**
  *
  *  device needs _id
- * @param formlyConfigProvider
+ * @param {FormlyConfigProvider}
  */
 function typeahead(formlyConfigProvider, CONSTANTS){
     formlyConfigProvider.setType({

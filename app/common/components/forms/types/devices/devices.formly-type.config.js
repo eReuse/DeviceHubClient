@@ -6,7 +6,7 @@
  *  }
  *
  *  device needs _id
- * @param formlyConfigProvider
+ * @param {FormlyConfigProvider}
  */
 function devices(formlyConfigProvider){
     formlyConfigProvider.setType({

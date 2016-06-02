@@ -11,9 +11,9 @@ function configureResources(schema, Restangular, CONSTANTS, $rootScope) {
 
     /**
      * Sets the active database to what is introduced
-     * @param newDatabase
-     * @param refresh bool Optional. If true, broadcasts a message for components to refresh
-     * @param account User account in session
+     * @param {string} newDatabase
+     * @param {boolean} refresh Optional. If true, broadcasts a message for components to refresh
+     * @param {User} account account in session
      */
     this.setActiveDatabase = function(newDatabase, refresh, account){
         account.activeDatabase = newDatabase;

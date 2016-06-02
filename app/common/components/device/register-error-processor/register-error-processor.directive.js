@@ -33,7 +33,7 @@ function showError($scope, error){
 
 function needsId(errors){
     /**
-     * @param errors An object with the following structure: {_issues:{_id: ['stringRepresentingObject', ...]}} This
+     * @param {object} errors An object with the following structure: {_issues:{_id: ['stringRepresentingObject', '...']}} This
      * method will return false if the structure is not followed.
      */
     try{ return _.find(errors._issues._id, function (error) {return _.includes(error, 'NeedsId') }) }
@@ -41,10 +41,6 @@ function needsId(errors){
 }
 
 function cannotCreateId(errors){
-    /**
-     * @param errors An object with the following structure: {_issues:{_id: ['stringRepresentingObject', ...]}} This
-     * method will return false if the structure is not followed.
-     */
     try{ return _.find(errors._issues._id, function (error) {return _.includes(error, 'CannotCreateId')}) }
     catch(error){ return false }
 }
