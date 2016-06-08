@@ -1,8 +1,22 @@
 'use strict';
 
+/**
+ * @ngdoc factory
+ * @name authService
+ * @description Provides an authentication layer (login)
+ */
 function authServiceFactory(Restangular, session) {
     var authService = {};
 
+    /**
+     * Performs login and, upon success, generates a valid session (saving it in the browser if set) and
+     * obtains the schema definition from the server.
+     * @param {Object} credentials - Identification for the user.
+     * @param {string} credentials.email
+     * @param {string} credentials.password
+     * @param {bool} saveInBrowser
+     * @returns {Object} Account object.
+     */
     authService.login = function (credentials, saveInBrowser) {
         return Restangular.all("login").post(credentials).then(function(account){
                 session.create(account, saveInBrowser);

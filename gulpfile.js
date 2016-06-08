@@ -248,7 +248,7 @@ gulp.task('clean', function() {
 
 gulp.task('afterClean', function() {
     return del([
-        filePath.destination + '/templates.js',
+        //filePath.destination + '/templates.js',
         filePath.assets.images.dest + '/spinner.scss'
     ]);
 });
@@ -344,4 +344,16 @@ gulp.task('docs', [], function () {
     return gulp.src('./app/**/*.js')
         .pipe(gulpDocs.process())
         .pipe(gulp.dest('./docs'));
+});
+
+// =======================================================================
+// Testing
+// =======================================================================
+
+gulp.task('tests', function (done) {
+    var Server = require('karma').Server;
+    new Server({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: true
+    }, done).start();
 });

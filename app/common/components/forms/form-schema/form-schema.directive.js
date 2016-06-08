@@ -22,8 +22,6 @@ function formSchema(cerberusToFormly, Restangular, $rootScope, Notification, eve
             var options = setOptions($scope.model['@type'], $scope.options);
             $scope.fields = cerberusToFormly.parse($scope.model, $scope, options); //parse adds 'nonModifiable' to options
             $scope.submit = submitFactory($scope.fields, $scope.form, $scope.status, Restangular, $rootScope, Notification);
-            window.model = $scope.model;
-            window.form = $scope.form;
             $scope.options.canDelete = 'remove' in $scope.model;
             $scope.options.delete = deleteFactory($scope.model, $rootScope, $scope.status, Notification);
         }
@@ -32,7 +30,7 @@ function formSchema(cerberusToFormly, Restangular, $rootScope, Notification, eve
 
 function submitFactory(fields, form, status, Restangular, $rootScope, Notification){
     return function (originalModel){
-        status.error = false;
+        status.errorFromLocal = false;
         if(isValid(form, fields)){
             status.working = true;
             var model = utils.copy(originalModel); //We are going to change stuff in model
@@ -42,7 +40,7 @@ function submitFactory(fields, form, status, Restangular, $rootScope, Notificati
                 failedSubmissionFactory(status)
             )
         }
-        else status.error = true;
+        else status.errorFromLocal = true;
     }
 }
 

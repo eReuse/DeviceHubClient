@@ -1,0 +1,7574 @@
+{
+  "hard-drive": {
+    "weight": {
+      "type": "float",
+      "unitCode": "KGM",
+      "teaser": false,
+      "sink": -1
+    },
+    "tests": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "events",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "icon": {
+      "type": "string",
+      "readonly": true,
+      "teaser": false,
+      "sink": -5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "test": {
+      "type": "dict",
+      "schema": {
+        "status": {
+          "type": "string",
+          "required": true
+        },
+        "snapshot": {
+          "type": "objectid",
+          "data_relation": {
+            "resource": "events",
+            "embeddable": true,
+            "field": "_id"
+          }
+        },
+        "secured": {
+          "type": "boolean",
+          "sink": -3
+        },
+        "incidence": {
+          "type": "boolean",
+          "description": "Check if something went wrong, you can add details in a comment",
+          "sink": -3
+        },
+        "comment": {
+          "type": "string",
+          "description": "Short comment for fast and easy reading",
+          "sink": -4
+        },
+        "type": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "A short, descriptive title",
+          "sink": 5
+        },
+        "parent": {
+          "type": "string",
+          "data_relation": {
+            "resource": "devices",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "description": "The event triggered in this computer."
+        },
+        "description": {
+          "type": "string",
+          "maxlength": 500,
+          "description": "Full long description",
+          "sink": -4
+        },
+        "lifetime": {
+          "type": "integer"
+        },
+        "byUser": {
+          "type": "objectid",
+          "data_relation": {
+            "resource": "accounts",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "readonly": true,
+          "sink": 2
+        },
+        "error": {
+          "type": "boolean",
+          "required": true
+        },
+        "sameAs": {
+          "type": "url",
+          "teaser": false
+        },
+        "device": {
+          "type": "string",
+          "data_relation": {
+            "resource": "devices",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "required": false
+        },
+        "byOrganization": {
+          "type": "string",
+          "readonly": true
+        },
+        "geo": {
+          "type": "point",
+          "description": "Where did it happened",
+          "sink": -5
+        },
+        "@type": {
+          "type": "string",
+          "required": true,
+          "allowed": [
+            "TestHardDrive"
+          ],
+          "teaser": false
+        },
+        "url": {
+          "type": "url",
+          "readonly": true,
+          "teaser": false
+        },
+        "firstError": {
+          "type": "integer",
+          "nullable": true
+        },
+        "date": {
+          "type": "datetime",
+          "description": "When this happened. Leave blank if it is happening now",
+          "sink": -2
+        }
+      }
+    },
+    "owners": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "accounts",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "firmwareRevision": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "HardDrive"
+      ],
+      "teaser": false
+    },
+    "erasures": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "events",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "size": {
+      "type": "float",
+      "unitCode": "4L",
+      "sink": 1
+    },
+    "_id": {
+      "type": "string",
+      "unique": true,
+      "device_id": true,
+      "teaser": false,
+      "sink": 4
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "width": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "benchmarks": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "dict",
+        "schema": {
+          "@type": {
+            "type": "string",
+            "required": true,
+            "allowed": [
+              "BenchmarkHardDrive"
+            ],
+            "teaser": false
+          },
+          "readingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "writingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "label": {
+            "type": "string",
+            "description": "A short, descriptive title",
+            "sink": 5
+          }
+        }
+      }
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "blockSize": {
+      "type": "integer",
+      "teaser": false,
+      "sink": -1
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      }
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "sectors": {
+      "type": "integer",
+      "teaser": false,
+      "sink": -1
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "erasure": {
+      "type": "dict",
+      "writeonly": true,
+      "schema": {
+        "success": {
+          "type": "boolean"
+        },
+        "secured": {
+          "type": "boolean",
+          "sink": -3
+        },
+        "incidence": {
+          "type": "boolean",
+          "description": "Check if something went wrong, you can add details in a comment",
+          "sink": -3
+        },
+        "comment": {
+          "type": "string",
+          "description": "Short comment for fast and easy reading",
+          "sink": -4
+        },
+        "label": {
+          "type": "string",
+          "description": "A short, descriptive title",
+          "sink": 5
+        },
+        "parent": {
+          "type": "string",
+          "data_relation": {
+            "resource": "devices",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "description": "The event triggered in this computer."
+        },
+        "description": {
+          "type": "string",
+          "maxlength": 500,
+          "description": "Full long description",
+          "sink": -4
+        },
+        "cleanWithZeros": {
+          "type": "boolean"
+        },
+        "byUser": {
+          "type": "objectid",
+          "data_relation": {
+            "resource": "accounts",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "readonly": true,
+          "sink": 2
+        },
+        "endingTime": {
+          "type": "datetime"
+        },
+        "sameAs": {
+          "type": "url",
+          "teaser": false
+        },
+        "device": {
+          "type": "string",
+          "data_relation": {
+            "resource": "devices",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "required": false
+        },
+        "secureRandomSteps": {
+          "type": "natural",
+          "required": true
+        },
+        "byOrganization": {
+          "type": "string",
+          "readonly": true
+        },
+        "geo": {
+          "type": "point",
+          "description": "Where did it happened",
+          "sink": -5
+        },
+        "startingTime": {
+          "type": "datetime"
+        },
+        "@type": {
+          "type": "string",
+          "required": true,
+          "allowed": [
+            "EraseSectors",
+            "EraseBasic"
+          ],
+          "teaser": false
+        },
+        "url": {
+          "type": "url",
+          "readonly": true,
+          "teaser": false
+        },
+        "steps": {
+          "type": "list",
+          "schema": {
+            "type": "dict",
+            "schema": {
+              "success": {
+                "type": "boolean",
+                "required": true
+              },
+              "endingTime": {
+                "type": "datetime"
+              },
+              "secureRandomSteps": {
+                "type": "boolean"
+              },
+              "startingTime": {
+                "type": "datetime"
+              },
+              "@type": {
+                "type": "string",
+                "required": true,
+                "allowed": [
+                  "Random",
+                  "Zeros"
+                ]
+              },
+              "cleanWithZeros": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "date": {
+          "type": "datetime",
+          "description": "When this happened. Leave blank if it is happening now",
+          "sink": -2
+        }
+      }
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "benchmark": {
+      "type": "dict",
+      "writeonly": true,
+      "schema": {
+        "@type": {
+          "type": "string",
+          "required": true,
+          "allowed": [
+            "BenchmarkHardDrive"
+          ],
+          "teaser": false
+        },
+        "readingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        },
+        "writingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        },
+        "label": {
+          "type": "string",
+          "description": "A short, descriptive title",
+          "sink": 5
+        }
+      }
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    }
+  },
+  "register": {
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "description": "Where did it happened",
+      "sink": 0
+    },
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "force": {
+      "type": [
+        "boolean"
+      ]
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "device": {
+      "type": [
+        "dict",
+        "string"
+      ],
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "schema": {
+        "inches": {
+          "type": "natural"
+        },
+        "tests": {
+          "type": "list",
+          "readonly": true,
+          "schema": {
+            "type": "objectid",
+            "data_relation": {
+              "resource": "events",
+              "embeddable": true,
+              "field": "_id"
+            }
+          }
+        },
+        "icon": {
+          "type": "string",
+          "readonly": true,
+          "teaser": false,
+          "sink": -5
+        },
+        "test": {
+          "type": "dict",
+          "schema": {
+            "status": {
+              "type": "string",
+              "required": true
+            },
+            "snapshot": {
+              "type": "objectid",
+              "data_relation": {
+                "resource": "events",
+                "embeddable": true,
+                "field": "_id"
+              }
+            },
+            "secured": {
+              "type": "boolean",
+              "sink": -3
+            },
+            "incidence": {
+              "type": "boolean",
+              "description": "Check if something went wrong, you can add details in a comment",
+              "sink": -3
+            },
+            "comment": {
+              "type": "string",
+              "description": "Short comment for fast and easy reading",
+              "sink": -4
+            },
+            "type": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string",
+              "description": "A short, descriptive title",
+              "sink": 5
+            },
+            "parent": {
+              "type": "string",
+              "data_relation": {
+                "resource": "devices",
+                "embeddable": true,
+                "field": "_id"
+              },
+              "description": "The event triggered in this computer."
+            },
+            "description": {
+              "type": "string",
+              "maxlength": 500,
+              "description": "Full long description",
+              "sink": -4
+            },
+            "lifetime": {
+              "type": "integer"
+            },
+            "byUser": {
+              "type": "objectid",
+              "data_relation": {
+                "resource": "accounts",
+                "embeddable": true,
+                "field": "_id"
+              },
+              "readonly": true,
+              "sink": 2
+            },
+            "error": {
+              "type": "boolean",
+              "required": true
+            },
+            "sameAs": {
+              "type": "url",
+              "teaser": false
+            },
+            "device": {
+              "type": "string",
+              "data_relation": {
+                "resource": "devices",
+                "embeddable": true,
+                "field": "_id"
+              },
+              "required": false
+            },
+            "byOrganization": {
+              "type": "string",
+              "readonly": true
+            },
+            "geo": {
+              "type": "point",
+              "description": "Where did it happened",
+              "sink": -5
+            },
+            "@type": {
+              "type": "string",
+              "required": true,
+              "allowed": [
+                "TestHardDrive"
+              ],
+              "teaser": false
+            },
+            "url": {
+              "type": "url",
+              "readonly": true,
+              "teaser": false
+            },
+            "firstError": {
+              "type": "integer",
+              "nullable": true
+            },
+            "date": {
+              "type": "datetime",
+              "description": "When this happened. Leave blank if it is happening now",
+              "sink": -2
+            }
+          }
+        },
+        "firmwareRevision": {
+          "type": "string",
+          "teaser": false,
+          "sink": -1
+        },
+        "meid": {
+          "type": "string",
+          "unique": true
+        },
+        "height": {
+          "type": "float",
+          "unitCode": "MTR",
+          "teaser": false,
+          "sink": -1
+        },
+        "usedSlots": {
+          "type": "integer",
+          "teaser": false
+        },
+        "_id": {
+          "type": "string",
+          "unique": true,
+          "device_id": true,
+          "teaser": false,
+          "sink": 4
+        },
+        "productId": {
+          "type": "string",
+          "teaser": false,
+          "sink": 3
+        },
+        "width": {
+          "type": "float",
+          "unitCode": "MTR",
+          "teaser": false,
+          "sink": -1
+        },
+        "totalSlots": {
+          "type": "integer",
+          "teaser": false
+        },
+        "labelId": {
+          "type": "string",
+          "sink": 5
+        },
+        "model": {
+          "type": "string",
+          "sink": 4
+        },
+        "numberOfCores": {
+          "type": "integer",
+          "min": 1,
+          "sink": 1
+        },
+        "speed": {
+          "type": "float",
+          "unitCode": "A86",
+          "sink": 1
+        },
+        "isUidSecured": {
+          "type": "boolean",
+          "default": true,
+          "teaser": false
+        },
+        "sectors": {
+          "type": "integer",
+          "teaser": false,
+          "sink": -1
+        },
+        "maxAcceptedMemory": {
+          "type": "integer",
+          "teaser": false
+        },
+        "pid": {
+          "type": "string",
+          "unique": true,
+          "sink": 5
+        },
+        "imei": {
+          "type": "string",
+          "unique": true
+        },
+        "place": {
+          "type": "objectid",
+          "data_relation": {
+            "resource": "places",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "readonly": true,
+          "sink": 2
+        },
+        "sameAs": {
+          "type": "url",
+          "teaser": false
+        },
+        "benchmark": {
+          "type": "dict",
+          "writeonly": true,
+          "schema": {
+            "readingSpeed": {
+              "type": "float",
+              "unitCode": "4L"
+            },
+            "writingSpeed": {
+              "type": "float",
+              "unitCode": "4L"
+            },
+            "@type": {
+              "type": "string",
+              "required": true,
+              "allowed": [
+                "BenchmarkProcessor"
+              ],
+              "teaser": false
+            },
+            "score": {
+              "type": "float"
+            },
+            "label": {
+              "type": "string",
+              "description": "A short, descriptive title",
+              "sink": 5
+            }
+          }
+        },
+        "manufacturer": {
+          "type": "string",
+          "sink": 4
+        },
+        "weight": {
+          "type": "float",
+          "unitCode": "KGM",
+          "teaser": false,
+          "sink": -1
+        },
+        "benchmarks": {
+          "type": "list",
+          "readonly": true,
+          "schema": {
+            "type": "dict",
+            "schema": {
+              "readingSpeed": {
+                "type": "float",
+                "unitCode": "4L"
+              },
+              "writingSpeed": {
+                "type": "float",
+                "unitCode": "4L"
+              },
+              "@type": {
+                "type": "string",
+                "required": true,
+                "allowed": [
+                  "BenchmarkProcessor"
+                ],
+                "teaser": false
+              },
+              "score": {
+                "type": "float"
+              },
+              "label": {
+                "type": "string",
+                "description": "A short, descriptive title",
+                "sink": 5
+              }
+            }
+          }
+        },
+        "type": {
+          "type": "string",
+          "allowed": [
+            "Mouse",
+            "SAI",
+            "TFT",
+            "MultifunctionPrinter",
+            "Router",
+            "Terminal",
+            "Keyboard",
+            "Desktop",
+            "Switch",
+            "Microtower",
+            "Laptop",
+            "Printer",
+            "Server",
+            "HUB",
+            "Scanner",
+            "LCD",
+            "Netbook"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "maxlength": 500,
+          "description": "Full long description",
+          "sink": -4
+        },
+        "owners": {
+          "type": "list",
+          "readonly": true,
+          "schema": {
+            "type": "objectid",
+            "data_relation": {
+              "resource": "accounts",
+              "embeddable": true,
+              "field": "_id"
+            }
+          },
+          "sink": 2
+        },
+        "memory": {
+          "type": "float",
+          "unitCode": "4L",
+          "min": 1,
+          "sink": 3
+        },
+        "@type": {
+          "type": "string",
+          "required": true,
+          "allowed": [
+            "Component",
+            "GraphicCard",
+            "RamModule",
+            "TabletComputer",
+            "Motherboard",
+            "Device",
+            "ComputerMonitor",
+            "MobilePhone",
+            "HardDrive",
+            "OpticalDrive",
+            "Computer",
+            "Mobile",
+            "NetworkAdapter",
+            "Processor",
+            "Peripheral",
+            "SoundCard"
+          ],
+          "teaser": false
+        },
+        "erasures": {
+          "type": "list",
+          "readonly": true,
+          "schema": {
+            "type": "objectid",
+            "data_relation": {
+              "resource": "events",
+              "embeddable": true,
+              "field": "_id"
+            }
+          }
+        },
+        "url": {
+          "type": "url",
+          "readonly": true,
+          "teaser": false
+        },
+        "size": {
+          "type": "integer",
+          "unitCode": "4L",
+          "min": 1,
+          "sink": 1
+        },
+        "hid": {
+          "type": "hid",
+          "teaser": false,
+          "sink": 5
+        },
+        "forceCreation": {
+          "type": "boolean",
+          "default": false
+        },
+        "address": {
+          "type": "integer",
+          "allowed": [
+            256,
+            32,
+            64,
+            128,
+            8,
+            16
+          ],
+          "unitCode": "A99",
+          "sink": -1
+        },
+        "serialNumber": {
+          "type": "string",
+          "sink": 4
+        },
+        "public": {
+          "type": "boolean",
+          "default": false
+        },
+        "blockSize": {
+          "type": "integer",
+          "teaser": false,
+          "sink": -1
+        },
+        "label": {
+          "type": "string",
+          "description": "A short, descriptive title",
+          "sink": 5
+        },
+        "interface": {
+          "type": "string",
+          "teaser": false,
+          "sink": -1
+        },
+        "connectors": {
+          "type": "dict",
+          "schema": {
+            "firewire": {
+              "type": "natural"
+            },
+            "serial": {
+              "type": "natural"
+            },
+            "usb": {
+              "type": "natural"
+            },
+            "pcmcia": {
+              "type": "natural"
+            }
+          }
+        },
+        "erasure": {
+          "type": "dict",
+          "writeonly": true,
+          "schema": {
+            "success": {
+              "type": "boolean"
+            },
+            "secured": {
+              "type": "boolean",
+              "sink": -3
+            },
+            "incidence": {
+              "type": "boolean",
+              "description": "Check if something went wrong, you can add details in a comment",
+              "sink": -3
+            },
+            "comment": {
+              "type": "string",
+              "description": "Short comment for fast and easy reading",
+              "sink": -4
+            },
+            "label": {
+              "type": "string",
+              "description": "A short, descriptive title",
+              "sink": 5
+            },
+            "parent": {
+              "type": "string",
+              "data_relation": {
+                "resource": "devices",
+                "embeddable": true,
+                "field": "_id"
+              },
+              "description": "The event triggered in this computer."
+            },
+            "description": {
+              "type": "string",
+              "maxlength": 500,
+              "description": "Full long description",
+              "sink": -4
+            },
+            "cleanWithZeros": {
+              "type": "boolean"
+            },
+            "byUser": {
+              "type": "objectid",
+              "data_relation": {
+                "resource": "accounts",
+                "embeddable": true,
+                "field": "_id"
+              },
+              "readonly": true,
+              "sink": 2
+            },
+            "endingTime": {
+              "type": "datetime"
+            },
+            "sameAs": {
+              "type": "url",
+              "teaser": false
+            },
+            "device": {
+              "type": "string",
+              "data_relation": {
+                "resource": "devices",
+                "embeddable": true,
+                "field": "_id"
+              },
+              "required": false
+            },
+            "secureRandomSteps": {
+              "type": "natural",
+              "required": true
+            },
+            "byOrganization": {
+              "type": "string",
+              "readonly": true
+            },
+            "geo": {
+              "type": "point",
+              "description": "Where did it happened",
+              "sink": -5
+            },
+            "startingTime": {
+              "type": "datetime"
+            },
+            "@type": {
+              "type": "string",
+              "required": true,
+              "allowed": [
+                "EraseSectors",
+                "EraseBasic"
+              ],
+              "teaser": false
+            },
+            "url": {
+              "type": "url",
+              "readonly": true,
+              "teaser": false
+            },
+            "steps": {
+              "type": "list",
+              "schema": {
+                "type": "dict",
+                "schema": {
+                  "success": {
+                    "type": "boolean",
+                    "required": true
+                  },
+                  "endingTime": {
+                    "type": "datetime"
+                  },
+                  "secureRandomSteps": {
+                    "type": "boolean"
+                  },
+                  "startingTime": {
+                    "type": "datetime"
+                  },
+                  "@type": {
+                    "type": "string",
+                    "required": true,
+                    "allowed": [
+                      "Random",
+                      "Zeros"
+                    ]
+                  },
+                  "cleanWithZeros": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "date": {
+              "type": "datetime",
+              "description": "When this happened. Leave blank if it is happening now",
+              "sink": -2
+            }
+          }
+        },
+        "components": {
+          "type": "list",
+          "default": [],
+          "schema": {
+            "type": "string",
+            "data_relation": {
+              "resource": "devices",
+              "embeddable": true,
+              "field": "_id"
+            }
+          },
+          "sink": 1
+        },
+        "parent": {
+          "type": "string",
+          "data_relation": {
+            "resource": "devices",
+            "embeddable": true,
+            "field": "_id"
+          }
+        }
+      }
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Register"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "components": {
+      "type": [
+        "list",
+        "string"
+      ],
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      }
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "erase-sectors": {
+    "success": {
+      "type": "boolean"
+    },
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "description": "The event triggered in this computer."
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "cleanWithZeros": {
+      "type": "boolean"
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "endingTime": {
+      "type": "datetime"
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "device": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "required": true
+    },
+    "secureRandomSteps": {
+      "type": "natural",
+      "required": true
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "startingTime": {
+      "type": "datetime"
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "EraseSectors"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "steps": {
+      "type": "list",
+      "schema": {
+        "type": "dict",
+        "schema": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "endingTime": {
+            "type": "datetime"
+          },
+          "secureRandomSteps": {
+            "type": "boolean"
+          },
+          "startingTime": {
+            "type": "datetime"
+          },
+          "@type": {
+            "type": "string",
+            "required": true,
+            "allowed": [
+              "Random",
+              "Zeros"
+            ]
+          },
+          "cleanWithZeros": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "add": {
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "device": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "required": true
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Add"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "components": {
+      "type": "list",
+      "description": "Components affected by the event.",
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "ram-module": {
+    "weight": {
+      "type": "float",
+      "unitCode": "KGM",
+      "teaser": false,
+      "sink": -1
+    },
+    "icon": {
+      "type": "string",
+      "readonly": true,
+      "teaser": false,
+      "sink": -5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "owners": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "accounts",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "RamModule"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "size": {
+      "type": "integer",
+      "unitCode": "4L",
+      "min": 1,
+      "sink": 1
+    },
+    "_id": {
+      "type": "string",
+      "unique": true,
+      "device_id": true,
+      "teaser": false,
+      "sink": 4
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "width": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "speed": {
+      "type": "float",
+      "unitCode": "MHZ",
+      "min": 1,
+      "sink": -1
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      }
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    }
+  },
+  "events": {
+    "fromOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "startingTime": {
+      "type": "datetime"
+    },
+    "events": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "events",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "debug": {
+      "type": "dict"
+    },
+    "cleanWithZeros": {
+      "type": "boolean"
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "endingTime": {
+      "type": "datetime"
+    },
+    "acceptedConditions": {
+      "type": "boolean",
+      "required": true,
+      "allowed": [
+        true
+      ]
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "devices": {
+      "type": "list",
+      "required": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "steps": {
+      "type": "list",
+      "schema": {
+        "type": "dict",
+        "schema": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "endingTime": {
+            "type": "datetime"
+          },
+          "secureRandomSteps": {
+            "type": "boolean"
+          },
+          "startingTime": {
+            "type": "datetime"
+          },
+          "@type": {
+            "type": "string",
+            "required": true,
+            "allowed": [
+              "Random",
+              "Zeros"
+            ]
+          },
+          "cleanWithZeros": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "firstError": {
+      "type": "integer",
+      "nullable": true
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "description": "Where did it happened",
+      "sink": 0
+    },
+    "snapshot": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "events",
+        "embeddable": true,
+        "field": "_id"
+      }
+    },
+    "undefinedDate": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check this to say: \"This owner possessed the device for an undetermined amount of time\".",
+      "excludes": "date"
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "description": "The event triggered in this computer."
+    },
+    "force": {
+      "type": [
+        "boolean"
+      ]
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "version": {
+      "type": "version"
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "error": {
+      "type": "boolean",
+      "required": true
+    },
+    "secureRandomSteps": {
+      "type": "natural",
+      "required": true
+    },
+    "geo": {
+      "type": "point",
+      "or": [
+        "place"
+      ],
+      "description": "Where did it happened",
+      "excludes": "place",
+      "sink": -5
+    },
+    "offline": {
+      "type": "boolean"
+    },
+    "unsecured": {
+      "type": "list",
+      "default": [],
+      "readonly": true,
+      "schema": {
+        "type": "dict",
+        "schema": {
+          "@type": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "allowed": [
+              "model",
+              "pid"
+            ]
+          },
+          "_id": {
+            "type": "string",
+            "data_relation": {
+              "resource": "devices",
+              "embeddable": true,
+              "field": "_id"
+            }
+          }
+        }
+      }
+    },
+    "toOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "FinalUser",
+        "CollectionPoint",
+        "RecyclingPoint"
+      ]
+    },
+    "to": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "or": [
+        "unregisteredTo"
+      ],
+      "excludes": "unregisteredTo",
+      "sink": 2
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "lifetime": {
+      "type": "integer"
+    },
+    "request": {
+      "type": "string",
+      "readonly": true
+    },
+    "automatic": {
+      "type": "boolean"
+    },
+    "automaticallyAllocate": {
+      "type": "boolean",
+      "default": false,
+      "description": "Allocates to the user"
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Remove",
+        "Locate",
+        "Register",
+        "EraseSectors",
+        "Snapshot",
+        "Deallocate",
+        "ToPrepare",
+        "Allocate",
+        "Free",
+        "EventWithOneDevice",
+        "ToRepair",
+        "Receive",
+        "Event",
+        "EventWithDevices",
+        "ToDispose",
+        "TestHardDrive",
+        "Ready",
+        "Repair",
+        "Dispose",
+        "Add",
+        "EraseBasic"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "from": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "receiver": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "or": [
+        "unregisteredReceiver"
+      ],
+      "excludes": "unregisteredReceiver",
+      "sink": 2
+    },
+    "success": {
+      "type": "boolean"
+    },
+    "device": {
+      "type": "dict",
+      "required": true,
+      "schema": {
+        "weight": {
+          "type": "float",
+          "unitCode": "KGM",
+          "teaser": false,
+          "sink": -1
+        },
+        "type": {
+          "type": "string",
+          "allowed": [
+            "Server",
+            "Desktop",
+            "Laptop",
+            "Netbook",
+            "Microtower"
+          ]
+        },
+        "icon": {
+          "type": "string",
+          "readonly": true,
+          "teaser": false,
+          "sink": -5
+        },
+        "description": {
+          "type": "string",
+          "maxlength": 500,
+          "description": "Full long description",
+          "sink": -4
+        },
+        "owners": {
+          "type": "list",
+          "readonly": true,
+          "schema": {
+            "type": "objectid",
+            "data_relation": {
+              "resource": "accounts",
+              "embeddable": true,
+              "field": "_id"
+            }
+          },
+          "sink": 2
+        },
+        "@type": {
+          "type": "string",
+          "required": true,
+          "allowed": [
+            "Computer"
+          ],
+          "teaser": false
+        },
+        "url": {
+          "type": "url",
+          "readonly": true,
+          "teaser": false
+        },
+        "forceCreation": {
+          "type": "boolean",
+          "default": false
+        },
+        "_id": {
+          "type": "string",
+          "unique": true,
+          "device_id": true,
+          "teaser": false,
+          "sink": 4
+        },
+        "productId": {
+          "type": "string",
+          "teaser": false,
+          "sink": 3
+        },
+        "width": {
+          "type": "float",
+          "unitCode": "MTR",
+          "teaser": false,
+          "sink": -1
+        },
+        "place": {
+          "type": "objectid",
+          "data_relation": {
+            "resource": "places",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "readonly": true,
+          "sink": 2
+        },
+        "hid": {
+          "type": "hid",
+          "teaser": false,
+          "sink": 5
+        },
+        "model": {
+          "type": "string",
+          "sink": 4
+        },
+        "serialNumber": {
+          "type": "string",
+          "sink": 4
+        },
+        "isUidSecured": {
+          "type": "boolean",
+          "default": true,
+          "teaser": false
+        },
+        "public": {
+          "type": "boolean",
+          "default": false
+        },
+        "label": {
+          "type": "string",
+          "description": "A short, descriptive title",
+          "sink": 5
+        },
+        "pid": {
+          "type": "string",
+          "unique": true,
+          "sink": 5
+        },
+        "height": {
+          "type": "float",
+          "unitCode": "MTR",
+          "teaser": false,
+          "sink": -1
+        },
+        "labelId": {
+          "type": "string",
+          "sink": 5
+        },
+        "sameAs": {
+          "type": "url",
+          "teaser": false
+        },
+        "manufacturer": {
+          "type": "string",
+          "sink": 4
+        },
+        "components": {
+          "type": "list",
+          "default": [],
+          "schema": {
+            "type": "string",
+            "data_relation": {
+              "resource": "devices",
+              "embeddable": true,
+              "field": "_id"
+            }
+          },
+          "sink": 1
+        }
+      },
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      }
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "unregisteredTo": {
+      "type": "dict",
+      "schema": {
+        "email": {
+          "type": "email",
+          "required": true,
+          "unique": true,
+          "sink": 5
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of an account, if it is a person or an organization.",
+          "sink": 3
+        },
+        "organization": {
+          "type": "string",
+          "description": "The name of the organization the account is in. Organizations can be inside other organizations.",
+          "sink": 1
+        },
+        "isOrganization": {
+          "type": "boolean",
+          "sink": 2
+        }
+      },
+      "sink": 2
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "unregisteredReceiver": {
+      "type": "dict",
+      "schema": {
+        "email": {
+          "type": "email",
+          "required": true,
+          "unique": true,
+          "sink": 5
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of an account, if it is a person or an organization.",
+          "sink": 3
+        },
+        "organization": {
+          "type": "string",
+          "description": "The name of the organization the account is in. Organizations can be inside other organizations.",
+          "sink": 1
+        },
+        "isOrganization": {
+          "type": "boolean",
+          "sink": 2
+        }
+      },
+      "sink": 2
+    },
+    "receiverOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "components": {
+      "type": "list",
+      "description": "Components affected by the event.",
+      "readonly": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "to-repair": {
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "devices": {
+      "type": "list",
+      "required": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "ToRepair"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "to-dispose": {
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "devices": {
+      "type": "list",
+      "required": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "ToDispose"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "snapshot": {
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "offline": {
+      "type": "boolean"
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "debug": {
+      "type": "dict"
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "request": {
+      "type": "string",
+      "readonly": true
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Snapshot"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    },
+    "version": {
+      "type": "version"
+    },
+    "device": {
+      "type": "dict",
+      "required": true,
+      "schema": {
+        "weight": {
+          "type": "float",
+          "unitCode": "KGM",
+          "teaser": false,
+          "sink": -1
+        },
+        "type": {
+          "type": "string",
+          "allowed": [
+            "Server",
+            "Desktop",
+            "Laptop",
+            "Netbook",
+            "Microtower"
+          ]
+        },
+        "icon": {
+          "type": "string",
+          "readonly": true,
+          "teaser": false,
+          "sink": -5
+        },
+        "description": {
+          "type": "string",
+          "maxlength": 500,
+          "description": "Full long description",
+          "sink": -4
+        },
+        "owners": {
+          "type": "list",
+          "readonly": true,
+          "schema": {
+            "type": "objectid",
+            "data_relation": {
+              "resource": "accounts",
+              "embeddable": true,
+              "field": "_id"
+            }
+          },
+          "sink": 2
+        },
+        "@type": {
+          "type": "string",
+          "required": true,
+          "allowed": [
+            "Computer"
+          ],
+          "teaser": false
+        },
+        "url": {
+          "type": "url",
+          "readonly": true,
+          "teaser": false
+        },
+        "forceCreation": {
+          "type": "boolean",
+          "default": false
+        },
+        "_id": {
+          "type": "string",
+          "unique": true,
+          "device_id": true,
+          "teaser": false,
+          "sink": 4
+        },
+        "productId": {
+          "type": "string",
+          "teaser": false,
+          "sink": 3
+        },
+        "width": {
+          "type": "float",
+          "unitCode": "MTR",
+          "teaser": false,
+          "sink": -1
+        },
+        "place": {
+          "type": "objectid",
+          "data_relation": {
+            "resource": "places",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "readonly": true,
+          "sink": 2
+        },
+        "hid": {
+          "type": "hid",
+          "teaser": false,
+          "sink": 5
+        },
+        "model": {
+          "type": "string",
+          "sink": 4
+        },
+        "serialNumber": {
+          "type": "string",
+          "sink": 4
+        },
+        "isUidSecured": {
+          "type": "boolean",
+          "default": true,
+          "teaser": false
+        },
+        "public": {
+          "type": "boolean",
+          "default": false
+        },
+        "label": {
+          "type": "string",
+          "description": "A short, descriptive title",
+          "sink": 5
+        },
+        "pid": {
+          "type": "string",
+          "unique": true,
+          "sink": 5
+        },
+        "height": {
+          "type": "float",
+          "unitCode": "MTR",
+          "teaser": false,
+          "sink": -1
+        },
+        "labelId": {
+          "type": "string",
+          "sink": 5
+        },
+        "sameAs": {
+          "type": "url",
+          "teaser": false
+        },
+        "manufacturer": {
+          "type": "string",
+          "sink": 4
+        },
+        "components": {
+          "type": "list",
+          "default": [],
+          "schema": {
+            "type": "string",
+            "data_relation": {
+              "resource": "devices",
+              "embeddable": true,
+              "field": "_id"
+            }
+          },
+          "sink": 1
+        }
+      },
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      }
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "automatic": {
+      "type": "boolean"
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "description": "Where did it happened",
+      "sink": 0
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "unsecured": {
+      "type": "list",
+      "default": [],
+      "readonly": true,
+      "schema": {
+        "type": "dict",
+        "schema": {
+          "@type": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "allowed": [
+              "model",
+              "pid"
+            ]
+          },
+          "_id": {
+            "type": "string",
+            "data_relation": {
+              "resource": "devices",
+              "embeddable": true,
+              "field": "_id"
+            }
+          }
+        }
+      }
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "events": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "events",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "dict",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        },
+        "schema": {
+          "weight": {
+            "type": "float",
+            "unitCode": "KGM",
+            "teaser": false,
+            "sink": -1
+          },
+          "address": {
+            "type": "integer",
+            "allowed": [
+              256,
+              32,
+              64,
+              128,
+              8,
+              16
+            ],
+            "unitCode": "A99",
+            "sink": -1
+          },
+          "tests": {
+            "type": "list",
+            "readonly": true,
+            "schema": {
+              "type": "objectid",
+              "data_relation": {
+                "resource": "events",
+                "embeddable": true,
+                "field": "_id"
+              }
+            }
+          },
+          "icon": {
+            "type": "string",
+            "readonly": true,
+            "teaser": false,
+            "sink": -5
+          },
+          "description": {
+            "type": "string",
+            "maxlength": 500,
+            "description": "Full long description",
+            "sink": -4
+          },
+          "test": {
+            "type": "dict",
+            "schema": {
+              "status": {
+                "type": "string",
+                "required": true
+              },
+              "snapshot": {
+                "type": "objectid",
+                "data_relation": {
+                  "resource": "events",
+                  "embeddable": true,
+                  "field": "_id"
+                }
+              },
+              "secured": {
+                "type": "boolean",
+                "sink": -3
+              },
+              "incidence": {
+                "type": "boolean",
+                "description": "Check if something went wrong, you can add details in a comment",
+                "sink": -3
+              },
+              "comment": {
+                "type": "string",
+                "description": "Short comment for fast and easy reading",
+                "sink": -4
+              },
+              "type": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string",
+                "description": "A short, descriptive title",
+                "sink": 5
+              },
+              "parent": {
+                "type": "string",
+                "data_relation": {
+                  "resource": "devices",
+                  "embeddable": true,
+                  "field": "_id"
+                },
+                "description": "The event triggered in this computer."
+              },
+              "description": {
+                "type": "string",
+                "maxlength": 500,
+                "description": "Full long description",
+                "sink": -4
+              },
+              "lifetime": {
+                "type": "integer"
+              },
+              "byUser": {
+                "type": "objectid",
+                "data_relation": {
+                  "resource": "accounts",
+                  "embeddable": true,
+                  "field": "_id"
+                },
+                "readonly": true,
+                "sink": 2
+              },
+              "error": {
+                "type": "boolean",
+                "required": true
+              },
+              "sameAs": {
+                "type": "url",
+                "teaser": false
+              },
+              "device": {
+                "type": "string",
+                "data_relation": {
+                  "resource": "devices",
+                  "embeddable": true,
+                  "field": "_id"
+                },
+                "required": false
+              },
+              "byOrganization": {
+                "type": "string",
+                "readonly": true
+              },
+              "geo": {
+                "type": "point",
+                "description": "Where did it happened",
+                "sink": -5
+              },
+              "@type": {
+                "type": "string",
+                "required": true,
+                "allowed": [
+                  "TestHardDrive"
+                ],
+                "teaser": false
+              },
+              "url": {
+                "type": "url",
+                "readonly": true,
+                "teaser": false
+              },
+              "firstError": {
+                "type": "integer",
+                "nullable": true
+              },
+              "date": {
+                "type": "datetime",
+                "description": "When this happened. Leave blank if it is happening now",
+                "sink": -2
+              }
+            }
+          },
+          "owners": {
+            "type": "list",
+            "readonly": true,
+            "schema": {
+              "type": "objectid",
+              "data_relation": {
+                "resource": "accounts",
+                "embeddable": true,
+                "field": "_id"
+              }
+            },
+            "sink": 2
+          },
+          "usedSlots": {
+            "type": "integer",
+            "teaser": false
+          },
+          "firmwareRevision": {
+            "type": "string",
+            "teaser": false,
+            "sink": -1
+          },
+          "benchmarks": {
+            "type": "list",
+            "readonly": true,
+            "schema": {
+              "type": "dict",
+              "schema": {
+                "readingSpeed": {
+                  "type": "float",
+                  "unitCode": "4L"
+                },
+                "writingSpeed": {
+                  "type": "float",
+                  "unitCode": "4L"
+                },
+                "@type": {
+                  "type": "string",
+                  "required": true,
+                  "allowed": [
+                    "BenchmarkProcessor"
+                  ],
+                  "teaser": false
+                },
+                "score": {
+                  "type": "float"
+                },
+                "label": {
+                  "type": "string",
+                  "description": "A short, descriptive title",
+                  "sink": 5
+                }
+              }
+            }
+          },
+          "speed": {
+            "type": "number",
+            "unitCode": "A86",
+            "sink": 1
+          },
+          "@type": {
+            "type": "string",
+            "required": true,
+            "allowed": [
+              "GraphicCard",
+              "Component",
+              "RamModule",
+              "OpticalDrive",
+              "NetworkAdapter",
+              "Motherboard",
+              "Processor",
+              "HardDrive",
+              "SoundCard"
+            ],
+            "teaser": false
+          },
+          "erasures": {
+            "type": "list",
+            "readonly": true,
+            "schema": {
+              "type": "objectid",
+              "data_relation": {
+                "resource": "events",
+                "embeddable": true,
+                "field": "_id"
+              }
+            }
+          },
+          "url": {
+            "type": "url",
+            "readonly": true,
+            "teaser": false
+          },
+          "size": {
+            "type": "number",
+            "unitCode": "4L",
+            "min": 1,
+            "sink": 1
+          },
+          "_id": {
+            "type": "string",
+            "unique": true,
+            "device_id": true,
+            "teaser": false,
+            "sink": 4
+          },
+          "productId": {
+            "type": "string",
+            "teaser": false,
+            "sink": 3
+          },
+          "width": {
+            "type": "float",
+            "unitCode": "MTR",
+            "teaser": false,
+            "sink": -1
+          },
+          "totalSlots": {
+            "type": "integer",
+            "teaser": false
+          },
+          "place": {
+            "type": "objectid",
+            "data_relation": {
+              "resource": "places",
+              "embeddable": true,
+              "field": "_id"
+            },
+            "readonly": true,
+            "sink": 2
+          },
+          "hid": {
+            "type": "hid",
+            "teaser": false,
+            "sink": 5
+          },
+          "model": {
+            "type": "string",
+            "sink": 4
+          },
+          "numberOfCores": {
+            "type": "integer",
+            "min": 1,
+            "sink": 1
+          },
+          "serialNumber": {
+            "type": "string",
+            "sink": 4
+          },
+          "isUidSecured": {
+            "type": "boolean",
+            "default": true,
+            "teaser": false
+          },
+          "public": {
+            "type": "boolean",
+            "default": false
+          },
+          "blockSize": {
+            "type": "integer",
+            "teaser": false,
+            "sink": -1
+          },
+          "parent": {
+            "type": "string",
+            "data_relation": {
+              "resource": "devices",
+              "embeddable": true,
+              "field": "_id"
+            }
+          },
+          "label": {
+            "type": "string",
+            "description": "A short, descriptive title",
+            "sink": 5
+          },
+          "interface": {
+            "type": "string",
+            "teaser": false,
+            "sink": -1
+          },
+          "pid": {
+            "type": "string",
+            "unique": true,
+            "sink": 5
+          },
+          "height": {
+            "type": "float",
+            "unitCode": "MTR",
+            "teaser": false,
+            "sink": -1
+          },
+          "labelId": {
+            "type": "string",
+            "sink": 5
+          },
+          "sectors": {
+            "type": "integer",
+            "teaser": false,
+            "sink": -1
+          },
+          "sameAs": {
+            "type": "url",
+            "teaser": false
+          },
+          "memory": {
+            "type": "float",
+            "unitCode": "4L",
+            "min": 1,
+            "sink": 3
+          },
+          "erasure": {
+            "type": "dict",
+            "writeonly": true,
+            "schema": {
+              "success": {
+                "type": "boolean"
+              },
+              "secured": {
+                "type": "boolean",
+                "sink": -3
+              },
+              "incidence": {
+                "type": "boolean",
+                "description": "Check if something went wrong, you can add details in a comment",
+                "sink": -3
+              },
+              "comment": {
+                "type": "string",
+                "description": "Short comment for fast and easy reading",
+                "sink": -4
+              },
+              "label": {
+                "type": "string",
+                "description": "A short, descriptive title",
+                "sink": 5
+              },
+              "parent": {
+                "type": "string",
+                "data_relation": {
+                  "resource": "devices",
+                  "embeddable": true,
+                  "field": "_id"
+                },
+                "description": "The event triggered in this computer."
+              },
+              "description": {
+                "type": "string",
+                "maxlength": 500,
+                "description": "Full long description",
+                "sink": -4
+              },
+              "cleanWithZeros": {
+                "type": "boolean"
+              },
+              "byUser": {
+                "type": "objectid",
+                "data_relation": {
+                  "resource": "accounts",
+                  "embeddable": true,
+                  "field": "_id"
+                },
+                "readonly": true,
+                "sink": 2
+              },
+              "endingTime": {
+                "type": "datetime"
+              },
+              "sameAs": {
+                "type": "url",
+                "teaser": false
+              },
+              "device": {
+                "type": "string",
+                "data_relation": {
+                  "resource": "devices",
+                  "embeddable": true,
+                  "field": "_id"
+                },
+                "required": false
+              },
+              "secureRandomSteps": {
+                "type": "natural",
+                "required": true
+              },
+              "byOrganization": {
+                "type": "string",
+                "readonly": true
+              },
+              "geo": {
+                "type": "point",
+                "description": "Where did it happened",
+                "sink": -5
+              },
+              "startingTime": {
+                "type": "datetime"
+              },
+              "@type": {
+                "type": "string",
+                "required": true,
+                "allowed": [
+                  "EraseSectors",
+                  "EraseBasic"
+                ],
+                "teaser": false
+              },
+              "url": {
+                "type": "url",
+                "readonly": true,
+                "teaser": false
+              },
+              "steps": {
+                "type": "list",
+                "schema": {
+                  "type": "dict",
+                  "schema": {
+                    "success": {
+                      "type": "boolean",
+                      "required": true
+                    },
+                    "endingTime": {
+                      "type": "datetime"
+                    },
+                    "secureRandomSteps": {
+                      "type": "boolean"
+                    },
+                    "startingTime": {
+                      "type": "datetime"
+                    },
+                    "@type": {
+                      "type": "string",
+                      "required": true,
+                      "allowed": [
+                        "Random",
+                        "Zeros"
+                      ]
+                    },
+                    "cleanWithZeros": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "date": {
+                "type": "datetime",
+                "description": "When this happened. Leave blank if it is happening now",
+                "sink": -2
+              }
+            }
+          },
+          "manufacturer": {
+            "type": "string",
+            "sink": 4
+          },
+          "benchmark": {
+            "type": "dict",
+            "writeonly": true,
+            "schema": {
+              "readingSpeed": {
+                "type": "float",
+                "unitCode": "4L"
+              },
+              "label": {
+                "type": "string",
+                "description": "A short, descriptive title",
+                "sink": 5
+              },
+              "writingSpeed": {
+                "type": "float",
+                "unitCode": "4L"
+              },
+              "@type": {
+                "type": "string",
+                "required": true,
+                "allowed": [
+                  "BenchmarkProcessor",
+                  "BenchmarkHardDrive"
+                ],
+                "teaser": false
+              },
+              "score": {
+                "type": "float"
+              }
+            }
+          },
+          "components": {
+            "type": "list",
+            "default": [],
+            "schema": {
+              "type": "string",
+              "data_relation": {
+                "resource": "devices",
+                "embeddable": true,
+                "field": "_id"
+              }
+            },
+            "sink": 1
+          },
+          "maxAcceptedMemory": {
+            "type": "integer",
+            "teaser": false
+          },
+          "connectors": {
+            "type": "dict",
+            "schema": {
+              "firewire": {
+                "type": "natural"
+              },
+              "serial": {
+                "type": "natural"
+              },
+              "usb": {
+                "type": "natural"
+              },
+              "pcmcia": {
+                "type": "natural"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "to-prepare": {
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "devices": {
+      "type": "list",
+      "required": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "ToPrepare"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "computer": {
+    "weight": {
+      "type": "float",
+      "unitCode": "KGM",
+      "teaser": false,
+      "sink": -1
+    },
+    "type": {
+      "type": "string",
+      "allowed": [
+        "Server",
+        "Desktop",
+        "Laptop",
+        "Netbook",
+        "Microtower"
+      ]
+    },
+    "icon": {
+      "type": "string",
+      "readonly": true,
+      "teaser": false,
+      "sink": -5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "owners": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "accounts",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Computer"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "forceCreation": {
+      "type": "boolean",
+      "default": false
+    },
+    "_id": {
+      "type": "string",
+      "unique": true,
+      "device_id": true,
+      "teaser": false,
+      "sink": 4
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "width": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    }
+  },
+  "accounts": {
+    "fingerprints": {
+      "type": "list",
+      "readonly": true
+    },
+    "isOrganization": {
+      "type": "boolean",
+      "sink": 2
+    },
+    "role": {
+      "type": "string",
+      "default": "basic",
+      "allowed": [
+        "superuser",
+        "basic",
+        "amateur",
+        "admin",
+        "employee"
+      ],
+      "dh_allowed_write_roles": [
+        "admin",
+        "superuser"
+      ],
+      "doc": "See the Roles section to get more info."
+    },
+    "defaultDatabase": {
+      "type": "string",
+      "dh_allowed_write_roles": [
+        "admin",
+        "superuser"
+      ],
+      "teaser": false,
+      "sink": -5
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Account"
+      ],
+      "teaser": false
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "password": {
+      "type": "string",
+      "doc": "Users can only see their own passwords.",
+      "minlength": 4,
+      "sink": 4
+    },
+    "organization": {
+      "type": "string",
+      "description": "The name of the organization the account is in. Organizations can be inside other organizations.",
+      "sink": 1
+    },
+    "email": {
+      "type": "email",
+      "required": true,
+      "unique": true,
+      "sink": 5
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "sink": -1,
+      "description": "Activate the account so you can start using it.",
+      "doc": "Inactive accounts cannot login, and they are created through regular events. `Employee` or below cannot see this parameter."
+    },
+    "blocked": {
+      "type": "boolean",
+      "default": true,
+      "dh_allowed_write_roles": [
+        "admin",
+        "superuser"
+      ],
+      "description": "As a manager, you need to specifically accept the user by unblocking it's account.",
+      "sink": -2
+    },
+    "token": {
+      "type": "string",
+      "readonly": true
+    },
+    "databases": {
+      "type": "list",
+      "required": true,
+      "dh_allowed_write_roles": [
+        "admin",
+        "superuser"
+      ],
+      "teaser": false,
+      "sink": -4
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of an account, if it is a person or an organization.",
+      "sink": 3
+    },
+    "publicKey": {
+      "type": "string",
+      "writeonly": true
+    }
+  },
+  "ready": {
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "devices": {
+      "type": "list",
+      "required": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Ready"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "devices": {
+    "inches": {
+      "type": "natural"
+    },
+    "tests": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "events",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "icon": {
+      "type": "string",
+      "readonly": true,
+      "teaser": false,
+      "sink": -5
+    },
+    "test": {
+      "type": "dict",
+      "schema": {
+        "status": {
+          "type": "string",
+          "required": true
+        },
+        "snapshot": {
+          "type": "objectid",
+          "data_relation": {
+            "resource": "events",
+            "embeddable": true,
+            "field": "_id"
+          }
+        },
+        "secured": {
+          "type": "boolean",
+          "sink": -3
+        },
+        "incidence": {
+          "type": "boolean",
+          "description": "Check if something went wrong, you can add details in a comment",
+          "sink": -3
+        },
+        "comment": {
+          "type": "string",
+          "description": "Short comment for fast and easy reading",
+          "sink": -4
+        },
+        "type": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "A short, descriptive title",
+          "sink": 5
+        },
+        "parent": {
+          "type": "string",
+          "data_relation": {
+            "resource": "devices",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "description": "The event triggered in this computer."
+        },
+        "description": {
+          "type": "string",
+          "maxlength": 500,
+          "description": "Full long description",
+          "sink": -4
+        },
+        "lifetime": {
+          "type": "integer"
+        },
+        "byUser": {
+          "type": "objectid",
+          "data_relation": {
+            "resource": "accounts",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "readonly": true,
+          "sink": 2
+        },
+        "error": {
+          "type": "boolean",
+          "required": true
+        },
+        "sameAs": {
+          "type": "url",
+          "teaser": false
+        },
+        "device": {
+          "type": "string",
+          "data_relation": {
+            "resource": "devices",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "required": false
+        },
+        "byOrganization": {
+          "type": "string",
+          "readonly": true
+        },
+        "geo": {
+          "type": "point",
+          "description": "Where did it happened",
+          "sink": -5
+        },
+        "@type": {
+          "type": "string",
+          "required": true,
+          "allowed": [
+            "TestHardDrive"
+          ],
+          "teaser": false
+        },
+        "url": {
+          "type": "url",
+          "readonly": true,
+          "teaser": false
+        },
+        "firstError": {
+          "type": "integer",
+          "nullable": true
+        },
+        "date": {
+          "type": "datetime",
+          "description": "When this happened. Leave blank if it is happening now",
+          "sink": -2
+        }
+      }
+    },
+    "firmwareRevision": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "meid": {
+      "type": "string",
+      "unique": true
+    },
+    "height": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "usedSlots": {
+      "type": "integer",
+      "teaser": false
+    },
+    "_id": {
+      "type": "string",
+      "unique": true,
+      "device_id": true,
+      "teaser": false,
+      "sink": 4
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "width": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "totalSlots": {
+      "type": "integer",
+      "teaser": false
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "numberOfCores": {
+      "type": "integer",
+      "min": 1,
+      "sink": 1
+    },
+    "speed": {
+      "type": "float",
+      "unitCode": "A86",
+      "sink": 1
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "sectors": {
+      "type": "integer",
+      "teaser": false,
+      "sink": -1
+    },
+    "maxAcceptedMemory": {
+      "type": "integer",
+      "teaser": false
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "imei": {
+      "type": "string",
+      "unique": true
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "benchmark": {
+      "type": "dict",
+      "writeonly": true,
+      "schema": {
+        "readingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        },
+        "writingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        },
+        "@type": {
+          "type": "string",
+          "required": true,
+          "allowed": [
+            "BenchmarkProcessor"
+          ],
+          "teaser": false
+        },
+        "score": {
+          "type": "float"
+        },
+        "label": {
+          "type": "string",
+          "description": "A short, descriptive title",
+          "sink": 5
+        }
+      }
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "weight": {
+      "type": "float",
+      "unitCode": "KGM",
+      "teaser": false,
+      "sink": -1
+    },
+    "benchmarks": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "dict",
+        "schema": {
+          "readingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "writingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "@type": {
+            "type": "string",
+            "required": true,
+            "allowed": [
+              "BenchmarkProcessor"
+            ],
+            "teaser": false
+          },
+          "score": {
+            "type": "float"
+          },
+          "label": {
+            "type": "string",
+            "description": "A short, descriptive title",
+            "sink": 5
+          }
+        }
+      }
+    },
+    "type": {
+      "type": "string",
+      "allowed": [
+        "Mouse",
+        "SAI",
+        "TFT",
+        "MultifunctionPrinter",
+        "Router",
+        "Terminal",
+        "Keyboard",
+        "Desktop",
+        "Switch",
+        "Microtower",
+        "Laptop",
+        "Printer",
+        "Server",
+        "HUB",
+        "Scanner",
+        "LCD",
+        "Netbook"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "owners": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "accounts",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "memory": {
+      "type": "float",
+      "unitCode": "4L",
+      "min": 1,
+      "sink": 3
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Component",
+        "GraphicCard",
+        "RamModule",
+        "TabletComputer",
+        "Motherboard",
+        "Device",
+        "ComputerMonitor",
+        "MobilePhone",
+        "HardDrive",
+        "OpticalDrive",
+        "Computer",
+        "Mobile",
+        "NetworkAdapter",
+        "Processor",
+        "Peripheral",
+        "SoundCard"
+      ],
+      "teaser": false
+    },
+    "erasures": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "events",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "size": {
+      "type": "integer",
+      "unitCode": "4L",
+      "min": 1,
+      "sink": 1
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "forceCreation": {
+      "type": "boolean",
+      "default": false
+    },
+    "address": {
+      "type": "integer",
+      "allowed": [
+        256,
+        32,
+        64,
+        128,
+        8,
+        16
+      ],
+      "unitCode": "A99",
+      "sink": -1
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "blockSize": {
+      "type": "integer",
+      "teaser": false,
+      "sink": -1
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "connectors": {
+      "type": "dict",
+      "schema": {
+        "firewire": {
+          "type": "natural"
+        },
+        "serial": {
+          "type": "natural"
+        },
+        "usb": {
+          "type": "natural"
+        },
+        "pcmcia": {
+          "type": "natural"
+        }
+      }
+    },
+    "erasure": {
+      "type": "dict",
+      "writeonly": true,
+      "schema": {
+        "success": {
+          "type": "boolean"
+        },
+        "secured": {
+          "type": "boolean",
+          "sink": -3
+        },
+        "incidence": {
+          "type": "boolean",
+          "description": "Check if something went wrong, you can add details in a comment",
+          "sink": -3
+        },
+        "comment": {
+          "type": "string",
+          "description": "Short comment for fast and easy reading",
+          "sink": -4
+        },
+        "label": {
+          "type": "string",
+          "description": "A short, descriptive title",
+          "sink": 5
+        },
+        "parent": {
+          "type": "string",
+          "data_relation": {
+            "resource": "devices",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "description": "The event triggered in this computer."
+        },
+        "description": {
+          "type": "string",
+          "maxlength": 500,
+          "description": "Full long description",
+          "sink": -4
+        },
+        "cleanWithZeros": {
+          "type": "boolean"
+        },
+        "byUser": {
+          "type": "objectid",
+          "data_relation": {
+            "resource": "accounts",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "readonly": true,
+          "sink": 2
+        },
+        "endingTime": {
+          "type": "datetime"
+        },
+        "sameAs": {
+          "type": "url",
+          "teaser": false
+        },
+        "device": {
+          "type": "string",
+          "data_relation": {
+            "resource": "devices",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "required": false
+        },
+        "secureRandomSteps": {
+          "type": "natural",
+          "required": true
+        },
+        "byOrganization": {
+          "type": "string",
+          "readonly": true
+        },
+        "geo": {
+          "type": "point",
+          "description": "Where did it happened",
+          "sink": -5
+        },
+        "startingTime": {
+          "type": "datetime"
+        },
+        "@type": {
+          "type": "string",
+          "required": true,
+          "allowed": [
+            "EraseSectors",
+            "EraseBasic"
+          ],
+          "teaser": false
+        },
+        "url": {
+          "type": "url",
+          "readonly": true,
+          "teaser": false
+        },
+        "steps": {
+          "type": "list",
+          "schema": {
+            "type": "dict",
+            "schema": {
+              "success": {
+                "type": "boolean",
+                "required": true
+              },
+              "endingTime": {
+                "type": "datetime"
+              },
+              "secureRandomSteps": {
+                "type": "boolean"
+              },
+              "startingTime": {
+                "type": "datetime"
+              },
+              "@type": {
+                "type": "string",
+                "required": true,
+                "allowed": [
+                  "Random",
+                  "Zeros"
+                ]
+              },
+              "cleanWithZeros": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "date": {
+          "type": "datetime",
+          "description": "When this happened. Leave blank if it is happening now",
+          "sink": -2
+        }
+      }
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      }
+    }
+  },
+  "locate": {
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "description": "Where did it happened",
+      "sink": 0
+    },
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "devices": {
+      "type": "list",
+      "required": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "or": [
+        "place"
+      ],
+      "description": "Where did it happened",
+      "excludes": "place",
+      "sink": -5
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Locate"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "components": {
+      "type": "list",
+      "description": "Components affected by the event.",
+      "readonly": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "erase-basic": {
+    "success": {
+      "type": "boolean"
+    },
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "description": "The event triggered in this computer."
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "cleanWithZeros": {
+      "type": "boolean"
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "endingTime": {
+      "type": "datetime"
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "device": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "required": true
+    },
+    "secureRandomSteps": {
+      "type": "natural",
+      "required": true
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "startingTime": {
+      "type": "datetime"
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "EraseSectors",
+        "EraseBasic"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "steps": {
+      "type": "list",
+      "schema": {
+        "type": "dict",
+        "schema": {
+          "success": {
+            "type": "boolean",
+            "required": true
+          },
+          "endingTime": {
+            "type": "datetime"
+          },
+          "secureRandomSteps": {
+            "type": "boolean"
+          },
+          "startingTime": {
+            "type": "datetime"
+          },
+          "@type": {
+            "type": "string",
+            "required": true,
+            "allowed": [
+              "Random",
+              "Zeros"
+            ]
+          },
+          "cleanWithZeros": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "test-hard-drive": {
+    "status": {
+      "type": "string",
+      "required": true
+    },
+    "snapshot": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "events",
+        "embeddable": true,
+        "field": "_id"
+      }
+    },
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "type": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "description": "The event triggered in this computer."
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "lifetime": {
+      "type": "integer"
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "error": {
+      "type": "boolean",
+      "required": true
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "device": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "required": true
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "TestHardDrive"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "firstError": {
+      "type": "integer",
+      "nullable": true
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "deallocate": {
+    "fromOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "devices": {
+      "type": "list",
+      "required": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Deallocate"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "from": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "components": {
+      "type": "list",
+      "description": "Components affected by the event.",
+      "readonly": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "mobile": {
+    "weight": {
+      "type": "float",
+      "unitCode": "KGM",
+      "teaser": false,
+      "sink": -1
+    },
+    "imei": {
+      "type": "string",
+      "unique": true
+    },
+    "icon": {
+      "type": "string",
+      "readonly": true,
+      "teaser": false,
+      "sink": -5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "owners": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "accounts",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "MobilePhone",
+        "Mobile",
+        "TabletComputer"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "string",
+      "unique": true,
+      "device_id": true,
+      "teaser": false,
+      "sink": 4
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "width": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "meid": {
+      "type": "string",
+      "unique": true
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    }
+  },
+  "graphic-card": {
+    "weight": {
+      "type": "float",
+      "unitCode": "KGM",
+      "teaser": false,
+      "sink": -1
+    },
+    "icon": {
+      "type": "string",
+      "readonly": true,
+      "teaser": false,
+      "sink": -5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "owners": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "accounts",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "memory": {
+      "type": "float",
+      "unitCode": "4L",
+      "min": 1,
+      "sink": 3
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "GraphicCard"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "string",
+      "unique": true,
+      "device_id": true,
+      "teaser": false,
+      "sink": 4
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "width": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      }
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    }
+  },
+  "places": {
+    "devices": {
+      "type": "list",
+      "default": [],
+      "unique_values": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "type": {
+      "type": "string",
+      "allowed": [
+        "Warehouse",
+        "Zone",
+        "Department",
+        "CollectionPoint"
+      ]
+    },
+    "label": {
+      "type": "string",
+      "required": true,
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "geo": {
+      "type": "polygon",
+      "description": "Set the area of the place. Be careful! Once set, you cannot update the area.",
+      "modifiable": false,
+      "sink": -5
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Place"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "objectid"
+    }
+  },
+  "component": {
+    "weight": {
+      "type": "float",
+      "unitCode": "KGM",
+      "teaser": false,
+      "sink": -1
+    },
+    "address": {
+      "type": "integer",
+      "allowed": [
+        256,
+        32,
+        64,
+        128,
+        8,
+        16
+      ],
+      "unitCode": "A99",
+      "sink": -1
+    },
+    "tests": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "events",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "icon": {
+      "type": "string",
+      "readonly": true,
+      "teaser": false,
+      "sink": -5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "test": {
+      "type": "dict",
+      "schema": {
+        "status": {
+          "type": "string",
+          "required": true
+        },
+        "snapshot": {
+          "type": "objectid",
+          "data_relation": {
+            "resource": "events",
+            "embeddable": true,
+            "field": "_id"
+          }
+        },
+        "secured": {
+          "type": "boolean",
+          "sink": -3
+        },
+        "incidence": {
+          "type": "boolean",
+          "description": "Check if something went wrong, you can add details in a comment",
+          "sink": -3
+        },
+        "comment": {
+          "type": "string",
+          "description": "Short comment for fast and easy reading",
+          "sink": -4
+        },
+        "type": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "A short, descriptive title",
+          "sink": 5
+        },
+        "parent": {
+          "type": "string",
+          "data_relation": {
+            "resource": "devices",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "description": "The event triggered in this computer."
+        },
+        "description": {
+          "type": "string",
+          "maxlength": 500,
+          "description": "Full long description",
+          "sink": -4
+        },
+        "lifetime": {
+          "type": "integer"
+        },
+        "byUser": {
+          "type": "objectid",
+          "data_relation": {
+            "resource": "accounts",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "readonly": true,
+          "sink": 2
+        },
+        "error": {
+          "type": "boolean",
+          "required": true
+        },
+        "sameAs": {
+          "type": "url",
+          "teaser": false
+        },
+        "device": {
+          "type": "string",
+          "data_relation": {
+            "resource": "devices",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "required": false
+        },
+        "byOrganization": {
+          "type": "string",
+          "readonly": true
+        },
+        "geo": {
+          "type": "point",
+          "description": "Where did it happened",
+          "sink": -5
+        },
+        "@type": {
+          "type": "string",
+          "required": true,
+          "allowed": [
+            "TestHardDrive"
+          ],
+          "teaser": false
+        },
+        "url": {
+          "type": "url",
+          "readonly": true,
+          "teaser": false
+        },
+        "firstError": {
+          "type": "integer",
+          "nullable": true
+        },
+        "date": {
+          "type": "datetime",
+          "description": "When this happened. Leave blank if it is happening now",
+          "sink": -2
+        }
+      }
+    },
+    "owners": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "accounts",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "usedSlots": {
+      "type": "integer",
+      "teaser": false
+    },
+    "firmwareRevision": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "benchmarks": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "dict",
+        "schema": {
+          "readingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "writingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "@type": {
+            "type": "string",
+            "required": true,
+            "allowed": [
+              "BenchmarkProcessor"
+            ],
+            "teaser": false
+          },
+          "score": {
+            "type": "float"
+          },
+          "label": {
+            "type": "string",
+            "description": "A short, descriptive title",
+            "sink": 5
+          }
+        }
+      }
+    },
+    "speed": {
+      "type": "number",
+      "unitCode": "A86",
+      "sink": 1
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "GraphicCard",
+        "Component",
+        "RamModule",
+        "OpticalDrive",
+        "NetworkAdapter",
+        "Motherboard",
+        "Processor",
+        "HardDrive",
+        "SoundCard"
+      ],
+      "teaser": false
+    },
+    "erasures": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "events",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "size": {
+      "type": "number",
+      "unitCode": "4L",
+      "min": 1,
+      "sink": 1
+    },
+    "_id": {
+      "type": "string",
+      "unique": true,
+      "device_id": true,
+      "teaser": false,
+      "sink": 4
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "width": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "totalSlots": {
+      "type": "integer",
+      "teaser": false
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "numberOfCores": {
+      "type": "integer",
+      "min": 1,
+      "sink": 1
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "blockSize": {
+      "type": "integer",
+      "teaser": false,
+      "sink": -1
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      }
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "sectors": {
+      "type": "integer",
+      "teaser": false,
+      "sink": -1
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "memory": {
+      "type": "float",
+      "unitCode": "4L",
+      "min": 1,
+      "sink": 3
+    },
+    "erasure": {
+      "type": "dict",
+      "writeonly": true,
+      "schema": {
+        "success": {
+          "type": "boolean"
+        },
+        "secured": {
+          "type": "boolean",
+          "sink": -3
+        },
+        "incidence": {
+          "type": "boolean",
+          "description": "Check if something went wrong, you can add details in a comment",
+          "sink": -3
+        },
+        "comment": {
+          "type": "string",
+          "description": "Short comment for fast and easy reading",
+          "sink": -4
+        },
+        "label": {
+          "type": "string",
+          "description": "A short, descriptive title",
+          "sink": 5
+        },
+        "parent": {
+          "type": "string",
+          "data_relation": {
+            "resource": "devices",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "description": "The event triggered in this computer."
+        },
+        "description": {
+          "type": "string",
+          "maxlength": 500,
+          "description": "Full long description",
+          "sink": -4
+        },
+        "cleanWithZeros": {
+          "type": "boolean"
+        },
+        "byUser": {
+          "type": "objectid",
+          "data_relation": {
+            "resource": "accounts",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "readonly": true,
+          "sink": 2
+        },
+        "endingTime": {
+          "type": "datetime"
+        },
+        "sameAs": {
+          "type": "url",
+          "teaser": false
+        },
+        "device": {
+          "type": "string",
+          "data_relation": {
+            "resource": "devices",
+            "embeddable": true,
+            "field": "_id"
+          },
+          "required": false
+        },
+        "secureRandomSteps": {
+          "type": "natural",
+          "required": true
+        },
+        "byOrganization": {
+          "type": "string",
+          "readonly": true
+        },
+        "geo": {
+          "type": "point",
+          "description": "Where did it happened",
+          "sink": -5
+        },
+        "startingTime": {
+          "type": "datetime"
+        },
+        "@type": {
+          "type": "string",
+          "required": true,
+          "allowed": [
+            "EraseSectors",
+            "EraseBasic"
+          ],
+          "teaser": false
+        },
+        "url": {
+          "type": "url",
+          "readonly": true,
+          "teaser": false
+        },
+        "steps": {
+          "type": "list",
+          "schema": {
+            "type": "dict",
+            "schema": {
+              "success": {
+                "type": "boolean",
+                "required": true
+              },
+              "endingTime": {
+                "type": "datetime"
+              },
+              "secureRandomSteps": {
+                "type": "boolean"
+              },
+              "startingTime": {
+                "type": "datetime"
+              },
+              "@type": {
+                "type": "string",
+                "required": true,
+                "allowed": [
+                  "Random",
+                  "Zeros"
+                ]
+              },
+              "cleanWithZeros": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "date": {
+          "type": "datetime",
+          "description": "When this happened. Leave blank if it is happening now",
+          "sink": -2
+        }
+      }
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "benchmark": {
+      "type": "dict",
+      "writeonly": true,
+      "schema": {
+        "readingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        },
+        "label": {
+          "type": "string",
+          "description": "A short, descriptive title",
+          "sink": 5
+        },
+        "writingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        },
+        "@type": {
+          "type": "string",
+          "required": true,
+          "allowed": [
+            "BenchmarkProcessor",
+            "BenchmarkHardDrive"
+          ],
+          "teaser": false
+        },
+        "score": {
+          "type": "float"
+        }
+      }
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "maxAcceptedMemory": {
+      "type": "integer",
+      "teaser": false
+    },
+    "connectors": {
+      "type": "dict",
+      "schema": {
+        "firewire": {
+          "type": "natural"
+        },
+        "serial": {
+          "type": "natural"
+        },
+        "usb": {
+          "type": "natural"
+        },
+        "pcmcia": {
+          "type": "natural"
+        }
+      }
+    }
+  },
+  "network-adapter": {
+    "weight": {
+      "type": "float",
+      "unitCode": "KGM",
+      "teaser": false,
+      "sink": -1
+    },
+    "icon": {
+      "type": "string",
+      "readonly": true,
+      "teaser": false,
+      "sink": -5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "owners": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "accounts",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "NetworkAdapter"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "string",
+      "unique": true,
+      "device_id": true,
+      "teaser": false,
+      "sink": 4
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "width": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "speed": {
+      "type": "float",
+      "unitCode": "E20",
+      "sink": 1
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      }
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    }
+  },
+  "repair": {
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "devices": {
+      "type": "list",
+      "required": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Repair"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "dispose": {
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "devices": {
+      "type": "list",
+      "required": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Dispose"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "motherboard": {
+    "weight": {
+      "type": "float",
+      "unitCode": "KGM",
+      "teaser": false,
+      "sink": -1
+    },
+    "icon": {
+      "type": "string",
+      "readonly": true,
+      "teaser": false,
+      "sink": -5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "owners": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "accounts",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "usedSlots": {
+      "type": "integer",
+      "teaser": false
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Motherboard"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "connectors": {
+      "type": "dict",
+      "schema": {
+        "firewire": {
+          "type": "natural"
+        },
+        "serial": {
+          "type": "natural"
+        },
+        "usb": {
+          "type": "natural"
+        },
+        "pcmcia": {
+          "type": "natural"
+        }
+      }
+    },
+    "_id": {
+      "type": "string",
+      "unique": true,
+      "device_id": true,
+      "teaser": false,
+      "sink": 4
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "width": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "totalSlots": {
+      "type": "integer",
+      "teaser": false
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      }
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "maxAcceptedMemory": {
+      "type": "integer",
+      "teaser": false
+    }
+  },
+  "computer-monitor": {
+    "weight": {
+      "type": "float",
+      "unitCode": "KGM",
+      "teaser": false,
+      "sink": -1
+    },
+    "type": {
+      "type": "string",
+      "allowed": [
+        "LCD",
+        "TFT"
+      ]
+    },
+    "inches": {
+      "type": "natural"
+    },
+    "icon": {
+      "type": "string",
+      "readonly": true,
+      "teaser": false,
+      "sink": -5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "owners": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "accounts",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "ComputerMonitor"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "string",
+      "unique": true,
+      "device_id": true,
+      "teaser": false,
+      "sink": 4
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "width": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    }
+  },
+  "optical-drive": {
+    "weight": {
+      "type": "float",
+      "unitCode": "KGM",
+      "teaser": false,
+      "sink": -1
+    },
+    "icon": {
+      "type": "string",
+      "readonly": true,
+      "teaser": false,
+      "sink": -5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "owners": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "accounts",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "OpticalDrive"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "string",
+      "unique": true,
+      "device_id": true,
+      "teaser": false,
+      "sink": 4
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "width": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      }
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    }
+  },
+  "receive": {
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "FinalUser",
+        "CollectionPoint",
+        "RecyclingPoint"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "acceptedConditions": {
+      "type": "boolean",
+      "required": true,
+      "allowed": [
+        true
+      ]
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "devices": {
+      "type": "list",
+      "required": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "automaticallyAllocate": {
+      "type": "boolean",
+      "default": false,
+      "description": "Allocates to the user"
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Receive"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    },
+    "receiver": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "or": [
+        "unregisteredReceiver"
+      ],
+      "excludes": "unregisteredReceiver",
+      "sink": 2
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "description": "Where did it happened",
+      "sink": 0
+    },
+    "unregisteredReceiver": {
+      "type": "dict",
+      "schema": {
+        "email": {
+          "type": "email",
+          "required": true,
+          "unique": true,
+          "sink": 5
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of an account, if it is a person or an organization.",
+          "sink": 3
+        },
+        "organization": {
+          "type": "string",
+          "description": "The name of the organization the account is in. Organizations can be inside other organizations.",
+          "sink": 1
+        },
+        "isOrganization": {
+          "type": "boolean",
+          "sink": 2
+        }
+      },
+      "sink": 2
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "receiverOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "components": {
+      "type": "list",
+      "description": "Components affected by the event.",
+      "readonly": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    }
+  },
+  "allocate": {
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "devices": {
+      "type": "list",
+      "required": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "unregisteredTo": {
+      "type": "dict",
+      "schema": {
+        "email": {
+          "type": "email",
+          "required": true,
+          "unique": true,
+          "sink": 5
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of an account, if it is a person or an organization.",
+          "sink": 3
+        },
+        "organization": {
+          "type": "string",
+          "description": "The name of the organization the account is in. Organizations can be inside other organizations.",
+          "sink": 1
+        },
+        "isOrganization": {
+          "type": "boolean",
+          "sink": 2
+        }
+      },
+      "sink": 2
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "undefinedDate": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check this to say: \"This owner possessed the device for an undetermined amount of time\".",
+      "excludes": "date"
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "toOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "to": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "or": [
+        "unregisteredTo"
+      ],
+      "excludes": "unregisteredTo",
+      "sink": 2
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Allocate"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "components": {
+      "type": "list",
+      "description": "Components affected by the event.",
+      "readonly": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "peripheral": {
+    "weight": {
+      "type": "float",
+      "unitCode": "KGM",
+      "teaser": false,
+      "sink": -1
+    },
+    "type": {
+      "type": "string",
+      "allowed": [
+        "Printer",
+        "Mouse",
+        "SAI",
+        "MultifunctionPrinter",
+        "Router",
+        "Terminal",
+        "HUB",
+        "Keyboard",
+        "Scanner",
+        "Switch"
+      ]
+    },
+    "icon": {
+      "type": "string",
+      "readonly": true,
+      "teaser": false,
+      "sink": -5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "owners": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "accounts",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Peripheral"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "string",
+      "unique": true,
+      "device_id": true,
+      "teaser": false,
+      "sink": 4
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "width": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    }
+  },
+  "sound-card": {
+    "weight": {
+      "type": "float",
+      "unitCode": "KGM",
+      "teaser": false,
+      "sink": -1
+    },
+    "icon": {
+      "type": "string",
+      "readonly": true,
+      "teaser": false,
+      "sink": -5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "owners": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "accounts",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "SoundCard"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "string",
+      "unique": true,
+      "device_id": true,
+      "teaser": false,
+      "sink": 4
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "width": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      }
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    }
+  },
+  "free": {
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "devices": {
+      "type": "list",
+      "required": true,
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Free"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "remove": {
+    "secured": {
+      "type": "boolean",
+      "default": false,
+      "sink": -3
+    },
+    "incidence": {
+      "type": "boolean",
+      "default": false,
+      "description": "Check if something went wrong, you can add details in a comment",
+      "sink": -3
+    },
+    "comment": {
+      "type": "string",
+      "description": "Short comment for fast and easy reading",
+      "sink": -4
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "byUser": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "accounts",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "device": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "required": true
+    },
+    "byOrganization": {
+      "type": "string",
+      "readonly": true
+    },
+    "geo": {
+      "type": "point",
+      "description": "Where did it happened",
+      "sink": -5
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Remove"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "components": {
+      "type": "list",
+      "description": "Components affected by the event.",
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      }
+    },
+    "_id": {
+      "type": "objectid"
+    },
+    "date": {
+      "type": "datetime",
+      "description": "When this happened. Leave blank if it is happening now",
+      "sink": -2
+    }
+  },
+  "processor": {
+    "weight": {
+      "type": "float",
+      "unitCode": "KGM",
+      "teaser": false,
+      "sink": -1
+    },
+    "benchmarks": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "dict",
+        "schema": {
+          "readingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "writingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "@type": {
+            "type": "string",
+            "required": true,
+            "allowed": [
+              "BenchmarkProcessor"
+            ],
+            "teaser": false
+          },
+          "score": {
+            "type": "float"
+          },
+          "label": {
+            "type": "string",
+            "description": "A short, descriptive title",
+            "sink": 5
+          }
+        }
+      }
+    },
+    "icon": {
+      "type": "string",
+      "readonly": true,
+      "teaser": false,
+      "sink": -5
+    },
+    "description": {
+      "type": "string",
+      "maxlength": 500,
+      "description": "Full long description",
+      "sink": -4
+    },
+    "owners": {
+      "type": "list",
+      "readonly": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "resource": "accounts",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "speed": {
+      "type": "float",
+      "unitCode": "A86",
+      "sink": 1
+    },
+    "@type": {
+      "type": "string",
+      "required": true,
+      "allowed": [
+        "Processor"
+      ],
+      "teaser": false
+    },
+    "url": {
+      "type": "url",
+      "readonly": true,
+      "teaser": false
+    },
+    "_id": {
+      "type": "string",
+      "unique": true,
+      "device_id": true,
+      "teaser": false,
+      "sink": 4
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "width": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "address": {
+      "type": "integer",
+      "allowed": [
+        256,
+        32,
+        64,
+        128,
+        8,
+        16
+      ],
+      "unitCode": "A99",
+      "sink": -1
+    },
+    "place": {
+      "type": "objectid",
+      "data_relation": {
+        "resource": "places",
+        "embeddable": true,
+        "field": "_id"
+      },
+      "readonly": true,
+      "sink": 2
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "numberOfCores": {
+      "type": "integer",
+      "min": 1,
+      "sink": 1
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "resource": "devices",
+        "embeddable": true,
+        "field": "_id"
+      }
+    },
+    "label": {
+      "type": "string",
+      "description": "A short, descriptive title",
+      "sink": 5
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "unitCode": "MTR",
+      "teaser": false,
+      "sink": -1
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "sameAs": {
+      "type": "url",
+      "teaser": false
+    },
+    "benchmark": {
+      "type": "dict",
+      "writeonly": true,
+      "schema": {
+        "readingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        },
+        "writingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        },
+        "@type": {
+          "type": "string",
+          "required": true,
+          "allowed": [
+            "BenchmarkProcessor"
+          ],
+          "teaser": false
+        },
+        "score": {
+          "type": "float"
+        },
+        "label": {
+          "type": "string",
+          "description": "A short, descriptive title",
+          "sink": 5
+        }
+      }
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "resource": "devices",
+          "embeddable": true,
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    }
+  }
+}
