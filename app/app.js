@@ -49,4 +49,7 @@ module.exports = angular.module('deviceHub',[
         $('#intro-spinner').remove();
         window.tc = $templateCache;
         window.document.title = CONSTANTS.appName;
+    })
+    .run(function ($rootScope) {
+        $rootScope._ = window._; // We add lodash for usage in templates
     });

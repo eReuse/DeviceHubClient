@@ -12,15 +12,16 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices){
     return {
         templateUrl: window.COMPONENTS + '/device-list/device-list.directive.html',
         restrict: 'AE',
-        scope: {
-            deviceChange: '&'
-        },
         link: function($scope, $element, $attrs){
+            // The devices the user selects to perform an action to.
             $scope.selectedDevices = [];
+            // The device the user is watching the details.
+            $scope.vewingDevice = {};
+            // Passed-in object for device directive.
+            $scope.deviceApi = {};
             $scope.availableSearchParams = deviceListConfig.defaultSearchParams;
-            $scope.actualDevice = {};
             $scope.searchParams = angular.copy(DEFAULT_SEARCH_PARAMS);
-
+            
             var _getDevices = $scope.getDevices = getDevicesFactory(getDevices, $scope, $rootScope);
             var refresh = refreshFactory(_getDevices, $scope);
 
@@ -39,14 +40,38 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices){
                 delete $scope.searchParams.place;
             });
 
+            /**
+             * Selects multiple devices when the user selects a device with shift pressed.
+             *
+             * Selects all devices until finds a previously selected device or reaches the beginning.
+             * @param $event {Object} The angular's event object.
+             * @param devices {Device[]} The total list of devices.
+             * @param $index {number} The index of the device the user clicked on.
+             */
+            $scope.select_multiple = function ($event, devices, $index) {
+                if($event.shiftKey){
+                    for(var i = $index - 1; i >= 0 && !_.includes($scope.selectedDevices, devices[i]); i--)
+                        $scope.selectedDevices.push(devices[i]);
+                    $scope.broadcastSelection();
+                }
+            };
+
             $scope.broadcastSelection = function(){
                 $rootScope.$broadcast('selectedDevices@deviceList', $scope.selectedDevices);
             };
 
+            /**
+             * Toggles the main view of the Device.
+             * @param device {Device}
+             */
+            $scope.toggleDeviceView = function (device) {
+                if($scope.isSelected(device._id))
+                    $scope.vewingDevice = {};
+                else{
+                    angular.copy(device, $scope.vewingDevice);
+                    $scope.deviceApi.showDevice($scope.vewingDevice);
+                }
 
-            $scope.deviceSelected = function(device){
-                angular.copy(device, $scope.actualDevice);
-                $scope.deviceChange({device: $scope.actualDevice});
             };
 
             $scope.$watchCollection(function(){return $scope.selectedDevices}, function(newValues, oldValues){
@@ -56,11 +81,11 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices){
 
             $scope.unselectDevices = function(){
                 $scope.selectedDevices.length = 0;
-                $scope.actualDevice = {};
+                $scope.vewingDevice = {};
             };
 
             $scope.isSelected = function(device_id){
-                return !_.isEmpty($scope.actualDevice) && device_id == $scope.actualDevice._id;
+                return !_.isEmpty($scope.vewingDevice) && device_id == $scope.vewingDevice._id;
             };
 
             $scope.openModal = function(type){
