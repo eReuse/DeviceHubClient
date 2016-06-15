@@ -8,7 +8,7 @@ var PAGINATION = 30;
 /**
  * Gets a new list of devices from the server and updates scope.
  */
-function list(deviceListConfig, $rootScope, $uibModal, getDevices){
+function list(deviceListConfig, $rootScope, $uibModal, getDevices, $timeout){
     return {
         templateUrl: window.COMPONENTS + '/device-list/device-list.directive.html',
         restrict: 'AE',
@@ -21,6 +21,10 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices){
             $scope.deviceApi = {};
             $scope.availableSearchParams = deviceListConfig.defaultSearchParams;
             $scope.searchParams = angular.copy(DEFAULT_SEARCH_PARAMS);
+            // Makes the table collapsible when window resizes
+            // Note this method is executed too in $scope.toggleDeviceView
+            var triggerCollapse = require('./collapse-table.js')($scope);
+            $(window).resize(triggerCollapse);
             
             var _getDevices = $scope.getDevices = getDevicesFactory(getDevices, $scope, $rootScope);
             var refresh = refreshFactory(_getDevices, $scope);
@@ -39,7 +43,7 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices){
             $scope.$on('unselectedPlace@placeNavWidget', function(){
                 delete $scope.searchParams.place;
             });
-
+            
             /**
              * Selects multiple devices when the user selects a device with shift pressed.
              *
@@ -71,7 +75,7 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices){
                     angular.copy(device, $scope.vewingDevice);
                     $scope.deviceApi.showDevice($scope.vewingDevice);
                 }
-
+                $timeout(triggerCollapse, 10);
             };
 
             $scope.$watchCollection(function(){return $scope.selectedDevices}, function(newValues, oldValues){

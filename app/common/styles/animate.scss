@@ -19,5 +19,14 @@
   &.ng-hide {
     opacity: 0;
   }
+}
 
+.ani-show-no-hide{
+  opacity: 1;
+  &.ng-hide-remove{
+    transition: all linear 0.25s;
+  }
+  &.ng-hide{
+    opacity: 0;
+  }
 }
