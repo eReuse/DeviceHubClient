@@ -11,6 +11,7 @@ module.exports = angular.module('common.components.nav',
         require('./../account').name,
         require('./../device').name,
         require('./../tools').name,
+        require('./../../constants').name,
         'ui.router'
     ])
     /**
@@ -19,7 +20,7 @@ module.exports = angular.module('common.components.nav',
      * @description Controls the tab main menu, changing the view accordingly.
      * Tab trick from http://odetocode.com/blogs/scott/archive/2014/04/14/deep-linking-a-tabbed-ui-with-angularjs.aspx
      */
-    .directive('navigation', function($state){
+    .directive('navigation', function($state, CONSTANTS){
         var firstTime = true;
         /**
          * Goes to the stated specified by route.
@@ -49,6 +50,9 @@ module.exports = angular.module('common.components.nav',
                     if(active(tab.route))
                         $scope.actualTab = index;
                 });
+                $scope.setTab = function (index) {
+                    $scope.actualTab = index;
+                };
                 $scope.go = go;
 
                 $scope.$on("$stateChangeSuccess", function() {
@@ -56,6 +60,8 @@ module.exports = angular.module('common.components.nav',
                         tab.active = active(tab.route);
                     });
                 });
+
+                $scope.CONSTANTS = CONSTANTS;
             }
         }
     });
