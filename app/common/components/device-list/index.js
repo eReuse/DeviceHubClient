@@ -16,7 +16,8 @@ module.exports = angular.module('common.components.list',
         'checklist-model',
         'ngAnimate',
         require('./../device-label').name,
-        require('./../event').name
+        require('./../event').name,
+        require('DeviceHubClient-Device-Maps').name
     ])
     /**
      * @name deviceListConfig

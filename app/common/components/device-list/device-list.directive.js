@@ -108,6 +108,17 @@ function list(deviceListConfig, $rootScope, $uibModal, getDevices, $timeout){
                     $scope.unselectDevices(); // todo fix so it doesn't need to unselect
                 });
             };
+
+            //tabs stuff
+            $scope.tabs = [
+                {isActive: true},
+                {isActive: false}
+            ];
+            $scope.activeTab = 0;
+            $scope.setActive = function(tab){ //todo this function is used many times for tabs in different places
+                _.forEach($scope.tabs, function(tab){tab.isActive = false});
+                tab.isActive = true;
+            };
         }
     };
 }
