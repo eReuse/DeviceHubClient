@@ -12,6 +12,12 @@ navigation{
         font-size: larger !important;
         margin: 0 !important;
       }
+      img{
+        max-height: 42px;
+        max-width: 200px;
+        margin-right: 1em;
+        margin-left: 0.25em;
+      }
     }
   }
 }
