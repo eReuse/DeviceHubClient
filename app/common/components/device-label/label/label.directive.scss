@@ -21,7 +21,6 @@
     margin-left: 2%;
   }
   table {
-    width: 64%;
     font-size: 19px;
     font-weight: bold;
     font-family: "Arial Black", sans-serif;
@@ -33,6 +32,21 @@
         text-align: right;
         width: 100%;
       }
+    }
+    &.t73{
+      width: 73%  /*125*/
+    }
+    &.t69{
+      width: 69%  /*90*/
+    }
+    &.t64{
+      width: 64% /*100*/
+    }
+    &.t60{
+      width: 60% /*90*/
+    }
+    &.t55{
+      width: 55% /*80*/
     }
   }
   &.no-logo{
