@@ -8,7 +8,8 @@
         <qrcode data="{{code}}" error-correction-level="Q" size="110" version="5"></qrcode>
         <table
                 ng-class="{
-                    't55': width <= 80,
+                    't53': width <= 70,
+                    't55': 70 < width && width <= 80,
                     't60': 80 < width && width <= 90,
                     't64': 90 < width && width <= 108,
                     't69': 108 < width && width <= 125,
