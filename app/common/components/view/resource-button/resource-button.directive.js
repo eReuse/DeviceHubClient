@@ -19,13 +19,13 @@ function resourceButton(Restangular, account, RecursionHelper){
                     Restangular.one($scope.urlResourceName, $scope.resourceId).get();
                 promise.then(function(resource){
                     $scope.resource = resource;
-                    $scope.popover.title = utils.getTitle($scope.resource);
+                    $scope.popover.title = utils.getResourceTitle($scope.resource);
                     $scope.isEvent = utils.isEvent(resource['@type']);
                 });
                 promise.catch(function(error){
                    $scope.error = true;
                 });
-                $scope.resourceName = utils.getResourceNameFromUrlRN($scope.urlResourceName);
+                $scope.resourceName = $scope.urlResourceName;
                 $scope.popover = {
                     templateUrl: PATH + 'resource-button.popover.directive.html',
                     isOpen: false,

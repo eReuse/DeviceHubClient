@@ -16,7 +16,7 @@ function parseFactory(schema, compareSink){
         var isAModification = '_id' in model; //Remember, defaults are taken from the schema
         var doNotUse = 'doNotUse' in options? options.doNotUse.concat(DO_NOT_USE) : DO_NOT_USE;
         var form = [];
-        var resourceUrlName = utils.getUrlResourceName(utils.getResourceName(model['@type']));
+        var resourceUrlName = utils.Naming.resource(model['@type']);
         for(var fieldName in schema[resourceUrlName]) {
             if (doNotUse.indexOf(fieldName) == -1) {
                 var subSchema = schema[resourceUrlName][fieldName];
@@ -44,7 +44,7 @@ function generateFieldGroup(fieldName, subSchema, model, doNotUse, isAModificati
         sink: subSchema.sink || 0
     };
     field.fieldGroup.push({
-        template: '<h4>' + utils.humanize(fieldName) + '</h4>'
+        template: '<h4>' + utils.Naming.humanize(fieldName) + '</h4>'
     });
     for(var childFieldName in subSchema.schema)
         if (doNotUse.indexOf(childFieldName) == -1)
@@ -54,7 +54,7 @@ function generateFieldGroup(fieldName, subSchema, model, doNotUse, isAModificati
 
 function generateField(fieldName, subSchema, model, doNotUse, isAModification){
     var options = {
-        label: utils.humanize(fieldName)
+        label: utils.Naming.humanize(fieldName)
     };
     var type = getTypeAndSetTypeOptions(subSchema, options, model);
     var field = {
@@ -150,7 +150,7 @@ function getSelectOptions(allowed){
     var options = [];
     for(var i = 0; i < allowed.length; i++){
         options.push({
-            name: utils.humanize(allowed[i]),
+            name: utils.Naming.humanize(allowed[i]),
             value: allowed[i]
         })
     }

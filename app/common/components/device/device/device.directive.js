@@ -7,14 +7,15 @@ function device(Restangular) {
     // y causando un bucle infinito. Usa las propiedades de los objetos.
     var tabs = [
         {
-            uiClass: 'glyphicon glyphicon-info-sign', heading: 'Show',
-            templateUrl: PATH + 'device-view.template.directive.html'
-        },
-        //{uiClass: 'glyphicon glyphicon-edit', heading: 'Edit'},
-        {
             uiClass: 'glyphicon glyphicon-map-marker', heading: 'Events',
             templateUrl: PATH + 'events-per-device.template.directive.html'
+        },
+        {
+            uiClass: 'glyphicon glyphicon-info-sign', heading: 'Characteristics',
+            templateUrl: PATH + 'device-view.template.directive.html'
         }
+        //{uiClass: 'glyphicon glyphicon-edit', heading: 'Edit'},
+
     ];
     return {
         templateUrl: PATH + 'device.directive.html',

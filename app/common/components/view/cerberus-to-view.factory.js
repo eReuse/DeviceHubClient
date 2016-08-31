@@ -16,7 +16,7 @@ function cerberusToView(schema, dateFilter, numberFilter, UNIT_CODES){
 function parseFactory(schema, UNIT_CODES){
     return function (model){
         var fields = [];
-        var resourceSchema = schema.schema[utils.getUrlResourceName(utils.getResourceName(model['@type']))];
+        var resourceSchema = schema.schema[utils.Naming.resource(model['@type'])];
         for(var fieldName in resourceSchema)
             if(fieldName in model && DO_NOT_USE.indexOf(fieldName) == -1)
                 fields.push(generateField(model[fieldName], resourceSchema[fieldName], fieldName, UNIT_CODES));
@@ -32,7 +32,7 @@ function parseFactory(schema, UNIT_CODES){
 
 function generateField(value, fieldSchema, fieldName, UNIT_CODES){
     var field = {
-        name: utils.humanize(fieldName),
+        name: utils.Naming.humanize(fieldName),
         value: '',
         unitCode: UNIT_CODES[fieldSchema.unitCode],
         sink: fieldSchema.sink || 0,

@@ -53,18 +53,17 @@ function remove_helper_values(model){
 function upload(Restangular, model){
     var type = model['@type'];
     var prepend = type in EVENTS? 'events' : '';
-    var resourceName = utils.getResourceName(type);
     return 'put' in model?
-        model.put() : Restangular.all(prepend).all(utils.getUrlResourceName(resourceName)).post(model);
+        model.put() : Restangular.all(prepend).all(utils.Naming.resource(type)).post(model);
 }
 
 function succeedSubmissionFactory($rootScope, status, Notification, operationName, model){
     return function (response){
         var resource = _.isUndefined(response)? model : response; //DELETE operations do not answer with the result
-        $rootScope.$broadcast('refresh@' + utils.getResourceName(model['@type']));
+        $rootScope.$broadcast('refresh@' + utils.Naming.resource(model['@type']));
         status.working = false;
         status.done = true;
-        Notification.success(utils.getTitle(resource) + ' successfully ' + operationName + '.');
+        Notification.success(utils.getResourceTitle(resource) + ' successfully ' + operationName + '.');
     }
 }
 

@@ -19,9 +19,9 @@ function patchPublicFactory(Notification){
     return function (device){
         device.patch({public: device.public}).then(function(){
             var text = device.public? 'public' : 'private';
-            Notification.success(utils.getTitle(device) + ' is now ' + text + '.');
+            Notification.success(utils.getResourceTitle(device) + ' is now ' + text + '.');
         }).catch(function(error){
-            Notification.error('We could not update '+ utils.getTitle(device));
+            Notification.error('We could not update '+ utils.getResourceTitle(device));
         });
     }
 }

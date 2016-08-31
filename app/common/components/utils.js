@@ -1,22 +1,10 @@
 'use strict';
-var Case = require('case');
-var pluralize = require('pluralize');
 var event = require('./event/event.factory.js');
 require('bower_components/Boxer/jquery.ba-dotimeout.js');
 require('angular');
+var parameterize = require('parameterize');
+var inflection = require('inflection');
 
-
-var utils = {
-    humanize: humanize,
-    getResourceName: getResourceName,
-    getUrlResourceName: getUrlResourceName,
-    copy: copy,
-    getResourceNameFromUrlRN: getResourceNameFromUrlRN,
-    getTitle: getTitle,
-    applyAfterScrolling: applyAfterScrolling,
-    isEvent: isEvent,
-    parseDate: parseDate
-};
 
 /**
  * Tries to copy a value using an own 'clone' property of it, or uses the angular standard way of doing it.
@@ -32,40 +20,110 @@ function copy(value){
     }
 }
 
-function humanize(text){
+/**
+ * Port from DeviceHub.utils.Naming. See that project for an explanation of the cases.
+ */
+var Naming = {
+    RESOURCE_PREFIX: '_',
+    TYPE_PREFIX: ':',
+    RESOURCES_CHANGING_NUMBER: require('./../constants/CONSTANTS.js').resourcesChangingNumber,
+
+    /**
+     * @param string {string} type or resource case
+     * @returns {string} e.x.: 'devices_snapshot', 'component', 'events'
+     */
+    resource: function(string){
+        return this._standarize(string)[0]
+    },
+
+    /**
+     *
+     * @param string {string} type or resource case
+     * @returns {string} e.x.: 'devices:Snapshot', 'Component', 'Event'
+     */
+    type: function (string) {
+        var values = this._standarize(string);
+        var pluralize = values[1];
+        return inflection.camelize(pluralize? inflection.singularize(string) : string)
+    },
+
+    urlWord: function (string) {
+        return parameterize(string.split(' ').join('_'))
+    },
+
+    _standarize: function (string) {
+        var prefix;
+        try{
+            var values = this.popPrefix(string);
+            prefix = values[0] + this.RESOURCE_PREFIX;
+            string = values[1];
+        }
+        catch(err){
+            prefix = '';
+        }
+        var value = inflection.dasherize(inflection.underscore(string));
+        var pluralize = _.includes(this.RESOURCES_CHANGING_NUMBER, value) || _.includes(this.RESOURCES_CHANGING_NUMBER, inflection.singularize(value));
+        return [prefix + (pluralize? inflection.pluralize(value) : value), pluralize]
+    },
+
+    /**
+     * Erases the prefix and returns it.
+     * @throws IndexError: There is no prefix
+     * @param string {string}
+     * @returns {array} Two values: [prefix, type]
+     */
+    popPrefix: function (string) {
+        var result = _.split(string, this.TYPE_PREFIX);
+        if(result.length == 1){
+            result = _.split(string, this.RESOURCE_PREFIX);
+            if(result.length == 1)
+                throw new NoPrefix();
+        }
+        return result;
+    },
+
+    new_type: function (type_name, prefix) {
+        prefix = prefix? (prefix + this.TYPE_PREFIX) : '';
+        return prefix + type_name
+    },
+
     /**
      * For a given text, it returns a human friendly version, with spaces, etc.
+     * @param string {string} If is type or resource name, it removes the spaces.
+     * @returns {string}
      */
-    return Case.title(text)
-}
+    humanize: function (string) {
+        try {
+            string = this.popPrefix(string)[1];
+        }
+        catch (err){}
+        return inflection.humanize(string)
+    }
+};
 
-function getResourceName(PascalCaseType){
-    /**
-     * Gets the resource name, as in DeviceHub. To build url to use against DeviceHub, use 'getUrlResourceName'.
-     */
-    return Case.kebab(PascalCaseType)
+/**
+ * Exception for cases where popup prefix does not get a prefix.
+ * @param message
+ * @constructor
+ */
+function NoPrefix(message){
+    this.message = message
 }
+NoPrefix.prototype = Object.create(Error.prototype);
 
-var RESOURCES_WITH_PLURAL = ['event', 'place', 'device', 'account'];
-function getUrlResourceName(resourceName){
-    /**
-     * Given a DeviceHub's resource name, builds the equivalent to use in an url.
-     */
-    return _.includes(RESOURCES_WITH_PLURAL, resourceName)? pluralize.plural(resourceName) : resourceName;
-}
-
-function getResourceNameFromUrlRN(urlResourceName){
-    return pluralize.singular(urlResourceName);
-}
-
-function getTitle(resource){
+/**
+ * Generates a suitable humanized title for a resource.
+ * @param resource {Object} Resource object with, at least, @type field
+ * @return {string}
+ */
+function getResourceTitle(resource){
     var text = '';
     text += resource.label || '';
     if(text == '')
         text += resource.email || '';
     if(text == '')
         text += resource._id;
-    return utils.humanize(resource['@type']) + ' ' + text
+    return Naming.humanize(resource['@type']) + ' ' + text
 }
 
 function isEvent(type){
@@ -95,4 +153,11 @@ function parseDate(oldDate){
     return datetime.substring(0, datetime.indexOf('.'))
 }
 
-module.exports = utils;
+module.exports = {
+    Naming: Naming,
+    copy: copy,
+    getResourceTitle: getResourceTitle,
+    applyAfterScrolling: applyAfterScrolling,
+    isEvent: isEvent,
+    parseDate: parseDate
+};
