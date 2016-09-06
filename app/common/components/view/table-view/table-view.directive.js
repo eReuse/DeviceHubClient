@@ -1,5 +1,7 @@
 'use strict';
 
+var utils = require('./../../utils');
+
 
 function tableView(){
     return{
@@ -19,6 +21,7 @@ function tableView(){
             _.forEach($scope.model, function(field){
                 field.showAsJson = _.isPlainObject(field.value) || _.isArray(field.value);
             });
+            $scope.Naming = utils.Naming;
 
         }
     }

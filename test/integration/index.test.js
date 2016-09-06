@@ -1,23 +1,16 @@
 /**
  * @file Global functions for tests.
  *
- * The variables *rootScope*, *server* (the mocked http), and the FS (toggle between use mocked or real $http) are set
- * global and set at every test.
+ * The variables *rootScope*, *server* (the mocked http), and the FS (FakeServer, toggle between use mocked or real
+ * $http) are set global and, thus, at every test. See {@link https://github.com/wardbell/bardjs#asyncModule here} the
+ * difference between both approaches.
  **/
 
-window.$ = window.jQuery = require('jquery'); //We globally load jQuery
-window._ = require('lodash');
-window.Sortable = require('bower_components/Sortable/Sortable.js');
-window.sinon = require('sinon');
-require('angular');
-require('angular-mocks');
-require('jasmine-jquery');
-require('node_modules/bardjs/dist/bard.js'); //It makes a variable 'bard' available to us
-require('jasmine-collection-matchers');
+require('./../init.js');
 
 'use strict';
-window.CONSTANTS = require('./../../app/common/constants/CONSTANTS.js');
-window.FS = true;
+
+window.FS = true; //FakeServer
 window.containing = jasmine.objectContaining;  // name is too long
 
 
@@ -34,6 +27,8 @@ describe('Test suite', function () {
             bard.asyncModule(app)
     });
 
+    //We do not want resourceButtonDirective to mess with our http requests
+    //So we replace it (mock it) by a blank directive
     beforeEach(angular.mock.module(function ($provide) {
         $provide.factory('resourceButtonDirective', function () {
             return {};
@@ -44,7 +39,7 @@ describe('Test suite', function () {
         window.rootScope = $rootScope;
         window.server = $httpBackend;
         window.compile = $compile; 
-        if(!FS){
+        if(!FS){ // We mock the functions so when they are called they do nothing
             server.when = function () {return {respond: function () {}}};
             server.expectPOST = function () {};
             server.expectGET = function() {};

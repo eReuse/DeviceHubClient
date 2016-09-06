@@ -13,7 +13,7 @@ function eventEasyExplanation(){
         link: function($scope){
             var type = $scope.event['@type'];
             $scope.useRB = angular.isDefined($scope.useResourceButton)? $scope.useResourceButton() : true;
-            if(type == 'TestHardDrive' || type== 'EraseBasic') $scope.name = type;
+            if(type == 'devices:TestHardDrive' || type== 'devices:EraseBasic') $scope.name = type;
             else $scope.name = type.concat(type.charAt(type.length - 1) == 'e'? 'd' : 'ed');
             $scope.preposition = $scope.name == 'Removed'? 'from' : 'to'
         }

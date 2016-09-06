@@ -6,7 +6,7 @@
         <span ng-if="event.components.length > 1">
             The components
             <span ng-repeat="componentId in event.components">
-                <resource-button ng-if='useRB' resource-id="componentId" url-resource-name="'devices'"></resource-button>
+                <resource-button ng-if='useRB' resource-id="componentId" resource-type="'Device'"></resource-button>
                 <span ng-hide="useRB">{{componentId}}</span>
             </span>
             <br/>
@@ -19,7 +19,7 @@
             The device has been {{name}}.
         </span>
     </span>
-    <span ng-if="id._id != event.device && event['@type'] != 'Snapshot'">
+    <span ng-if="id._id != event.device && event['@type'] != 'devices:Snapshot'">
         {{name}} was performed {{preposition}} {{event.device}}.
     </span>
         <!--<span ng-if="id._id == event.device && event['@type'] != 'Snapshot'">

@@ -3,7 +3,7 @@
 var utils = require('./../../utils.js');
 var PATH = window.COMPONENTS + '/view/resource-button/';
 
-function resourceButton(Restangular, account, RecursionHelper){
+function resourceButton(RecursionHelper, resourceSettings){
     return{
         templateUrl: PATH + 'resource-button.directive.html',
         restrict: 'E',
@@ -14,18 +14,16 @@ function resourceButton(Restangular, account, RecursionHelper){
         },
         compile: function(element) {
             return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {
-                var promise = $scope.resourceType == 'accounts'?
-                    account.getOne($scope.resourceId) :
-                    Restangular.one($scope.resourceType, $scope.resourceId).get();
-                promise.then(function(resource){
-                    $scope.resource = resource;
-                    $scope.popover.title = utils.getResourceTitle($scope.resource);
-                    $scope.isEvent = utils.isEvent(resource['@type']);
+                var rSettings = new resourceSettings($scope.resourceType);
+                rSettings.loaded.then(function () {
+                    rSettings.server.one($scope.resourceId).get().then(function () {
+                        $scope.resource = resource;
+                        $scope.popover.title = utils.getResourceTitle($scope.resource);
+                        $scope.isEvent = _.includes(events, resource['@type']);
+                    }).catch(function(error){
+                        $scope.error = true;
+                    });
                 });
-                promise.catch(function(error){
-                   $scope.error = true;
-                });
-                $scope.resourceName = $scope.resourceType;
                 $scope.popover = {
                     templateUrl: PATH + 'resource-button.popover.directive.html',
                     isOpen: false,

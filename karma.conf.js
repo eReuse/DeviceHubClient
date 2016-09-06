@@ -15,10 +15,11 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'app/**/*.test.js', //unit tests
       'test/integration/index.test.js',
       // fixtures
-      {pattern: 'test/mock/*.json', watched: true, served: true, included: false},
-      {pattern: 'app/**/*.js', included: false} //Watch for any change for Webstorm https://github.com/Workiva/karma-jspm/issues/69#issuecomment-179182219
+      {pattern: 'test/mock/*.json', watched: true, served: true, included: false}
+      //{pattern: 'app/**/*.js', included: false} //Watch for any change for Webstorm https://github.com/Workiva/karma-jspm/issues/69#issuecomment-179182219
     ],
 
 
@@ -30,6 +31,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'app/**/*.test.js': ['browserify'],
       'test/integration/index.test.js': ['browserify']
     },
 

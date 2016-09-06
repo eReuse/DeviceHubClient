@@ -12,10 +12,10 @@ function schema_factory(){
         expect(schema).toBeDefined();
     });
     beforeEach(function () {
-        server.when('GET', CONSTANTS.url + '/schema').respond(200, getJSONFixture('schema.json'));
+        server.when('GET', resourceSettings.url + '/schema').respond(200, getJSONFixture('schema.json'));
     });
     it('gets schema from server', function () {
-        server.expectGET(CONSTANTS.url + '/schema');
+        server.expectGET(resourceSettings.url + '/schema');
         var promise = schema.getFromServer();
         promise.then(function (response_schema) {
             expect(response_schema).toBeDefined();
@@ -23,4 +23,4 @@ function schema_factory(){
     })
 }
 
-module.exports = schema_factory;
+//module.exports = schema_factory;

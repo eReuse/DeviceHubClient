@@ -18,11 +18,11 @@
                     <span
                             ng-repeat="value in field.value"
                     >
-                        <resource-button resource-id="value" url-resource-name="field.data_relation.resource"></resource-button>
+                        <resource-button resource-id="value" resource-type="Naming.type(field.data_relation.resource)"></resource-button>
                     </span>
                 </div>
                 <div ng-if="!$root._.isArray(field.value)">
-                    <resource-button resource-id="field.value" url-resource-name="field.data_relation.resource"></resource-button>
+                    <resource-button resource-id="field.value" resource-type="Naming.type(field.data_relation.resource)"></resource-button>
                 </div>
             </td>
         </tr>

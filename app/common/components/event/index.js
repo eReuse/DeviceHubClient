@@ -11,7 +11,6 @@ module.exports = angular.module('common.components.event',
         'RecursionHelper'
     ])
     .factory('event', require('./event.factory.js'))
-    .directive('eventIcon', require('./event-icon/event-icon.directive.js'))
     .directive('manualEventsButton', require('./manual-events-button/manual-events-button.directive.js'))
     .directive('eventView',require('./event-view/event-view.directive.js'))
     .directive('eventEasyExplanation', require('./event-easy-explanation/event-easy-explanation.directive.js'))

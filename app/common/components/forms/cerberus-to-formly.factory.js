@@ -2,8 +2,9 @@
 
 var sjv = require('simple-js-validator');
 var utils = require('./../utils.js');
+var inflection = require('inflection');
 
-var DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url'];
+var DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url', '_settings'];
 var COMMON_OPTIONS = ['min', 'max', 'required', 'minlength', 'maxlength', 'readonly', 'description'];
 
 function cerberusToFormly(schema){
@@ -16,10 +17,10 @@ function parseFactory(schema, compareSink){
         var isAModification = '_id' in model; //Remember, defaults are taken from the schema
         var doNotUse = 'doNotUse' in options? options.doNotUse.concat(DO_NOT_USE) : DO_NOT_USE;
         var form = [];
-        var resourceUrlName = utils.Naming.resource(model['@type']);
-        for(var fieldName in schema[resourceUrlName]) {
+        var resource_type = utils.Naming.resource(model['@type']);
+        for(var fieldName in schema[resource_type]) {
             if (doNotUse.indexOf(fieldName) == -1) {
-                var subSchema = schema[resourceUrlName][fieldName];
+                var subSchema = schema[resource_type][fieldName];
                 if (!subSchema.readonly){
                     if (subSchema.type == 'dict' && 'schema' in subSchema)
                         form.push(generateFieldGroup(fieldName, subSchema, model, doNotUse, isAModification));
@@ -54,7 +55,7 @@ function generateFieldGroup(fieldName, subSchema, model, doNotUse, isAModificati
 
 function generateField(fieldName, subSchema, model, doNotUse, isAModification){
     var options = {
-        label: utils.Naming.humanize(fieldName)
+        label: inflection.humanize(fieldName) //It's no resource type
     };
     var type = getTypeAndSetTypeOptions(subSchema, options, model);
     var field = {
@@ -85,7 +86,6 @@ function generateField(fieldName, subSchema, model, doNotUse, isAModification){
 
 function getTypeAndSetTypeOptions(fieldSchema, options, model){
     var type = fieldSchema.type;
-    var NO_TYPE_ERROR = 'No type for ' + type;
     if('allowed' in fieldSchema && fieldSchema.allowed.length > 1){
         options.options = getSelectOptions(fieldSchema.allowed);
         return 'select';
@@ -116,7 +116,7 @@ function getTypeAndSetTypeOptions(fieldSchema, options, model){
                         return 'devices'
                     }
                 }
-                throw NO_TYPE_ERROR;
+                throw new NoType(type, 'list');
             case 'objectid':
                 options.resourceName = fieldSchema.data_relation.resource;
                 options.keyFieldName = fieldSchema.data_relation.field;
@@ -131,7 +131,7 @@ function getTypeAndSetTypeOptions(fieldSchema, options, model){
                         options.labelFieldName = 'label';
                         options.filterFieldName = 'label';
                         return 'typeahead';
-                    default: throw NO_TYPE_ERROR;
+                    default: throw new NoType(type, 'objectid');
                 }
             case 'email':
                 options.type = 'email';
@@ -141,7 +141,7 @@ function getTypeAndSetTypeOptions(fieldSchema, options, model){
                 return 'input';
             case 'polygon':
                 return 'maps';
-            default: throw NO_TYPE_ERROR;
+            default: throw new NoType(type);
         }
     }
 }
@@ -250,8 +250,20 @@ function generateNonModifiableArray(form){
             array.push(field.key);
             delete field.nonModifiable;
         }
-    })
+    });
     return array;
 }
+
+/**
+ * Exception used when there is no handler for the issued field type.
+ * @param type The type of the field
+ */
+function NoType(type, fieldType){
+    this.message = 'No type for ' + type;
+    this.message += fieldType? ' in the field ' + fieldType : '';
+    this.type = type;
+    this.fieldType = fieldType;
+}
+NoType.prototype = Object.create(Error.prototype);
 
 module.exports = cerberusToFormly;

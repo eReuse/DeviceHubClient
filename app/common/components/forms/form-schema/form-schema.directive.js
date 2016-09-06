@@ -1,13 +1,12 @@
 'use strict';
 var utils = require('./../../utils.js');
-var EVENTS;
 var OPERATION = {
     put: 'updated',
     post: 'created',
     delete: 'deleted'
 };
 
-function formSchema(cerberusToFormly, Restangular, $rootScope, Notification, event){
+function formSchema(cerberusToFormly, resourceSettings, $rootScope, Notification){
     return{
         templateUrl: window.COMPONENTS + '/forms/form-schema/form-schema.directive.html',
         restrict: 'E',
@@ -17,25 +16,27 @@ function formSchema(cerberusToFormly, Restangular, $rootScope, Notification, eve
             status: '=' //list
         },
         link: function($scope){
-            EVENTS = event.EVENTS;
-            $scope.form;
-            var options = setOptions($scope.model['@type'], $scope.options);
-            $scope.fields = cerberusToFormly.parse($scope.model, $scope, options); //parse adds 'nonModifiable' to options
-            $scope.submit = submitFactory($scope.fields, $scope.form, $scope.status, Restangular, $rootScope, Notification);
-            $scope.options.canDelete = 'remove' in $scope.model;
-            $scope.options.delete = deleteFactory($scope.model, $rootScope, $scope.status, Notification);
+            var rSettings = new resourceSettings($scope.model['@type']);
+            rSettings.loaded.then(function () {
+                $scope.form;
+                var options = setOptions($scope.model['@type'], $scope.options, rSettings);
+                $scope.fields = cerberusToFormly.parse($scope.model, $scope, options); //parse adds 'nonModifiable' to options
+                $scope.submit = submitFactory($scope.fields, $scope.form, $scope.status, rSettings, $rootScope, Notification);
+                $scope.options.canDelete = 'remove' in $scope.model;
+                $scope.options.delete = deleteFactory($scope.model, $rootScope, $scope.status, Notification);
+            });
         }
     }
 }
 
-function submitFactory(fields, form, status, Restangular, $rootScope, Notification){
+function submitFactory(fields, form, status, rSettings, $rootScope, Notification){
     return function (originalModel){
         status.errorFromLocal = false;
         if(isValid(form, fields)){
             status.working = true;
             var model = utils.copy(originalModel); //We are going to change stuff in model
             remove_helper_values(model);
-            upload(Restangular, model, $rootScope).then(
+            upload(rSettings, model, $rootScope).then(
                 succeedSubmissionFactory($rootScope, status, Notification, OPERATION['put' in model? 'put' : 'post'], model),
                 failedSubmissionFactory(status)
             )
@@ -50,11 +51,8 @@ function remove_helper_values(model){
             delete model[fieldName];
 }
 
-function upload(Restangular, model){
-    var type = model['@type'];
-    var prepend = type in EVENTS? 'events' : '';
-    return 'put' in model?
-        model.put() : Restangular.all(prepend).all(utils.Naming.resource(type)).post(model);
+function upload(rSettings, model){
+    return 'put' in model? model.put() : rSettings.server.post(model);
 }
 
 function succeedSubmissionFactory($rootScope, status, Notification, operationName, model){
@@ -74,17 +72,16 @@ function failedSubmissionFactory(status){
     }
 }
 
-function setOptions(type, options){
+function setOptions(type, options, rSettings){
     var settings = {
         excludeLabels: { //In fact we do not need to pass always all labels, just the ones we want to use
             receiver: 'Check if the receiver has already an account',
             to: 'Check if the new possessor has already an account'
         }
     };
-    if('doNotUse' in options)
-        settings.doNotUse = options.doNotUse;
-    else if(type in EVENTS)
-        settings.doNotUse = EVENTS[type].doNotUse;
+    settings.doNotUse = options.doNotUse || [];
+    try{ settings.doNotUse += rSettings.settings.doNotUse }
+    catch (error){}
     return settings;
 }
 

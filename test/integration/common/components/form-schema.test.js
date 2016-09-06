@@ -14,7 +14,7 @@ function form_schema() {
         var isolated;
         beforeEach(function () {
             data = {
-                model: {'@type': 'Locate', devices: devices},
+                model: {'@type': 'devices:Locate', devices: devices},
                 options: {},
                 status: {}
             };
@@ -26,8 +26,8 @@ function form_schema() {
         it('should contain all the fields in the same order', function () {
             expect(isolated.fields).toHaveSameItems([
                 containing({key: 'label', type: 'input'}),
-                containing({key: 'place', type: 'typeahead'}),
                 containing({key: 'devices', type: 'devices'}),
+                containing({key: 'place', type: 'typeahead'}),
                 containing({key: 'date', type: 'datepicker'}),
                 containing({key: 'incidence', type: 'checkbox'}),
                 containing({key: 'comment', type: 'input'}),
@@ -41,7 +41,7 @@ function form_schema() {
          * an error from the server. todo place OR geolocation is a condition that could be checked in angular
          */
         it('should have an error when submitting empty', function () {
-            var url = CONSTANTS.url + '/db1/events/locate';
+            var url = CONSTANTS.url + '/db1/events/devices/locate';
             var error = {
                 _issues: {
                     geo: ["You need at least one of the following: {'geo', 'place'}"],
@@ -59,8 +59,5 @@ function form_schema() {
         //todo play with adding and removing values
     });
 }
-
-
-
 
 module.exports = form_schema;

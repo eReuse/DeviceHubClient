@@ -14,6 +14,7 @@ module.exports = angular.module('common.components.placeNav',
             'uiGmapgoogle-maps',
             'ngGeolocation',
             require('./../forms').name,
+            require('./../resource').name,
             'ui-notification',
             'RecursionHelper'
         ]

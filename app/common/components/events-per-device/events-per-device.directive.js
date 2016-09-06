@@ -9,7 +9,7 @@ function eventsPerDevice(Restangular, event) {
         },
         link: function ($scope, $element, $attrs) {
             $scope.id = {};
-            $scope.EVENTS = event.EVENTS;
+            //$scope.EVENTS = event.EVENTS;
             $scope.$watch(function () {
                 return $scope.device._id;
             }, function (newValue, oldValue) {
@@ -40,7 +40,7 @@ function eventsPerDevice(Restangular, event) {
 
 var subsanizeEvents = function (events) {
     events.forEach(function (event) {
-        if (event['@type'] == 'Snapshot'){  //for every snapshot
+        if (event['@type'] == 'devices:Snapshot'){  //for every snapshot
             event.events.forEach(function (subEventId) {  //we get its full events
                 for (var i = 0; i < events.length; i++) //and we remove them from the general event list
                     if (events[i]['_id'] == subEventId) events.splice(i,1);

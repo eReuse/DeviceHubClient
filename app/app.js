@@ -1,16 +1,6 @@
 'use strict';
 
-window.COMMON = 'common';
-window.COMPONENTS = 'common/components';
-window.VIEWS = 'views';
-
-window.$ = window.jQuery = require('jquery'); //We globally load jQuery
-window._ = require('lodash');
-window.Sortable = require('bower_components/Sortable/Sortable.js');
-
-require('angular');
-require('angular-ui-router');
-
+require('./init.js');
 
 module.exports = angular.module('deviceHub',[
         'ui.router',

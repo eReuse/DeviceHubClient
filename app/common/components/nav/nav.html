@@ -4,8 +4,8 @@
 <register-button class="pull-right"></register-button>
 <nav>
     <div ng-switch="CONSTANTS.showSiteLogo" id="logo">
-        <img ng-switch-when="true" ng-src="{{CONSTANTS.siteLogo}}" ng-click="setTab(0)"/>
-        <h1 ng-switch-when="false" ng-click="setTab(0)">{{CONSTANTS.appName}}</h1>
+        <img ng-switch-when="true" ng-src="{{resourceSettings.siteLogo}}" ng-click="setTab(0)"/>
+        <h1 ng-switch-when="false" ng-click="setTab(0)">{{resourceSettings.appName}}</h1>
     </div>
     <uib-tabset  active="actualTab" type="pills">
         <uib-tab

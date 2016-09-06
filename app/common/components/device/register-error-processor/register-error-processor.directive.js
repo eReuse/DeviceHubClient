@@ -60,7 +60,7 @@ function insert(Restangular, $scope, snapshot){
 }
 
 function submit(Restangular, $scope, snapshot){
-    Restangular.all('events/snapshot').post(snapshot).then(function(){
+    Restangular.all('events/devices/snapshot').post(snapshot).then(function(){
         resultOk($scope);
     }, function(response){
         delete snapshot.device._id; //We leave the snapshot in original state

@@ -8,6 +8,7 @@ module.exports = angular.module('common.components.accounts',
         require('./../authentication').name,
         'ui.bootstrap',
         require('./../../constants/').name,
+        require('./../resource').name,
         'RecursionHelper'
     ])
     .directive('userButton', require('./user-button/user-button.directive.js'))

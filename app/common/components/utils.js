@@ -1,5 +1,4 @@
 'use strict';
-var event = require('./event/event.factory.js');
 require('bower_components/Boxer/jquery.ba-dotimeout.js');
 require('angular');
 var parameterize = require('parameterize');
@@ -113,7 +112,7 @@ NoPrefix.prototype = Object.create(Error.prototype);
 
 /**
  * Generates a suitable humanized title for a resource.
- * @param resource {Object} Resource object with, at least, @type field
+ * @param {Object} resource Resource object (not schema) with, at least, @type field
  * @return {string}
  */
 function getResourceTitle(resource){

@@ -41,7 +41,7 @@ function iterativeUpload(Restangular, $rootScope, $scope,  files, i){
             return function(e) {
                 //file.name
                 var content = e.target.result;
-                Restangular.all('events/snapshot').post(content).then(function (response) {
+                Restangular.all('events/devices/snapshot').post(content).then(function (response) {
                     processAnswer($rootScope, files.length, file.name, response, $scope, false, i, content);
                     iterativeUpload(Restangular,$rootScope, $scope, files, i + 1);
                 }, function (response) {
