@@ -5,12 +5,8 @@
 module.exports = angular.module('views.devices',
     [
         require('angular-ui-bootstrap'),
-        require('./../../common/components/device').name,
         require('./../../common/components/device-list').name,
-        require('./../../common/components/account').name,
-        require('./../../common/components/authentication').name,
-        require('./../../common/config').name,
-        require('./../../common/components/resource').name
+        require('./../../common/components/place').name
     ])
     .config(
         function($urlRouterProvider,$stateProvider){

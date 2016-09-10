@@ -6,6 +6,13 @@ require('./../../../test/init.js');
 describe('Test Utils', function () {
     var utils = require('./utils.js');
     var Naming = utils.Naming;
+
+    it('popprefix works correctly', function () {
+        expect(Naming.popPrefix('devices_dummy')).toEqual(['devices', 'dummy']);
+        expect(Naming.popPrefix('devices:Dummy')).toEqual(['devices', 'Dummy']);
+        //expect(Naming.popPrefix('devicesDummy')).toThrowAnyError()
+    });
+
     it('works with a type that doesn\'t change the number (singular - plural)', function () {
         tryPrefix('Snapshot', 'devices', 'snapshot')
     });
@@ -14,6 +21,12 @@ describe('Test Utils', function () {
     });
     it('works without prefix', function () {
         tryPrefix('Device', null, 'devices')
+    });
+    it('works from resourceName to resourceType and otherwise', function () {
+        var resourceType = 'devices:Dummy';
+        var resourceName = 'devices_dummy';
+        expect(Naming.type(resourceName)).toEqual(resourceType);
+        expect(Naming.resource(resourceType)).toEqual(resourceName);
     });
 
     function tryPrefix(originalType, prefix, supposedResourceName) {

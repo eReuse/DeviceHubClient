@@ -1,9 +1,9 @@
 'use strict';
 
 var utils = require('./../../utils.js');
-var PATH = window.COMPONENTS + '/view/resource-button/';
+var PATH = window.COMPONENTS + '/resource/resource-button/';
 
-function resourceButton(RecursionHelper, resourceSettings){
+function resourceButton(RecursionHelper, ResourceSettings){
     return{
         templateUrl: PATH + 'resource-button.directive.html',
         restrict: 'E',
@@ -14,15 +14,13 @@ function resourceButton(RecursionHelper, resourceSettings){
         },
         compile: function(element) {
             return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {
-                var rSettings = new resourceSettings($scope.resourceType);
-                rSettings.loaded.then(function () {
-                    rSettings.server.one($scope.resourceId).get().then(function () {
-                        $scope.resource = resource;
-                        $scope.popover.title = utils.getResourceTitle($scope.resource);
-                        $scope.isEvent = _.includes(events, resource['@type']);
-                    }).catch(function(error){
-                        $scope.error = true;
-                    });
+                var rSettings = ResourceSettings($scope.resourceType);
+                $scope.isEvent = rSettings.isSubResource('Event');
+                rSettings.server.one($scope.resourceId).get().then(function (resource) {
+                    $scope.resource = resource;
+                    $scope.popover.title = utils.getResourceTitle($scope.resource);
+                }).catch(function(error){
+                    $scope.error = true;
                 });
                 $scope.popover = {
                     templateUrl: PATH + 'resource-button.popover.directive.html',

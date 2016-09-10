@@ -15,7 +15,8 @@ var CONSTANTS = (function() {
             "Content-Type": "application/json",
             Accept: "application/json"
         },
-        resourcesChangingNumber: ['device', 'event', 'account', 'place', 'erase', 'project']
+        resourcesChangingNumber: ['device', 'event', 'account', 'place', 'erase', 'project'],
+        debug: true
     };
 }());
 

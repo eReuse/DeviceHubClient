@@ -10,4 +10,3 @@ module.exports = angular.module('views.fullDevice',
         require('./../../common/components/resource').name
     ])
     .controller('fullDeviceCtrl', require('./full-device.controller.js'));
-

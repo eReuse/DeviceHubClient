@@ -2,10 +2,13 @@
 var sjv = require('simple-js-validator');
 var ACCOUNT_STORAGE = 'account';
 
-function session($rootScope) {
+function session($rootScope, $q) {
     this._account = {};
     this.saveInBrowser = true;
     this.first_time = true;
+    this.callbacksForDatabaseChange = [];
+    this.activeDatabase = null;
+    this.accountIsSet = $q.defer();
 
     this.create = function(account, saveInBrowser){
         this._account = account;
@@ -25,6 +28,8 @@ function session($rootScope) {
     this._isAccountSet = function(){
         return sjv.isNotEmpty(this._account)
     };
+
+
     this.getAccount = function(){
         if(!this._isAccountSet()) {
             var item = sessionStorage.getItem(ACCOUNT_STORAGE);
@@ -35,7 +40,7 @@ function session($rootScope) {
         if(this._isAccountSet() && this.first_time){
             this.setActiveDefaultDatabase();
             this.first_time = false;
-            $rootScope.$broadcast('session:AccountIsSet', this._account)
+            this.accountIsSet.resolve();
         }
         return this._account;
     };
@@ -52,18 +57,27 @@ function session($rootScope) {
         } catch(err){}
 
     };
+
     /* Databases */
+
     this.setActiveDefaultDatabase = function(){
         this.setActiveDatabase(this._account.defaultDatabase || this._account.databases[0], false)
     };
     this.setActiveDatabase = function (database, refresh) {
+        //_.invokeMap(this.callbacksForDatabaseChange, _.call, null, database, refresh);
         this.activeDatabase = database;
+        _.forEach(this.callbacksForDatabaseChange, function (val) {
+            val(database, refresh);
+        });
         if(refresh) $rootScope.$broadcast('refresh@deviceHub');
-        $rootScope.$broadcast('session:DatabaseChanges', database, refresh)
     };
     this.removeActiveDatabase = function () {
         this.setActiveDatabase(null, false)
     };
+    this.callWhenDatabaseChanges = function (callback) {
+        this.callbacksForDatabaseChange.push(callback);
+    };
+    return this;
 }
 
 module.exports = session;

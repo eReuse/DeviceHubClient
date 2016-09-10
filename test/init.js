@@ -14,12 +14,14 @@ require('jasmine-jquery');
 require('node_modules/bardjs/dist/bard.js'); //It makes a variable 'bard' available to us
 require('jasmine-collection-matchers');
 
+jasmine.getJSONFixtures().fixturesPath = 'base/test/mock';
 
 /**
  * Creates a promise that is already resolved.
  *
- * This method needs to execute '$rootScope.$apply()' after the methods using .then() on the promise for them to
- * execute.
+ * Promises in angular 'wait' until a digest cycle to propagate their result when they are resolved. To achieve this,
+ * you need to use call $rootScope.$apply() after this method. This emulates too the time that the promise
+ * is not resolved for the rest of the app.
  *
  * From {@link https://docs.angularjs.org/api/ng/service/$q#testing Testing $q in Angular documentation}.
  * @param {function} callable A function that returns $q (q may not be available at init time in tests)

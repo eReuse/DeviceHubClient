@@ -4,7 +4,6 @@ require('angular');
 var parameterize = require('parameterize');
 var inflection = require('inflection');
 
-
 /**
  * Tries to copy a value using an own 'clone' property of it, or uses the angular standard way of doing it.
  * @param value
@@ -32,7 +31,17 @@ var Naming = {
      * @returns {string} e.x.: 'devices_snapshot', 'component', 'events'
      */
     resource: function(string){
-        return this._standarize(string)[0]
+        var prefix, type = string;
+        try {
+            var values = this.popPrefix(string);
+            prefix = values[0] + this.RESOURCE_PREFIX;
+            type = values[1];
+        }
+        catch (err) {
+            prefix = '';
+        }
+        var type = inflection.dasherize(inflection.underscore(type));
+        return prefix + (this._pluralize(type) ? inflection.pluralize(type) : type);
     },
 
     /**
@@ -41,35 +50,32 @@ var Naming = {
      * @returns {string} e.x.: 'devices:Snapshot', 'Component', 'Event'
      */
     type: function (string) {
-        var values = this._standarize(string);
-        var pluralize = values[1];
-        return inflection.camelize(pluralize? inflection.singularize(string) : string)
+        var prefix, type = '';
+        try {
+            var values = this.popPrefix(string);
+            prefix = values[0] + this.TYPE_PREFIX;
+            type = values[1];
+        }
+        catch (err) {
+            prefix = '';
+        }
+        return prefix + inflection.camelize(this._pluralize(type)? inflection.singularize(type) : type)
     },
 
     urlWord: function (string) {
         return parameterize(string.split(' ').join('_'))
     },
 
-    _standarize: function (string) {
-        var prefix;
-        try{
-            var values = this.popPrefix(string);
-            prefix = values[0] + this.RESOURCE_PREFIX;
-            string = values[1];
-        }
-        catch(err){
-            prefix = '';
-        }
+    _pluralize: function (string) {
         var value = inflection.dasherize(inflection.underscore(string));
-        var pluralize = _.includes(this.RESOURCES_CHANGING_NUMBER, value) || _.includes(this.RESOURCES_CHANGING_NUMBER, inflection.singularize(value));
-        return [prefix + (pluralize? inflection.pluralize(value) : value), pluralize]
+        return _.includes(this.RESOURCES_CHANGING_NUMBER, value) || _.includes(this.RESOURCES_CHANGING_NUMBER, inflection.singularize(value));
     },
 
     /**
      * Erases the prefix and returns it.
      * @throws IndexError: There is no prefix
      * @param string {string}
-     * @returns {array} Two values: [prefix, type]
+     * @returns {Array} Two values: [prefix, type]
      */
     popPrefix: function (string) {
         var result = _.split(string, this.TYPE_PREFIX);
@@ -125,10 +131,6 @@ function getResourceTitle(resource){
     return Naming.humanize(resource['@type']) + ' ' + text
 }
 
-function isEvent(type){
-    return type in event({}).EVENTS;
-}
-
 /**
  * Executes $apply() after the element has scrolled.
  * @param {Object} element DOM element to detect the scroll
@@ -152,11 +154,21 @@ function parseDate(oldDate){
     return datetime.substring(0, datetime.indexOf('.'))
 }
 
+/**
+ * It is used in the views (see main app.js) to block loading of a view until schema is ready, needed for
+ * views that manage resources (i.e. all except login view).
+ * @param schema The schema service.
+ * @return {$q.promise} The promise.
+ */
+function schemaIsLoaded(schema) {
+    return schema.isLoaded();
+}
+
 module.exports = {
     Naming: Naming,
     copy: copy,
     getResourceTitle: getResourceTitle,
     applyAfterScrolling: applyAfterScrolling,
-    isEvent: isEvent,
-    parseDate: parseDate
+    parseDate: parseDate,
+    schemaIsLoaded: schemaIsLoaded
 };

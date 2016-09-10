@@ -13,10 +13,10 @@ module.exports = angular.module('common.components.forms',
         'restangular',
         'ui-notification'
     ])
-    .config(require('./types/devices/devices.formly-type.config.js'))
-    .config(require('./types/maps/maps.formly-type.config.js'))
-    .config(require('./types/typeahead/typeahead.formly-type.config.js'))
-    .config(require('./types/datepicker/datepicker.formly-type.config.js'))
-    .directive('formSchema', require('./form-schema/form-schema.directive.js'))
-    .factory('cerberusToFormly', require('./cerberus-to-formly.factory.js'))
-    .controller('formModalCtrl', require('./form-modal/form-modal.controller.js'));
+    .config(require('./types/devices/devices.formly-type.config'))
+    .config(require('./types/maps/maps.formly-type.config'))
+    .config(require('./types/typeahead/typeahead.formly-type.config'))
+    .config(require('./types/datepicker/datepicker.formly-type.config'))
+    .directive('formSchema', require('./form-schema/form-schema.directive'))
+    .service('cerberusToFormly', require('./cerberus-to-formly.service'))
+    .controller('formModalCtrl', require('./form-modal/form-modal.controller'));

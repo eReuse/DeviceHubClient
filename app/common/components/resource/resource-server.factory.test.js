@@ -11,19 +11,22 @@ describe('Test ResourceServer', function () {
     beforeEach(angular.mock.module(require('./../../../app').name));
     beforeEach(angular.mock.module({
         session: {
-            callWhenDatabaseChanges: function (callback) {
+            callWhenDatabaseChanges: function (callback) { //With this we can change the database in run-time
                 setDatabaseInUrl = callback;
             }
         },
-        authService: {}
+        authService: {},
+        schema: {}
     }));
     beforeEach(
-        inject(function(_ResourceServer_, $httpBackend, _$rootScope_){ //We inject it.
+        inject(function(_ResourceServer_, $httpBackend, _$rootScope_, _$q_){ //We inject it.
             ResourceServer = _ResourceServer_;
             server = $httpBackend;
             $rootScope = _$rootScope_;
         })
     );
+    //beforeEach(function () { $rootScope.$apply(); });
+
     it('should be defined', function () {
         expect(ResourceServer).toBeDefined();
     });
@@ -51,7 +54,7 @@ describe('Test ResourceServer', function () {
             useDefaultDatabase: false
         };
         var instance = ResourceServer(settings);
-        $rootScope.$broadcast('session:DatabaseChanges', db); // We set an active database
+        setDatabaseInUrl(db, false); // We set an active database
         instance.getList();
         server.expectGET(CONSTANTS.url + '/' + db + '/' + settings.url).respond(code);
         server.flush();

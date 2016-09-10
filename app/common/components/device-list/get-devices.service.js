@@ -2,7 +2,7 @@
 
 var utils = require('./../utils.js');
 
-function getDevices(Restangular, deviceListConfig) {
+function getDevices(ResourceSettings, deviceListConfig, $q) {
     this.getDevices = function(searchParams, page){
         var where =  $.extend({}, searchParams);
         Object.keys(where).forEach(function(key,index) {
@@ -42,7 +42,7 @@ function getDevices(Restangular, deviceListConfig) {
             catch(err){}
         });
 
-        return Restangular.all('devices').getList({where: where, page: page});
+        return ResourceSettings('Device').server.getList({where: where, page: page});
     }
 }
 

@@ -6,7 +6,7 @@ var OPERATION = {
     delete: 'deleted'
 };
 
-function formSchema(cerberusToFormly, resourceSettings, $rootScope, Notification){
+function formSchema(cerberusToFormly, ResourceSettings, $rootScope, Notification){
     return{
         templateUrl: window.COMPONENTS + '/forms/form-schema/form-schema.directive.html',
         restrict: 'E',
@@ -16,15 +16,13 @@ function formSchema(cerberusToFormly, resourceSettings, $rootScope, Notification
             status: '=' //list
         },
         link: function($scope){
-            var rSettings = new resourceSettings($scope.model['@type']);
-            rSettings.loaded.then(function () {
-                $scope.form;
-                var options = setOptions($scope.model['@type'], $scope.options, rSettings);
-                $scope.fields = cerberusToFormly.parse($scope.model, $scope, options); //parse adds 'nonModifiable' to options
-                $scope.submit = submitFactory($scope.fields, $scope.form, $scope.status, rSettings, $rootScope, Notification);
-                $scope.options.canDelete = 'remove' in $scope.model;
-                $scope.options.delete = deleteFactory($scope.model, $rootScope, $scope.status, Notification);
-            });
+            var rSettings = ResourceSettings($scope.model['@type']);
+            $scope.form;
+            var options = setOptions($scope.model['@type'], $scope.options, rSettings);
+            $scope.fields = cerberusToFormly.parse($scope.model, $scope, options); //parse adds 'nonModifiable' to options
+            $scope.submit = submitFactory($scope.fields, $scope.form, $scope.status, rSettings, $rootScope, Notification);
+            $scope.options.canDelete = 'remove' in $scope.model;
+            $scope.options.delete = deleteFactory($scope.model, $rootScope, $scope.status, Notification);
         }
     }
 }

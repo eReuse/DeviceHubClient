@@ -23,14 +23,12 @@ function triggerCollapseFactory($scope) {
         }
         var $th = $table.find('>thead>tr>th');
         var i;
-        console.log('collapse until ' + collapseUntil);
         for(i = $th.length - offsetRight - 1; i >= collapseUntil; i--){
             // Let's collapse the column
             $($th[i]).hide();
             var j = i+1;
             $table.find('>tbody>tr>td:nth-child(' + j + ')').hide();
         }
-        console.log(i);
         for(; i >= offsetLeft; i--){
             $($th[i]).show();
             var j = i+1;

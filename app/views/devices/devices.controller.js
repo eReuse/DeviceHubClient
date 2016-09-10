@@ -1,9 +1,6 @@
 'use strict';
 
-function devicesController ($scope, configureResources){
-
-    configureResources.configureSchema().then(function(){
-    })
+function devicesController ($scope, ResourceSettings){
 }
 
 module.exports = devicesController;

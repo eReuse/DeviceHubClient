@@ -1,6 +1,6 @@
 'use strict';
 
-function manualEventsButton(resourceSettings, $uibModal){
+function manualEventsButton(ResourceSettings, $uibModal){
     return {
         templateUrl: window.COMPONENTS + '/event/manual-events-button/manual-events-button.directive.html',
         restrict: 'E',
@@ -8,10 +8,7 @@ function manualEventsButton(resourceSettings, $uibModal){
             devices: "="
         },
         link: function ($scope) {
-            var rS = new resourceSettings('devices:DeviceEvent');
-            rS.loaded.then(function(){
-                $scope.events = rS.getSubResources()
-            });
+            $scope.events = ResourceSettings('devices:DeviceEvent').getSubResources()
             $scope.openModal = openModalFactory($uibModal)
         }
     }

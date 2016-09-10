@@ -1,27 +1,31 @@
 'use strict';
 
-function schema(CONSTANTS, Restangular) {
+function schema(CONSTANTS, Restangular, $q, session) {
     var self = this;
     this.schema = null;
-    this.compareSink = compareSink;
-    this.getFromServer = function(){
-        if (!('promise' in self)) {
-            self.promise = Restangular.oneUrl('schema', CONSTANTS.url + '/schema').get().then(function (data) {
-                self.schema = data;
-            });
-        }
-        return self.promise;
+    var deferred = $q.defer();
+    this.loaded = deferred.promise;
+    session.accountIsSet.then(function () {
+        Restangular.oneUrl('schema', CONSTANTS.url + '/schema').get().then(function (data) {
+            self.schema = data;
+            deferred.resolve(self.schema);
+        }).catch(function (data) {
+            deferred.reject();
+            throw data;
+        });
+    });
+
+    this.isLoaded = function () { // The same as loaded, but as a method, for testing purposes
+        return this.loaded;
+    };
+
+    this.compareSink = function(a, b){
+        if (a.sink > b.sink) return -1;
+        else if (a.sink < b.sink) return 1;
+        else return 0;
     };
     return this;
 }
-
-
-function compareSink(a, b){
-    if(a.sink > b.sink) return -1;
-    else if(a.sink < b.sink) return 1;
-    else return 0;
-}
-
 
 module.exports = schema;
 

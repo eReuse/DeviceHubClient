@@ -1,15 +1,15 @@
 'use strict';
 
-function createPlace($uibModal, configureResources){
+function createPlace($uibModal, schema){
     return {
         templateUrl: window.COMPONENTS + '/place/create-place/create-place.directive.html',
         restrict: 'E',
         link: function ($scope) {
             $scope.openModal = openModalFactory($uibModal);
             $scope.schemaLoaded = false;
-            configureResources.configureSchema().then(function(){
+            schema.getFromServer().then(function () {
                 $scope.schemaLoaded = true;
-            })
+            });
         }
     }
 }

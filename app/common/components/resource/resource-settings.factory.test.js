@@ -1,10 +1,9 @@
 
 require('./../../../../test/init.js');
-
 'use strict';
 
 describe('Test ResourceSettings', function () {
-    var resourceSettings, schema, instance, $q, $rootScope, server,
+    var ResourceSettings, schema, instance, $q, $rootScope, server,
         type = 'devices:Dummy', url = 'devices';
     beforeEach(angular.mock.module(require('./../../../app').name));
     beforeEach(angular.mock.module({
@@ -21,26 +20,31 @@ describe('Test ResourceSettings', function () {
                     }
                 }
             },
-            getFromServer: createResolvedPromiseFactory(function () {
-                return $q
-            })
-        }
+            isLoaded: createResolvedPromiseFactory(function () { return $q })
+        },
+        session: {
+            activeDatabase: 'db1', //Let's set an active database
+            callWhenDatabaseChanges: _.noop
+        },
+        authService: {}
+    }));
+    beforeEach(inject(function (_$q_) {
+        $q = _$q_;
     }));
     beforeEach(
-        inject(function(_resourceSettings_, _schema_, _$q_, _$rootScope_, $httpBackend){ //We inject it.
-            resourceSettings = _resourceSettings_;
+        inject(function(_schema_, _ResourceSettings_, _$rootScope_, $httpBackend){ //We inject it.
             schema = _schema_;
-            $q = _$q_;
+            ResourceSettings = _ResourceSettings_;
             $rootScope = _$rootScope_;
             server = $httpBackend;
         })
     );
     beforeEach(function () {
-        instance = new resourceSettings(type); // Instance won't be ok if not in beforeEach
         $rootScope.$apply();
+        instance = ResourceSettings(type); // Instance won't be ok if not in beforeEach
     });
     it('should be defined', function () {
-        expect(resourceSettings).toBeDefined();
+        expect(ResourceSettings).toBeDefined();
         expect(schema).toBeDefined();
         expect(instance.server).toBeDefined();
         expect(instance.server.one).toBeDefined();

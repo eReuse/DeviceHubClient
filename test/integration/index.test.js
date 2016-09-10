@@ -18,6 +18,7 @@ window.containing = jasmine.objectContaining;  // name is too long
  * Generic describe. Bootstraps the full app (so you do not need to add any module) and generates basic
  */
 describe('Test suite', function () {
+    var $q; //global promise module
     beforeEach(function () {
         //We can only perform module before inject, so we just import all the app and forget about it.
         var app = require('./../../app/app.js').name;
@@ -35,19 +36,37 @@ describe('Test suite', function () {
         })
     }));
 
-    beforeEach(inject(function ($rootScope, $httpBackend, $compile) {
-        window.rootScope = $rootScope;
+    // We replace the schema with a method that returns a full schema. To trigger
+    // the response (promise) with the schema, use $rootScope.$apply()
+    beforeEach(angular.mock.module({
+        schema: {
+            schema: getJSONFixture('schema.json'),
+            isLoaded: createResolvedPromiseFactory(function () {
+                return $q
+            })
+        }
+    }));
+    beforeEach(
+        inject(function (_$q_) { // We inject $q, for the schema
+            $q = _$q_;
+        })
+    );
+    beforeEach(inject(function (_$rootScope_, $httpBackend, _$compile_) {
+        window.$rootScope = _$rootScope_;
         window.server = $httpBackend;
-        window.compile = $compile; 
+        window.$compile = _$compile_;
         if(!FS){ // We mock the functions so when they are called they do nothing
             server.when = function () {return {respond: function () {}}};
             server.expectPOST = function () {};
             server.expectGET = function() {};
             server.flush = function () {}
         }
-        jasmine.getJSONFixtures().fixturesPath='base/test/mock';
         server.when('GET', CONSTANTS.url + '/schema').respond(200, getJSONFixture('schema.json'));
     }));
+    beforeEach(function () {
+        $rootScope.$apply(); // We propagate $q
+    });
+
     it('should define server', function () {
         expect(server).toBeDefined();
     });
@@ -71,9 +90,9 @@ function login() {
     var test_account = getJSONFixture('full-user.json');
     var url = CONSTANTS.url + '/login';
     server.when('POST', url).respond(200, test_account);
+    server.expectPOST(url);
     // We perform the login
     var result = auth.login({email: test_account.email, password: test_account.password}, true);
-    server.expectPOST(url);
     result.then(function (response_account) {
         expect(response_account).toEqual(containing(test_account));
     });
@@ -88,11 +107,11 @@ function login() {
  * @returns {Object} The scope of the directive; you can access its scoped values.
  */
 window.create_directive = function (data, template) {
-    var scope = rootScope.$new();  //Creates isolated scope
+    var scope = $rootScope.$new();  //Creates isolated scope
     //angular.copy(data, scope);  // Setup scope state
     scope = _.assign(scope, data);
-    var element = compile(template)(scope);  // Create directive
-    rootScope.$digest();
+    var element = $compile(template)(scope);  // Create directive
+    $rootScope.$digest();
     var isolated = element.isolateScope();
     it('should have the data', function () {
         expect(isolated).toEqual(jasmine.objectContaining(data));

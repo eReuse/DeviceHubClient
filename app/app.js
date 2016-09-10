@@ -1,6 +1,7 @@
 'use strict';
 
 require('./init.js');
+var utils = require('./common/components/utils');
 
 module.exports = angular.module('deviceHub',[
         'ui.router',
@@ -19,11 +20,13 @@ module.exports = angular.module('deviceHub',[
             .state('index.devices',{
                 url:'/devices',
                 templateUrl: 'views/devices/devices.controller.html',
-                abstract: true
+                abstract: true,
+                resolve: {rs: utils.schemaIsLoaded}
             }).state('fullDevice',{
                 url:'/:db/devices/:id',
                 templateUrl: 'views/full-device/full-device.controller.html',
-                controller: 'fullDeviceCtrl as FeCl'
+                controller: 'fullDeviceCtrl as FeCl',
+                resolve: {rs: utils.schemaIsLoaded}
             }).state('login',{
                 url:'/login',
                 templateUrl: 'views/login/login.controller.html',
@@ -31,7 +34,8 @@ module.exports = angular.module('deviceHub',[
             }).state('index.reports',{
                 url: '/reports',
                 templateUrl: 'views/reports/reports.controller.html',
-                controller: 'reportsCtrl as RsCl'
+                controller: 'reportsCtrl as RsCl',
+                resolve: {rs: utils.schemaIsLoaded}
             });
             $urlRouterProvider.otherwise("/devices")
         })

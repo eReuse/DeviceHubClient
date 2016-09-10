@@ -8,7 +8,8 @@ var utils = require('./../utils.js');
  *
  * This is an extension of {@link https://github.com/mgonto/restangular#how-to-create-a-restangular-service-with-a-different-configuration-from-the-global-one Restangular's different configuration manual}.
  */
-function ResourceServer(schema, Restangular, CONSTANTS, $rootScope) {
+function ResourceServer(schema, Restangular, CONSTANTS, session) {
+
     /**
      * Obtains the server proxy for a ResourceSettings.
      *
@@ -87,10 +88,11 @@ function ResourceServer(schema, Restangular, CONSTANTS, $rootScope) {
      * Changes the database in the url for the configuration with databases
      * @param {string} database New database to override existing
      */
-    function setDatabaseInUrl(_, database) {
+    function setDatabaseInUrl(database, _) {
         RestangularConfigurerCustomDB.setBaseUrl(CONSTANTS.url + '/' + database)
     }
-    $rootScope.$on('session:DatabaseChanges', setDatabaseInUrl);
+    session.callWhenDatabaseChanges(setDatabaseInUrl);
+    setDatabaseInUrl(session.activeDatabase); //In case there is already a database set
 
     return _ResourceServer;
 }
