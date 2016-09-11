@@ -50,7 +50,7 @@ var Naming = {
      * @returns {string} e.x.: 'devices:Snapshot', 'Component', 'Event'
      */
     type: function (string) {
-        var prefix, type = '';
+        var prefix, type = string;
         try {
             var values = this.popPrefix(string);
             prefix = values[0] + this.TYPE_PREFIX;
@@ -170,5 +170,6 @@ module.exports = {
     getResourceTitle: getResourceTitle,
     applyAfterScrolling: applyAfterScrolling,
     parseDate: parseDate,
-    schemaIsLoaded: schemaIsLoaded
+    schemaIsLoaded: schemaIsLoaded,
+    NoPrefix: NoPrefix,
 };

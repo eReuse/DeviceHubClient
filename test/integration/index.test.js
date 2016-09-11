@@ -18,7 +18,6 @@ window.containing = jasmine.objectContaining;  // name is too long
  * Generic describe. Bootstraps the full app (so you do not need to add any module) and generates basic
  */
 describe('Test suite', function () {
-    var $q; //global promise module
     beforeEach(function () {
         //We can only perform module before inject, so we just import all the app and forget about it.
         var app = require('./../../app/app.js').name;
@@ -27,30 +26,8 @@ describe('Test suite', function () {
         else
             bard.asyncModule(app)
     });
+    removeResourceButtonDirective();
 
-    //We do not want resourceButtonDirective to mess with our http requests
-    //So we replace it (mock it) by a blank directive
-    beforeEach(angular.mock.module(function ($provide) {
-        $provide.factory('resourceButtonDirective', function () {
-            return {};
-        })
-    }));
-
-    // We replace the schema with a method that returns a full schema. To trigger
-    // the response (promise) with the schema, use $rootScope.$apply()
-    beforeEach(angular.mock.module({
-        schema: {
-            schema: getJSONFixture('schema.json'),
-            isLoaded: createResolvedPromiseFactory(function () {
-                return $q
-            })
-        }
-    }));
-    beforeEach(
-        inject(function (_$q_) { // We inject $q, for the schema
-            $q = _$q_;
-        })
-    );
     beforeEach(inject(function (_$rootScope_, $httpBackend, _$compile_) {
         window.$rootScope = _$rootScope_;
         window.server = $httpBackend;
@@ -63,58 +40,20 @@ describe('Test suite', function () {
         }
         server.when('GET', CONSTANTS.url + '/schema').respond(200, getJSONFixture('schema.json'));
     }));
-    beforeEach(function () {
-        $rootScope.$apply(); // We propagate $q
-    });
-
+    
     it('should define server', function () {
         expect(server).toBeDefined();
     });
+
+
+    describe('Test index.devices view', require('./devices.test'));
 
     /**
      * Describe for tests that need authentication.
      */
     describe('Auth', function () {
-        beforeEach(login);
-        describe('Form Schema', require('./common/components/form-schema.test.js'));
+        //beforeEach(login);
+        //describe('Form Schema', require('./common/components/form-schema.test.js'));
     });
     //describe('Schema', require('./common/config/schema.factory.test'));
 });
-
-function login() {
-    var auth;
-    inject(function(_authService_){ //We inject it.
-        auth = _authService_;
-        expect(auth).toBeDefined();
-    });
-    var test_account = getJSONFixture('full-user.json');
-    var url = CONSTANTS.url + '/login';
-    server.when('POST', url).respond(200, test_account);
-    server.expectPOST(url);
-    // We perform the login
-    var result = auth.login({email: test_account.email, password: test_account.password}, true);
-    result.then(function (response_account) {
-        expect(response_account).toEqual(containing(test_account));
-    });
-    server.flush();
-
-}
-
-/**
- * Creates a directive with isolated scope.
- * @param data {Object} Data to set in the scope
- * @param template {string} Html tag of the directive
- * @returns {Object} The scope of the directive; you can access its scoped values.
- */
-window.create_directive = function (data, template) {
-    var scope = $rootScope.$new();  //Creates isolated scope
-    //angular.copy(data, scope);  // Setup scope state
-    scope = _.assign(scope, data);
-    var element = $compile(template)(scope);  // Create directive
-    $rootScope.$digest();
-    var isolated = element.isolateScope();
-    it('should have the data', function () {
-        expect(isolated).toEqual(jasmine.objectContaining(data));
-    });
-    return isolated;
-};

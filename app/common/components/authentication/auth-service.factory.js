@@ -53,11 +53,11 @@ function authServiceFactory(Restangular, session, $state, $location) {
      *
      * This method is supposed to be used when the event '$stateChangeStart' triggers, see 'shield-states.run.js'
      */
-    authService.shieldStates = function (event, next) {
-            if(next.name != 'login'){
+    authService.shieldStates = function (event, toState, toParams, fromState, fromParams, options) {
+            if(toState.name != 'login'){
                 if (authService.isAuthenticated()) { //This call triggers the account loading
                     try{
-                        if(!authService.isAuthorized(next.data.authorizedRoles)){
+                        if(!authService.isAuthorized(toState.data.authorizedRoles)){
                             alert("You are not allowed to do so. Contact the admin.");
                             $state.transitionTo('login');
                             $location.path('/login');
@@ -66,7 +66,7 @@ function authServiceFactory(Restangular, session, $state, $location) {
                     catch(err){}
                 }
                 else{
-                    if(next.name == 'fullDevice') return;
+                    if(toState.name == 'fullDevice') return;
                     // user is not logged in
                     session.removeActiveDatabase();
                     event.preventDefault();

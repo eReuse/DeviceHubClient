@@ -27,11 +27,97 @@ jasmine.getJSONFixtures().fixturesPath = 'base/test/mock';
  * @param {function} callable A function that returns $q (q may not be available at init time in tests)
  * @return {object} A promise
  */
-window.createResolvedPromiseFactory = function (callable) {
-    return function () {
-        var $q = callable();
-        var deferred = $q.defer();
-        deferred.resolve();
-        return deferred.promise;
-    }
+window.createResolvedPromiseFactory = function () {
+    var deferred = window.$q.defer();
+    deferred.resolve();
+    return deferred.promise;
+};
+
+window.mockSchema = function () {
+    beforeEach(angular.mock.module({
+        schema: {
+            schema: getJSONFixture('schema.json'),
+            isLoaded: createResolvedPromiseFactory,
+            compareSink: function(a, b){
+                if(a.sink > b.sink) return -1;
+                else if(a.sink < b.sink) return 1;
+                else return 0;
+            }
+        }
+    }))
+};
+
+window.schemaInject = function () {
+    beforeEach(
+        inject(function (_$q_, _$rootScope_) { // We inject $q, for the schema
+            window.$q = _$q_;
+            window.$rootScope = _$rootScope_;
+        })
+    );
+};
+
+window.propagateSchemaChange = function () {
+    beforeEach(function () {
+        window.$rootScope.$apply(); // We propagate $q
+    });
+};
+
+/**
+ * Creates a directive with isolated scope.
+ * @param data {Object} Data to set in the scope
+ * @param template {string} Html tag of the directive
+ * @returns {Object} The scope of the directive; you can access its scoped values.
+ */
+window.createDirective = function (data, template) {
+    var scope = $rootScope.$new();  //Creates isolated scope
+    //angular.copy(data, scope);  // Setup scope state
+    scope = _.assign(scope, data);
+    var element = $compile(template)(scope);  // Create directive
+    $rootScope.$digest();
+    var isolated = element.isolateScope();
+    it('should have the data', function () {
+        expect(isolated).toEqual(jasmine.objectContaining(data));
+    });
+    return isolated;
+};
+
+window.createDirectiveInject = function () {
+    beforeEach(inject(function (_$compile_, _$rootScope_) {
+        window.$compile = _$compile_;
+        window.$rootScope = _$rootScope_;
+    }))
+};
+
+// For integration tests
+
+window.loginInject = function(){
+    beforeEach(inject(function(_authService_){
+        window.auth = _authService_;
+    }));
+};
+
+window.login = function(){
+    var test_account = getJSONFixture('full-user.json');
+    var url = CONSTANTS.url + '/login';
+    server.when('POST', url).respond(200, test_account);
+    server.expectPOST(url);
+    // We perform the login
+    var result = auth.login({email: test_account.email, password: test_account.password}, true);
+    result.then(function(response_account){
+        expect(response_account).toEqual(containing(test_account));
+    });
+    server.flush();
+};
+
+/**
+ * Mocks the directive ResourceButton to an empty one, avoiding requests.
+ *
+ * We do not want resourceButtonDirective to mess with our http requests wo we replace it (mock it) by a blank directive
+ */
+window.removeResourceButtonDirective = function(){
+    beforeEach(angular.mock.module(function($provide){
+        $provide.factory('resourceButtonDirective', function(){
+            return {};
+        })
+    }));
 };

@@ -8,7 +8,7 @@ function manualEventsButton(ResourceSettings, $uibModal){
             devices: "="
         },
         link: function ($scope) {
-            $scope.events = ResourceSettings('devices:DeviceEvent').getSubResources()
+            $scope.events = ResourceSettings('devices:DeviceEvent').getSubResources();
             $scope.openModal = openModalFactory($uibModal)
         }
     }

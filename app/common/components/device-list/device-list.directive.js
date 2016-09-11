@@ -3,7 +3,6 @@
 var DEFAULT_SEARCH_PARAMS = {
     '@type': 'Computer'
 };
-var PAGINATION = 30;
 
 /**
  * Gets a new list of devices from the server and updates scope.

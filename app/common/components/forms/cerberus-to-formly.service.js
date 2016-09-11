@@ -7,8 +7,7 @@ var inflection = require('inflection');
 var DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url', '_settings'];
 var COMMON_OPTIONS = ['min', 'max', 'required', 'minlength', 'maxlength', 'readonly', 'description'];
 
-function cerberusToFormly(schema, ResourceSettings) {
-
+function cerberusToFormly(ResourceSettings, schema) {
     /**
      * Generates a form for the given model, by parsing the information in the Cerberus schema transforming it to an
      * Angular-Formly compatible form.
@@ -21,13 +20,15 @@ function cerberusToFormly(schema, ResourceSettings) {
      * @return {Array} An ordered array with the form, ready to send to Angular Formly.
      */
     this.parse = function (model, $scope, options) {
+        var resourceSettings = ResourceSettings(model['@type']);
+        if(_.isUndefined(resourceSettings.schema))
+            throw Error('cerberusToFormly: cannot parse ' + model['@type'] + ' because it is not in the schema.');
         var isAModification = '_id' in model; //Remember, defaults are taken from the schema
         var doNotUse = 'doNotUse' in options ? options.doNotUse.concat(DO_NOT_USE) : DO_NOT_USE;
         var form = [];
-        var resource_type = utils.Naming.resource(model['@type']);
-        for (var fieldName in schema[resource_type]) {
+        for (var fieldName in resourceSettings.schema) {
             if (!_.includes(doNotUse, fieldName)) {
-                var subSchema = schema[resource_type][fieldName];
+                var subSchema = resourceSettings.schema[fieldName];
                 if (!subSchema.readonly) {
                     if (subSchema.type == 'dict' && 'schema' in subSchema)
                         form.push(this.generateFieldGroup(fieldName, subSchema, model, doNotUse, isAModification));
@@ -53,9 +54,12 @@ function cerberusToFormly(schema, ResourceSettings) {
         field.fieldGroup.push({
             template: '<h4>' + utils.Naming.humanize(fieldName) + '</h4>'
         });
-        for (var childFieldName in subSchema.schema)
-            if (doNotUse.indexOf(childFieldName) == -1)
-                field.fieldGroup.push(generateField(childFieldName, subSchema.schema[childFieldName], model, doNotUse, isAModification));
+        for (var childFieldName in subSchema.schema){
+            if(!_.includes(doNotUse, childFieldName)){
+                var f = this.generateField(childFieldName, subSchema.schema[childFieldName], model, doNotUse, isAModification);
+                field.fieldGroup.push(f);
+            }
+        }
         return field;
     };
 
@@ -180,6 +184,7 @@ function cerberusToFormly(schema, ResourceSettings) {
 
     this.setExcludes = function (form, model, $scope, excludeLabels) {
         var self = this;
+        //var formToIterate = _.clone(form); // Shallow copy: formToIterate and form point to the same field objects
         form.forEach(function (field, i) {
             if ('excludes' in field) {
                 var toggleKey;
@@ -197,7 +202,7 @@ function cerberusToFormly(schema, ResourceSettings) {
                     field.hideExpression = '!model.' + toggleKey;
                 }
                 var positions = [i];
-                self.setExcludesWatch(field, $scope);
+                self.setExcludesWatch(field, $scope, model);
                 form.forEach(function (excludedField, j) {
                     if (excludedField.key == field.excludes) {
                         positions.push(j);
@@ -212,7 +217,7 @@ function cerberusToFormly(schema, ResourceSettings) {
         });
     };
 
-    this.setExcludesWatch = function (field, $scope) {
+    this.setExcludesWatch = function (field, $scope, model) {
         /**
          * Deletes the values of an excluded field when this goes hidden.
          */

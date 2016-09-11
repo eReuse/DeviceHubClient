@@ -8,7 +8,11 @@ function session($rootScope, $q) {
     this.first_time = true;
     this.callbacksForDatabaseChange = [];
     this.activeDatabase = null;
-    this.accountIsSet = $q.defer();
+    this._accountIsSet = $q.defer();
+    this._accountIsSetPromise = this._accountIsSet.promise;
+    this.accountIsSet = function(){
+        return this._accountIsSetPromise;
+    };
 
     this.create = function(account, saveInBrowser){
         this._account = account;
@@ -40,7 +44,7 @@ function session($rootScope, $q) {
         if(this._isAccountSet() && this.first_time){
             this.setActiveDefaultDatabase();
             this.first_time = false;
-            this.accountIsSet.resolve();
+            this._accountIsSet.resolve(this._account);
         }
         return this._account;
     };

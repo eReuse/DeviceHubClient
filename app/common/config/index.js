@@ -18,7 +18,7 @@ module.exports = angular.module('common.config',
     .config(require('./json-formatter.config'))
     .config(require('./html5.config'))
     .config(require('./ui-notification.config'))
-    .factory(require('./restangular.factory.js'))
+    .factory('RestangularFactory', require('./restangular.factory.js'))
     .factory('schema', require('./schema.factory'))
     .run(function ($rootScope) {
             $rootScope._ = window._;

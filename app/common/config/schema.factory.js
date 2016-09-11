@@ -1,11 +1,11 @@
 'use strict';
 
-function schema(CONSTANTS, Restangular, $q, session) {
+function schema(CONSTANTS, Restangular, $q, RestangularFactory) {
     var self = this;
     this.schema = null;
     var deferred = $q.defer();
     this.loaded = deferred.promise;
-    session.accountIsSet.then(function () {
+    RestangularFactory.isLoaded().then(function () {
         Restangular.oneUrl('schema', CONSTANTS.url + '/schema').get().then(function (data) {
             self.schema = data;
             deferred.resolve(self.schema);

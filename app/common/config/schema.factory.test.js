@@ -16,7 +16,7 @@ function schema_factory(){
     });
     it('gets schema from server', function () {
         server.expectGET(CONSTANTS.url + '/schema');
-        var promise = schema.getFromServer();
+        var promise = schema.loaded();
         promise.then(function (response_schema) {
             expect(response_schema).toBeDefined();
         })

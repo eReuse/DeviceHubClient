@@ -10,31 +10,18 @@ describe('Test Utils', function () {
     it('popprefix works correctly', function () {
         expect(Naming.popPrefix('devices_dummy')).toEqual(['devices', 'dummy']);
         expect(Naming.popPrefix('devices:Dummy')).toEqual(['devices', 'Dummy']);
-        //expect(Naming.popPrefix('devicesDummy')).toThrowAnyError()
+        expect(function(){ Naming.popPrefix('accounts') }).toThrowErrorOfType('Error'); // todo error of type 'NoPrefix'
     });
 
     it('works with a type that doesn\'t change the number (singular - plural)', function () {
-        tryPrefix('Snapshot', 'devices', 'snapshot')
+        expect(Naming.resource('devices:Snapshot')).toEqual('devices_snapshot');
+        expect(Naming.type('devices_snapshot')).toEqual('devices:Snapshot');
+        expect(Naming.new_type('Snapshot', 'devices')).toEqual('devices:Snapshot');
+
     });
     it('works with a type that changes its number (see RESOURCES_CHANGING_NUMBER in config)', function () {
-        tryPrefix('Event', 'projects', 'events')
+        expect(Naming.resource('Events')).toEqual('events');
+        expect(Naming.type('events')).toEqual('Event');
+        expect(Naming.new_type('Event')).toEqual('Event');
     });
-    it('works without prefix', function () {
-        tryPrefix('Device', null, 'devices')
-    });
-    it('works from resourceName to resourceType and otherwise', function () {
-        var resourceType = 'devices:Dummy';
-        var resourceName = 'devices_dummy';
-        expect(Naming.type(resourceName)).toEqual(resourceType);
-        expect(Naming.resource(resourceType)).toEqual(resourceName);
-    });
-
-    function tryPrefix(originalType, prefix, supposedResourceName) {
-        var typeName = Naming.new_type(originalType, prefix);
-        var equal = prefix? prefix + Naming.TYPE_PREFIX + originalType : originalType;
-        expect(typeName).toBe(equal);
-        var resourceName = Naming.resource(typeName);
-        equal = prefix? prefix + Naming.RESOURCE_PREFIX + supposedResourceName : supposedResourceName;
-        expect(resourceName).toBe(equal);
-    }
 });

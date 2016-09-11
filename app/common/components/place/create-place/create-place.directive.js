@@ -6,10 +6,6 @@ function createPlace($uibModal, schema){
         restrict: 'E',
         link: function ($scope) {
             $scope.openModal = openModalFactory($uibModal);
-            $scope.schemaLoaded = false;
-            schema.getFromServer().then(function () {
-                $scope.schemaLoaded = true;
-            });
         }
     }
 }

@@ -1,4 +1,6 @@
 'use strict';
+
+var utils = require('./../../common/components/utils');
 /**
  * Represents the main devices view
  */
@@ -13,7 +15,8 @@ module.exports = angular.module('views.devices',
             $stateProvider.state('index.devices.show',{
                 url:'?max_results',
                 templateUrl: window.VIEWS + '/devices/devices.controller.html',
-                controller: 'devicesCtrl as DsCl'
+                controller: 'devicesCtrl as DsCl',
+                resolve: {rs: utils.schemaIsLoaded}
             })
     })
     .controller('devicesCtrl', require('./devices.controller.js'));

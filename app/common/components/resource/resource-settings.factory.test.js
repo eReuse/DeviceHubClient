@@ -2,9 +2,11 @@
 require('./../../../../test/init.js');
 'use strict';
 
-describe('Test ResourceSettings', function () {
-    var ResourceSettings, schema, instance, $q, $rootScope, server,
+describe('Test ResourceSettings', function(){
+    var ResourceSettings, schema, instance, $rootScope, server,
         type = 'devices:Dummy', url = 'devices';
+
+    //Mock modules
     beforeEach(angular.mock.module(require('./../../../app').name));
     beforeEach(angular.mock.module({
         schema: {
@@ -20,7 +22,7 @@ describe('Test ResourceSettings', function () {
                     }
                 }
             },
-            isLoaded: createResolvedPromiseFactory(function () { return $q })
+            isLoaded: createResolvedPromiseFactory
         },
         session: {
             activeDatabase: 'db1', //Let's set an active database
@@ -28,9 +30,9 @@ describe('Test ResourceSettings', function () {
         },
         authService: {}
     }));
-    beforeEach(inject(function (_$q_) {
-        $q = _$q_;
-    }));
+
+    // Inject
+    schemaInject();
     beforeEach(
         inject(function(_schema_, _ResourceSettings_, _$rootScope_, $httpBackend){ //We inject it.
             schema = _schema_;
@@ -39,8 +41,9 @@ describe('Test ResourceSettings', function () {
             server = $httpBackend;
         })
     );
+
+    propagateSchemaChange();
     beforeEach(function () {
-        $rootScope.$apply();
         instance = ResourceSettings(type); // Instance won't be ok if not in beforeEach
     });
     it('should be defined', function () {
