@@ -88,11 +88,12 @@ function ResourceServer(schema, Restangular, CONSTANTS, session) {
      * Changes the database in the url for the configuration with databases
      * @param {string} database New database to override existing
      */
-    function setDatabaseInUrl(database, _) {
+    function setDatabaseInUrl(database) {
         RestangularConfigurerCustomDB.setBaseUrl(CONSTANTS.url + '/' + database)
     }
     session.callWhenDatabaseChanges(setDatabaseInUrl);
-    setDatabaseInUrl(session.activeDatabase); //In case there is already a database set
+    if(!_.isNull(session.activeDatabase))
+        setDatabaseInUrl(session.activeDatabase); //In case there is already a database set
 
     return _ResourceServer;
 }

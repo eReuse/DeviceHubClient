@@ -161,7 +161,7 @@ function parseDate(oldDate){
  * @return {$q.promise} The promise.
  */
 function schemaIsLoaded(schema) {
-    return schema.isLoaded();
+    return schema.isLoaded()
 }
 
 module.exports = {
@@ -171,5 +171,5 @@ module.exports = {
     applyAfterScrolling: applyAfterScrolling,
     parseDate: parseDate,
     schemaIsLoaded: schemaIsLoaded,
-    NoPrefix: NoPrefix,
+    NoPrefix: NoPrefix
 };

@@ -28,32 +28,31 @@ describe('Test suite', function () {
     });
     removeResourceButtonDirective();
 
-    beforeEach(inject(function (_$rootScope_, $httpBackend, _$compile_) {
+    // By mocking otherwise we avoid going to the default state at the very first $digest()
+    // see http://stackoverflow.com/a/26613169/2710757
+    beforeEach(angular.mock.module(function($urlRouterProvider){
+        $urlRouterProvider.otherwise(_.noop);
+    }));
+
+    beforeEach(inject(function (_$rootScope_, $httpBackend, _$compile_, Restangular) {
         window.$rootScope = _$rootScope_;
         window.server = $httpBackend;
         window.$compile = _$compile_;
         if(!FS){ // We mock the functions so when they are called they do nothing
             server.when = function () {return {respond: function () {}}};
-            server.expectPOST = function () {};
-            server.expectGET = function() {};
-            server.flush = function () {}
+            server.expectPOST = server.expectGET = server.flush = _.noop;
         }
-        server.when('GET', CONSTANTS.url + '/schema').respond(200, getJSONFixture('schema.json'));
+        localStorage.clear(); // Karma does not clean storage per test
+        sessionStorage.clear();
+        // Somehow this gets leaked from other tests...
+        delete Restangular.configuration.defaultHeaders.Authorization
+
     }));
     
     it('should define server', function () {
         expect(server).toBeDefined();
     });
 
-
     describe('Test index.devices view', require('./devices.test'));
-
-    /**
-     * Describe for tests that need authentication.
-     */
-    describe('Auth', function () {
-        //beforeEach(login);
-        //describe('Form Schema', require('./common/components/form-schema.test.js'));
-    });
-    //describe('Schema', require('./common/config/schema.factory.test'));
+    describe('Test public.test view', require('./public.test'));
 });

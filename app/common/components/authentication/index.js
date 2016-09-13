@@ -8,7 +8,7 @@ module.exports = angular.module('common.components.authentication',
         'restangular',
         'ui.router'
     ])
-    .factory('session', require('./session.factory.js'))
+    .service('session', require('./session.service.js'))
     .factory('authService', require('./auth-service.factory.js'))
     .run(require('./shield-states.run.js'))
     .constant('AUTH_EVENTS', require('./AUTH_EVENTS.js'))

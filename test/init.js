@@ -63,6 +63,27 @@ window.propagateSchemaChange = function () {
 };
 
 /**
+ * Mocks the server to return a full schema. Note that this method needs the headers to be set correctly. Use
+ * mockSchema to fully mock the schema otherwise.
+ *
+ * Uses global variable server.
+ */
+window.schemaWhenGetFull = function(){
+    var headers = _.assign({Authorization: 'Basic ' + getJSONFixture('full-user.json').token}, {"Accept": "application/json"});
+    server.expectGET(CONSTANTS.url + '/schema', headers).respond(200, getJSONFixture('schema.json'));
+};
+
+/**
+ * Mocks the server to return the public schema, a subset of the full one.
+ * Note that this method needs the headers to be set correctly.
+ *
+ * Uses global variable server.
+ */
+window.schemaWhenGetPublic = function(force){
+    server.expectGET(CONSTANTS.url + '/schema', {"Accept": "application/json"}).respond(200, getJSONFixture('public-schema.json'));
+};
+
+/**
  * Creates a directive with isolated scope.
  * @param data {Object} Data to set in the scope
  * @param template {string} Html tag of the directive
@@ -99,8 +120,7 @@ window.loginInject = function(){
 window.login = function(){
     var test_account = getJSONFixture('full-user.json');
     var url = CONSTANTS.url + '/login';
-    server.when('POST', url).respond(200, test_account);
-    server.expectPOST(url);
+    server.expectPOST(url).respond(200, test_account);
     // We perform the login
     var result = auth.login({email: test_account.email, password: test_account.password}, true);
     result.then(function(response_account){
@@ -108,6 +128,7 @@ window.login = function(){
     });
     server.flush();
 };
+
 
 /**
  * Mocks the directive ResourceButton to an empty one, avoiding requests.

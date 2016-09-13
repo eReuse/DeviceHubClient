@@ -5,7 +5,7 @@
  * @name authService
  * @description Provides an authentication layer (login)
  */
-function authServiceFactory(Restangular, session, $state, $location) {
+function authServiceFactory(Restangular, session, $state, $location){
     var authService = {};
 
     /**
@@ -17,7 +17,7 @@ function authServiceFactory(Restangular, session, $state, $location) {
      * @param {bool} saveInBrowser
      * @returns {Object} Account object.
      */
-    authService.login = function (credentials, saveInBrowser) {
+    authService.login = function(credentials, saveInBrowser){
         return Restangular.all("login").post(credentials).then(function(account){
                 session.create(account, saveInBrowser);
                 return account;
@@ -29,8 +29,12 @@ function authServiceFactory(Restangular, session, $state, $location) {
      * in the browser.
      * @returns {boolean}
      */
-    authService.isAuthenticated = function () {
+    authService.isAuthenticated = function(){
         return session.isAccountSet();
+    };
+
+    authService.broadcast = function(){
+        session.broadcast();
     };
 
     /**
@@ -38,8 +42,8 @@ function authServiceFactory(Restangular, session, $state, $location) {
      * @param {Array} authorizedRoles Roles to check the user against
      * @returns {boolean}
      */
-    authService.isAuthorized = function (authorizedRoles) {
-        if (!angular.isArray(authorizedRoles)) {
+    authService.isAuthorized = function(authorizedRoles){
+        if(!angular.isArray(authorizedRoles)){
             authorizedRoles = [authorizedRoles];
         }
         return (authService.isAuthenticated() &&
@@ -53,28 +57,20 @@ function authServiceFactory(Restangular, session, $state, $location) {
      *
      * This method is supposed to be used when the event '$stateChangeStart' triggers, see 'shield-states.run.js'
      */
-    authService.shieldStates = function (event, toState, toParams, fromState, fromParams, options) {
-            if(toState.name != 'login'){
-                if (authService.isAuthenticated()) { //This call triggers the account loading
-                    try{
-                        if(!authService.isAuthorized(toState.data.authorizedRoles)){
-                            alert("You are not allowed to do so. Contact the admin.");
-                            $state.transitionTo('login');
-                            $location.path('/login');
-                        }
-                    }
-                    catch(err){}
-                }
+    authService.shieldStates = function(event, toState, toParams, fromState, fromParams, options){
+        if(toState.name != 'login'){
+            if(authService.isAuthenticated())
+                authService.broadcast();
+            else{
+                if(toState.public)
+                    authService.broadcast();
                 else{
-                    if(toState.name == 'fullDevice') return;
-                    // user is not logged in
                     session.removeActiveDatabase();
                     event.preventDefault();
                     $state.go('login');
-                    //$state.transitionTo('login');
-                    //$location.path('/login');
                 }
             }
+        }
     };
 
     return authService;

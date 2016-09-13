@@ -1,0 +1,3731 @@
+{
+  "mobile": {
+    "url": {
+      "move": "sameAs",
+      "type": "url",
+      "teaser": false,
+      "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+    },
+    "sameAs": {
+      "readonly": true,
+      "type": "url",
+      "teaser": false,
+      "unique": true
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "@type": {
+      "type": "string",
+      "teaser": false,
+      "required": true,
+      "allowed": [
+        "MobilePhone",
+        "Mobile",
+        "TabletComputer"
+      ]
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "devices",
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "owners": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "accounts",
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "_id": {
+      "unique": true,
+      "type": "string",
+      "teaser": false,
+      "sink": 4,
+      "device_id": true
+    },
+    "weight": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "KGM",
+      "sink": -1
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "place": {
+      "type": "objectid",
+      "materialized": true,
+      "data_relation": {
+        "embeddable": true,
+        "resource": "places",
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "events": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "dict"
+      }
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "label": {
+      "description": "A short, descriptive title",
+      "type": "string",
+      "sink": 5
+    },
+    "imei": {
+      "type": "string",
+      "unique": true
+    },
+    "height": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "meid": {
+      "type": "string",
+      "unique": true
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "description": {
+      "maxlength": 500,
+      "type": "string",
+      "description": "Full long description",
+      "sink": -4
+    },
+    "width": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "icon": {
+      "readonly": true,
+      "type": "string",
+      "teaser": false,
+      "sink": -5
+    },
+    "_settings": {
+      "url": "devices/mobile",
+      "use_default_database": false
+    }
+  },
+  "computer": {
+    "url": {
+      "move": "sameAs",
+      "type": "url",
+      "teaser": false,
+      "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+    },
+    "sameAs": {
+      "readonly": true,
+      "type": "url",
+      "teaser": false,
+      "unique": true
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "@type": {
+      "type": "string",
+      "teaser": false,
+      "required": true,
+      "allowed": [
+        "Computer"
+      ]
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "devices",
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "owners": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "accounts",
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "_id": {
+      "unique": true,
+      "type": "string",
+      "teaser": false,
+      "sink": 4,
+      "device_id": true
+    },
+    "weight": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "KGM",
+      "sink": -1
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "place": {
+      "type": "objectid",
+      "materialized": true,
+      "data_relation": {
+        "embeddable": true,
+        "resource": "places",
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "events": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "dict"
+      }
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "label": {
+      "description": "A short, descriptive title",
+      "type": "string",
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "description": {
+      "maxlength": 500,
+      "type": "string",
+      "description": "Full long description",
+      "sink": -4
+    },
+    "width": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "icon": {
+      "readonly": true,
+      "type": "string",
+      "teaser": false,
+      "sink": -5
+    },
+    "type": {
+      "type": "string",
+      "allowed": [
+        "Server",
+        "Laptop",
+        "Microtower",
+        "Netbook",
+        "Desktop"
+      ]
+    },
+    "forceCreation": {
+      "type": "boolean",
+      "default": false
+    },
+    "_settings": {
+      "url": "devices/computer",
+      "use_default_database": false
+    }
+  },
+  "motherboard": {
+    "url": {
+      "move": "sameAs",
+      "type": "url",
+      "teaser": false,
+      "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+    },
+    "sameAs": {
+      "readonly": true,
+      "type": "url",
+      "teaser": false,
+      "unique": true
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "embeddable": true,
+        "resource": "devices",
+        "field": "_id"
+      }
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "maxAcceptedMemory": {
+      "type": "integer",
+      "teaser": false
+    },
+    "@type": {
+      "type": "string",
+      "teaser": false,
+      "required": true,
+      "allowed": [
+        "Motherboard"
+      ]
+    },
+    "weight": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "KGM",
+      "sink": -1
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "devices",
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "usedSlots": {
+      "type": "integer",
+      "teaser": false
+    },
+    "owners": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "accounts",
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "_id": {
+      "unique": true,
+      "type": "string",
+      "teaser": false,
+      "sink": 4,
+      "device_id": true
+    },
+    "totalSlots": {
+      "type": "integer",
+      "teaser": false
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "place": {
+      "type": "objectid",
+      "materialized": true,
+      "data_relation": {
+        "embeddable": true,
+        "resource": "places",
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "events": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "dict"
+      }
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "label": {
+      "description": "A short, descriptive title",
+      "type": "string",
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "description": {
+      "maxlength": 500,
+      "type": "string",
+      "description": "Full long description",
+      "sink": -4
+    },
+    "width": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "icon": {
+      "readonly": true,
+      "type": "string",
+      "teaser": false,
+      "sink": -5
+    },
+    "connectors": {
+      "type": "dict",
+      "schema": {
+        "usb": {
+          "type": "natural"
+        },
+        "serial": {
+          "type": "natural"
+        },
+        "pcmcia": {
+          "type": "natural"
+        },
+        "firewire": {
+          "type": "natural"
+        }
+      }
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "_settings": {
+      "url": "devices/motherboard",
+      "use_default_database": false
+    }
+  },
+  "computer-monitor": {
+    "url": {
+      "move": "sameAs",
+      "type": "url",
+      "teaser": false,
+      "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+    },
+    "sameAs": {
+      "readonly": true,
+      "type": "url",
+      "teaser": false,
+      "unique": true
+    },
+    "inches": {
+      "type": "natural"
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "@type": {
+      "type": "string",
+      "teaser": false,
+      "required": true,
+      "allowed": [
+        "ComputerMonitor"
+      ]
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "devices",
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "owners": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "accounts",
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "_id": {
+      "unique": true,
+      "type": "string",
+      "teaser": false,
+      "sink": 4,
+      "device_id": true
+    },
+    "weight": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "KGM",
+      "sink": -1
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "place": {
+      "type": "objectid",
+      "materialized": true,
+      "data_relation": {
+        "embeddable": true,
+        "resource": "places",
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "events": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "dict"
+      }
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "label": {
+      "description": "A short, descriptive title",
+      "type": "string",
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "description": {
+      "maxlength": 500,
+      "type": "string",
+      "description": "Full long description",
+      "sink": -4
+    },
+    "width": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "icon": {
+      "readonly": true,
+      "type": "string",
+      "teaser": false,
+      "sink": -5
+    },
+    "type": {
+      "type": "string",
+      "allowed": [
+        "LCD",
+        "TFT"
+      ]
+    },
+    "_settings": {
+      "url": "devices/computer-monitor",
+      "use_default_database": false
+    }
+  },
+  "component": {
+    "url": {
+      "move": "sameAs",
+      "type": "url",
+      "teaser": false,
+      "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+    },
+    "sameAs": {
+      "readonly": true,
+      "type": "url",
+      "teaser": false,
+      "unique": true
+    },
+    "erasures": {
+      "readonly": true,
+      "type": "list",
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "events",
+          "field": "_id"
+        }
+      }
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "sectors": {
+      "type": "integer",
+      "teaser": false,
+      "sink": -1
+    },
+    "maxAcceptedMemory": {
+      "type": "integer",
+      "teaser": false
+    },
+    "@type": {
+      "type": "string",
+      "teaser": false,
+      "required": true,
+      "allowed": [
+        "NetworkAdapter",
+        "SoundCard",
+        "HardDrive",
+        "Component",
+        "OpticalDrive",
+        "Motherboard",
+        "Processor",
+        "GraphicCard",
+        "RamModule"
+      ]
+    },
+    "weight": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "KGM",
+      "sink": -1
+    },
+    "tests": {
+      "readonly": true,
+      "type": "list",
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "events",
+          "field": "_id"
+        }
+      }
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "devices",
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "usedSlots": {
+      "type": "integer",
+      "teaser": false
+    },
+    "owners": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "accounts",
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "totalSlots": {
+      "type": "integer",
+      "teaser": false
+    },
+    "benchmark": {
+      "writeonly": true,
+      "type": "dict",
+      "schema": {
+        "label": {
+          "description": "A short, descriptive title",
+          "type": "string",
+          "sink": 5
+        },
+        "score": {
+          "type": "float"
+        },
+        "writingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        },
+        "@type": {
+          "type": "string",
+          "teaser": false,
+          "required": true,
+          "allowed": [
+            "BenchmarkProcessor",
+            "BenchmarkHardDrive"
+          ]
+        },
+        "readingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        }
+      }
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "place": {
+      "type": "objectid",
+      "materialized": true,
+      "data_relation": {
+        "embeddable": true,
+        "resource": "places",
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "events": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "dict"
+      }
+    },
+    "icon": {
+      "readonly": true,
+      "type": "string",
+      "teaser": false,
+      "sink": -5
+    },
+    "height": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "numberOfCores": {
+      "type": "integer",
+      "sink": 1,
+      "min": 1
+    },
+    "connectors": {
+      "type": "dict",
+      "schema": {
+        "usb": {
+          "type": "natural"
+        },
+        "serial": {
+          "type": "natural"
+        },
+        "pcmcia": {
+          "type": "natural"
+        },
+        "firewire": {
+          "type": "natural"
+        }
+      }
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "test": {
+      "type": "dict",
+      "schema": {
+        "url": {
+          "move": "sameAs",
+          "type": "url",
+          "teaser": false,
+          "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+        },
+        "device": {
+          "type": "string",
+          "required": false,
+          "data_relation": {
+            "embeddable": true,
+            "resource": "devices",
+            "field": "_id"
+          }
+        },
+        "firstError": {
+          "type": "integer",
+          "nullable": true
+        },
+        "sameAs": {
+          "readonly": true,
+          "type": "url",
+          "teaser": false,
+          "unique": true
+        },
+        "incidence": {
+          "description": "Check if something went wrong, you can add details in a comment",
+          "type": "boolean",
+          "sink": -3
+        },
+        "parent": {
+          "description": "The event triggered in this computer.",
+          "type": "string",
+          "data_relation": {
+            "embeddable": true,
+            "resource": "devices",
+            "field": "_id"
+          }
+        },
+        "label": {
+          "description": "A short, descriptive title",
+          "type": "string",
+          "sink": 5
+        },
+        "secured": {
+          "type": "boolean",
+          "sink": -3
+        },
+        "lifetime": {
+          "type": "integer"
+        },
+        "comment": {
+          "description": "Short comment for fast and easy reading",
+          "type": "string",
+          "sink": -4
+        },
+        "@type": {
+          "type": "string",
+          "teaser": false,
+          "required": true,
+          "allowed": [
+            "devices:TestHardDrive"
+          ]
+        },
+        "description": {
+          "maxlength": 500,
+          "type": "string",
+          "description": "Full long description",
+          "sink": -4
+        },
+        "status": {
+          "type": "string",
+          "required": true
+        },
+        "snapshot": {
+          "type": "objectid",
+          "data_relation": {
+            "embeddable": true,
+            "resource": "events",
+            "field": "_id"
+          }
+        },
+        "geo": {
+          "description": "Where did it happened",
+          "type": "point",
+          "sink": -5
+        },
+        "type": {
+          "type": "string"
+        },
+        "byOrganization": {
+          "readonly": true,
+          "type": "string"
+        },
+        "date": {
+          "description": "When this happened. Leave blank if it is happening now",
+          "type": "datetime",
+          "sink": -2
+        },
+        "error": {
+          "type": "boolean",
+          "required": true
+        },
+        "byUser": {
+          "type": "objectid",
+          "coerce_with_context": "<callable>",
+          "dh_allowed_write_roles": [
+            "admin",
+            "superuser"
+          ],
+          "sink": 2,
+          "data_relation": {
+            "embeddable": true,
+            "resource": "accounts",
+            "field": "_id"
+          }
+        }
+      }
+    },
+    "size": {
+      "type": "number",
+      "min": 1,
+      "unitCode": "4L",
+      "sink": 1
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "embeddable": true,
+        "resource": "devices",
+        "field": "_id"
+      }
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "memory": {
+      "type": "float",
+      "min": 1,
+      "unitCode": "4L",
+      "sink": 3
+    },
+    "_id": {
+      "unique": true,
+      "type": "string",
+      "teaser": false,
+      "sink": 4,
+      "device_id": true
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "blockSize": {
+      "type": "integer",
+      "teaser": false,
+      "sink": -1
+    },
+    "benchmarks": {
+      "readonly": true,
+      "type": "list",
+      "schema": {
+        "type": "dict",
+        "schema": {
+          "label": {
+            "description": "A short, descriptive title",
+            "type": "string",
+            "sink": 5
+          },
+          "score": {
+            "type": "float"
+          },
+          "writingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "readingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "@type": {
+            "type": "string",
+            "teaser": false,
+            "required": true,
+            "allowed": [
+              "BenchmarkProcessor"
+            ]
+          }
+        }
+      }
+    },
+    "erasure": {
+      "writeonly": true,
+      "type": "dict",
+      "schema": {
+        "url": {
+          "move": "sameAs",
+          "type": "url",
+          "teaser": false,
+          "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+        },
+        "device": {
+          "type": "string",
+          "required": false,
+          "data_relation": {
+            "embeddable": true,
+            "resource": "devices",
+            "field": "_id"
+          }
+        },
+        "description": {
+          "maxlength": 500,
+          "type": "string",
+          "description": "Full long description",
+          "sink": -4
+        },
+        "sameAs": {
+          "readonly": true,
+          "type": "url",
+          "teaser": false,
+          "unique": true
+        },
+        "incidence": {
+          "description": "Check if something went wrong, you can add details in a comment",
+          "type": "boolean",
+          "sink": -3
+        },
+        "parent": {
+          "description": "The event triggered in this computer.",
+          "type": "string",
+          "data_relation": {
+            "embeddable": true,
+            "resource": "devices",
+            "field": "_id"
+          }
+        },
+        "label": {
+          "description": "A short, descriptive title",
+          "type": "string",
+          "sink": 5
+        },
+        "endingTime": {
+          "type": "datetime"
+        },
+        "steps": {
+          "type": "list",
+          "schema": {
+            "type": "dict",
+            "schema": {
+              "cleanWithZeros": {
+                "type": "boolean"
+              },
+              "secureRandomSteps": {
+                "type": "boolean"
+              },
+              "success": {
+                "type": "boolean",
+                "required": true
+              },
+              "endingTime": {
+                "type": "datetime"
+              },
+              "@type": {
+                "type": "string",
+                "required": true,
+                "allowed": [
+                  "Random",
+                  "Zeros"
+                ]
+              },
+              "startingTime": {
+                "type": "datetime"
+              }
+            }
+          }
+        },
+        "@type": {
+          "type": "string",
+          "teaser": false,
+          "required": true,
+          "allowed": [
+            "devices:EraseSectors",
+            "devices:EraseBasic"
+          ]
+        },
+        "byUser": {
+          "type": "objectid",
+          "coerce_with_context": "<callable>",
+          "dh_allowed_write_roles": [
+            "admin",
+            "superuser"
+          ],
+          "sink": 2,
+          "data_relation": {
+            "embeddable": true,
+            "resource": "accounts",
+            "field": "_id"
+          }
+        },
+        "secured": {
+          "type": "boolean",
+          "sink": -3
+        },
+        "comment": {
+          "description": "Short comment for fast and easy reading",
+          "type": "string",
+          "sink": -4
+        },
+        "cleanWithZeros": {
+          "type": "boolean"
+        },
+        "secureRandomSteps": {
+          "type": "natural",
+          "required": true
+        },
+        "geo": {
+          "description": "Where did it happened",
+          "type": "point",
+          "sink": -5
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "byOrganization": {
+          "readonly": true,
+          "type": "string"
+        },
+        "date": {
+          "description": "When this happened. Leave blank if it is happening now",
+          "type": "datetime",
+          "sink": -2
+        },
+        "startingTime": {
+          "type": "datetime"
+        }
+      }
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "label": {
+      "description": "A short, descriptive title",
+      "type": "string",
+      "sink": 5
+    },
+    "speed": {
+      "type": "number",
+      "unitCode": "A86",
+      "sink": 1
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "description": {
+      "maxlength": 500,
+      "type": "string",
+      "description": "Full long description",
+      "sink": -4
+    },
+    "firmwareRevision": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "width": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "address": {
+      "type": "integer",
+      "unitCode": "A99",
+      "allowed": [
+        256,
+        128,
+        64,
+        32,
+        8,
+        16
+      ],
+      "sink": -1
+    },
+    "_settings": {
+      "url": "devices/component",
+      "use_default_database": false
+    }
+  },
+  "ram-module": {
+    "url": {
+      "move": "sameAs",
+      "type": "url",
+      "teaser": false,
+      "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+    },
+    "sameAs": {
+      "readonly": true,
+      "type": "url",
+      "teaser": false,
+      "unique": true
+    },
+    "size": {
+      "type": "integer",
+      "min": 1,
+      "unitCode": "4L",
+      "sink": 1
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "embeddable": true,
+        "resource": "devices",
+        "field": "_id"
+      }
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "@type": {
+      "type": "string",
+      "teaser": false,
+      "required": true,
+      "allowed": [
+        "RamModule"
+      ]
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "devices",
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "owners": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "accounts",
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "_id": {
+      "unique": true,
+      "type": "string",
+      "teaser": false,
+      "sink": 4,
+      "device_id": true
+    },
+    "weight": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "KGM",
+      "sink": -1
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "place": {
+      "type": "objectid",
+      "materialized": true,
+      "data_relation": {
+        "embeddable": true,
+        "resource": "places",
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "events": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "dict"
+      }
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "label": {
+      "description": "A short, descriptive title",
+      "type": "string",
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "speed": {
+      "type": "float",
+      "min": 1,
+      "unitCode": "MHZ",
+      "sink": -1
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "description": {
+      "maxlength": 500,
+      "type": "string",
+      "description": "Full long description",
+      "sink": -4
+    },
+    "width": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "icon": {
+      "readonly": true,
+      "type": "string",
+      "teaser": false,
+      "sink": -5
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "_settings": {
+      "url": "devices/ram-module",
+      "use_default_database": false
+    }
+  },
+  "optical-drive": {
+    "url": {
+      "move": "sameAs",
+      "type": "url",
+      "teaser": false,
+      "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+    },
+    "sameAs": {
+      "readonly": true,
+      "type": "url",
+      "teaser": false,
+      "unique": true
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "embeddable": true,
+        "resource": "devices",
+        "field": "_id"
+      }
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "@type": {
+      "type": "string",
+      "teaser": false,
+      "required": true,
+      "allowed": [
+        "OpticalDrive"
+      ]
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "devices",
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "owners": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "accounts",
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "_id": {
+      "unique": true,
+      "type": "string",
+      "teaser": false,
+      "sink": 4,
+      "device_id": true
+    },
+    "weight": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "KGM",
+      "sink": -1
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "place": {
+      "type": "objectid",
+      "materialized": true,
+      "data_relation": {
+        "embeddable": true,
+        "resource": "places",
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "events": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "dict"
+      }
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "label": {
+      "description": "A short, descriptive title",
+      "type": "string",
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "description": {
+      "maxlength": 500,
+      "type": "string",
+      "description": "Full long description",
+      "sink": -4
+    },
+    "width": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "icon": {
+      "readonly": true,
+      "type": "string",
+      "teaser": false,
+      "sink": -5
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "_settings": {
+      "url": "devices/optical-drive",
+      "use_default_database": false
+    }
+  },
+  "processor": {
+    "url": {
+      "move": "sameAs",
+      "type": "url",
+      "teaser": false,
+      "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+    },
+    "sameAs": {
+      "readonly": true,
+      "type": "url",
+      "teaser": false,
+      "unique": true
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "embeddable": true,
+        "resource": "devices",
+        "field": "_id"
+      }
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "@type": {
+      "type": "string",
+      "teaser": false,
+      "required": true,
+      "allowed": [
+        "Processor"
+      ]
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "devices",
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "numberOfCores": {
+      "type": "integer",
+      "sink": 1,
+      "min": 1
+    },
+    "owners": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "accounts",
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "_id": {
+      "unique": true,
+      "type": "string",
+      "teaser": false,
+      "sink": 4,
+      "device_id": true
+    },
+    "weight": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "KGM",
+      "sink": -1
+    },
+    "benchmark": {
+      "writeonly": true,
+      "type": "dict",
+      "schema": {
+        "label": {
+          "description": "A short, descriptive title",
+          "type": "string",
+          "sink": 5
+        },
+        "score": {
+          "type": "float"
+        },
+        "writingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        },
+        "readingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        },
+        "@type": {
+          "type": "string",
+          "teaser": false,
+          "required": true,
+          "allowed": [
+            "BenchmarkProcessor"
+          ]
+        }
+      }
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "place": {
+      "type": "objectid",
+      "materialized": true,
+      "data_relation": {
+        "embeddable": true,
+        "resource": "places",
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "events": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "dict"
+      }
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "label": {
+      "description": "A short, descriptive title",
+      "type": "string",
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "speed": {
+      "type": "float",
+      "unitCode": "A86",
+      "sink": 1
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "description": {
+      "maxlength": 500,
+      "type": "string",
+      "description": "Full long description",
+      "sink": -4
+    },
+    "width": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "icon": {
+      "readonly": true,
+      "type": "string",
+      "teaser": false,
+      "sink": -5
+    },
+    "address": {
+      "type": "integer",
+      "unitCode": "A99",
+      "allowed": [
+        256,
+        128,
+        64,
+        32,
+        8,
+        16
+      ],
+      "sink": -1
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "_settings": {
+      "url": "devices/processor",
+      "use_default_database": false
+    },
+    "benchmarks": {
+      "readonly": true,
+      "type": "list",
+      "schema": {
+        "type": "dict",
+        "schema": {
+          "label": {
+            "description": "A short, descriptive title",
+            "type": "string",
+            "sink": 5
+          },
+          "score": {
+            "type": "float"
+          },
+          "writingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "readingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "@type": {
+            "type": "string",
+            "teaser": false,
+            "required": true,
+            "allowed": [
+              "BenchmarkProcessor"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "hard-drive": {
+    "url": {
+      "move": "sameAs",
+      "type": "url",
+      "teaser": false,
+      "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+    },
+    "test": {
+      "type": "dict",
+      "schema": {
+        "url": {
+          "move": "sameAs",
+          "type": "url",
+          "teaser": false,
+          "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+        },
+        "device": {
+          "type": "string",
+          "required": false,
+          "data_relation": {
+            "embeddable": true,
+            "resource": "devices",
+            "field": "_id"
+          }
+        },
+        "firstError": {
+          "type": "integer",
+          "nullable": true
+        },
+        "sameAs": {
+          "readonly": true,
+          "type": "url",
+          "teaser": false,
+          "unique": true
+        },
+        "incidence": {
+          "description": "Check if something went wrong, you can add details in a comment",
+          "type": "boolean",
+          "sink": -3
+        },
+        "parent": {
+          "description": "The event triggered in this computer.",
+          "type": "string",
+          "data_relation": {
+            "embeddable": true,
+            "resource": "devices",
+            "field": "_id"
+          }
+        },
+        "label": {
+          "description": "A short, descriptive title",
+          "type": "string",
+          "sink": 5
+        },
+        "secured": {
+          "type": "boolean",
+          "sink": -3
+        },
+        "lifetime": {
+          "type": "integer"
+        },
+        "comment": {
+          "description": "Short comment for fast and easy reading",
+          "type": "string",
+          "sink": -4
+        },
+        "@type": {
+          "type": "string",
+          "teaser": false,
+          "required": true,
+          "allowed": [
+            "devices:TestHardDrive"
+          ]
+        },
+        "description": {
+          "maxlength": 500,
+          "type": "string",
+          "description": "Full long description",
+          "sink": -4
+        },
+        "status": {
+          "type": "string",
+          "required": true
+        },
+        "snapshot": {
+          "type": "objectid",
+          "data_relation": {
+            "embeddable": true,
+            "resource": "events",
+            "field": "_id"
+          }
+        },
+        "geo": {
+          "description": "Where did it happened",
+          "type": "point",
+          "sink": -5
+        },
+        "type": {
+          "type": "string"
+        },
+        "byOrganization": {
+          "readonly": true,
+          "type": "string"
+        },
+        "date": {
+          "description": "When this happened. Leave blank if it is happening now",
+          "type": "datetime",
+          "sink": -2
+        },
+        "error": {
+          "type": "boolean",
+          "required": true
+        },
+        "byUser": {
+          "type": "objectid",
+          "coerce_with_context": "<callable>",
+          "dh_allowed_write_roles": [
+            "admin",
+            "superuser"
+          ],
+          "sink": 2,
+          "data_relation": {
+            "embeddable": true,
+            "resource": "accounts",
+            "field": "_id"
+          }
+        }
+      }
+    },
+    "sameAs": {
+      "readonly": true,
+      "type": "url",
+      "teaser": false,
+      "unique": true
+    },
+    "size": {
+      "type": "float",
+      "unitCode": "4L",
+      "sink": 1
+    },
+    "erasures": {
+      "readonly": true,
+      "type": "list",
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "events",
+          "field": "_id"
+        }
+      }
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "embeddable": true,
+        "resource": "devices",
+        "field": "_id"
+      }
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "sectors": {
+      "type": "integer",
+      "teaser": false,
+      "sink": -1
+    },
+    "blockSize": {
+      "type": "integer",
+      "teaser": false,
+      "sink": -1
+    },
+    "@type": {
+      "type": "string",
+      "teaser": false,
+      "required": true,
+      "allowed": [
+        "HardDrive"
+      ]
+    },
+    "tests": {
+      "readonly": true,
+      "type": "list",
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "events",
+          "field": "_id"
+        }
+      }
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "devices",
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "owners": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "accounts",
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "_id": {
+      "unique": true,
+      "type": "string",
+      "teaser": false,
+      "sink": 4,
+      "device_id": true
+    },
+    "weight": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "KGM",
+      "sink": -1
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "place": {
+      "type": "objectid",
+      "materialized": true,
+      "data_relation": {
+        "embeddable": true,
+        "resource": "places",
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "events": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "dict"
+      }
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "label": {
+      "description": "A short, descriptive title",
+      "type": "string",
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "description": {
+      "maxlength": 500,
+      "type": "string",
+      "description": "Full long description",
+      "sink": -4
+    },
+    "firmwareRevision": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "benchmark": {
+      "writeonly": true,
+      "type": "dict",
+      "schema": {
+        "label": {
+          "description": "A short, descriptive title",
+          "type": "string",
+          "sink": 5
+        },
+        "writingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        },
+        "readingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        },
+        "@type": {
+          "type": "string",
+          "teaser": false,
+          "required": true,
+          "allowed": [
+            "BenchmarkHardDrive"
+          ]
+        }
+      }
+    },
+    "width": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "icon": {
+      "readonly": true,
+      "type": "string",
+      "teaser": false,
+      "sink": -5
+    },
+    "erasure": {
+      "writeonly": true,
+      "type": "dict",
+      "schema": {
+        "url": {
+          "move": "sameAs",
+          "type": "url",
+          "teaser": false,
+          "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+        },
+        "device": {
+          "type": "string",
+          "required": false,
+          "data_relation": {
+            "embeddable": true,
+            "resource": "devices",
+            "field": "_id"
+          }
+        },
+        "description": {
+          "maxlength": 500,
+          "type": "string",
+          "description": "Full long description",
+          "sink": -4
+        },
+        "sameAs": {
+          "readonly": true,
+          "type": "url",
+          "teaser": false,
+          "unique": true
+        },
+        "incidence": {
+          "description": "Check if something went wrong, you can add details in a comment",
+          "type": "boolean",
+          "sink": -3
+        },
+        "parent": {
+          "description": "The event triggered in this computer.",
+          "type": "string",
+          "data_relation": {
+            "embeddable": true,
+            "resource": "devices",
+            "field": "_id"
+          }
+        },
+        "label": {
+          "description": "A short, descriptive title",
+          "type": "string",
+          "sink": 5
+        },
+        "endingTime": {
+          "type": "datetime"
+        },
+        "steps": {
+          "type": "list",
+          "schema": {
+            "type": "dict",
+            "schema": {
+              "cleanWithZeros": {
+                "type": "boolean"
+              },
+              "secureRandomSteps": {
+                "type": "boolean"
+              },
+              "success": {
+                "type": "boolean",
+                "required": true
+              },
+              "endingTime": {
+                "type": "datetime"
+              },
+              "@type": {
+                "type": "string",
+                "required": true,
+                "allowed": [
+                  "Random",
+                  "Zeros"
+                ]
+              },
+              "startingTime": {
+                "type": "datetime"
+              }
+            }
+          }
+        },
+        "@type": {
+          "type": "string",
+          "teaser": false,
+          "required": true,
+          "allowed": [
+            "devices:EraseSectors",
+            "devices:EraseBasic"
+          ]
+        },
+        "byUser": {
+          "type": "objectid",
+          "coerce_with_context": "<callable>",
+          "dh_allowed_write_roles": [
+            "admin",
+            "superuser"
+          ],
+          "sink": 2,
+          "data_relation": {
+            "embeddable": true,
+            "resource": "accounts",
+            "field": "_id"
+          }
+        },
+        "secured": {
+          "type": "boolean",
+          "sink": -3
+        },
+        "comment": {
+          "description": "Short comment for fast and easy reading",
+          "type": "string",
+          "sink": -4
+        },
+        "cleanWithZeros": {
+          "type": "boolean"
+        },
+        "secureRandomSteps": {
+          "type": "natural",
+          "required": true
+        },
+        "geo": {
+          "description": "Where did it happened",
+          "type": "point",
+          "sink": -5
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "byOrganization": {
+          "readonly": true,
+          "type": "string"
+        },
+        "date": {
+          "description": "When this happened. Leave blank if it is happening now",
+          "type": "datetime",
+          "sink": -2
+        },
+        "startingTime": {
+          "type": "datetime"
+        }
+      }
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "_settings": {
+      "url": "devices/hard-drive",
+      "use_default_database": false
+    },
+    "benchmarks": {
+      "readonly": true,
+      "type": "list",
+      "schema": {
+        "type": "dict",
+        "schema": {
+          "label": {
+            "description": "A short, descriptive title",
+            "type": "string",
+            "sink": 5
+          },
+          "writingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "readingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "@type": {
+            "type": "string",
+            "teaser": false,
+            "required": true,
+            "allowed": [
+              "BenchmarkHardDrive"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "network-adapter": {
+    "url": {
+      "move": "sameAs",
+      "type": "url",
+      "teaser": false,
+      "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+    },
+    "sameAs": {
+      "readonly": true,
+      "type": "url",
+      "teaser": false,
+      "unique": true
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "embeddable": true,
+        "resource": "devices",
+        "field": "_id"
+      }
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "@type": {
+      "type": "string",
+      "teaser": false,
+      "required": true,
+      "allowed": [
+        "NetworkAdapter"
+      ]
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "devices",
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "owners": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "accounts",
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "_id": {
+      "unique": true,
+      "type": "string",
+      "teaser": false,
+      "sink": 4,
+      "device_id": true
+    },
+    "weight": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "KGM",
+      "sink": -1
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "place": {
+      "type": "objectid",
+      "materialized": true,
+      "data_relation": {
+        "embeddable": true,
+        "resource": "places",
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "events": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "dict"
+      }
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "label": {
+      "description": "A short, descriptive title",
+      "type": "string",
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "speed": {
+      "type": "float",
+      "unitCode": "E20",
+      "sink": 1
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "description": {
+      "maxlength": 500,
+      "type": "string",
+      "description": "Full long description",
+      "sink": -4
+    },
+    "width": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "icon": {
+      "readonly": true,
+      "type": "string",
+      "teaser": false,
+      "sink": -5
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "_settings": {
+      "url": "devices/network-adapter",
+      "use_default_database": false
+    }
+  },
+  "peripheral": {
+    "url": {
+      "move": "sameAs",
+      "type": "url",
+      "teaser": false,
+      "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+    },
+    "sameAs": {
+      "readonly": true,
+      "type": "url",
+      "teaser": false,
+      "unique": true
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "@type": {
+      "type": "string",
+      "teaser": false,
+      "required": true,
+      "allowed": [
+        "Peripheral"
+      ]
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "devices",
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "owners": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "accounts",
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "_id": {
+      "unique": true,
+      "type": "string",
+      "teaser": false,
+      "sink": 4,
+      "device_id": true
+    },
+    "weight": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "KGM",
+      "sink": -1
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "place": {
+      "type": "objectid",
+      "materialized": true,
+      "data_relation": {
+        "embeddable": true,
+        "resource": "places",
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "events": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "dict"
+      }
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "label": {
+      "description": "A short, descriptive title",
+      "type": "string",
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "description": {
+      "maxlength": 500,
+      "type": "string",
+      "description": "Full long description",
+      "sink": -4
+    },
+    "width": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "icon": {
+      "readonly": true,
+      "type": "string",
+      "teaser": false,
+      "sink": -5
+    },
+    "type": {
+      "type": "string",
+      "allowed": [
+        "SAI",
+        "Scanner",
+        "MultifunctionPrinter",
+        "Keyboard",
+        "HUB",
+        "Router",
+        "Printer",
+        "Switch",
+        "Mouse",
+        "Terminal"
+      ]
+    },
+    "_settings": {
+      "url": "devices/peripheral",
+      "use_default_database": false
+    }
+  },
+  "sound-card": {
+    "url": {
+      "move": "sameAs",
+      "type": "url",
+      "teaser": false,
+      "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+    },
+    "sameAs": {
+      "readonly": true,
+      "type": "url",
+      "teaser": false,
+      "unique": true
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "embeddable": true,
+        "resource": "devices",
+        "field": "_id"
+      }
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "@type": {
+      "type": "string",
+      "teaser": false,
+      "required": true,
+      "allowed": [
+        "SoundCard"
+      ]
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "devices",
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "owners": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "accounts",
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "_id": {
+      "unique": true,
+      "type": "string",
+      "teaser": false,
+      "sink": 4,
+      "device_id": true
+    },
+    "weight": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "KGM",
+      "sink": -1
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "place": {
+      "type": "objectid",
+      "materialized": true,
+      "data_relation": {
+        "embeddable": true,
+        "resource": "places",
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "events": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "dict"
+      }
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "label": {
+      "description": "A short, descriptive title",
+      "type": "string",
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "description": {
+      "maxlength": 500,
+      "type": "string",
+      "description": "Full long description",
+      "sink": -4
+    },
+    "width": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "icon": {
+      "readonly": true,
+      "type": "string",
+      "teaser": false,
+      "sink": -5
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "_settings": {
+      "url": "devices/sound-card",
+      "use_default_database": false
+    }
+  },
+  "devices": {
+    "url": {
+      "move": "sameAs",
+      "type": "url",
+      "teaser": false,
+      "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+    },
+    "sameAs": {
+      "readonly": true,
+      "type": "url",
+      "teaser": false,
+      "unique": true
+    },
+    "inches": {
+      "type": "natural"
+    },
+    "erasures": {
+      "readonly": true,
+      "type": "list",
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "events",
+          "field": "_id"
+        }
+      }
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "sectors": {
+      "type": "integer",
+      "teaser": false,
+      "sink": -1
+    },
+    "maxAcceptedMemory": {
+      "type": "integer",
+      "teaser": false
+    },
+    "@type": {
+      "type": "string",
+      "teaser": false,
+      "required": true,
+      "allowed": [
+        "SoundCard",
+        "MobilePhone",
+        "ComputerMonitor",
+        "Processor",
+        "GraphicCard",
+        "RamModule",
+        "NetworkAdapter",
+        "Device",
+        "TabletComputer",
+        "Mobile",
+        "HardDrive",
+        "Component",
+        "OpticalDrive",
+        "Peripheral",
+        "Motherboard",
+        "Computer"
+      ]
+    },
+    "weight": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "KGM",
+      "sink": -1
+    },
+    "tests": {
+      "readonly": true,
+      "type": "list",
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "events",
+          "field": "_id"
+        }
+      }
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "devices",
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "usedSlots": {
+      "type": "integer",
+      "teaser": false
+    },
+    "owners": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "accounts",
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "totalSlots": {
+      "type": "integer",
+      "teaser": false
+    },
+    "benchmark": {
+      "writeonly": true,
+      "type": "dict",
+      "schema": {
+        "label": {
+          "description": "A short, descriptive title",
+          "type": "string",
+          "sink": 5
+        },
+        "score": {
+          "type": "float"
+        },
+        "writingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        },
+        "readingSpeed": {
+          "type": "float",
+          "unitCode": "4L"
+        },
+        "@type": {
+          "type": "string",
+          "teaser": false,
+          "required": true,
+          "allowed": [
+            "BenchmarkProcessor"
+          ]
+        }
+      }
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "place": {
+      "type": "objectid",
+      "materialized": true,
+      "data_relation": {
+        "embeddable": true,
+        "resource": "places",
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "events": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "dict"
+      }
+    },
+    "icon": {
+      "readonly": true,
+      "type": "string",
+      "teaser": false,
+      "sink": -5
+    },
+    "imei": {
+      "type": "string",
+      "unique": true
+    },
+    "height": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "numberOfCores": {
+      "type": "integer",
+      "sink": 1,
+      "min": 1
+    },
+    "meid": {
+      "type": "string",
+      "unique": true
+    },
+    "connectors": {
+      "type": "dict",
+      "schema": {
+        "usb": {
+          "type": "natural"
+        },
+        "serial": {
+          "type": "natural"
+        },
+        "pcmcia": {
+          "type": "natural"
+        },
+        "firewire": {
+          "type": "natural"
+        }
+      }
+    },
+    "forceCreation": {
+      "type": "boolean",
+      "default": false
+    },
+    "test": {
+      "type": "dict",
+      "schema": {
+        "url": {
+          "move": "sameAs",
+          "type": "url",
+          "teaser": false,
+          "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+        },
+        "device": {
+          "type": "string",
+          "required": false,
+          "data_relation": {
+            "embeddable": true,
+            "resource": "devices",
+            "field": "_id"
+          }
+        },
+        "firstError": {
+          "type": "integer",
+          "nullable": true
+        },
+        "sameAs": {
+          "readonly": true,
+          "type": "url",
+          "teaser": false,
+          "unique": true
+        },
+        "incidence": {
+          "description": "Check if something went wrong, you can add details in a comment",
+          "type": "boolean",
+          "sink": -3
+        },
+        "parent": {
+          "description": "The event triggered in this computer.",
+          "type": "string",
+          "data_relation": {
+            "embeddable": true,
+            "resource": "devices",
+            "field": "_id"
+          }
+        },
+        "label": {
+          "description": "A short, descriptive title",
+          "type": "string",
+          "sink": 5
+        },
+        "secured": {
+          "type": "boolean",
+          "sink": -3
+        },
+        "lifetime": {
+          "type": "integer"
+        },
+        "comment": {
+          "description": "Short comment for fast and easy reading",
+          "type": "string",
+          "sink": -4
+        },
+        "@type": {
+          "type": "string",
+          "teaser": false,
+          "required": true,
+          "allowed": [
+            "devices:TestHardDrive"
+          ]
+        },
+        "description": {
+          "maxlength": 500,
+          "type": "string",
+          "description": "Full long description",
+          "sink": -4
+        },
+        "status": {
+          "type": "string",
+          "required": true
+        },
+        "snapshot": {
+          "type": "objectid",
+          "data_relation": {
+            "embeddable": true,
+            "resource": "events",
+            "field": "_id"
+          }
+        },
+        "geo": {
+          "description": "Where did it happened",
+          "type": "point",
+          "sink": -5
+        },
+        "type": {
+          "type": "string"
+        },
+        "byOrganization": {
+          "readonly": true,
+          "type": "string"
+        },
+        "date": {
+          "description": "When this happened. Leave blank if it is happening now",
+          "type": "datetime",
+          "sink": -2
+        },
+        "error": {
+          "type": "boolean",
+          "required": true
+        },
+        "byUser": {
+          "type": "objectid",
+          "coerce_with_context": "<callable>",
+          "dh_allowed_write_roles": [
+            "admin",
+            "superuser"
+          ],
+          "sink": 2,
+          "data_relation": {
+            "embeddable": true,
+            "resource": "accounts",
+            "field": "_id"
+          }
+        }
+      }
+    },
+    "size": {
+      "type": "integer",
+      "min": 1,
+      "unitCode": "4L",
+      "sink": 1
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "embeddable": true,
+        "resource": "devices",
+        "field": "_id"
+      }
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "memory": {
+      "type": "float",
+      "min": 1,
+      "unitCode": "4L",
+      "sink": 3
+    },
+    "_id": {
+      "unique": true,
+      "type": "string",
+      "teaser": false,
+      "sink": 4,
+      "device_id": true
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "blockSize": {
+      "type": "integer",
+      "teaser": false,
+      "sink": -1
+    },
+    "benchmarks": {
+      "readonly": true,
+      "type": "list",
+      "schema": {
+        "type": "dict",
+        "schema": {
+          "label": {
+            "description": "A short, descriptive title",
+            "type": "string",
+            "sink": 5
+          },
+          "score": {
+            "type": "float"
+          },
+          "writingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "readingSpeed": {
+            "type": "float",
+            "unitCode": "4L"
+          },
+          "@type": {
+            "type": "string",
+            "teaser": false,
+            "required": true,
+            "allowed": [
+              "BenchmarkProcessor"
+            ]
+          }
+        }
+      }
+    },
+    "erasure": {
+      "writeonly": true,
+      "type": "dict",
+      "schema": {
+        "url": {
+          "move": "sameAs",
+          "type": "url",
+          "teaser": false,
+          "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+        },
+        "device": {
+          "type": "string",
+          "required": false,
+          "data_relation": {
+            "embeddable": true,
+            "resource": "devices",
+            "field": "_id"
+          }
+        },
+        "description": {
+          "maxlength": 500,
+          "type": "string",
+          "description": "Full long description",
+          "sink": -4
+        },
+        "sameAs": {
+          "readonly": true,
+          "type": "url",
+          "teaser": false,
+          "unique": true
+        },
+        "incidence": {
+          "description": "Check if something went wrong, you can add details in a comment",
+          "type": "boolean",
+          "sink": -3
+        },
+        "parent": {
+          "description": "The event triggered in this computer.",
+          "type": "string",
+          "data_relation": {
+            "embeddable": true,
+            "resource": "devices",
+            "field": "_id"
+          }
+        },
+        "label": {
+          "description": "A short, descriptive title",
+          "type": "string",
+          "sink": 5
+        },
+        "endingTime": {
+          "type": "datetime"
+        },
+        "steps": {
+          "type": "list",
+          "schema": {
+            "type": "dict",
+            "schema": {
+              "cleanWithZeros": {
+                "type": "boolean"
+              },
+              "secureRandomSteps": {
+                "type": "boolean"
+              },
+              "success": {
+                "type": "boolean",
+                "required": true
+              },
+              "endingTime": {
+                "type": "datetime"
+              },
+              "@type": {
+                "type": "string",
+                "required": true,
+                "allowed": [
+                  "Random",
+                  "Zeros"
+                ]
+              },
+              "startingTime": {
+                "type": "datetime"
+              }
+            }
+          }
+        },
+        "@type": {
+          "type": "string",
+          "teaser": false,
+          "required": true,
+          "allowed": [
+            "devices:EraseSectors",
+            "devices:EraseBasic"
+          ]
+        },
+        "byUser": {
+          "type": "objectid",
+          "coerce_with_context": "<callable>",
+          "dh_allowed_write_roles": [
+            "admin",
+            "superuser"
+          ],
+          "sink": 2,
+          "data_relation": {
+            "embeddable": true,
+            "resource": "accounts",
+            "field": "_id"
+          }
+        },
+        "secured": {
+          "type": "boolean",
+          "sink": -3
+        },
+        "comment": {
+          "description": "Short comment for fast and easy reading",
+          "type": "string",
+          "sink": -4
+        },
+        "cleanWithZeros": {
+          "type": "boolean"
+        },
+        "secureRandomSteps": {
+          "type": "natural",
+          "required": true
+        },
+        "geo": {
+          "description": "Where did it happened",
+          "type": "point",
+          "sink": -5
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "byOrganization": {
+          "readonly": true,
+          "type": "string"
+        },
+        "date": {
+          "description": "When this happened. Leave blank if it is happening now",
+          "type": "datetime",
+          "sink": -2
+        },
+        "startingTime": {
+          "type": "datetime"
+        }
+      }
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "label": {
+      "description": "A short, descriptive title",
+      "type": "string",
+      "sink": 5
+    },
+    "speed": {
+      "type": "float",
+      "unitCode": "A86",
+      "sink": 1
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "description": {
+      "maxlength": 500,
+      "type": "string",
+      "description": "Full long description",
+      "sink": -4
+    },
+    "firmwareRevision": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "width": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "type": {
+      "type": "string",
+      "allowed": [
+        "SAI",
+        "Laptop",
+        "MultifunctionPrinter",
+        "HUB",
+        "LCD",
+        "Microtower",
+        "Netbook",
+        "Server",
+        "Switch",
+        "Terminal",
+        "TFT",
+        "Scanner",
+        "Keyboard",
+        "Router",
+        "Printer",
+        "Mouse",
+        "Desktop"
+      ]
+    },
+    "address": {
+      "type": "integer",
+      "unitCode": "A99",
+      "allowed": [
+        256,
+        128,
+        64,
+        32,
+        8,
+        16
+      ],
+      "sink": -1
+    },
+    "_settings": {
+      "url": "devices",
+      "use_default_database": false
+    }
+  },
+  "graphic-card": {
+    "url": {
+      "move": "sameAs",
+      "type": "url",
+      "teaser": false,
+      "doc": "The url of the resource. If passed in, the value it is moved to sameAs."
+    },
+    "sameAs": {
+      "readonly": true,
+      "type": "url",
+      "teaser": false,
+      "unique": true
+    },
+    "parent": {
+      "type": "string",
+      "data_relation": {
+        "embeddable": true,
+        "resource": "devices",
+        "field": "_id"
+      }
+    },
+    "hid": {
+      "type": "hid",
+      "teaser": false,
+      "sink": 5
+    },
+    "@type": {
+      "type": "string",
+      "teaser": false,
+      "required": true,
+      "allowed": [
+        "GraphicCard"
+      ]
+    },
+    "pid": {
+      "type": "string",
+      "unique": true,
+      "sink": 5
+    },
+    "memory": {
+      "type": "float",
+      "min": 1,
+      "unitCode": "4L",
+      "sink": 3
+    },
+    "components": {
+      "type": "list",
+      "default": [],
+      "schema": {
+        "type": "string",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "devices",
+          "field": "_id"
+        }
+      },
+      "sink": 1
+    },
+    "owners": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "objectid",
+        "data_relation": {
+          "embeddable": true,
+          "resource": "accounts",
+          "field": "_id"
+        }
+      },
+      "sink": 2
+    },
+    "_id": {
+      "unique": true,
+      "type": "string",
+      "teaser": false,
+      "sink": 4,
+      "device_id": true
+    },
+    "weight": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "KGM",
+      "sink": -1
+    },
+    "manufacturer": {
+      "type": "string",
+      "sink": 4
+    },
+    "labelId": {
+      "type": "string",
+      "sink": 5
+    },
+    "public": {
+      "type": "boolean",
+      "default": false
+    },
+    "place": {
+      "type": "objectid",
+      "materialized": true,
+      "data_relation": {
+        "embeddable": true,
+        "resource": "places",
+        "field": "_id"
+      },
+      "sink": 2
+    },
+    "events": {
+      "type": "list",
+      "materialized": true,
+      "schema": {
+        "type": "dict"
+      }
+    },
+    "isUidSecured": {
+      "type": "boolean",
+      "default": true,
+      "teaser": false
+    },
+    "label": {
+      "description": "A short, descriptive title",
+      "type": "string",
+      "sink": 5
+    },
+    "height": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "productId": {
+      "type": "string",
+      "teaser": false,
+      "sink": 3
+    },
+    "model": {
+      "type": "string",
+      "sink": 4
+    },
+    "serialNumber": {
+      "type": "string",
+      "sink": 4
+    },
+    "description": {
+      "maxlength": 500,
+      "type": "string",
+      "description": "Full long description",
+      "sink": -4
+    },
+    "width": {
+      "type": "float",
+      "teaser": false,
+      "unitCode": "MTR",
+      "sink": -1
+    },
+    "icon": {
+      "readonly": true,
+      "type": "string",
+      "teaser": false,
+      "sink": -5
+    },
+    "interface": {
+      "type": "string",
+      "teaser": false,
+      "sink": -1
+    },
+    "_settings": {
+      "url": "devices/graphic-card",
+      "use_default_database": false
+    }
+  }
+}

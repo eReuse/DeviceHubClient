@@ -6,7 +6,7 @@ require('./../../../../../test/init');
  * Checks that the form generation of different types of well-known resources are ok.
  */
 describe('Test FormSchema', function(){
-    var directive, server, ResourceSettings;
+    var directive, server, ResourceSettings, session;
     // These events only need a list of devices (with @type and other default/automatic fields) to pass as
     // valid for the form
     var EventsThatCanBeUploadedOnlyWithDevices = ['devices:Prepare',
@@ -22,7 +22,7 @@ describe('Test FormSchema', function(){
         'devices:Locate'];
 
     // Mock modules
-    beforeEach(angular.mock.module(require('./../../../../app').name));
+    beforeEach(angular.mock.module(require('./../../../index').name));
     mockSchema();
     removeResourceButtonDirective();
 
@@ -34,6 +34,10 @@ describe('Test FormSchema', function(){
     }));
 
     propagateSchemaChange();
+    beforeEach(inject(function(_ResourceServer_, _session_){
+        session = _session_;
+        session.setActiveDatabase('db1', false);
+    }));
     describe('Forms-schema with events', function(){
         var EventSettings;
         beforeEach(inject(function(_ResourceSettings_){

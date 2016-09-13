@@ -21,12 +21,13 @@ module.exports = angular.module('deviceHub',[
                 url:'/devices',
                 templateUrl: 'views/devices/devices.controller.html',
                 abstract: true,
-                resolve: {rs: utils.schemaIsLoaded}
+                resolve: {schemaLoaded: utils.schemaIsLoaded}
             }).state('fullDevice',{
                 url:'/:db/devices/:id',
                 templateUrl: 'views/full-device/full-device.controller.html',
                 controller: 'fullDeviceCtrl as FeCl',
-                resolve: {rs: utils.schemaIsLoaded}
+                resolve: {schemaLoaded: utils.schemaIsLoaded},
+                public: true // This is custom value used in shield-states
             }).state('login',{
                 url:'/login',
                 templateUrl: 'views/login/login.controller.html',
@@ -35,7 +36,7 @@ module.exports = angular.module('deviceHub',[
                 url: '/reports',
                 templateUrl: 'views/reports/reports.controller.html',
                 controller: 'reportsCtrl as RsCl',
-                resolve: {rs: utils.schemaIsLoaded}
+                resolve: {schemaLoaded: utils.schemaIsLoaded}
             });
             $urlRouterProvider.otherwise("/devices")
         })

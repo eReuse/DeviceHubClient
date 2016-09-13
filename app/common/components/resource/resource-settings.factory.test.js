@@ -7,7 +7,7 @@ describe('Test ResourceSettings', function(){
         type = 'devices:Dummy', url = 'devices';
 
     //Mock modules
-    beforeEach(angular.mock.module(require('./../../../app').name));
+    beforeEach(angular.mock.module(require('./../../index').name));
     beforeEach(angular.mock.module({
         schema: {
             schema: {
