@@ -87,7 +87,7 @@ window.schemaWhenGetPublic = function(force){
  * Creates a directive with isolated scope.
  * @param data {Object} Data to set in the scope
  * @param template {string} Html tag of the directive
- * @returns {Object} The scope of the directive; you can access its scoped values.
+ * @returns {Array} First, the scope of the directive, and second, the element itself.
  */
 window.createDirective = function (data, template) {
     var scope = $rootScope.$new();  //Creates isolated scope
@@ -99,7 +99,7 @@ window.createDirective = function (data, template) {
     it('should have the data', function () {
         expect(isolated).toEqual(jasmine.objectContaining(data));
     });
-    return isolated;
+    return [isolated, element];
 };
 
 window.createDirectiveInject = function () {

@@ -14,10 +14,20 @@ describe('Test ResourceSettings', function(){
                 'devices_dummy': {
                     property: 'this is a property',
                     '@type': {
-                        allowed: [type]
+                        allowed: [type, 'devices:SubDummy']
                     },
                     _settings: {
                         url: url,
+                        use_default_database: false
+                    }
+                },
+                'devices_sub-dummy': {
+                    property: 'this is a property of a subtype',
+                    '@type': {
+                        allowed: ['devices:SubDummy']
+                    },
+                    _settings: {
+                        url: 'devices/sub-dummy',
                         use_default_database: false
                     }
                 }
@@ -60,4 +70,10 @@ describe('Test ResourceSettings', function(){
         server.expectGET(CONSTANTS.url + '/db1/' + url).respond(500);
         server.flush();
     });
+    it('works with subResources', function(){
+        var subResource = ResourceSettings('devices:SubDummy');
+        expect(subResource).toBeDefined();
+        expect(subResource.server).toBeNonEmptyObject();
+        expect(subResource.isSubResource(type)).toBeTrue();
+    })
 });

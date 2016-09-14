@@ -24,13 +24,16 @@ var RESOURCE_SETTINGS = (function () {
             'devices:ProveUsage': {doNotUse: generalDoNotUse, manual: true},
             'devices:ToDispose': {doNotUse: generalDoNotUse, manual: true},
             'devices:Dispose': {doNotUse: generalDoNotUse, manual: true},
+            'Device': {view: 'device'},
+            'Event': {view: 'event'},
             'Account': {
                 dataRelation: {
                     label: 'Account\'s e-mail',
                     labelFieldName: 'email',
                     filterFieldName: 'email',
                     fieldType: 'typeahead'
-                }
+                },
+                view: 'account'
             },
             'Place': {
                 dataRelation: {
@@ -38,7 +41,8 @@ var RESOURCE_SETTINGS = (function () {
                     labelFieldName: 'label',
                     filterFieldName: 'label',
                     fieldType: 'typeahead'
-                }
+                },
+                view: 'place'
             },
             'Project': {
                 dataRelation: {

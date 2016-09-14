@@ -1,3 +1,4 @@
+"use strict";
 var utils = require('./../utils');
 var inflection = require('inflection');
 
@@ -85,7 +86,7 @@ function resourceSettingsFactory(ResourceServer, schema, RESOURCE_CONFIG) {
      * @return {boolean}
      */
     rs.isSubResource = function (parent_type) {
-        return _.includes(resourceSettingsFactory(parent_type).subResourcesNames, self.type);
+        return _.includes(_ResourceSettingsFactory(parent_type).subResourcesNames, this.type);
     };
 
     rs.throwError = function(){
@@ -95,11 +96,11 @@ function resourceSettingsFactory(ResourceServer, schema, RESOURCE_CONFIG) {
     // ResourceSettings are singletons per resource, so we avoid duplicities for the same resource
     // This is the actual factory
     var resourceTypes = {};
-    var _ResourceSettingsFactory = function (type) {
+    function _ResourceSettingsFactory(type) {
         if(!(type in resourceTypes))
             resourceTypes[type] = new ResourceSettings(type);
         return resourceTypes[type]
-    };
+    }
 
     return _ResourceSettingsFactory
 }

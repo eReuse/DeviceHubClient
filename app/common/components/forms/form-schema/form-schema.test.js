@@ -109,7 +109,7 @@ describe('Test FormSchema', function(){
             status: {}
         };
         try{
-            directive = createDirective(data, template);
+            directive = createDirective(data, template)[0];
             $rootScope.$apply(); // We get the schema (see index.test.js)
         }
         catch(error){
