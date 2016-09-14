@@ -2,6 +2,7 @@
 
 var utils = require('./../../utils.js');
 var PATH = window.COMPONENTS + '/resource/resource-button/';
+var Unauthorized = require('./../../authentication/Unauthorized');
 
 function resourceButton(RecursionHelper, ResourceSettings){
     return{
@@ -16,12 +17,15 @@ function resourceButton(RecursionHelper, ResourceSettings){
             return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {
                 var rSettings = ResourceSettings($scope.resourceType);
                 $scope.isEvent = rSettings.isSubResource('Event');
-                rSettings.server.one($scope.resourceId).get().then(function (resource) {
-                    $scope.resource = resource;
-                    $scope.popover.title = utils.getResourceTitle($scope.resource);
-                }).catch(function(error){
-                    $scope.error = true;
-                });
+                if(rSettings.authorized){
+                    rSettings.server.one($scope.resourceId).get().then(function(resource){
+                        $scope.resource = resource;
+                        $scope.popover.title = utils.getResourceTitle($scope.resource);
+                    }).catch(function(error){
+                        $scope.error = true;
+                    });
+                }
+                else {$scope.error = true}
                 $scope.popover = {
                     templateUrl: PATH + 'resource-button.popover.directive.html',
                     isOpen: false,

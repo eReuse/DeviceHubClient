@@ -1,5 +1,7 @@
 'use strict';
 
+var utils = require('./../../../utils');
+
 /**
  *
  *  device needs _id
@@ -15,8 +17,8 @@ function typeahead(formlyConfigProvider, CONSTANTS){
             }
         },
         templateUrl: window.COMPONENTS + '/forms/types/typeahead/typeahead.formly-type.config.html',
-        controller: function($scope, Restangular){
-            $scope.getResources = getResourcesFactory(Restangular, $scope.to.resourceName, $scope.to.filterFieldName, CONSTANTS);
+        controller: function($scope, ResourceSettings){
+            $scope.getResources = getResourcesFactory(ResourceSettings, $scope.to.resourceName, $scope.to.filterFieldName, CONSTANTS);
         },
         apiCheck: function(check){
             return {
@@ -31,22 +33,12 @@ function typeahead(formlyConfigProvider, CONSTANTS){
     })
 }
 
-function getResourcesFactory(Restangular, resourceName, filterFieldName, CONSTANTS){
+function getResourcesFactory(ResourceSettings, resourceName, filterFieldName){
     return function (filterValue){
         var searchParams = {where : {}};
         //We look for words starting by filterValue (so we use indexs), case-insensible (options: -i)
         searchParams.where[filterFieldName] = {$regex: '^' + filterValue, $options: '-i'};
-        if(resourceName == 'accounts'){
-            return Restangular.allUrl('accounts', CONSTANTS.url + '/accounts').getList(searchParams).then(function(resources){
-                return resources; //todo make custom method accounts that sets own url.
-            })
-        }
-        else{
-            return Restangular.all(resourceName).getList(searchParams).then(function(resources){
-                return resources; //We need promise not $object
-            });
-        }
-
+        return ResourceSettings(utils.Naming.type(resourceName)).server.getList(searchParams);
     }
 }
 

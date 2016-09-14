@@ -1,6 +1,8 @@
 'use strict';
 
-function eventsPerDevice(Restangular, event) {
+var Unauthorized = require('./../authentication/Unauthorized');
+
+function eventsPerDevice(ResourceSettings) {
     return {
         templateUrl: window.COMPONENTS + '/events-per-device/events-per-device.directive.html',
         restrict: 'E',
@@ -24,13 +26,9 @@ function eventsPerDevice(Restangular, event) {
                             {parent: newValue}
                         ]})
                     };
-                    Restangular.all('events').getList(data).then(function (events) {
+                    ResourceSettings('Event').server.getList(data).then(function(events){
                         $scope.events = subsanizeEvents(events);
-                        $scope.loading = false;
-                    }).catch(function(error){
-                        $scope.error = error.status;
-                        $scope.loading = false;
-                        if(error.status != 401) throw Error(error);
+                        $scope.loading = $scope.error = false;
                     });
                 }
             });

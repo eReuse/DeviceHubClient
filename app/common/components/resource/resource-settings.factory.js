@@ -1,6 +1,8 @@
 var utils = require('./../utils');
 var inflection = require('inflection');
 
+var Unauthorized = require('./../authentication/Unauthorized');
+
 /**
  * @typedef {Object} ResourceSettingsRet
  * @property {Function} of The ResourceSettings method
@@ -41,6 +43,7 @@ function resourceSettingsFactory(ResourceServer, schema, RESOURCE_CONFIG) {
      * you can add more by extending RESOURCE_CONFIG or through DeviceHub.
      * @property {object} server A gateway to send POST and GET petitions
      * @property {Array} subResourcesNames A list of subresources (excluding itself) in Type convention.
+     * @property {boolean} accessible States if the user has the permission to work with the resource.
      */
     function ResourceSettings(type){
         var self = this;
@@ -48,8 +51,8 @@ function resourceSettingsFactory(ResourceServer, schema, RESOURCE_CONFIG) {
         this.resourceName = utils.Naming.resource(type);
         this.humanName = utils.Naming.humanize(type);
         this.settings = {};
-        // Not all resources have an schema (ex. 'event')
-        if (self.resourceName in schema.schema){
+        this.authorized = self.resourceName in schema.schema; // The server only sends the schemas that we have access to
+        if (this.authorized){
             self.schema = schema.schema[self.resourceName];
             // DeviceHub sends us data in underscore
             var settings = _.mapKeys(self.schema['_settings'], function (value, key) { return _.camelCase(key) });
@@ -83,6 +86,10 @@ function resourceSettingsFactory(ResourceServer, schema, RESOURCE_CONFIG) {
      */
     rs.isSubResource = function (parent_type) {
         return _.includes(resourceSettingsFactory(parent_type).subResourcesNames, self.type);
+    };
+
+    rs.throwError = function(){
+        throw Unauthorized('The user is not authorized to submit this resource in DeviceHub.');
     };
 
     // ResourceSettings are singletons per resource, so we avoid duplicities for the same resource

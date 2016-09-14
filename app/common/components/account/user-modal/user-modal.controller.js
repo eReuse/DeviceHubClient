@@ -1,6 +1,6 @@
 'use strict';
 
-function userModalCtrl($scope, $uibModalInstance, Restangular, session){
+function userModalCtrl($scope, $uibModalInstance, ResourceSettings, session){
     //$scope.account = session.account;
     $scope.account = $.extend(true, {}, session.getAccount());
     $scope.cancel = function () {
@@ -11,7 +11,7 @@ function userModalCtrl($scope, $uibModalInstance, Restangular, session){
     };
     $scope.update = function(account){
         //We will copy stuff to session once it is validated through the server.
-        Restangular.one('accounts',session.getAccount()._id).customOperation('patch','',{},{},{
+        ResourceSettings('Account').server.one(session.getAccount()._id).customOperation('patch','',{},{},{
             email: account.email,
             password: account.password,
             name: account.name

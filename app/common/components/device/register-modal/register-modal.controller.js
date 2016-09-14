@@ -1,6 +1,6 @@
 'use strict';
 
-function registerModalCtrl($scope,$uibModalInstance,Restangular,type,$rootScope){
+function registerModalCtrl($scope,$uibModalInstance,ResourceSettings,type,$rootScope){
     $scope.type = type;
     $scope.title = type;
     $scope.uploaded = 0;
@@ -18,7 +18,7 @@ function registerModalCtrl($scope,$uibModalInstance,Restangular,type,$rootScope)
             $scope.files = fu.files.length;
             $scope.uploaded = 0;
             $scope.active = 'active';
-            iterativeUpload(Restangular, $rootScope, $scope, fu.files, 0);
+            iterativeUpload(ResourceSettings, $rootScope, $scope, fu.files, 0);
         }
     };
     $scope.done = function () {
@@ -34,14 +34,14 @@ function registerModalCtrl($scope,$uibModalInstance,Restangular,type,$rootScope)
     })
 }
 
-function iterativeUpload(Restangular, $rootScope, $scope,  files, i){
+function iterativeUpload(ResourceSettings, $rootScope, $scope,  files, i){
     if(files && i < files.length){
         var reader = new FileReader();
         reader.onloadend = (function(file){
             return function(e) {
                 //file.name
                 var content = e.target.result;
-                Restangular.all('events/devices/snapshot').post(content).then(function (response) {
+                ResourceSettings.server.all('devices:Snapshot').server.post(content).then(function (response) {
                     processAnswer($rootScope, files.length, file.name, response, $scope, false, i, content);
                     iterativeUpload(Restangular,$rootScope, $scope, files, i + 1);
                 }, function (response) {
