@@ -1,4 +1,4 @@
-'use strict';
+
 require('angular-ui-router');
 
 /**
@@ -44,7 +44,7 @@ module.exports = angular.module('common.components.nav',
             link: function($scope){
                 $scope.tabs = [
                     {heading: 'Devices', route: 'index.devices.show', glyphicon: 'phone'},
-                    {heading: 'Reports', route: 'index.reports', glyphicon: 'file'}
+                   // {heading: 'Reports', route: 'index.reports', glyphicon: 'file'}
                 ];
                 $scope.tabs.forEach(function(tab, index){
                     if(active(tab.route))

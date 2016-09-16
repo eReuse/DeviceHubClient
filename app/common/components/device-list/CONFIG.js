@@ -1,4 +1,4 @@
-'use strict';
+
 
 var Case = require('case');
 

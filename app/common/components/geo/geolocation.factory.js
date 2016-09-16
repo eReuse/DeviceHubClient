@@ -1,4 +1,4 @@
-'use strict';
+
 
 var TIMEOUT = 5000;
 var MAXIMUM_AGE = 5000;

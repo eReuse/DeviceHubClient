@@ -1,4 +1,4 @@
-'use strict';
+
 
 var sjv = require('simple-js-validator');
 var utils = require('./../utils.js');
@@ -65,7 +65,7 @@ function cerberusToFormly(ResourceSettings, schema) {
 
     this.generateField = function (fieldName, subSchema, model, doNotUse, isAModification) {
         var options = {
-            label: inflection.humanize(fieldName) //It's no resource type
+            label: utils.Naming.humanize(fieldName) // It's no resource type but it works too
         };
         try {
             var type = this.getTypeAndSetTypeOptions(subSchema, options, model);
@@ -207,7 +207,7 @@ function cerberusToFormly(ResourceSettings, schema) {
                     if (excludedField.key == field.excludes) {
                         positions.push(j);
                         excludedField.hideExpression = 'model.' + toggleKey;
-                        self.setExcludesWatch(excludedField, $scope);
+                        self.setExcludesWatch(excludedField, $scope, model);
                     }
                 });
                 delete field.excludes;
@@ -236,7 +236,7 @@ function cerberusToFormly(ResourceSettings, schema) {
                 field.validators = field.validators || {};
                 field.validators.or = function ($viewValue, $modelValue) {
                     return self.atLeastOneNotEmpty(model, orFields)
-                        || !_.is($modelValue || $viewValue);
+                        || !_.isEmpty($modelValue || $viewValue);
                     //Angular-formly sets the value in field *after* validation (doesn't apply in submit)
                 };
                 delete field.or;

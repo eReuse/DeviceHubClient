@@ -1,4 +1,4 @@
-'use strict';
+
 
 require('angular-chart.js');
 require('angular-google-maps');

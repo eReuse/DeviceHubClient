@@ -79,7 +79,8 @@ module.exports = function (config) {
 
         browserify: {
             debug: true,
-            paths: ['./']
+            paths: ['./'],
+            transform: ['strictify']
         }
 
     })

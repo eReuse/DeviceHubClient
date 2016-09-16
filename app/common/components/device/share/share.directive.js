@@ -1,4 +1,4 @@
-'use strict';
+
 
 var options = [
     {name: 'link', humanName: 'Share public links', desc: 'Set which devices are public, and get links to publicly share them.'}

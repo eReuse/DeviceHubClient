@@ -1,4 +1,4 @@
-'use strict';
+
 
 // Filenames for Constants are always UPPERCASE
 // You can have as many files for constants as you require (ex: USER_ROLES, NOTIFICATIONS, etc)

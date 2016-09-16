@@ -1,4 +1,4 @@
-'use strict';
+
 
 function restangularConfig (RestangularProvider, CONSTANTS){
     RestangularProvider.setBaseUrl(CONSTANTS.url);

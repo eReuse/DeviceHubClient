@@ -1,4 +1,4 @@
-'use strict';
+
 
 function labelList(CONSTANTS){
     var labelsToPdf = require('./labels-to-pdf.js');

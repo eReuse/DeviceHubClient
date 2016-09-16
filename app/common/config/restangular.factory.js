@@ -1,4 +1,4 @@
-"use strict";
+
 
 function RestangularFactory(Restangular, CONSTANTS, session){
     /**

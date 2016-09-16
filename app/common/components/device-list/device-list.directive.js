@@ -1,4 +1,4 @@
-'use strict';
+
 
 var DEFAULT_SEARCH_PARAMS = {
     '@type': 'Computer'

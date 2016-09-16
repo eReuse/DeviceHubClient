@@ -10,7 +10,7 @@
 
 (function() {
 
-'use strict';
+
 
 angular.module('angular-advanced-searchbox', [])
     .directive('nitAdvancedSearchbox', function() {

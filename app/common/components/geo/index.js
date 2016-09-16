@@ -1,6 +1,6 @@
-'use strict';
 
-'use strict';
+
+
 require('angular-ui-bootstrap');
 require('angular-simple-logger'); //Required by angular-google-maps
 require('angular-google-maps');

@@ -1,4 +1,4 @@
-'use strict';
+
 
 var utils = require('./../../common/components/utils');
 /**

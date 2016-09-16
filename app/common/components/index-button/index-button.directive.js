@@ -1,4 +1,4 @@
-'use strict';
+
 
 function indexButton(CONSTANTS){
     return {

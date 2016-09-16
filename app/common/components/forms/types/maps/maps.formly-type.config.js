@@ -1,4 +1,4 @@
-'use strict';
+
 
 function maps(formlyConfigProvider){
     formlyConfigProvider.setType({

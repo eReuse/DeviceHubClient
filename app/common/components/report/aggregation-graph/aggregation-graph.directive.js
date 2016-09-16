@@ -1,4 +1,4 @@
-'use strict';
+
 
 function aggregationGraph(Restangular){
     return {

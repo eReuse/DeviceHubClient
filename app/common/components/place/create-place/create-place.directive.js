@@ -1,4 +1,4 @@
-'use strict';
+
 
 function createPlace($uibModal, schema){
     return {

@@ -1,4 +1,4 @@
-'use strict';
+
 
 function resourceIcon(resourceSettings){
     return{

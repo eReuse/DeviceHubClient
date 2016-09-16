@@ -1,4 +1,4 @@
-'use strict';
+
 
 function deviceIcon(CONSTANTS){
     return{

@@ -1,4 +1,4 @@
-'use strict';
+
 
 /**
  * Checks if it should collapse part of the columns the device-list-table, depending on how

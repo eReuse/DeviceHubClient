@@ -1,4 +1,4 @@
-'use strict';
+
 
 var utils = require('./../../utils.js');
 var path = window.COMMON + '/elements/modal/';

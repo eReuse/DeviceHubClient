@@ -1,4 +1,4 @@
-'use strict';
+
 
 function registerModalCtrl($scope,$uibModalInstance,ResourceSettings,type,$rootScope){
     $scope.type = type;

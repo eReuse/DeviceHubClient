@@ -1,4 +1,4 @@
-'use strict';
+
 
 function placeNavDirective(ResourceSettings, $rootScope, Notification) {
     return {

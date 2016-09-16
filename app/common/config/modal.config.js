@@ -1,4 +1,4 @@
-'use strict';
+
 
 function modalConfig ($uibModalProvider){
     var ops = $uibModalProvider.options;

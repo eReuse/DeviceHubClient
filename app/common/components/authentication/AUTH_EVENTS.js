@@ -1,4 +1,4 @@
-'use strict';
+
 
 function AUTH_EVENTS(){
     return {

@@ -1,4 +1,4 @@
-'use strict';
+
 
 require('./../../../../../test/init');
 
@@ -83,6 +83,19 @@ describe('Test FormSchema', function(){
                 }
             });
         });
+        it('works with devices:Allocate perfectly', function(){
+            test_form_creation('devices:Allocate');
+            expect(directive.model).toEqual({
+                '@type': 'devices:Allocate',
+                devices: ['1', '2'],
+                incidence: false,
+                undefinedDate: false,
+                unregisteredTo: {}
+            });
+            expect(directive.fields[0].key).toEqual('label');
+            expect(directive.fields[1].key).toEqual('exclude_to');
+
+        })
     });
 
     describe('Form-schema with a place', function(){
@@ -100,8 +113,8 @@ describe('Test FormSchema', function(){
     function test_form_creation(resourceType){
         var template = '<form-schema model="model" options="options" status="status"></form-schema>';
         var devices = [
-            {_id: 1, '@type': 'Computer'},
-            {_id: 2, '@type': 'Motherboard'}
+            {_id: '1', '@type': 'Computer'},
+            {_id: '2', '@type': 'Motherboard'}
         ];
         var data = {
             model: {'@type': resourceType, devices: devices},
@@ -118,6 +131,8 @@ describe('Test FormSchema', function(){
         }
         expect(directive).toBeDefined();
         expect(directive.form).toBeNonEmptyObject();
+        expect(directive.model).toBeNonEmptyObject();
+        expect(directive.model.devices).toEqual(['1', '2'])
     }
     function test_empty_submission(url){
         var error = { // We generate some random error so it can be processed by form-schema
@@ -134,4 +149,5 @@ describe('Test FormSchema', function(){
         expect(directive.status.errorListFromServer).toEqual(containing(error._issues));  // The error is from server.
         expect(directive.status.errorFromLocal).toBe(false);  // There is no local error, though
     }
+
 });

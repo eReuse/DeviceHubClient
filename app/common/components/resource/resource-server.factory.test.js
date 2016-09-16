@@ -1,7 +1,7 @@
 
 require('./../../../../test/init.js');
 
-'use strict';
+
 
 describe('Test ResourceServer', function () {
     var ResourceServer, setDatabaseInUrl, server, $rootScope;

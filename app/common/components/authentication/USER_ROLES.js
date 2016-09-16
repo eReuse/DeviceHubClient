@@ -1,4 +1,4 @@
-'use strict';
+
 
 function USER_ROLES(){
     return {

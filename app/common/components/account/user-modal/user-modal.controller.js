@@ -1,4 +1,4 @@
-'use strict';
+
 
 function userModalCtrl($scope, $uibModalInstance, ResourceSettings, session){
     //$scope.account = session.account;

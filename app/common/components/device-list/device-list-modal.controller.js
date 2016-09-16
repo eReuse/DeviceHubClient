@@ -1,4 +1,4 @@
-'use strict';
+
 
 function listModalCtrl($scope,$uibModalInstance,devices,type){
     $scope.devices = devices;

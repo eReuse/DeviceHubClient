@@ -1,4 +1,4 @@
-'use strict';
+
 
 require('./init.js');
 var utils = require('./common/components/utils');

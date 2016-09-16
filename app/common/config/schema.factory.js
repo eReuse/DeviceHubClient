@@ -1,4 +1,4 @@
-'use strict';
+
 
 function schema(CONSTANTS, Restangular, $q, RestangularFactory) {
     var self = this;

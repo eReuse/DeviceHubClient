@@ -1,4 +1,4 @@
-'use strict';
+
 /**
  * Represents the main devices view
  */

@@ -1,4 +1,4 @@
-'use strict';
+
 
 require('restangular');
 require('angular-ui-bootstrap');

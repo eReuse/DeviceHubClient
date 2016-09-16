@@ -1,7 +1,7 @@
 
 require('./../../../test/init.js');
 
-'use strict';
+
 
 describe('Test Utils', function () {
     var utils = require('./utils.js');
@@ -24,4 +24,11 @@ describe('Test Utils', function () {
         expect(Naming.type('events')).toEqual('Event');
         expect(Naming.new_type('Event')).toEqual('Event');
     });
+    it('humanizes fields', function(){
+        expect(Naming.humanize('addressLocality')).toEqual('Address locality');
+        expect(Naming.humanize('devices:Snapshot')).toEqual('Snapshot');
+        expect(Naming.humanize('devices:EraseBasic')).toEqual('Erase basic');
+        expect(Naming.humanize('Event')).toEqual('Event');
+
+    })
 });

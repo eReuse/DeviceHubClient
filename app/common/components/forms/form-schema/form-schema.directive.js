@@ -1,4 +1,4 @@
-'use strict';
+
 var utils = require('./../../utils.js');
 var OPERATION = {
     put: 'updated',
@@ -18,6 +18,7 @@ function formSchema(cerberusToFormly, ResourceSettings, $rootScope, Notification
         link: function($scope){
             var rSettings = ResourceSettings($scope.model['@type']);
             $scope.form;
+            window.fss = $scope; //todo remove
             var options = setOptions($scope.model['@type'], $scope.options, rSettings);
             $scope.fields = cerberusToFormly.parse($scope.model, $scope, options); //parse adds 'nonModifiable' to options
             $scope.submit = submitFactory($scope.fields, $scope.form, $scope.status, rSettings, $rootScope, Notification);

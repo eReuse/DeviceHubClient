@@ -1,7 +1,7 @@
-'use strict';
+
 var ACCOUNT_STORAGE = 'account';
 
-function session($q) {
+function session($q, $rootScope) {
     this._account = {};
     this.saveInBrowser = true;
     this.first_time = true;
@@ -9,6 +9,7 @@ function session($q) {
     this.activeDatabase = null;
     this._accountIsSet = $q.defer();
     this._accountIsSetPromise = this._accountIsSet.promise;
+    this.$rootScope = $rootScope;
 }
 
 session.prototype.accountIsSet = function(){
@@ -86,7 +87,7 @@ session.prototype.setActiveDatabase = function(database, refresh){
     _.forEach(this.callbacksForDatabaseChange, function(val){
         val(database, refresh);
     });
-    if(refresh) $rootScope.$broadcast('refresh@deviceHub');
+    if(refresh) this.$rootScope.$broadcast('refresh@deviceHub');
 };
 session.prototype.removeActiveDatabase = function(){
     this.setActiveDatabase(null, false)

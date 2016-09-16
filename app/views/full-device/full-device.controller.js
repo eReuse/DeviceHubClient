@@ -1,4 +1,4 @@
-'use strict';
+
 
 function fullDeviceController (ResourceSettings, $stateParams, session){
     var self = this;

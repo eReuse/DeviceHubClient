@@ -1,4 +1,4 @@
-'use strict';
+
 require('bower_components/Boxer/jquery.ba-dotimeout.js');
 require('angular');
 var parameterize = require('parameterize');
@@ -98,11 +98,12 @@ var Naming = {
      * @returns {string}
      */
     humanize: function (string) {
+        var converted = string;
         try {
-            string = this.popPrefix(string)[1];
+            converted = this.popPrefix(string)[1];
         }
         catch (err){}
-        return inflection.humanize(string)
+        return inflection.humanize(inflection.underscore(converted))
     }
 };
 

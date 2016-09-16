@@ -1,4 +1,4 @@
-'use strict';
+
 
 function manualEventsButton(ResourceSettings, $uibModal){
     return {

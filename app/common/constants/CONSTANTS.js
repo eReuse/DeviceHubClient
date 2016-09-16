@@ -1,4 +1,4 @@
-'use strict';
+
 
 var CONSTANTS = (function() {
     return {

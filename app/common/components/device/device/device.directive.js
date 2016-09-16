@@ -1,4 +1,4 @@
-'use strict';
+
 var PATH = window.COMPONENTS + '/device/device/';
 function device(ResourceSettings) {
     var actualTab = {device: null}; //no se puede hacer {{x()}} en una directiva siendo x = f(){return {} };

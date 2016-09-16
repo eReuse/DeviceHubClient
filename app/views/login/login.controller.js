@@ -1,4 +1,4 @@
-'use strict';
+
 
 function loginController($scope, $state, authService, CONSTANTS) {
     $scope.credentials = {

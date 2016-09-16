@@ -1,6 +1,6 @@
 
 require('./../../../../test/init.js');
-'use strict';
+
 
 describe('Test ResourceSettings', function(){
     var ResourceSettings, schema, instance, $rootScope, server,

@@ -1,4 +1,4 @@
-'use strict';
+
 
 function toolsButton(CONSTANTS){
     return {

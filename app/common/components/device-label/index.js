@@ -1,4 +1,4 @@
-'use strict';
+
 
 
 window.qrcode = require('./label/qrcode.js');

@@ -1,4 +1,4 @@
-'use strict';
+
 
 var TEMPLATE_NEEDS_ID_URL = window.COMPONENTS + '/device/register-error-processor/register-error-processor-needs-id.directive.html';
 var TEMPLATE = window.COMPONENTS + '/device/register-error-processor/register-error-processor.directive.html';

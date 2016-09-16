@@ -1,4 +1,4 @@
-'use strict';
+
 var sjv = require('simple-js-validator');
 
 function maps(geolocation, geoParsers, uiGmapGoogleMapApi){

@@ -1,4 +1,4 @@
-'use strict';
+
 
 /**
  * Checks the authentication service, performing login.

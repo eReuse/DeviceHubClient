@@ -1,4 +1,4 @@
-'use strict';
+
 
 var utils = require('./../../utils.js');
 var PATH = window.COMPONENTS + '/resource/resource-button/';

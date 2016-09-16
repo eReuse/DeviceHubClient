@@ -1,4 +1,4 @@
-'use strict';
+
 
 require('angular-ui-router');
 require('bower_components/angular-timeline/dist/angular-timeline.js');

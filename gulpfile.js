@@ -136,7 +136,8 @@ bundle.conf = {
     debug: true,
 //    cache: {},
 //    packageCache: {},
-    paths: filePath.browserify.paths
+    paths: filePath.browserify.paths,
+    transform: [require('strictify').name]
 };
 
 function rebundle() {
