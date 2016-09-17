@@ -1,4 +1,3 @@
-var sjv = require('simple-js-validator')
 var utils = require('./../utils.js')
 
 var DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url', '_settings']
@@ -257,7 +256,7 @@ function cerberusToFormly (ResourceSettings, schema) {
      * @param {?Array} keysToCheck Optional. If set it will check only for the given keys.
      */
     for (var key in model) {
-      if ((angular.isUndefined(keysToCheck) || keysToCheck.indexOf(key) !== -1) && sjv.isNotEmpty(model[key])) {
+      if ((angular.isUndefined(keysToCheck) || keysToCheck.indexOf(key) !== -1) && !_.isEmpty(model[key])) {
         if (angular.isObject(model[key])) {
           if (this.atLeastOneNotEmpty(model[key])) {
             return true

@@ -6,7 +6,6 @@ var clean = require('gulp-clean')
 var source = require('vinyl-source-stream')
 var sass = require('gulp-sass')
 var concat = require('gulp-concat')
-var debowerify = require('debowerify')
 var disc = require('disc')
 var fs = require('fs')
 var open = require('opener')
@@ -20,7 +19,6 @@ var sourcemaps = require('gulp-sourcemaps')
 var notify = require('gulp-notify')
 var templateCache = require('gulp-angular-templatecache')
 var del = require('del')
-var shell = require('gulp-shell')
 
 var filePath = {
   destination: './dist',
@@ -137,8 +135,7 @@ bundle.conf = {
 }
 
 function rebundle () {
-  console.log('rebundle');
-  return bundle.bundler.bundle()
+  var result = bundle.bundler.bundle()
   .pipe(source('bundle.js'))
   .on('error', handleError)
   .pipe(buffer())
@@ -150,11 +147,14 @@ function rebundle () {
     mangle: false
   }))))
   .pipe(gulp.dest(filePath.build.jsDest))
+  console.log('Bundle finished')
+  return result
 }
 
 gulp.task('bundle-dev', function () {
   'use strict'
   bundle.bundler = watchify(browserify(bundle.conf))
+  bundle.prod = false
   bundle.bundler.on('update', rebundle)
   return rebundle()
 })

@@ -1,5 +1,4 @@
 var utils = require('./../utils.js')
-var sjv = require('simple-js-validator')
 var filters = {}
 
 var DO_NOT_USE = ['request', 'debug', 'events']
@@ -37,9 +36,9 @@ function generateField (value, fieldSchema, fieldName, UNIT_CODES) {
     value: '',
     unitCode: UNIT_CODES[fieldSchema.unitCode],
     sink: fieldSchema.sink || 0,
-    teaser: sjv.isDefined(fieldSchema.teaser) ? fieldSchema.teaser : true
+    teaser: angular.isDefined(fieldSchema.teaser) ? fieldSchema.teaser : true
   }
-  if (sjv.isDefined(value)) {
+  if (angular.isDefined(value)) {
     field.value = getContent(value, fieldSchema)
   }
   try {

@@ -16,7 +16,7 @@
         <div class="spinner"></div>
     </div>
     <div class="col-xs-7">
-        <div class="text-left" ng-show="isNotEmpty(status.errorListFromServer)">
+        <div class="text-left" ng-show="!_.isEmpty(status.errorListFromServer)">
             <i class="glyphicon glyphicon-alert"></i>
             Cannot submit. Fix the following errors:
             <ul>

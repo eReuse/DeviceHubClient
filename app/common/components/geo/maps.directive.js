@@ -1,5 +1,3 @@
-var sjv = require('simple-js-validator')
-
 function maps (geolocation, geoParsers, uiGmapGoogleMapApi) {
   return {
     templateUrl: window.COMPONENTS + '/geo/maps.directive.html',
@@ -13,7 +11,7 @@ function maps (geolocation, geoParsers, uiGmapGoogleMapApi) {
       $scope.disabled = $scope.disabled || false
       $scope.mapConfig = null // Map will take some time to load
       var useUserPosition = $scope.getUserPosition === 'true'
-      if (sjv.isNotEmpty($scope.coordinates.coordinates)) {
+      if (!_.isEmpty($scope.coordinates.coordinates)) {
         uiGmapGoogleMapApi.then(function () { // Once the api is loaded
           var center = getCenter($scope.coordinates.coordinates)
           $scope.mapConfig = getMapConfig({
