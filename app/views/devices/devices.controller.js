@@ -1,6 +1,4 @@
-
-
-function devicesController ($scope, ResourceSettings){
+function devicesController ($scope, ResourceSettings) {
 }
 
-module.exports = devicesController;
+module.exports = devicesController

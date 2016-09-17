@@ -1,36 +1,37 @@
-#device-list-table tr td{
+#device-list-table tr td {
   padding: 1vh !important;
 
-  :first-child{
+  :first-child {
     white-space: nowrap;
   }
-  .device-list-checkbox{
+  .device-list-checkbox {
     zoom: 2;
   }
 }
-device-list{
-  #screener{
+
+device-list {
+  #screener {
     display: inline-block;
     position: relative;
-    >:first-child{
+    > :first-child {
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0);
+      background-color: rgba(0, 0, 0, 0);
       z-index: 1;
       position: absolute;
       cursor: not-allowed;
     }
   }
-  #counter{
-    >*{
+  #counter {
+    > * {
       vertical-align: middle;
     }
-    i{
+    i {
       font-size: 1.4em;
       cursor: pointer;
     }
   }
-  device-icon img{
+  device-icon img {
     max-width: 2em;
   }
 }

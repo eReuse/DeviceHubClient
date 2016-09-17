@@ -1,5 +1,6 @@
 <div class="advancedSearchBox" ng-class="{active:focus}" ng-init="focus = false">
-    <span ng-show="searchParams.length < 1 && searchQuery.length === 0" class="search-icon glyphicon glyphicon-search"></span>
+    <span ng-show="searchParams.length < 1 && searchQuery.length === 0"
+          class="search-icon glyphicon glyphicon-search"></span>
     <a ng-href="" ng-show="searchParams.length > 0 || searchQuery.length > 0" ng-click="removeAll()" role="button">
         <span class="remove-all-icon glyphicon glyphicon-trash"></span>
     </a>
@@ -17,7 +18,8 @@
                         ng-blur="leaveEditMode($index)"
 
                         ng-model="searchParam.value"
-                        ng-options="value for value in searchParam.select"></select><!--ng-show="searchParam.editMode"-->
+                        ng-options="value for value in searchParam.select"></select>
+                <!--ng-show="searchParam.editMode"-->
                 <input ng-if="searchParam.date"
                        name="value"
                        type="date"
@@ -27,7 +29,7 @@
 
                        ng-model="searchParam.value"/>
                 <input ng-if="searchParam.select == null && !searchParam.date"
-                        name="value"
+                       name="value"
                        type="text"
                        nit-auto-size-input
                        nit-set-focus="searchParam.editMode"
@@ -48,7 +50,7 @@
                ng-blur="focus = false"
                uib-typeahead-on-select="typeaheadOnSelect($item, $model, $label)"
                uib-typeahead="parameter as parameter.name for parameter in parameters | filter:{name:$viewValue} | limitTo:8"
-               ng-model="searchQuery" />
+               ng-model="searchQuery"/>
     </div>
     <div class="search-parameter-suggestions" ng-show="parameters && focus">
         <span class="search-parameter" ng-repeat="param in parameters" ng-mousedown="addSearchParam(param)">{{param.name}}</span>

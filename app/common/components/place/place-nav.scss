@@ -1,12 +1,17 @@
-place-nav .list-group-item edit-place{
-    display: none;
+place-nav .list-group-item edit-place {
+  display: none;
 }
 
-place-nav .list-group-item:hover edit-place{
-    display: inline-block;
+place-nav .list-group-item:hover edit-place {
+  display: inline-block;
 }
 
-.angular-google-map-container { height: 500px; }
+.angular-google-map-container {
+  height: 500px;
+}
+
 @media screen and (max-height: 700px) {
-    .angular-google-map-container { height: 300px; }
+  .angular-google-map-container {
+    height: 300px;
+  }
 }

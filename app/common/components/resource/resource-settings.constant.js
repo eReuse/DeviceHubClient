@@ -1,6 +1,4 @@
-
-
-var generalDoNotUse = ['geo'];
+var generalDoNotUse = ['geo']
 
 /**
  * Specifies custom settings for the resources to be used through the app.
@@ -9,51 +7,51 @@ var generalDoNotUse = ['geo'];
  * @type {{resources}}
  */
 var RESOURCE_SETTINGS = (function () {
-    return {
-        resources: {
-            'devices:ToPrepare': {doNotUse: generalDoNotUse, manual: true},
-            'devices:Ready': {doNotUse: generalDoNotUse, manual: true},
-            'devices:Locate': {doNotUse: generalDoNotUse, manual: true},
-            'devices:Allocate': {doNotUse: generalDoNotUse, manual: true},
-            'devices:Deallocate': {doNotUse: generalDoNotUse, manual: true},
-            'devices:Receive': {doNotUse: generalDoNotUse, manual: true},
-            'devices:ToRepair': {doNotUse: generalDoNotUse, manual: true},
-            'devices:Repair': {doNotUse: generalDoNotUse, manual: true},
-            'devices:ToRecycle': {doNotUse: generalDoNotUse, manual: true},
-            'devices:Recycle': {doNotUse: generalDoNotUse, manual: true},
-            'devices:ProveUsage': {doNotUse: generalDoNotUse, manual: true},
-            'devices:ToDispose': {doNotUse: generalDoNotUse, manual: true},
-            'devices:Dispose': {doNotUse: generalDoNotUse, manual: true},
-            'Device': {view: 'device'},
-            'Event': {view: 'event'},
-            'Account': {
-                dataRelation: {
-                    label: 'Account\'s e-mail',
-                    labelFieldName: 'email',
-                    filterFieldName: 'email',
-                    fieldType: 'typeahead'
-                },
-                view: 'account'
-            },
-            'Place': {
-                dataRelation: {
-                    label: 'Identifier of the place',
-                    labelFieldName: 'label',
-                    filterFieldName: 'label',
-                    fieldType: 'typeahead'
-                },
-                view: 'place'
-            },
-            'Project': {
-                dataRelation: {
-                    label: 'Identifier of the project',
-                    labelFieldName: 'project',
-                    filterFieldName: 'project',
-                    fieldType: 'typeahead'
-                }
-            }
+  return {
+    resources: {
+      'devices:ToPrepare': {doNotUse: generalDoNotUse, manual: true},
+      'devices:Ready': {doNotUse: generalDoNotUse, manual: true},
+      'devices:Locate': {doNotUse: generalDoNotUse, manual: true},
+      'devices:Allocate': {doNotUse: generalDoNotUse, manual: true},
+      'devices:Deallocate': {doNotUse: generalDoNotUse, manual: true},
+      'devices:Receive': {doNotUse: generalDoNotUse, manual: true},
+      'devices:ToRepair': {doNotUse: generalDoNotUse, manual: true},
+      'devices:Repair': {doNotUse: generalDoNotUse, manual: true},
+      'devices:ToRecycle': {doNotUse: generalDoNotUse, manual: true},
+      'devices:Recycle': {doNotUse: generalDoNotUse, manual: true},
+      'devices:ProveUsage': {doNotUse: generalDoNotUse, manual: true},
+      'devices:ToDispose': {doNotUse: generalDoNotUse, manual: true},
+      'devices:Dispose': {doNotUse: generalDoNotUse, manual: true},
+      'Device': {view: 'device'},
+      'Event': {view: 'event'},
+      'Account': {
+        dataRelation: {
+          label: 'Account\'s e-mail',
+          labelFieldName: 'email',
+          filterFieldName: 'email',
+          fieldType: 'typeahead'
+        },
+        view: 'account'
+      },
+      'Place': {
+        dataRelation: {
+          label: 'Identifier of the place',
+          labelFieldName: 'label',
+          filterFieldName: 'label',
+          fieldType: 'typeahead'
+        },
+        view: 'place'
+      },
+      'Project': {
+        dataRelation: {
+          label: 'Identifier of the project',
+          labelFieldName: 'project',
+          filterFieldName: 'project',
+          fieldType: 'typeahead'
         }
-    };
-}());
+      }
+    }
+  }
+}())
 
-module.exports = RESOURCE_SETTINGS;
+module.exports = RESOURCE_SETTINGS

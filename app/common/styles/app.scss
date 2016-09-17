@@ -1,61 +1,65 @@
 @import 'https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css';
 
-td{
-    vertical-align: middle !important;
+td {
+  vertical-align: middle !important;
 }
 
-.modal-xl > .modal-dialog{
-    width: 95% !important;
-    margin-bottom: 0 !important;
+.modal-xl > .modal-dialog {
+  width: 95% !important;
+  margin-bottom: 0 !important;
 }
-.modal-body{
-    overflow: auto;
-    max-height: 73vh;
+
+.modal-body {
+  overflow: auto;
+  max-height: 73vh;
 }
 
 @media screen and (max-height: 600px) {
-    .modal-body{
-        max-height: 50vh;
-    }
+  .modal-body {
+    max-height: 50vh;
+  }
 }
 
-pre{
-    word-break: break-word;
-    max-width: 60em;
+pre {
+  word-break: break-word;
+  max-width: 60em;
 }
 
 .form-group.required .control-label:after {
-    content:"*";
-    color:red;
+  content: "*";
+  color: red;
 }
 
-button[ng-click], a[ng-click], small[ng-click]{
-    cursor: pointer;
+button[ng-click], a[ng-click], small[ng-click] {
+  cursor: pointer;
 }
 
-#footer{
-    line-height:2;
-    position: fixed;
-    bottom: 0;
-    margin: 0 1em 0 1em;
+#footer {
+  line-height: 2;
+  position: fixed;
+  bottom: 0;
+  margin: 0 1em 0 1em;
 }
-[class*=col-]{
-    padding-left: 0.25vw;
-    padding-right: 0.25vw;
+
+[class*=col-] {
+  padding-left: 0.25vw;
+  padding-right: 0.25vw;
 }
-.row{
-    margin-left: -0.25vw;
-    margin-right: -0.25vw;
+
+.row {
+  margin-left: -0.25vw;
+  margin-right: -0.25vw;
 }
+
 /*Could go in devices/css*/
 
-.main-row{
-    margin: 0 !important;
+.main-row {
+  margin: 0 !important;
 }
 
-.glyphicon{
-    margin-right: 0.1em;
-    &.glyphicon-tags{
-        margin-right: 0.3em;
-    }
+.glyphicon {
+  margin-right: 0.1em;
+  &.glyphicon-tags {
+    margin-right: 0.3em;
+  }
 }

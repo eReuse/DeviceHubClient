@@ -1,10 +1,7 @@
+var utils = require('./../../utils.js')
+var PATH = window.COMPONENTS + '/resource/resource-button/'
 
-
-var utils = require('./../../utils.js');
-var PATH = window.COMPONENTS + '/resource/resource-button/';
-var Unauthorized = require('./../../authentication/Unauthorized');
-
-//noinspection JSCommentMatchesSignature
+// noinspection JSCommentMatchesSignature
 /**
  * A small button that, on clicked, shows a modal with the most relevant information of a resource.
  *
@@ -18,44 +15,42 @@ var Unauthorized = require('./../../authentication/Unauthorized');
  * @param {string|int|undefined} parentId Optional.
  * @param {string} resourceType
  */
-function resourceButton(RecursionHelper, ResourceSettings){
-    return{
-        templateUrl: PATH + 'resource-button.directive.html',
-        restrict: 'E',
-        scope:{
-            resourceId: '=?',
-            resource: '=?',
-            parentId: '=?',
-            resourceType: '='
-        },
-        compile: function(element) {
-            return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {
-                var rSettings = ResourceSettings($scope.resourceType);
-                $scope.isEvent = rSettings.isSubResource('Event');
-                if(angular.isDefined($scope.resourceId)){
-                    if(rSettings.authorized){
-                        rSettings.server.one($scope.resourceId).get().then(function(resource){
-                            $scope.resource = resource;
-                            $scope.popover.title = utils.getResourceTitle($scope.resource);
-                        }).catch(function(error){
-                            $scope.error = true;
-                            throw error;
-                        });
-                    }
-                    else{
-                        $scope.error = true;
-                        throw error;
-                    }
-                }
-                $scope.popover = {
-                    templateUrl: PATH + 'resource-button.popover.directive.html',
-                    isOpen: false,
-                    placement: 'left'
-                };
-                utils.applyAfterScrolling('device-view .device', $scope);
-            });
+function resourceButton (RecursionHelper, ResourceSettings) {
+  return {
+    templateUrl: PATH + 'resource-button.directive.html',
+    restrict: 'E',
+    scope: {
+      resourceId: '=?',
+      resource: '=?',
+      parentId: '=?',
+      resourceType: '='
+    },
+    compile: function (element) {
+      return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {
+        var rSettings = ResourceSettings($scope.resourceType)
+        $scope.isEvent = rSettings.isSubResource('Event')
+        if (angular.isDefined($scope.resourceId)) {
+          if (rSettings.authorized) {
+            rSettings.server.one($scope.resourceId).get().then(function (resource) {
+              $scope.resource = resource
+              $scope.popover.title = utils.getResourceTitle($scope.resource)
+            }).catch(function (error) {
+              $scope.error = true
+              throw error
+            })
+          } else {
+            $scope.error = true
+          }
         }
+        $scope.popover = {
+          templateUrl: PATH + 'resource-button.popover.directive.html',
+          isOpen: false,
+          placement: 'left'
+        }
+        utils.applyAfterScrolling('device-view .device', $scope)
+      })
     }
+  }
 }
 
-module.exports = resourceButton;
+module.exports = resourceButton

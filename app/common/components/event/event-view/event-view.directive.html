@@ -1,8 +1,12 @@
 <article class="event" itemscope itemtype="http://www.ereuse.org/schema#Event">
     <h3>{{event['@type']}}</h3>
-    <div ng-if="!teaser"><event-easy-explanation event="event" id="id"></event-easy-explanation></div>
+    <div ng-if="!teaser">
+        <event-easy-explanation event="event" id="id"></event-easy-explanation>
+    </div>
     <div ng-switch="event['@type']">
-        <div ng-switch-when="devices:Snapshot"><snapshot-view snapshot="event" id="id"></snapshot-view></div>
+        <div ng-switch-when="devices:Snapshot">
+            <snapshot-view snapshot="event" id="id"></snapshot-view>
+        </div>
     </div>
     <div ng-if="!teaser" uib-accordion>
         <div uib-accordion-group>
@@ -10,5 +14,7 @@
             <table-view model="model" teaser="teaser"></table-view>
         </div>
     </div>
-    <div ng-if="teaser"><table-view model="model" teaser="teaser"></table-view></div>
+    <div ng-if="teaser">
+        <table-view model="model" teaser="teaser"></table-view>
+    </div>
 </article>

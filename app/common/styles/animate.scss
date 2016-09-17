@@ -1,19 +1,19 @@
-.ani-default{
+.ani-default {
   animation-duration: 0.5s;
-  &.ng-enter{
+  &.ng-enter {
     animation-name: fadeIn;
   }
-  &.ng-leave{
+  &.ng-leave {
     animation-name: fadeOut;
   }
-  &.ng-move{
+  &.ng-move {
     animation-name: fadeIn;
   }
 }
 
 .ani-show {
   opacity: 1;
-  &.ng-hide-add, &.ng-hide-remove{
+  &.ng-hide-add, &.ng-hide-remove {
     transition: all linear 0.25s;
   }
   &.ng-hide {
@@ -21,12 +21,12 @@
   }
 }
 
-.ani-show-no-hide{
+.ani-show-no-hide {
   opacity: 1;
-  &.ng-hide-remove{
+  &.ng-hide-remove {
     transition: all linear 0.25s;
   }
-  &.ng-hide{
+  &.ng-hide {
     opacity: 0;
   }
 }

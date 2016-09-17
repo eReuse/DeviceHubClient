@@ -1,20 +1,21 @@
+/* global getJSONFixture CONSTANTS server auth containing $rootScope $compile */
 /**
  * Common initialisations for Unit Tests and Integration Tests.
  *
  * Just require this file.
  */
 
-require('./../app/init.js');
+require('./../app/init.js')
 
-window.sinon = require('sinon');
-window.CONSTANTS = require('./../app/common/constants/CONSTANTS');
+window.sinon = require('sinon')
+window.CONSTANTS = require('./../app/common/constants/CONSTANTS')
 
-require('angular-mocks');
-require('jasmine-jquery');
-require('node_modules/bardjs/dist/bard.js'); //It makes a variable 'bard' available to us
-require('jasmine-collection-matchers');
+require('angular-mocks')
+require('jasmine-jquery')
+require('node_modules/bardjs/dist/bard.js') // It makes a variable 'bard' available to us
+require('jasmine-collection-matchers')
 
-jasmine.getJSONFixtures().fixturesPath = 'base/test/mock';
+jasmine.getJSONFixtures().fixturesPath = 'base/test/mock'
 
 /**
  * Creates a promise that is already resolved.
@@ -28,39 +29,43 @@ jasmine.getJSONFixtures().fixturesPath = 'base/test/mock';
  * @return {object} A promise
  */
 window.createResolvedPromiseFactory = function () {
-    var deferred = window.$q.defer();
-    deferred.resolve();
-    return deferred.promise;
-};
+  var deferred = window.$q.defer()
+  deferred.resolve()
+  return deferred.promise
+}
 
 window.mockSchema = function () {
-    beforeEach(angular.mock.module({
-        schema: {
-            schema: getJSONFixture('schema.json'),
-            isLoaded: createResolvedPromiseFactory,
-            compareSink: function(a, b){
-                if(a.sink > b.sink) return -1;
-                else if(a.sink < b.sink) return 1;
-                else return 0;
-            }
+  beforeEach(angular.mock.module({
+    schema: {
+      schema: getJSONFixture('schema.json'),
+      isLoaded: createResolvedPromiseFactory,
+      compareSink: function (a, b) {
+        if (a.sink > b.sink) {
+          return -1
+        } else if (a.sink < b.sink) {
+          return 1
+        } else {
+          return 0
         }
-    }))
-};
+      }
+    }
+  }))
+}
 
 window.schemaInject = function () {
-    beforeEach(
-        inject(function (_$q_, _$rootScope_) { // We inject $q, for the schema
-            window.$q = _$q_;
-            window.$rootScope = _$rootScope_;
-        })
-    );
-};
+  beforeEach(
+    inject(function (_$q_, _$rootScope_) { // We inject $q, for the schema
+      window.$q = _$q_
+      window.$rootScope = _$rootScope_
+    })
+  )
+}
 
 window.propagateSchemaChange = function () {
-    beforeEach(function () {
-        window.$rootScope.$apply(); // We propagate $q
-    });
-};
+  beforeEach(function () {
+    window.$rootScope.$apply() // We propagate $q
+  })
+}
 
 /**
  * Mocks the server to return a full schema. Note that this method needs the headers to be set correctly. Use
@@ -68,10 +73,10 @@ window.propagateSchemaChange = function () {
  *
  * Uses global variable server.
  */
-window.schemaWhenGetFull = function(){
-    var headers = _.assign({Authorization: 'Basic ' + getJSONFixture('full-user.json').token}, {"Accept": "application/json"});
-    server.expectGET(CONSTANTS.url + '/schema', headers).respond(200, getJSONFixture('schema.json'));
-};
+window.schemaWhenGetFull = function () {
+  var headers = _.assign({Authorization: 'Basic ' + getJSONFixture('full-user.json').token}, {'Accept': 'application/json'})
+  server.expectGET(CONSTANTS.url + '/schema', headers).respond(200, getJSONFixture('schema.json'))
+}
 
 /**
  * Mocks the server to return the public schema, a subset of the full one.
@@ -79,9 +84,9 @@ window.schemaWhenGetFull = function(){
  *
  * Uses global variable server.
  */
-window.schemaWhenGetPublic = function(force){
-    server.expectGET(CONSTANTS.url + '/schema', {"Accept": "application/json"}).respond(200, getJSONFixture('public-schema.json'));
-};
+window.schemaWhenGetPublic = function (force) {
+  server.expectGET(CONSTANTS.url + '/schema', {'Accept': 'application/json'}).respond(200, getJSONFixture('public-schema.json'))
+}
 
 /**
  * Creates a directive with isolated scope.
@@ -90,55 +95,53 @@ window.schemaWhenGetPublic = function(force){
  * @returns {Array} First, the scope of the directive, and second, the element itself.
  */
 window.createDirective = function (data, template) {
-    var scope = $rootScope.$new();  //Creates isolated scope
-    //angular.copy(data, scope);  // Setup scope state
-    scope = _.assign(scope, data);
-    var element = $compile(template)(scope);  // Create directive
-    $rootScope.$digest();
-    var isolated = element.isolateScope();
-    it('should have the data', function () {
-        expect(isolated).toEqual(jasmine.objectContaining(data));
-    });
-    return [isolated, element];
-};
+  var scope = $rootScope.$new()  // Creates isolated scope
+  scope = _.assign(scope, data)
+  var element = $compile(template)(scope)  // Create directive
+  $rootScope.$digest()
+  var isolated = element.isolateScope()
+  it('should have the data', function () {
+    expect(isolated).toEqual(jasmine.objectContaining(data))
+  })
+  return [isolated, element]
+}
 
 window.createDirectiveInject = function () {
-    beforeEach(inject(function (_$compile_, _$rootScope_) {
-        window.$compile = _$compile_;
-        window.$rootScope = _$rootScope_;
-    }))
-};
+  beforeEach(inject(function (_$compile_, _$rootScope_) {
+    window.$compile = _$compile_
+    window.$rootScope = _$rootScope_
+  }))
+}
 
 // For integration tests
 
-window.loginInject = function(){
-    beforeEach(inject(function(_authService_){
-        window.auth = _authService_;
-    }));
-};
+window.loginInject = function () {
+  beforeEach(inject(function (_authService_) {
+    window.auth = _authService_
+  }))
+}
 
-window.login = function(){
-    var test_account = getJSONFixture('full-user.json');
-    var url = CONSTANTS.url + '/login';
-    server.expectPOST(url).respond(200, test_account);
-    // We perform the login
-    var result = auth.login({email: test_account.email, password: test_account.password}, true);
-    result.then(function(response_account){
-        expect(response_account).toEqual(containing(test_account));
-    });
-    server.flush();
-};
-
+window.login = function () {
+  var testAccount = getJSONFixture('full-user.json')
+  var url = CONSTANTS.url + '/login'
+  server.expectPOST(url).respond(200, testAccount)
+  // We perform the login
+  var result = auth.login({email: testAccount.email, password: testAccount.password}, true)
+  result.then(function (responseAccount) {
+    expect(responseAccount).toEqual(containing(testAccount))
+  })
+  server.flush()
+}
 
 /**
  * Mocks the directive ResourceButton to an empty one, avoiding requests.
  *
  * We do not want resourceButtonDirective to mess with our http requests wo we replace it (mock it) by a blank directive
  */
-window.removeResourceButtonDirective = function(){
-    beforeEach(angular.mock.module(function($provide){
-        $provide.factory('resourceButtonDirective', function(){
-            return {};
-        })
-    }));
-};
+window.removeResourceButtonDirective = function () {
+  beforeEach(angular.mock.module(function ($provide) {
+    $provide.factory('resourceButtonDirective', function () {
+      return {}
+    })
+  }))
+}

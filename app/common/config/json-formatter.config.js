@@ -1,7 +1,5 @@
-
-
-function jsonFormatter(JSONFormatterConfigProvider){
-    JSONFormatterConfigProvider.hoverPreviewEnabled = false;
+function jsonFormatter (JSONFormatterConfigProvider) {
+  JSONFormatterConfigProvider.hoverPreviewEnabled = false
 }
 
-module.exports = jsonFormatter;
+module.exports = jsonFormatter

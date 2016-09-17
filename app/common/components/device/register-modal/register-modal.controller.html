@@ -3,14 +3,15 @@
     <div class="form-inline">
         <div class="form-group">
             <label for="select-files">Select files to upload</label>
-            <input  type="file" class="file" multiple accept=".json" id="select-files"/>
+            <input type="file" class="file" multiple accept=".json" id="select-files"/>
         </div>
         <div class="form-group">
             <button class="btn btn-primary" type="submit" id="upload-files" ng-click="upload()">Upload files</button>
         </div>
     </div>
     <div ng-if="files !== false">
-        <uib-progressbar class="progress-striped" ng-class="active" type="success" value="uploaded" max="files"></uib-progressbar>
+        <uib-progressbar class="progress-striped" ng-class="active" type="success" value="uploaded"
+                         max="files"></uib-progressbar>
     </div>
     <div class="row">
         <div ng-if="results.error.length > 0" class="col-xs-12 col-lg-8">
