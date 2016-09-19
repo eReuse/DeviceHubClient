@@ -98,6 +98,7 @@ var filePath = {
       './node_modules/chart.js/Chart.js',
       './node_modules/lodash/lodash.js',
       './resources/qrcode.js',
+      './resources/jspdf.min.js',
       './bower_components/Boxer/jquery.ba-dotimeout.js'
     ],
     src1: [
@@ -130,8 +131,8 @@ bundle.conf = {
   debug: true,
   cache: {},
   packageCache: {},
-  paths: filePath.browserify.paths,
-  transform: [require('strictify').name]
+  paths: filePath.browserify.paths
+  // transform: [require('strictify').name]
 }
 
 function rebundle () {
@@ -175,7 +176,7 @@ gulp.task('bundle-prod', function () {
 // =======================================================================
 gulp.task('vendorJS', function () {
   var b = browserify({
-    debug: true,
+    debug: false,
     require: filePath.vendorJS.src
   })
 
