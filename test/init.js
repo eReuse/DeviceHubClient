@@ -145,3 +145,17 @@ window.removeResourceButtonDirective = function () {
     })
   }))
 }
+
+window.KEYCODES = {
+  ENTER: 13
+}
+/**
+ * Triggers a keydown
+ * @param element
+ * @param keyCode
+ */
+window.triggerKeyDown = function (element, keyCode) {
+  var e = jQuery.Event('keydown')
+  e.which = e.keyCode = keyCode
+  element.trigger(e)
+}

@@ -1,12 +1,12 @@
 /* global mockSchema removeResourceButtonDirective schemaInject createDirectiveInject inject CONSTANTS containing
- createDirective $rootScope propagateSchemaChange */
+ createDirective $rootScope propagateSchemaChange getJSONFixture triggerKeyDown KEYCODES */
 require('./../../../../../test/init')
 
 /**
  * Checks that the form generation of different types of well-known resources are ok.
  */
 describe('Test FormSchema', function () {
-  var directive, server, session
+  var directive, server, session, element
   // These events only need a list of devices (with @type and other default/automatic fields) to pass as
   // valid for the form
   var EventsThatCanBeUploadedOnlyWithDevices = ['devices:Prepare',
@@ -94,6 +94,30 @@ describe('Test FormSchema', function () {
       })
       expect(directive.fields[0].key).toEqual('label')
       expect(directive.fields[1].key).toEqual('exclude_to')
+      // Let's set a label
+      var sampleLabel = 'Example text for label'
+      element.find('#formly_1_input_label_0').val(sampleLabel).trigger('input')
+      expect(directive.model.label).toEqual(sampleLabel)
+      // Let's say that the possessor has already an account
+      element.find('#formly_1_checkbox_exclude_to_1').trigger('click')
+      // This should make appear the account's email
+      var to = element.find('#formly_1_typeahead_to_2')
+      expect(to.length).toBe(1)
+      var response = getJSONFixture('typeahead.request.form-schema.json')
+      var url = 'http://127.0.0.1:5000/accounts?where=%7B%22email%22:%7B%22$regex%22:%22%5Ea%22,%22$options%22:%22-i%22%7D%7D'
+      server.expectGET(url).respond(200, response)
+      to.val('a').trigger('input')
+      server.flush()
+      triggerKeyDown(to, KEYCODES.ENTER)
+      expect(directive.model.to).toEqual('57c5db8726cc5d1f1740f309')
+      // We should not have any error to submit this
+      server.expectPOST(CONSTANTS.url + '/db1/events/devices/allocate').respond(201)
+      directive.submit(directive.model)
+      server.flush()
+      expect(directive.status.working).toBe(false)  // Execution is finished
+      expect(directive.status.done).toBe(true)  // Execution is finished
+      expect(directive.status.errorListFromServer).toBe(null)
+      expect(directive.status.errorFromLocal).toBe(false)  // There is no local error, though
     })
   })
 
@@ -120,7 +144,9 @@ describe('Test FormSchema', function () {
       status: {}
     }
     try {
-      directive = createDirective(data, template)[0]
+      var result = createDirective(data, template)
+      directive = result[0]
+      element = result[1]
       $rootScope.$apply() // We get the schema (see index.test.js)
     } catch (error) {
       error.message += '\nEventType: ' + resourceType

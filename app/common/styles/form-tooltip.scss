@@ -1,0 +1,16 @@
+.form-tooltip-with-description + .tooltip {
+  margin-top: -2.5em !important
+}
+
+.form-tooltip-checkbox.tooltip-is-open {
+  margin-bottom: 1.5em // So the tooltip does not hide anything
+}
+
+.form-tooltip-checkbox + .tooltip {
+  margin-left: 0 !important;
+  left: 20px !important; // same as modal
+  margin-top: -1em !important;
+  .tooltip-arrow {
+    left: 5px !important;
+  }
+}

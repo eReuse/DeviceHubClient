@@ -1,0 +1,3 @@
+<div ng-repeat="(errorName, _) in fc.$error">
+  {{options.validation.messages[errorName](fc.$viewValue, fc.$modelValue, this)}}
+</div>

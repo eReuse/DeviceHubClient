@@ -1,0 +1,11 @@
+<formly-transclude></formly-transclude>
+<div uib-tooltip-template="'common/config/tooltip.error-messages.formly.config.html'"
+     tooltip-is-open="fc.$invalid && (form.triedSubmission || options.formControl.$touched)"
+     tooltip-placement="bottom"
+     tooltip-trigger="none"
+     ng-class="{
+         'form-tooltip-with-description': options.templateOptions.description,
+         'form-tooltip-checkbox': options.type == 'checkbox',
+         'tooltip-is-open': fc.$invalid && (form.triedSubmission || options.formControl.$touched)
+         }"
+></div>

@@ -1,34 +1,19 @@
 <div id="login">
-    <form name="loginForm" class="form-horizontal" ng-submit="login(credentials, saveInBrowser)" show-validation>
-        <h1>
-            <span ng-if="!showSiteLogo">{{APP_NAME}}</span>
-            <img ng-if="showSiteLogo" ng-src="{{siteLogo}}"/>
-        </h1>
-        <div class="form-group">
-            <label for="email" class="col-xs-3">Email</label>
-            <div class="col-xs-9">
-                <input name="email" type="email" id="email" class="form-control"
-                       ng-model="credentials.email" placeholder="Your e-mail" required>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="password" class="col-xs-3">Password</label>
-            <div class="col-xs-9">
-                <input type="password" id="password" class="form-control" ng-model="credentials.password" required
-                       minlength="4">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="saveInBrowser" class="col-xs-3">Remember me</label>
-            <div class="col-xs-9">
-                <input type="checkbox" id="saveInBrowser" class="form-control" ng-model="saveInBrowser"
-                       ng-disabled="cannotSave">
-            </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-        <!--<button type="submit" class="btn btn-info">Register</button>-->
-    </form>
-    <footer class="row">
-        <img ng-src="{{eReuseLogo}}"/>
-    </footer>
+  <form ng-submit="form.login(form.model)" name="loginForm" id="loginForm" novalidate>
+    <h1>
+      <span ng-if="!showSiteLogo">{{APP_NAME}}</span>
+      <img ng-if="showSiteLogo" ng-src="{{siteLogo}}"/>
+    </h1>
+    <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
+      <button type="submit" class="btn btn-primary submit-button" ng-disabled="loading">
+        <span ng-show="loading">Logging in...</span>
+        <span ng-hide="loading">Login</span>
+      </button>
+      <span ng-show="submissionError" class="alert alert-danger ani-show pull-right">Incorrect username or password
+                                                                                   .</span>
+    </formly-form>
+  </form>
+  <footer class="row">
+    <img ng-src="{{eReuseLogo}}"/>
+  </footer>
 </div>

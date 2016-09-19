@@ -9,15 +9,18 @@ module.exports = angular.module('common.config',
     'restangular',
     'ui.bootstrap',
     'jsonFormatter',
-    'ui-notification'
+    'ui-notification',
+    require('angular-formly')
   ])
 .config(require('./restangular.config'))
 .config(require('./modal.config'))
 .config(require('./json-formatter.config'))
 .config(require('./html5.config'))
 .config(require('./ui-notification.config'))
-.factory('RestangularFactory', require('./restangular.factory.js'))
+.config(require('./formly.config'))
+.factory('RestangularFactory', require('./restangular.factory'))
 .factory('schema', require('./schema.factory'))
+.run(require('./formly.run'))
 .run(function ($rootScope) {
   $rootScope._ = window._
 })
