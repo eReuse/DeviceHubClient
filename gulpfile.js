@@ -97,7 +97,7 @@ var filePath = {
       './node_modules/angular-chart.js/angular-chart.js',
       './node_modules/chart.js/Chart.js',
       './node_modules/lodash/lodash.js',
-      './app/common/components/device-label/label/qrcode.js',
+      './resources/qrcode.js',
       './bower_components/Boxer/jquery.ba-dotimeout.js'
     ],
     src1: [
@@ -135,7 +135,8 @@ bundle.conf = {
 }
 
 function rebundle () {
-  var result = bundle.bundler.bundle()
+  console.log('bundle started')
+  return bundle.bundler.bundle()
   .pipe(source('bundle.js'))
   .on('error', handleError)
   .pipe(buffer())
@@ -147,8 +148,6 @@ function rebundle () {
     mangle: false
   }))))
   .pipe(gulp.dest(filePath.build.jsDest))
-  console.log('Bundle finished')
-  return result
 }
 
 gulp.task('bundle-dev', function () {
@@ -156,6 +155,11 @@ gulp.task('bundle-dev', function () {
   bundle.bundler = watchify(browserify(bundle.conf))
   bundle.prod = false
   bundle.bundler.on('update', rebundle)
+  bundle.bundler.on('time', function (time) {
+    var text = 'Bundle finished in ' + time / 1000 + ' s'
+    notifyTask(text)
+    console.log(text)
+  })
   return rebundle()
 })
 
@@ -282,10 +286,12 @@ gulp.task('vendorCSS', function () {
   .pipe(gulp.dest(filePath.build.cssDest))
 })
 
-gulp.task('notify', function () {
+function notifyTask (text) {
+  text = typeof text === 'string' ? text : 'Done!'
   return gulp.src(filePath.copyIndex.src)
-  .pipe(notify('Done!'))
-})
+  .pipe(notify(text))
+}
+gulp.task('notify', notifyTask)
 
 // =======================================================================
 // Sequential Build Rendering
