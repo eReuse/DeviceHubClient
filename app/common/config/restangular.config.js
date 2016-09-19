@@ -6,15 +6,13 @@ function restangularConfig (RestangularProvider, CONSTANTS) {
     // .. to look for getList operations
     switch (operation) {
       case 'getList':
-        _.forEach(data._items, function (item) {
-          item._links.self.href += CONSTANTS.url + '/'
-        })
+        _.forEach(data._items, buildLink)
         extractedData = data._items
         extractedData._meta = data._meta
         break
       case 'get':
         try {
-          data._links.self.href = CONSTANTS.url + '/' + data._links.self.href
+          buildLink(data)
         } catch (err) {}
         extractedData = data
         break
@@ -32,6 +30,9 @@ function restangularConfig (RestangularProvider, CONSTANTS) {
     console.log(response)
   })
   RestangularProvider.setDefaultHeaders(CONSTANTS.headers)
+  function buildLink (item) {
+    item._links.self.href = CONSTANTS.url + '/' + item._links.self.href
+  }
 }
 
 module.exports = restangularConfig

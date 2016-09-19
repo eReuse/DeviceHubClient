@@ -21,7 +21,7 @@ function placeNavDirective (ResourceSettings, $rootScope, Notification) {
           $scope.selected_id = placeId
         }
       }
-      $scope.$on('refresh@place', getPlaces)
+      $scope.$on('submitted@Place', getPlaces)
       $scope.$on('refresh@deviceHub', getPlaces)
       $scope.$on('selectedDevices@deviceList', function (event, devices) {
         $scope.devices = devices

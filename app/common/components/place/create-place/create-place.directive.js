@@ -1,4 +1,4 @@
-function createPlace ($uibModal, schema) {
+function createPlace ($uibModal) {
   return {
     templateUrl: window.COMPONENTS + '/place/create-place/create-place.directive.html',
     restrict: 'E',
