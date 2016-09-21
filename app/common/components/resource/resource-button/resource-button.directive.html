@@ -10,11 +10,12 @@
         popover-placement="auto left"
 
 >
-    <div ng-if="isEvent">
+    {{popover.title}}
+    <!--<div ng-if="isEvent">
         <event-easy-explanation event="resource" id="parentId" use-resource-button="false"></event-easy-explanation>
     </div>
     <div ng-hide="isEvent">
-        {{popover.title}}
-    </div>
+
+    </div>-->
 </button>
 <i ng-show="error" class="glyphicon glyphicon-ban-circle"></i>

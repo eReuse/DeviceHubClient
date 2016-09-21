@@ -4,6 +4,7 @@ require('./angular-advanced-searchbox-ereuse.js')
 require('angular-ui-router')
 require('checklist-model')
 require('angular-animate')
+require('angular-timeago')
 
 module.exports = angular.module('common.components.list',
   [
@@ -15,7 +16,9 @@ module.exports = angular.module('common.components.list',
     'ngAnimate',
     require('./../device-label').name,
     require('./../event').name,
-    require('DeviceHubClient-Device-Maps').name
+    require('DeviceHubClient-Device-Maps').name,
+    'yaru22.angular-timeago'
+
   ])
 /**
  * @name deviceListConfig
@@ -37,3 +40,4 @@ module.exports = angular.module('common.components.list',
  * @returns {Promise} Restangular's promise, filled with all the devices
  */
 .service('getDevices', require('./get-devices.service.js'))
+.directive('fieldSort', require('./field-sort/field-sort.directive'))

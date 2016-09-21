@@ -10,6 +10,7 @@ function list (deviceListConfig, $rootScope, $uibModal, getDevices, $timeout) {
     templateUrl: window.COMPONENTS + '/device-list/device-list.directive.html',
     restrict: 'AE',
     link: function ($scope, $element, $attrs) {
+      window.dlist = $scope
       // The devices the user selects to perform an action to.
       $scope.selectedDevices = []
       // The device the user is watching the details.
@@ -114,18 +115,11 @@ function list (deviceListConfig, $rootScope, $uibModal, getDevices, $timeout) {
           $scope.unselectDevices() // todo fix so it doesn't need to unselect
         })
       }
-
-      /* Tabs */
-      $scope.tabs = [
-        {isActive: true},
-        {isActive: false}
-      ]
-      $scope.activeTab = 0
-      $scope.setActive = function (tab) { // todo this function is used many times for tabs in different places
-        _.forEach($scope.tabs, function (tab) {
-          tab.isActive = false
-        })
-        tab.isActive = true
+      // sorting
+      $scope.sort = {} // This is passed to every sort member
+      $scope.setSort = function (query) {
+        $scope.sortQuery = query
+        $scope.getDevices(false, false)
       }
     }
   }
@@ -134,7 +128,7 @@ function list (deviceListConfig, $rootScope, $uibModal, getDevices, $timeout) {
 function refreshFactory (getDevices, $scope) {
   return function () {
     delete $scope.searchParams.place
-    getDevices(true, false)
+    getDevices(false, false)
   }
 }
 
@@ -142,7 +136,15 @@ function getDevicesFactory (getDevices, $scope, $rootScope) {
   var page = 1
   $scope.busy = true // We prevent from infinitescroll load at the first time
   $scope.moreData = true
+  $scope.firstTime = true
+  $scope.devices = []
   return function (reset, addMore) {
+    // At the beginning, both search and params want to load the devices
+    // let's wait to have the query constructed -by both-
+    if ($scope.firstTime) {
+      $scope.firstTime = false
+      return
+    }
     if (addMore) {
       if (!$scope.moreData || $scope.busy) return
       $scope.busy = true // Needs to be called asap
@@ -155,12 +157,9 @@ function getDevicesFactory (getDevices, $scope, $rootScope) {
       }
       page = 1
     }
-    getDevices.getDevices($scope.searchParams, page).then(function (devices) {
-      if (addMore) {
-        $scope.devices = $scope.devices.concat(devices)
-      } else {
-        $scope.devices = devices
-      }
+    getDevices.getDevices($scope.searchParams, $scope.sortQuery, page).then(function (devices) {
+      if (!addMore) $scope.devices.length = 0 // Truncate array
+      _.assign($scope.devices, devices) // We do not want to overwrite the reference
       $scope.busy = false
       $scope.moreData = devices._meta.page * devices._meta.max_results < devices._meta.total
     })

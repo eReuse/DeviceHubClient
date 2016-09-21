@@ -14,6 +14,8 @@ var PATH = window.COMPONENTS + '/resource/resource-button/'
  * @param {object|undefined} resource
  * @param {string|int|undefined} parentId Optional.
  * @param {string} resourceType
+ * @param {string|undefined} getWhenClicks Only gets the resource after clicking the button. Anything different from
+ * undefined evaluates to true.
  */
 function resourceButton (RecursionHelper, ResourceSettings) {
   return {
@@ -23,17 +25,31 @@ function resourceButton (RecursionHelper, ResourceSettings) {
       resourceId: '=?',
       resource: '=?',
       parentId: '=?',
-      resourceType: '='
+      resourceType: '=',
+      getWhenClicks: '@?'
     },
     compile: function (element) {
       return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {
         var rSettings = ResourceSettings($scope.resourceType)
         $scope.isEvent = rSettings.isSubResource('Event')
-        if (angular.isDefined($scope.resourceId)) {
+        if (angular.isDefined($scope.resourceId) && _.isUndefined($scope.getWhenClicks)) getResource()
+        $scope.popover = {
+          templateUrl: PATH + 'resource-button.popover.directive.html',
+          isOpen: false,
+          placement: 'left'
+        }
+        utils.applyAfterScrolling('device-view .device', $scope)
+        if (angular.isDefined($scope.getWhenClicks)) {  // We avoid the watcher if not getWhenClicks
+          $scope.$watch('popover.isOpen', function (isOpen) {
+            if (isOpen) getResource()
+          })
+        }
+
+        function getResource () {
           if (rSettings.authorized) {
             rSettings.server.one($scope.resourceId).get().then(function (resource) {
               $scope.resource = resource
-              $scope.popover.title = utils.getResourceTitle($scope.resource)
+              getTitle()
             }).catch(function (error) {
               $scope.error = true
               throw error
@@ -42,12 +58,16 @@ function resourceButton (RecursionHelper, ResourceSettings) {
             $scope.error = true
           }
         }
-        $scope.popover = {
-          templateUrl: PATH + 'resource-button.popover.directive.html',
-          isOpen: false,
-          placement: 'left'
+
+        function getTitle () {
+          $scope.popover.title = utils.getResourceTitle($scope.resource)
         }
-        utils.applyAfterScrolling('device-view .device', $scope)
+
+        try {
+          getTitle() // When we get 'resource' as param
+        } catch (err) { // Note that if resource may not be defined or incomplete
+          if (!(err instanceof TypeError)) throw err
+        }
       })
     }
   }

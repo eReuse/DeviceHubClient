@@ -1,14 +1,1 @@
-<div>
-    <div ng-if="resourceType == 'Device'">
-        <device-view device="resource" teaser="true"></device-view>
-    </div>
-    <div ng-if="resourceType == 'Event'">
-        <event-view event="resource" teaser="true"></event-view>
-    </div>
-    <div ng-if="resourceType == 'Place'">
-        <place-view place="resource" teaser="true"></place-view>
-    </div>
-    <div ng-if="resourceType == 'Account'">
-        <account-view account="resource" teaser="true"></account-view>
-    </div>
-</div>
+<resource-view resource="resource" teaser="true"></resource-view>

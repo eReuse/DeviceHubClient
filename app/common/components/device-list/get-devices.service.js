@@ -1,7 +1,7 @@
 var utils = require('./../utils.js')
 
 function getDevices (ResourceSettings, deviceListConfig) {
-  this.getDevices = function (searchParams, page) {
+  this.getDevices = function (searchParams, sort, page) {
     var where = $.extend({}, searchParams)
     Object.keys(where).forEach(function (key, index) {
       try {
@@ -51,7 +51,7 @@ function getDevices (ResourceSettings, deviceListConfig) {
         }
       } catch (err) {}
     })
-    return ResourceSettings('Device').server.getList({where: where, page: page})
+    return ResourceSettings('Device').server.getList({where: where, page: page, sort: sort})
   }
 }
 
