@@ -20,7 +20,7 @@
         parameters: '='
       },
       replace: true,
-      templateUrl: window.COMPONENTS + '/device-list/search.html',
+      templateUrl: window.COMPONENTS + '/resource/resource-search/angular-advanced-searchbox-search.html',
       controller: [
         '$scope', '$attrs', '$element', '$timeout', '$filter',
         function ($scope, $attrs, $element, $timeout, $filter) {

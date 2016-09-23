@@ -11,8 +11,8 @@
     <ul uib-dropdown-menu role="menu" aria-labelledby="event-button">
         <li
                 role="menuitem"
-                ng-repeat="eventSettings in events" ng-if="eventSettings.settings.manual"
-                uib-tooltip-html="event.settings.short_description"
+                ng-repeat="eventSettings in events | orderBy:'settings.sink':true" ng-if="eventSettings.settings.manual"
+                uib-tooltip-html="eventSettings.settings.shortDescription"
                 tooltip-placement="right"
                 tooltip-append-to-body="true"
         >

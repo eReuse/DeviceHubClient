@@ -45,4 +45,6 @@ module.exports = window.angular.module('deviceHub', [
 })
 .run(function ($rootScope) {
   $rootScope._ = window._ // We add lodash for usage in templates
+  $rootScope.COMMON = window.COMMON
+  $rootScope.COMPONENTS = window.COMPONENTS
 })

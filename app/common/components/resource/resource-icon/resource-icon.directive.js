@@ -1,10 +1,14 @@
-function resourceIcon (resourceSettings) {
+function resourceIcon (ResourceSettings) {
   return {
-    template: '<small ng-if="resourceSettings.of(eventType).settings.to"><i  class="fa fa-arrow-right"></i></small>' +
-    '<i class="fa {{resourceSettings.of(eventType).settings.fa}} {{class}}"></i>',
+    template: '<small ng-if="to"><i  class="fa fa-arrow-right"></i></small>' +
+    '<i class="fa {{settings.fa}} {{class}}"></i>',
     restrict: 'E',
     scope: {
       resourceType: '@'
+    },
+    link: function ($scope) {
+      $scope.settings = ResourceSettings($scope.resourceType).settings
+      $scope.to = _.includes($scope.resourceType, 'To')
     }
   }
 }

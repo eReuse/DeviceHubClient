@@ -34,4 +34,11 @@ device-list {
   device-icon img {
     max-width: 2em;
   }
+
+  .blink{
+    // from @extend input[type="checkbox"]:focus;
+    outline: 4px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+  }
 }
+

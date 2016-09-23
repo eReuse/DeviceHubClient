@@ -5,7 +5,7 @@ var DEFAULT_SEARCH_PARAMS = {
 /**
  * Gets a new list of devices from the server and updates scope.
  */
-function list (deviceListConfig, $rootScope, $uibModal, getDevices, $timeout) {
+function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $timeout) {
   return {
     templateUrl: window.COMPONENTS + '/device-list/device-list.directive.html',
     restrict: 'AE',
@@ -17,32 +17,39 @@ function list (deviceListConfig, $rootScope, $uibModal, getDevices, $timeout) {
       $scope.vewingDevice = {}
       // Passed-in object for device directive.
       $scope.deviceApi = {}
-      $scope.availableSearchParams = deviceListConfig.defaultSearchParams
-      $scope.searchParams = angular.copy(DEFAULT_SEARCH_PARAMS)
+
       // Makes the table collapsible when window resizes
       // Note this method is executed too in $scope.toggleDeviceView
       var triggerCollapse = require('./collapse-table.js')($scope)
       $(window).resize(triggerCollapse)
 
+      // deviceFactory
       var _getDevices = $scope.getDevices = getDevicesFactory(getDevices, $scope, $rootScope)
-      var refresh = refreshFactory(_getDevices, $scope)
 
-      $scope.$watchCollection(function () {
-        return $scope.searchParams
-      }, function (newValue, oldValue) {
-        if (angular.isDefined(newValue)) _getDevices(false, false)
+      // Search
+      var params = {}
+      window.params = params
+      $scope.paramsSettings = deviceListConfigFactory.paramsSettings
+      $scope.onParamsChanged = function (_params) {
+        var place = params.place
+        window.params = params = angular.copy(_params)
+        if (place) params.place = place
+        _getDevices(false, false, params)
+      }
+      $scope.DEFAULT_SEARCH_PARAMS = DEFAULT_SEARCH_PARAMS
+      $scope.$on('selectedPlace@placeNavWidget', function (event, placeId) {
+        params.place = placeId  // The watchCollection will detect changes
+        _getDevices(false, false, params)
+      })
+      $scope.$on('unselectedPlace@placeNavWidget', function () {
+        delete params.place
+        _getDevices(false, false, params)
       })
 
+      // Refresh
+      var refresh = refreshFactory(_getDevices, $scope)
       $scope.$on('refresh@deviceList', refresh)
       $scope.$on('refresh@deviceHub', refresh)
-
-      $scope.$on('selectedPlace@placeNavWidget', function (event, placeId) {
-        $scope.searchParams.place = placeId  // The watchCollection will detect changes
-      })
-
-      $scope.$on('unselectedPlace@placeNavWidget', function () {
-        delete $scope.searchParams.place
-      })
 
       /**
        * Selects multiple devices when the user selects a device with shift pressed.
@@ -136,15 +143,17 @@ function getDevicesFactory (getDevices, $scope, $rootScope) {
   var page = 1
   $scope.busy = true // We prevent from infinitescroll load at the first time
   $scope.moreData = true
-  $scope.firstTime = true
+  var firstTime = true
   $scope.devices = []
-  return function (reset, addMore) {
+  var _params
+  return function (reset, addMore, params) {
     // At the beginning, both search and params want to load the devices
     // let's wait to have the query constructed -by both-
-    if ($scope.firstTime) {
-      $scope.firstTime = false
+    if (firstTime) {
+      firstTime = false
       return
     }
+    if (params) _params = params
     if (addMore) {
       if (!$scope.moreData || $scope.busy) return
       $scope.busy = true // Needs to be called asap
@@ -157,7 +166,7 @@ function getDevicesFactory (getDevices, $scope, $rootScope) {
       }
       page = 1
     }
-    getDevices.getDevices($scope.searchParams, $scope.sortQuery, page).then(function (devices) {
+    getDevices.getDevices(_params, $scope.sortQuery, page).then(function (devices) {
       if (!addMore) $scope.devices.length = 0 // Truncate array
       _.assign($scope.devices, devices) // We do not want to overwrite the reference
       $scope.busy = false

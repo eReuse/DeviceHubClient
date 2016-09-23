@@ -1,17 +1,18 @@
-<nit-advanced-searchbox
-  ng-model="searchParams"
-  parameters="availableSearchParams"
-  placeholder="Search..."
-  template-url="'common/components/device-list/search.html'"
-  parameters-display-limit="200">
-</nit-advanced-searchbox>
+<resource-search settings="paramsSettings"
+                 on-params-changed="onParamsChanged(params)"
+                 default-params="DEFAULT_SEARCH_PARAMS"
+></resource-search>
 <div>
   <div style="text-align: center"
        id="selectedMenu"
        class="ani-show"
   >
-    <div id="screener" uib-tooltip="Select some devices first."
-         tooltip-enable="selectedDevices.length == 0">
+    <div id="screener"
+         uib-tooltip="Select some devices first."
+         tooltip-enable="selectedDevices.length == 0"
+         ng-mouseenter="hoverScreener = true"
+         ng-mouseleave="hoverScreener = false"
+    >
       <div ng-show="selectedDevices.length == 0"></div>
       <span uib-tooltip-template="'common/components/device-list/selected-devices.uib-tooltip-template.html'"
             tooltip-placement="bottom"
@@ -63,13 +64,15 @@
                        checklist-model="selectedDevices"
                        checklist-value="device"
                        ng-click="$event.stopPropagation(); select_multiple($event, devices, $index);  broadcastSelection()"
+                       ng-class="{blink: hoverScreener && device._id === devices[0]._id}"
                 >
               </td>
               <td>{{device._id}}</td>
               <td>{{device.labelId}}</td>
               <td>{{device.model}}</td>
               <td>
-                <resource-button resource="device.events[0]"
+                <resource-button ng-if="device.events"
+                                 resource="device.events[0]"
                                  resource-type="device.events[0]['@type']"
                                  resource-id="device.events[0]._id"
                                  get-when-clicks="true"

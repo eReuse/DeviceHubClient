@@ -18,7 +18,7 @@
                         ng-blur="leaveEditMode($index)"
 
                         ng-model="searchParam.value"
-                        ng-options="value for value in searchParam.select"></select>
+                        ng-options="key as value for (key, value) in searchParam.select"></select>
                 <!--ng-show="searchParam.editMode"-->
                 <input ng-if="searchParam.date"
                        name="value"
