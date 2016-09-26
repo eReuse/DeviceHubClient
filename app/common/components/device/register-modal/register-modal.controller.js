@@ -40,7 +40,7 @@ function iterativeUpload (ResourceSettings, $rootScope, $scope, files, i) {
       return function (e) {
         // file.name
         var content = e.target.result
-        ResourceSettings.server.all('devices:Snapshot').server.post(content).then(function (response) {
+        ResourceSettings('devices:Snapshot').server.post(content).then(function (response) {
           processAnswer($rootScope, files.length, file.name, response, $scope, false, i, content)
           iterativeUpload(ResourceSettings, $rootScope, $scope, files, i + 1)
         }, function (response) {

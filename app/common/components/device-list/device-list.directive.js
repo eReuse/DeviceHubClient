@@ -10,7 +10,6 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
     templateUrl: window.COMPONENTS + '/device-list/device-list.directive.html',
     restrict: 'AE',
     link: function ($scope, $element, $attrs) {
-      window.dlist = $scope
       // The devices the user selects to perform an action to.
       $scope.selectedDevices = []
       // The device the user is watching the details.
@@ -28,11 +27,10 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
 
       // Search
       var params = {}
-      window.params = params
       $scope.paramsSettings = deviceListConfigFactory.paramsSettings
       $scope.onParamsChanged = function (_params) {
         var place = params.place
-        window.params = params = angular.copy(_params)
+        params = angular.copy(_params)
         if (place) params.place = place
         _getDevices(false, false, params)
       }
@@ -133,7 +131,7 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
 
 function refreshFactory (getDevices, $scope) {
   return function () {
-    delete $scope.searchParams.place
+    delete $scope.params.place
     getDevices(false, false)
   }
 }
