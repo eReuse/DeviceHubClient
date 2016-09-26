@@ -46,42 +46,42 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
    those parameters.
    */
   var RestangularConfigurerResource = Restangular.withConfig(function (RestangularProvider) {
-    /**
-     * Parses resources received from the server.
-     */
-    RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response, deferred) {
-      if (resourceName in schema.schema) {
-        if (operation === 'getList') {
-          for (var i = 0; i < data.length; i++) parse(data[i], schema.schema[resourceName])
-        } else if (response.status !== 204) parse(data, schema.schema[resourceName])
-      }
-      return data
-    })
+      /**
+       * Parses resources received from the server.
+       */
+      RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response, deferred) {
+        if (resourceName in schema.schema) {
+          if (operation === 'getList') {
+            for (var i = 0; i < data.length; i++) parse(data[i], schema.schema[resourceName])
+          } else if (response.status !== 204) parse(data, schema.schema[resourceName])
+        }
+        return data
+      })
 
-    /**
-     * Parses resources sent to the server.
-     */
-    RestangularProvider.addRequestInterceptor(function (originalElement, operation, what, url) {
-      var element = utils.copy(originalElement)
-      if (operation === 'post') {
-        for (var fieldName in element) {
-          if (element[fieldName] instanceof Date) {
-            element[fieldName] = utils.parseDate(element[fieldName])
+      /**
+       * Parses resources sent to the server.
+       */
+      RestangularProvider.addRequestInterceptor(function (originalElement, operation, what, url) {
+        var element = utils.copy(originalElement)
+        if (operation === 'post') {
+          for (var fieldName in element) {
+            if (element[fieldName] instanceof Date) {
+              element[fieldName] = utils.parseDate(element[fieldName])
+            }
           }
         }
-      }
-      if (operation === 'put') {
-        for (fieldName in element) {
-          if (fieldName === '_created' ||
-            fieldName === '_updated' ||
-            fieldName === '_links') {
-            delete element[fieldName]
+        if (operation === 'put') {
+          for (fieldName in element) {
+            if (fieldName === '_created' ||
+              fieldName === '_updated' ||
+              fieldName === '_links') {
+              delete element[fieldName]
+            }
           }
         }
-      }
-      return element
-    })
-  }
+        return element
+      })
+    }
   )
 
   /**
@@ -114,6 +114,7 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
  * @param schema
  */
 function parse (item, schema) {
+  // todo this first for should be nested
   for (var fieldName in schema) {
     switch (schema[fieldName].type) {
       case 'datetime':
@@ -121,8 +122,21 @@ function parse (item, schema) {
         break
     }
   }
-  item['_updated'] = new Date(item['_updated'])
-  item['_created'] = new Date(item['_created'])
+
+  // We do only one nested level, as python-eve cannot go more deeper neither (of object and array)
+  _.forOwn(item, function (val) {
+    if (_.isArray(val)) {
+      _.forEach(val, parseDate)
+    } else if (_.isObject(val)) parseDate(val)
+  })
+  parseDate(item)
+
+  function parseDate (val) {
+    try {
+      val['_updated'] = new Date(val['_updated'])
+      val['_created'] = new Date(val['_created'])
+    } catch (err) {}
+  }
 }
 
 module.exports = ResourceServer

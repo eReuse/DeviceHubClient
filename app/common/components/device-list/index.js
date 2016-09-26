@@ -14,7 +14,8 @@ module.exports = angular.module('common.components.list',
     'ngAnimate',
     require('./../device-label').name,
     require('./../event').name,
-    'yaru22.angular-timeago'
+    'yaru22.angular-timeago',
+    require('./../device/certificate').name
 
   ])
 /**

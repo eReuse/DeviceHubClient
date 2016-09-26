@@ -1,10 +1,11 @@
 /* global jsPDF */
 /* eslint new-cap: ["error", { "newIsCapExceptions": ["jsPDF"] }] */
-require('resources/jspdf.min.js')
+
 /**
  * Created by busta on 22/8/2015.
  */
 module.exports = function () {
+  require('resources/jspdf.min.js')
   var width = parseInt($('#width').val())
   var height = parseInt($('#height').val())
   var pdf = new jsPDF('l', 'mm', [width, height])

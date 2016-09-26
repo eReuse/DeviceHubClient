@@ -8,7 +8,8 @@ module.exports = angular.module('common.components.deviceLabel',
     'monospaced.qrcode',
     'ui.bootstrap',
     'ngAnimate',
-    require('./../../constants').name
+    require('./../../constants').name,
+    require('./../resource').name
   ])
 /**
  * @ngdoc directive

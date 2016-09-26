@@ -160,6 +160,20 @@ function schemaIsLoaded (schema) {
   return schema.isLoaded()
 }
 
+function setImageGetter ($scope, jqueryExpression, nameOfVariableToStore) {
+  $(jqueryExpression).change(function () {
+    if (this.files && this.files[0]) {
+      var reader = new FileReader()
+      reader.onload = function (e) {
+        $scope.$evalAsync(function (scope) {
+          scope[nameOfVariableToStore] = e.target.result
+        })
+      }
+      reader.readAsDataURL(this.files[0])
+    }
+  })
+}
+
 module.exports = {
   Naming: Naming,
   copy: copy,
@@ -167,5 +181,6 @@ module.exports = {
   applyAfterScrolling: applyAfterScrolling,
   parseDate: parseDate,
   schemaIsLoaded: schemaIsLoaded,
-  NoPrefix: NoPrefix
+  NoPrefix: NoPrefix,
+  setImageGetter: setImageGetter
 }

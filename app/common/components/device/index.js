@@ -16,7 +16,8 @@ module.exports = angular.module('common.components.device',
     'RecursionHelper',
     'restangular',
     require('./../view').name,
-    require('./../authentication').name
+    require('./../authentication').name,
+    require('./certificate').name
   ])
 /**
  * @ngdoc directive

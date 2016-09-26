@@ -22,7 +22,7 @@ function fieldSort () {
       var actualSorting = null
       $scope.changeSorting = changeSorting
       if (angular.isDefined($scope.sortByDefault)) {
-        actualSorting = true
+        actualSorting = false // We set sorting but to reverse (bigger -> smaller)
         setSorting()
       } else setClassSorting()
 
