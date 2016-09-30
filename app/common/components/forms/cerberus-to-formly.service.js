@@ -1,9 +1,10 @@
 var utils = require('./../utils.js')
+var FieldShouldNotBeIncluded = require('./field-should-not-be-included.exception')
 
-var DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url', '_settings']
+var DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url', '_settings', 'hid']
 var COMMON_OPTIONS = ['min', 'max', 'required', 'minlength', 'maxlength', 'readonly', 'description']
 
-function cerberusToFormly (ResourceSettings, schema) {
+function cerberusToFormly (ResourceSettings, schema, UNIT_CODES) {
   /**
    * Generates a form for the given model, by parsing the information in the Cerberus schema transforming it to an
    * Angular-Formly compatible form.
@@ -12,7 +13,11 @@ function cerberusToFormly (ResourceSettings, schema) {
    * server. We do not look for this to keep the method synchronous.
    * @param {object} model It uses model['@type'] to generate the form, and updates model with defaults.
    * @param {object} $scope
-   * @param {object} options
+   * @param {object} options Customize the resulting Formly. Optional Fields are:
+   * - doNotUse: A list of fields to exclude.
+   * - excludeLabels:
+   * - schema: every field of the dictionary will override the field in the original schema for this parsing.
+   * @throw NoType There is no Angular-Formly type to represent a field's type.
    * @return {Array} An ordered array with the form, ready to send to Angular Formly.
    */
   this.parse = function (model, $scope, options) {
@@ -22,48 +27,94 @@ function cerberusToFormly (ResourceSettings, schema) {
     }
     var isAModification = '_id' in model // Remember, defaults are taken from the schema
     var doNotUse = 'doNotUse' in options ? options.doNotUse.concat(DO_NOT_USE) : DO_NOT_USE
-    var form = []
-    for (var fieldName in resourceSettings.schema) {
-      if (!_.includes(doNotUse, fieldName)) {
-        var subSchema = resourceSettings.schema[fieldName]
-        if (!subSchema.readonly) {
-          if (subSchema.type === 'dict' && 'schema' in subSchema) {
-            form.push(this.generateFieldGroup(fieldName, subSchema, model, doNotUse, isAModification))
-          } else {
-            form.push(this.generateField(fieldName, subSchema, model, doNotUse, isAModification))
-          }
-        }
-      }
-    }
-    form.sort(schema.compareSink)
+    var _schema = _.assign({}, resourceSettings.schema, options.schema || {})
+    var form = this.parseFields(doNotUse, isAModification, _schema, model)
     this.setExcludes(form, model, $scope, options.excludeLabels || [])
     options.nonModifiable = this.generateNonModifiableArray(form)
-    this.removeSink(form)
     this.or(form, model)
     return form
   }
 
+  /**
+   * Generates the form for the given schema.
+   * @param doNotUse
+   * @param isAModification
+   * @param subSchema
+   * @param model
+   * @throw NoType There is no Angular-Formly type to represent the field's type
+   * @return {Array}
+   */
+  this.parseFields = function (doNotUse, isAModification, subSchema, model) {
+    var form = []
+    for (var fieldName in subSchema) {
+      try {
+        form.push(this.parseField(fieldName, doNotUse, isAModification, subSchema[fieldName], model))
+      } catch (err) {
+        if (!(err instanceof FieldShouldNotBeIncluded)) throw err
+      }
+    }
+    form.sort(schema.compareSink)
+    _.forEach(form, function (field) {
+      delete field.sink
+    })
+    return form
+  }
+
+  /**
+   * Generates a specific field.
+   * @param fieldName
+   * @param doNotUse
+   * @param isAModification
+   * @param schema
+   * @param model
+   * @throw NoType There is no Angular-Formly type to represent the field's type
+   * @throw FieldShouldNotBeIncluded The field should not be added in the form
+   * @return object A field.
+   */
+  this.parseField = function (fieldName, doNotUse, isAModification, schema, model) {
+    if (!_.includes(doNotUse, fieldName) && !schema.readonly && !schema.materialized) {
+      if (schema.type === 'dict' && 'schema' in schema) {
+        return this.generateFieldGroup(fieldName, schema, model, doNotUse, isAModification)
+      } else {
+        return this.generateField(fieldName, schema, model, doNotUse, isAModification)
+      }
+    } else {
+      throw new FieldShouldNotBeIncluded(fieldName, model['@type'])
+    }
+  }
+
+  /**
+   * Generates a field group, generating and grouping all the inner fields
+   * @param fieldName
+   * @param subSchema
+   * @param model
+   * @param doNotUse
+   * @param isAModification
+   * @throw NoType There is no Angular-Formly type to represent the field's type
+   * @return {{fieldGroup: 'fields', key: string, sink: number}}
+   */
   this.generateFieldGroup = function (fieldName, subSchema, model, doNotUse, isAModification) {
-    var field = {
-      fieldGroup: [],
+    return {
+      fieldGroup: _.concat([{template: '<h4>' + utils.Naming.humanize(fieldName) + '</h4>'}],
+        this.parseFields(doNotUse, isAModification, subSchema.schema, model)),
       key: fieldName, // If doesn't work for exclude, use data: {id: } or something like
       sink: subSchema.sink || 0
     }
-    field.fieldGroup.push({
-      template: '<h4>' + utils.Naming.humanize(fieldName) + '</h4>'
-    })
-    for (var childFieldName in subSchema.schema) {
-      if (!_.includes(doNotUse, childFieldName)) {
-        var f = this.generateField(childFieldName, subSchema.schema[childFieldName], model, doNotUse, isAModification)
-        field.fieldGroup.push(f)
-      }
-    }
-    return field
   }
 
+  /**
+   * Builds a field, creating the Angular-Formly structure from the Cerberus schema.
+   * @param fieldName
+   * @param subSchema
+   * @param model
+   * @param doNotUse
+   * @param isAModification
+   * @throw NoType There is no Angular-Formly type to represent the field's type
+   * @return {{key: string, type: string, templateOptions: {label: (*|string)}, sink: number}}
+   */
   this.generateField = function (fieldName, subSchema, model, doNotUse, isAModification) {
     var options = {
-      label: utils.Naming.humanize(fieldName) // It's no resource type but it works too
+      label: utils.Naming.humanize(fieldName) + (subSchema.unitCode ? ' (' + UNIT_CODES[subSchema.unitCode] + ')' : '')
     }
     try {
       var type = this.getTypeAndSetTypeOptions(subSchema, options, model)
@@ -115,8 +166,17 @@ function cerberusToFormly (ResourceSettings, schema) {
           return 'checkbox'
         case 'float':
         case 'number':
+          options.type = 'number'
+          return 'input'
+        case 'natural':
+          fieldSchema.min = fieldSchema.min || 0
+          fieldSchema.step = fieldSchema.step || 1
+          options.type = 'number'
+          return 'input'
         case 'integer':
-          return 'number'
+          fieldSchema.step = fieldSchema.step || 1
+          options.type = 'number'
+          return 'input'
         case 'string':
           if ('maxlength' in fieldSchema && fieldSchema.maxlength >= 500) {
             return 'textarea'
@@ -174,18 +234,6 @@ function cerberusToFormly (ResourceSettings, schema) {
       })
     }
     return options
-  }
-
-  this.removeSink = function (form) {
-    var self = this
-    form.forEach(function (field) {
-      if ('sink' in field) {
-        delete field.sink
-      }
-      if ('fieldGroup' in field) {
-        self.removeSink(field.fieldGroup)
-      }
-    })
   }
 
   this.setExcludes = function (form, model, $scope, excludeLabels) {
