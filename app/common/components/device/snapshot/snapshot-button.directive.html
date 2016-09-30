@@ -3,9 +3,21 @@
     <i class="fa fa-plus"></i>&nbsp;New snapshot<span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
-    <li role="menuitem"><a ng-click="openModal('Computer')">Computer</a></li>
-    <li role="menuitem"><a ng-click="openFormModal('Peripheral')">Peripheral</a></li>
-    <li role="menuitem"><a ng-click="openFormModal('Mobile')">Mobile</a></li>
-    <li role="menuitem"><a ng-click="openFormModal('ComputerMonitor')">Monitor</a></li>
+    <li role="menuitem"><a ng-click="openModal('Computer')">
+      <device-icon type="Computer" subtype="Desktop"></device-icon>
+      Computer
+    </a></li>
+    <li role="menuitem"><a ng-click="openFormModal('ComputerMonitor')">
+      <device-icon type="ComputerMonitor"></device-icon>
+      Monitor
+    </a></li>
+    <li role="menuitem"><a ng-click="openFormModal('Peripheral')">
+      <device-icon type="Peripheral" subtype="Mouse"></device-icon>
+      Peripheral
+    </a></li>
+    <li role="menuitem"><a ng-click="openFormModal('Mobile')">
+      <device-icon type="Mobile" subtype="Smartphone"></device-icon>
+      Mobile
+    </a></li>
   </ul>
 </div>

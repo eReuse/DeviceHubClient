@@ -1,7 +1,7 @@
 <article class="device" itemscope itemtype="http://www.ereuse.org/schema#Device">
     <header ng-if="!teaser">
         <h3>
-            <device-icon icon="{{device['icon']}}"></device-icon>
+            <device-icon type="{{device['@type']}}" subtype="{{device.type}}"></device-icon>
             <strong>{{device._id}}</strong> {{device.manufacturer}} {{device.model}}
         </h3>
     </header>

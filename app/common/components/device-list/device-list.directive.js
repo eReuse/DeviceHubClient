@@ -17,6 +17,7 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
       // Passed-in object for device directive.
       $scope.deviceApi = {}
 
+      window.dlist = $scope
       // Makes the table collapsible when window resizes
       // Note this method is executed too in $scope.toggleDeviceView
       var triggerCollapse = require('./collapse-table.js')($scope)
