@@ -6,8 +6,7 @@ function deviceListConfigFactory (RESOURCE_SEARCH) {
     {
       key: '@type',
       name: 'Type',
-      methods: [Case.pascal],
-      select: 'devices'
+      select: 'Device'
     },
     {
       key: 'type',
@@ -96,9 +95,8 @@ function deviceListConfigFactory (RESOURCE_SEARCH) {
       realKey: 'events._updated'
     }
   ]
-  _.assign(paramsSettings, RESOURCE_SEARCH)
   return {
-    paramsSettings: paramsSettings
+    paramsSettings: _.concat(paramsSettings, RESOURCE_SEARCH)
   }
 }
 

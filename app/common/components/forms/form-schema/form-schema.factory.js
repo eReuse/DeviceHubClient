@@ -8,16 +8,16 @@ function FormSchemaFactory (ResourceSettings, $rootScope, Notification, cerberus
    * @param {object} model The resource
    * @param {object} form A reference to formly's form
    * @param {object} status The status object
-   * @param {array} doNotUse An array of elements to not to use
+   * @param {array} options
    * @param {object} scope $scope
    * @constructor
    */
-  function FormSchema (model, form, status, doNotUse, scope) {
+  function FormSchema (model, form, status, options, scope) {
     this.rSettings = ResourceSettings(model['@type'])
     this.form = form
     this.status = status
-    var settings = this.prepareSettings(doNotUse)
-    this.fields = cerberusToFormly.parse(model, scope, settings) // parse adds 'nonModifiable' to options
+    var _options = this.prepareOptions(options)
+    this.fields = cerberusToFormly.parse(model, scope, _options) // parse adds 'nonModifiable' to options
   }
 
   var proto = FormSchema.prototype
@@ -67,18 +67,14 @@ function FormSchemaFactory (ResourceSettings, $rootScope, Notification, cerberus
       self.status.errorListFromServer = response.data._issues
     }
   }
-  proto.prepareSettings = function (doNotUse) {
-    var settings = {
-      excludeLabels: { // In fact we do not need to pass always all labels, just the ones we want to use
-        receiver: 'Check if the receiver has already an account',
-        to: 'Check if the new possessor has already an account'
-      }
+  proto.prepareOptions = function (options) {
+    var _options = _.cloneDeep(options)
+    _options.excludeLabels = {
+      receiver: 'Check if the receiver has already an account',
+      to: 'Check if the new possessor has already an account'
     }
-    settings.doNotUse = doNotUse || []
-    try {
-      settings.doNotUse += this.rSettings.settings.doNotUse
-    } catch (error) {}
-    return settings
+    _options.doNotUse = _.concat(_options.doNotUse || [], this.rSettings.settings.doNotUse)
+    return _options
   }
   proto.isValid = function (schema) {
     if (!this.form.$valid) {
@@ -103,9 +99,7 @@ function FormSchemaFactory (ResourceSettings, $rootScope, Notification, cerberus
       )
     }
   }
-  return function (model, form, status, doNotUse, scope) {
-    return new FormSchema(model, form, status, doNotUse, scope)
-  }
+  return FormSchema
 }
 
 module.exports = FormSchemaFactory

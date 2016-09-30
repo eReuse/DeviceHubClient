@@ -1,9 +1,11 @@
 function formlyRun (formlyValidationMessages) {
-  formlyValidationMessages.addStringMessage('required', 'This field is required.')
-  formlyValidationMessages.addStringMessage('or', 'This field is required.')
-  formlyValidationMessages.addStringMessage('email', 'The e-mail is not correct.')
-  formlyValidationMessages.addStringMessage('incorrectUser', 'The e-mail or password are incorrect.')
-  formlyValidationMessages.addTemplateOptionValueMessage('minlength', 'minlength', '', 'is the minimum length', 'Too short');
+  var f = formlyValidationMessages
+  f.addStringMessage('required', 'This field is required.')
+  f.addStringMessage('or', 'This field is required.')
+  f.addStringMessage('email', 'The e-mail is not correct.')
+  f.addStringMessage('incorrectUser', 'The e-mail or password are incorrect.')
+  f.addTemplateOptionValueMessage('minlength', 'minlength', '', 'is the minimum length', 'Too short')
+  f.addStringMessage('number', 'Write a correct number.')
 }
 
 module.exports = formlyRun

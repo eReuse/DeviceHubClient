@@ -6,7 +6,7 @@ require('./../../../../../test/init')
  * Checks that the form generation of different types of well-known resources are ok.
  */
 describe('Test FormSchema', function () {
-  var directive, server, session, element
+  var directive, server, session, element, SnapshotFormSchema
   // These events only need a list of devices (with @type and other default/automatic fields) to pass as
   // valid for the form
   var EventsThatCanBeUploadedOnlyWithDevices = ['devices:Prepare',
@@ -34,9 +34,10 @@ describe('Test FormSchema', function () {
   }))
 
   propagateSchemaChange()
-  beforeEach(inject(function (_ResourceServer_, _session_) {
+  beforeEach(inject(function (_ResourceServer_, _session_, _SnapshotFormSchema_) {
     session = _session_
     session.setActiveDatabase('db1', false)
+    SnapshotFormSchema = _SnapshotFormSchema_
   }))
   describe('Forms-schema with events', function () {
     var EventSettings
@@ -63,8 +64,8 @@ describe('Test FormSchema', function () {
         containing({key: 'place', type: 'typeahead'}),
         containing({key: 'date', type: 'datepicker'}),
         containing({key: 'incidence', type: 'checkbox'}),
-        containing({key: 'comment', type: 'input'}),
-        containing({key: 'description', type: 'textarea'})
+        containing({key: 'description', type: 'textarea'}),
+        containing({key: 'comment', type: 'input'})
       ])
       // We try to submit it
       var url = CONSTANTS.url + '/db1/events/devices/locate'
@@ -101,7 +102,7 @@ describe('Test FormSchema', function () {
       // Let's say that the possessor has already an account
       element.find('#formly_1_checkbox_exclude_to_1').trigger('click')
       // This should make appear the account's email
-      var to = element.find('#formly_1_typeahead_to_2')
+      var to = element.find('[id*=typeahead_to]') // todo all selectors like this better?
       expect(to.length).toBe(1)
       var response = getJSONFixture('typeahead.request.form-schema.json')
       var url = 'http://127.0.0.1:5000/accounts?where=%7B%22email%22:%7B%22$regex%22:%22%5Ea%22,%22$options%22:%22-i%22%7D%7D'
@@ -132,19 +133,69 @@ describe('Test FormSchema', function () {
     })
   })
 
-  function testFormCreation (resourceType) {
+  describe('Form-schema with a ComputerMonitor', function () {
+    it('should generate computerMonitor', function () {
+      var data = {
+        model: {'@type': 'devices:Snapshot'},
+        options: {
+          deviceType: 'ComputerMonitor',
+          FormSchema: SnapshotFormSchema
+        }
+      }
+      testFormCreation('ComputerMonitor', data)
+      _.forEach(['device', 'place', 'date', 'incidence', 'comment', 'description'], function (key) {
+        var field = _.find(directive.fields, {key: key})
+        expect(field).toBeDefined()
+        if (key === 'device') {
+          expect(field.fieldGroup).toBeArrayOfSize(11)
+        }
+      })
+    })
+    it('should have an error when submitting empty', function () {
+      var data = {
+        model: {'@type': 'devices:Snapshot'},
+        options: {
+          deviceType: 'ComputerMonitor',
+          FormSchema: SnapshotFormSchema
+        }
+      }
+      testFormCreation('ComputerMonitor', data)
+      directive.submit(directive.model)
+      expect(directive.status.errorFromLocal).toBe(true)
+      // Now let's add a manufacturer, S/N and model and submit it
+      var manufacturer = 'Foo Manufacturer'
+      element.find('#formly_1_input_manufacturer_2').val(manufacturer).trigger('input')
+      expect(directive.model.device.manufacturer).toEqual(manufacturer)
+      var serialNumber = 'Foo SN'
+      element.find('#formly_1_input_serialNumber_3').val(serialNumber).trigger('input')
+      expect(directive.model.device.serialNumber).toEqual(serialNumber)
+      var model = 'Foo Model'
+      element.find('#formly_1_input_model_4').val(model).trigger('input')
+      expect(directive.model.device.model).toEqual(model)
+      server.expectPOST(CONSTANTS.url + '/db1/events/devices/snapshot').respond(201)
+      directive.submit(directive.model)
+      server.flush()
+      expect(directive.status.working).toBe(false)  // Execution is finished
+      expect(directive.status.done).toBe(true)  // Execution is finished
+      expect(directive.status.errorListFromServer).toBe(null)
+      expect(directive.status.errorFromLocal).toBe(false)  // There is no local error, though
+    })
+
+  })
+
+  function testFormCreation (resourceType, data) {
     var template = '<form-schema model="model" options="options" status="status"></form-schema>'
     var devices = [
       {_id: '1', '@type': 'Computer'},
       {_id: '2', '@type': 'Motherboard'}
     ]
-    var data = {
+    var _data = _.extend({
       model: {'@type': resourceType, devices: devices},
       options: {},
       status: {}
-    }
+    }, data)
     try {
-      var result = createDirective(data, template)
+      var result = createDirective(_data, template)
       directive = result[0]
       element = result[1]
       $rootScope.$apply() // We get the schema (see index.test.js)
@@ -155,7 +206,6 @@ describe('Test FormSchema', function () {
     expect(directive).toBeDefined()
     expect(directive.form).toBeNonEmptyObject()
     expect(directive.model).toBeNonEmptyObject()
-    expect(directive.model.devices).toEqual(['1', '2'])
   }
 
   function testEmptySubmission (url) {

@@ -22,7 +22,14 @@ var RESOURCE_SETTINGS = (function () {
       'devices:ProveUsage': {doNotUse: generalDoNotUse, manual: true},
       'devices:ToDispose': {doNotUse: generalDoNotUse, manual: true},
       'devices:Dispose': {doNotUse: generalDoNotUse, manual: true},
-      'Device': {view: 'device'},
+      'devices:Snapshot': {
+        doNotUse: _.concat(generalDoNotUse, ['debug', 'version', 'events', 'owners', 'components', 'version',
+          'snapshotSoftware', 'automatic', 'offline'])
+      },
+      'Device': {
+        view: 'device',
+        doNotUse: ['events', 'owners', 'components', 'isUidSecured', 'public', 'icon', 'pid', 'labelId']
+      },
       'Event': {view: 'event'},
       'Account': {
         dataRelation: {

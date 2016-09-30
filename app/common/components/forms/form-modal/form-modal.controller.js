@@ -1,4 +1,4 @@
-function formModal ($scope, $uibModalInstance, options, model, event) {
+function formModal ($scope, $uibModalInstance, options, model, ResourceSettings) {
   $scope.model = model
   $scope.options = options
   $scope.status = {}
@@ -10,6 +10,7 @@ function formModal ($scope, $uibModalInstance, options, model, event) {
   }, function (newV) {
     if (newV) $uibModalInstance.close('success')
   })
+  $scope.title = $scope.options.title || ResourceSettings(model['@type']).humanName
 }
 
 module.exports = formModal

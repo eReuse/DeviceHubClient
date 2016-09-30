@@ -12,8 +12,9 @@ function formSchema (FormSchema) {
     },
     link: function ($scope) {
       $scope.form
-      window.fss = $scope
-      var formSchema = FormSchema($scope.model, $scope.form, $scope.status, $scope.options.doNotUse, $scope)
+      window.fs = $scope
+      var FS = $scope.options.FormSchema || FormSchema // We let people pass us extended FormSchema
+      var formSchema = new FS($scope.model, $scope.form, $scope.status, $scope.options, $scope)
       $scope.fields = formSchema.fields
       $scope.submit = function (model) {
         try {

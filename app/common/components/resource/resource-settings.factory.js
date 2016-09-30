@@ -48,6 +48,7 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
    */
   function ResourceSettings (type) {
     if (!_.isString(type)) throw TypeError('ResourceSettings: type is expected to be string, but it is ' + typeof type)
+    if (utils.Naming.type(type) !== type) throw TypeError(type + ' should be of Type convention.')
     var self = this
     this.type = type
     this.resourceName = utils.Naming.resource(type)

@@ -17,7 +17,8 @@ module.exports = angular.module('common.components.device',
     'restangular',
     require('./../view').name,
     require('./../authentication').name,
-    require('./certificate').name
+    require('./certificate').name,
+    require('./../forms').name
   ])
 /**
  * @ngdoc directive
@@ -26,7 +27,7 @@ module.exports = angular.module('common.components.device',
  * @param {Object} identifier Object with one property: _id, which is a string identifying the device. We use an object
  * to be able to watch over it, and load a new device when the _id changes.
  */
-.directive('device', require('./device/device.directive.js'))
+.directive('device', require('./device/device.directive'))
 /**
  * Shows all the hardware and related information (not events) of a device, and its components.
  * @ngdoc directive
@@ -34,32 +35,33 @@ module.exports = angular.module('common.components.device',
  * @param {Object} identifier Object with one property: _id, which is a string identifying the device. We use an object
  * to be able to watch over it, and load a new device when the _id changes.
  */
-.directive('deviceView', require('./device-view/device-view.directive.js'))
+.directive('deviceView', require('./device-view/device-view.directive'))
 /**
  * @ngdoc directive
  * @name placeIcon
  * @description Gets and shows the icon that represents a device.
  * @param {string} icon Name of the icon to show. This is the @type of the device.
  */
-.directive('deviceIcon', require('./device-icon/device-icon.directive.js'))
+.directive('deviceIcon', require('./device-icon/device-icon.directive'))
 /**
  * @ngdoc directive
  * @name registerErrorProcessor
  * @description Shows a button that lets the user to register a device. This directive calls registerModalCtrl.
  */
-.directive('registerButton', require('./register-button/register-button.directive.js'))
+.directive('snapshotButton', require('./snapshot/snapshot-button.directive'))
 /**
  * @ngdoc controller
  * @name registerModalCtrl
  * @description Lets users upload snapshots in json (from DeviceInventory) to the server, helping with the process and
  * showing the results.
  */
-.controller('registerModalCtrl', require('./register-modal/register-modal.controller.js'))
+.controller('registerModalCtrl', require('./register-modal/register-modal.controller'))
 /**
  * @ngdoc directive
  * @name registerErrorProcessor
  * @description Shows a button that lets the user to register a device. This directive calls registerModalCtrl.
  */
-.directive('registerErrorProcessor', require('./register-error-processor/register-error-processor.directive.js'))
-.directive('share', require('./share/share.directive.js'))
-.controller('shareModalCtrl', require('./share/share-modal.controller.js'))
+.directive('registerErrorProcessor', require('./register-error-processor/register-error-processor.directive'))
+.directive('share', require('./share/share.directive'))
+.controller('shareModalCtrl', require('./share/share-modal.controller'))
+.factory('SnapshotFormSchema', require('./snapshot/snapshot.form-schema.factory'))
