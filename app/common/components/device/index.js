@@ -1,6 +1,5 @@
 require('angular-ui-bootstrap')
 require('angular-animate')
-require('angular-fill-height-directive')
 require('angular-sanitize')
 require('angular-recursion')
 
@@ -10,7 +9,6 @@ module.exports = angular.module('common.components.device',
     'ui.bootstrap',
     require('./../event').name,
     'ngAnimate',
-    'fillHeight',
     'ngSanitize',
     require('./../device-list').name,
     'RecursionHelper',

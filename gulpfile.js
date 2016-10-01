@@ -32,6 +32,7 @@ var filePath = {
     paths: ['./']
   },
   styles: {
+    sass: './app/**/*.sass',
     src: './app/**/*.scss'
   },
   templates: {
@@ -274,7 +275,7 @@ gulp.task('analyzeScripts', function () {
 })
 
 gulp.task('sass', function () {
-  return gulp.src(filePath.styles.src)
+  return gulp.src([filePath.styles.sass, filePath.styles.src])
   .pipe(sass({
     outputStyle: 'compressed'
   }).on('error', sass.logError))
