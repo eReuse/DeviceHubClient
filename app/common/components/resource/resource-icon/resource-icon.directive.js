@@ -1,10 +1,12 @@
 function resourceIcon (ResourceSettings) {
   return {
-    template: '<small ng-if="to"><i  class="fa fa-arrow-right"></i></small>' +
-    '<i class="fa {{settings.fa}} {{class}}"></i>',
+    template: '<span ng-if="to"><i class="fa fa-fw fa-arrow-right"></i></span>' +
+    '<span ng-if="fillTo && !to"><i style="opacity:0" class="fa fa-fw fa-arrow-right"></i></span>' +
+    '<i class="fa fa-fw fa-lg {{settings.fa}} {{class}}"></i>',
     restrict: 'E',
     scope: {
-      resourceType: '@'
+      resourceType: '@',
+      fillTo: '=' // If defined == true
     },
     link: function ($scope) {
       $scope.settings = ResourceSettings($scope.resourceType).settings
