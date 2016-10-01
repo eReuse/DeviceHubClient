@@ -40,7 +40,7 @@ var filePath = {
   },
   assets: {
     images: {
-      src: './app/common/assets/**/*',
+      src: ['./app/common/assets/**/*', './app/**/*.svg'],
       watch: ['./dist/common/assets/', './dist/common/assets/**/*'],
       dest: './dist/common/assets/'
     }
@@ -228,11 +228,13 @@ gulp.task('copyFavicon', function () {
 // Watch for changes
 // =======================================================================
 gulp.task('watch', function () {
-  gulp.watch(filePath.styles.watch, ['styles-dev'])
-  //  gulp.watch(filePath.assets.images.watch, ['images'])
-  gulp.watch(filePath.vendorJS.src, ['vendorJS'])
-  gulp.watch(filePath.vendorCSS.src, ['vendorCSS'])
-  //  gulp.watch(filePath.copyIndex.watch, ['copyIndex'])
+  gulp.watch(filePath.styles.sass, ['sass'])
+  gulp.watch(filePath.styles.src, ['sass'])
+  gulp.watch(filePath.templates.src, ['templates'])
+  gulp.watch(filePath.assets.images.watch, ['images'])
+  //gulp.watch(filePath.vendorJS.src, ['vendorJS'])
+  //gulp.watch(filePath.vendorCSS.src, ['vendorCSS'])
+  gulp.watch(filePath.copyIndex.watch, ['copyIndex'])
   //  gulp.watch(filePath.lint.src, ['checkstyle'])
   console.log('Watching...')
 })
@@ -307,7 +309,7 @@ gulp.task('build-dev', function (callback) {
     // images and vendor tasks are removed to speed up build time. Use "gulp build" to do a full re-build of the dev app.
     ['templates'],
     ['bundle-dev', 'copyIndex', 'sass'],
-    ['notify', 'afterClean'],
+    ['notify', 'afterClean', 'watch'],
     callback
   )
 })

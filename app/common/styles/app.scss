@@ -32,13 +32,6 @@ button[ng-click], a[ng-click], small[ng-click] {
   cursor: pointer;
 }
 
-#footer {
-  line-height: 2;
-  position: fixed;
-  bottom: 0;
-  margin: 0 1em 0 1em;
-}
-
 [class*=col-] {
   padding-left: 0.25vw;
   padding-right: 0.25vw;
