@@ -7,11 +7,14 @@ function deviceIcon (CONSTANTS, ResourceSettings) {
       subtype: '@'
     },
     link: function ($scope) {
-      $scope.$watch('type', function (type) {
+      $scope.$watchGroup(['type', 'subtype'], function (values) {
+        var type = values[0]
+        var subtype = values[1]
         if (angular.isDefined(type)) {
-          $scope.icon = CONSTANTS.url + '/' + ResourceSettings(type).settings.icon + ($scope.subtype || type) + '.svg'
+          $scope.icon = CONSTANTS.url + '/' + ResourceSettings(values[0]).settings.icon + (subtype || type) + '.svg'
         }
       })
+
     }
   }
 }

@@ -91,7 +91,7 @@
               <td>{{device._created | timeAgo}}</td>
               <td>{{device.serialNumber | limitTo : 10}}{{device.serialNumber.length > 10? '&hellip;': ''}}</td>
               <td>
-                <device-icon type="{{device['@type']}}" subtype="{{device['']}}"></device-icon>
+                <device-icon type="{{device['@type']}}" subtype="{{device.type}}"></device-icon>
               </td>
             </tr>
           </tbody>
