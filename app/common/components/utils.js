@@ -96,7 +96,10 @@ var Naming = {
     try {
       converted = this.popPrefix(string)[1]
     } catch (err) {}
-    return inflection.humanize(inflection.underscore(converted))
+    converted = inflection.humanize(inflection.underscore(converted))
+    // Humanize destroys acronyms by adding a space between letters
+    if (converted[0] !== ' ' && converted[1] === ' ' && converted[2] !== '' && converted[3] === ' ') return string
+    else return converted
   }
 }
 

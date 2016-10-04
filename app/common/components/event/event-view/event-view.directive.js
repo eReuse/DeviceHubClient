@@ -10,6 +10,7 @@ function eventView (cerberusToView, RecursionHelper) {
     compile: function (element) {
       return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {
         $scope.model = cerberusToView.parse($scope.event)
+        $scope.Naming = require('./../../utils').Naming
       })
     }
   }

@@ -1,7 +1,10 @@
+var utils = require('./../../utils')
+
 function formModal ($scope, $uibModalInstance, options, model, ResourceSettings) {
   $scope.model = model
   $scope.options = options
   $scope.status = {}
+  $scope.humanize = utils.Naming
   $scope.cancel = function () {
     $uibModalInstance.dismiss('cancel')
   }

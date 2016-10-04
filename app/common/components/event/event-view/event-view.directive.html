@@ -1,7 +1,7 @@
 <article class="event" itemscope itemtype="http://www.ereuse.org/schema#Event">
   <delete-button class="pull-right" model="event"></delete-button>
-  <h3>{{event['@type']}}</h3>
   <div ng-if="!teaser">
+    <h3>{{Naming.humanize(event['@type'])}}</h3>
     <event-easy-explanation event="event" id="id"></event-easy-explanation>
   </div>
   <div ng-switch="event['@type']">

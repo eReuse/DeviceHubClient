@@ -1,3 +1,5 @@
+var utils = require('./../../utils')
+
 function eventEasyExplanation () {
   return {
     templateUrl: window.COMPONENTS + '/event/event-easy-explanation/event-easy-explanation.directive.html',
@@ -8,6 +10,7 @@ function eventEasyExplanation () {
       id: '='  // Optional. The id of the actual device. Stylish purposes.
     },
     link: function ($scope) {
+      $scope.humanize = utils.Naming.humanize
       var type = $scope.event['@type']
       $scope.useRB = angular.isDefined($scope.useResourceButton) ? $scope.useResourceButton() : true
       if (type === 'devices:TestHardDrive' || type === 'devices:EraseBasic') {
