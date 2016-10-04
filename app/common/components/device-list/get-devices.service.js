@@ -15,7 +15,7 @@ function getDevices (ResourceSettings, deviceListConfigFactory) {
           })
         }*/
         if ('boolean' in setting) {
-          where[key] = where[key] === 'Yes' || where[key] === 'Success'
+          where[key] = where[key] === 'Yes' || where[key] === 'Succeed'
         }
         if ('comparison' in setting) {
           switch (setting.comparison) {
