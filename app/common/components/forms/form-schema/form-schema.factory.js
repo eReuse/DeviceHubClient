@@ -55,6 +55,7 @@ function FormSchemaFactory (ResourceSettings, $rootScope, Notification, cerberus
     return function (response) {
       var resource = _.isUndefined(response) ? model : response // DELETE operations do not answer with the result
       $rootScope.$broadcast('submitted@' + model['@type'])
+      $rootScope.$broadcast('submitted@any')
       self.status.working = false
       self.status.done = true
       Notification.success(utils.getResourceTitle(resource) + ' successfully ' + operationName + '.')

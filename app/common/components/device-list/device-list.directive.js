@@ -40,15 +40,17 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
         params.place = placeId  // The watchCollection will detect changes
         _getDevices(false, false, params)
       })
-      $scope.$on('unselectedPlace@placeNavWidget', function () {
+      function refresh () {
         delete params.place
+        $scope.unselectDevices()
         _getDevices(false, false, params)
-      })
+      }
 
       // Refresh
-      var refresh = refreshFactory(_getDevices, $scope)
+      $scope.$on('unselectedPlace@placeNavWidget', refresh)
       $scope.$on('refresh@deviceList', refresh)
       $scope.$on('refresh@deviceHub', refresh)
+      $scope.$on('submitted@any', refresh)
 
       /**
        * Selects multiple devices when the user selects a device with shift pressed.
@@ -127,13 +129,6 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
         $scope.getDevices(false, false)
       }
     }
-  }
-}
-
-function refreshFactory (getDevices, $scope) {
-  return function () {
-    delete $scope.params.place
-    getDevices(false, false)
   }
 }
 
