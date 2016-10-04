@@ -66,7 +66,7 @@ function deviceListConfigFactory (RESOURCE_SEARCH) {
     },
     {
       key: 'lastEvent',
-      name: 'The last event is',
+      name: 'Last event is',
       select: 'devices:DeviceEvent',
       realKey: 'events.0.@type'
     },
@@ -93,6 +93,14 @@ function deviceListConfigFactory (RESOURCE_SEARCH) {
       comparison: '>=',
       placeholder: datePlaceholder,
       realKey: 'events._updated'
+    },
+    {
+      key: 'erase',
+      name: 'Erasure has',
+      realKey: 'events.success', // todo this works because success field is only for erasures
+      select: ['Succeed', 'Failed'],
+      boolean: true,
+      comparison: '='
     }
   ]
   return {

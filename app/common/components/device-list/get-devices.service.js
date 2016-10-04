@@ -15,7 +15,7 @@ function getDevices (ResourceSettings, deviceListConfigFactory) {
           })
         }*/
         if ('boolean' in setting) {
-          where[key] = where[key] === 'Yes'
+          where[key] = where[key] === 'Yes' || where[key] === 'Success'
         }
         if ('comparison' in setting) {
           switch (setting.comparison) {
@@ -30,8 +30,8 @@ function getDevices (ResourceSettings, deviceListConfigFactory) {
               break
           }
         } else {
-          where[key] = {$regex: '^' + where[key], $options: 'ix'}
-        } // We perform equality, but getting all words starting (the ^) with what we write
+          where[key] = {$regex: where[key], $options: 'ix'}
+        } // We perform equality, and we could make it faster by using ^ at the beggining of the word
       } catch (err) { // This error will happen while user types 'type'
         if (err.name !== 'TypeError') throw err
       }

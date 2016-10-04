@@ -42,8 +42,9 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
    * @property {object} server A gateway to send POST and GET petitions
    * @property {Array} subResourcesNames A list of subresources (excluding itself) in Type convention.
    * @property {boolean} accessible States if the user has the permission to work with the resource.
-   * @property {boolean} isALeaf In the resource tree leafs (resources without inner resources) are the actual
-   * specific resources we work with (you can have an object of devices:Snapshot but not an object of
+   * @property {boolean} isALeaf todo false (counterexample: EraseBasic) In the resource tree leafs (resources without
+   * inner resources) are the actual specific resources we work with (you can have an object of devices:Snapshot but
+   * not an object of
    * devices:deviceEvent).
    */
   function ResourceSettings (type) {
@@ -64,7 +65,7 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
       self.settings = _.assign(self._getInnerSettings(), settings)
       self.server = ResourceServer(self.settings)
       self.subResourcesNames = _.without(self.schema['@type']['allowed'], self.type)
-      self.isALeaf = self.subResourcesNames.length === 0
+      self.isALeaf = self.subResourcesNames.length === 0 || self.type === 'devices:EraseBasic' // todo so works redo
     }
   }
 

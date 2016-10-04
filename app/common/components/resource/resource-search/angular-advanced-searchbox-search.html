@@ -15,7 +15,7 @@
                         name="value"
                         nit-set-focus="searchParam.editMode"
                         ng-blur="leaveEditMode($index)"
-                        ng-keyup="$event.keyCode == 8? leaveEditMode($index, true) : null"
+                        ng-keydown="$event.keyCode == 8? leaveEditMode($index, true) : null"
                         ng-model="searchParam.value"
                         ng-options="key as value for (key, value) in searchParam.select"></select>
                 <!--ng-show="searchParam.editMode"-->
@@ -24,7 +24,7 @@
                        type="date"
                        nit-set-focus="searchParam.editMode"
                        ng-blur="leaveEditMode($index)"
-                       ng-keyup="$event.keyCode == 8? leaveEditMode($index, true) : null"
+                       ng-keydown="$event.keyCode == 8? leaveEditMode($index, true) : null"
                        ng-model="searchParam.value"/>
                 <input ng-if="searchParam.select == null && !searchParam.date"
                        name="value"
