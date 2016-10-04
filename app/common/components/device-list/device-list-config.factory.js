@@ -96,7 +96,7 @@ function deviceListConfigFactory (RESOURCE_SEARCH) {
     }
   ]
   return {
-    paramsSettings: _.concat(paramsSettings, RESOURCE_SEARCH)
+    paramsSettings: _.concat(paramsSettings, RESOURCE_SEARCH.params)
   }
 }
 

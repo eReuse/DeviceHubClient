@@ -1,4 +1,4 @@
-<div class="advancedSearchBox" ng-class="{active:focus}" ng-init="focus = false">
+<div class="advancedSearchBox form-control" ng-class="{active:focus}" ng-init="focus = false">
     <span ng-show="searchParams.length < 1 && searchQuery.length === 0"
           class="search-icon glyphicon glyphicon-search"></span>
     <a ng-href="" ng-show="searchParams.length > 0 || searchQuery.length > 0" ng-click="removeAll()" role="button">
@@ -14,9 +14,8 @@
                 <select ng-if="searchParam.select != null"
                         name="value"
                         nit-set-focus="searchParam.editMode"
-                        ng-keydown="keydown($event, $index)"
                         ng-blur="leaveEditMode($index)"
-
+                        ng-keyup="$event.keyCode == 8? leaveEditMode($index, true) : null"
                         ng-model="searchParam.value"
                         ng-options="key as value for (key, value) in searchParam.select"></select>
                 <!--ng-show="searchParam.editMode"-->
@@ -24,9 +23,8 @@
                        name="value"
                        type="date"
                        nit-set-focus="searchParam.editMode"
-                       ng-keydown="keydown($event, $index)"
                        ng-blur="leaveEditMode($index)"
-
+                       ng-keyup="$event.keyCode == 8? leaveEditMode($index, true) : null"
                        ng-model="searchParam.value"/>
                 <input ng-if="searchParam.select == null && !searchParam.date"
                        name="value"
@@ -35,7 +33,6 @@
                        nit-set-focus="searchParam.editMode"
                        ng-keydown="keydown($event, $index)"
                        ng-blur="leaveEditMode($index)"
-
                        ng-model="searchParam.value"
                        placeholder="{{searchParam.placeholder}}"/>
             </div>
@@ -48,8 +45,8 @@
                placeholder="{{placeholder}}"
                ng-focus="focus = true"
                ng-blur="focus = false"
-               uib-typeahead-on-select="typeaheadOnSelect($item, $model, $label)"
                uib-typeahead="parameter as parameter.name for parameter in parameters | filter:{name:$viewValue} | limitTo:8"
+               typeahead-on-select="typeaheadOnSelect($item, $model, $label)"
                ng-model="searchQuery"/>
     </div>
     <div class="search-parameter-suggestions" ng-show="parameters && focus">

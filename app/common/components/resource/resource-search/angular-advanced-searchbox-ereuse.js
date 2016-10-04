@@ -47,7 +47,7 @@
             searchParam.editMode = true
           }
 
-          $scope.leaveEditMode = function (index) {
+          $scope.leaveEditMode = function (index, force) { // todo ereuse add force
             if (index === undefined) {
               return
             }
@@ -56,6 +56,7 @@
             searchParam.editMode = false
 
             // remove empty search params
+            if (force) delete searchParam.value
             if (!searchParam.value) {
               $scope.removeSearchParam(index)
             }
