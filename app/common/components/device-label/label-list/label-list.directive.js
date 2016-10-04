@@ -1,5 +1,5 @@
 var labelsToPdf = require('./labels-to-pdf.js')
-var setImageGetter = require('../../utils')
+var setImageGetter = require('../../utils').setImageGetter
 
 function labelList (CONSTANTS) {
   return {

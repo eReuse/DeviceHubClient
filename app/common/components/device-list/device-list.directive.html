@@ -18,8 +18,9 @@
             tooltip-placement="bottom"
             id="counter"
       >
-        <span>{{selectedDevices.length}} devices</span>
-        <i ng-click="unselectDevices()" class="glyphicon glyphicon-remove-circle"></i>
+        <span>{{selectedDevices.length}} {{selectedDevices.length != 1? 'devices' : 'device&nbsp;&nbsp;'}}</span>
+        <i ng-style="{'visibility': selectedDevices.length == 0? 'hidden' : 'visible'}" ng-click="unselectDevices()"
+           class="fa fa-ban"></i>
       </span>
       <button
         type="button"
@@ -73,7 +74,7 @@
                        checklist-model="selectedDevices"
                        checklist-value="device"
                        ng-click="$event.stopPropagation(); select_multiple($event, devices, $index);  broadcastSelection()"
-                       ng-class="{blink: hoverScreener && device._id === devices[0]._id}"
+                       ng-class="{blink: hoverScreener && device._id === devices[0]._id && selectedDevices.length == 0}"
                 >
               </td>
               <td>{{device._id}}</td>
