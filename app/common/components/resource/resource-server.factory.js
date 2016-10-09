@@ -132,10 +132,13 @@ function parse (item, schema) {
   parseDate(item)
 
   function parseDate (val) {
-    try {
-      val['_updated'] = new Date(val['_updated'])
-      val['_created'] = new Date(val['_created'])
-    } catch (err) {}
+    _parseDate(val, '_updated')
+    _parseDate(val, '_created')
+
+    function _parseDate (value, propertyName) {
+      var a = new Date(value[propertyName])
+      if (!_.isNaN(a.getTime())) value[propertyName] = a
+    }
   }
 }
 
