@@ -11,12 +11,7 @@ function tableView () {
     link: function ($scope) {
       $scope._teaser = $scope.teaser()
       $scope.filterTeaser = {}
-      if ($scope._teaser) {
-        $scope.filterTeaser.teaser = true
-      }
-      _.forEach($scope.model, function (field) {
-        field.showAsJson = _.isPlainObject(field.value) || _.isArray(field.value)
-      })
+      if ($scope._teaser) $scope.filterTeaser = {teaser: true}
       $scope.Naming = utils.Naming
     }
   }

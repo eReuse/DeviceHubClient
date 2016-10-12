@@ -7,9 +7,8 @@ var PATH = window.COMPONENTS + '/resource/resource-button/'
  *
  * You have two options, or sending resourceId or sending resource. If you pass in
  * resourceId the resource will be fetched from the server. If you passed in resource it is used as it. If you pass in
- * both, the passed-in resource is used as is *until* the result from the server arrives, where the reference of
- * resource is replaced by the one from the server.
- *
+ * both, the passed-in resource is used to display the button and the result of the result from the server to display
+ * the popover.
  * @param {string|int|undefined} resourceId Identifier.
  * @param {object|undefined} resource
  * @param {string|int|undefined} parentId Optional.
@@ -30,9 +29,10 @@ function resourceButton (RecursionHelper, ResourceSettings) {
     },
     compile: function (element) {
       return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {
+        $scope.resource = $scope.resource || {}
         var rSettings = ResourceSettings($scope.resourceType)
         $scope.isEvent = rSettings.isSubResource('Event')
-        if (angular.isDefined($scope.resourceId) && _.isUndefined($scope.getWhenClicks)) getResource()
+        getResource()
         $scope.popover = {
           templateUrl: PATH + 'resource-button.popover.directive.html',
           isOpen: false,
@@ -48,7 +48,7 @@ function resourceButton (RecursionHelper, ResourceSettings) {
         function getResource () {
           if (rSettings.authorized) {
             rSettings.server.one($scope.resourceId).get().then(function (resource) {
-              $scope.resource = resource
+              _.assign($scope.resource, resource)
               getTitle()
             }).catch(function (error) {
               $scope.error = true

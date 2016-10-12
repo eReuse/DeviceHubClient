@@ -8,10 +8,10 @@
   <tbody>
     <tr ng-repeat="field in model | filter: filterTeaser ">
       <td>{{field.name}}</td>
-      <td ng-if="field.showAsJson && field.data_relation == undefined">
+      <td ng-if="$root._.isPlainObject(field.value) || $root._.isArray(field.value) && field.data_relation == undefined">
         <json-formatter json="field.value"></json-formatter>
       </td>
-      <td ng-if="!field.showAsJson && field.data_relation == undefined">
+      <td ng-if="!$root._.isPlainObject(field.value) && !$root._.isArray(field.value) && field.data_relation == undefined">
         {{field.value}}&nbsp;{{field.unitCode}}
       </td>
       <td ng-if="field.data_relation != undefined">
