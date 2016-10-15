@@ -5,7 +5,7 @@ var utils = require('./../../../utils')
  *  device needs _id
  * @param {FormlyConfigProvider}
  */
-function typeahead (formlyConfigProvider, CONSTANTS) {
+function typeahead (formlyConfigProvider) {
   // noinspection JSUnusedGlobalSymbols
   formlyConfigProvider.setType({
     name: 'typeahead',
@@ -17,7 +17,7 @@ function typeahead (formlyConfigProvider, CONSTANTS) {
     },
     templateUrl: window.COMPONENTS + '/forms/types/typeahead/typeahead.formly-type.config.html',
     controller: function ($scope, ResourceSettings) {
-      $scope.getResources = getResourcesFactory(ResourceSettings, $scope.to.resourceName, $scope.to.filterFieldName, CONSTANTS)
+      $scope.getResources = ResourceSettings(utils.Naming.type($scope.to.resourceName)).server.findText
     },
     apiCheck: function (check) {
       return {
@@ -30,15 +30,6 @@ function typeahead (formlyConfigProvider, CONSTANTS) {
       }
     }
   })
-}
-
-function getResourcesFactory (ResourceSettings, resourceName, filterFieldName) {
-  return function (filterValue) {
-    var searchParams = {where: {}}
-    // We look for words starting by filterValue (so we use indexs), case-insensible (options: -i)
-    searchParams.where[filterFieldName] = {$regex: '^' + filterValue, $options: '-i'}
-    return ResourceSettings(utils.Naming.type(resourceName)).server.getList(searchParams)
-  }
 }
 
 module.exports = typeahead

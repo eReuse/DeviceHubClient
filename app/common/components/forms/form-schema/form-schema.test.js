@@ -105,7 +105,7 @@ describe('Test FormSchema', function () {
       var to = element.find('[id*=typeahead_to]') // todo all selectors like this better?
       expect(to.length).toBe(1)
       var response = getJSONFixture('typeahead.request.form-schema.json')
-      var url = 'http://127.0.0.1:5000/accounts?where=%7B%22email%22:%7B%22$regex%22:%22%5Ea%22,%22$options%22:%22-i%22%7D%7D'
+      var url = 'http://127.0.0.1:5000/accounts?where=%7B%22email%22:%7B%22$regex%22:%22a%22,%22$options%22:%22-ix%22%7D%7D'
       server.expectGET(url).respond(200, response)
       to.val('a').trigger('input')
       server.flush()

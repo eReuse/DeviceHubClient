@@ -32,7 +32,24 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
         restangularConfig = CustomRestangular.one(url[0], url[1])
         break
     }
-    return CustomRestangular.service(url[url.length - 1], restangularConfig)
+    var service = CustomRestangular.service(url[url.length - 1], restangularConfig)
+    /**
+     * Finds the given text in field. Text can be a partial word.
+     * @param {string} name The name of the field
+     * @param {string} text The text to look for
+     * @param {bool} valueMatchesBeginning Optional, default false. If the text should match from the beginning,
+     * makes the search quite faster.
+     * @type {string}
+     * @return {$q} The same promise as service.getList()
+     */
+    service.findText = function (name, text, valueMatchesBeginning) {
+      var fromBeginning = valueMatchesBeginning ? '^' : ''
+      var searchParams = {where: {}}
+      // We look for words starting by filterValue (so we use indexs), case-insensible (options: -i)
+      searchParams.where[name] = {$regex: fromBeginning + text, $options: '-ix'}
+      return service.getList(searchParams)
+    }
+    return service
   }
 
   /* Configurations */

@@ -9,11 +9,6 @@ function getDevices (ResourceSettings, deviceListConfigFactory) {
           return x.key === key
         })[0]
         if ('date' in setting) where[key] = utils.parseDate(where[key])
-        /*if ('methods' in setting) {
-          setting.methods.forEach(function (method, index, array) {
-            where[key] = method(where[key])
-          })
-        }*/
         if ('boolean' in setting) {
           where[key] = where[key] === 'Yes' || where[key] === 'Succeed'
         }
@@ -28,6 +23,11 @@ function getDevices (ResourceSettings, deviceListConfigFactory) {
             case '=':
               where[key] = where[key]
               break
+            case 'in':
+              where[key] = {$in: _.isArray(where[key]) ? where[key] : [where[key]]}
+              break
+            case 'nin':
+              where[key] = {$nin: _.isArray(where[key]) ? where[key] : [where[key]]}
           }
         } else {
           where[key] = {$regex: where[key], $options: 'ix'}

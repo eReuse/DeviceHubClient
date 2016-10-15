@@ -1,6 +1,6 @@
 <input type="text"
        ng-model="model[options.key]"
-       uib-typeahead="resource[to.keyFieldName] as resource[to.labelFieldName] for resource in getResources($viewValue)"
+       uib-typeahead="resource[to.keyFieldName] as resource[to.labelFieldName] for resource in getResources(to.filterFieldName, $viewValue)"
        class="form-control"
        typeahead-editable="false">
 </input>

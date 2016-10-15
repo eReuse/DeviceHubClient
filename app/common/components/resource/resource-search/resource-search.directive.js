@@ -19,6 +19,7 @@ function resourceSearch (ResourceSettings) {
       function unpackSettings (settings) {
         _.forEach(settings, function (param) {
           var result = {}
+          // For selects
           if (_.isString(param.select)) {
             _.forEach(ResourceSettings(param.select).getSubResources(), function (rSettings) {
               if (rSettings.isALeaf) result[rSettings.type] = rSettings.humanName
@@ -30,6 +31,11 @@ function resourceSearch (ResourceSettings) {
             })
             param.select = result
           }
+        })
+        settings.sort(function (a, b) {
+          if (a.name < b.name) return -1
+          if (a.name > b.name) return 1
+          return 0
         })
         return settings
       }

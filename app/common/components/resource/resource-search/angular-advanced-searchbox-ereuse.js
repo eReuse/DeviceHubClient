@@ -12,7 +12,7 @@
 (function () {
 
   angular.module('angular-advanced-searchbox', [])
-  .directive('nitAdvancedSearchbox', function () {
+  .directive('nitAdvancedSearchbox', function (ResourceSettings) {
     return {
       restrict: 'E',
       scope: {
@@ -80,11 +80,23 @@
                 value: value || '',
                 editMode: enterEditModel,
                 select: 'select' in searchParam ? searchParam.select : null,  // todo modified by ereuse
-                date: 'date' in searchParam ? searchParam.date : false
+                date: 'date' in searchParam ? searchParam.date : false,
+                typeahead: searchParam.typeahead
+                  ? _.assign(searchParam.typeahead, {_get: ResourceSettings(searchParam.typeahead.resourceType).server.findText})
+                  : null
               }
             )
-
             // TODO: hide used suggestion
+          }
+
+          $scope.typeaheadCanRemove = function (e) {
+            return e.keyCode == 8 && e.target.value.length == 0
+          }
+          $scope.datepickerOpen = function (searchParam) {
+            _.forEach($scope.searchParams, function (searchParam) {
+              searchParam.datepickerOpened = false
+            })
+            searchParam.datepickerOpened = true
           }
 
           $scope.removeSearchParam = function (index) {
@@ -205,7 +217,7 @@
               }
 
               angular.forEach($scope.searchParams, function (param) {
-                if (param.value !== undefined) { // todo modified by ereuse
+                if (angular.isDefined(param.value) && !_.isNull(param.value)) { // todo modified by ereuse
                   if (param.value.length > 0 || typeof param.value != 'string') {
                     $scope.model[param.key] = param.value
                   }
@@ -253,7 +265,7 @@
             }
           })
           $element.bind('blur', function () {
-            $scope.$apply(model.assign($scope, false))
+            $scope.$evalAsync(model.assign($scope, false)) // todo ereuse changed from $apply
           })
         }
       }
