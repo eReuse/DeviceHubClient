@@ -9,7 +9,7 @@ function accountView (RecursionHelper, cerberusToView) {
     },
     compile: function (element) {
       return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {
-        $scope.$watch('account._id', function () {
+        $scope.$watchCollection('account', function () {
           $scope.model = cerberusToView.parse($scope.account)
         })
       })

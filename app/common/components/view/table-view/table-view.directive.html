@@ -17,13 +17,13 @@
       <td ng-if="field.data_relation != undefined">
         <div ng-if="$root._.isArray(field.value)">
           <span ng-repeat="value in field.value">
-              <resource-button resource-id="value"
-                               resource-type="Naming.type(field.data_relation.resource)"></resource-button>
+              <resource-button resource="{_id: value, '@type': Naming.type(field.data_relation.resource)}">
+              </resource-button>
           </span>
         </div>
         <div ng-if="!$root._.isArray(field.value)">
-          <resource-button resource-id="field.value"
-                           resource-type="Naming.type(field.data_relation.resource)"></resource-button>
+          <resource-button resource="{_id: field.value, '@type': Naming.type(field.data_relation.resource)}">
+          </resource-button>
         </div>
       </td>
     </tr>

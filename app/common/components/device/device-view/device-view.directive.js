@@ -9,7 +9,7 @@ function deviceView (RecursionHelper, cerberusToView) {
     },
     compile: function (element) {
       return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {
-        $scope.$watch('device._id', function () {
+        $scope.$watchCollection('device', function () {
           $scope.model = cerberusToView.parse($scope.device)
         })
       })

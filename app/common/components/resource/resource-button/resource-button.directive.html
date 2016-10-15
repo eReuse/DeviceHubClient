@@ -1,5 +1,4 @@
-<button
-        ng-hide="error"
+<button ng-hide="error"
         uib-popover-template="popover.templateUrl"
         popover-title="{{popover.title}}"
         type="button"
@@ -11,12 +10,6 @@
         popover-class="resource-button-popover"
 
 >
-    {{popover.title | limitTo : 18}}{{popover.title.length > 18? '&hellip;': ''}}
-    <!--<div ng-if="isEvent">
-        <event-easy-explanation event="resource" id="parentId" use-resource-button="false"></event-easy-explanation>
-    </div>
-    <div ng-hide="isEvent">
-
-    </div>-->
+  {{popover.title | limitTo : 18}}{{popover.title.length > 18? '&hellip;': ''}}
 </button>
 <i ng-show="error" class="glyphicon glyphicon-ban-circle"></i>

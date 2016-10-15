@@ -9,8 +9,12 @@ function eventView (cerberusToView, RecursionHelper) {
     },
     compile: function (element) {
       return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {
-        $scope.model = cerberusToView.parse($scope.event)
         $scope.Naming = require('./../../utils').Naming
+        $scope.$watchCollection('event', function (event) {
+          if (angular.isDefined(event)) {
+            $scope.model = cerberusToView.parse(event)
+          }
+        })
       })
     }
   }

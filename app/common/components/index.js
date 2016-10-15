@@ -19,3 +19,4 @@ module.exports = angular.module('common.components',
     require('./index-button').name,
     require('./resource').name
   ])
+.directive('closePopover', require('./close-popover'))

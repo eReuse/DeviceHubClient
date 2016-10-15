@@ -18,3 +18,4 @@ module.exports = angular.module('common.components.resource',
 .directive('resourceView', require('./resource-view/resource-view.directive'))
 .directive('resourceButton', require('./resource-button/resource-button.directive'))
 .directive('deleteButton', require('./delete-button/delete-button.directive'))
+.directive('resource', require('./resource/resource.directive'))
