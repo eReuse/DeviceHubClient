@@ -32,16 +32,7 @@
       </button>
       <manual-events-button devices="selectedDevices"></manual-events-button>
       <share devices="selectedDevices"></share>
-      <button
-        type="button"
-        class="btn"
-        ng-click="allComputers ? openModal('Erasure Certificate') : null"
-        ng-class="{'btn-primary': selectedDevices.length > 0 && allComputers}"
-        uib-tooltip="Select only computers"
-        tooltip-enable="!allComputers"
-      >
-        <i class="fa fa-certificate"></i>Erasure certificate
-      </button>
+      <certificate-button devices="selectedDevices"></certificate-button>
     </div>
   </div>
   <div class="row">

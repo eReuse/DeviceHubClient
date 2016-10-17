@@ -90,7 +90,6 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
       $scope.$watchCollection('selectedDevices', function (selectedDevices) {
         $('device-list input:checked').parents('tr').addClass('info')
         $('device-list input:not(checked)').parents('tr').removeClass('info')
-        $scope.allComputers = _.every(selectedDevices, {'@type': 'Computer'})
       })
 
       $scope.unselectDevices = function () {
