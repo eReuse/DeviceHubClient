@@ -54,7 +54,7 @@ function FormSchemaFactory (ResourceSettings, $rootScope, Notification, cerberus
     var self = this
     return function (response) {
       var resource = _.isUndefined(response) ? model : response // DELETE operations do not answer with the result
-      $rootScope.$broadcast('submitted@' + model['@type'])
+      $rootScope.$broadcast('submitted@' + resource['@type'])
       $rootScope.$broadcast('submitted@any')
       self.status.working = false
       self.status.done = true
@@ -95,7 +95,7 @@ function FormSchemaFactory (ResourceSettings, $rootScope, Notification, cerberus
   proto.delete = function (model) {
     if (confirm('Are you sure you want to delete it?')) {
       model.remove().then(
-        this.succeedSubmissionFactory(this.OPERATION.delete),
+        this.succeedSubmissionFactory(this.OPERATION.delete, model),
         this.failedSubmissionFactory()
       )
     }
