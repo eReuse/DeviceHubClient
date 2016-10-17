@@ -1,25 +1,26 @@
-'use strict';
-
-require('restangular');
-require('angular-ui-bootstrap');
-require('jsonformatter');
-require('angular-ui-notification');
+require('restangular')
+require('angular-ui-bootstrap')
+require('jsonformatter')
+require('angular-ui-notification')
 
 module.exports = angular.module('common.config',
-    [
-        require('./../constants').name,
-        'restangular',
-        'ui.bootstrap',
-        'jsonFormatter',
-        'ui-notification'
-    ])
-    .config(require('./restangular.config.js'))
-    .config(require('./modal.config.js'))
-    .config(require('./json-formatter.config.js'))
-    .config(require('./html5.config.js'))
-    .config(require('./ui-notification.config.js'))
-    .factory('configureResources', require('./configureResources.factory.js'))
-    .factory('schema', require('./schema.factory.js'))
-    .run(function ($rootScope) {
-            $rootScope._ = window._;
-    });
+  [
+    require('./../constants').name,
+    'restangular',
+    'ui.bootstrap',
+    'jsonFormatter',
+    'ui-notification',
+    require('angular-formly')
+  ])
+.config(require('./restangular.config'))
+.config(require('./modal.config'))
+.config(require('./json-formatter.config'))
+.config(require('./html5.config'))
+.config(require('./ui-notification.config'))
+.config(require('./formly.config'))
+.factory('RestangularFactory', require('./restangular.factory'))
+.factory('schema', require('./schema.factory'))
+.run(require('./formly.run'))
+.run(function ($rootScope) {
+  $rootScope._ = window._
+})

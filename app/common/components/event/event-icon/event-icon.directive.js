@@ -1,17 +1,14 @@
-'use strict';
-
-function eventIcon(event){
-    return{
-        template: '<small ng-if="EVENTS[eventType].to"><i  class="glyphicon glyphicon-arrow-right"></i></small>'  +
-        '<i class="glyphicon glyphicon-{{EVENTS[eventType].glyphicon}} {{class}}"></i>',
-        restrict: 'E',
-        scope:{
-            eventType: '@'
-        },
-        link: function($scope){
-            $scope.EVENTS = event.EVENTS;
-        }
+function eventIcon (ResourceSettings) {
+  return {
+    template: '<small ng-if="ResourceSettings(eventType).settings.to">' +
+    '<i  class="glyphicon glyphicon-arrow-right"></i>' +
+    '</small>' +
+    '<i class="fa {{ResourceSettings(eventType).settings.fa}} {{class}}"></i>',
+    restrict: 'E',
+    scope: {
+      eventType: '@'
     }
+  }
 }
 
-module.exports = eventIcon;
+module.exports = eventIcon

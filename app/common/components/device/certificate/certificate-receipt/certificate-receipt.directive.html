@@ -1,0 +1,15 @@
+<form ng-submit="form.print(devices, form.model, logo)" name="receiptForm" id="receiptForm" novalidate>
+  <div>
+    <i class="fa fa-exclamation-triangle fa-lg"></i>
+    This is a preview and may not work, we will update it in a few days.
+  </div>
+  <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
+    <button type="submit" class="btn btn-primary submit-button" ng-disabled="commonOwners.length == 0">
+      Print
+    </button>
+  </formly-form>
+  <div class="form-group">
+    <label for="logoUpload">Logo of the organization to show</label>
+    <input type="file" class="form-control" id="logoUpload" accept="image/x-png, image/jpeg" required>
+  </div>
+</form>

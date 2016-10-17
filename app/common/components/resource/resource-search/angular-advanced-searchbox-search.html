@@ -1,0 +1,69 @@
+<div class="advancedSearchBox form-control" ng-class="{active:focus}" ng-init="focus = false">
+    <span ng-show="searchParams.length < 1 && searchQuery.length === 0"
+          class="search-icon glyphicon glyphicon-search"></span>
+  <a ng-href="" ng-show="searchParams.length > 0 || searchQuery.length > 0" ng-click="removeAll()" role="button">
+    <span class="remove-all-icon glyphicon glyphicon-trash"></span>
+  </a>
+  <div>
+    <div class="search-parameter" ng-repeat="searchParam in searchParams">
+      <a ng-href="" ng-click="removeSearchParam($index)" role="button">
+        <span class="remove glyphicon glyphicon-trash"></span>
+      </a>
+      <div class="key">{{searchParam.name}}&nbsp;</div>
+      <div class="value">
+        <select ng-if="searchParam.select != null"
+                name="value"
+                nit-set-focus="searchParam.editMode"
+                ng-blur="leaveEditMode($index)"
+                ng-keydown="$event.keyCode == 8? leaveEditMode($index, true) : null"
+                ng-model="searchParam.value"
+                ng-options="key as value for (key, value) in searchParam.select"></select>
+        <!--ng-show="searchParam.editMode"-->
+        <input ng-if="searchParam.date"
+               type="text"
+               ng-model="searchParam.value"
+               ng-focus="datepickerOpen(searchParam)"
+               uib-datepicker-popup
+               is-open="searchParam.datepickerOpened"
+               nit-set-focus="searchParam.editMode"
+               ng-keydown="typeaheadCanRemove($event)? leaveEditMode($index, true) : null"/>
+        <input ng-if="searchParam.select == null && !searchParam.date && !searchParam.typeahead"
+               name="value"
+               type="text"
+               nit-auto-size-input
+               nit-set-focus="searchParam.editMode"
+               ng-keydown="keydown($event, $index)"
+               ng-blur="leaveEditMode($index)"
+               ng-model="searchParam.value"
+               placeholder="{{searchParam.placeholder}}"/>
+        <input
+          ng-if="searchParam.typeahead"
+          type="text"
+          ng-model="searchParam.value"
+          nit-set-focus="searchParam.editMode"
+          uib-typeahead="resource[searchParam.typeahead.keyFieldName] as resource[searchParam.typeahead.labelFieldName] for resource in searchParam.typeahead._get(searchParam.typeahead.filterFieldName, $viewValue)"
+          ng-keydown="typeaheadCanRemove($event)? leaveEditMode($index, true) : null"
+          typeahead-editable="false">
+        </input>
+      </div>
+    </div>
+    <input name="searchbox"
+           class="search-parameter-input"
+           type="text"
+           nit-set-focus="setSearchFocus"
+           ng-keydown="keydown($event)"
+           placeholder="{{placeholder}}"
+           ng-focus="focus = true"
+           ng-blur="focus = false"
+           uib-typeahead="parameter as parameter.name for parameter in parameters | filter:{name:$viewValue} | limitTo:8"
+           typeahead-on-select="typeaheadOnSelect($item, $model, $label)"
+           ng-model="searchQuery"/>
+  </div>
+  <div class="search-parameter-suggestions" ng-show="parameters && focus">
+    <span class="search-parameter"
+          ng-repeat="param in parameters"
+          ng-mousedown="addSearchParam(param)"
+          uib-tooltip="{{::param.description}}"
+    >{{param.name}}</span>
+  </div>
+</div>

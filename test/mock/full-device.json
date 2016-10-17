@@ -1,0 +1,72 @@
+{
+  "_created": "2016-09-02T16:28:51",
+  "_id": "1",
+  "public": false,
+  "events": [
+    {
+      "_id": "57c9d9cc7b7d3a07332bbf5b",
+      "date": "2016-07-25T18:18:13",
+      "toOrganization": "ong1",
+      "to": "57c9cce57b7d3a07332bbf56",
+      "incidence": false,
+      "byUser": "57c9cc457b7d3a07332bbf55",
+      "@type": "devices:Allocate",
+      "secured": false
+    },
+    {
+      "comment": "",
+      "_id": "57c9a8c47b7d3a371c33c809",
+      "label": "13",
+      "incidence": false,
+      "byUser": "57c9a8c07b7d3a371c33c802",
+      "@type": "devices:Snapshot",
+      "secured": false
+    },
+    {
+      "_id": "57c9a8c47b7d3a371c33c807",
+      "incidence": false,
+      "byUser": "57c9a8c07b7d3a371c33c802",
+      "@type": "devices:Register",
+      "secured": false
+    }
+  ],
+  "hid": "hewlett-packard-ac4daeded290ca9f4f9cfe1e07c661000f1307090dd7774e82ee6e8d-hp_compaq_dc5800_microtower",
+  "_links": {
+    "collection": {
+      "title": "devices",
+      "href": "db1/devices"
+    },
+    "parent": {
+      "title": "home",
+      "href": "/"
+    },
+    "self": {
+      "title": "Device",
+      "href": "db1/devices/1"
+    }
+  },
+  "@type": "Computer",
+  "model": "HP Compaq dc5800 Microtower",
+  "forceCreation": false,
+  "type": "Desktop",
+  "isUidSecured": true,
+  "_updated": "2016-09-02T16:28:51",
+  "icon": "devices/icons/Desktop.svg",
+  "components": [
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9"
+  ],
+  "owners": [
+    "57c9cce57b7d3a07332bbf56"
+  ],
+  "serialNumber": "ac4daeded290ca9f4f9cfe1e07c661000f1307090dd7774e82ee6e8d",
+  "manufacturer": "Hewlett-Packard",
+  "labelId": "13",
+  "_etag": "5940972e358776244873408bbb51ba55d37009d0"
+}

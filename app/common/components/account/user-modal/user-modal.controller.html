@@ -1,18 +1,23 @@
 <div class="modal-header">
-    <h3 class="modal-title"><account-role role="{{account.role}}"></account-role>&nbsp;{{account.name}}</h3>
+    <h3 class="modal-title">
+        <account-role role="{{account.role}}"></account-role>
+        &nbsp;{{account.name}}
+    </h3>
 </div>
 <div class="modal-body" ng-switch="type">
     <form id="accountForm" name="accountForm" class="form-horizontal" ng-submit="update(account)" show-validation>
         <div class="form-group">
             <label for="email" class="col-xs-2">Email</label>
             <div class="col-xs-10">
-                <input type="email" id="email" class="form-control" ng-model="account.email" placeholder="Your e-mail" required autocomplete="off">
+                <input type="email" id="email" class="form-control" ng-model="account.email" placeholder="Your e-mail"
+                       required autocomplete="off">
             </div>
         </div>
         <div class="form-group">
             <label for="password" class="col-xs-2">Password</label>
             <div class="col-xs-10">
-                <input type="password" id="password" class="form-control" ng-model="account.password" required minlength="4" autocomplete="off">
+                <input type="password" id="password" class="form-control" ng-model="account.password" required
+                       minlength="4" autocomplete="off">
             </div>
         </div>
         <div class="form-group">
@@ -24,7 +29,8 @@
         <div class="form-group">
             <label for="role" class="col-xs-2">Role</label>
             <div class="col-xs-10">
-                <account-role role="{{account.role}}"></account-role>&nbsp{{account.role}}
+                <account-role role="{{account.role}}"></account-role>
+                &nbsp{{account.role}}
             </div>
         </div>
     </form>

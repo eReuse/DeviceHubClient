@@ -4,8 +4,8 @@
         <div ng-switch-when="Label">
             <device-label-list devices="devices"></device-label-list>
         </div>
-        <div ng-switch-when="Receive">
-            <event-edit-fullscreen-widget event="event"></event-edit-fullscreen-widget>
+        <div ng-switch-when="Erasure Certificate">
+            <certificate-erasure devices="devices"></certificate-erasure>
         </div>
     </div>
     <!--<ul>
@@ -15,6 +15,5 @@
     </ul>-->
 </div>
 <div class="modal-footer">
-    <button ng-if="type != 'Label'" type="submit" form="eventForm" class="btn btn-primary">Apply</button>
-    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Return to list</button>
 </div>

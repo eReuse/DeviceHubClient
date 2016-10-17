@@ -1,49 +1,52 @@
-device-list-widget table input[type=checkbox]{
-    -webkit-transform: scale(1.35);
-    -moz-transform: scale(1.35);
-    -ms-transform: scale(1.35);
-    -o-transform: scale(1.35);
-    transform: scale(1.35);
+device-list-widget table input[type=checkbox] {
+  -webkit-transform: scale(1.35);
+  -moz-transform: scale(1.35);
+  -ms-transform: scale(1.35);
+  -o-transform: scale(1.35);
+  transform: scale(1.35);
 }
 
-device-list-widget table tr{
-    cursor: pointer;
+device-list-widget table tr {
+  cursor: pointer;
 }
 
-device-list-widget #selectedMenu span[uib-tooltip-template]{
-    margin-right: 1em;
+device-list-widget #selectedMenu span[uib-tooltip-template] {
+  margin-right: 1em;
 }
 
-device-list-widget #selectedMenu span[uib-tooltip-template] i{
-    vertical-align: middle;
-    cursor: pointer;
+device-list-widget #selectedMenu span[uib-tooltip-template] i {
+  vertical-align: middle;
+  cursor: pointer;
 }
 
-
-.table>thead>tr>td.success, .table>tbody>tr>td.success, .table>tfoot>tr>td.success, .table>thead>tr>th.success, .table>tbody>tr>th.success, .table>tfoot>tr>th.success, .table>thead>tr.success>td, .table>tbody>tr.success>td, .table>tfoot>tr.success>td, .table>thead>tr.success>th, .table>tbody>tr.success>th, .table>tfoot>tr.success>th{
-    background-color: rgb(24, 146, 182) !important;
+.table > thead > tr > td.success, .table > tbody > tr > td.success, .table > tfoot > tr > td.success, .table > thead > tr > th.success, .table > tbody > tr > th.success, .table > tfoot > tr > th.success, .table > thead > tr.success > td, .table > tbody > tr.success > td, .table > tfoot > tr.success > td, .table > thead > tr.success > th, .table > tbody > tr.success > th, .table > tfoot > tr.success > th {
+  background-color: rgb(24, 146, 182) !important;
 }
 
-.advancedSearchBox input, .advancedSearchBox select{
-    line-height: initial;
-    border: none;
-}
-.advancedSearchBox input:focus, .advancedSearchBox select:focus{
-    border-bottom: 1px solid white;
+.advancedSearchBox input, .advancedSearchBox select {
+  line-height: initial;
+  border: none;
 }
 
-.advancedSearchBox .search-parameter{
-    border-radius: 0;
-    box-shadow: none;
+.advancedSearchBox input:focus, .advancedSearchBox select:focus {
+  border-bottom: 1px solid white;
 }
-.advancedSearchBox .search-parameter-input{
-    height: auto;
+
+.advancedSearchBox .search-parameter {
+  border-radius: 0;
+  box-shadow: none;
 }
-.advancedSearchBox{
-    cursor: auto;
-    border-radius: 0;
+
+.advancedSearchBox .search-parameter-input {
+  height: auto;
 }
-.advancedSearchBox .search-parameter{
-    height: auto;
-    line-height: 2em;
+
+.advancedSearchBox {
+  cursor: auto;
+  border-radius: 0;
+}
+
+.advancedSearchBox .search-parameter {
+  height: auto;
+  line-height: 2em;
 }

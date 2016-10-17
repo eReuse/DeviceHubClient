@@ -20,7 +20,8 @@
     "angular-timeline": "~1.6.1",
     "angular-dashboard-framework": "^0.11.0",
     "adf-structures-base": "^0.1.1",
-    "Boxer": "ba-dotimeout#*"
+    "Boxer": "ba-dotimeout#*",
+    "pdfmake-dist": "^0.1.31"
   },
   "resolutions": {
     "jquery": ">= 1.9.1",

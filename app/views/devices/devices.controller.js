@@ -1,10 +1,4 @@
-'use strict';
-
-function devicesController ($scope, configureResources){
-    var self = this;
-    self.deviceApi = {};
-    configureResources.configureSchema().then(function(){
-    })
+function devicesController ($scope, ResourceSettings) {
 }
 
-module.exports = devicesController;
+module.exports = devicesController

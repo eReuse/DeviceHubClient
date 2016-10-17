@@ -1,20 +1,20 @@
-<div fill-height additional-padding="{{87+20}}">
-<div class="list-group">
-        <h3 class="row">
-            <span class="col-xs-9">Places</span>
-            <create-place class="col-xs-3"></create-place>
-        </h3>
+<div>
+  <h3 class="row">
+    <span class="col-xs-9">Places</span>
+    <create-place class="col-xs-3"></create-place>
+  </h3>
+  <div class="fill-height">
     <a class="list-group-item"
        ng-repeat="place in places"
        ng-click="broadcastSelectedPlace(place._id)"
-            ng-class="{active: isSelected(place._id)}"
+       ng-class="{active: isSelected(place._id)}"
     >
-        <i ng-if="devices.length > 0"
-           ng-click="$event.stopPropagation(); moveDevices(place, devices)"
-           class="glyphicon glyphicon-log-in pull-right ani-show"
-        ></i>
-        <edit-place place="place"></edit-place>
-       {{place.label}}
+      <i ng-if="devices.length > 0"
+         ng-click="$event.stopPropagation(); moveDevices(place, devices)"
+         class="glyphicon glyphicon-log-in pull-right ani-show"
+      ></i>
+      <edit-place place="place"></edit-place>
+      {{place.label}}
     </a>
-</div>
+  </div>
 </div>

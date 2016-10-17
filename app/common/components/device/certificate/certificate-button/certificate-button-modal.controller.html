@@ -1,0 +1,10 @@
+<div ng-include="'common/elements/modal/header.html'"></div>
+<div class="modal-body" ng-switch="title">
+  <div ng-switch-when="Erasure">
+    <certificate-erasure devices="devices"></certificate-erasure>
+  </div>
+  <div ng-switch-when="Receipt">
+    <certificate-receipt devices="devices"></certificate-receipt>
+  </div>
+</div>
+<div ng-include="'common/elements/modal/done-dismiss.html'"></div>

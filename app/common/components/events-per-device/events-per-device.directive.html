@@ -5,14 +5,14 @@
     <timeline side="left" ng-hide="loading || error">
         <timeline-event ng-repeat="event in events">
             <timeline-badge class="info">
-                <event-icon event-type="{{event['@type']}}"></event-icon>
+                <resource-icon resource-type="{{event['@type']}}"></resource-icon>
             </timeline-badge>
             <timeline-panel class="info">
                 <event-view event="event" id="id"></event-view>
             </timeline-panel>
         </timeline-event>
     </timeline>
-    <uib-alert class="alert alert-danger" ng-show="error == 401">
+    <uib-alert class="alert alert-danger" ng-show="error">
         You are not authorized to see events.
     </uib-alert>
 </article>

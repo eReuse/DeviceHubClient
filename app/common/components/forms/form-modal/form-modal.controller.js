@@ -1,22 +1,19 @@
+var utils = require('./../../utils')
 
-
-'use strict';
-
-var sjv = require('simple-js-validator');
-
-function formModal($scope, $uibModalInstance, options, model, event){
-    $scope.model = model;
-    $scope.options = options;
-    $scope.defined = angular.isDefined(event.EVENTS[model['@type']]);
-    $scope.status = {};
-    $scope.isNotEmpty = sjv.isNotEmpty;
-    $scope.cancel = function () {
-        $uibModalInstance.dismiss('cancel');
-    };
-    $scope.$watch(function(){return $scope.status.done}, function(newV){
-        if(newV) $uibModalInstance.close('success');
-    })
-
+function formModal ($scope, $uibModalInstance, options, model, ResourceSettings) {
+  $scope.model = model
+  $scope.options = options
+  $scope.status = {}
+  $scope.humanize = utils.Naming
+  $scope.cancel = function () {
+    $uibModalInstance.dismiss('cancel')
+  }
+  $scope.$watch(function () {
+    return $scope.status.done
+  }, function (newV) {
+    if (newV) $uibModalInstance.close('success')
+  })
+  $scope.title = $scope.options.title || ResourceSettings(model['@type']).humanName
 }
 
-module.exports = formModal;
+module.exports = formModal

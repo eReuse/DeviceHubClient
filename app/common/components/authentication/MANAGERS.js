@@ -1,10 +1,8 @@
-'use strict';
-
-function MANAGERS(){
-    return {
-        admin: 'admin',
-        superuser: 'superuser'
-    }
+function MANAGERS () {
+  return {
+    admin: 'admin',
+    superuser: 'superuser'
+  }
 }
 
-module.exports = MANAGERS;
+module.exports = MANAGERS

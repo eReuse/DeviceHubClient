@@ -1,0 +1,24 @@
+<div class="btn-group" uib-dropdown is-open="dropDownIsOpen">
+  <button type="button"
+          class="btn"
+          ng-class="{'btn-primary': devices.length > 0 && allComputers}"
+          uib-tooltip="Select only computers"
+          tooltip-enable="!allComputers"
+          ng-click="openDropdown()"
+  >
+    <i class="fa fa-certificate"></i>New certificate<i class="fa fa-fw fa-caret-down"></i>
+  </button>
+  <ul uib-dropdown-menu role="menu" aria-labelledby="certificate-button">
+    <li role="menuitem"
+        ng-repeat="certificate in ::certificates"
+        uib-tooltip-html="certificate.description"
+        tooltip-placement="left"
+        tooltip-append-to-body="true"
+    >
+      <a ng-click="openModal(certificate.title, devices)">
+        <i class="fa fa-fw fa-lg {{certificate.icon}}"></i>
+        {{certificate.title}}
+      </a>
+    </li>
+  </ul>
+</div>

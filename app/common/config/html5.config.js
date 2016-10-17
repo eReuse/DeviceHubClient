@@ -1,8 +1,6 @@
-'use strict';
-
-function html5($locationProvider, CONSTANTS){
-    $locationProvider.html5Mode(CONSTANTS.html5mode);
-    $locationProvider.hashPrefix('!');
+function html5 ($locationProvider, CONSTANTS) {
+  $locationProvider.html5Mode(CONSTANTS.html5mode)
+  $locationProvider.hashPrefix('!')
 }
 
-module.exports = html5;
+module.exports = html5

@@ -1,38 +1,39 @@
 ul.timeline:before {
-    left: 40px !important; }
+  left: 40px !important;
+}
 
 ul.timeline li timeline-panel {
-    width: calc(100% - 85px) !important;
-    width: -moz-calc(100% - 85px) !important;
-    width: -webkit-calc(100% - 85px) !important;
+  width: calc(100% - 85px) !important;
+  width: -moz-calc(100% - 85px) !important;
+  width: -webkit-calc(100% - 85px) !important;
 }
 
 ul.timeline li timeline-badge {
-    left: 15px !important;
-    margin-left: 0 !important;
-    top: 36px !important;
+  left: 15px !important;
+  margin-left: 0 !important;
+  top: 36px !important;
 }
 
 ul.timeline li timeline-panel {
-    float: right !important;
+  float: right !important;
 }
 
 ul.timeline li timeline-panel:before {
-    border-left-width: 0 !important;
-    border-right-width: 15px !important;
-    left: -15px !important;
-    right: auto !important;
-    top: 46px !important;
+  border-left-width: 0 !important;
+  border-right-width: 15px !important;
+  left: -15px !important;
+  right: auto !important;
+  top: 46px !important;
 }
 
 ul.timeline li timeline-panel:after {
-    border-left-width: 0 !important;
-    border-right-width: 14px !important;
-    left: -14px !important;
-    right: auto !important;
-    top: 47px !important;
+  border-left-width: 0 !important;
+  border-right-width: 14px !important;
+  left: -14px !important;
+  right: auto !important;
+  top: 47px !important;
 }
 
-ul.timeline li .timeline-panel{
-    width: auto !important;
+ul.timeline li .timeline-panel {
+  width: auto !important;
 }

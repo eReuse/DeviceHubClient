@@ -1,0 +1,15 @@
+<button ng-hide="error"
+        uib-popover-template="popover.templateUrl"
+        popover-title="{{popover.title}}"
+        type="button"
+        class="btn btn-primary btn-xs"
+        popover-is-open="popover.isOpen"
+        popover-trigger="click"
+        popover-append-to-body="true"
+        popover-placement="auto left"
+        popover-class="resource-button-popover"
+
+>
+  {{popover.title | limitTo : 18}}{{popover.title.length > 18? '&hellip;': ''}}
+</button>
+<i ng-show="error" class="glyphicon glyphicon-ban-circle"></i>

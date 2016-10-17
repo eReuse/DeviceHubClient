@@ -1,10 +1,10 @@
 /*Stop bouncing on iOS and Mac*/
-html{
+html {
   height: 100%;
   overflow: hidden;
 }
 
-.popover-content{
+.popover-content {
   overflow-y: auto;
   overflow-x: hidden;
 }

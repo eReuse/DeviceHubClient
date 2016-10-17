@@ -1,30 +1,32 @@
-'use strict';
+function manualEventsButton (ResourceSettings, $uibModal) {
+  return {
+    templateUrl: window.COMPONENTS + '/event/manual-events-button/manual-events-button.directive.html',
+    restrict: 'E',
+    scope: {
+      devices: '='
+    },
+    link: function ($scope) {
+      $scope.events = ResourceSettings('devices:DeviceEvent').getSubResources()
+      $scope.openModal = openModalFactory($uibModal)
+    }
+  }
+}
 
-function manualEventsButton(event, $uibModal){
-    return {
-        templateUrl: window.COMPONENTS + '/event/manual-events-button/manual-events-button.directive.html',
-        restrict: 'E',
-        scope: {
-            devices: "="
+function openModalFactory ($uibModal) {
+  return function (type, devices) {
+    $uibModal.open({
+      templateUrl: window.COMPONENTS + '/forms/form-modal/form-modal.controller.html',
+      controller: 'formModalCtrl',
+      resolve: {
+        model: function () {
+          return {'@type': type, devices: devices}
         },
-        link: function ($scope) {
-            $scope.events = event.EVENTS;
-            $scope.openModal = openModalFactory($uibModal)
+        options: function () {
+          return {}
         }
-    }
+      }
+    })
+  }
 }
 
-function openModalFactory($uibModal){
-    return function (type, devices){
-        $uibModal.open({
-            templateUrl: window.COMPONENTS + '/forms/form-modal/form-modal.controller.html',
-            controller: 'formModalCtrl',
-            resolve: {
-                model: function(){ return {'@type': type, devices: devices}},
-                options: function(){ return {}}
-            }
-        })
-    }
-}
-
-module.exports = manualEventsButton;
+module.exports = manualEventsButton

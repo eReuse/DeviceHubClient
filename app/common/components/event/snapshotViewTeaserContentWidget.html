@@ -1,8 +1,9 @@
 <div>
-    The user <resource-button resource-id="snapshot.byUser" url-resource-name="'accounts'"></resource-button>
-     uploaded a Snapshot JSON file at {{snapshot._created | date}},
+    The user
+    <resource-button resource="{_id: snapshot.byUser, '@type': 'Account'}"></resource-button>
+    uploaded a Snapshot JSON file at {{snapshot._created | date}},
     and the following changes were performed:
-    <div ng-repeat="subEventId in snapshot.events">
-        <resource-button parent-id="id" resource-id="subEventId" url-resource-name="'events'"></resource-button>
-    </div>
+    <span ng-repeat="subEventId in snapshot.events">
+        <resource-button resource="{_id: subEventId, '@type': 'Event'}"></resource-button>
+    </span>
 </div>

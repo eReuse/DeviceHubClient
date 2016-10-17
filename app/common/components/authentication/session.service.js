@@ -1,67 +1,96 @@
-'use strict';
-var sjv = require('simple-js-validator');
-var ACCOUNT_STORAGE = 'account';
+var ACCOUNT_STORAGE = 'account'
 
-function session(configureResources) {
-    this._account = {};
-    this.saveInBrowser = true;
-    this.first_time = true;
-    this.create = function(account, saveInBrowser){
-        this._account = account;
-        this.saveInBrowser = saveInBrowser;
-        this.setActiveDefaultDatabase();
-        this.setInBrowser(this.saveInBrowser);
-        configureResources.setAuthHeader(account);
-        configureResources.configureSchema();
-    };
-    this.destroy = function(){
-        configureResources.removeActiveDatabase(this._account);
-        this._account.length = 0;
-        localStorage.clear();
-        sessionStorage.clear();
-    };
-    this.isAccountSet = function(){
-        return sjv.isNotEmpty(this.getAccount())
-    };
-
-    this._isAccountSet = function(){
-        return sjv.isNotEmpty(this._account)
-    };
-    this.getAccount = function(){
-        if(!this._isAccountSet()) {
-            var item = sessionStorage.getItem(ACCOUNT_STORAGE);
-            if (item == null) item = localStorage.getItem(ACCOUNT_STORAGE);
-            if (item == null) item = {};
-            else angular.copy(JSON.parse(item), this._account);
-        }
-        if(this._isAccountSet() && this.first_time){
-            configureResources.setAuthHeader(this._account);
-            this.setActiveDefaultDatabase();
-            configureResources.configureSchema();
-            this.first_time = false;
-        }
-        return this._account;
-    };
-    this.update = function(email, password, name){
-        this._account.email = email;
-        this._account.password = password;
-        this._account.name = name;
-        this.setInBrowser(this.saveInBrowser);
-    };
-    this.setInBrowser = function(persistence){
-        var storage = persistence? localStorage : sessionStorage;
-        try{ //Private mode in safari causes an exception
-            storage.setItem(ACCOUNT_STORAGE, JSON.stringify(this._account));
-        } catch(err){}
-
-    };
-    this.setActiveDefaultDatabase = function(){
-        configureResources.setActiveDatabase(
-            'defaultDatabase' in this._account? this._account.defaultDatabase : this._account.databases[0],
-            false,
-            this._account
-        );
-    };
+function Session ($q, $rootScope) {
+  this._account = {}
+  this.saveInBrowser = true
+  this.first_time = true
+  this.callbacksForDatabaseChange = []
+  this.activeDatabase = null
+  this._accountIsSet = $q.defer()
+  this._accountIsSetPromise = this._accountIsSet.promise
+  this.$rootScope = $rootScope
 }
 
-module.exports = session;
+Session.prototype.accountIsSet = function () {
+  return this._accountIsSetPromise
+}
+
+Session.prototype.create = function (account, saveInBrowser) {
+  this._account = account
+  this.saveInBrowser = saveInBrowser
+  this.setInBrowser(this.saveInBrowser)
+}
+Session.prototype.destroy = function () {
+  this._account.length = 0
+  localStorage.clear()
+  sessionStorage.clear()
+}
+Session.prototype.isAccountSet = function () {
+  return !_.isEmpty(this.getAccount())
+}
+
+Session.prototype._isAccountSet = function () {
+  return !_.isEmpty(this._account)
+}
+
+/**
+ * Gets the account. This method can trigger retrieval from session/localStorage.
+ * @return {object} Account.
+ */
+Session.prototype.getAccount = function () {
+  if (!this._isAccountSet()) {
+    var account = sessionStorage.getItem(ACCOUNT_STORAGE) || localStorage.getItem(ACCOUNT_STORAGE) || '{}'
+    _.extend(this._account, JSON.parse(account))
+  }
+  return this._account
+}
+
+/**
+ * Resolves or rejects accountIsSet and triggers the callbacks of callWhenDatabaseChanges, depending if
+ * the account is set.
+ */
+Session.prototype.broadcast = function () {
+  if (this._isAccountSet()) {
+    if (this.first_time) {
+      this.setActiveDefaultDatabase()
+      this.first_time = false
+      this._accountIsSet.resolve(this._account)
+    }
+  } else {
+    this._accountIsSet.reject()
+  }
+}
+
+Session.prototype.update = function (email, password, name) {
+  this._account.email = email
+  this._account.password = password
+  this._account.name = name
+  this.setInBrowser(this.saveInBrowser)
+}
+Session.prototype.setInBrowser = function (persistence) {
+  var storage = persistence ? localStorage : sessionStorage
+  try { // Private mode in safari causes an exception
+    storage.setItem(ACCOUNT_STORAGE, JSON.stringify(this._account))
+  } catch (err) {
+  }
+}
+
+/* Databases */
+Session.prototype.setActiveDefaultDatabase = function () {
+  this.setActiveDatabase(this._account.defaultDatabase || this._account.databases[0], false)
+}
+Session.prototype.setActiveDatabase = function (database, refresh) {
+  this.activeDatabase = database
+  _.forEach(this.callbacksForDatabaseChange, function (val) {
+    val(database, refresh)
+  })
+  if (refresh) this.$rootScope.$broadcast('refresh@deviceHub')
+}
+Session.prototype.removeActiveDatabase = function () {
+  this.setActiveDatabase(null, false)
+}
+Session.prototype.callWhenDatabaseChanges = function (callback) {
+  this.callbacksForDatabaseChange.push(callback)
+}
+
+module.exports = Session
