@@ -1,14 +1,27 @@
-<article class="labelWidget" ng-style="{width: width+'mm', height:height+'mm'}" ng-class="{'no-logo': !useLogo}">
+<article
+  class="labelWidget"
+  ng-style="{width: width+'mm', height:height+'mm', 'padding-left': leftPadding+'mm', 'padding-top': topPadding+'mm'}"
+  ng-class="{'no-logo': !useLogo}"
+>
     <div><img ng-src="{{logo}}"/></div>
     <div>
         <qrcode data="{{code}}" error-correction-level="Q" size="110" version="5"></qrcode>
-        <table>
+        <table
+          ng-class="{
+                    't53': width <= 70,
+                    't55': 70 < width && width <= 80,
+                    't60': 80 < width && width <= 90,
+                    't64': 90 < width && width <= 108,
+                    't69': 108 < width && width <= 125,
+                    't73': 125 <= width
+                  }"
+        >
             <tr>
                 <td>ID</td>
                 <td>{{device._id}}</td>
             </tr>
             <tr>
-                <td><i class="glyphicon glyphicon-tag"></i></td>
+                <td>Label</td>
                 <td>{{device.labelId}}</td>
             </tr>
         </table>
