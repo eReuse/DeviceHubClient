@@ -1,26 +1,25 @@
 var CERTIFICATE_ERASURE_FACTORY_STRINGS = (function () {
   return {
     ES_BODY: [
-      'En <%= city %> a <%= day %> de <%= month %> de <%= year %>',
+      'En <%= city %> a <%= day %> de <%= month %> de <%= year %>.',
       'REUNIDOS:',
       'De una parte, <%= namePersonManager %>, <%= positionPersonManager %> y representante de' +
       ' <%= nameCompanyManager %>, mayor de edad, con domicilio en <%= postalManager %> ' +
-      'y CIF <%= vatManager %>, en adelante el comodante;',
-      'y de la otra parte, Don/Doña <%= namePersonReceiver %> mayor de edad, estado civil, con domicilio en' +
+      'y CIF <%= vatManager %>, en adelante el comodante.' +
+      ' Y de la otra parte, Don/Doña <%= namePersonReceiver %> mayor de edad, estado civil, con domicilio en' +
       ' <%= postalReceiver %> y con DNI <%= vatReceiver %>, en adelante el comodatario.',
       'INTERVIENEN:',
       'Ambas partes en nombre propio, acreditando su identidad por los documentos indicados;' +
       ' se reconocen mutuamente capacidad y legitimación para otorgar el presente documento;' +
       ' y a tal efecto, actuando ambos en su propio nombre y derecho,',
       'EXPONEN:',
-      'I. Que <%= namePersonManager  %>es propietario del bien a continuación descrito en la siguiente página, y' +
-      ' concede,' +
+      'I. Que <%= namePersonManager  %>es propietario del bien descrito en el ANEXO, y concede,' +
       ' sin pagar renta ni otra retribución, el uso de dicho bien a favor de DON/DOÑA <%= namePersonReceiver %>',
       'II. Que DON/DOÑA <%= namePersonReceiver  %>está interesado en el uso de dicho bien,' +
       ' aceptando la cesión, que se lleva a efecto conforme a las siguientes,',
       'ESTIPULACIONES:',
       'PRIMERA: La cesión objeto del presente documento, se formaliza a fin de que el comodatario ' +
-      'pueda utilizar los bienes detallados en la siguiente página durante un periodo de tiempo indefinido mientras' +
+      'pueda utilizar los bienes descritos en el ANEXO durante un periodo de tiempo indefinido mientras' +
       ' haga un uso del mismo.',
       'SEGUNDA: A la firma del presente documento, el comodante entrega el bien al comodatario,' +
       ' que recibe el uso del mismo.',
@@ -39,9 +38,7 @@ var CERTIFICATE_ERASURE_FACTORY_STRINGS = (function () {
       ' o al arbitraje de derecho en caso de acuerdo en este sentido.',
       'Y en prueba de conformidad ambas partes firman este acuerdo, ' +
       'por duplicado ya un solo efecto, en la fecha y lugar mencionados en el encabezamiento.',
-      '',
       '<%= namePersonManager  %>(Comodante)...........................................',
-      '',
       '<%= namePersonReceiver  %>(Comodatario)...........................................'
     ],
     ES: {
@@ -52,7 +49,9 @@ var CERTIFICATE_ERASURE_FACTORY_STRINGS = (function () {
       TYPE: 'Tipo',
       ID: 'ID',
       MONTHS: ['enero', 'Febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre',
-        'noviembre', 'diciembre']
+        'noviembre', 'diciembre'],
+      TITLE: 'Certificado de recepción',
+      ANNEX: 'Anexo'
     },
     EN: {}
   }

@@ -7,7 +7,7 @@ function certificateFactory (CONSTANTS) {
     this.content = []
     this.s = {}
     this.pdf = {
-      pageMargins: [40, 10, 40, 60],
+      pageMargins: [60, 20, 60, 60],
       info: {
         title: model.title,
         author: model.org || CONSTANTS.appName,
@@ -43,7 +43,7 @@ function certificateFactory (CONSTANTS) {
           color: 'red'
         },
         p: {
-          margin: [5, 5]
+          margin: [0, 8]
         }
       }
     }

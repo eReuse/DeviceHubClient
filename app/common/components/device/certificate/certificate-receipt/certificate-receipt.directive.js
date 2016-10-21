@@ -8,6 +8,8 @@ function labelList (certificateReceiptFactory, ResourceSettings, session) {
     },
     link: function ($scope) {
       var account = session.getAccount()
+      // For 'form' param in formly, if we use form.form as in loginController it doesn't work, we need to use a
+      // standalone var. Why?
       $scope.form = {
         fields: [
           {
@@ -104,20 +106,33 @@ function labelList (certificateReceiptFactory, ResourceSettings, session) {
               }]
             },
             type: 'select'
+          },
+          {
+            key: 'logo',
+            templateOptions: {
+              label: 'Logo',
+              accept: 'image/x-png, image/jpeg',
+              required: true,
+              description: 'Only PNG or JPG.'
+            },
+            type: 'upload'
           }
         ],
         model: {
           'namePersonManager': account.name,
           'nameCompanyManager': account.organization,
+          'lan': 'ES',
           date: new Date()
         },
-        print: function (devices, model, logo) {
-          (new certificateReceiptFactory(devices, model, logo)).generatePdf()
+        print: function (devices, model) {
+          $scope.formForm.triedSubmission = false
+          if ($scope.formForm.$valid) (new certificateReceiptFactory(devices, model, model.logo.data)).generatePdf()
+          else $scope.formForm.triedSubmission = true
         }
       }
 
       setCommonOwnerInModel()
-      setImageGetter($scope, '#logoUpload', 'logo')
+      //setImageGetter($scope, '[id*=input_logo]', 'logo')
 
       function setCommonOwnerInModel () {
         var commonOwners = []

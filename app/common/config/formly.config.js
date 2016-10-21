@@ -6,7 +6,7 @@ function formlyConfig (formlyConfigProvider) {
     name: 'tooltip-validation',
     // todo theoretically I should be able to remove 'types' and make it general
     // but it does not work...
-    types: ['input', 'checkbox', 'email', 'number', 'datepicker', 'typeahead'],
+    types: ['input', 'checkbox', 'email', 'number', 'datepicker', 'typeahead', 'upload'],
     templateUrl: window.COMMON + '/config/error-messages.formly.config.html'
   })
 }
