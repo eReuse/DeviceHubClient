@@ -160,7 +160,7 @@ function getDevicesFactory (getDevices, $scope, $rootScope) {
     }
     getDevices.getDevices(_params, $scope.sortQuery, page).then(function (devices) {
       if (!addMore) $scope.devices.length = 0 // Truncate array
-      _.assign($scope.devices, devices) // We do not want to overwrite the reference
+      _.assign($scope.devices, $scope.devices.concat(devices)) // We do not want to overwrite the reference
       $scope.busy = false
       $scope.moreData = devices._meta.page * devices._meta.max_results < devices._meta.total
     })
