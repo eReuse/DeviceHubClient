@@ -24,8 +24,9 @@ function certificateButton ($uibModal, ResourceSettings) {
         }
       ]
 
-      $scope.openDropdown = function () {
+      $scope.openDropdown = function ($event) {
         if ($scope.allComputers && $scope.devices.length > 0) $scope.dropDownIsOpen = true
+        $event.stopPropagation()  // https://github.com/angular-ui/bootstrap/issues/6038
       }
 
       $scope.openModal = function (title, devices) {

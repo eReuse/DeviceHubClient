@@ -4,7 +4,7 @@
           ng-class="{'btn-primary': devices.length > 0 && allComputers}"
           uib-tooltip="Select only computers"
           tooltip-enable="!allComputers"
-          ng-click="openDropdown()"
+          ng-click="openDropdown($event)"
   >
     <i class="fa fa-certificate"></i>New certificate<i class="fa fa-fw fa-caret-down"></i>
   </button>
