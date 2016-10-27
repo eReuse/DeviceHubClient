@@ -16,6 +16,7 @@ module.exports = angular.module('common.components.forms',
 .config(require('./types/typeahead/typeahead.formly-type.config'))
 .config(require('./types/datepicker/datepicker.formly-type.config'))
 .config(require('./types/upload/upload.formly-type.config'))
+.config(require('./types/get-from-data-relation-or-create/get-from-data-relation-or-create.formly-type.config'))
 .directive('formSchema', require('./form-schema/form-schema.directive'))
 .factory('FormSchema', require('./form-schema/form-schema.factory'))
 .service('cerberusToFormly', require('./cerberus-to-formly.service'))

@@ -1,0 +1,17 @@
+<div>
+  <div id="typeahead">
+    <formly-field options="typeaheadOptions"
+                  model="model.to.email"
+                  form="form"
+                  index="$index">
+    </formly-field>
+  </div>
+  <!--<div ng-repeat="field in to.schema" ng-init="options = $root._.pick(field, ['key', 'type'])">
+    <formly-field options="options"
+                  model="model.key"
+                  form="form"
+                  index="$index">
+    </formly-field>-->
+    <formly-form fields="to.schema.fieldGroup" model="model.to" form="form"></formly-form>
+  </div>
+</div>

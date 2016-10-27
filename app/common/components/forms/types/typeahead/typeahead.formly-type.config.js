@@ -12,7 +12,10 @@ function typeahead (formlyConfigProvider) {
     wrapper: ['bootstrapLabel', 'bootstrapHasError'],
     defaultOptions: {
       templateOptions: {
-        keyFieldName: '_id'
+        keyFieldName: '_id',
+        options: {
+          'typeahead-editable': false
+        }
       }
     },
     templateUrl: window.COMPONENTS + '/forms/types/typeahead/typeahead.formly-type.config.html',
@@ -25,7 +28,8 @@ function typeahead (formlyConfigProvider) {
           keyFieldName: check.string,
           resourceName: check.string,
           filterFieldName: check.string,
-          labelFieldName: check.string
+          labelFieldName: check.string,
+          options: check.object
         }
       }
     }

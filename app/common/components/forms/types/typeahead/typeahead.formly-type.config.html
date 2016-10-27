@@ -2,5 +2,8 @@
        ng-model="model[options.key]"
        uib-typeahead="resource[to.keyFieldName] as resource[to.labelFieldName] for resource in getResources(to.filterFieldName, $viewValue)"
        class="form-control"
-       typeahead-editable="false">
+       typeahead-editable="to.options['typeahead-editable']"
+       typeahead-select-on-exact="to.options['typeahead-select-on-exact']"
+       typeahead-on-select="to.options['typeahead-on-select']"
+>
 </input>

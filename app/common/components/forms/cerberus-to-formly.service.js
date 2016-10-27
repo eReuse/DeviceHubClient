@@ -117,7 +117,7 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES) {
       label: utils.Naming.humanize(fieldName) + (subSchema.unitCode ? ' (' + UNIT_CODES[subSchema.unitCode] + ')' : '')
     }
     try {
-      var type = this.getTypeAndSetTypeOptions(subSchema, options, model)
+      var type = this.getTypeAndSetTypeOptions(fieldName, subSchema, model, doNotUse, isAModification, options)
     } catch (err) {
       err.message += '. Field ' + fieldName + ' and resource type ' + model['@type']
       err.fieldName = fieldName
@@ -155,11 +155,16 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES) {
     return field
   }
 
-  this.getTypeAndSetTypeOptions = function (fieldSchema, options, model) {
+  this.getTypeAndSetTypeOptions = function (fieldName, fieldSchema, model, doNotUse, isAModification, options) {
     var type = fieldSchema.type
     if ('allowed' in fieldSchema && fieldSchema.allowed.length > 1) {
       options.options = this.getSelectOptions(fieldSchema.allowed)
       return 'select'
+    } else if ('get_from_data_relation_or_create' in fieldSchema) {
+      this._getDataRelation(type, fieldSchema, options)
+      options.schema = this.generateFieldGroup(fieldName, fieldSchema, model, doNotUse, isAModification)
+      options.getFromDataRelationOrCreate = fieldSchema.get_from_data_relation_or_create
+      return 'getFromDataRelationOrCreate'
     } else {
       switch (type) {
         case 'boolean':
@@ -202,15 +207,7 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES) {
           }
           throw new NoType(type)
         case 'objectid':
-          options.resourceName = fieldSchema.data_relation.resource
-          options.keyFieldName = fieldSchema.data_relation.field
-
-          var dataRelationSettings = ResourceSettings(utils.Naming.type(options.resourceName)).settings.dataRelation
-          if (!_.isObject(dataRelationSettings)) {
-            throw new NoType(type, ' no handle for the objectid ' + options.resourceName)
-          }
-          _.assign(options, _.pick(dataRelationSettings, ['label', 'labelFieldName', 'filterFieldName']))
-          return dataRelationSettings.fieldType
+          return this._getDataRelation(type, fieldSchema, options)
         case 'email':
           options.type = 'email'
           return 'input'
@@ -326,6 +323,18 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES) {
       }
     })
     return array
+  }
+
+  this._getDataRelation = function (type, fieldSchema, options) {
+    options.resourceName = fieldSchema.data_relation.resource
+    options.keyFieldName = fieldSchema.data_relation.field
+
+    var dataRelationSettings = ResourceSettings(utils.Naming.type(options.resourceName)).settings.dataRelation
+    if (!_.isObject(dataRelationSettings)) {
+      throw new NoType(type, ' no handle for the objectid ' + options.resourceName)
+    }
+    _.assign(options, _.pick(dataRelationSettings, ['label', 'labelFieldName', 'filterFieldName']))
+    return dataRelationSettings.fieldType
   }
 }
 

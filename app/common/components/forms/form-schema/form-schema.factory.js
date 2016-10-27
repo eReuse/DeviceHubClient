@@ -72,7 +72,8 @@ function FormSchemaFactory (ResourceSettings, $rootScope, Notification, cerberus
     var _options = _.cloneDeep(options)
     _options.excludeLabels = {
       receiver: 'Check if the receiver has already an account',
-      to: 'Check if the new possessor has already an account'
+      to: 'Check if the new possessor has already an account',
+      from: 'Check if the old possessor has already an account'
     }
     _options.doNotUse = _.concat(_options.doNotUse || [], this.rSettings.settings.doNotUse)
     return _options
