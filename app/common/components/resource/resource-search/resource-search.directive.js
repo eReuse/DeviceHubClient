@@ -27,7 +27,7 @@ function resourceSearch (ResourceSettings) {
             param.select = result
           } else if (_.isArray(param.select)) {
             _.forEach(param.select, function (value) {
-              result['methods' in settings ? param.methods[0](value) : value] = value
+              result[value] = value
             })
             param.select = result
           }

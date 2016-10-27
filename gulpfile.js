@@ -7,8 +7,6 @@ var source = require('vinyl-source-stream')
 var sass = require('gulp-sass')
 var concat = require('gulp-concat')
 var disc = require('disc')
-var fs = require('fs')
-var open = require('opener')
 var uglify = require('gulp-uglify')
 var streamify = require('gulp-streamify')
 var watchify = require('watchify')
@@ -74,7 +72,6 @@ var filePath = {
       './node_modules/angular/angular.js',
       './node_modules/angular-animate/angular-animate.js',
       './node_modules/angular-sanitize/angular-sanitize.js',
-      './node_modules/angular-fill-height-directive/src/fill-height.js',
       './node_modules/angular-simple-logger/dist/index.js',
       './node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
       './node_modules/checklist-model/checklist-model.js',
@@ -88,7 +85,6 @@ var filePath = {
       './node_modules/angular-ui-router/release/angular-ui-router.js',
       './node_modules/angular-formly/dist/formly.js',
       './node_modules/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js',
-      './node_modules/simple-js-validator/lib/simple.js.validator.js',
       './node_modules/jsonformatter/dist/json-formatter.js',
       './node_modules/angular-ui-notification/dist/angular-ui-notification.js',
       './node_modules/pluralize/pluralize.js',
@@ -96,7 +92,7 @@ var filePath = {
       './bower_components/Sortable/Sortable.js',
       './bower_components/adf-structures-base/dist/adf-structures-base.js',
       './node_modules/angular-chart.js/angular-chart.js',
-      './node_modules/chart.js/Chart.js',
+      './node_modules/chart.js/src/chart.js',
       './node_modules/lodash/lodash.js',
       './resources/qrcode.js',
       './resources/jspdf.min.js',
@@ -154,11 +150,19 @@ function rebundle () {
   .pipe(gulp.dest(filePath.build.jsDest))
 }
 
+gulp.task('bundle-dev-once', function () {
+  bundle.bundler = browserify(bundle.conf)
+  bundle.prod = false
+  rebundle()
+  console.log('bundle finished')
+})
+
 gulp.task('bundle-dev', function () {
   'use strict'
   bundle.bundler = watchify(browserify(bundle.conf))
   bundle.prod = false
   bundle.bundler.on('update', rebundle)
+  bundle.bundler.on('error', handleError)
   bundle.bundler.on('time', function (time) {
     var text = 'Bundle finished in ' + time / 1000 + ' s'
     notifyTask(text)
@@ -257,23 +261,6 @@ gulp.task('templates', function () {
   return gulp.src(filePath.templates.src)
   .pipe(templateCache('templates.js', {standalone: true, moduleSystem: 'Browserify'}))
   .pipe(gulp.dest(filePath.destination))
-})
-
-gulp.task('analyzeScripts', function () {
-  var conf = {
-    entries: filePath.browserify.src,
-    debug: true,
-    paths: filePath.browserify.paths,
-    fullPaths: true
-  }
-  var discOutput = __dirname + '/disc.html'
-  return browserify(conf)
-  .bundle()
-  .pipe(disc())
-  .pipe(fs.createWriteStream(discOutput))
-  .once('close', function () {
-    open(discOutput)
-  })
 })
 
 gulp.task('sass', function () {

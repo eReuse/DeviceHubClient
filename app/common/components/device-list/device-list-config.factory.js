@@ -1,4 +1,3 @@
-var Case = require('case')
 var datePlaceholder = 'This way: 2016-12-31'
 
 function deviceListConfigFactory (RESOURCE_SEARCH) {
@@ -18,14 +17,12 @@ function deviceListConfigFactory (RESOURCE_SEARCH) {
     {
       key: 'type',
       name: 'Computers',
-      methods: [Case.pascal],
       select: ['Desktop', 'Laptop', 'Netbook', 'Server', 'Microtower'],
       description: 'Types of computers: Desktops, laptops, servers...'
     },
     {
       key: 'type',
       name: 'Peripherals',
-      methods: [Case.pascal],
       select: ['Router', 'Switch', 'Printer', 'Scanner', 'Multifunction printer', 'Terminal', 'HUB', 'SAI',
         'Keyboard', 'Mouse'],
       description: 'Types of peripherals: keyboards, printers, switchs...'
@@ -33,14 +30,12 @@ function deviceListConfigFactory (RESOURCE_SEARCH) {
     {
       key: 'type',
       name: 'Monitors',
-      methods: [Case.pascal],
       select: ['TFT', 'LCD', 'LED', 'OLED'],
       description: 'Types of monitors: TFT, LED...'
     },
     {
       key: 'type',
       name: 'Mobiles',
-      methods: [Case.pascal],
       select: ['Smartphone', 'Tablet'],
       description: 'Types of mobiles: smartphones and tablets.'
     },
