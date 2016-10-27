@@ -18,7 +18,7 @@ module.exports = angular.module('common.components.event',
     restrict: 'E',
     scope: {
       event: '=',
-      id: '=' // The id of the actual device, to know if is a component or a computer.
+      id: '=' //  The id of the actual device, to know if is a component or a computer.
     }
   }
 }])

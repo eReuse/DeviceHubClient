@@ -74,7 +74,6 @@ var filePath = {
       './node_modules/angular/angular.js',
       './node_modules/angular-animate/angular-animate.js',
       './node_modules/angular-sanitize/angular-sanitize.js',
-      './node_modules/angular-fill-height-directive/src/fill-height.js',
       './node_modules/angular-simple-logger/dist/index.js',
       './node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
       './node_modules/checklist-model/checklist-model.js',
@@ -154,11 +153,19 @@ function rebundle () {
   .pipe(gulp.dest(filePath.build.jsDest))
 }
 
+gulp.task('bundle-dev-once', function () {
+  bundle.bundler = browserify(bundle.conf)
+  bundle.prod = false
+  rebundle()
+  console.log('bundle finished')
+})
+
 gulp.task('bundle-dev', function () {
   'use strict'
   bundle.bundler = watchify(browserify(bundle.conf))
   bundle.prod = false
   bundle.bundler.on('update', rebundle)
+  bundle.bundler.on('error', handleError)
   bundle.bundler.on('time', function (time) {
     var text = 'Bundle finished in ' + time / 1000 + ' s'
     notifyTask(text)
