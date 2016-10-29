@@ -9,7 +9,7 @@ function placeView (RecursionHelper, cerberusToView) {
     },
     compile: function (element) {
       return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {
-        $scope.$watch('place._id', function () {
+        $scope.$watchCollection('place', function () {
           $scope.model = cerberusToView.parse($scope.place)
         })
       })
