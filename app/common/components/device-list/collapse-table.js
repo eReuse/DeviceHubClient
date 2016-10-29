@@ -9,7 +9,6 @@ function triggerCollapseFactory ($scope) {
     var collapseUntil // Counting from right
     var offsetLeft = 2
     var offsetRight = 1
-    console.log('width' + width)
     if (width <= 450 && !_.isEmpty($scope.vewingDevice)) {
       collapseUntil = offsetLeft
     } else {
