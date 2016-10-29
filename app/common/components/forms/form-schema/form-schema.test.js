@@ -60,8 +60,8 @@ describe('Test FormSchema', function () {
       testFormCreation('devices:Locate')
       expect(directive.fields).toHaveSameItems([
         containing({key: 'label', type: 'input'}),
-        containing({key: 'devices', type: 'devices'}),
         containing({key: 'place', type: 'typeahead'}),
+        containing({key: 'devices', type: 'devices'}),
         containing({key: 'date', type: 'datepicker'}),
         containing({key: 'incidence', type: 'checkbox'}),
         containing({key: 'description', type: 'textarea'}),
@@ -84,33 +84,71 @@ describe('Test FormSchema', function () {
         }
       })
     })
-    it('works with devices:Allocate perfectly', function () {
+    it('works with devices:Allocate with existing account', function () {
       testFormCreation('devices:Allocate')
       expect(directive.model).toEqual({
         '@type': 'devices:Allocate',
         devices: ['1', '2'],
         incidence: false,
-        undefinedDate: false,
-        unregisteredTo: {}
+        to: {}
       })
       expect(directive.fields[0].key).toEqual('label')
-      expect(directive.fields[1].key).toEqual('exclude_to')
       // Let's set a label
       var sampleLabel = 'Example text for label'
       element.find('#formly_1_input_label_0').val(sampleLabel).trigger('input')
       expect(directive.model.label).toEqual(sampleLabel)
-      // Let's say that the possessor has already an account
-      element.find('#formly_1_checkbox_exclude_to_1').trigger('click')
-      // This should make appear the account's email
-      var to = element.find('[id*=typeahead_to]') // todo all selectors like this better?
-      expect(to.length).toBe(1)
+      // Let's write an email to add an account
+      var toEmail = element.find('[id*=typeahead_email]') // todo all selectors like this better?
+      expect(toEmail.length).toBe(1)
       var response = getJSONFixture('typeahead.request.form-schema.json')
-      var url = 'http://127.0.0.1:5000/accounts?where=%7B%22email%22:%7B%22$regex%22:%22a%22,%22$options%22:%22-ix%22%7D%7D'
+      var url = 'http://127.0.0.1:5000/accounts?where=%7B%22email%22:%7B%22$regex%22:%22a@%22,%22$options%22:%22-ix%22%7D%7D'
       server.expectGET(url).respond(200, response)
-      to.val('a').trigger('input')
+      toEmail.val('a@').trigger('input')
       server.flush()
-      triggerKeyDown(to, KEYCODES.ENTER)
-      expect(directive.model.to).toEqual('57c5db8726cc5d1f1740f309')
+      triggerKeyDown(toEmail, KEYCODES.ENTER)
+      expect(directive.model.to).toEqual({email: 'a@a.a'})
+      // We should not have any error to submit this
+      server.expectPOST(CONSTANTS.url + '/db1/events/devices/allocate').respond(201)
+      directive.submit(directive.model)
+      server.flush()
+      expect(directive.status.working).toBe(false)  // Execution is finished
+      expect(directive.status.done).toBe(true)  // Execution is finished
+      expect(directive.status.errorListFromServer).toBe(null)
+      expect(directive.status.errorFromLocal).toBe(false)  // There is no local error, though
+    })
+    it('works with devices:Allocate with a new account', function () {
+      // The same as the above one but having an account
+      testFormCreation('devices:Allocate')
+      expect(directive.model).toEqual({
+        '@type': 'devices:Allocate',
+        devices: ['1', '2'],
+        incidence: false,
+        to: {}
+      })
+      expect(directive.fields[0].key).toEqual('label')
+      // Let's set a label
+      var sampleLabel = 'Example text for label'
+      element.find('#formly_1_input_label_0').val(sampleLabel).trigger('input')
+      expect(directive.model.label).toEqual(sampleLabel)
+      // Let's write an email to add an account
+      var toEmail = element.find('[id*=typeahead_email]') // todo all selectors like this better?
+      expect(toEmail.length).toBe(1) // it exists
+
+      // We will have a request when we input k@k.com, which should return an empty list from server
+      var response = getJSONFixture('typeahead-empty.request.form-schema.json')
+      var url = 'http://127.0.0.1:5000/accounts?where=%7B%22email%22:%7B%22$regex%22:%22k@k.com%22,%22$options%22:%22-ix%22%7D%7D'
+      server.expectGET(url).respond(200, response)
+      toEmail.val('k@k.com').trigger('input')
+      server.flush()
+      // Let's write the fields to create a new account
+      var toName = element.find('input[id*=input_name]')
+      expect(toName.length).toBe(1)
+      toName.val('foo').trigger('input')
+      var toOrganization = element.find('[id*=checkbox_isOrganization]')
+      expect(toOrganization.length).toBe(1)
+      toOrganization.trigger('click')
+      triggerKeyDown(toEmail, KEYCODES.ENTER)
+      expect(directive.model.to).toEqual({email: 'k@k.com', name: 'foo', isOrganization: true})
       // We should not have any error to submit this
       server.expectPOST(CONSTANTS.url + '/db1/events/devices/allocate').respond(201)
       directive.submit(directive.model)
@@ -164,14 +202,17 @@ describe('Test FormSchema', function () {
       expect(directive.status.errorFromLocal).toBe(true)
       // Now let's add a manufacturer, S/N and model and submit it
       var manufacturer = 'Foo Manufacturer'
-      element.find('#formly_1_input_manufacturer_2').val(manufacturer).trigger('input')
+      element.find('[id*=input_manufacturer]').val(manufacturer).trigger('input')
       expect(directive.model.device.manufacturer).toEqual(manufacturer)
       var serialNumber = 'Foo SN'
-      element.find('#formly_1_input_serialNumber_3').val(serialNumber).trigger('input')
+      element.find('[id*=input_serialNumber]').val(serialNumber).trigger('input')
       expect(directive.model.device.serialNumber).toEqual(serialNumber)
       var model = 'Foo Model'
-      element.find('#formly_1_input_model_4').val(model).trigger('input')
+      element.find('[id*=input_model]').val(model).trigger('input')
       expect(directive.model.device.model).toEqual(model)
+      var type = 'OLED'
+      element.find('[id*=select_type]').val('string:' + type).trigger('change')
+      expect(directive.model.device.type).toEqual(type)
       server.expectPOST(CONSTANTS.url + '/db1/events/devices/snapshot').respond(201)
       directive.submit(directive.model)
       server.flush()

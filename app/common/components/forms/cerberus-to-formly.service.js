@@ -29,7 +29,6 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES) {
     var doNotUse = 'doNotUse' in options ? options.doNotUse.concat(DO_NOT_USE) : DO_NOT_USE
     var _schema = _.assign({}, resourceSettings.schema, options.schema || {})
     var form = this.parseFields(doNotUse, isAModification, _schema, model)
-    this.setExcludes(form, model, $scope, options.excludeLabels || [])
     options.nonModifiable = this.generateNonModifiableArray(form)
     this.or(form, model)
     return form
@@ -97,7 +96,7 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES) {
     return {
       fieldGroup: _.concat([{template: '<h4>' + utils.Naming.humanize(fieldName) + '</h4>'}],
         this.parseFields(doNotUse, isAModification, subSchema.schema, model)),
-      key: fieldName, // If doesn't work for exclude, use data: {id: } or something like
+      key: fieldName,
       sink: subSchema.sink || 0
     }
   }
@@ -145,10 +144,7 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES) {
       field.templateOptions.disabled = true
       field.nonModifiable = true
     }
-
-    if ('excludes' in subSchema) {
-      field.excludes = subSchema.excludes
-    }  // temporal value
+    // temporal value
     if ('or' in subSchema) {
       field.or = subSchema.or
     } // temporal value
@@ -233,51 +229,6 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES) {
     return options
   }
 
-  this.setExcludes = function (form, model, $scope, excludeLabels) {
-    var self = this
-    form.forEach(function (field, i) {
-      if ('excludes' in field) {
-        var toggleKey
-        if (field.type === 'checkbox') { // boolean
-          toggleKey = field.key
-        } else {
-          toggleKey = 'exclude_' + field.key
-          var toggle = {
-            key: toggleKey,
-            type: 'checkbox',
-            templateOptions: {
-              label: excludeLabels[field.key]
-            }
-          }
-          field.hideExpression = '!model.' + toggleKey
-        }
-        var positions = [i]
-        self.setExcludesWatch(field, $scope, model)
-        form.forEach(function (excludedField, j) {
-          if (excludedField.key === field.excludes) {
-            positions.push(j)
-            excludedField.hideExpression = 'model.' + toggleKey
-            self.setExcludesWatch(excludedField, $scope, model)
-          }
-        })
-        delete field.excludes
-        if (field.type !== 'checkbox') {
-          form.splice(Math.min.apply(null, positions), 0, toggle)
-        }
-      }
-    })
-  }
-
-  this.setExcludesWatch = function (field, $scope, model) {
-    /**
-     * Deletes the values of an excluded field when this goes hidden.
-     */
-    $scope.$watch(function () {
-      return field.hide
-    }, function (hidden) {
-      if (hidden) delete model[field.key]
-    })
-  }
 
   this.or = function (form, model) {
     var self = this

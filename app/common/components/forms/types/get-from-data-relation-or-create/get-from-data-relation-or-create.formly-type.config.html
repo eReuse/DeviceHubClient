@@ -1,17 +1,17 @@
-<div>
-  <div id="typeahead">
+<div class="get-from-data-relation-or-create">
+  <div id="selector">
     <formly-field options="typeaheadOptions"
-                  model="model.to.email"
+                  model="model[options.key]"
                   form="form"
                   index="$index">
     </formly-field>
   </div>
-  <!--<div ng-repeat="field in to.schema" ng-init="options = $root._.pick(field, ['key', 'type'])">
-    <formly-field options="options"
-                  model="model.key"
-                  form="form"
-                  index="$index">
-    </formly-field>-->
-    <formly-form fields="to.schema.fieldGroup" model="model.to" form="form"></formly-form>
+  <div class="panel panel-default" ng-hide="to.schema.fieldGroup[0].hide">
+    <div class="panel-heading">
+      {{showFieldsDescription}}
+    </div>
+    <div class="panel-body">
+      <formly-form fields="to.schema.fieldGroup" model="model[options.key]" form="form"></formly-form>
+    </div>
   </div>
 </div>
