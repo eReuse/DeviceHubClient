@@ -12,30 +12,30 @@ module.exports = angular.module('common.components.list',
     'ui.router',
     'checklist-model',
     'ngAnimate',
-    require('./../device-label').name,
-    require('./../event').name,
+    require('./../device-label/index').name,
+    require('./../../event').name,
     'yaru22.angular-timeago',
-    require('./../device/certificate').name
+    require('./../certificate').name
 
   ])
 /**
  * @name deviceListConfigFactory
  */
-.factory('deviceListConfigFactory', require('./device-list-config.factory'))
+.factory('deviceListConfigFactory', require('./device-list-config.factory.js'))
 /**
  * @ngdoc directive
  * @name deviceList
  */
-.directive('deviceList', require('./device-list.directive'))
+.directive('deviceList', require('./device-list.directive.js'))
 /**
  * @ngdoc directive
  * @name deviceListModalCtrl
  */
-.controller('deviceListModalCtrl', require('./device-list-modal.controller'))
+.controller('deviceListModalCtrl', require('./device-list-modal.controller.js'))
 /**
  * @ngdoc service
  * @name getDevices
  * @returns {Promise} Restangular's promise, filled with all the devices
  */
-.service('getDevices', require('./get-devices.service'))
-.directive('fieldSort', require('./field-sort/field-sort.directive'))
+.service('getDevices', require('./get-devices.service.js'))
+.directive('fieldSort', require('./field-sort/field-sort.directive.js'))

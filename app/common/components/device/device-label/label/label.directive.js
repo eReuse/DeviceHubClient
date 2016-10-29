@@ -1,6 +1,6 @@
 function label () {
   return {
-    templateUrl: window.COMPONENTS + '/device-label/label/label.directive.html',
+    templateUrl: require('./__init__').PATH + '/label.directive.html',
     restrict: 'E',
     scope: {
       device: '=',

@@ -6,7 +6,6 @@ module.exports = angular.module('common.components.eventsPerDevice',
   [
     require('app/common/config').name,
     'ui.bootstrap',
-    require('./../event').name,
     'ui.router',
     'angular-timeline'
 

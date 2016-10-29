@@ -5,7 +5,7 @@ var utils = require('./../../common/components/utils')
 module.exports = angular.module('views.devices',
   [
     require('angular-ui-bootstrap'),
-    require('./../../common/components/device-list').name,
+    require('./../../common/components/device/device-list').name,
     require('./../../common/components/place').name
   ])
 .config(

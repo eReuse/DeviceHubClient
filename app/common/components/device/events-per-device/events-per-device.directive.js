@@ -1,6 +1,6 @@
 function eventsPerDevice (ResourceSettings) {
   return {
-    templateUrl: window.COMPONENTS + '/events-per-device/events-per-device.directive.html',
+    templateUrl: require('./__init__').PATH + '/events-per-device.directive.html',
     restrict: 'E',
     scope: {
       device: '='

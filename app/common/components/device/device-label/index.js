@@ -1,4 +1,4 @@
-window.qrcode = require('./../../../../resources/qrcode.js')
+window.qrcode = require('./../../../../../resources/qrcode.js')
 require('angular-qrcode')
 require('angular-ui-bootstrap')
 require('angular-animate')
@@ -8,8 +8,8 @@ module.exports = angular.module('common.components.deviceLabel',
     'monospaced.qrcode',
     'ui.bootstrap',
     'ngAnimate',
-    require('./../../constants').name,
-    require('./../resource').name
+    require('./../../../constants').name,
+    require('./../../resource').name
   ])
 /**
  * @ngdoc directive

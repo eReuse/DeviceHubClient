@@ -9,7 +9,7 @@
  */
 function fieldSort () {
   return {
-    templateUrl: window.COMPONENTS + '/device-list/field-sort/field-sort.directive.html',
+    templateUrl: require('./__init__').PATH + '/field-sort.directive.html',
     restrict: 'A',
     scope: {
       sort: '&',

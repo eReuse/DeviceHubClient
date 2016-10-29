@@ -1,9 +1,8 @@
-var labelsToPdf = require('./labels-to-pdf.js')
-var setImageGetter = require('../../utils').setImageGetter
-
 function labelList (CONSTANTS) {
+  var labelsToPdf = require('./labels-to-pdf.js')
+  var setImageGetter = require('../../../utils').setImageGetter
   return {
-    templateUrl: window.COMPONENTS + '/device-label/label-list/label-list.directive.html',
+    templateUrl: require('./__init__').PATH + '/label-list.directive.html',
     restrict: 'E',
     scope: {
       devices: '='

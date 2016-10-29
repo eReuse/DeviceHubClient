@@ -7,7 +7,7 @@ var DEFAULT_SEARCH_PARAMS = {
  */
 function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $timeout) {
   return {
-    templateUrl: window.COMPONENTS + '/device-list/device-list.directive.html',
+    templateUrl: require('./__init__').PATH + '/device-list.directive.html',
     restrict: 'AE',
     link: function ($scope, $element, $attrs) {
       // The devices the user selects to perform an action to.
@@ -103,7 +103,7 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
 
       $scope.openModal = function (type) {
         var modalInstance = $uibModal.open({
-          templateUrl: window.COMPONENTS + '/device-list/device-list-modal.controller.html',
+          templateUrl: require('./__init__').PATH + '/device-list-modal.controller.html',
           controller: 'deviceListModalCtrl',
           resolve: {
             devices: function () {

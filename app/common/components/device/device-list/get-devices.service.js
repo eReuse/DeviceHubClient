@@ -1,4 +1,4 @@
-var utils = require('./../utils.js')
+var utils = require('./../../utils.js')
 
 function getDevices (ResourceSettings, deviceListConfigFactory) {
   this.getDevices = function (searchParams, sort, page) {

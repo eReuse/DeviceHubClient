@@ -10,13 +10,14 @@ module.exports = angular.module('common.components.device',
     require('./../event').name,
     'ngAnimate',
     'ngSanitize',
-    require('./../device-list').name,
+    require('./device-list').name,
     'RecursionHelper',
     'restangular',
     require('./../view').name,
     require('./../authentication').name,
     require('./certificate').name,
-    require('./../forms').name
+    require('./../forms').name,
+    require('./events-per-device').name
   ])
 /**
  * @ngdoc directive
