@@ -14,7 +14,7 @@
          ng-mouseleave="hoverScreener = false"
     >
       <div ng-show="selectedDevices.length == 0"></div>
-      <span uib-tooltip-template="'common/components/device-list/selected-devices.uib-tooltip-template.html'"
+      <span uib-tooltip-template="UIB_TOOLTIP_TEMPLATE"
             tooltip-placement="bottom"
             id="counter"
       >
@@ -56,7 +56,7 @@
           <tbody>
             <tr ng-repeat="device in devices"
                 ng-click="toggleDeviceView(device)"
-                ng-class="{success: isSelected(device._id)}"
+                ng-class="{info: isSelected(device._id)}"
                 class="ani-default"
             >
               <td>

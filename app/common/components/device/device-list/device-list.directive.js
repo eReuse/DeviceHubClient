@@ -10,6 +10,7 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
     templateUrl: require('./__init__').PATH + '/device-list.directive.html',
     restrict: 'AE',
     link: function ($scope, $element, $attrs) {
+      $scope.UIB_TOOLTIP_TEMPLATE = require('./__init__').PATH + '/selected-devices.uib-tooltip-template.html'
       // The devices the user selects to perform an action to.
       $scope.selectedDevices = []
       // The device the user is watching the details.
