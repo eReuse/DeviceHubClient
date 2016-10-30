@@ -21,6 +21,8 @@
     "angular-ui-router": "^0.2.18",
     "api-check": "^7.5.5",
     "bootstrap": "^3.3.6",
+    "bootstrap-sass": "^3.3.7",
+    "bootswatch": "^3.3.7",
     "browserify": "^13.1.1",
     "checklist-model": "^0.10.0",
     "del": "^2.2.0",

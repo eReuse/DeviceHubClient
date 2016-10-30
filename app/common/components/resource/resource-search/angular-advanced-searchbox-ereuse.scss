@@ -1,3 +1,5 @@
+@import './../../../styles/_variables.sass';
+
 .advancedSearchBox {
   position: relative;
   margin: 5px 0 10px 0;
@@ -27,11 +29,11 @@
   display: inline-block;
   height: 24px;
   margin: 0 7px 0 0;
-  background-color: #5bc0de;
+  background-color: $brand-info;
   padding: 0 5px;
-  border-radius: 4px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
   line-height: 24px;
   cursor: default;
   transition: box-shadow 100ms linear;

@@ -6,7 +6,6 @@ var clean = require('gulp-clean')
 var source = require('vinyl-source-stream')
 var sass = require('gulp-sass')
 var concat = require('gulp-concat')
-var disc = require('disc')
 var uglify = require('gulp-uglify')
 var streamify = require('gulp-streamify')
 var watchify = require('watchify')
@@ -51,12 +50,11 @@ var filePath = {
     src: './app/common/favicon/*'
   },
   copyFonts: {
-    src: './fonts/*',
-    dest: './dist/fonts'
+    src: './node_modules/bootstrap-sass/assets/fonts/bootstrap/*',
+    dest: './dist/css/fonts'
   },
   vendorCSS: {
     src: [
-      './resources/bootstrap.min.css',
       './resources/animate.min.css',
       './bower_components/angular-timeline/dist/angular-timeline.css',
       './bower_components/angular-timeline/dist/angular-timeline-bootstrap.css',

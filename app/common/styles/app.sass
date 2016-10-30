@@ -1,0 +1,52 @@
+@import './variables'
+// Variables in bootstrap are defined using 'default' so they are overriden by variables set before
+@import './../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap'
+@import "./../../../node_modules/bootswatch/cosmo/bootswatch"
+
+td
+  vertical-align: middle !important
+
+.modal-xl > .modal-dialog
+  width: 95% !important
+  margin-bottom: 0 !important
+
+.modal-body
+  overflow: auto
+  max-height: 71vh
+
+@media screen and (max-height: 600px)
+  .modal-body
+    max-height: 50vh
+
+pre
+  word-break: break-word
+  max-width: 60em
+
+.form-group.required .control-label:after
+  content: "*"
+  color: red
+
+button[ng-click], a[ng-click], small[ng-click]
+  cursor: pointer
+
+[class*=col-]
+  padding-left: 0.25vw
+  padding-right: 0.25vw
+
+.row
+  margin-left: -0.25vw
+  margin-right: -0.25vw
+
+/*Could go in devices/css*/
+
+.main-row
+  margin: 0 !important
+
+.glyphicon
+  margin-right: 0.1em
+  &.glyphicon-tags
+    margin-right: 0.3em
+
+.clickable
+  cursor: pointer
+
