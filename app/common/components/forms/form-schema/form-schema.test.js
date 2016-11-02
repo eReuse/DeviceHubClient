@@ -89,8 +89,7 @@ describe('Test FormSchema', function () {
       expect(directive.model).toEqual({
         '@type': 'devices:Allocate',
         devices: ['1', '2'],
-        incidence: false,
-        to: {}
+        incidence: false
       })
       expect(directive.fields[0].key).toEqual('label')
       // Let's set a label
@@ -122,8 +121,7 @@ describe('Test FormSchema', function () {
       expect(directive.model).toEqual({
         '@type': 'devices:Allocate',
         devices: ['1', '2'],
-        incidence: false,
-        to: {}
+        incidence: false
       })
       expect(directive.fields[0].key).toEqual('label')
       // Let's set a label

@@ -1,0 +1,42 @@
+<div ng-include="'common/elements/modal/header.html'"></div>
+<div class="modal-body">
+  <div uib-collapse="!status.working && !status.done">
+    <uib-progressbar ng-class="{active: !status.done, 'progress-striped': !status.done}"
+                     type="{{progressBarType}}"
+                     value="status.uploaded"
+                     max="model.files.length">
+    </uib-progressbar>
+    <div ng-show="status.done" ng-switch="progressBarType">
+      <div class="alert alert-warning" ng-switch-when="warning">
+        {{status.results.success.length}} computers were successfully uploaded, but
+        {{status.results.error.length}} have <strong>not</strong> been uploaded and require attention. See below.
+      </div>
+      <div class="alert alert-success" ng-switch-when="success">
+        All computers ({{status.results.success.length}}) have been successfully uploaded.
+      </div>
+      <div class="alert alert-danger" ng-switch-when="danger">
+        No computer ({{status.results.error.length}}) has been uploaded, see below how to fix it.
+      </div>
+    </div>
+  </div>
+  <form uib-collapse="status.working || status.done"
+        ng-submit="submit(model)"
+        name="computer-snapshot-form"
+        id="computer-snapshot-form"
+        novalidate>
+    <formly-form model="model" fields="fields" form="form">
+      <button type="submit" class="btn btn-primary submit-button" ng-disabled="status.working">
+        <i class="fa fa-upload"></i>
+        Upload
+      </button>
+    </formly-form>
+  </form>
+  <div uib-collapse="status.results.error.length === 0">
+    <ul class="list-group">
+      <li ng-repeat="result in status.results.error" class="list-group-item">
+        <computer-snapshot-error status="status" error="result"></computer-snapshot-error>
+      </li>
+    </ul>
+  </div>
+</div>
+<div ng-include="'common/elements/modal/done.html'"></div>

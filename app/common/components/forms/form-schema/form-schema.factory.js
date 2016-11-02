@@ -1,7 +1,7 @@
 var utils = require('./../../utils.js')
 var CannotSubmit = require('./cannot-submit.exception')
 
-function FormSchemaFactory (ResourceSettings, $rootScope, Notification, cerberusToFormly) {
+function FormSchemaFactory (ResourceSettings, $rootScope, Notification, cerberusToFormly, $q) {
   /**
    * Generates and handles a form schema, using angular-formly settings. This service provides
    * the functions to submit and delete the resource in the form.
@@ -33,10 +33,9 @@ function FormSchemaFactory (ResourceSettings, $rootScope, Notification, cerberus
       this.status.errorListFromServer = null
       var model = utils.copy(originalModel) // We are going to change stuff in model
       this.removeHelperValues(model)
-      this.upload(model).then(
-        this.succeedSubmissionFactory(this.OPERATION['put' in model ? 'put' : 'post'], model),
-        this.failedSubmissionFactory()
-      )
+      return this.upload(model)
+      .then(this.succeedSubmissionFactory(this.OPERATION['put' in model ? 'put' : 'post'], model))
+      .catch(this.failedSubmissionFactory())
     } else {
       this.status.errorFromLocal = true
       throw new CannotSubmit('Form is invalid')
@@ -59,6 +58,7 @@ function FormSchemaFactory (ResourceSettings, $rootScope, Notification, cerberus
       self.status.working = false
       self.status.done = true
       Notification.success(utils.getResourceTitle(resource) + ' successfully ' + operationName + '.')
+      return response
     }
   }
   proto.failedSubmissionFactory = function () {
@@ -66,6 +66,7 @@ function FormSchemaFactory (ResourceSettings, $rootScope, Notification, cerberus
     return function (response) {
       self.status.working = false
       self.status.errorListFromServer = response.data._issues
+      return $q.reject(response)
     }
   }
   proto.prepareOptions = function (options) {

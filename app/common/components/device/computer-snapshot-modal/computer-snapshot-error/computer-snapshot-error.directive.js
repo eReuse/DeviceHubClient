@@ -1,39 +1,37 @@
-var TEMPLATE_NEEDS_ID_URL = window.COMPONENTS + '/device/register-error-processor/register-error-processor-needs-id.directive.html'
-var TEMPLATE = window.COMPONENTS + '/device/register-error-processor/register-error-processor.directive.html'
-var TEMPLATE_RESULT_OK = window.COMPONENTS + '/device/register-error-processor/register-error-processor-result-ok.directive.html'
-
 function registerErrorProcessor (ResourceSettings) {
+  var TEMPLATE_NEEDS_ID_URL = require('./__init__').PATH + '/computer-snapshot-error-needs-id.directive.html'
+  var TEMPLATE = require('./__init__').PATH + '/computer-snapshot-error.directive.html'
+  var TEMPLATE_RESULT_OK = require('./__init__').PATH + '/computer-snapshot-error-result-ok.directive.html'
   return {
     template: '<ng-include src="templateUrl"/>',
     restrict: 'E',
     scope: {
-      fileName: '@',
-      fileContent: '=',
-      error: '=',
-      solved: '='
+      status: '=',
+      error: '='
     },
     link: function ($scope) {
-      $scope.solved.solved = false
-      showError($scope, $scope.error)
-      $scope.update = update($scope, $scope.fileContent)
-      $scope.insert = insert($scope, $scope.fileContent)
+      $scope.error.solved = $scope.type === 'json'
+      if ($scope.error.rolved) ++$scope.status.errorsSolved
+      showError($scope, $scope.error.object.data)
+      $scope.update = update($scope, $scope.error.fileContent)
+      $scope.insert = insert($scope, $scope.error.fileContent)
       $scope.$on('modal.closing')
     }
   }
 
-  function showError ($scope, error) {
-    $scope.error = error
-    $scope.cannotCreateId = cannotCreateId(error)
-    $scope.templateUrl = needsId(error) || $scope.cannotCreateId ? TEMPLATE_NEEDS_ID_URL : TEMPLATE
+  function showError ($scope, content) {
+    $scope.content = content
+    $scope.cannotCreateId = cannotCreateId(content)
+    $scope.templateUrl = needsId(content) || $scope.cannotCreateId ? TEMPLATE_NEEDS_ID_URL : TEMPLATE
   }
 
-  function needsId (errors) {
+  function needsId (content) {
     /**
      * @param {object} errors An object with the following structure: {_issues:{_id: ['stringRepresentingObject', '...']}} This
      * method will return false if the structure is not followed.
      */
     try {
-      return _.find(errors._issues._id, function (error) {
+      return _.find(content._issues._id, function (error) {
         return _.includes(error, 'NeedsId')
       })
     } catch (error) {
@@ -41,9 +39,9 @@ function registerErrorProcessor (ResourceSettings) {
     }
   }
 
-  function cannotCreateId (errors) {
+  function cannotCreateId (content) {
     try {
-      return _.find(errors._issues._id, function (error) {
+      return _.find(content._issues._id, function (error) {
         return _.includes(error, 'CannotCreateId')
       })
     } catch (error) {
@@ -76,7 +74,8 @@ function registerErrorProcessor (ResourceSettings) {
   }
 
   function resultOk ($scope) {
-    $scope.solved.solved = true
+    $scope.error.solved = true
+    ++$scope.status.errorsSolved
     $scope.templateUrl = TEMPLATE_RESULT_OK
   }
 }

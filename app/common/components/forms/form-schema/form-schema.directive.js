@@ -1,6 +1,3 @@
-var CannotSubmit = require('./cannot-submit.exception')
-var FormUtils = require('./../form-utils')
-
 function formSchema (FormSchema) {
   return {
     templateUrl: window.COMPONENTS + '/forms/form-schema/form-schema.directive.html',
@@ -11,8 +8,9 @@ function formSchema (FormSchema) {
       status: '=' // list
     },
     link: function ($scope) {
+      var CannotSubmit = require('./cannot-submit.exception')
+      var FormUtils = require('./../form-utils')
       $scope.form
-      window.fs = $scope
       var FS = $scope.options.FormSchema || FormSchema // We let people pass us extended FormSchema
       var formSchema = new FS($scope.model, $scope.form, $scope.status, $scope.options, $scope)
       $scope.fields = formSchema.fields

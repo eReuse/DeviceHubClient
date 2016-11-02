@@ -11,7 +11,6 @@ function getFromDataRelationOrCreate (formlyConfigProvider) {
     },
     templateUrl: window.COMPONENTS + '/forms/types/get-from-data-relation-or-create/get-from-data-relation-or-create.formly-type.config.html',
     controller: function ($scope, ResourceSettings) {
-
       $scope.typeaheadOptions = {
         templateOptions: _.pick($scope.to, ['filterFieldName', 'label', 'labelFieldName',
           'resourceName', 'required']),
@@ -39,14 +38,16 @@ function getFromDataRelationOrCreate (formlyConfigProvider) {
         }
       })
       // The other watcher does not execute initially or when removing the last character (empty)
-      $scope.$watch(function () {
-        try { // If the parent value does not exist (initial state) we will have an exception accessing it
-          return _.isEmpty($scope.model[$scope.options.key][$scope.typeaheadOptions.key])
-        } catch (e) {
-          return true
+      $scope.$watch('model[options.key][typeaheadOptions.key]', function () {
+        if (_.isEmpty(_.get($scope.model, [$scope.options.key, $scope.typeaheadOptions.key]))) {
+          hideFields()
+          delete $scope.model[$scope.options.key]
         }
-      }, function (newV) {
-        if (_.isEmpty(newV)) hideFields()
+      })
+
+      // The watcher above (and in initial state) does not delete the model[options.key] itself
+      $scope.$watch('model[options.key]', function (value) {
+        if (_.isEmpty(value)) delete $scope.model[$scope.options.key]
       })
 
       var text = _.template('The <%= fieldName %> does not exist, so a new <%= resource %> will be created with the' +
@@ -70,8 +71,8 @@ function getFromDataRelationOrCreate (formlyConfigProvider) {
           field.hide = false
         })
         $scope.showFieldsDescription = text
-        window.a = $scope
       }
+
     },
     apiCheck: function (check) {
       return {

@@ -43,7 +43,7 @@ function FormSchemaFactory (FormSchema, ResourceSettings) {
    */
   proto.submit = function (originalModel) {
     var model = utils.copy(originalModel)
-    FormSchema.prototype.submit.call(this, model)
+    return FormSchema.prototype.submit.call(this, model)
   }
   /**
    * We add the doNotUse for the device

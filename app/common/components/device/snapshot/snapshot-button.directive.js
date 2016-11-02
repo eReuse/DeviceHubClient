@@ -6,8 +6,8 @@ function registerButton ($uibModal, SnapshotFormSchema, ResourceSettings) {
     link: function ($scope) {
       $scope.openModal = function (type) {
         var modalInstance = $uibModal.open({
-          templateUrl: window.COMPONENTS + '/device/register-modal/register-modal.controller.html',
-          controller: 'registerModalCtrl',
+          templateUrl: window.COMPONENTS + '/device/computer-snapshot-modal/computer-snapshot-modal.controller.html',
+          controller: 'computerSnapshotModalCtrl',
           resolve: {
             type: function () {
               return type

@@ -9,31 +9,35 @@ function typeahead (formlyConfigProvider) {
     name: 'upload', //
     extends: 'input',
     wrapper: ['bootstrapLabel', 'bootstrapHasError'],
-    link: function (scope, el, attrs) {
-      el.find('input').attr('accept', scope.to.accept)
+    link: function (scope, el) {
+      el.find('input').attr('accept', scope.to.accept).prop('multiple', scope.to.multiple)
       el.on('change', function (e) {
         var files = e.target.files
-        if (files && files[0]) {
-          var file = files[0]
-          var fileProp = {};
+        var model = []
+        scope.fc.$setViewValue(undefined)
+        _.forEach(files, function (file) {
+          var fileProp = {}
           for (var properties in file) {
             if (!angular.isFunction(file[properties])) {
               fileProp[properties] = file[properties];
             }
           }
-          scope.fc.$setViewValue(fileProp);
+          model.push(fileProp)
+          scope.fc.$setViewValue(model)
           var reader = new FileReader()
           reader.onload = function (e) {
             fileProp.data = e.target.result
           }
-          reader.readAsDataURL(files[0])
-        } else scope.fc.$setViewValue(undefined)
+          reader[scope.to.readAs](file)
+        })
       })
     },
     defaultOptions: {
       templateOptions: {
         accept: '*/*',
-        type: 'file'
+        type: 'file',
+        multiple: false,
+        readAs: 'readAsDataUrl' // see http://blog.teamtreehouse.com/reading-files-using-the-html5-filereader-api
       }
     }
   })

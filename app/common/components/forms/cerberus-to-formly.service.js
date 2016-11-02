@@ -113,7 +113,8 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES) {
    */
   this.generateField = function (fieldName, subSchema, model, doNotUse, isAModification) {
     var options = {
-      label: utils.Naming.humanize(fieldName) + (subSchema.unitCode ? ' (' + UNIT_CODES[subSchema.unitCode] + ')' : '')
+      label: (subSchema.label || utils.Naming.humanize(fieldName)) +
+      (subSchema.unitCode ? ' (' + UNIT_CODES[subSchema.unitCode] + ')' : '')
     }
     try {
       var type = this.getTypeAndSetTypeOptions(fieldName, subSchema, model, doNotUse, isAModification, options)
@@ -229,7 +230,6 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES) {
     return options
   }
 
-
   this.or = function (form, model) {
     var self = this
     form.forEach(function (field) {
@@ -285,6 +285,7 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES) {
       throw new NoType(type, ' no handle for the objectid ' + options.resourceName)
     }
     _.assign(options, _.pick(dataRelationSettings, ['label', 'labelFieldName', 'filterFieldName']))
+    if ('label' in fieldSchema) options.label = fieldSchema.label // We assign it again so we do not lose it
     return dataRelationSettings.fieldType
   }
 }
