@@ -10,7 +10,8 @@ function typeahead (formlyConfigProvider) {
     extends: 'input',
     wrapper: ['bootstrapLabel', 'bootstrapHasError'],
     link: function (scope, el) {
-      el.find('input').attr('accept', scope.to.accept).prop('multiple', scope.to.multiple)
+      var input = el.find('input')
+      input.attr('accept', scope.to.accept).prop('multiple', scope.to.multiple)
       el.on('change', function (e) {
         var files = e.target.files
         var model = []
@@ -18,9 +19,7 @@ function typeahead (formlyConfigProvider) {
         _.forEach(files, function (file) {
           var fileProp = {}
           for (var properties in file) {
-            if (!angular.isFunction(file[properties])) {
-              fileProp[properties] = file[properties];
-            }
+            if (!angular.isFunction(file[properties])) fileProp[properties] = file[properties]
           }
           model.push(fileProp)
           scope.fc.$setViewValue(model)
@@ -31,6 +30,13 @@ function typeahead (formlyConfigProvider) {
           reader[scope.to.readAs](file)
         })
       })
+      // We monkeypatch resetModel (which is called when form has to be reset) to remove the input
+      // Note that by default it removes model[] but not the html's input
+      var resetModel = scope.formOptions.resetModel
+      scope.formOptions.resetModel = function () {
+        input.val('')
+        resetModel.apply(this, arguments)
+      }
     },
     defaultOptions: {
       templateOptions: {
