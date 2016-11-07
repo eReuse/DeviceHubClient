@@ -40,6 +40,7 @@ module.exports = window.angular.module('deviceHub', [
   })
 .controller('deviceHubCtrl', function ($templateCache, CONSTANTS) {
   $('#intro-spinner').remove()
+  $('html,body').removeClass('dh-wait')
   window.tc = $templateCache
   window.document.title = CONSTANTS.appName
 })

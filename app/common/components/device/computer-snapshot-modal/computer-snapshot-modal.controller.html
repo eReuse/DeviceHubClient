@@ -24,7 +24,7 @@
         name="computer-snapshot-form"
         id="computer-snapshot-form"
         novalidate>
-    <formly-form model="model" fields="fields" form="form">
+    <formly-form model="model" fields="fields" form="form" options="options">
       <button type="submit" class="btn btn-primary submit-button" ng-disabled="status.working">
         <i class="fa fa-upload"></i>
         Upload
@@ -39,4 +39,10 @@
     </ul>
   </div>
 </div>
-<div ng-include="'common/elements/modal/done.html'"></div>
+<div class="modal-footer">
+  <button ng-show="status.done" class="btn btn-success" type="button" ng-click="restartIfConfirms()">
+    <i class="fa fa-plus"></i>
+    Upload more Snapshot computers
+  </button>
+  <button ng-disabled="status.working" class="btn btn-info" type="button" ng-click="done()">Done</button>
+</div>

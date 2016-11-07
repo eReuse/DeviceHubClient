@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html class="dh-wait">
+  <head>
     <meta charset="utf-8">
     <title></title>
     <!-- Uncomment the following line to use HTML5 mode -->
@@ -12,12 +12,12 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-</head>
-<body ng-app="deviceHub" ng-controller="deviceHubCtrl as Mc">
-<div class="spinner" id="intro-spinner"></div>
-<!--<header ng-controller="HeaderCtrl as Hr" ng-include="'app/header/header.html'"></header>-->
-<section ui-view></section>
-<script type="text/javascript" src="js/vendor.js"></script>
-<script type="text/javascript" src="js/bundle.js"></script>
-</body>
+  </head>
+  <body class="dh-wait" ng-app="deviceHub" ng-controller="deviceHubCtrl as Mc">
+    <div class="spinner" id="intro-spinner"></div>
+    <!--<header ng-controller="HeaderCtrl as Hr" ng-include="'app/header/header.html'"></header>-->
+    <section ui-view></section>
+    <script type="text/javascript" src="js/vendor.js"></script>
+    <script type="text/javascript" src="js/bundle.js"></script>
+  </body>
 </html>

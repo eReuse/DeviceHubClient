@@ -11,7 +11,7 @@ function registerErrorProcessor (ResourceSettings) {
     },
     link: function ($scope) {
       $scope.error.solved = $scope.type === 'json'
-      if ($scope.error.rolved) ++$scope.status.errorsSolved
+      if ($scope.error.solved) --$scope.status.unsolved
       showError($scope, $scope.error.object.data)
       $scope.update = update($scope, $scope.error.fileContent)
       $scope.insert = insert($scope, $scope.error.fileContent)
@@ -75,7 +75,7 @@ function registerErrorProcessor (ResourceSettings) {
 
   function resultOk ($scope) {
     $scope.error.solved = true
-    ++$scope.status.errorsSolved
+    --$scope.status.unsolved
     $scope.templateUrl = TEMPLATE_RESULT_OK
   }
 }

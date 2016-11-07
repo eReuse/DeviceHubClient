@@ -177,6 +177,22 @@ function setImageGetter ($scope, jqueryExpression, nameOfVariableToStore) {
   })
 }
 
+var Progress = {
+  PROGRESS_NAME: 'dh-progress',
+  /**
+   * Barebone for a progress package that handles switching a global progress (cursor style). It is interesting
+   * to handle different begin and end globally (e.x. only stopping the cursor after all end() have been executed)
+   */
+  start: function () {
+    console.log(Progress.PROGRESS_NAME)
+    $('*').addClass(Progress.PROGRESS_NAME)
+  },
+  stop: function () {
+    console.log('stop')
+    $('*').removeClass(Progress.PROGRESS_NAME)
+  }
+}
+
 module.exports = {
   Naming: Naming,
   copy: copy,
@@ -185,5 +201,6 @@ module.exports = {
   parseDate: parseDate,
   schemaIsLoaded: schemaIsLoaded,
   NoPrefix: NoPrefix,
-  setImageGetter: setImageGetter
+  setImageGetter: setImageGetter,
+  Progress: Progress
 }
