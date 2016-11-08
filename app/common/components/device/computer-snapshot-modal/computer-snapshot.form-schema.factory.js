@@ -1,5 +1,6 @@
 function ComputerSnapshotFormSchemaFactory (SnapshotFormSchema, FormSchema, ResourceSettings, $rootScope, $q) {
   var Progress = require('./../../utils').Progress
+  var CannotSubmit = require('./../../forms/form-schema/cannot-submit.exception')
   /**
    * Extends SnapshotFormSchema. See that class to know how to use it.
    * @param {object} model The resource
@@ -54,7 +55,13 @@ function ComputerSnapshotFormSchemaFactory (SnapshotFormSchema, FormSchema, Reso
     Progress.start()
     iterativeUpload(originalModel.files, 0)
     function iterativeUpload (files, index) {
-      var file = files[index]
+      try {
+        var file = files[index]
+      } catch (e) { // This file is required and should be treated as a local error
+        self.status.errorFromLocal = true
+        Progress.stop()
+        throw new CannotSubmit('Select at least one JSON file')
+      }
       try {
         var snapshotFromFile = JSON.parse(file.data)
       } catch (e) {
@@ -64,6 +71,7 @@ function ComputerSnapshotFormSchemaFactory (SnapshotFormSchema, FormSchema, Reso
           object: e
         })
         ++self.status.unsolved
+        self.status.errorFromLocal = true
         return final()
       }
       var model = _.assign({}, snapshotFromFile)

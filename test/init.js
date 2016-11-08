@@ -15,7 +15,7 @@ require('jasmine-jquery')
 require('node_modules/bardjs/dist/bard.js') // It makes a variable 'bard' available to us
 require('jasmine-collection-matchers')
 
-jasmine.getJSONFixtures().fixturesPath = 'base/test/mock'
+jasmine.getJSONFixtures().fixturesPath = 'base/test/fixtures'
 
 /**
  * Creates a promise that is already resolved.

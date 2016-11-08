@@ -38,10 +38,9 @@ module.exports = window.angular.module('deviceHub', [
     })
     $urlRouterProvider.otherwise('/devices')
   })
-.controller('deviceHubCtrl', function ($templateCache, CONSTANTS) {
+.controller('deviceHubCtrl', function (CONSTANTS) {
   $('#intro-spinner').remove()
   $('html,body').removeClass('dh-wait')
-  window.tc = $templateCache
   window.document.title = CONSTANTS.appName
 })
 .run(function ($rootScope) {

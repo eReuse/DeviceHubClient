@@ -24,7 +24,6 @@ function computerSnapshotModalCtrl ($scope, $uibModalInstance, type, ComputerSna
       }
     }
   }
-  window.a = $scope
   $scope.type = type
   $scope.title = type
 

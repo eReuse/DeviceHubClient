@@ -1,0 +1,70 @@
+{
+  "@type": "Snapshot",
+  "components": [
+    {
+      "@type": "Processor",
+      "address": "64",
+      "manufacturer": "Intel Corp.",
+      "model": "Intel(R) Core(TM) i5-3337U CPU @ 1.80GHz",
+      "numberOfCores": "2",
+      "speed": 2.394
+    },
+    {
+      "@type": "RamModule",
+      "interface": "DDR3",
+      "serialNumber": "23L4JEKSA",
+      "size": 8192,
+      "speed": 1066.0
+    },
+    {
+      "@type": "HardDrive",
+      "interface": "ata",
+      "size": 15296.0
+    },
+    {
+      "@type": "HardDrive",
+      "interface": "ata",
+      "manufacturer": "Toshiba",
+      "model": "TOSHIBA THNSNS12",
+      "serialNumber": "43ASDF22",
+      "size": 122104.3359375
+    },
+    {
+      "@type": "GraphicCard",
+      "manufacturer": "Intel Corporation",
+      "model": "3rd Gen Core processor Graphics Controller"
+    },
+    {
+      "@type": "Motherboard",
+      "manufacturer": "Sony Corporation",
+      "model": "VAIO"
+    },
+    {
+      "@type": "NetworkAdapter",
+      "manufacturer": "Intel Corporation",
+      "model": "Centrino Advanced-N 6235",
+      "serialNumber": "c8:f7:f3:1f:8f:1f"
+    },
+    {
+      "@type": "NetworkAdapter",
+      "manufacturer": "Realtek Semiconductor Co., Ltd.",
+      "model": "RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller",
+      "serialNumber": "3d:08:73:52:2f:a9",
+      "speed": 1000
+    },
+    {
+      "@type": "SoundCard",
+      "manufacturer": "Intel Corporation",
+      "model": "7 Series/C210 Series Chipset Family High Definition Audio Controller"
+    }
+  ],
+  "device": {
+    "@type": "Computer",
+    "label": "",
+    "manufacturer": "Sony Corporation",
+    "model": "SVD1123C5F",
+    "serialNumber": "86SXQ-0000029",
+    "type": "Desktop"
+  },
+  "secured": false
+}

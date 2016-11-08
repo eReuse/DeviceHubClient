@@ -16,7 +16,7 @@ module.exports = function (config) {
       'app/**/*.test.js',
       'test/integration/index.test.js',
       // fixtures
-      {pattern: 'test/mock/*.json', watched: true, served: true, included: false}
+      {pattern: 'test/fixtures/*.json', watched: true, served: true, included: false}
     ],
 
     // list of files to exclude
@@ -49,8 +49,8 @@ module.exports = function (config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'], // 'Chrome' 'PhantomJS'
-    //browsers: ['Chrome'],
+    // browsers: ['PhantomJS'], // 'Chrome' 'PhantomJS'
+    browsers: ['Chrome'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits

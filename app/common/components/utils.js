@@ -184,11 +184,9 @@ var Progress = {
    * to handle different begin and end globally (e.x. only stopping the cursor after all end() have been executed)
    */
   start: function () {
-    console.log(Progress.PROGRESS_NAME)
     $('*').addClass(Progress.PROGRESS_NAME)
   },
   stop: function () {
-    console.log('stop')
     $('*').removeClass(Progress.PROGRESS_NAME)
   }
 }
