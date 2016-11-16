@@ -15,6 +15,11 @@ function deviceListConfigFactory (RESOURCE_SEARCH) {
       description: 'The type of the device: Computer, Mobile, Computer monitor...'
     },
     {
+      key: 'pid',
+      name: 'Pid',
+      placeholder: 'The Platform Identifier...'
+    },
+    {
       key: 'type',
       name: 'Computers',
       select: ['Desktop', 'Laptop', 'Netbook', 'Server', 'Microtower'],
