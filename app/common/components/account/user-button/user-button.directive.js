@@ -1,10 +1,9 @@
-function userButton (session, $uibModal, CONSTANTS) {
+function userButton (session, $uibModal) {
   return {
     templateUrl: window.COMPONENTS + '/account/user-button/user-button.directive.html',
     restrict: 'E',
     scope: {},
     link: function ($scope, $element, $attrs) {
-      $scope.DEFAULT_AVATAR = encodeURI('https://data.ereuse.org/images/timmy/avatar.png')
       $scope.account = session.getAccount()
       $scope.openModal = function (type) {
         var modalInstance = $uibModal.open({
