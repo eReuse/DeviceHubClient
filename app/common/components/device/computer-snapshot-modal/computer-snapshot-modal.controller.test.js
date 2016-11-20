@@ -25,6 +25,8 @@ describe('Test ComputerSnapshotModalControler and ComputerSnapshotFormSchema', f
   beforeEach(inject(function (_ResourceServer_, _session_) {
     session = _session_
     session.setActiveDatabase('db1', false)
+    session._account.role = 'employee'
+    session._prepareAccount()
   }))
 
   // Create a controller with an html template

@@ -1,6 +1,6 @@
 var ACCOUNT_STORAGE = 'account'
 
-function Session ($q, $rootScope) {
+function Session ($q, $rootScope, Role) {
   this._account = {}
   this.saveInBrowser = true
   this.first_time = true
@@ -9,6 +9,7 @@ function Session ($q, $rootScope) {
   this._accountIsSet = $q.defer()
   this._accountIsSetPromise = this._accountIsSet.promise
   this.$rootScope = $rootScope
+  this._Role = Role
 }
 
 Session.prototype.accountIsSet = function () {
@@ -17,6 +18,7 @@ Session.prototype.accountIsSet = function () {
 
 Session.prototype.create = function (account, saveInBrowser) {
   this._account = account
+  this._prepareAccount()
   this.saveInBrowser = saveInBrowser
   this.setInBrowser(this.saveInBrowser)
 }
@@ -41,8 +43,15 @@ Session.prototype.getAccount = function () {
   if (!this._isAccountSet()) {
     var account = sessionStorage.getItem(ACCOUNT_STORAGE) || localStorage.getItem(ACCOUNT_STORAGE) || '{}'
     _.extend(this._account, JSON.parse(account))
+    this._prepareAccount()
   }
   return this._account
+}
+
+Session.prototype._prepareAccount = function () {
+  if (typeof this._account['role'] === 'string') { // In some scenarios this can be already an instance of Role
+    this._account['role'] = new this._Role(this._account['role'])
+  }
 }
 
 /**

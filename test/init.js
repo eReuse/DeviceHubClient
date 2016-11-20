@@ -128,7 +128,10 @@ window.login = function () {
   // We perform the login
   var result = auth.login({email: testAccount.email, password: testAccount.password}, true)
   result.then(function (responseAccount) {
-    expect(responseAccount).toEqual(containing(testAccount))
+    var _testAccount = _.clone(testAccount)
+    delete _testAccount['role'] // role is transformed to be an instance of Role
+    expect(responseAccount).toEqual(containing(_testAccount))
+    expect(responseAccount['role'].eq('admin')).toBeTrue()
   })
   server.flush()
 }

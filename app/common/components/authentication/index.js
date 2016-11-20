@@ -12,3 +12,4 @@ module.exports = angular.module('common.components.authentication',
 .constant('AUTH_EVENTS', require('./AUTH_EVENTS.js'))
 .constant('USER_ROLES', require('./USER_ROLES.js'))
 .constant('MANAGERS', require('./MANAGERS.js'))
+.factory('Role', require('./role.factory.js'))

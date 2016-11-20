@@ -4,7 +4,7 @@ var FieldShouldNotBeIncluded = require('./field-should-not-be-included.exception
 var DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url', '_settings', 'hid']
 var COMMON_OPTIONS = ['min', 'max', 'required', 'minlength', 'maxlength', 'readonly', 'description']
 
-function cerberusToFormly (ResourceSettings, schema, UNIT_CODES) {
+function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) {
   /**
    * Generates a form for the given model, by parsing the information in the Cerberus schema transforming it to an
    * Angular-Formly compatible form.
@@ -71,7 +71,8 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES) {
    * @return object A field.
    */
   this.parseField = function (fieldName, doNotUse, isAModification, schema, model) {
-    if (!_.includes(doNotUse, fieldName) && !schema.readonly && !schema.materialized) {
+    var hasWriteAccess = session.getAccount().role.ge(schema['dh_allowed_write_roles'] || Role.prototype.BASIC)
+    if (!_.includes(doNotUse, fieldName) && !schema.readonly && !schema.materialized && hasWriteAccess) {
       if (schema.type === 'dict' && 'schema' in schema) {
         return this.generateFieldGroup(fieldName, schema, model, doNotUse, isAModification)
       } else {
