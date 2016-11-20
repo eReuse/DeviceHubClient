@@ -1,25 +1,23 @@
 <div class="btn-group" uib-dropdown is-open="status.isopen">
-    <button
-            id="event-button"
-            type="button"
-            class="btn"
-            ng-class="{'btn-primary': devices.length > 0}"
-            uib-dropdown-toggle
+  <button id="event-button"
+          type="button"
+          class="btn"
+          ng-class="{'btn-primary': devices.length > 0}"
+          uib-dropdown-toggle
+  >
+    <i class="glyphicon glyphicon-plus"></i>New event<span class="caret"></span>
+  </button>
+  <ul uib-dropdown-menu role="menu" aria-labelledby="event-button">
+    <li role="menuitem"
+        ng-repeat="eventSettings in events | orderBy:'settings.sink':true" ng-if="eventSettings.settings.manual"
+        uib-tooltip-html="eventSettings.settings.shortDescription"
+        tooltip-placement="right"
+        tooltip-append-to-body="true"
     >
-        <i class="glyphicon glyphicon-plus"></i>New event<span class="caret"></span>
-    </button>
-    <ul uib-dropdown-menu role="menu" aria-labelledby="event-button">
-        <li
-                role="menuitem"
-                ng-repeat="eventSettings in events | orderBy:'settings.sink':true" ng-if="eventSettings.settings.manual"
-                uib-tooltip-html="eventSettings.settings.shortDescription"
-                tooltip-placement="right"
-                tooltip-append-to-body="true"
-        >
-            <a ng-click="openModal(eventSettings.type, devices)">
-                <resource-icon resource-type="{{eventSettings.type}}" fill-to="true"></resource-icon>
-                {{eventSettings.humanName}}
-            </a>
-        </li>
-    </ul>
+      <a ng-click="openModal(eventSettings.type, devices)">
+        <resource-icon resource-type="{{eventSettings.type}}" fill-to="true"></resource-icon>
+        {{eventSettings.humanName}}
+      </a>
+    </li>
+  </ul>
 </div>

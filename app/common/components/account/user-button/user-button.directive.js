@@ -14,6 +14,10 @@ function userButton (session, $uibModal) {
           $scope.selected = selectedItem
         })
       }
+      $scope.logout = function () {
+        session.destroy()
+        location.reload(false)
+      }
     }
   }
 }

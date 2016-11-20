@@ -19,10 +19,6 @@ function userModalCtrl ($scope, $uibModalInstance, ResourceSettings, session) {
       alert('Verify that the data is correct and try again.')
     })
   }
-  $scope.logout = function () {
-    session.destroy()
-    location.reload()
-  }
 }
 
 module.exports = userModalCtrl
