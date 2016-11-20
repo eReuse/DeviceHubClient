@@ -5,6 +5,8 @@
     </h3>
 </div>
 <div class="modal-body" ng-switch="type">
+    Add {{::account.email}} to <a href="https://gravatar.com" target="_blank">Gravatar</a> to see your profile picture in
+    {{::appName}}.
     <form id="accountForm" name="accountForm" class="form-horizontal" ng-submit="update(account)" show-validation>
         <div class="form-group">
             <label for="email" class="col-xs-2">Email</label>

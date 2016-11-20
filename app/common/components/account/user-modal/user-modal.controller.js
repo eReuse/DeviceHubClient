@@ -1,6 +1,7 @@
-function userModalCtrl ($scope, $uibModalInstance, ResourceSettings, session) {
+function userModalCtrl ($scope, $uibModalInstance, ResourceSettings, session, CONSTANTS) {
   // $scope.account = session.account
   $scope.account = $.extend(true, {}, session.getAccount())
+  $scope.appName = CONSTANTS.appName
   $scope.cancel = function () {
     $uibModalInstance.dismiss('cancel')
   }
