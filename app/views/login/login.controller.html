@@ -9,8 +9,17 @@
         <span ng-show="loading">Logging in...</span>
         <span ng-hide="loading">Login</span>
       </button>
-      <span ng-show="submissionError" class="alert alert-danger ani-show pull-right">Incorrect username or password
-                                                                                   .</span>
+      <span ng-show="submissionError"
+            class="alert alert-danger ani-show pull-right"
+      >
+        <span ng-switch="status">
+          <span ng-switch-when="-1">You are not connected to the Internet &#128534;</span>
+          <span ng-switch-when="401">Incorrect username or password.</span>
+          <span ng-switch-default>There has been an error,
+            <a href="mailto:hello@ereuse.org">contact the administrator</a>.</span>
+        </span>
+
+      </span>
     </formly-form>
   </form>
   <footer class="row">

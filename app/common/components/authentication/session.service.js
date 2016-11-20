@@ -18,8 +18,8 @@ Session.prototype.accountIsSet = function () {
 
 Session.prototype.create = function (account, saveInBrowser) {
   this._account = account
-  this._prepareAccount()
   this.saveInBrowser = saveInBrowser
+  this._prepareAccount()
   this.setInBrowser(this.saveInBrowser)
 }
 Session.prototype.destroy = function () {
@@ -48,10 +48,23 @@ Session.prototype.getAccount = function () {
   return this._account
 }
 
+/**
+ * Changes the string representing the role of the account for a Role instance.
+ * @private
+ */
 Session.prototype._prepareAccount = function () {
   if (typeof this._account['role'] === 'string') { // In some scenarios this can be already an instance of Role
     this._account['role'] = new this._Role(this._account['role'])
   }
+}
+
+/**
+ * Used in Stringify, undoes '_prepareAccount' so it can be represented in a JSON.
+ * @returns {*}
+ */
+Session.prototype.stringifyAccountField = function (key, value) {
+  if (key === 'role') value = value.role
+  return value
 }
 
 /**
@@ -79,7 +92,7 @@ Session.prototype.update = function (email, password, name) {
 Session.prototype.setInBrowser = function (persistence) {
   var storage = persistence ? localStorage : sessionStorage
   try { // Private mode in safari causes an exception
-    storage.setItem(ACCOUNT_STORAGE, JSON.stringify(this._account))
+    storage.setItem(ACCOUNT_STORAGE, JSON.stringify(this._account, this.stringifyAccountField))
   } catch (err) {
   }
 }

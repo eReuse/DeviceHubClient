@@ -15,7 +15,7 @@ function parseFactory (schema, UNIT_CODES) {
     var fields = []
     var resourceSchema = schema.schema[utils.Naming.resource(model['@type'])]
     for (var fieldName in resourceSchema) {
-      if (fieldName in model && DO_NOT_USE.indexOf(fieldName) === -1) {
+      if (fieldName in model && !_.includes(DO_NOT_USE, fieldName) && !('writeonly' in resourceSchema[fieldName])) {
         fields.push(generateField(model[fieldName], resourceSchema[fieldName], fieldName, UNIT_CODES))
       }
     }

@@ -64,11 +64,12 @@ function loginController ($scope, $state, authService, CONSTANTS) {
   /**
    * Shows an error at the whole form after being Unauthorized by the server
    */
-  function setSubmissionError () {
+  function setSubmissionError (error) {
     var $input = $('.formly-field:not(.formly-field:last)')
     $scope.submissionError = true
     $scope.loading = false
     $input.addClass('has-error')
+    $scope.status = error.status
     $input.focusin(function () {
       $input.removeClass('has-error')
       $scope.submissionError = false
