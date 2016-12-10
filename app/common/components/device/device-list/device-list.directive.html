@@ -14,14 +14,6 @@
          ng-mouseleave="hoverScreener = false"
     >
       <div ng-show="selectedDevices.length == 0"></div>
-      <span uib-tooltip-template="UIB_TOOLTIP_TEMPLATE"
-            tooltip-placement="bottom"
-            id="counter"
-      >
-        <span>{{selectedDevices.length}} {{selectedDevices.length != 1? 'devices' : 'device&nbsp;&nbsp;'}}</span>
-        <i ng-style="{'visibility': selectedDevices.length == 0? 'hidden' : 'visible'}" ng-click="unselectDevices()"
-           class="fa fa-ban"></i>
-      </span>
       <button
         type="button"
         class="btn"

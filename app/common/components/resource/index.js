@@ -9,7 +9,8 @@ module.exports = angular.module('common.components.resource',
     require('./../../config').name,
     'restangular',
     'RecursionHelper',
-    require('./resource-search').name
+    require('./resource-search').name,
+    require('./resource-list').name
   ])
 .constant('RESOURCE_CONFIG', require('./resource-settings.constant'))
 .factory('ResourceServer', require('./resource-server.factory'))

@@ -1,0 +1,9 @@
+<span>
+Total: {{totalResources}} items<span ng-show="selectedResources.length > 0">,</span>
+<span uib-tooltip-template="UIB_TOOLTIP_TEMPLATE"
+      tooltip-placement="top"
+      id="counter"
+      ng-show="selectedResources.length > 0"
+>{{selectedResources.length}} selected
+</span>
+</span>

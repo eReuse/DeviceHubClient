@@ -10,7 +10,6 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
     templateUrl: require('./__init__').PATH + '/device-list.directive.html',
     restrict: 'AE',
     link: function ($scope, $element, $attrs) {
-      $scope.UIB_TOOLTIP_TEMPLATE = require('./__init__').PATH + '/selected-devices.uib-tooltip-template.html'
       // The devices the user selects to perform an action to.
       $scope.selectedDevices = []
       // The device the user is watching the details.
@@ -164,6 +163,7 @@ function getDevicesFactory (getDevices, $scope, $rootScope) {
       _.assign($scope.devices, $scope.devices.concat(devices)) // We do not want to overwrite the reference
       $scope.busy = false
       $scope.moreData = devices._meta.page * devices._meta.max_results < devices._meta.total
+      $rootScope.$broadcast('returnedResources@resourceList', $scope.devices, devices._meta)
     })
   }
 }
