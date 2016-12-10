@@ -12,6 +12,7 @@ function deviceListConfigFactory (RESOURCE_SEARCH) {
       key: '@type',
       name: 'Type',
       select: 'Device',
+      comparison: '=',
       description: 'The type of the device: Computer, Mobile, Computer monitor...'
     },
     {
@@ -23,6 +24,7 @@ function deviceListConfigFactory (RESOURCE_SEARCH) {
       key: 'type',
       name: 'Computers',
       select: ['Desktop', 'Laptop', 'Netbook', 'Server', 'Microtower'],
+      comparison: '=',
       description: 'Types of computers: Desktops, laptops, servers...'
     },
     {
@@ -30,18 +32,21 @@ function deviceListConfigFactory (RESOURCE_SEARCH) {
       name: 'Peripherals',
       select: ['Router', 'Switch', 'Printer', 'Scanner', 'Multifunction printer', 'Terminal', 'HUB', 'SAI',
         'Keyboard', 'Mouse'],
+      comparison: '=',
       description: 'Types of peripherals: keyboards, printers, switchs...'
     },
     {
       key: 'type',
       name: 'Monitors',
       select: ['TFT', 'LCD', 'LED', 'OLED'],
+      comparison: '=',
       description: 'Types of monitors: TFT, LED...'
     },
     {
       key: 'type',
       name: 'Mobiles',
       select: ['Smartphone', 'Tablet'],
+      comparison: '=',
       description: 'Types of mobiles: smartphones and tablets.'
     },
     {key: 'serialNumber', name: 'Serial Number', placeholder: 'S/N...'},
@@ -82,6 +87,7 @@ function deviceListConfigFactory (RESOURCE_SEARCH) {
       key: 'event',
       name: 'Has event',
       select: 'devices:DeviceEvent',
+      comparison: '=',
       realKey: 'events.@type',
       description: 'Match only devices that have a specific type of event.'
     },
@@ -89,6 +95,7 @@ function deviceListConfigFactory (RESOURCE_SEARCH) {
       key: 'lastEvent',
       name: 'Last event is',
       select: 'devices:DeviceEvent',
+      comparison: '=',
       realKey: 'events.0.@type',
       description: 'The actual state of the device.'
     },
