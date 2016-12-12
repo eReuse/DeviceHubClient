@@ -8,8 +8,12 @@ function resourceSearch (ResourceSettings) {
       defaultParams: '=' // object
     },
     link: function ($scope) {
-      window.rs = $scope
-      $scope._settings = unpackSettings($scope.settings)
+      if (!$scope.settings.resourceSearchProcessed) {  // The creation of the directive has to be idempotent
+        $scope._settings = unpackSettings($scope.settings)
+        $scope.settings.resourceSearchProcessed = true
+      } else {
+        $scope._settings = $scope.settings
+      }
       $scope.params = angular.copy($scope.defaultParams)
 
       $scope.$watchCollection('params', function (params) {
@@ -18,18 +22,18 @@ function resourceSearch (ResourceSettings) {
 
       function unpackSettings (settings) {
         _.forEach(settings, function (param) {
-          var result = {}
+          var select = []
           // For selects
           if (_.isString(param.select)) {
             _.forEach(ResourceSettings(param.select).getSubResources(), function (rSettings) {
-              if (rSettings.isALeaf) result[rSettings.type] = rSettings.humanName
+              if (rSettings.isALeaf) select.push({key: rSettings.type, label: rSettings.humanName})
             })
-            param.select = result
+            param.select = select
           } else if (_.isArray(param.select)) {
             _.forEach(param.select, function (value) {
-              result[value] = value
+              select.push({key: value, label: value})
             })
-            param.select = result
+            param.select = select
           }
         })
         settings.sort(function (a, b) {

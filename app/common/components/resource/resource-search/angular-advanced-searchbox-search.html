@@ -17,7 +17,7 @@
                 ng-blur="leaveEditMode($index)"
                 ng-keydown="$event.keyCode == 8? leaveEditMode($index, true) : null"
                 ng-model="searchParam.value"
-                ng-options="key as value for (key, value) in searchParam.select"></select>
+                ng-options="item.key as item.label for item in searchParam.select | orderBy:'label'"></select>
         <!--ng-show="searchParam.editMode"-->
         <input ng-if="searchParam.date"
                type="text"
