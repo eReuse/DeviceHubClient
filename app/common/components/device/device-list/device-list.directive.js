@@ -13,7 +13,7 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
       // The devices the user selects to perform an action to.
       $scope.selectedDevices = []
       // The device the user is watching the details.
-      $scope.vewingDevice = {}
+      $scope.viewingDevice = {}
       // Passed-in object for device directive.
       $scope.deviceApi = {}
 
@@ -42,7 +42,7 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
       })
       function refresh () {
         delete params.place
-        $scope.unselectDevices()
+        $scope.resourceListSelectAll.deselectAll()
         _getDevices(false, false, params)
       }
 
@@ -70,7 +70,7 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
       }
 
       $scope.broadcastSelection = function () {
-        $rootScope.$broadcast('selectedDevices@deviceList', $scope.selectedDevices)
+        $rootScope.$broadcast('selectedDevices@deviceList', $scope.selectedDevices, $scope.numberSelectedDevicesInActualList)
       }
 
       /**
@@ -79,10 +79,10 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
        */
       $scope.toggleDeviceView = function (device) {
         if ($scope.isSelected(device._id)) {
-          $scope.vewingDevice = {}
+          $scope.viewingDevice = {}
         } else {
-          angular.copy(device, $scope.vewingDevice)
-          $scope.deviceApi.showDevice($scope.vewingDevice)
+          angular.copy(device, $scope.viewingDevice)
+          $scope.deviceApi.showDevice($scope.viewingDevice)
         }
         $timeout(triggerCollapse, 10)
       }
@@ -92,13 +92,8 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
         $('device-list input:not(checked)').parents('tr').removeClass('info')
       })
 
-      $scope.unselectDevices = function () {
-        $scope.selectedDevices.length = 0
-        $scope.vewingDevice = {}
-      }
-
       $scope.isSelected = function (deviceId) {
-        return !_.isEmpty($scope.vewingDevice) && deviceId === $scope.vewingDevice._id
+        return !_.isEmpty($scope.viewingDevice) && deviceId === $scope.viewingDevice._id
       }
 
       $scope.openModal = function (type) {
@@ -118,7 +113,7 @@ function list (deviceListConfigFactory, $rootScope, $uibModal, getDevices, $time
           $scope.selected = selectedItem
         }, function () {
           // $log.info('Modal dismissed at: ' + new Date())
-          $scope.unselectDevices() // todo fix so it doesn't need to unselect
+          $scope.selectResourcesDirective.deselectAll() // todo fix so it doesn't need to unselect
         })
       }
       // sorting
@@ -152,10 +147,7 @@ function getDevicesFactory (getDevices, $scope, $rootScope) {
       ++page
     } else {
       $scope.busy = true
-      if (reset) {
-        $scope.unselectDevices()
-        $rootScope.$broadcast('deviceDeselected@deviceList')
-      }
+      if (reset) $scope.resourceListSelectAll.deselectAll()
       page = 1
     }
     getDevices.getDevices(_params, $scope.sortQuery, page).then(function (devices) {

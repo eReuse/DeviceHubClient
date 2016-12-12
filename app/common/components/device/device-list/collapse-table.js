@@ -9,10 +9,10 @@ function triggerCollapseFactory ($scope) {
     var collapseUntil // Counting from right
     var offsetLeft = 2
     var offsetRight = 1
-    if (width <= 450 && !_.isEmpty($scope.vewingDevice)) {
+    if (width <= 450 && !_.isEmpty($scope.viewingDevice)) {
       collapseUntil = offsetLeft
     } else {
-      if (!_.isEmpty($scope.vewingDevice)) {
+      if (!_.isEmpty($scope.viewingDevice)) {
         width -= 400
       }
       collapseUntil = Math.floor(width / 150 - 1)

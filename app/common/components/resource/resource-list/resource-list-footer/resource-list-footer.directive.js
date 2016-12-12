@@ -14,8 +14,9 @@ function resourceListFooter (ResourceSettings) {
       $scope.$on('returnedResources@resourceList', function (_, resources, meta) {
         $scope.totalResources = meta.total
       })
-      $scope.$on('selectedDevices@deviceList', function (_, selectedResources) {
+      $scope.$on('selectedDevices@deviceList', function (_, selectedResources, numberSelectedResourcesInList) {
         $scope.selectedResources = selectedResources
+        $scope.numberSelectedResourcesInList = numberSelectedResourcesInList
       })
     }
   }

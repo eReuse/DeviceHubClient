@@ -1,15 +1,23 @@
 @import '_device-list.directive'
 
-#device-list-table tr td
-  padding: 1vh !important
-  user-select: none
-  cursor: pointer
+#device-list-table tr
+  *
+    &:first-child
+      white-space: nowrap
 
-  :first-child
-    white-space: nowrap
+    .device-list-checkbox
+      zoom: 2
+      -moz-transform: scale(2)
 
-  .device-list-checkbox
-    zoom: 2
+  td
+    padding-top: 1vh !important
+    padding-bottom: 1vh !important
+    user-select: none
+    cursor: pointer
+
+  th
+    padding-top: 0 !important
+
 
 device-list
   #screener
@@ -22,14 +30,6 @@ device-list
       position: absolute
       cursor: not-allowed
 
-  #counter
-    > *
-      vertical-align: middle
-
-    i
-      font-size: 1.4em
-      cursor: pointer
-
   device-icon img
     max-width: 2em
 
@@ -39,5 +39,5 @@ device-list
     outline-offset: -2px
 
   #device-list.fill-height
-      height: calc(100vh - #{$headerHeight} - #{$footerHeight} - #{$optionsMenuHeight} - #{$searchHeight})
-      overflow-y: auto
+    height: calc(100vh - #{$headerHeight} - #{$footerHeight} - #{$optionsMenuHeight} - #{$searchHeight})
+    overflow-y: auto
