@@ -4,7 +4,7 @@
  * @param {object|undefined} resource
  * undefined evaluates to true.
  */
-function resourceListFooter (ResourceSettings) {
+function resourceListFooter (session, CONSTANTS, $http) {
   return {
     templateUrl: require('./__init__').PATH + '/resource-list-footer.directive.html',
     restrict: 'E',
@@ -18,7 +18,31 @@ function resourceListFooter (ResourceSettings) {
         $scope.selectedResources = selectedResources
         $scope.numberSelectedResourcesInList = numberSelectedResourcesInList
       })
+      var MIME_TYPES = {
+        xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ods: 'application/vnd.oasis.opendocument.spreadsheet'
+      }
+      $scope.isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)
+      $scope.exportSpreadsheet = function (format) {
+        var Naming = require('./../../../utils').Naming
+        var mimeType = MIME_TYPES[format]
+        var resource = Naming.resource('Device')
+        $http({
+          method: 'GET',
+          url: CONSTANTS.url + '/' + session.activeDatabase + '/export/' + resource,
+          params: {'ids': _.map($scope.selectedResources, '_id'), 'groupBy': 'Actual place'},
+          headers: {'Accept': mimeType, 'Authorization': 'Basic ' + session.getAccount().token},
+          responseType: 'arraybuffer'
+        }).success(function (data) {
+          var r = new Blob([data], {type: mimeType})
+          var a = document.createElement('a')
+          a.href = URL.createObjectURL(r)
+          a.download = resource + '.' + format
+          a.click()
+        })
+      }
     }
+
   }
 }
 
