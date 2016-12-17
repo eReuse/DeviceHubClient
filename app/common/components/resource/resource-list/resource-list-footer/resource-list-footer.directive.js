@@ -25,6 +25,7 @@ function resourceListFooter (session, CONSTANTS, $http) {
       $scope.isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)
       $scope.exportSpreadsheet = function (format) {
         var Naming = require('./../../../utils').Naming
+        var saveAs = require('file-saver').saveAs
         var mimeType = MIME_TYPES[format]
         var resource = Naming.resource('Device')
         $http({
@@ -34,11 +35,8 @@ function resourceListFooter (session, CONSTANTS, $http) {
           headers: {'Accept': mimeType, 'Authorization': 'Basic ' + session.getAccount().token},
           responseType: 'arraybuffer'
         }).success(function (data) {
-          var r = new Blob([data], {type: mimeType})
-          var a = document.createElement('a')
-          a.href = URL.createObjectURL(r)
-          a.download = resource + '.' + format
-          a.click()
+          var file = new File([data], resource + '.' + format, {type: mimeType})
+          saveAs(file)
         })
       }
     }
