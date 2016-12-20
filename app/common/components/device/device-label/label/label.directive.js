@@ -4,10 +4,7 @@ function label () {
     restrict: 'E',
     scope: {
       device: '=',
-      width: '@',
-      height: '@',
-      logo: '@',
-      useLogo: '='
+      set: '='
     },
     link: function ($scope, $element, $attrs) {
       $scope.code = $scope.device._links.self.href

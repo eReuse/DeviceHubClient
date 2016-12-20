@@ -14,14 +14,9 @@
          ng-mouseleave="hoverScreener = false"
     >
       <div ng-show="selectedDevices.length == 0"></div>
-      <button
-        type="button"
-        class="btn"
-        ng-click="openModal('Label')"
-        ng-class="{'btn-primary': selectedDevices.length > 0}"
-      >
-        <i class="fa fa-tags"></i>Label
-      </button>
+      <device-label-button
+        devices="selectedDevices"
+      ></device-label-button>
       <manual-events-button devices="selectedDevices"></manual-events-button>
       <share devices="selectedDevices"></share>
       <certificate-button devices="selectedDevices"></certificate-button>

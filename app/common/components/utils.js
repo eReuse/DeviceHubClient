@@ -163,13 +163,13 @@ function schemaIsLoaded (schema) {
   return schema.isLoaded()
 }
 
-function setImageGetter ($scope, jqueryExpression, nameOfVariableToStore) {
+function setImageGetter ($scope, jqueryExpression, pathToStore) {
   $(jqueryExpression).change(function () {
     if (this.files && this.files[0]) {
       var reader = new FileReader()
       reader.onload = function (e) {
         $scope.$evalAsync(function (scope) {
-          scope[nameOfVariableToStore] = e.target.result
+          _.set(scope, pathToStore, e.target.result)
         })
       }
       reader.readAsDataURL(this.files[0])

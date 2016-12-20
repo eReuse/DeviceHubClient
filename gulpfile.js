@@ -234,10 +234,7 @@ gulp.task('watch', function () {
   gulp.watch(filePath.styles.src, ['sass'])
   gulp.watch(filePath.templates.src, ['templates'])
   gulp.watch(filePath.assets.images.watch, ['images'])
-  //gulp.watch(filePath.vendorJS.src, ['vendorJS'])
-  //gulp.watch(filePath.vendorCSS.src, ['vendorCSS'])
   gulp.watch(filePath.copyIndex.watch, ['copyIndex'])
-  //  gulp.watch(filePath.lint.src, ['checkstyle'])
   console.log('Watching...')
 })
 

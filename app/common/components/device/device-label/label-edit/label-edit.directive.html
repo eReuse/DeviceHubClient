@@ -1,0 +1,54 @@
+<table>
+  <tr>
+    <td></td>
+    <td>
+      <div class="form-group">
+        <label for="use-logo">Use a logo</label>
+        <input type="checkbox" class="form-control" id="use-logo" ng-model="set.useLogo"/>
+      </div>
+      <div class="form-group" ng-show="set.useLogo">
+        <label for="logoUpload">Logo</label>
+        <input type="file" class="form-control" id="logoUpload" accept="image/*"/>
+      </div>
+    </td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>
+      <div class="form-group">
+        <label for="width">Width</label>
+        <div class="input-group">
+          <input type="number" class="form-control" id="width" ng-model="set.width" min="67"/>
+          <div class="input-group-addon">mm</div>
+        </div>
+      </div>
+    </td>
+    <td>
+      <device-label set="set" device="device"></device-label>
+    </td>
+    <td>
+      <div class="form-group">
+        <label for="fields">Fields</label>
+        <div id="list-checkboxes">
+          <div ng-repeat="field in fields">
+            <input id="fields" type="checkbox" checklist-model="set.fields" checklist-value="field">
+            {{field.humanName}}
+          </div>
+        </div>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>
+      <div class="form-group">
+        <label for="height">Height</label>
+        <div class="input-group">
+          <input type="number" class="form-control" id="height" ng-model="set.height" min="28"/>
+          <div class="input-group-addon">mm</div>
+        </div>
+      </div>
+    </td>
+    <td></td>
+  </tr>
+</table>
