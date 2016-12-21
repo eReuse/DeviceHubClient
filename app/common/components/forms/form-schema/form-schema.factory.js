@@ -65,7 +65,9 @@ function FormSchemaFactory (ResourceSettings, $rootScope, Notification, cerberus
     var self = this
     return function (response) {
       self.status.working = false
-      self.status.errorListFromServer = response.data._issues
+      try {
+        self.status.errorListFromServer = response.data._issues
+      } catch (err) {}
       return $q.reject(response)
     }
   }
