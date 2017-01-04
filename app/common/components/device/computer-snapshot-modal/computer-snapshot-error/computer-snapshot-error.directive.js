@@ -2,6 +2,7 @@ function registerErrorProcessor (ResourceSettings) {
   var TEMPLATE_NEEDS_ID_URL = require('./__init__').PATH + '/computer-snapshot-error-needs-id.directive.html'
   var TEMPLATE = require('./__init__').PATH + '/computer-snapshot-error.directive.html'
   var TEMPLATE_RESULT_OK = require('./__init__').PATH + '/computer-snapshot-error-result-ok.directive.html'
+  var TEMPLATE_ALREADY_UPLOADED = require('./__init__').PATH + '/computer-snapshot-error-already-uploaded.directive.html'
   return {
     template: '<ng-include src="templateUrl"/>',
     restrict: 'E',
@@ -10,19 +11,26 @@ function registerErrorProcessor (ResourceSettings) {
       error: '='
     },
     link: function ($scope) {
-      $scope.error.solved = $scope.type === 'json'
-      if ($scope.error.solved) --$scope.status.unsolved
-      showError($scope, $scope.error.object.data)
+      processError($scope, $scope.error.object.data)
       $scope.update = update($scope, $scope.error.fileContent)
       $scope.insert = insert($scope, $scope.error.fileContent)
       $scope.$on('modal.closing')
     }
   }
 
-  function showError ($scope, content) {
+  function processError ($scope, content) {
+    $scope.error.solved = $scope.type === 'json'
     $scope.content = content
     $scope.cannotCreateId = cannotCreateId(content)
-    $scope.templateUrl = needsId(content) || $scope.cannotCreateId ? TEMPLATE_NEEDS_ID_URL : TEMPLATE
+    if (needsId(content) || $scope.cannotCreateId) {
+      $scope.templateUrl = TEMPLATE_NEEDS_ID_URL
+    } else if (alreadyUploaded(content)) {
+      $scope.templateUrl = TEMPLATE_ALREADY_UPLOADED
+      $scope.error.solved = true
+    } else {
+      $scope.templateUrl = TEMPLATE
+    }
+    if ($scope.error.solved) --$scope.status.unsolved
   }
 
   function needsId (content) {
@@ -49,6 +57,16 @@ function registerErrorProcessor (ResourceSettings) {
     }
   }
 
+  function alreadyUploaded (content) {
+    try {
+      return _.find(content._issues._uuid, function (error) {
+        return _.includes(error, 'NotUnique')
+      })
+    } catch (error) {
+      return false
+    }
+  }
+
   function update ($scope, snapshot) {
     return function (identifier) {
       snapshot.device._id = identifier
@@ -69,7 +87,7 @@ function registerErrorProcessor (ResourceSettings) {
     }, function (response) {
       delete snapshot.device._id // We leave the snapshot in original state
       delete snapshot.device.forceCreation
-      showError($scope, response.data)
+      processError($scope, response.data)
     })
   }
 

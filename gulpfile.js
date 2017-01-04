@@ -97,17 +97,6 @@ var filePath = {
       './bower_components/Boxer/jquery.ba-dotimeout.js',
       './bower_components/pdfmake-dist/build/pdfmake.js',
       './bower_components/pdfmake-dist/build/vfs_fonts.js'
-    ],
-    src1: [
-      'angular',
-      'angular-animate',
-      'angular-bootstrap'
-    ],
-    src2: [
-      './bower_components/angular/angular.js'
-    ],
-    src2b: [
-      'angular'
     ]
   }
 }
@@ -156,7 +145,6 @@ gulp.task('bundle-dev-once', function () {
 })
 
 gulp.task('bundle-dev', function () {
-  'use strict'
   bundle.bundler = watchify(browserify(bundle.conf))
   bundle.prod = false
   bundle.bundler.on('update', rebundle)

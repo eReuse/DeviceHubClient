@@ -34,7 +34,8 @@
   <div uib-collapse="status.results.error.length === 0">
     <ul class="list-group">
       <li ng-repeat="result in status.results.error" class="list-group-item">
-        <computer-snapshot-error status="status" error="result"></computer-snapshot-error>
+        <h4 class="list-group-item-heading">{{::result.fileName}}</h4>
+        <computer-snapshot-error class="list-group-item-text" status="status" error="result"></computer-snapshot-error>
       </li>
     </ul>
   </div>

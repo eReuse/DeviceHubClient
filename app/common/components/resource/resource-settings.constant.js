@@ -24,7 +24,7 @@ var RESOURCE_SETTINGS = (function () {
       'devices:Dispose': {doNotUse: generalDoNotUse, manual: true},
       'devices:Snapshot': {
         doNotUse: _.concat(generalDoNotUse, ['debug', 'version', 'events', 'owners', 'components', 'version',
-          'snapshotSoftware', 'automatic', 'offline'])
+          'snapshotSoftware', 'automatic', 'offline', '_uuid'])
       },
       'Device': {
         view: 'device',
