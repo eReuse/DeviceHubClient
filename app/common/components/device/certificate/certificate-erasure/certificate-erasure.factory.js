@@ -1,7 +1,7 @@
 function certificateErasureFactory (CONSTANTS, CERTIFICATE_ERASURE_FACTORY_STRINGS, ResourceSettings, session,
                                     certificateFactory) {
-  require('bower_components/pdfmake-dist/build/pdfmake')
-  require('bower_components/pdfmake-dist/build/vfs_fonts')
+  require('bower_components/pdfmake/build/pdfmake')
+  require('bower_components/pdfmake/build/vfs_fonts')
 
   function CertificateErasure (computers, model, logo) {
     var self = this

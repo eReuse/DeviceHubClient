@@ -1,6 +1,6 @@
 function certificateReceiptFactory (CERTIFICATE_RECEIPT_FACTORY_STRINGS, certificateFactory) {
-  require('bower_components/pdfmake-dist/build/pdfmake')
-  require('bower_components/pdfmake-dist/build/vfs_fonts')
+  require('bower_components/pdfmake/build/pdfmake')
+  require('bower_components/pdfmake/build/vfs_fonts')
 
   function CertificateReceipt (devices, model, logo) {
     model.day = model.date.getDate()
