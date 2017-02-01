@@ -28,6 +28,7 @@
     "checklist-model": "~0.10.0",
     "del": "~2.2.0",
     "file-saver": "~1.3.3",
+    "font-awesome": "^4.7.0",
     "gulp": "~3.9.0",
     "gulp-angular-templatecache": "~2.0.0",
     "gulp-clean": "~0.3.1",

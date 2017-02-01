@@ -49,10 +49,6 @@ var filePath = {
   copyFavicon: {
     src: './app/common/favicon/*'
   },
-  copyFonts: {
-    src: './node_modules/bootstrap-sass/assets/fonts/bootstrap/*',
-    dest: './dist/css/fonts'
-  },
   vendorCSS: {
     src: [
       './resources/animate.min.css',
@@ -198,13 +194,6 @@ gulp.task('copyIndex', function () {
   .pipe(gulp.dest(filePath.build.dest))
 })
 
-// =======================================================================
-// Copy Fonts
-// =======================================================================
-gulp.task('copyFonts', function () {
-  return gulp.src(filePath.copyFonts.src)
-  .pipe(gulp.dest(filePath.copyFonts.dest))
-})
 
 // =======================================================================
 // Copy Favicon
@@ -289,7 +278,7 @@ gulp.task('build', function (callback) {
   runSequence(
     ['clean'],
     ['templates'],
-    ['bundle-dev', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex', 'copyFonts'],
+    ['bundle-dev', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex'],
     ['afterClean', 'notify'],
     callback
   )
@@ -300,7 +289,7 @@ gulp.task('build-prod', function (callback) {
   runSequence(
     ['clean'],
     ['templates'],
-    ['bundle-prod', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex', 'copyFonts'],
+    ['bundle-prod', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex'],
     ['notify', 'afterClean'],
     callback
   )
