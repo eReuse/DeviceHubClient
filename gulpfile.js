@@ -46,6 +46,10 @@ var filePath = {
     src: './app/index.html',
     watch: './app/index.html'
   },
+  copyFonts: {
+    src: './node_modules/font-awesome/fonts/*',
+    dest: './dist/fonts'
+  },
   copyFavicon: {
     src: './app/common/favicon/*'
   },
@@ -58,7 +62,8 @@ var filePath = {
       './node_modules/jsonformatter/dist/json-formatter.min.css',
       './node_modules/angular-ui-notification/dist/angular-ui-notification.css',
       './bower_components/angular-dashboard-framework/angular-dashboard-framework.css',
-      './node_modules/angular-chart.js/dist/angular-chart.css'
+      './node_modules/angular-chart.js/dist/angular-chart.css',
+      './node_modules/font-awesome/css/font-awesome.min.css'
     ]
   },
   vendorJS: {
@@ -251,6 +256,14 @@ gulp.task('vendorCSS', function () {
   .pipe(gulp.dest(filePath.build.cssDest))
 })
 
+// =======================================================================
+// Copy Fonts
+// =======================================================================
+gulp.task('copyFonts', function () {
+  return gulp.src(filePath.copyFonts.src)
+    .pipe(gulp.dest(filePath.copyFonts.dest))
+})
+
 function notifyTask (text) {
   text = typeof text === 'string' ? text : 'Done!'
   return gulp.src(filePath.copyIndex.src)
@@ -278,7 +291,7 @@ gulp.task('build', function (callback) {
   runSequence(
     ['clean'],
     ['templates'],
-    ['bundle-dev', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex'],
+    ['bundle-dev', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex', 'copyFonts'],
     ['afterClean', 'notify'],
     callback
   )
@@ -289,7 +302,7 @@ gulp.task('build-prod', function (callback) {
   runSequence(
     ['clean'],
     ['templates'],
-    ['bundle-prod', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex'],
+    ['bundle-prod', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex', 'copyFonts'],
     ['notify', 'afterClean'],
     callback
   )
