@@ -28,7 +28,7 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
     var isAModification = '_id' in model // Remember, defaults are taken from the schema
     var doNotUse = 'doNotUse' in options ? options.doNotUse.concat(DO_NOT_USE) : DO_NOT_USE
     var _schema = _.assign({}, resourceSettings.schema, options.schema || {})
-    var form = this.parseFields(doNotUse, isAModification, _schema, model)
+    var form = this.parseFields(doNotUse, isAModification, _schema, model, '')
     options.nonModifiable = this.generateNonModifiableArray(form)
     this.or(form, model)
     return form
@@ -40,14 +40,16 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
    * @param isAModification
    * @param subSchema
    * @param model
+   * @param path The absolute path where the field is located, used when a field is nested inside field groups
+   * (dicts). For example: a.b.c makes reference to a field 'c' whose value is nested inside a.b.c
    * @throw NoType There is no Angular-Formly type to represent the field's type
    * @return {Array}
    */
-  this.parseFields = function (doNotUse, isAModification, subSchema, model) {
+  this.parseFields = function (doNotUse, isAModification, subSchema, model, path) {
     var form = []
     for (var fieldName in subSchema) {
       try {
-        form.push(this.parseField(fieldName, doNotUse, isAModification, subSchema[fieldName], model))
+        form.push(this.parseField(fieldName, doNotUse, isAModification, subSchema[fieldName], model, path))
       } catch (err) {
         if (!(err instanceof FieldShouldNotBeIncluded)) throw err
       }
@@ -70,13 +72,13 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
    * @throw FieldShouldNotBeIncluded The field should not be added in the form
    * @return object A field.
    */
-  this.parseField = function (fieldName, doNotUse, isAModification, schema, model) {
+  this.parseField = function (fieldName, doNotUse, isAModification, schema, model, path) {
     var hasWriteAccess = session.getAccount().role.ge(schema['dh_allowed_write_roles'] || Role.prototype.BASIC)
     if (!_.includes(doNotUse, fieldName) && !schema.readonly && !schema.materialized && hasWriteAccess) {
       if (schema.type === 'dict' && 'schema' in schema) {
-        return this.generateFieldGroup(fieldName, schema, model, doNotUse, isAModification)
+        return this.generateFieldGroup(fieldName, schema, model, doNotUse, isAModification, path)
       } else {
-        return this.generateField(fieldName, schema, model, doNotUse, isAModification)
+        return this.generateField(fieldName, schema, model, doNotUse, isAModification, path)
       }
     } else {
       throw new FieldShouldNotBeIncluded(fieldName, model['@type'])
@@ -93,10 +95,11 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
    * @throw NoType There is no Angular-Formly type to represent the field's type
    * @return {{fieldGroup: 'fields', key: string, sink: number}}
    */
-  this.generateFieldGroup = function (fieldName, subSchema, model, doNotUse, isAModification) {
+  this.generateFieldGroup = function (fieldName, subSchema, model, doNotUse, isAModification, path) {
+    var ourPath = _.isEmpty(path) ? fieldName : path + '.' + fieldName
     return {
       fieldGroup: _.concat([{template: '<h4>' + utils.Naming.humanize(fieldName) + '</h4>'}],
-        this.parseFields(doNotUse, isAModification, subSchema.schema, model)),
+        this.parseFields(doNotUse, isAModification, subSchema.schema, model, ourPath)),
       key: fieldName,
       sink: subSchema.sink || 0
     }
@@ -112,13 +115,14 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
    * @throw NoType There is no Angular-Formly type to represent the field's type
    * @return {{key: string, type: string, templateOptions: {label: (*|string)}, sink: number}}
    */
-  this.generateField = function (fieldName, subSchema, model, doNotUse, isAModification) {
+  this.generateField = function (fieldName, subSchema, model, doNotUse, isAModification, path) {
+    var fieldPath = path + '.' + fieldName
     var options = {
       label: (subSchema.label || utils.Naming.humanize(fieldName)) +
       (subSchema.unitCode ? ' (' + UNIT_CODES[subSchema.unitCode] + ')' : '')
     }
     try {
-      var type = this.getTypeAndSetTypeOptions(fieldName, subSchema, model, doNotUse, isAModification, options)
+      var type = this.getTypeAndSetTypeOptions(fieldName, subSchema, model, doNotUse, isAModification, options, fieldPath)
     } catch (err) {
       err.message += '. Field ' + fieldName + ' and resource type ' + model['@type']
       err.fieldName = fieldName
@@ -153,7 +157,8 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
     return field
   }
 
-  this.getTypeAndSetTypeOptions = function (fieldName, fieldSchema, model, doNotUse, isAModification, options) {
+  this.getTypeAndSetTypeOptions = function (fieldName, fieldSchema, model, doNotUse, isAModification, options,
+                                            fieldPath) {
     var type = fieldSchema.type
     if ('allowed' in fieldSchema && fieldSchema.allowed.length > 1) {
       options.options = this.getSelectOptions(fieldSchema.allowed)
@@ -188,20 +193,13 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
           }
         case 'datetime':
           return 'datepicker'
-        case 'list':
-          if ('schema' in fieldSchema && 'data_relation' in fieldSchema.schema) {
-            if (fieldSchema.schema.data_relation.resource === 'devices') {
-              if ('devices' in model) {
-                options.options = angular.copy(model.devices || {})
-                model.devices = [] // Now devices will hold just a list of _id
-                options.options.forEach(function (device) {
-                  model.devices.push(device._id)
-                })
-              } else {
-                options.options = [{}]
-              }
-              return 'devices'
+        case 'list': // Let's convert the full list of resources to simply a list holding ids
+          if (_.has(fieldSchema, 'schema.data_relation')) {
+            if (_.has(model, fieldPath)) {
+              options.options = angular.copy(_.get(model, fieldPath) || {})
+              _.set(model, fieldPath, _.map(options.options, '_id'))
             }
+            return fieldSchema.schema.data_relation.resource
           }
           throw new NoType(type)
         case 'objectid':

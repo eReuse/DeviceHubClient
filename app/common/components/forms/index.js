@@ -11,7 +11,7 @@ module.exports = angular.module('common.components.forms',
     'restangular',
     'ui-notification'
   ])
-.config(require('./types/devices/devices.formly-type.config'))
+.config(require('./types/resources/resources.formly-type.config'))
 .config(require('./types/maps/maps.formly-type.config'))
 .config(require('./types/typeahead/typeahead.formly-type.config'))
 .config(require('./types/datepicker/datepicker.formly-type.config'))

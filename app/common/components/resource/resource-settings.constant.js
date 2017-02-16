@@ -42,10 +42,11 @@ var RESOURCE_SETTINGS = (function () {
       },
       'Place': {
         dataRelation: {
-          label: 'Identifier of the place',
+          label: 'Name of the place',
           labelFieldName: 'label',
           filterFieldName: 'label',
-          fieldType: 'typeahead'
+          fieldType: 'typeahead',
+          keyFieldName: 'label'
         },
         view: 'place'
       },
@@ -55,6 +56,42 @@ var RESOURCE_SETTINGS = (function () {
           labelFieldName: 'project',
           filterFieldName: 'project',
           fieldType: 'typeahead'
+        }
+      },
+      'Package': {
+        dataRelation: {
+          label: 'Name of the package',
+          labelFieldName: 'label',
+          filterFieldName: 'label',
+          fieldType: 'typeahead',
+          keyFieldName: 'label'
+        }
+      },
+      'Lot': {
+        dataRelation: {
+          label: 'Name of the lot',
+          labelFieldName: 'label',
+          filterFieldName: 'label',
+          fieldType: 'typeahead',
+          keyFieldName: 'label'
+        }
+      },
+      'InputLot': {
+        dataRelation: {
+          label: 'Name of the input lot',
+          labelFieldName: 'label',
+          filterFieldName: 'label',
+          fieldType: 'typeahead',
+          keyFieldName: 'label'
+        }
+      },
+      'OutputLot': {
+        dataRelation: {
+          label: 'Name of the output lot',
+          labelFieldName: 'label',
+          filterFieldName: 'label',
+          fieldType: 'typeahead',
+          keyFieldName: 'label'
         }
       }
     }

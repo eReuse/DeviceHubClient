@@ -68,7 +68,7 @@ describe('Test FormSchema', function () {
         containing({key: 'incidence', type: 'checkbox'}),
         containing({key: 'description', type: 'textarea'}),
         containing({key: 'comment', type: 'input'})
-      ])
+      ], true) // Ignore sorting
       // We try to submit it
       var url = CONSTANTS.url + '/db1/events/devices/locate'
       testEmptySubmission(url)
@@ -235,6 +235,10 @@ describe('Test FormSchema', function () {
       options: {},
       status: {}
     }, data)
+    if (resourceType == 'Place') {
+      _data.model.children = {'devices': devices}
+      delete _data.model.devices
+    }
     try {
       var result = createDirective(_data, template)
       directive = result[0]

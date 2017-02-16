@@ -13,7 +13,8 @@ var CONSTANTS = (function () {
       'Content-Type': 'application/json',
       Accept: 'application/json'
     },
-    resourcesChangingNumber: ['device', 'event', 'account', 'place', 'erase', 'project'],
+    // todo this should be taken from the server
+    resourcesChangingNumber: ['device', 'event', 'account', 'place', 'erase', 'project', 'package', 'lot'],
     debug: true
   }
 }())
