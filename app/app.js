@@ -15,10 +15,9 @@ module.exports = window.angular.module('deviceHub', [
       templateUrl: 'views/index/index.controller.html',
       abstract: true
     })
-    .state('index.devices', {
-      url: '/devices',
-      templateUrl: 'views/devices/devices.controller.html',
-      abstract: true,
+    .state('index.inventory', {
+      url: '/inventory',
+      templateUrl: 'views/inventory/inventory.controller.html',
       resolve: {schemaLoaded: utils.schemaIsLoaded}
     }).state('fullDevice', {
       url: '/:db/devices/:id',
@@ -36,7 +35,7 @@ module.exports = window.angular.module('deviceHub', [
       controller: 'reportsCtrl as RsCl',
       resolve: {schemaLoaded: utils.schemaIsLoaded}
     })
-    $urlRouterProvider.otherwise('/devices')
+    $urlRouterProvider.otherwise('/inventory')
   })
 .controller('deviceHubCtrl', function (CONSTANTS) {
   $('#intro-spinner').remove()

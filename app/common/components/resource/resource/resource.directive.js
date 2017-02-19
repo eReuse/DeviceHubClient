@@ -1,18 +1,18 @@
 /**
  * Loads and shows a resource
  */
-function resourceButton (RecursionHelper, ResourceSettings) {
+function resource (RecursionHelper, ResourceSettings) {
   return {
     templateUrl: window.COMPONENTS + '/resource/resource/resource.directive.html',
     restrict: 'E',
     scope: {
       resource: '=',
-      teaser: '='
+      type: '=' // big / medium / small
     },
     compile: function (element) {
       return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {
         $scope.resource = $scope.resource || {}
-        var rSettings = ResourceSettings($scope.resource['@type'])
+        let rSettings = ResourceSettings($scope.resource['@type'])
         $scope.isEvent = rSettings.isSubResource('Event')
         getResource()
 
@@ -33,4 +33,4 @@ function resourceButton (RecursionHelper, ResourceSettings) {
   }
 }
 
-module.exports = resourceButton
+module.exports = resource

@@ -1,0 +1,76 @@
+<!-- Resource Search -->
+<div class="row">
+  <resource-search settings="config.search.params"
+                   on-params-changed="onSearchParamsChanged(params)"
+                   default-params="config.search.defaultParams"
+  ></resource-search>
+</div>
+
+<!-- Butttons -->
+<div id="buttons" class="row text-center">
+  <div id="screener"
+       uib-tooltip="Select some {{resourceType}} first."
+       tooltip-enable="selector.inList.length == 0"
+       ng-mouseenter="hoverScreener = true"
+       ng-mouseleave="hoverScreener = false"
+  >
+    <div ng-show="selectedDevices.length == 0"></div>
+    <div ng-include="config.buttons.templateUrl"></div>
+  </div>
+</div>
+
+<!-- Listing -->
+<div class="row">
+  <div ng-class="{'col-xs-12': $root._.isNull(opened), 'col-xs-5 col-lg-6': !$root._.isEmpty(opened)}"
+       class="fill-height" id="device-list">
+    <table id="resource-list-table" class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>
+            <input type="checkbox"
+                   class="resource-list-checkbox"
+                   ng-model="selector.checked"
+                   ng-click="selector.toggleSelectAll(selector.checked)">
+          </th>
+          <th ng-repeat="th in config.table.th"
+              field-sort sort="setSort(sort)" key="{{::th.key}}" name="{{::th.name}}" group="sort"
+          ></th>
+          <th field-sort sort="setSort(sort)" key="_created" name="Registered in" group="sort"></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="resource in resources"
+            ng-click="subresource.toggle(resource)"
+            ng-class="{info: subresource.isOpened(resource['_id'])}"
+        >
+          <td>
+            <input class="resource-list-checkbox"
+                   type="checkbox"
+                   ng-model="selector.checkboxes[resource['_id']]"
+                   ng-click="selector.toggle(resource, $event, $index)"
+                   ng-class="{blink: hoverScreener && resource._id === resources[0]._id && inList.length == 0}"
+            >
+          </td>
+          <td ng-repeat="td in config.table.td">
+            <!--<div ng-if="td.templateUrl" ng-include="td.templateUrl"></div>-->
+            <div ng-if="td.value">{{resource[td.value] | limitTo: 10}}<small>{{resource[td.value].length > 10? '&hellip;':
+                                                                             ''}}</small></div>
+          </td>
+          <td>{{resource._created | timeAgo}}</td>
+          <td>
+            <!--<resource-icon resource-type="{{resource['@type']}}" subtype="{{resource.type}}"></resource-icon>-->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center" ng-show="!loadMoreIsBusy && pagination.morePagesAvailable">
+      <button class="btn btn-default" ng-click="loadMore()">Load more</button>
+    </div>
+  </div>
+  <!-- SubResource in right-bar -->
+  <aside ng-if="type === 'big' && subResource.resource" class="col-xs-7 col-lg-6 ani-show-no-hide">
+    <resource-view resource="subResource.resource" type="medium"></resource-view>
+  </aside>
+</div>
+

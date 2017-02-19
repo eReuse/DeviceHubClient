@@ -7,6 +7,15 @@ var generalDoNotUse = ['geo']
  * @type {{resources}}
  */
 var RESOURCE_SETTINGS = (function () {
+  let v = {
+    Dashboard: {view: 'resource-dashboard', name: 'Dashboard'},
+    Device: {view: 'resource-list', resourceType: 'Device', name: 'Devices'},
+    Event: {view: 'resource-list', resourceType: 'Event', name: 'Events'},
+    Place: {view: 'resource-list', resourceType: 'Place', name: 'Places'},
+    Lot: {view: 'resource-list', resourceType: 'Lot', name: 'Lots'},
+    Package: {view: 'resource-list', resourceType: 'Package', name: 'Packages'}
+  }
+
   return {
     resources: {
       'devices:ToPrepare': {doNotUse: generalDoNotUse, manual: true},
@@ -28,9 +37,11 @@ var RESOURCE_SETTINGS = (function () {
       },
       'Device': {
         view: 'device',
+        // We pass a 'resource' object to a subview with, at least, @type.
+        subviews: [v.Dashboard, v.Event],
         doNotUse: ['events', 'owners', 'components', 'isUidSecured', 'public', 'icon', 'pid', 'labelId']
       },
-      'Event': {view: 'event'},
+      'Event': {view: 'event', viewListOfMainView: 'event-list'},
       'Account': {
         dataRelation: {
           label: 'Account\'s e-mail',
@@ -74,7 +85,8 @@ var RESOURCE_SETTINGS = (function () {
           filterFieldName: 'label',
           fieldType: 'typeahead',
           keyFieldName: 'label'
-        }
+        },
+        subviews: [v.Dashboard, v.Lot, v.Package, v.Device, v.Place, v.Event]
       },
       'InputLot': {
         dataRelation: {
@@ -94,6 +106,9 @@ var RESOURCE_SETTINGS = (function () {
           keyFieldName: 'label'
         }
       }
+    },
+    inventory: {
+      subviews: [v.Dashboard, v.Lot, v.Package, v.Device, v.Place, v.Event]
     }
   }
 }())

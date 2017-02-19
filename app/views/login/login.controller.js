@@ -41,7 +41,7 @@ function loginController ($scope, $state, authService, CONSTANTS) {
       if ($scope.form.form.$valid) {
         $scope.loading = true
         authService.login(credentials, model.saveInBrowser).then(function () {
-          $state.go('index.devices.show')
+          $state.go('index.inventory')
         }, setSubmissionError)
       } else {
         $scope.form.form.triedSubmission = true

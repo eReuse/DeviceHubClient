@@ -22,7 +22,7 @@ function resourceSearch (ResourceSettings) {
 
       function unpackSettings (settings) {
         _.forEach(settings, function (param) {
-          var select = []
+          let select = []
           // For selects
           if (_.isString(param.select)) {
             _.forEach(ResourceSettings(param.select).getSubResources(), function (rSettings) {

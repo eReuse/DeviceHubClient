@@ -1,6 +1,6 @@
 <article class="device">
     <div ng-if="device._id != null">
-        <uib-tabset active="activeTab">
+        <uib-tabset id="subviews" active="activeTab">
             <uib-tab ng-repeat="tab in tabs" select="setActive(tab)">
                 <uib-tab-heading>
                     <i class="{{tab.uiClass}}"></i>&nbsp;{{tab.heading}}

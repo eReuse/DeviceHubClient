@@ -43,7 +43,7 @@ module.exports = angular.module('common.components.nav',
     restrict: 'E',
     link: function ($scope) {
       $scope.tabs = [
-        {heading: 'Devices', route: 'index.devices.show', glyphicon: 'phone'}
+        {heading: 'Devices', route: 'index.inventory', glyphicon: 'phone'}
         // {heading: 'Reports', route: 'index.reports', glyphicon: 'file'}
       ]
       $scope.tabs.forEach(function (tab, index) {
