@@ -1,11 +1,19 @@
 <article>
-  <header ng-show="type === BIG">
-    <div ng-show="!$root._.isEmpty(resource)">
-
-    </div>
-    <div ng-hide="!$root._.isEmpty(resource)">
-      <h2>All {{tabs.actualTab}}</h2>
-    </div>
-  </header>
-
+  <div ng-if="type === 'small'">
+    <table-view ng-if="type === 'small'"
+                model="model"
+                teaser="true"
+    ></table-view>
+  </div>
+  <div ng-if="type !== 'small'">
+    <header ng-if="resource['@type']">
+      <resource-icon class="pull-right" resource-type="{{resource['@type']}}"
+                     resource-subtype="{{resource.type}}"></resource-icon>
+      <h4 ng-show="view.title" class="display-inline">
+        <span ng-repeat="t in view.title">{{resource[t]}}</span>
+        <small ng-repeat="s in view.subtitle">&nbsp;{{resource[s]}}</small>
+      </h4>
+    </header>
+  </div>
+  <div id="resource-view-body"></div>
 </article>

@@ -3,8 +3,7 @@ function ResourceSelectorFactory () {
    * Manages selecting resources in the resource-list.
    *
    * The user can select them through a checkbox in every row and through a 'select all on this list' / 'unselect all'
-   * button at the end of the table. These elements are supposed to call methods of this class and use values
-   * in this.$scope.selector as their ng-models.
+   * button at the end of the table.
    *
    * There is the concept of *actual list* and *total*. The actual list is formed by the list of resources the user
    * sees. However, as the user filters the list, resources appear and disappear. Those resources that
@@ -12,24 +11,23 @@ function ResourceSelectorFactory () {
    * those resources appear again, the user will see them selected.
    */
   class ResourceListSelector {
-    constructor ($scope, resourceListGetter) {
-      this.$scope = $scope
-      this.$scope.selector = {
-        /**
-         * ng-model for the 'selectAll' checkbox
-         */
-        checked: false,
-        /**
-         * ng-model for the checkboxes in the list. Only for representational purposes.
-         * Is an object key (_id) / value (boolean) stating if ticked/non-ticked.
-         */
-        checkboxes: {} // The checkbox representation
-      }
+    /**
+     *
+     * @param {object} selector - A selector object with the ng-models of the checkboxes
+     *  - 'checked': the ng-model for the 'selectAll' checkbox
+     *  - 'checkboxes': an array of ng-models for the individual resource select checkboxes where the '_id' is the key.
+     * @param {array} resources - The array that will hold the resources
+     * @param {ResourceListGetter} resourceListGetter - An instance of ResourceListGetter
+     */
+    constructor (selector, resources, resourceListGetter) {
+      this.selector = selector
+      this.resources = resources
+
       /**
        * Array holding the resources that are selected in the actual list.
        * @type {Array}
        */
-      this.inList = $scope.selector.inList = []
+      this.inList = selector.inList = []
       /**
        * Resources selected through all lists.
        * @type {Array}
@@ -52,10 +50,10 @@ function ResourceSelectorFactory () {
         this.remove(resource)
       } else { // Add
         if ($event.shiftKey) { // Add multiple
-          let foundSelectedOne = false
+          let foundPreviousSelectedOne = false
           // Selects all resources until finds a previously selected resources or reaches the beginning
-          for (let i = $index - 1; i >= 0 && !foundSelectedOne; i--) {
-            foundSelectedOne = this.add(this.$scope.resources[i])
+          for (let i = $index - 1; i >= 0 && !foundPreviousSelectedOne; i--) {
+            foundPreviousSelectedOne = !this.add(this.resources[i])
           }
         } else {  // Add one
           this.add(resource)
@@ -69,12 +67,13 @@ function ResourceSelectorFactory () {
      * @param selectAll
      */
     toggleSelectAll (selectAll) {
+      let self = this
       if (selectAll) {
-        _.forEach(this.$scope.resources, _.bind(this.add, this, _))
+        _.forEach(this.resources, (resource) => { self.add(resource) }) // We cannot bind as add() can return 'false'
       } else {
         this.inList.length = 0
         this.total.length = 0
-        this.$scope.selector.checkboxes = {}
+        this.selector.checkboxes = {}
         this._control()
       }
     }
@@ -90,9 +89,10 @@ function ResourceSelectorFactory () {
       // We re-populate inList from the actual resources that are in total
       let self = this
       this.inList.length = 0
-      this.$scope.selector.checkboxes = {} // todo is ok with ng-model?
+      this._control()
+      this.selector.checkboxes = {} // todo is ok with ng-model?
       _.forEach(resources, function (resource) {
-        if (_.find(self.total, resource)) {
+        if (_.find(self.total, {_id: resource._id})) {
           self.add(resource, true) // 2nd parameter -> We add it only to inList
         }
       })
@@ -104,19 +104,20 @@ function ResourceSelectorFactory () {
      * @returns {boolean}
      */
     isInList (resource) {
-      return _.find(this.inList, {'_id': resource['_id']})
+      return _.find(this.inList, {_id: resource._id})
     }
 
     /**
      * Adds a resource to the actual list and to the total, if it was not there before.
-     * @param resource
-     * @param inListOnly
+     * @param {object} resource - The resource to add
+     * @param {boolean} inListOnly - True for not adding it to the total list
+     * @return {boolean} True if a *new* resource has been added to the list
      */
     add (resource, inListOnly = false) {
       if (!this.isInList(resource)) {
         this.inList.push(resource)
         if (!inListOnly) this.total.push(resource)
-        this.$scope.selector.checkboxes[resource['_id']] = true
+        this.selector.checkboxes[resource['_id']] = true
         this._control()
         return true
       } else {
@@ -131,7 +132,7 @@ function ResourceSelectorFactory () {
     remove (resource) {
       _.remove(this.inList, {'_id': resource['_id']})
       _.remove(this.total, {'_id': resource['_id']})
-      this.$scope.selector.checkboxes[resource['_id']] = false
+      this.selector.checkboxes[resource['_id']] = false
       this._control()
     }
 
@@ -140,8 +141,8 @@ function ResourceSelectorFactory () {
      * @private
      */
     _control () {
-      this.$scope.selector.checked = this.inList.length === this.$scope.resources.length
-      _.invokeMap(this.callbacksForSelections, _.call, null, this.total, this.inList, this.$scope.resources)
+      this.selector.checked = this.inList.length === this.resources.length
+      _.invokeMap(this.callbacksForSelections, _.call, null, this.total, this.inList, this.resources)
     }
 
     callbackOnSelection (callback) {

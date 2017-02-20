@@ -16,14 +16,7 @@ function SubviewFactory (ResourceViewGenerator, RESOURCE_CONFIG, ResourceSetting
      * @returns {Array}
      */
     static generate ($scope, resourceType = null) {
-      let subviewsConfig
-      if (resourceType) {
-        let rSettings = ResourceSettings(resourceType)
-        let resourceWithTheSubviewsDefinition = this.getAppropiateViewName(rSettings, 'subviews')
-        subviewsConfig = RESOURCE_CONFIG.resources[resourceWithTheSubviewsDefinition].subviews
-      } else {
-        subviewsConfig = RESOURCE_CONFIG.inventory.subviews
-      }
+      let subviewsConfig = resourceType ? this.getSetting(resourceType, 'subviews') : RESOURCE_CONFIG.inventory.subviews
       return this.compile(subviewsConfig, $scope)
     }
 
@@ -41,7 +34,6 @@ function SubviewFactory (ResourceViewGenerator, RESOURCE_CONFIG, ResourceSetting
           <uib-tab select="setActive(tabs['${uid}'])">
             <uib-tab-heading>${option.name}</uib-tab-heading>
             <div ng-if="tabs['${uid}'].isActive">
-            ${option.name}
               <${option.view} resource-type="${option.resourceType}" type="{{type}}" parent-resource="resource">
               </${option.view}>
             </div>

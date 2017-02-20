@@ -6,7 +6,7 @@ var generalDoNotUse = ['geo']
  * Note that, as any constant, you can extend this through a config method.
  * @type {{resources}}
  */
-var RESOURCE_SETTINGS = (function () {
+var RESOURCE_CONFIG = (function () {
   let v = {
     Dashboard: {view: 'resource-dashboard', name: 'Dashboard'},
     Device: {view: 'resource-list', resourceType: 'Device', name: 'Devices'},
@@ -36,20 +36,25 @@ var RESOURCE_SETTINGS = (function () {
           'snapshotSoftware', 'automatic', 'offline', '_uuid'])
       },
       'Device': {
-        view: 'device',
+        view: {
+          title: ['_id'],
+          subtitle: ['model', 'manufacturer']
+        },
         // We pass a 'resource' object to a subview with, at least, @type.
         subviews: [v.Dashboard, v.Event],
         doNotUse: ['events', 'owners', 'components', 'isUidSecured', 'public', 'icon', 'pid', 'labelId']
       },
-      'Event': {view: 'event', viewListOfMainView: 'event-list'},
+      'Event': {
+        view: {},
+        subviews: [v.Dashboard, v.Device, v.Place]
+      },
       'Account': {
         dataRelation: {
           label: 'Account\'s e-mail',
           labelFieldName: 'email',
           filterFieldName: 'email',
           fieldType: 'typeahead'
-        },
-        view: 'account'
+        }
       },
       'Place': {
         dataRelation: {
@@ -59,7 +64,8 @@ var RESOURCE_SETTINGS = (function () {
           fieldType: 'typeahead',
           keyFieldName: 'label'
         },
-        view: 'place'
+        view: {title: ['label'], subtitle: []},
+        subviews: [v.Dashboard, v.Lot, v.Package, v.Device, v.Place, v.Event]
       },
       'Project': {
         dataRelation: {
@@ -76,7 +82,9 @@ var RESOURCE_SETTINGS = (function () {
           filterFieldName: 'label',
           fieldType: 'typeahead',
           keyFieldName: 'label'
-        }
+        },
+        view: {title: ['label'], subtitle: []},
+        subviews: [v.Dashboard, v.Package, v.Device, v.Event]
       },
       'Lot': {
         dataRelation: {
@@ -86,7 +94,8 @@ var RESOURCE_SETTINGS = (function () {
           fieldType: 'typeahead',
           keyFieldName: 'label'
         },
-        subviews: [v.Dashboard, v.Lot, v.Package, v.Device, v.Place, v.Event]
+        view: {title: ['label'], subtitle: ['@type']},
+        subviews: [v.Dashboard, v.Lot, v.Package, v.Device]
       },
       'InputLot': {
         dataRelation: {
@@ -113,4 +122,4 @@ var RESOURCE_SETTINGS = (function () {
   }
 }())
 
-module.exports = RESOURCE_SETTINGS
+module.exports = RESOURCE_CONFIG

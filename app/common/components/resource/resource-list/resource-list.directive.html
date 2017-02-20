@@ -21,16 +21,22 @@
 
 <!-- Listing -->
 <div class="row">
-  <div ng-class="{'col-xs-12': $root._.isNull(opened), 'col-xs-5 col-lg-6': !$root._.isEmpty(opened)}"
-       class="fill-height" id="device-list">
+  <div
+    ng-class="{
+      'col-xs-12': type !== 'big' || !subResource.resource,
+      'col-xs-5 col-lg-6': type === 'big' && subResource.resource
+    }"
+    class="fill-height"
+  >
     <table id="resource-list-table" class="table table-striped table-hover">
       <thead>
         <tr>
           <th>
             <input type="checkbox"
                    class="resource-list-checkbox"
-                   ng-model="selector.checked"
-                   ng-click="selector.toggleSelectAll(selector.checked)">
+                   ng-click="toggleSelectAll(selector.checked)"
+                   ng-model="selector.checked">
+
           </th>
           <th ng-repeat="th in config.table.th"
               field-sort sort="setSort(sort)" key="{{::th.key}}" name="{{::th.name}}" group="sort"
@@ -41,25 +47,40 @@
       </thead>
       <tbody>
         <tr ng-repeat="resource in resources"
-            ng-click="subresource.toggle(resource)"
-            ng-class="{info: subresource.isOpened(resource['_id'])}"
+            ng-click="subResource.toggle(resource)"
+            ng-class="{info: subResource.isOpened(resource._id)}"
+
+            ng-init="popover=popovers[resource._id]"
+
+            uib-popover-template="popovers.templateUrl"
+            popover-enable="popovers.enable"
+            popover-title="{{popover.title}}"
+            popover-is-open="popover.isOpen"
+            popover-trigger="click"
+            popover-append-to-body="true"
+            popover-placement="auto left"
+            popover-class="resource-button-popover"
         >
           <td>
             <input class="resource-list-checkbox"
                    type="checkbox"
+                   ng-click="toggleSelect(resource, $event, $index)"
                    ng-model="selector.checkboxes[resource['_id']]"
-                   ng-click="selector.toggle(resource, $event, $index)"
                    ng-class="{blink: hoverScreener && resource._id === resources[0]._id && inList.length == 0}"
             >
           </td>
           <td ng-repeat="td in config.table.td">
-            <!--<div ng-if="td.templateUrl" ng-include="td.templateUrl"></div>-->
-            <div ng-if="td.value">{{resource[td.value] | limitTo: 10}}<small>{{resource[td.value].length > 10? '&hellip;':
-                                                                             ''}}</small></div>
+            <div ng-if="td.templateUrl" ng-include="td.templateUrl"></div>
+            <div ng-if="td.value">
+              {{resource[td.value] | limitTo: 19}}
+              <small>
+                {{resource[td.value].length > 19? '&hellip;':''}}
+              </small>
+            </div>
           </td>
           <td>{{resource._created | timeAgo}}</td>
           <td>
-            <!--<resource-icon resource-type="{{resource['@type']}}" subtype="{{resource.type}}"></resource-icon>-->
+            <resource-icon resource-type="{{resource['@type']}}" resource-subtype="{{resource.type}}"></resource-icon>
           </td>
         </tr>
       </tbody>
@@ -69,7 +90,7 @@
     </div>
   </div>
   <!-- SubResource in right-bar -->
-  <aside ng-if="type === 'big' && subResource.resource" class="col-xs-7 col-lg-6 ani-show-no-hide">
+  <aside ng-if="type === 'big' && subResource.resource" class="col-xs-7 col-lg-6">
     <resource-view resource="subResource.resource" type="medium"></resource-view>
   </aside>
 </div>

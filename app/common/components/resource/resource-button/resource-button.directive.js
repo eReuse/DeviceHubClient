@@ -17,6 +17,7 @@ function resourceButton (RecursionHelper) {
     },
     compile: function (element) {
       return RecursionHelper.compile(element, function ($scope) {
+        $scope.type = 'small'
         $scope.popover = {
           templateUrl: PATH + 'resource-button.popover.directive.html',
           isOpen: false,

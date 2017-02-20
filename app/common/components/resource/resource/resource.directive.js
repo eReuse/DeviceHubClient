@@ -7,7 +7,7 @@ function resource (RecursionHelper, ResourceSettings) {
     restrict: 'E',
     scope: {
       resource: '=',
-      type: '=' // big / medium / small
+      type: '@' // big / medium / small
     },
     compile: function (element) {
       return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {

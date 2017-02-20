@@ -89,6 +89,9 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
 
   /**
    * Returns if the actual type is a sub-resource of a given parent type.
+   *
+   * The parent type is not a subResource of itself.
+   *
    * @param {string} parentType In ResourceType format.
    * @return {boolean}
    */
@@ -98,6 +101,20 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
 
   rs.throwError = function () {
     throw Unauthorized('The user is not authorized to submit this resource in DeviceHub.')
+  }
+
+  /**
+   * Gets the setting in the settings of the passed-in resource or, if the resource has not
+   * the setting, it gets it from one of its ancestors.
+   *
+   * The value of the setting cannot be 'undefined'.
+   *
+   * @param {string} path - The name of the setting to fetch.
+   * @throw {TypeError} Nor the resource type of its ancestors had the setting.
+   * @return {*} The value of the setting
+   */
+  rs.getSetting = function (path) {
+    return utils.getSetting(RESOURCE_CONFIG.resources, this, path)
   }
 
   // ResourceSettings are singletons per resource, so we avoid duplicities for the same resource

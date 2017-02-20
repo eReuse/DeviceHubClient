@@ -3,7 +3,7 @@
  * Represents a resource. Selects the appropriate view to show the resource, depending of its type.
  *
  */
-function resourceView (RecursionHelper, Subview) {
+function resourceView (RecursionHelper, Subview, cerberusToView) {
   let BIG = 'big'
   let MED = 'medium'
   let SM = 'small'
@@ -28,15 +28,25 @@ function resourceView (RecursionHelper, Subview) {
 
         $scope.$watch('resource', (newResource, oldResource) => {
           // We create the tabs with the subviews embedded
-          if (newResource !== oldResource) generateSubview()
+          // Note that resourceView is re-used to hold different types of resources at different times
+          // So th
+          if (newResource !== oldResource) generateViewAndSubview()
         })
 
-        function generateSubview () {
+        function generateViewAndSubview () {
+          // Gets the info for the view
+          let resourceType = _.get($scope, 'resource.@type')
+          if (!_.isUndefined(resourceType)) $scope.view = Subview.getSetting(resourceType, 'view')
+          // Generates the subviews
           $scope.tabs = {} // Stores for each tab if it is the active one
-          iElement.find('article').append(Subview.generate($scope, _.get($scope, 'resource.@type')))
+          iElement.find('#resource-view-body').html(Subview.generate($scope, resourceType))
         }
 
-        generateSubview()
+        if ($scope.type !== 'small') {
+          generateViewAndSubview()
+        } else {
+          $scope.model = cerberusToView.parse($scope.resource)
+        }
       })
     }
   }

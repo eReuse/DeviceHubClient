@@ -279,7 +279,7 @@
           model: '=ngModel'
         },
         link: function ($scope, $element, $attrs) {
-          var container = angular.element('<div style="position: fixed top: -9999px left: 0"></div>')
+          var container = angular.element('<div style="position: fixed; top: -9999px; left: 0"></div>')
           var shadow = angular.element('<span style="white-space:pre"></span>')
 
           var maxWidth = $element.css('maxWidth') === 'none'

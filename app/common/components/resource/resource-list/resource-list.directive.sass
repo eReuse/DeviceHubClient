@@ -1,25 +1,6 @@
 @import '_resource-list.directive'
 
-#device-list-table tr
-  *
-    &:first-child
-      white-space: nowrap
-
-    .device-list-checkbox
-      zoom: 2
-      -moz-transform: scale(2)
-
-  td
-    padding-top: 1vh !important
-    padding-bottom: 1vh !important
-    user-select: none
-    cursor: pointer
-
-  th
-    padding-top: 0 !important
-
-
-device-list
+resource-list
   #screener
     display: inline-block
     position: relative
@@ -30,7 +11,7 @@ device-list
       position: absolute
       cursor: not-allowed
 
-  device-icon img
+  resource-icon img
     max-width: 2em
 
   .blink
@@ -38,6 +19,30 @@ device-list
     outline: 4px auto -webkit-focus-ring-color
     outline-offset: -2px
 
-  #device-list.fill-height
-    height: calc(100vh - #{$headerHeight} - #{$footerHeight} - #{$optionsMenuHeight} - #{$searchHeight})
+  .fill-height
+    height: calc(100vh - #{$headerHeight} - #{$footerHeight} - 2 * #{$optionsMenuHeight} - #{$searchHeight})
     overflow-y: auto
+
+  #resource-list-table tr
+    *
+      &:first-child
+        white-space: nowrap
+
+      .resource-list-checkbox
+        zoom: 1.5
+        -moz-transform: scale(1.5)
+
+    td
+      padding-top: 1vh !important
+      padding-bottom: 1vh !important
+      user-select: none
+      cursor: pointer
+
+    th
+      padding-top: 0 !important
+
+  resource-view
+    .fill-height
+      // - 2 * (everything we had in .fill-height above) but calc does not allow 2 * (parenthesis) so we get it by
+      // applying the distributive property
+      height: calc(100vh - #{$headerHeight} - 2 * #{$footerHeight} - 4 * #{$optionsMenuHeight} - 2 * #{$searchHeight}) !important

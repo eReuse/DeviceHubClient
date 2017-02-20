@@ -54,12 +54,13 @@ function ResourceListGetterFactory (ResourceSettings) {
      */
     updateFilters (source, newFilters) {
       this._filtersBySource[source] = newFilters
-      let oldFilters = _.clone(this._filters)
       // Let's merge the different filters in a single one
-      _.merge.apply(_, [this._filters].concat(_.values(this._filtersBySource)))
+      this._filters = {}
+      _.merge.call(_, this._filters, ..._.values(this._filtersBySource))
       // The 'search' filters have preference over others
       _.merge(this._filters, this._filtersBySource[SEARCH])
-      if (!_.isEqual(this._filters, oldFilters)) this.getResources()
+      // todo if this is called multiple times for the same parameters use isEqual and firstTime combo
+      this.getResources()
     }
 
     /**
@@ -71,44 +72,56 @@ function ResourceListGetterFactory (ResourceSettings) {
      */
     updateFiltersFromSearch (newFilters) {
       let _filters = {}
+      let callbacks = []
       let findSettings = _.bind(_.find, null, this.filterSettings.search.params, _)
-      _.forOwn(newFilters, (value, key) => {
+      _.forOwn(_.cloneDeep(newFilters), (value, key) => {
         let settings = findSettings({key: key})
-        if (!settings) throw TypeError(`The filter with Key ${key} has no configuration parameter`)
-        let result
-        if ('date' in settings) result = utils.parseDate(value)
-        if ('boolean' in settings) result = value === 'Yes' || value === 'Succeed'
-        if ('comparison' in settings) {
-          switch (settings.comparison) {
-            case '<=':
-              result = {$lte: value}
-              break
-            case '>=':
-              result = {$gte: value}
-              break
-            case '=':
-              result = value
-              break
-            case 'in':
-              result = {$in: _.isArray(value) ? value : [value]}
-              break
-            case 'nin':
-              result = {$nin: _.isArray(value) ? value : [value]}
-          }
-        } else {
-          // We perform equality, and we could make it faster by using ^ at the beggining of the word
-          result = {$regex: value, $options: 'ix'}
+        if (!settings){
+          throw TypeError(`The filter with Key ${key} has no configuration parameter`)
         }
-        _filters[key] = result
+        if ('callback' in settings) {
+          // Save the callbacks to execute them at the end, passing the resulting filters array and the value
+          callbacks.push(_.bind(settings.callback, null, _filters, value))
+        } else {
+          if ('date' in settings) value = utils.parseDate(value)
+          if ('boolean' in settings) value = value === 'Yes' || value === 'Succeed'
+          if ('comparison' in settings) {
+            switch (settings.comparison) { // Case '=' is itself so no need to do anything
+              case '<=':
+                value = {$lte: value}
+                break
+              case '>=':
+                value = {$gte: value}
+                break
+              case 'in':
+                value = {$in: _.isArray(value) ? value : [value]}
+                break
+              case 'nin':
+                value = {$nin: _.isArray(value) ? value : [value]}
+            }
+          } else {
+            // We perform equality, and we could make it faster by using ^ at the beggining of the word
+            value = {$regex: value, $options: 'ix'}
+          }
+          _filters[key] = value
+        }
       })
-      // We may modify the array and need the full 'where'
-      _.forOwn(_filters, function (value, key) { // todo is it safe to modify keys in the foreach?
+      // Values from filters with a different 'key' than the filter sent to the server are moved
+      // or merged with the 'real key'. This needs to be done after modifying the array above.
+      _.forOwn(_filters, function (value, key) {
         let settings = findSettings({key: key})
         if ('realKey' in settings) {
-          _.merge(_filters[settings['realKey']], value)
+          if (!_filters[settings['realKey']]) {
+            _filters[settings['realKey']] = value
+          } else {
+            _.merge(_filters[settings['realKey']], value)
+          }
           delete _filters[key]
         }
       })
+
+      _.invokeMap(callbacks, _.call)
+
       this.updateFilters(SEARCH, _filters)
     }
 
@@ -136,6 +149,7 @@ function ResourceListGetterFactory (ResourceSettings) {
       // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 0
       let page = this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 0
       return this.server.getList({where: this._filters, page: page, sort: this._sort}).then((resources) => {
+        if (!getNextPage) self.resources.length = 0
         _.assign(self.resources, self.resources.concat(resources))
         self.pagination.morePagesAvailable = resources._meta.page * resources._meta.max_results < resources._meta.total
         self.pagination.totalPages = resources._meta.total

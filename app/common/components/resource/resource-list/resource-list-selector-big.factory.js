@@ -14,7 +14,7 @@ function ResourceListSelectorBigFactory (ResourceListSelector) {
     _control () {
       super._control()
       // Perform callback
-      _.invokeMap(callbacksForSelections, _.call, null, this.total, this.inList, this.$scope.resources)
+      _.invokeMap(callbacksForSelections, _.call, null, this.total, this.inList, this.resources)
     }
 
     /**

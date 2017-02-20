@@ -98,8 +98,11 @@ var Naming = {
     } catch (err) {}
     converted = inflection.humanize(inflection.underscore(converted))
     // Humanize destroys acronyms by adding a space between letters
-    if (converted[0] !== ' ' && converted[1] === ' ' && converted[2] !== '' && converted[3] === ' ') return string
-    else return converted
+    if (converted[0] !== ' ' && converted[1] === ' ' && converted[2] !== '' && converted[3] === ' ') {
+      return string
+    } else {
+      return converted
+    }
   }
 }
 
@@ -191,6 +194,27 @@ var Progress = {
   }
 }
 
+/**
+ * Gets the path from a resource or its parent in a dh settings-like object
+ * @param settings - An object where the first level keys are resourceType
+ * @param {ResourceSettings} rSettings
+ * @param path - What you want to find from the resourcetype in rSettings or its ancestor
+ * @returns {*}
+ */
+function getSetting (settings, rSettings, path) {
+  let value
+  value = _.get(settings, rSettings.type + '.' + path)
+  if (_.isUndefined(value)) {
+    value = _.get(_.find(settings, (setting, resourceType) => {
+      return _.has(setting, path) && rSettings.isSubResource(resourceType)
+    }), path)
+    if (_.isUndefined(value)) {
+      throw TypeError(`Nor ${rSettings.type} or its ancestors have the setting ${path}`)
+    }
+  }
+  return value
+}
+
 module.exports = {
   Naming: Naming,
   copy: copy,
@@ -200,5 +224,6 @@ module.exports = {
   schemaIsLoaded: schemaIsLoaded,
   NoPrefix: NoPrefix,
   setImageGetter: setImageGetter,
-  Progress: Progress
+  Progress: Progress,
+  getSetting: getSetting
 }
