@@ -1,2 +1,5 @@
+@import './_inventory-dashboard.directive'
 inventory-dashboard
-  .chart-holder
+  .fill-height
+    height: calc(100vh - #{$headerHeight} - #{$footerHeight} - #{$tabsHeight})
+    overflow-y: auto

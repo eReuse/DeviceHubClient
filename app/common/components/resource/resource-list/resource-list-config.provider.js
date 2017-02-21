@@ -34,7 +34,12 @@ function resourceListProvider (RESOURCE_SEARCH) {
   let f = {
     id: {th: {key: '_id', name: 'Id'}, td: {value: '_id'}},
     label: {th: {key: 'label', name: 'Label'}, td: {value: 'label'}},
-    '@type': {th: {key: '@type', name: 'Type'}, td: {value: '@type'}}
+    '@type': {th: {key: '@type', name: 'Type'}, td: {value: '@type'}},
+    from: {th: {key: 'from', name: 'From client'}, td: {value: 'from'}},
+    to: {th: {key: 'to', name: 'To client'}, td: {value: 'to'}},
+    name: {th: {key: 'name', name: 'Name'}, td: {value: 'name'}},
+    organization: {th: {key: 'organization', name: 'Organization'}, td: {value: 'organization'}},
+    email: {th: {key: 'email', name: 'email'}, td: {value: 'email'}}
   }
 
   function getIsAncestor (resourceType, value) {
@@ -350,8 +355,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-lot.html'
         },
         table: {
-          th: [f.id.th, f.label.th, f['@type'].th],
-          td: [f.id.td, f.label.td, f['@type'].td]
+          th: [f.label.th, f['@type'].th, f.from.th, f.to.th],
+          td: [f.label.td, f['@type'].td, f.from.td, f.to.td]
         }
       },
       Package: {
@@ -375,8 +380,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-package.html'
         },
         table: {
-          th: [f.id.th, f.label.th],
-          td: [f.id.td, f.label.td]
+          th: [f.id.th, f.label.th, f.from.th, f.to.th],
+          td: [f.id.td, f.label.td, f.from.td, f.to.td]
         }
       },
       Place: {
@@ -457,6 +462,33 @@ function resourceListProvider (RESOURCE_SEARCH) {
         table: {
           th: [f.id.th, f.label.th, f['@type'].th],
           td: [f.id.td, f.label.td, f['@type'].td]
+        }
+      },
+      Account: {
+        search: {
+          params: RESOURCE_SEARCH.params.concat([
+            {
+              key: 'email',
+              name: 'email',
+              typeahead: ACCOUNT_TYPEAHEAD,
+              comparison: '=',
+              description: 'Match account by their e-mail.'
+            },
+            {
+              key: 'organization',
+              name: 'Organization',
+              comparison: '=',
+              description: 'Match accounts by the organization they are in.'
+            }
+          ]),
+          defaultParams: {}
+        },
+        buttons: {
+          templateUrl: configFolder + '/resource-list-config-account.html'
+        },
+        table: {
+          th: [f.email.th, f.name.th, f.organization.th],
+          td: [f.email.td, f.name.td, f.organization.td]
         }
       }
     }

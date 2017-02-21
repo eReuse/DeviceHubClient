@@ -5,7 +5,7 @@
   adf-model="model"
   editable="true"
 ></adf-dashboard>-->
-<div class="row">
+<div class="row fill-height">
   <div class="col-xs-12 col-md-6">
     <div class="panel">
       <div class="panel-heading">
@@ -16,30 +16,40 @@
         <h4>
           Everything is mostly <span class="text-success">ok</span>
         </h4>
-        <ul class="list-group-item list-group-item-success">
-          <span class="badge">0</span>
-          Hard-drives with errors
-        </ul>
-        <ul class="list-group-item list-group-item-success">
-          <span class="badge">0</span>
-          Policies broken
-        </ul>
-        <ul class="list-group-item list-group-item-warning">
-          <span class="badge">7</span>
-          Devices that have been more than one week without being prepared
-        </ul>
-        <ul class="list-group-item">
-          <span class="badge">23</span>
-          Devices ready but not assigned to a receiver
-        </ul>
-        <ul class="list-group-item">
-          <span class="badge">3 days</span>
-          Medium time to prepare a device
-        </ul>
+        <div class="list-group">
+          <button type="button" class="list-group-item list-group-item-success">
+            <span class="badge">0</span>
+            Hard-drives with errors
+          </button>
+          <button type="button" class="list-group-item list-group-item-success">
+            <span class="badge">0</span>
+            Broken policies
+          </button>
+          <button type="button" class="list-group-item list-group-item-warning">
+            <span class="badge">7</span>
+            Devices that have been more than one week without being prepared
+          </button>
+          <button type="button" class="list-group-item">
+            <span class="badge">7</span>
+            Devices that have been more than one week without being prepared
+          </button>
+          <button type="button" class="list-group-item">
+            <span class="badge">3 days</span>
+            Medium time to prepare a device
+          </button>
+          <button type="button" class="list-group-item">
+            <span class="badge">2</span>
+            Input lots not assigned to a client
+          </button>
+          <button type="button" class="list-group-item list-group-item-warning">
+            <span class="badge">5</span>
+            Output lots not assigned to a client
+          </button>
+        </div>
       </div>
     </div>
   </div>
-  <div class="col-xs-12 col-md-6 col-lg-3">
+  <div class="col-xs-12 col-md-6">
     <div class="panel">
       <div class="panel-heading">
         <h3 class="panel-title">Discovered vs undiscovered devices</h3>
@@ -54,7 +64,8 @@
       </div>
     </div>
   </div>
-  <div class="col-xs-12 col-md-6 col-lg-6">
+  <div class="clearfix"></div>
+  <div class="col-xs-12 col-md-6">
     <div class="panel">
       <div class="panel-heading">
         <h3 class="panel-title">State of the devices</h3>
@@ -66,6 +77,14 @@
           >
           </canvas>
         </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-md-6">
+    <div class="panel">
+      <div class="panel-heading"><h3 class="panel-title">Receptions of devices last week</h3></div>
+      <div class="panel-body">
+        <device-maps devices="maps.devices"></device-maps>
       </div>
     </div>
   </div>

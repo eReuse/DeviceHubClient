@@ -9,12 +9,12 @@
 <!-- Butttons -->
 <div id="buttons" class="row text-center">
   <div id="screener"
-       uib-tooltip="Select some {{resourceType}} first."
+       uib-tooltip="Select some {{resourceName}} first."
        tooltip-enable="selector.inList.length == 0"
        ng-mouseenter="hoverScreener = true"
        ng-mouseleave="hoverScreener = false"
   >
-    <div ng-show="selectedDevices.length == 0"></div>
+    <div ng-show="selector.inList.length == 0"></div>
     <div ng-include="config.buttons.templateUrl"></div>
   </div>
 </div>

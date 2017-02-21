@@ -64,3 +64,4 @@ module.exports = angular.module('common.components.device',
 .controller('shareModalCtrl', require('./share/share-modal.controller'))
 .factory('SnapshotFormSchema', require('./snapshot/snapshot.form-schema.factory'))
 .factory('ComputerSnapshotFormSchema', require('./computer-snapshot-modal/computer-snapshot.form-schema.factory'))
+.directive('deviceMaps', require('./device-maps/device-maps.directive'))

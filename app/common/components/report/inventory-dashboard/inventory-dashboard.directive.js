@@ -26,9 +26,43 @@ function inventoryDashboard () {
             legend: {display: true}
           }
         }
-
+        let maps = {
+          devices: [
+            {
+              _id: 1,
+              geo: {
+                "type": "Point",
+                "coordinates": [
+                  -122.33,
+                  47.61
+                ]
+              }
+            },
+            {
+              _id: 2,
+              geo: {
+                "type": "Point",
+                "coordinates": [
+                  -122.34,
+                  47.62
+                ]
+              }
+            },
+            {
+              _id: 3,
+              geo: {
+                "type": "Point",
+                "coordinates": [
+                  -122.35,
+                  47.60
+                ]
+              }
+            }
+          ]
+        }
         $scope.placeholders = placeholders
         $scope.state = state
+        $scope.maps = maps
       }
     }
   }

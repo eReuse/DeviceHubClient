@@ -23,6 +23,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
       // Note that we load on 'pre' to initialize before our child (or inner) directives so they get real config values
       pre: ($scope) => {
         let resourceType = $scope.resourceType
+        $scope.resourceName = utils.Naming.resource(resourceType)
         if (!resourceType) throw TypeError('resourceList needs a "resourceType" set, not ' + resourceType)
         if (!$scope.type) throw TypeError('resourceLists needs a "type" to be "big"|"medium"|"small", not ' + $scope.type)
         let config = _.cloneDeep(resourceListConfig.config.views[resourceType])

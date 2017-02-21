@@ -14,7 +14,8 @@ var RESOURCE_CONFIG = (function () {
     Event: {view: 'resource-list', resourceType: 'Event', name: 'Events'},
     Place: {view: 'resource-list', resourceType: 'Place', name: 'Places'},
     Lot: {view: 'resource-list', resourceType: 'Lot', name: 'Lots'},
-    Package: {view: 'resource-list', resourceType: 'Package', name: 'Packages'}
+    Package: {view: 'resource-list', resourceType: 'Package', name: 'Packages'},
+    Account: {view: 'resource-list', resourceType: 'Account', name: 'Accounts'}
   }
 
   return {
@@ -55,7 +56,9 @@ var RESOURCE_CONFIG = (function () {
           labelFieldName: 'email',
           filterFieldName: 'email',
           fieldType: 'typeahead'
-        }
+        },
+        view: {title: ['label'], subtitle: ['e-mail']},
+        subviews: [v.Dashboard, v.Lot, v.Package, v.Device]
       },
       'Place': {
         dataRelation: {
@@ -118,7 +121,7 @@ var RESOURCE_CONFIG = (function () {
       }
     },
     inventory: {
-      subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Event]
+      subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Event, v.Account]
     }
   }
 }())

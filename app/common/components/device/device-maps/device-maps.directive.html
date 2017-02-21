@@ -1,0 +1,10 @@
+<div ng-if="devices.length > 0">
+    <ui-gmap-google-map draggable="false" pan="true" center="center" zoom="zoom" control="control">
+
+        <ui-gmap-markers models="models" coords="'geo'"
+                         type="'cluster'" clusterOptions="clusterOptions" idkey="'_id'">
+        </ui-gmap-markers>
+
+    </ui-gmap-google-map>
+</div>
+<div ng-if="devices.length == 0">No devices to show. Try to change search criteria.</div>
