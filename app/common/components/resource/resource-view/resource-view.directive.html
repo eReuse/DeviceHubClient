@@ -1,10 +1,8 @@
 <article>
-  <div ng-if="type === 'small'">
-    <table-view ng-if="type === 'small'"
-                model="model"
-                teaser="true"
-    ></table-view>
-  </div>
+  <table-view ng-if="type === 'small'"
+              model="model"
+              teaser="true"
+  ></table-view>
   <div ng-if="type !== 'small'">
     <header ng-if="resource['@type']">
       <resource-icon class="pull-right" resource-type="{{resource['@type']}}"

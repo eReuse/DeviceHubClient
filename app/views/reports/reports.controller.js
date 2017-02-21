@@ -21,7 +21,7 @@ var model = {
 }
 
 function reportsController ($scope) {
-  $scope.model = window.model = model
+  $scope.model = model
 }
 
 module.exports = reportsController

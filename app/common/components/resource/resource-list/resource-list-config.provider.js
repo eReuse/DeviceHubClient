@@ -40,7 +40,7 @@ function resourceListProvider (RESOURCE_SEARCH) {
   function getIsAncestor (resourceType, value) {
     let resourceName = utils.Naming.resource(resourceType)
     return [
-      {'ancestors.@type': resourceType, 'label': value},
+      {'ancestors': {'$elemMatch': {'@type': resourceType, 'label': value}}},
       {'ancestors': {'$elemMatch': {[resourceName]: {'$elemMatch': {$in: [value]}}}}}
     ]
   }
@@ -72,6 +72,38 @@ function resourceListProvider (RESOURCE_SEARCH) {
       if (!('$or' in where)) where.$or = []
       where.$or = where.$or.concat(getIsAncestor('Place', value))
     }
+  }
+
+  function hasGroupCallback (resourceName) {
+    let resourceType = utils.Naming.type(resourceName)
+    return (where, ancestors) => {
+      let parents = _(ancestors).filter({'@type': resourceType}).flatMapDeep('label').value()
+      where['label'] = {'$in': _(ancestors).flatMapDeep(resourceName).concat(parents).uniq().value()}
+    }
+  }
+
+  // We use the typeahead to retrieve us the ancestors of the device :-)
+  // todo ^ makes to show [object Object] in the typeahead field
+  // The following has_** fields require 'callback' to be set; look at examples
+  const HAS_LOT = {
+    key: 'hasLot',
+    name: 'Has lot',
+    typeahead: _.assign({}, LOT_TYPEAHEAD, {keyFieldName: 'ancestors'})
+  }
+  const HAS_PACKAGE = {
+    key: 'hasPackage',
+    name: 'Has Package',
+    typeahead: _.assign({}, PACKAGE_TYPEAHEAD, {keyFieldName: 'ancestors'})
+  }
+  const HAS_DEVICE = {
+    key: 'hasDevice',
+    name: 'Has Device',
+    typeahead: _.assign({}, DEVICE_TYPEAHEAD, {keyFieldName: 'ancestors'})
+  }
+  const HAS_PLACE = {
+    key: 'hasPlace',
+    name: 'Has Place',
+    typeahead: _.assign({}, PLACE_TYPEAHEAD, {keyFieldName: 'ancestors'})
   }
 
   this.config = {
@@ -274,14 +306,35 @@ function resourceListProvider (RESOURCE_SEARCH) {
               comparison: '=',
               description: 'The type of the lot'
             },
+            _.assign({}, HAS_DEVICE, {
+              callback: hasGroupCallback('lots'),
+              description: 'Find lots that have a specific device.'
+            }),
+            _.assign({}, HAS_LOT, {
+              callback: hasGroupCallback('lots'),
+              description: 'Find lots that have a specific lot.'
+            }),
+            _.assign({}, HAS_PACKAGE, {
+              callback: hasGroupCallback('lots'),
+              description: 'Find lots that have a specific package.'
+            }),
             {
-              key: 'hasLot',
-              name: 'Has lot',
-              typeahead: LOT_TYPEAHEAD,
-              comparison: 'in',
-              placeholder: 'Name inner lot',
-              realKey: 'children.lot',
-              description: 'Match a lot called'
+              key: 'to',
+              name: 'Assigned to account / client',
+              typeahead: ACCOUNT_TYPEAHEAD,
+              realKey: 'to',
+              comparison: '=',
+              placeholder: 'Type an e-mail',
+              description: 'Match Output lots that are assigned to a client.'
+            },
+            {
+              key: 'from',
+              name: 'From account / client',
+              typeahead: ACCOUNT_TYPEAHEAD,
+              placeholder: 'Type an e-mail',
+              realKey: 'from',
+              comparison: '=',
+              description: 'Match Input Lots that come from a client.'
             },
             INSIDE_PLACE,
             INSIDE_LOT
@@ -306,7 +359,11 @@ function resourceListProvider (RESOURCE_SEARCH) {
           params: RESOURCE_SEARCH.params.concat([
             INSIDE_LOT,
             INSIDE_PLACE,
-            INSIDE_PACKAGE
+            INSIDE_PACKAGE,
+            _.assign({}, HAS_DEVICE, {
+              callback: hasGroupCallback('packages'),
+              description: 'Find packages that have a specific device.'
+            })
           ]),
           defaultParams: {},
           subResource: {
@@ -325,7 +382,23 @@ function resourceListProvider (RESOURCE_SEARCH) {
       Place: {
         search: {
           params: RESOURCE_SEARCH.params.concat([
-            INSIDE_PLACE
+            INSIDE_PLACE,
+            _.assign({}, HAS_PACKAGE, {
+              callback: hasGroupCallback('places'),
+              description: 'Find packages that have a specific package.'
+            }),
+            _.assign({}, HAS_LOT, {
+              callback: hasGroupCallback('places'),
+              description: 'Find places that have a specific lot.'
+            }),
+            _.assign({}, HAS_DEVICE, {
+              callback: hasGroupCallback('places'),
+              description: 'Find places that have a specific device.'
+            }),
+            _.assign({}, HAS_PLACE, {
+              callback: hasGroupCallback('places'),
+              description: 'Find places that have a specific place.'
+            })
           ]),
           defaultParams: {},
           subResource: {

@@ -93,8 +93,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           $scope.toggleSelectAll = _.bind(resourceListSelector.toggleSelectAll, resourceListSelector, _)
           $scope.toggleSelect = _.bind(resourceListSelector.toggle, resourceListSelector, _)
 
-          // Loading more
-          // Only be able to load more if there is not already an active request
+          // Pagination ('load more' button)
+          // Let's avoid the user pressing multiple times the 'load more'
           $scope.loadMoreIsBusy = false
           $scope.loadMore = () => {
             if (!$scope.loadMoreIsBusy) {
@@ -102,6 +102,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
               resourceListGetter.getResources(true).finally(() => { $scope.loadMoreIsBusy = false })
             }
           }
+          $scope.pagination = resourceListGetter.pagination
+
           $scope.popovers = {enable: false}
           if ($scope.type === 'medium') {
             resourceListGetter.callbackOnGetting((resources) => {

@@ -16,7 +16,7 @@ function resources (formlyConfigProvider, RESOURCE_CONFIG) {
         valueProp: '_id'
       }
     },
-    templateUrl: window.COMPONENTS + '/forms/types/devices/devices.formly-type.config.html'
+    templateUrl: window.COMPONENTS + '/forms/types/resources/resources.formly-type.config.html'
   })
 
   // Note that we cannot use ResourceSettings as this is executed in config time
@@ -28,8 +28,7 @@ function resources (formlyConfigProvider, RESOURCE_CONFIG) {
         templateOptions: {
           type: typeName
         }
-      },
-      templateUrl: window.COMPONENTS + '/forms/types/devices/devices.formly-type.config.html'
+      }
     }
     if (_.has(resourceConfig, 'dataRelation.keyFieldName')) {
       type.defaultOptions.templateOptions.keyFieldName = resourceConfig.dataRelation.keyFieldName

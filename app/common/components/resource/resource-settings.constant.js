@@ -8,6 +8,7 @@ var generalDoNotUse = ['geo']
  */
 var RESOURCE_CONFIG = (function () {
   let v = {
+    InventoryDashboard: {view: 'inventory-dashboard', name: 'Dashboard'},
     Dashboard: {view: 'resource-dashboard', name: 'Dashboard'},
     Device: {view: 'resource-list', resourceType: 'Device', name: 'Devices'},
     Event: {view: 'resource-list', resourceType: 'Event', name: 'Events'},
@@ -84,7 +85,7 @@ var RESOURCE_CONFIG = (function () {
           keyFieldName: 'label'
         },
         view: {title: ['label'], subtitle: []},
-        subviews: [v.Dashboard, v.Package, v.Device, v.Event]
+        subviews: [v.Dashboard, v.Package, v.Device]
       },
       'Lot': {
         dataRelation: {
@@ -117,7 +118,7 @@ var RESOURCE_CONFIG = (function () {
       }
     },
     inventory: {
-      subviews: [v.Dashboard, v.Lot, v.Package, v.Device, v.Place, v.Event]
+      subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Event]
     }
   }
 }())
