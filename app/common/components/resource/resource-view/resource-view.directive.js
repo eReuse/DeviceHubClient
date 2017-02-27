@@ -4,6 +4,7 @@
  *
  */
 function resourceView (RecursionHelper, Subview, cerberusToView) {
+  const utils = require('./../../utils')
   let BIG = 'big'
   let MED = 'medium'
   let SM = 'small'
@@ -40,12 +41,14 @@ function resourceView (RecursionHelper, Subview, cerberusToView) {
           // Generates the subviews
           $scope.tabs = {} // Stores for each tab if it is the active one
           iElement.find('#resource-view-body').html(Subview.generate($scope, resourceType))
+          // If small we use the resourceName
         }
 
         if ($scope.type !== 'small') {
           generateViewAndSubview()
         } else {
           $scope.model = cerberusToView.parse($scope.resource)
+          $scope.srefUiParams = {resourceName: utils.Naming.resource($scope.resource['@type']), id: $scope.resource._id}
         }
       })
     }

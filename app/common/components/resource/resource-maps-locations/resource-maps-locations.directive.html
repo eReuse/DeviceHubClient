@@ -1,0 +1,30 @@
+<div ng-if="resources.length > 0">
+  <ui-gmap-google-map draggable="false"
+                      pan="true"
+                      center="map.center"
+                      zoom="map.zoom"
+                      control="map.control"
+                      options="map.options"
+  >
+    <ui-gmap-markers models="map.markers.models"
+                     coords="'geo'"
+                     type="'cluster'"
+                     clusterOptions="map.markers.clusterOptions"
+                     idkey="'_id'"
+                     fit="true"
+                     coords="'self'"
+                     events="map.markers.events"
+    >
+    </ui-gmap-markers>
+    <ui-gmap-window
+      show="map.window.show"
+      coords="map.window.coords"
+      options="map.window.options"
+      closeClick="map.window.closeClick()"
+      templateUrl="map.window.templateUrl"
+      templateParameter="map.window"
+    >
+    </ui-gmap-window>
+  </ui-gmap-google-map>
+</div>
+<div ng-if="resources.length == 0">Loading&hellip;</div>

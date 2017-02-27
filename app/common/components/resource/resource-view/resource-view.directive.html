@@ -1,8 +1,21 @@
 <article>
-  <table-view ng-if="type === 'small'"
-              model="model"
-              teaser="true"
-  ></table-view>
+  <div ng-if="type === 'small'">
+    <div class="pull-right">
+      <a class="fa fa-window-maximize"
+         ui-sref="index.inventory.resource(srefUiParams)"
+         uib-tooltip="Maximize it"
+         tooltip-append-to-body="true"
+      ></a>
+      <a class="fa fa-external-link"
+         ui-sref="index.inventory.resource(srefUiParams)"
+         target="_blank"
+         uib-tooltip="Open it in a new tab"
+         tooltip-append-to-body="true"
+      ></a>
+    </div>
+    <table-view model="model" teaser="true"></table-view>
+  </div>
+
   <div ng-if="type !== 'small'">
     <header ng-if="resource['@type']">
       <resource-icon class="pull-right" resource-type="{{resource['@type']}}"

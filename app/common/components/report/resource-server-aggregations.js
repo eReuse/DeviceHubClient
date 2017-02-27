@@ -2,7 +2,7 @@ function resourceServerAggregationsFactory (ResourceServer) {
   function resourceServerAggregations (resource, method) {
     let settings = {
       url: `aggregations/${resource}/${method}`,
-      useDefaultDatabase: false,
+      useDefaultDatabase: false
     }
     return ResourceServer(settings)
   }

@@ -1,4 +1,4 @@
-function inventoryDashboard () {
+function inventoryDashboard (resourceServerAggregations) {
   return {
     templateUrl: require('./__init__').PATH + '/inventory-dashboard.directive.html',
     restrict: 'E',
@@ -26,43 +26,12 @@ function inventoryDashboard () {
             legend: {display: true}
           }
         }
-        let maps = {
-          devices: [
-            {
-              _id: 1,
-              geo: {
-                "type": "Point",
-                "coordinates": [
-                  -122.33,
-                  47.61
-                ]
-              }
-            },
-            {
-              _id: 2,
-              geo: {
-                "type": "Point",
-                "coordinates": [
-                  -122.34,
-                  47.62
-                ]
-              }
-            },
-            {
-              _id: 3,
-              geo: {
-                "type": "Point",
-                "coordinates": [
-                  -122.35,
-                  47.60
-                ]
-              }
-            }
-          ]
-        }
         $scope.placeholders = placeholders
         $scope.state = state
-        $scope.maps = maps
+        $scope.resourcesForMaps = []
+        resourceServerAggregations('places', 'places_with_coordinates').getList().then(resources => {
+          _.assign($scope.resourcesForMaps, resources)
+        })
       }
     }
   }

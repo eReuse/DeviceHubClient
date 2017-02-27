@@ -5,6 +5,7 @@ require('angular-ui-notification')
 require('angular-recursion')
 require('angular-animate')
 require('angular-timeago')
+require('angular-google-maps')
 
 module.exports = angular.module('common.components.resource',
   [
@@ -17,6 +18,7 @@ module.exports = angular.module('common.components.resource',
     'yaru22.angular-timeago',
     require('./../authentication').name,
     require('./../../constants').name,
+    'uiGmapgoogle-maps'
   ])
   .constant('RESOURCE_CONFIG', require('./resource-settings.constant'))
   .factory('ResourceServer', require('./resource-server.factory'))
@@ -40,4 +42,5 @@ module.exports = angular.module('common.components.resource',
   .directive('resourceListSelectAll', require('./resource-list/resource-list-select-all/resource-list-select-all.directive'))
   .directive('fieldSort', require('./resource-list/field-sort/field-sort.directive.js'))
   .directive('resourceDashboard', require('./resource-dashboard/resource-dashboard.directive'))
+  .directive('resourceMapsLocations', require('./resource-maps-locations/resource-maps-locations.directive'))
 

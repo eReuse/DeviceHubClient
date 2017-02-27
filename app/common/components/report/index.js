@@ -13,5 +13,5 @@ module.exports = angular.module('common.components.report',
 .config(require('./widgets/actual-positions/actual-positions.widget-adf.config.js'))
 .controller('actualPositionsWidgetCtl', require('./widgets/actual-positions/actual-positions.widget-adf.controller.js'))
 .directive('inventoryDashboard', require('./inventory-dashboard/inventory-dashboard.directive'))
-/*.factory('resourceServerAggregations', require('./resource-server-aggregations'))*/
+.factory('resourceServerAggregations', require('./resource-server-aggregations'))
 

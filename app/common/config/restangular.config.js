@@ -11,9 +11,7 @@ function restangularConfig (RestangularProvider, CONSTANTS) {
         extractedData._meta = data._meta
         break
       case 'get':
-        try {
-          buildLink(data)
-        } catch (err) {}
+        buildLink(data)
         extractedData = data
         break
       default:
@@ -31,7 +29,9 @@ function restangularConfig (RestangularProvider, CONSTANTS) {
   })
   RestangularProvider.setDefaultHeaders(CONSTANTS.headers)
   function buildLink (item) {
-    item._links.self.href = CONSTANTS.url + '/' + item._links.self.href
+    try {
+      item._links.self.href = CONSTANTS.url + '/' + item._links.self.href
+    } catch (err) {}
   }
 }
 

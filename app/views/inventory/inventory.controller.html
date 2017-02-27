@@ -4,6 +4,7 @@
 <!--    <aside class="col-xs-2 col-lg-1">
 
     </aside>-->
-    <resource-view class="col-xs-12" type="big"></resource-view>
+    <resource ng-if="resource" class="col-xs-12" type="big" resource="resource"></resource>
+    <resource-view ng-if="!resource" class="col-xs-12" type="big"></resource-view>
   </div>
 </div>
