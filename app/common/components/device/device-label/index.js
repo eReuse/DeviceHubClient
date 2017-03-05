@@ -2,12 +2,14 @@ window.qrcode = require('./../../../../../resources/qrcode.js')
 require('angular-qrcode')
 require('angular-ui-bootstrap')
 require('angular-animate')
+require('checklist-model')
 
 module.exports = angular.module('common.components.deviceLabel',
   [
     'monospaced.qrcode',
     'ui.bootstrap',
     'ngAnimate',
+    'checklist-model',
     require('./../../../constants').name,
     require('./../../resource').name
   ])
