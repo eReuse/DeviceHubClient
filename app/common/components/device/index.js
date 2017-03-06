@@ -43,12 +43,6 @@ module.exports = angular.module('common.components.device',
    */
   .directive('deviceIcon', require('./device-icon/device-icon.directive'))
   /**
-   * @ngdoc directive
-   * @name registerErrorProcessor
-   * @description Shows a button that lets the user to register a device. This directive calls registerModalCtrl.
-   */
-  .directive('snapshotButton', require('./snapshot/snapshot-button.directive'))
-  /**
    * @ngdoc controller
    * @name computerSnapshotModalCtrl
    * @description Lets users upload snapshots in json (from DeviceInventory) to the server, helping with the process and
@@ -65,3 +59,4 @@ module.exports = angular.module('common.components.device',
   .controller('shareModalCtrl', require('./share/share-modal.controller'))
   .factory('SnapshotFormSchema', require('./snapshot/snapshot.form-schema.factory'))
   .factory('ComputerSnapshotFormSchema', require('./computer-snapshot-modal/computer-snapshot.form-schema.factory'))
+  .config(require('./computer-snapshot-modal/computer-snapshot-modal.config'))

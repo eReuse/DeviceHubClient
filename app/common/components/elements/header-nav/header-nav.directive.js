@@ -1,26 +1,5 @@
-require('angular-ui-router')
-
-/**
- * @overview
- * @name nav
- * Has Nav directive.
- */
-module.exports = angular.module('common.components.nav',
-  [
-    require('./../account').name,
-    require('./../device').name,
-    require('./../tools').name,
-    require('./../../constants').name,
-    'ui.router'
-  ])
-/**
- * @ngdoc directive
- * @name dhNavNav
- * @description Controls the tab main menu, changing the view accordingly.
- * Tab trick from http://odetocode.com/blogs/scott/archive/2014/04/14/deep-linking-a-tabbed-ui-with-angularjs.aspx
- */
-.directive('navigation', function ($state, CONSTANTS) {
-  var firstTime = true
+function navHeader ($state, CONSTANTS) {
+  let firstTime = true
   /**
    * Goes to the stated specified by route.
    *
@@ -28,20 +7,20 @@ module.exports = angular.module('common.components.nav',
    * it does not change state when executing at the first time.
    * @param route
    */
-  var go = function (route) {
+  let go = route => {
     if (!firstTime) {
       $state.go(route)
     } else {
       firstTime = false
     }
   }
-  var active = function (route) {
+  let active = route => {
     return $state.is(route)
   }
   return {
-    templateUrl: window.COMPONENTS + '/nav/nav.html',
+    templateUrl: require('./__init__').PATH + '/header-nav.directive.html',
     restrict: 'E',
-    link: function ($scope) {
+    link: $scope => {
       $scope.tabs = [
         {heading: 'Inventory', route: 'index.inventory', glyphicon: 'phone'}
         // {heading: 'Reports', route: 'index.reports', glyphicon: 'file'}
@@ -65,4 +44,5 @@ module.exports = angular.module('common.components.nav',
       $scope.CONSTANTS = CONSTANTS
     }
   }
-})
+}
+module.exports = navHeader

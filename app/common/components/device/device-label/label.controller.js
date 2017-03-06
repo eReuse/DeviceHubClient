@@ -1,4 +1,4 @@
-function formModal ($scope, $uibModalInstance, devices, labelsToPdfService) {
+function deviceLabelCtrl ($scope, $uibModalInstance, devices, labelsToPdfService) {
   $scope.devices = devices
   $scope.set = {}
   $scope.labelEditApi = {}
@@ -10,4 +10,4 @@ function formModal ($scope, $uibModalInstance, devices, labelsToPdfService) {
   }
 }
 
-module.exports = formModal
+module.exports = deviceLabelCtrl

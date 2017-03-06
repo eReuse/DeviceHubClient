@@ -1,6 +1,6 @@
 var utils = require('./../../utils.js')
 
-function FormSchemaFactory (FormSchema, ResourceSettings) {
+function SnapshotFormSchemaFactory (FormSchema, ResourceSettings) {
   /**
    * Extends FormSchema. See that class to know how to use it. These are the following changes:
    * @param {object} model The resource
@@ -62,4 +62,4 @@ function FormSchemaFactory (FormSchema, ResourceSettings) {
   return SnapshotFormSchema
 }
 
-module.exports = FormSchemaFactory
+module.exports = SnapshotFormSchemaFactory

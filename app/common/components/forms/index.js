@@ -8,6 +8,7 @@ module.exports = angular.module('common.components.forms',
     require('./../../config').name,
     require('./../event').name,
     require('./../../constants').name,
+    require('./../utilities').name,
     'restangular',
     'ui-notification'
   ])
@@ -20,4 +21,5 @@ module.exports = angular.module('common.components.forms',
 .directive('formSchema', require('./form-schema/form-schema.directive'))
 .factory('FormSchema', require('./form-schema/form-schema.factory'))
 .service('cerberusToFormly', require('./cerberus-to-formly.service'))
+.config(require('./form-modal/form-modal.config'))
 .controller('formModalCtrl', require('./form-modal/form-modal.controller'))
