@@ -1,4 +1,5 @@
 var generalDoNotUse = ['geo']
+let groupDoNotUse = ['children', 'policies']
 
 /**
  * Specifies custom settings for the resources to be used through the app.
@@ -69,7 +70,8 @@ var RESOURCE_CONFIG = (function () {
           keyFieldName: 'label'
         },
         view: {title: ['label'], subtitle: []},
-        subviews: [v.Dashboard, v.Lot, v.Package, v.Device, v.Place, v.Event]
+        subviews: [v.Dashboard, v.Lot, v.Package, v.Device, v.Place, v.Event],
+        doNotUse: groupDoNotUse
       },
       'Project': {
         dataRelation: {
@@ -88,7 +90,8 @@ var RESOURCE_CONFIG = (function () {
           keyFieldName: 'label'
         },
         view: {title: ['label'], subtitle: []},
-        subviews: [v.Dashboard, v.Package, v.Device]
+        subviews: [v.Dashboard, v.Package, v.Device],
+        doNotUse: generalDoNotUse.concat(groupDoNotUse)
       },
       'Lot': {
         dataRelation: {
@@ -99,7 +102,8 @@ var RESOURCE_CONFIG = (function () {
           keyFieldName: 'label'
         },
         view: {title: ['label'], subtitle: ['@type']},
-        subviews: [v.Dashboard, v.Lot, v.Package, v.Device]
+        subviews: [v.Dashboard, v.Lot, v.Package, v.Device],
+        doNotUse: generalDoNotUse.concat(groupDoNotUse)
       },
       'InputLot': {
         dataRelation: {
@@ -108,7 +112,8 @@ var RESOURCE_CONFIG = (function () {
           filterFieldName: 'label',
           fieldType: 'typeahead',
           keyFieldName: 'label'
-        }
+        },
+        doNotUse: generalDoNotUse.concat(groupDoNotUse)
       },
       'OutputLot': {
         dataRelation: {
@@ -117,7 +122,8 @@ var RESOURCE_CONFIG = (function () {
           filterFieldName: 'label',
           fieldType: 'typeahead',
           keyFieldName: 'label'
-        }
+        },
+        doNotUse: generalDoNotUse.concat(groupDoNotUse)
       }
     },
     inventory: {
