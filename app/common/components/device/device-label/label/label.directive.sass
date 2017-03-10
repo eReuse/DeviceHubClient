@@ -2,57 +2,63 @@
 .labelWidget
   width: 20em
   background-color: white
-  border: 1px solid $modal-header-border-color
   overflow: hidden
+  display: table
+  border: 1px solid $modal-header-border-color
   img
     max-width: 100%
     max-height: 100%
-
-  > div:first-child
-    text-align: center
-    height: 44%
-
-  > div:last-child > *
-    display: inline-block
-
-  qrcode, table
+  .label-body
+    display: table-cell
     vertical-align: middle
 
-  qrcode
-    margin-left: 2%
+    > div:first-child
+      text-align: center
 
-  table
-    font-size: 19px
-    font-weight: bold
-    font-family: "Arial Black", sans-serif
-    tr
-      &:not(:first-child) td:last-child
-        border-top: 1px solid
+    > div:last-child > *
+      display: inline-block
 
-      > td:last-child
-        text-align: right
-        width: 100%
-    &.t73
-      width: 73%  /*125*/
+    qrcode, table
+      vertical-align: middle
 
-    &.t69
-      width: 69%  /*90*/
+    qrcode
+      margin-left: 2%
+      line-height: normal
 
-    &.t64
-      width: 64% /*100*/
 
-    &.t60
-      width: 60% /*90*/
+    table
+      font-size: 19px
+      font-weight: bold
+      font-family: "Arial Black", sans-serif
+      tr
+        &:not(:first-child) td:last-child
+          border-top: 1px solid
 
-    &.t55
-      width: 55% /*80*/
+        > td:last-child
+          text-align: right
+          width: 100%
+      &.t73
+        width: 74%  /*125*/
 
-    &.t53
-      width: 53% /*70*/
+      &.t69
+        width: 70%  /*90*/
+
+      &.t64
+        width: 65% /*100*/
+
+      &.t60
+        width: 61% /*90*/
+
+      &.t55
+        width: 56% /*80*/
+
+      &.t53
+        width: 54% /*70*/
+
+      &.t-nothing
+        width: auto
 
   &.no-logo
-    > div:first-child
-      display: none
-
-    > div:last-child
-      margin-top: 1mm
+    .label-body
+      > div:first-child
+        display: none

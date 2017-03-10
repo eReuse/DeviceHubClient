@@ -18,7 +18,7 @@
       <div class="form-group">
         <label for="width">Width</label>
         <div class="input-group">
-          <input type="number" class="form-control" id="width" ng-model="set.width" min="67"/>
+          <input type="number" class="form-control" id="width" ng-model="set.width" min="52"/>
           <div class="input-group-addon">mm</div>
         </div>
       </div>
@@ -44,7 +44,7 @@
       <div class="form-group">
         <label for="height">Height</label>
         <div class="input-group">
-          <input type="number" class="form-control" id="height" ng-model="set.height" min="28"/>
+          <input type="number" class="form-control" id="height" ng-model="set.height" min="{{minHeight}}"/>
           <div class="input-group-addon">mm</div>
         </div>
       </div>
@@ -52,3 +52,7 @@
     <td></td>
   </tr>
 </table>
+<div ng-show="set.width < 60 || set.height < 35" class="text-warning">
+  <i class="fa fa-warning"></i>
+  The label is very small. Ensure all labels below fit well.
+</div>

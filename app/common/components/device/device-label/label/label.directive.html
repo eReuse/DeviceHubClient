@@ -3,23 +3,26 @@
   ng-style="{width: set.width+'mm', height:set.height+'mm', 'padding-left': leftPadding+'mm', 'padding-top': topPadding+'mm'}"
   ng-class="{'no-logo': !set.useLogo}"
 >
-  <div><img ng-src="{{set.logo}}"/></div>
-  <div>
-    <qrcode data="{{code}}" error-correction-level="Q" size="110" version="5"></qrcode>
-    <table
-      ng-class="{
-                    't53': set.width <= 70,
+  <div class="label-body">
+    <div ng-style="{height: (set.height / 2.5) - 1 + 'mm'}"><img ng-src="{{set.logo}}"/></div>
+    <div>
+      <qrcode data="{{code}}" error-correction-level="Q" size="95" version="5"></qrcode>
+      <table
+        ng-class="{
+                    't-nothing': set.width <= 60,
+                    't53': 60 < set.width && set.width <= 70,
                     't55': 70 < set.width && set.width <= 80,
                     't60': 80 < set.width && set.width <= 90,
                     't64': 90 < set.width && set.width <= 108,
                     't69': 108 < set.width && set.width <= 125,
                     't73': 125 <= set.width
                   }"
-    >
-      <tr ng-repeat="field in set.fields">
-        <td>{{field.short || field.humanName}}</td>
-        <td>{{device[field.name]}}</td>
-      </tr>
-    </table>
+      >
+        <tr ng-repeat="field in set.fields">
+          <td ng-show="set.width > 60">{{field.short || field.humanName}}</td>
+          <td>{{device[field.name]}}</td>
+        </tr>
+      </table>
+    </div>
   </div>
 </article>

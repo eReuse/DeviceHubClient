@@ -9,12 +9,10 @@
   <device-label-edit device="devices[0]" set="set" api="labelEditApi"></device-label-edit>
   <h2 class="label-title">Preview</h2>
   <div class="row" id="labels">
-    <div ng-repeat="device in devices"
-         class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-      <device-label set="set"
+      <device-label ng-repeat="device in devices"
+                    set="set"
                     device="device"
       ></device-label>
-    </div>
   </div>
 </div>
 <div class="modal-footer row">
