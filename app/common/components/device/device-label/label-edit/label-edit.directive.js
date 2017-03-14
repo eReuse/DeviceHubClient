@@ -10,6 +10,7 @@ function labelEdit (CONSTANTS, ResourceSettings, $interval) {
     },
     link: function ($scope) {
       $scope.api.reset = function () {
+        $scope.minHeight = 49
         _.assign($scope.set, {
           width: 97,
           height: 59,
@@ -31,8 +32,10 @@ function labelEdit (CONSTANTS, ResourceSettings, $interval) {
         if (newV === false) {
           oldHeight = $scope.set.height
           $scope.set.height = 32
+          $scope.minHeight = 29
         } else {
           $scope.set.height = oldHeight
+          $scope.minHeight = 49
         }
       })
 

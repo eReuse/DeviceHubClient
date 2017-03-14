@@ -5,7 +5,9 @@ function labelsToPdfService () {
   this.execute = function ($labels) {
     var utils = require('./../../utils')
     var $labelEdit = $('device-label-edit')
+    var $labelTitle = $('.label-title')
     $labelEdit.hide()
+    $labelTitle.hide()
     utils.Progress.start()
     require('resources/jspdf.min.js')
     var width = parseInt($('#width').val())
@@ -22,7 +24,7 @@ function labelsToPdfService () {
           getLabel(i + 1)
           if (i === $labels.length - 1) { // When we reach the bottom we put all the labels visible again
             for (var j = 0; j < $labels.length; j++) {
-              $($labels.get(j)).css('display', 'block')
+              $($labels.get(j)).css('display', 'table')
             }
           }
         })
@@ -30,6 +32,7 @@ function labelsToPdfService () {
         pdf.save('Labels.pdf')
         utils.Progress.stop()
         $labelEdit.show()
+        $labelTitle.show()
       }
     }
     getLabel(0)
