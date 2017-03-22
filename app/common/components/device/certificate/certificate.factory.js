@@ -7,7 +7,7 @@ function certificateFactory (CONSTANTS) {
     this.content = []
     this.s = {}
     this.pdf = {
-      pageMargins: [60, 20, 60, 60],
+      pageMargins: [20, 20, 20, 60],
       info: {
         title: model.title,
         author: model.org || CONSTANTS.appName,

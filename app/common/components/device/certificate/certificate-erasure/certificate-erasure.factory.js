@@ -72,10 +72,10 @@ function certificateErasureFactory (CONSTANTS, CERTIFICATE_ERASURE_FACTORY_STRIN
       {
         table: {
           headerRows: 1,
-          widths: ['*', '*', 30, 70, 55],
+          widths: [40, '*', '*', 30, 70, 55],
           body: [
-            [this.ts(this.s.COMPUTER, 'th'), this.ts(this.s.DISK, 'th'), this.ts(this.s.STATUS, 'th'),
-              this.ts(this.s.DATE, 'th'), this.ts(this.s.ERASURE_TYPE, 'th')]
+            [this.ts(this.s.PID, 'th'), this.ts(this.s.COMPUTER, 'th'), this.ts(this.s.DISK, 'th'),
+              this.ts(this.s.STATUS, 'th'), this.ts(this.s.DATE, 'th'), this.ts(this.s.ERASURE_TYPE, 'th')]
           ]
         },
         layout: 'lightHorizontalLines'
@@ -84,7 +84,7 @@ function certificateErasureFactory (CONSTANTS, CERTIFICATE_ERASURE_FACTORY_STRIN
 
     _.forEach(reports, function (report) {
       var type = report.isBasic ? self.s.ERASURE_BASIC : self.s.ERASURE_SECTORS
-      var row = [self.get(report.computer.serialNumber), self.get(report.hdd.serialNumber),
+      var row = [self.get(report.computer.pid), self.get(report.computer.serialNumber), self.get(report.hdd.serialNumber),
         self.getStatus(report.erasure.success), report.erasure._updated.toLocaleDateString(), type]
       content[1].table.body.push(row)
     })
@@ -145,7 +145,8 @@ function certificateErasureFactory (CONSTANTS, CERTIFICATE_ERASURE_FACTORY_STRIN
         },
         {
           columns: [
-            self._field(self.s.COMPUTER_MANUFACTURER, self.get(report.computer.manufacturer))
+            self._field(self.s.COMPUTER_MANUFACTURER, self.get(report.computer.manufacturer)),
+            self._field(self.s.PID, self.get(report.computer.pid))
           ]
         }
       ]
