@@ -35,6 +35,7 @@ var CERTIFICATE_ERASURE_FACTORY_STRINGS = (function () {
       ERASURE_METHOD: 'Método de borrado',
       ERASURE_METHOD_EXPLANATION: 'British HMG Infosec Standard 5, Baseline Standard',
       ERASURE_TOOL: 'Herramienta usada para el borrado',
+      PID: 'Basa',
       explanation: _.template('<%= org %> ha borrado los siguientes discos acorde el estándar <%= method %>.')
     },
     EN: {
@@ -72,6 +73,7 @@ var CERTIFICATE_ERASURE_FACTORY_STRINGS = (function () {
       ERASURE_METHOD: 'Erasure method',
       ERASURE_METHOD_EXPLANATION: 'British HMG Infosec Standard 5, Baseline Standard',
       ERASURE_TOOL: 'Tool used to erase',
+      PID: 'PID',
       explanation: _.template('<%= org %> has erased the following disks using the standard <%= method %>.')
     }
   }
