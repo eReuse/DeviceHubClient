@@ -1,4 +1,5 @@
 require('angular-ui-bootstrap')
+require('angular-ui-notification')
 /**
  * @ngdoc module
  * @name common.components.utilities
@@ -7,6 +8,9 @@ require('angular-ui-bootstrap')
  */
 module.exports = angular.module('common.components.utilities',
   [
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'ui-notification'
   ])
   .provider('dhModal', require('./dh-modal.provider'))
+  .directive('dhSubmitButton', require('./dh-submit-button/dh-submit-button.directive'))
+  .factory('SubmitForm', require('./submit-form'))

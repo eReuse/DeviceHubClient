@@ -5,9 +5,8 @@
       <img ng-if="showSiteLogo" ng-src="{{siteLogo}}"/>
     </h1>
     <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
-      <button type="submit" class="btn btn-primary submit-button" ng-disabled="loading">
-        <span ng-show="loading">Logging in...</span>
-        <span ng-hide="loading">Login</span>
+      <button type="submit" class="btn btn-primary submit-button" dh-submit-button="loading">
+        <span>Login</span>
       </button>
       <span ng-show="submissionError"
             class="alert alert-danger ani-show pull-right"

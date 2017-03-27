@@ -1,4 +1,4 @@
-function loginController ($scope, $state, authService, CONSTANTS) {
+function loginController ($scope, $state, authService, CONSTANTS, SubmitForm) {
   // note that we do not define form.form or form.options as it needs to be undefined for formly
   $scope.form = {
     fields: [
@@ -36,15 +36,14 @@ function loginController ($scope, $state, authService, CONSTANTS) {
       saveInBrowser: false
     },
     login: function (model) {
-      var credentials = _.pick(model, ['email', 'password'])
-      $scope.form.form.triedSubmission = false
-      if ($scope.form.form.$valid) {
-        $scope.loading = true
-        authService.login(credentials, model.saveInBrowser).then(function () {
+      let submitForm = new SubmitForm($scope.form, $scope)
+      let credentials = _.pick(model, ['email', 'password'])
+      if (submitForm.isValid()) {
+        submitForm.prepare()
+        let promise = authService.login(credentials, model.saveInBrowser).then(function () {
           $state.go('index.inventory')
         }, setSubmissionError)
-      } else {
-        $scope.form.form.triedSubmission = true
+        submitForm.after(promise)
       }
     }
   }
@@ -67,7 +66,6 @@ function loginController ($scope, $state, authService, CONSTANTS) {
   function setSubmissionError (error) {
     var $input = $('.formly-field:not(.formly-field:last)')
     $scope.submissionError = true
-    $scope.loading = false
     $input.addClass('has-error')
     $scope.status = error.status
     $input.focusin(function () {

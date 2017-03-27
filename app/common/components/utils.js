@@ -180,17 +180,20 @@ function setImageGetter ($scope, jqueryExpression, pathToStore) {
   })
 }
 
+/**
+ * Barebone for a progress package that handles switching a global progress (cursor style). It is interesting
+ * to handle different begin and end globally (e.x. only stopping the cursor after all end() have been executed)
+ */
 var Progress = {
   PROGRESS_NAME: 'dh-progress',
-  /**
-   * Barebone for a progress package that handles switching a global progress (cursor style). It is interesting
-   * to handle different begin and end globally (e.x. only stopping the cursor after all end() have been executed)
-   */
+  running: false,
   start: function () {
     $('*').addClass(Progress.PROGRESS_NAME)
+    Progress.running = true
   },
   stop: function () {
     $('*').removeClass(Progress.PROGRESS_NAME)
+    Progress.running = false
   }
 }
 
