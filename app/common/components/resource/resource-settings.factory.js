@@ -99,6 +99,15 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
     return _.includes(_ResourceSettingsFactory(parentType).subResourcesNames, this.type)
   }
 
+  /**
+   * As *isSubResource* but including itself.
+   * @param {string} parentType
+   * @returns {boolean}
+   */
+  rs.isSubResourceOrItself = function (parentType) {
+    return parentType === this.type || this.isSubResource(parentType)
+  }
+
   rs.throwError = function () {
     throw Unauthorized('The user is not authorized to submit this resource in DeviceHub.')
   }

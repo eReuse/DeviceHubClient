@@ -94,6 +94,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           $scope.toggleSelectAll = _.bind(resourceListSelector.toggleSelectAll, resourceListSelector, _)
           $scope.toggleSelect = _.bind(resourceListSelector.toggle, resourceListSelector, _)
 
+          // Reloading
+          // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
+          $scope.reload = () => {
+            resourceListGetter.getResources()
+          }
+
           // Pagination ('load more' button)
           // Let's avoid the user pressing multiple times the 'load more'
           $scope.loadMoreIsBusy = false

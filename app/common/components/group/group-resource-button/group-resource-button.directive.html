@@ -1,0 +1,36 @@
+<div class="btn-group" uib-dropdown is-open="status.isopen">
+  <button type="button"
+          class="btn"
+          ng-class="{'btn-primary': resources.length > 0}"
+          uib-dropdown-toggle
+
+          uib-popover-template="popover.templateUrl"
+          popover-enable="popover.enable"
+          popover-title="{{popover.title}}"
+          popover-is-open="popover.isOpen"
+          popover-placement="auto bottom"
+          popover-trigger="'none'"
+
+          ng-click="closePopover()"
+  >
+    <i class="fa fa-object-group"></i>Groups<span class="caret"></span>
+  </button>
+  <ul uib-dropdown-menu role="menu">
+    <li role="menuitem"
+        ng-repeat="item in ::menu"
+        ng-class="{'dropdown-header': item.title}"
+        uib-tooltip-html="item.tooltip"
+        tooltip-placement="left"
+        tooltip-append-to-body="true"
+    >
+      <span ng-show="item.title">
+        <resource-icon resource-type="{{item.group}}"></resource-icon>
+        {{item.title}}
+      </span>
+      <a ng-click="openPopover(item.group, item.action, item.label)" ng-hide="item.title">
+        <i class="fa fa-fw {{item.fa}}"></i>
+        {{item.label}}
+      </a>
+    </li>
+  </ul>
+</div>

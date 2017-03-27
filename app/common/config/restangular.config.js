@@ -1,4 +1,5 @@
 function restangularConfig (RestangularProvider, CONSTANTS) {
+  const utils = require('./../components/utils')
   RestangularProvider.setBaseUrl(CONSTANTS.url)
   RestangularProvider.addResponseInterceptor(function (data, operation, what, url, response, deferred) {
     if (what === 'schema') return data
