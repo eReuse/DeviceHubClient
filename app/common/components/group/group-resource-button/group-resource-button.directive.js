@@ -16,12 +16,13 @@ function groupResourceButton () {
       success: '&'
     },
     link: $scope => {
-      $scope.menu = [
-        {title: 'Lot', group: 'Lot'},
+      let menu = [
+        {title: 'Lot', group: 'Lot', resourceTypes: ['Package', 'Device', 'Lot']},
         {
           label: 'Add to lot',
           action: 'add',
           group: 'Lot',
+          resourceTypes: ['Package', 'Device', 'Lot'],
           tooltip: `
                    Add the items to the lot, keeping the lots they are in, plus the new one. An item can be 
                    in different lots at the same time.
@@ -32,14 +33,16 @@ function groupResourceButton () {
           label: 'Remove from lot',
           action: 'remove',
           group: 'Lot',
+          resourceTypes: ['Package', 'Device', 'Lot'],
           tooltip: `Removes the items from a lot.`,
           fa: 'fa-minus'
         },
-        {title: 'Package', group: 'Package'},
+        {title: 'Package', group: 'Package', resourceTypes: ['Device']},
         {
           label: 'Move to package',
           action: 'move',
           group: 'Package',
+          resourceTypes: ['Device'],
           tooltip: 'Replaces the package of the items.',
           fa: 'fa-long-arrow-right'
         },
@@ -47,14 +50,16 @@ function groupResourceButton () {
           label: 'Remove from packages',
           action: 'remove',
           group: 'Package',
+          resourceTypes: ['Device'],
           tooltip: 'Removes the items from their packages.',
           fa: 'fa-minus'
         },
-        {title: 'Place', group: 'Place'},
+        {title: 'Place', group: 'Place', resourceTypes: ['Package', 'Device', 'Lot', 'Place']},
         {
           label: 'Move to place',
           action: 'move',
           group: 'Place',
+          resourceTypes: ['Package', 'Device', 'Lot', 'Place'],
           tooltip: 'Replaces the place of the items.',
           fa: 'fa-long-arrow-right'
         },
@@ -62,10 +67,12 @@ function groupResourceButton () {
           label: 'Remove from places',
           action: 'remove',
           group: 'Place',
+          resourceTypes: ['Package', 'Device', 'Lot', 'Place'],
           tooltip: 'Removes the items from their places.',
           fa: 'fa-minus'
         }
       ]
+      $scope.menu = _(menu).remove(menuItem => _.includes(menuItem.resourceTypes, $scope.resourceType)).value()
 
       $scope.popover = {
         templateUrl: require('./__init__').PATH + '/group-resource-button.popover.template.html',

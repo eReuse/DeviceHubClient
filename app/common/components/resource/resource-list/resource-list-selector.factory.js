@@ -59,7 +59,6 @@ function ResourceSelectorFactory () {
           this.add(resource)
         }
       }
-      $event.stopPropagation()
     }
 
     /**

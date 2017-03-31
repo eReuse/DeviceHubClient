@@ -1,7 +1,4 @@
-<button class="btn" ng-class="{'btn-primary': selector.inList.length > 0}">
-  Create a lot or package inside
-</button>
-<button class="btn" ng-class="{'btn-primary': selector.inList.length > 0}">
-  Add devices to this lot
-</button>
-<certificate-button devices="selector.inList"></certificate-button>
+<group-resource-button resources="selector.inList"
+                       resource-type="{{resourceType}}"
+                       success="reload()"
+></group-resource-button>

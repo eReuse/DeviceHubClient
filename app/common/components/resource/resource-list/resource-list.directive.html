@@ -47,7 +47,6 @@
       </thead>
       <tbody>
         <tr ng-repeat="resource in resources"
-            ng-click="subResource.toggle(resource)"
             ng-class="{info: subResource.isOpened(resource._id)}"
 
             ng-init="popover=popovers[resource._id]"
@@ -69,7 +68,7 @@
                    ng-class="{blink: hoverScreener && resource._id === resources[0]._id && inList.length == 0}"
             >
           </td>
-          <td ng-repeat="td in config.table.td">
+          <td ng-repeat="td in config.table.td" ng-click="subResource.toggle(resource)">
             <div ng-if="td.templateUrl" ng-include="td.templateUrl"></div>
             <div ng-if="td.value">
               {{resource[td.value] | limitTo: 19}}
@@ -78,8 +77,8 @@
               </small>
             </div>
           </td>
-          <td>{{resource._created | timeAgo}}</td>
-          <td>
+          <td ng-click="subResource.toggle(resource)">{{resource._created | timeAgo}}</td>
+          <td ng-click="subResource.toggle(resource)">
             <resource-icon resource-type="{{resource['@type']}}" resource-subtype="{{resource.type}}"></resource-icon>
           </td>
         </tr>

@@ -34,7 +34,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           isOpened: resourceId => {
             return resourceId === _.get(subResource.resource, '_id')
           },
-          toggle: resource => {
+          toggle: (resource, $event) => {
+            console.log($event)
             subResource.resource = subResource.isOpened(resource['_id']) ? null : resource
             triggerCollapse()
           }

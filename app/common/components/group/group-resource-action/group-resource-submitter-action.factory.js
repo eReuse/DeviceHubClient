@@ -23,7 +23,9 @@ function groupResourceSubmitterFactory (SubmitForm, ResourceSettings) {
       this.addingResources = addingResources
       this.success = success
       // We start chaining the children
-      let property = this.rSettings.isSubResourceOrItself('Group') ? 'label' : '_id'
+      let property = this.rSettings.isSubResourceOrItself('Lot') ||
+                     this.rSettings.isSubResourceOrItself('Package') ||
+                     this.rSettings.isSubResourceOrItself('Place') ? 'label' : '_id'
       this.children = _(this.resources).map(property)
     }
 
