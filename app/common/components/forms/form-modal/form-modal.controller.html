@@ -14,13 +14,13 @@
 <div class="modal-footer row">
   <div class="col-xs-7">
     <div class="text-left" ng-show="!_.isEmpty(status.errorListFromServer)">
-      <i class="glyphicon glyphicon-alert"></i>
+      <i class="fa fa-warning"></i>
       Cannot submit. Fix the following errors:
       <ul>
         <li ng-repeat="(key, value) in status.errorListFromServer">{{key}}: {{value}}</li>
       </ul>
     </div>
-    <div ng-if="status.errorFromLocal"><i class="glyphicon glyphicon-alert"></i>Cannot submit. Check the form and
+    <div ng-if="status.errorFromLocal"><i class="fa fa-warning"></i>Cannot submit. Check the form and
                                                                                 repair the errors.
     </div>
   </div>

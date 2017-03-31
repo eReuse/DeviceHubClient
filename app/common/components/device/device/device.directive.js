@@ -3,13 +3,13 @@ function device (ResourceSettings) {
   var actualTab = {device: null}
   var tabs = [
     {
-      uiClass: 'glyphicon glyphicon-map-marker',
+      uiClass: 'fa fa-map-marker',
       heading: 'Events',
       templateUrl: PATH + 'events-per-device.template.directive.html',
       resourceAccess: 'Event'
     },
     {
-      uiClass: 'glyphicon glyphicon-info-sign',
+      uiClass: 'fa fa-info',
       heading: 'Characteristics',
       templateUrl: PATH + 'device-view.template.directive.html',
       resourceAccess: 'Device'

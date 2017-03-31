@@ -22,7 +22,7 @@ function navHeader ($state, CONSTANTS) {
     restrict: 'E',
     link: $scope => {
       $scope.tabs = [
-        {heading: 'Inventory', route: 'index.inventory', glyphicon: 'phone'}
+        {heading: 'Inventory', route: 'index.inventory', fa: 'list'}
         // {heading: 'Reports', route: 'index.reports', glyphicon: 'file'}
       ]
       $scope.tabs.forEach(function (tab, index) {
