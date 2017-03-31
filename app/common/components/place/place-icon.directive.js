@@ -1,6 +1,6 @@
 function placeIcon () {
   return {
-    template: '<i class="glyphicon glyphicon-home"></i>',
+    template: '<i class="fa fa-home"></i>',
     restrict: 'E'
   }
 }
