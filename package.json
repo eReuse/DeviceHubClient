@@ -41,6 +41,7 @@
     "gulp-uglify": "~2.0.0",
     "inflection": "~1.10.0",
     "jquery": "~2.1.4",
+    "jquery-clickout": "0.0.3",
     "jsonformatter": "~0.6.0",
     "jspdf-browserify": "~1.0.272",
     "lodash": "~4.17.4",
