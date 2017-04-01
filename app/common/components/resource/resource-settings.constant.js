@@ -28,7 +28,7 @@ var RESOURCE_SETTINGS = (function () {
       },
       'Device': {
         view: 'device',
-        doNotUse: ['events', 'owners', 'components', 'isUidSecured', 'public', 'icon', 'pid', 'labelId']
+        doNotUse: ['events', 'owners', 'components', 'isUidSecured', 'public', 'icon', 'pid', 'labelId', 'placeholder']
       },
       'Event': {view: 'event'},
       'Account': {
