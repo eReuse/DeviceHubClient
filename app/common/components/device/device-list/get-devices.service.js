@@ -28,6 +28,12 @@ function getDevices (ResourceSettings, deviceListConfigFactory) {
               break
             case 'nin':
               where[key] = {$nin: _.isArray(where[key]) ? where[key] : [where[key]]}
+              break
+            case '!=':
+              where[key] = {$ne: where[key]}
+              break
+            case 'custom':
+              where[key] = setting.custom(where[key])
           }
         } else {
           where[key] = {$regex: where[key], $options: 'ix'}

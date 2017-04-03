@@ -45,7 +45,7 @@ var RESOURCE_CONFIG = (function () {
         },
         // We pass a 'resource' object to a subview with, at least, @type.
         subviews: [v.Dashboard, v.Event],
-        doNotUse: ['events', 'owners', 'components', 'isUidSecured', 'public', 'icon', 'pid', 'labelId']
+        doNotUse: ['events', 'owners', 'components', 'isUidSecured', 'public', 'icon', 'pid', 'labelId', 'placeholder']
       },
       'Event': {
         view: {},
