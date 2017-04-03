@@ -1,5 +1,5 @@
 var DEFAULT_SEARCH_PARAMS = {
-  '@type': 'Computer'
+  'is-component': 'No'
 }
 
 /**

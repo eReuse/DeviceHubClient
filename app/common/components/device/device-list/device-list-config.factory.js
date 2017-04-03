@@ -7,6 +7,7 @@ function deviceListConfigFactory (RESOURCE_SEARCH) {
     filterFieldName: 'email',
     labelFieldName: 'email'
   }
+  var SNAPSHOT_SOFTWARE_ALLOWED = ['Workbench', 'AndroidApp', 'Web']
   var paramsSettings = [
     {
       key: '@type',
@@ -176,6 +177,59 @@ function deviceListConfigFactory (RESOURCE_SEARCH) {
       comparison: 'nin',
       placeholder: 'Type an e-mail',
       description: 'Match devices that are actually not assigned to a specific user.'
+    },
+    {
+      key: 'snapshot-software',
+      name: 'Has a Snapshot made with',
+      realKey: 'events.snapshotSoftware',
+      select: SNAPSHOT_SOFTWARE_ALLOWED,
+      comparison: '=',
+      description: 'The device has a Snapshot made with a specific software.'
+    },
+    {
+      key: 'not-snapshot-software',
+      name: 'Has not a Snapshot made with',
+      realKey: 'events.snapshotSoftware',
+      select: SNAPSHOT_SOFTWARE_ALLOWED,
+      comparison: '!=',
+      description: 'The device has not a Snapshot made with a specific software.'
+    },
+    {
+      key: 'event-label',
+      realKey: 'events.label',
+      name: 'Label of the event',
+      placeholder: 'Start writing the label...',
+      description: 'The name the user wrote in the event.'
+    },
+    {
+      key: 'placeholder',
+      name: 'Is Placeholder',
+      select: ['Yes', 'No'],
+      boolean: true,
+      comparison: '=',
+      description: 'Match devices that are placeholders.'
+    },
+    {
+      key: 'not-event',
+      name: 'Has not event',
+      select: 'devices:DeviceEvent',
+      comparison: '!=',
+      realKey: 'events.@type',
+      description: 'Match only devices that have not a specific type of event. Example: devices not ready.'
+    },
+    {
+      key: 'is-component',
+      name: 'Is component',
+      realKey: '@type',
+      select: ['Yes', 'No'],
+      boolean: true,
+      comparison: 'custom',
+      custom: function (value) {
+        var components = ['GraphicCard', 'HardDrive', 'Motherboard', 'NetworkAdapter', 'OpticalDrive', 'Processor',
+          'RamModule', 'SoundCard']
+        return value ? {$in: components} : {$nin: components}
+      },
+      description: 'Match devices depending if they are components or not.'
     }
   ]
   return {
