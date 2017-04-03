@@ -17,7 +17,7 @@ function FormSchemaFactory (FormSchema, ResourceSettings) {
       '@type': options.deviceType
     }
     model.automatic = false
-    model.snapshotSoftware = 'DeviceHubClient'
+    model.snapshotSoftware = 'Web'
     delete deviceSchema.description
     delete deviceSchema.place
     options.schema = {
