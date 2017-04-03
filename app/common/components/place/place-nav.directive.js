@@ -28,20 +28,18 @@ function placeNavDirective (ResourceSettings, $rootScope, Notification) {
       })
 
       $scope.moveDevices = function (place, newDevices) {
-        var ids = angular.copy(place.devices) || []
-        var error = false
-        newDevices.forEach(function (device) {
-          if (device['@type'] !== 'Computer') {
-            Notification.error('For now, you can just move computers. Deselect any other device.')
-            error = true
-          }
-        })
-        ids = _.union(ids, _.map(newDevices, '_id'))
+        if (_.find(newDevices, function (device) {
+          return ResourceSettings(device['@type'])
+            .isSubResource('Component')
+        })) {
+          Notification.error('You cannot move components; deselect them.')
+          return
+        }
+        var ids = _.union(_.clone(place.devices) || [], _.map(newDevices, '_id'))
         if (_.isEqual(place.devices, ids)) {
           Notification.warning('All the devices are already in the place, so we are not moving them.')
-          error = true
+          return
         }
-        if (error) return
         var dataToSend = {
           '@type': 'Place',
           'devices': ids,
