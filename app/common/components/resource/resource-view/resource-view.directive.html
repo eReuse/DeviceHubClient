@@ -20,10 +20,10 @@
     <header ng-if="resource['@type']">
       <resource-icon class="pull-right" resource-type="{{resource['@type']}}"
                      resource-subtype="{{resource.type}}"></resource-icon>
-      <h4 ng-show="view.title" class="display-inline">
+      <h3 ng-show="view.title" class="display-inline">
         <span ng-repeat="t in view.title">{{resource[t]}}</span>
         <small ng-repeat="s in view.subtitle">&nbsp;{{resource[s]}}</small>
-      </h4>
+      </h3>
     </header>
   </div>
   <div id="resource-view-body"></div>

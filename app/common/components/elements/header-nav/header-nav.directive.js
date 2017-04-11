@@ -1,4 +1,4 @@
-function navHeader ($state, CONSTANTS) {
+function headerNav ($state, CONSTANTS) {
   let firstTime = true
   /**
    * Goes to the stated specified by route.
@@ -21,6 +21,7 @@ function navHeader ($state, CONSTANTS) {
     templateUrl: require('./__init__').PATH + '/header-nav.directive.html',
     restrict: 'E',
     link: $scope => {
+      // Note that as we are using only one tab I have commented it in html, discoment to show them
       $scope.tabs = [
         {heading: 'Inventory', route: 'index.inventory', fa: 'list'}
         // {heading: 'Reports', route: 'index.reports', glyphicon: 'file'}
@@ -45,4 +46,4 @@ function navHeader ($state, CONSTANTS) {
     }
   }
 }
-module.exports = navHeader
+module.exports = headerNav

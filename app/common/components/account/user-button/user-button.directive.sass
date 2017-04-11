@@ -1,9 +1,10 @@
 @import './../../../styles/_variables.sass'
-user-button
-  #single-button
+#user-button
+  #img-button
     padding: 0 !important
     border: none !important
     img
-      width: 42px
+      width: $navbar-height
       border-radius: 30px
-      border: 1px solid $btn-default-border
+      &:hover
+        transform: scale(0.9)

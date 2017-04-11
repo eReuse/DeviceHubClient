@@ -1,6 +1,6 @@
 <!-- Resource Search -->
 <div class="row">
-  <resource-search settings="config.search.params"
+  <resource-search class="col-md-10 col-xs-offset-0 col-md-offset-1 show" settings="config.search.params"
                    on-params-changed="onSearchParamsChanged(params)"
                    default-params="config.search.defaultParams"
   ></resource-search>
@@ -78,7 +78,7 @@
             </div>
           </td>
           <td ng-click="subResource.toggle(resource)">{{resource._created | timeAgo}}</td>
-          <td ng-click="subResource.toggle(resource)">
+          <td ng-click="subResource.toggle(resource)" class="text-center">
             <resource-icon resource-type="{{resource['@type']}}" resource-subtype="{{resource.type}}"></resource-icon>
           </td>
         </tr>
@@ -91,7 +91,7 @@
     </div>
   </div>
   <!-- SubResource in right-bar -->
-  <aside ng-if="type === 'big' && subResource.resource" class="col-xs-7 col-lg-6">
+  <aside ng-if="type === 'big' && subResource.resource" class="col-xs-7 col-lg-6" id="aside-subResource">
     <resource-view resource="subResource.resource" type="medium"></resource-view>
   </aside>
 </div>

@@ -2,6 +2,7 @@ function userButton (session, $uibModal) {
   return {
     templateUrl: window.COMPONENTS + '/account/user-button/user-button.directive.html',
     restrict: 'E',
+    replace: true,
     scope: {},
     link: function ($scope, $element, $attrs) {
       $scope.account = session.getAccount()

@@ -17,6 +17,7 @@ module.exports = window.angular.module('deviceHub', [
       }).state('index.inventory', {
         url: '/inventory',
         templateUrl: 'views/inventory/inventory.controller.html',
+        controller: 'inventoryCtrl as inCl',
         resolve: {schemaLoaded: utils.schemaIsLoaded}
       }).state('index.inventory.resource', {
         url: '/:resourceName/:id',

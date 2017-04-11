@@ -1,13 +1,27 @@
-<user-button class="pull-right"></user-button>
-<change-database class="pull-right"></change-database>
-<tools-button class="pull-right"></tools-button>
-<new-button class="pull-right"></new-button>
-<nav>
-  <div ng-switch="CONSTANTS.showSiteLogo" id="logo">
-    <img ng-switch-when="true" ng-src="{{CONSTANTS.siteLogo}}" ng-click="setTab(0)"/>
-    <h1 ng-switch-when="false" ng-click="setTab(0)">{{CONSTANTS.appName}}</h1>
+<nav class="navbar navbar-static-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <i class="fa fa-bars fa-lg"></i>
+      </button>
+      <div ng-switch="CONSTANTS.showSiteLogo" class="navbar-brand">
+        <img ng-switch-when="true" ng-src="{{CONSTANTS.siteLogo}}" ng-click="setTab(0)"/>
+        <span ng-switch-when="false" ng-click="setTab(0)">{{CONSTANTS.appName}}</span>
+      </div>
+
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        <new-button></new-button>
+        <tools-button></tools-button>
+        <change-database></change-database>
+        <user-button></user-button>
+      </ul>
+    </div>
   </div>
-  <uib-tabset active="actualTab" type="pills">
+
+
+  <!--<uib-tabset active="actualTab" type="pills">
     <uib-tab
       ng-repeat="tab in tabs"
       heading="{{tab.heading}}"
@@ -18,5 +32,5 @@
         {{tab.heading}}
       </uib-tab-heading>
     </uib-tab>
-  </uib-tabset>
+  </uib-tabset>-->
 </nav>

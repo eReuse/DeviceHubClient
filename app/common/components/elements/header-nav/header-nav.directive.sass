@@ -1,21 +1,26 @@
 @import './../../../styles/_variables.sass'
+
 header-nav
-  .pull-right .btn
-    border-bottom: 0 !important
-
-  nav
-    background-color: $main-nav-bg
-    #logo
+  background-color: $main-nav-bg
+  .navbar
+    margin-bottom: 0
+    user-select: none
+    .navbar-brand
       float: left
-      cursor: pointer
-      h1
-        padding: 10px 2em !important
-        font-size: larger !important
-        margin: 0 !important
-
-      img
+      padding: $navbar-padding-vertical/2 $navbar-padding-horizontal
+      font-size: $font-size-h2
+      line-height: $headings-line-height
+      height: $navbar-height
+      font-weight: lighter
+      &:hover, &:focus
+        text-decoration: none
+      > img
+        display: block
         max-height: 42px
         max-width: 200px
         margin-right: 1em
         margin-left: 0.25em
-xXX
+
+  @media (min-width: $grid-float-breakpoint)
+    .navbar > .container, .navbar > .container-fluid
+      margin-left: -$navbar-padding-horizontal

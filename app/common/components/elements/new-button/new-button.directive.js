@@ -2,6 +2,7 @@ function registerButton (SnapshotFormSchema, ResourceSettings, dhModal, FormSche
   return {
     templateUrl: require('./__init__').PATH + '/new-button.directive.html',
     restrict: 'E',
+    replace: true,
     scope: {},
     link: function ($scope) {
       let open = {}

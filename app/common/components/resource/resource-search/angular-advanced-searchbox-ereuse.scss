@@ -8,6 +8,14 @@
   cursor: text;
   line-height: 38px;
   height: auto !important;
+
+  background-color: rgb(249, 249, 249);
+  box-shadow: lightgrey 0 0 2px;
+  border: none;
+}
+
+.advancedSearchBox .search-parameter-input{
+  background: none !important;
 }
 
 .advancedSearchBox.active {

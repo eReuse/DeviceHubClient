@@ -3,12 +3,12 @@
  * Represents a resource. Selects the appropriate view to show the resource, depending of its type.
  *
  */
-function resourceView (RecursionHelper, Subview, cerberusToView) {
+function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG) {
   const utils = require('./../../utils')
-  let BIG = 'big'
-  let MED = 'medium'
-  let SM = 'small'
-  let TYPES = [BIG, MED, SM]
+  const BIG = 'big'
+  const MED = 'medium'
+  const SM = 'small'
+  const TYPES = [BIG, MED, SM]
   return {
     templateUrl: require('./__init__').PATH + '/resource-view.directive.html',
     restrict: 'E',
@@ -17,7 +17,7 @@ function resourceView (RecursionHelper, Subview, cerberusToView) {
       type: '@'
     },
     compile: element => {
-      return RecursionHelper.compile(element, function ($scope, iElement) {
+      return RecursionHelper.compile(element, ($scope, iElement) => {
         if (!_.includes(TYPES, $scope.type)) {
           throw TypeError('ResourceView only accepts big, medium and small as types.')
         }
@@ -26,6 +26,8 @@ function resourceView (RecursionHelper, Subview, cerberusToView) {
           _.forOwn($scope.tabs, (tab) => { tab.isActive = false })
           tabToActivate.isActive = true
         }
+
+        $scope.$on('changeTab', () => $scope.setActive())
 
         $scope.$watch('resource', (newResource, oldResource) => {
           // We create the tabs with the subviews embedded
@@ -40,11 +42,27 @@ function resourceView (RecursionHelper, Subview, cerberusToView) {
           if (!_.isUndefined(resourceType)) $scope.view = Subview.getSetting(resourceType, 'view')
           // Generates the subviews
           $scope.tabs = {} // Stores for each tab if it is the active one
+          $scope.tabs.active = 0  // Let's make the first tab the active one initially
           iElement.find('#resource-view-body').html(Subview.generate($scope, resourceType))
           // If small we use the resourceName
+
+          if ($scope.type === BIG) {
+            let subviewsConfig = resourceType
+              ? this.getSetting(resourceType, 'subviews')
+              : RESOURCE_CONFIG.inventory.subviews
+            let num = subviewsConfig.length - 1
+            /**
+             * Sets the subviews tabs by pressing a number from the keyboard.
+             */
+            const keyPress = e => {
+              if (e.which >= 49 && e.which <= 49 + num) $scope.$evalAsync(() => { $scope.tabs.active = e.which - 49 })
+            }
+            $(document).keypress(keyPress)
+            $scope.$on('$destroy', () => $(document).off('keypress', null, keyPress))
+          }
         }
 
-        if ($scope.type !== 'small') {
+        if ($scope.type !== SM) {
           generateViewAndSubview()
         } else {
           $scope.srefUiParams = {resourceName: utils.Naming.resource($scope.resource['@type']), id: $scope.resource._id}

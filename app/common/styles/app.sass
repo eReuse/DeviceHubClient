@@ -33,7 +33,7 @@ pre
   content: "*"
   color: red
 
-button[ng-click], a[ng-click], small[ng-click]
+button[ng-click], a, small[ng-click]
   cursor: pointer
 
 [class*=col-]
@@ -63,3 +63,15 @@ button[ng-click], a[ng-click], small[ng-click]
 
 .btn .caret
   margin-left: 0.25em
+
+.table-striped
+  td
+    border-top: none !important
+
+.nav-pills > li:not(.active) > a
+  color: $text-color
+  i
+    color: lighten($text-color, 25%)
+
+a.text-success:hover
+  color: $brand-success

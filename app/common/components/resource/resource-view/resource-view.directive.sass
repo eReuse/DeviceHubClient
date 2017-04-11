@@ -1,0 +1,17 @@
+@import '_resource-view.directive.sass'
+
+#subviews .nav-pills
+  background-color: lighten($main-nav-bg, 4)
+  @media (max-width: $screen-xs)
+    a
+      padding-left: 0
+      padding-right: 0
+
+#subviews #subviews > .nav-pills .nav-link
+  padding-top: .25em
+  padding-bottom: .25em
+
+#subviews
+  .fill-height
+    height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$tabsHeight})
+    overflow-y: auto
