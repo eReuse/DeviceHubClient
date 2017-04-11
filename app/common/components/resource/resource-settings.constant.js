@@ -9,14 +9,15 @@ let groupDoNotUse = ['children', 'policies']
  */
 var RESOURCE_CONFIG = (function () {
   let v = {
-    InventoryDashboard: {view: 'inventory-dashboard', name: 'Dashboard'},
-    Dashboard: {view: 'resource-dashboard', name: 'Dashboard'},
-    Device: {view: 'resource-list', resourceType: 'Device', name: 'Devices'},
-    Event: {view: 'resource-list', resourceType: 'Event', name: 'Events'},
-    Place: {view: 'resource-list', resourceType: 'Place', name: 'Places'},
-    Lot: {view: 'resource-list', resourceType: 'Lot', name: 'Lots'},
-    Package: {view: 'resource-list', resourceType: 'Package', name: 'Packages'},
-    Account: {view: 'resource-list', resourceType: 'Account', name: 'Accounts'}
+    InventoryDashboard: {view: 'inventory-dashboard', name: 'Dashboard', 'class': 'fill-height show', fa: 'fa-dashboard'},
+    Dashboard: {view: 'resource-dashboard', name: 'Dashboard', 'class': 'fill-height show', fa: 'fa-dashboard'},
+    Detail: {view: 'table-view', name: 'Detail', 'class': 'fill-height show', fa: 'fa-info'},
+    Device: {view: 'resource-list', resourceType: 'Device', name: 'Devices', fa: 'fa-desktop'},
+    Event: {view: 'resource-list', resourceType: 'Event', name: 'Events', resourceIcon: 'Event'},
+    Place: {view: 'resource-list', resourceType: 'Place', name: 'Places', resourceIcon: 'Place'},
+    Lot: {view: 'resource-list', resourceType: 'Lot', name: 'Lots', resourceIcon: 'Lot'},
+    Package: {view: 'resource-list', resourceType: 'Package', name: 'Packages', resourceIcon: 'Package'},
+    Account: {view: 'resource-list', resourceType: 'Account', name: 'Accounts', resourceIcon: 'Account'}
   }
 
   return {
@@ -44,12 +45,12 @@ var RESOURCE_CONFIG = (function () {
           subtitle: ['model', 'manufacturer']
         },
         // We pass a 'resource' object to a subview with, at least, @type.
-        subviews: [v.Dashboard, v.Event],
+        subviews: [v.Dashboard, v.Event, v.Detail],
         doNotUse: ['events', 'owners', 'components', 'isUidSecured', 'public', 'icon', 'pid', 'labelId', 'placeholder']
       },
       'Event': {
         view: {},
-        subviews: [v.Dashboard, v.Device, v.Place]
+        subviews: [v.Dashboard, v.Device, v.Place, v.Detail]
       },
       'Account': {
         dataRelation: {

@@ -30,11 +30,19 @@ function SubviewFactory (ResourceViewGenerator, RESOURCE_CONFIG, ResourceSetting
         } else {
           $scope.tabs[uid] = {isActive: false}
         }
+        let icon = option.fa
+          ? `<i class="fa ${option.fa} fa-fw fa-lg"></i>`
+          : `<resource-icon resource-type="${option.resourceIcon}"></resource-icon>`
         body += `
           <uib-tab select="setActive(tabs['${uid}'])">
-            <uib-tab-heading>${option.name}</uib-tab-heading>
+            <uib-tab-heading>${option.name} ${icon}</uib-tab-heading>
             <div ng-if="tabs['${uid}'].isActive">
-              <${option.view} resource-type="${option.resourceType}" type="{{type}}" parent-resource="resource">
+              <${option.view} resource-type="${option.resourceType}" 
+                              type="{{type}}" 
+                              parent-resource="resource" 
+                              model="model"
+                              class="${option.class}"
+              >
               </${option.view}>
             </div>
           </uib-tab>

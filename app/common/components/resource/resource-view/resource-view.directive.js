@@ -47,9 +47,9 @@ function resourceView (RecursionHelper, Subview, cerberusToView) {
         if ($scope.type !== 'small') {
           generateViewAndSubview()
         } else {
-          $scope.model = cerberusToView.parse($scope.resource)
           $scope.srefUiParams = {resourceName: utils.Naming.resource($scope.resource['@type']), id: $scope.resource._id}
         }
+        if (!_.isEmpty($scope.resource)) $scope.model = cerberusToView.parse($scope.resource)
       })
     }
   }

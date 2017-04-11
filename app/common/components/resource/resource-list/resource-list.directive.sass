@@ -20,6 +20,10 @@ resource-list
     outline-offset: -2px
 
   .fill-height
+    height: calc(100vh - #{$headerHeight} - #{$footerHeight})
+    overflow-y: auto
+
+  .fill-height-bar
     height: calc(100vh - #{$headerHeight} - #{$footerHeight} - 2 * #{$optionsMenuHeight} - #{$searchHeight})
     overflow-y: auto
 
@@ -42,7 +46,15 @@ resource-list
       padding-top: 0 !important
 
   resource-view
-    .fill-height
-      // - 2 * (everything we had in .fill-height above) but calc does not allow 2 * (parenthesis) so we get it by
+    .fill-height-bar
+      // - 2 * (everything we had in .fill-height-bar above) but calc does not allow 2 * (parenthesis) so we get it by
       // applying the distributive property
-      height: calc(100vh - #{$headerHeight} - 2 * #{$footerHeight} - 2 * #{$optionsMenuHeight} - 2 * #{$tabsHeight} - 2 * #{$searchHeight}) !important
+      height: calc(100vh - #{$headerHeight} - #{$footerHeight} - 2 * #{$optionsMenuHeight} - 2 * #{$tabsHeight} - 2 * #{$searchHeight} - #{$subresourceH4Height}) !important
+      overflow-y: auto
+
+    .fill-height
+      // We use fill-height-bar as initial, as only listing have subresources
+      height: calc(100vh - #{$headerHeight} - #{$footerHeight} - #{$optionsMenuHeight} - 2 * #{$tabsHeight} - #{$searchHeight} - #{$subresourceH4Height}) !important
+      overflow-y: auto
+
+

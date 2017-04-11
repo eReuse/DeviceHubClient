@@ -6,10 +6,10 @@ function tableView () {
     restrict: 'E',
     scope: {
       model: '=',
-      teaser: '&?'
+      teaser: '=?'
     },
     link: function ($scope) {
-      $scope._teaser = $scope.teaser()
+      $scope._teaser = !!$scope.teaser
       $scope.filterTeaser = {}
       if ($scope._teaser) $scope.filterTeaser = {teaser: true}
       $scope.Naming = utils.Naming
