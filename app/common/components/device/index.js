@@ -19,14 +19,6 @@ module.exports = angular.module('common.components.device',
     require('./events-per-device').name,
     require('./device-label').name
   ])
-/**
- * @ngdoc directive
- * @name device
- * @description Main device method. Given an identifier, retrieves and shows a full device, with its events and other info.
- * @param {Object} identifier Object with one property: _id, which is a string identifying the device. We use an object
- * to be able to watch over it, and load a new device when the _id changes.
- */
-  .directive('device', require('./device/device.directive'))
   /**
    * Shows all the hardware and related information (not events) of a device, and its components.
    * @ngdoc directive
