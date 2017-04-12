@@ -10,7 +10,7 @@ Total: {{totalResources}} items<span ng-show="selectedResources.length > 0">,</s
   <i uib-dropdown-toggle id="export-button" type="button" class="fa fa-download"></i>
   <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="single-button">
     <li role="menuitem" class="dropdown-header">Export the selected devices</li>
-    <li role="menuitem" class="dropdown-header" ng-show="isSafari">Safari not supported</li>
+    <li role="menuitem" class="dropdown-header" ng-show="isSafari">Only Safari from 2017+ supported</li>
     <li role="menuitem">
       <a href="#" ng-click="exportSpreadsheet('ods')">
         <i class="fa fa-file-excel-o"></i>
