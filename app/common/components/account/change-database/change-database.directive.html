@@ -3,7 +3,7 @@
         <i class="fa fa-database fa-fw fa-lg"></i>{{session.activeDatabase}}<span class="caret"></span>
     </a>
     <ul class="dropdown-menu dropdown-menu-right">
-        <li role="menuitem" ng-repeat="database in session._account.databases">
+        <li role="menuitem" ng-repeat="database in session._account.databases | orderBy">
             <a ng-click="session.setActiveDatabase(database, true)">
                 {{::database}}
             </a>
