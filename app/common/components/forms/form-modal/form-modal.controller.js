@@ -6,7 +6,7 @@ function formModal ($scope, $uibModalInstance, options, model, ResourceSettings)
   $scope.status = {}
   $scope.humanize = utils.Naming
   $scope.cancel = () => $uibModalInstance.dismiss('cancel')
-  $scope.$watch('status.done', (newV) => { if (newV) $uibModalInstance.close('success') })
+  $scope.$watch('status.succeeded', newV => { if (newV) $uibModalInstance.close('success') })
   $scope.title = $scope.options.title || ResourceSettings(model['@type']).humanName
 }
 

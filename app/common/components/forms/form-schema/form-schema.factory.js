@@ -1,108 +1,105 @@
-var utils = require('./../../utils.js')
-var CannotSubmit = require('./cannot-submit.exception')
-
-function FormSchemaFactory (ResourceSettings, $rootScope, Notification, cerberusToFormly, $q) {
-  /**
-   * Generates and handles a form schema, using angular-formly settings. This service provides
-   * the functions to submit and delete the resource in the form.
-   * @param {object} model The resource
-   * @param {object} form A reference to formly's form
-   * @param {object} status The status object
-   * @param {array} options
-   * @param {object} scope $scope
-   * @constructor
-   */
-  function FormSchema (model, form, status, options, scope) {
-    this.rSettings = ResourceSettings(model['@type'])
-    this.form = form
-    this.status = status
-    var _options = this.prepareOptions(options)
-    this.fields = cerberusToFormly.parse(model, scope, _options) // parse adds 'nonModifiable' to options
-  }
-
-  var proto = FormSchema.prototype
-  proto.OPERATION = {
+function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notification, cerberusToFormly, $q) {
+  const utils = require('./../../utils.js')
+  const CannotSubmit = require('./cannot-submit.exception')
+  const OPERATION = {
     put: 'updated',
     post: 'created',
     delete: 'deleted'
   }
-  proto.submit = function (originalModel) {
-    this.status.errorFromLocal = false
-    if (this.isValid(this.fields)) {
-      this.status.working = true
-      this.status.errorListFromServer = null
-      var model = utils.copy(originalModel) // We are going to change stuff in model
-      this.removeHelperValues(model)
-      return this.upload(model)
-      .then(this.succeedSubmissionFactory(this.OPERATION['put' in model ? 'put' : 'post'], model))
-      .catch(this.failedSubmissionFactory())
-    } else {
-      this.status.errorFromLocal = true
-      throw new CannotSubmit('Form is invalid')
-    }
-  }
-  proto.removeHelperValues = function (model) {
-    for (var fieldName in model) {
-      if (_.includes(fieldName, 'exclude_')) delete model[fieldName]
-    }
-  }
-  proto.upload = function (model) {
-    return 'put' in model ? model.put() : this.rSettings.server.post(model)
-  }
-  proto.succeedSubmissionFactory = function (operationName, model) {
-    var self = this
-    return function (response) {
-      var resource = _.isUndefined(response) ? model : response // DELETE operations do not answer with the result
-      $rootScope.$broadcast('submitted@' + resource['@type'])
-      $rootScope.$broadcast('submitted@any')
-      self.status.working = false
-      self.status.done = true
-      Notification.success(utils.getResourceTitle(resource) + ' successfully ' + operationName + '.')
-      return response
-    }
-  }
-  proto.failedSubmissionFactory = function () {
-    var self = this
-    return function (response) {
-      self.status.working = false
-      try {
-        self.status.errorListFromServer = response.data._issues
-      } catch (err) {}
-      return $q.reject(response)
-    }
-  }
-  proto.prepareOptions = function (options) {
-    var _options = _.cloneDeep(options)
-    _options.excludeLabels = {
-      receiver: 'Check if the receiver has already an account',
-      to: 'Check if the new possessor has already an account',
-      from: 'Check if the old possessor has already an account'
-    }
-    _options.doNotUse = _.concat(_options.doNotUse || [], this.rSettings.settings.doNotUse)
-    return _options
-  }
-  proto.isValid = function (schema) {
-    if (!this.form.$valid) {
-      return false
-    } else {
-      var valid = true
-      schema.forEach(function (field) {
-        try {
-          if (!field.validators.or()) {
-            valid = false
-          }
-        } catch (err) {}
+
+  /**
+   * Generates and handles a form schema, using angular-formly settings. This service provides
+   * the functions to submit and delete the resource in the form.
+   */
+  class FormSchema {
+    /**
+     * @param {object} model - The resource to upload.
+     * @param {object} form - A form object containing a reference to formly's form.
+     * @param {object} form.form - A formly form. It is ok if this is not set yet when creating
+     * FormSchema, but it will need to be set when submitting. This is usual workflow when leading
+     * with formly forms, as until the formly form is instantiated this value won't be populated.
+     * @param {object} status - Flags of the submission.
+     * @param {boolean} status.errorFromLocal - An error has been detected through validation in the browser prior
+     * submitting to server.
+     * @param {boolean} status.loading - A flag indicating that the server is processing a request of the server.
+     * @param {boolean} status.errorListFromServer - An error has been detected from the server.
+     * @param {boolean} status.done - If the execution has done. Prior first execution is false too.
+     * @param {boolean} status.succeeded - Flag set true when the execution is done successfully (HTTP 2XX).
+     * @param {object} [parserOptions] - Options for cerberusToFormly. See it there.
+     */
+    constructor (model, form, status, parserOptions = {}) {
+      this.rSettings = ResourceSettings(model['@type'])
+      this.form = form
+      this.status = status
+      // Assign parserOptions
+      _.defaultsDeep(parserOptions, {
+        excludeLabels: {
+          receiver: 'Check if the receiver has already an account',
+          to: 'Check if the new possessor has already an account',
+          from: 'Check if the old possessor has already an account'
+        }
       })
-      return valid
+      try {
+        parserOptions.doNotUse = _.concat(parserOptions.doNotUse || [], this.rSettings.getSetting('doNotUse'))
+      } catch (err) {}  // doNotUse not in getSetting
+      this.fields = this.form.fields = cerberusToFormly.parse(model, parserOptions)
+      this.submitForm = new SubmitForm(form, status)
     }
-  }
-  proto.delete = function (model) {
-    if (confirm('Are you sure you want to delete it?')) {
-      model.remove().then(
-        this.succeedSubmissionFactory(this.OPERATION.delete, model),
-        this.failedSubmissionFactory()
-      )
+
+    /**
+     * Submits the form.
+     * @param {object} originalModel - The formly model
+     * @return {Promise}
+     */
+    submit (originalModel) {
+      if (this.submitForm.isValid()) {
+        this.submitForm.prepare()
+        return this._submit(originalModel)
+      } else {
+        throw new CannotSubmit('Form is invalid')
+      }
     }
+
+    /**
+     * Internal function that performs the actual submission, without checking
+     * @param {object} originalModel
+     * @returns {Promise.<T>|*}
+     * @private
+     */
+    _submit (originalModel) {
+      let model = utils.copy(originalModel) // We are going to change stuff in model
+      // Remove helper values todo necessary still?
+      for (let fieldName in model) if (_.includes(fieldName, 'exclude_')) delete model[fieldName]
+      // Upload
+      let promise = 'put' in model ? model.put() : this.rSettings.server.post(model)
+        .then(this._succeedSubmissionFactory(OPERATION['put' in model ? 'put' : 'post'], model))
+      this._final(promise)
+      return promise
+    }
+
+    delete (model) {
+      if (confirm('Are you sure you want to delete it?')) {
+        model.remove().then(
+          this._succeedSubmissionFactory(OPERATION.delete, model),
+          this._failedSubmissionFactory()
+        )
+      }
+    }
+
+    _succeedSubmissionFactory (operationName, model) {
+      return response => {
+        let resource = _.isUndefined(response) ? model : response // DELETE operations do not answer with the result
+        $rootScope.$broadcast('submitted@' + resource['@type'])
+        $rootScope.$broadcast('submitted@any')
+        Notification.success(utils.getResourceTitle(resource) + ' successfully ' + operationName + '.')
+        return response
+      }
+    }
+
+    _final (promise) {
+      this.submitForm.after(promise)
+    }
+
   }
   return FormSchema
 }

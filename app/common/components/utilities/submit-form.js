@@ -13,12 +13,19 @@ function submitFormFactory (Notification) {
   class SubmitForm {
     /**
      * @param {Object} form - An object containing Angular Formly parameters. See *login* controller for an example.
-     * @param {Object} loadingContainer - An object containing 'loading'
-     * @param {bool} loadingContainer.loading - A flag that SubmitForm changes depending if the server is loading
+     * @param {Object} status - An object containing several flags
+     * @param {boolean} status.loading - A flag only set true while executing.
+     * @param {boolean} status.errorFromLocal - Flag set when isValid() returns false.
+     * @param {boolean} status.done - A flag only set true when execution is done; succeeded or not.
+     * @param {boolean} status.succeeded - Flag set true when the execution is done successfully (HTTP 2XX).
+     * @param {object[]|null} status.errorListFromServer - If there was an error from the server, the cerberu's
+     * issues. Otherwise null
      */
-    constructor (form, loadingContainer) {
+    constructor (form, status) {
       this.form = form
-      this.lc = loadingContainer
+      this.status = status
+      this.status.loading = this.status.done = this.status.succeeded = false
+      this.status.errorListFromServer = null
     }
 
     /**
@@ -29,8 +36,12 @@ function submitFormFactory (Notification) {
      * @returns {boolean}
      */
     isValid () {
-      this.form.form.triedSubmission = !this.form.$valid
-      return this.form.form.$valid
+      let isValid = this.form.form.$valid
+      this.status.errorListFromServer = null // could be dirty from prior execution
+      this.status.succeeded = this.status.done = false // could be dirty from prior execution
+      this.form.form.triedSubmission = this.status.errorFromLocal = !isValid
+      if (!isValid) require('./../forms/form-utils').scrollToFormlyError(this.form.form)
+      return isValid
     }
 
     /**
@@ -39,7 +50,7 @@ function submitFormFactory (Notification) {
      * Internally raises some flags to show to the user a 'working...' state.
      */
     prepare () {
-      this.lc.loading = true
+      this.status.loading = true
       utils.Progress.start()
     }
 
@@ -50,14 +61,27 @@ function submitFormFactory (Notification) {
      * @param {string} [notifyText] - If set, notifies the user with the following **success** text.
      */
     after (promise, notifyText) {
+      let self = this
       promise.then(() => {
         if (notifyText) Notification.success(notifyText)
-      }).catch(() => {
-        this.form.form.triedSubmission = true
+        self.status.succeeded = true
+      }).catch((response) => {
+        self.form.form.triedSubmission = true
+        self.status.errorListFromServer = response.data._issues
       }).finally(() => {
-        this.lc.loading = false
-        utils.Progress.stop()
+        self.final()
       })
+    }
+
+    /**
+     * States that execution is done. Executed inside 'after'.
+     * *ComputerSnapshotFormSchema* does not execute *after* but *final* after all JSONs have been
+     * uploaded.
+     */
+    final () {
+      this.status.loading = false
+      this.status.done = true
+      utils.Progress.stop()
     }
   }
   return SubmitForm

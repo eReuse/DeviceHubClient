@@ -1,136 +1,135 @@
-function ComputerSnapshotFormSchemaFactory (SnapshotFormSchema, FormSchema, ResourceSettings, $rootScope, $q) {
-  var Progress = require('./../../utils').Progress
-  var CannotSubmit = require('./../../forms/form-schema/cannot-submit.exception')
+/**
+ *
+ * @param {SnapshotFormSchema} SnapshotFormSchema
+ * @param $rootScope
+ * @param $q
+ * @returns {ComputerSnapshotFormSchema}
+ * @constructor
+ */
+function ComputerSnapshotFormSchemaFactory (SnapshotFormSchema, $rootScope, $q) {
   /**
-   * Extends SnapshotFormSchema. See that class to know how to use it.
-   * @param {object} model The resource
-   * @param {object} form A reference to formly's form
-   * @param {object} status The status object
-   * @param {array} options It adds a new 'deviceType' field with the type of device
-   * @param {object} scope $scope
-   * @constructor
+   * Contains a list of form keys used to create the field
+   * @type {string[]}
    */
-  function ComputerSnapshotFormSchema (model, form, status, options, scope) {
-    var self = this
-    this.PICK_VARS = [{key: 'from'}, {key: 'place'}]
-    status.uploaded = status.unsolved = 0
-    status.working = status.done = false
-    status.results = {
-      error: [],
-      success: []
-    }
-    this.deviceRSettings = ResourceSettings('Computer')
-    model['@type'] = 'devices:Snapshot'
-    FormSchema.apply(this, arguments)
-    var fields = []
-    _.forEach(this.PICK_VARS, function (filter) {
-      fields = fields.concat(_.filter(self.fields, filter))
-    })
-    this.fields = fields
-    this.fields.unshift({
-      key: 'files',
-      templateOptions: {
-        label: 'Snapshot JSON Files to upload',
-        accept: '.json',
-        required: true,
-        readAs: 'readAsText',
-        multiple: true,
-        description: 'You can select multiple'
-      },
-      type: 'upload'
-    })
-  }
-
-  ComputerSnapshotFormSchema.prototype = Object.create(SnapshotFormSchema.prototype)
-  ComputerSnapshotFormSchema.prototype.constructor = ComputerSnapshotFormSchema
-  var proto = ComputerSnapshotFormSchema.prototype
+  const PICK_FIELDS = ['from', 'place']
 
   /**
-   *
-   * @param originalModel
+   * Enables uploading Snapshot forms containing snapshot files.
    */
-  proto.submit = function (originalModel) {
-    var self = this
-    this.status.results.error.length = this.status.results.success.length = 0
-    Progress.start()
-    iterativeUpload(originalModel.files, 0)
-    function iterativeUpload (files, index) {
-      try {
-        var file = files[index]
-      } catch (e) { // This file is required and should be treated as a local error
-        self.status.errorFromLocal = true
-        Progress.stop()
-        throw new CannotSubmit('Select at least one JSON file')
+  class ComputerSnapshotFormSchema extends SnapshotFormSchema {
+
+    /**
+     * @param {object} model - The resource to upload.
+     * @param {object} form - A reference to formly's form
+     * @param {object} status - The status object. See it in FormSchema. **We do not use status.succeeded**
+     * @param {object} parserOptions - Options for cerberusToFormly. See it there.
+     */
+    constructor (model, form, status, parserOptions = {}) {
+      status.uploaded = status.unsolved = 0
+      status.results = {
+        error: [],
+        success: []
       }
-      try {
-        var snapshotFromFile = JSON.parse(file.data)
-      } catch (e) {
-        self.status.results.error.push({
-          fileName: file.name,
-          type: 'json',
-          object: e
-        })
-        ++self.status.unsolved
-        self.status.errorFromLocal = true
-        return final()
-      }
-      var model = _.assign({}, snapshotFromFile)
-      _.forEach(self.PICK_VARS, function (filter) {
-        if (originalModel[filter.key]) model[filter.key] = originalModel[filter.key]
+      super(model, form, status, parserOptions, 'Computer')
+      // Snapshot is special in that we only use three values, two from the Schema computed in FormSchema
+      // Let's override this.fields with the only three fields we are going to use
+      _.remove(this.fields, field => !_.includes(PICK_FIELDS, field.key))
+      this.fields.unshift({
+        key: 'files',
+        templateOptions: {
+          label: 'Snapshot JSON Files to upload',
+          accept: '.json',
+          required: true,
+          readAs: 'readAsText',
+          multiple: true,
+          description: 'You can select multiple'
+        },
+        type: 'upload'
       })
-      try {
-        var promise = SnapshotFormSchema.prototype.submit.call(self, model)
-      } catch (e) { // Local JS validation form error
-        Progress.stop()
-        throw e
-      }
-      promise.then(function (modelFromServer) {
-        self.status.results.success.push({
-          fileName: file.name,
-          _id: modelFromServer._id
-        })
-        return modelFromServer
-      }).catch(function (modelFromServer) {
-        self.status.results.error.push({
-          fileName: file.name,
-          _id: modelFromServer._id,
-          fileContent: snapshotFromFile,
-          object: modelFromServer,
-          solved: false,
-          type: 'server'
-        })
-        ++self.status.unsolved
-        return $q.reject(modelFromServer)
-      }).finally(final)
+    }
 
-      function final () {
-        ++self.status.uploaded
-        if (index === (files.length - 1)) {
-          if (self.status.results.success.length > 0) {
-            $rootScope.$broadcast('submitted@Computer')
-            $rootScope.$broadcast('submitted@any')
-          }
-          self.status.working = false
-          self.status.done = true
-          Progress.stop()
-        } else {
-          iterativeUpload(files, index + 1)
+    /**
+     * Uploads *all* the Snapshot json files to the server.
+     *
+     * @param {object} originalModel - The formly model
+     */
+    submit (originalModel) {
+      // Note that we will call super.submit() for each snapshot in *_iterativeUpload*
+      if (this.submitForm.isValid()) this._iterativeUpload(originalModel, _(originalModel.files))
+    }
+
+    /**
+     * Iteratively uploads the Snapshot json files to the server.
+     *
+     * Note that we upload iteratively to not overhead the server.
+     * @param {object} originalModel
+     * @param {Iterator} iterator - An iterator containing the files.
+     * @private
+     */
+    _iterativeUpload (originalModel, iterator) {
+      let step = iterator.next()
+      if (!step.done) { // We have a new file to process
+        let file = step.value
+        let snapshotFromFile
+        try {
+          snapshotFromFile = JSON.parse(file.data)
+        } catch (e) {
+          this.status.results.error.push({
+            fileName: file.name,
+            type: 'json',
+            object: e
+          })
+          ++this.status.unsolved
+          this.status.errorFromLocal = true
+          this._uploadNextFile(originalModel, iterator) // Let's still continue with other json
+          return
         }
+        // Model we submit = the fields of the form + values from snapshot
+        let model = _.assign(_.pick(originalModel, PICK_FIELDS), snapshotFromFile)
+        let self = this
+        super.submit(model).then(modelFromServer => {
+          self.status.results.success.push({
+            fileName: file.name,
+            _id: modelFromServer._id
+          })
+          return modelFromServer
+        }).catch(modelFromServer => {
+          self.status.results.error.push({
+            fileName: file.name,
+            _id: modelFromServer._id,
+            fileContent: snapshotFromFile,
+            object: modelFromServer,
+            solved: false,
+            type: 'server'
+          })
+          ++self.status.unsolved
+          return $q.reject(modelFromServer)
+        }).finally(() => { this._uploadNextFile(originalModel, iterator)})
+      } else { // no more files to process
+        if (this.status.results.success.length > 0) {
+          $rootScope.$broadcast('submitted@Computer')
+          $rootScope.$broadcast('submitted@any')
+        }
+        this.submitForm.final() // Let's say with our flags that we are finished
       }
     }
-  }
-  proto.succeedSubmissionFactory = function () {
-    return _.identity
-  }
-  proto.failedSubmissionFactory = function () {
-    return function (response) {
-      return $q.reject(response)
+
+    /**
+     * Performs the recursive call to iterativeUpload
+     * @param {object} originalModel
+     * @param {Iterator} iterator - An iterator containing the files
+     * @private
+     */
+    _uploadNextFile (originalModel, iterator) {
+      ++this.status.uploaded
+      this._iterativeUpload(originalModel, iterator)
     }
-  }
-  proto.prepareOptions = function (options) {
-    var _options = SnapshotFormSchema.prototype.prepareOptions.call(this, options)
-    _options.doNotUse.push('device')
-    return _options
+
+    _succeedSubmissionFactory () {
+      return _.identity
+    }
+
+    _final (promise) {}
   }
   return ComputerSnapshotFormSchema
 }

@@ -9,6 +9,7 @@
     model="model"
     options="options"
     status="status"
+    l-container="lContainer"
   ></form-schema>
 </div>
 <div class="modal-footer row">
@@ -28,20 +29,20 @@
     <button type="submit"
             form="form-schema"
             class="btn btn-primary submit-button"
-            dh-submit-button="status.working"
+            dh-submit-button="status.loading"
     >Submit
     </button>
     <button class="btn btn-warning"
             type="button"
             ng-click="cancel()"
-            ng-disabled="status.working"
+            ng-disabled="status.loading"
     >Cancel
     </button>
     <button ng-if="options.canDelete"
             type="button"
             ng-click="options.delete(model)"
             class="btn btn-danger"
-            dh-submit-button="status.working"
+            dh-submit-button="status.loading"
     >Delete
     </button>
   </div>

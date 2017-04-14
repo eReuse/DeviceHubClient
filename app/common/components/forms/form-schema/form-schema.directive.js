@@ -1,32 +1,37 @@
 function formSchema (FormSchema) {
+  /**
+   * Generates a form for a resource parsing the information form the schema from the server.
+   * @name formSchema
+   * @ngdoc directive
+   * @param {object} model - The resource to be submitted.
+   * @param {object} options - Options for formSchema directive
+   * @param {FormSchema} options.FormSchema - A FormSchema subclass to be used instead of regular one.
+   * @param {string} options.deviceType - The type of the device in the Snapshot.
+   * @param {boolean} options.canDelete - Automatically set.
+   * @param {boolean} options.delete - API to delete the model, if possible.
+   * @param {object} status - Status object as FormSchema requires. See it there.
+   */
   return {
     templateUrl: window.COMPONENTS + '/forms/form-schema/form-schema.directive.html',
     restrict: 'E',
     scope: {
       model: '=',
       options: '=',
-      status: '=' // list
+      status: '='
     },
-    link: function ($scope) {
-      var CannotSubmit = require('./cannot-submit.exception')
-      var FormUtils = require('./../form-utils')
-      $scope.form
-      var FS = $scope.options.FormSchema || FormSchema // We let people pass us extended FormSchema
-      var formSchema = new FS($scope.model, $scope.form, $scope.status, $scope.options, $scope)
-      $scope.fields = formSchema.fields
-      $scope.submit = function (model) {
-        try {
-          $scope.form.triedSubmission = false
-          formSchema.submit(model)
-        } catch (err) {
-          $scope.form.triedSubmission = true
-          if (err instanceof CannotSubmit) FormUtils.scrollToFormlyError($scope.form)
-          else throw err
+    link: {
+      pre: $scope => {
+        let form = {
+          model: $scope.model,
+          form: null
         }
-      }
-      $scope.options.canDelete = 'remove' in $scope.model
-      $scope.options.delete = function (model) {
-        formSchema.delete(model)
+        window.a = $scope
+        const FS = $scope.options.FormSchema || FormSchema // We let people pass us extended FormSchema
+        let formSchema = new FS($scope.model, form, $scope.status, {}, $scope.options.deviceType)
+        $scope.submit = model => formSchema.submit(model)
+        $scope.options.canDelete = 'remove' in $scope.model
+        $scope.options.delete = model => formSchema.delete(model)
+        $scope.form = form
       }
     }
   }

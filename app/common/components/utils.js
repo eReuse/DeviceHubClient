@@ -198,22 +198,22 @@ var Progress = {
 }
 
 /**
- * Gets the path from a resource or its parent in a dh settings-like object
- * @param settings - An object where the first level keys are resourceType
+ * Given a setting object (note there are two) and a path to a property, retrieves the property. If the property is
+ * not in the object, it looks at the ancestors and retrieves from them.
+ *
+ * If the setting object is RESOURCE_CONFIG, just use *ResourceSettings.getSetting*.
+ * @param settings - An object where the first level keys are resource types.
  * @param {ResourceSettings} rSettings
  * @param path - What you want to find from the resourcetype in rSettings or its ancestor
+ * @throw {TypeError} - No setting found in the resource or ancestors
  * @returns {*}
  */
 function getSetting (settings, rSettings, path) {
-  let value
-  value = _.get(settings, rSettings.type + '.' + path)
+  let value = _.get(settings, rSettings.type + '.' + path)
   if (_.isUndefined(value)) {
-    value = _.get(_.find(settings, (setting, resourceType) => {
-      return _.has(setting, path) && rSettings.isSubResource(resourceType)
-    }), path)
-    if (_.isUndefined(value)) {
-      throw TypeError(`Nor ${rSettings.type} or its ancestors have the setting ${path}`)
-    }
+    let ancestorSetting = _.find(settings, (setting, rType) => _.has(setting, path) && rSettings.isSubResource(rType))
+    value = _.get(ancestorSetting, path)
+    if (_.isUndefined(value)) throw TypeError(`Nor ${rSettings.type} or its ancestors have the setting ${path}`)
   }
   return value
 }

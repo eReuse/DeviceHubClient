@@ -20,7 +20,7 @@ module.exports = angular.module('common.components.resource',
     require('./../../constants').name,
     'uiGmapgoogle-maps'
   ])
-  .constant('RESOURCE_CONFIG', require('./resource-settings.constant'))
+  .constant('RESOURCE_CONFIG', require('./resource-config.constant'))
   .factory('ResourceServer', require('./resource-server.factory'))
   .factory('ResourceSettings', require('./resource-settings.factory'))
   .directive('resourceIcon', require('./resource-icon/resource-icon.directive'))

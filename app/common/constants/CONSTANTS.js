@@ -14,7 +14,7 @@ var CONSTANTS = (function () {
       Accept: 'application/json'
     },
     // todo this should be taken from the server
-    resourcesChangingNumber: ['device', 'event', 'account', 'place', 'erase', 'project', 'package', 'lot'],
+    resourcesChangingNumber: ['device', 'event', 'account', 'place', 'erase', 'project', 'package', 'lot', 'manufacturer'],
     debug: true
   }
 }())

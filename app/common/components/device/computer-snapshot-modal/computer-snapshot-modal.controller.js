@@ -1,33 +1,19 @@
 function computerSnapshotModalCtrl ($scope, $uibModalInstance, type, ComputerSnapshotFormSchema) {
-  var CannotSubmit = require('./../../forms/form-schema/cannot-submit.exception')
-  var FormUtils = require('./../../forms/form-utils')
-
-  var EXIT_QUESTION = 'Some devices could not be uploaded and need review. Are you sure you want to exit?'
-  $scope.form
+  const EXIT_QUESTION = 'Some devices could not be uploaded and need review. Are you sure you want to exit?'
+  let form = {
+    model: {},
+    form: null,
+    options: {}
+  }
   $scope.done = false
   $scope.status = {}
-  $scope.model = {}
-  $scope.options = {}
-  var formSchema = new ComputerSnapshotFormSchema($scope.model, $scope.form, $scope.status, $scope.options, $scope)
-  $scope.fields = formSchema.fields
-  $scope.submit = function (model) {
-    formSchema.form = $scope.form
-    try {
-      $scope.form.triedSubmission = false
-      formSchema.submit(model)
-    } catch (err) {
-      $scope.form.triedSubmission = true
-      if (err instanceof CannotSubmit) {
-        FormUtils.scrollToFormlyError($scope.form)
-      } else {
-        throw err
-      }
-    }
-  }
+  let formSchema = new ComputerSnapshotFormSchema(form.model, form, $scope.status)
+  form.fields = formSchema.fields
+  $scope.submit = model => formSchema.submit(model)
   $scope.type = type
   $scope.title = type
 
-  $scope.$watch('status.done', function (done) {
+  $scope.$watch('status.done', done => {
     if (done) {
       if ($scope.status.results.error.length > 0) {
         $scope.progressBarType = _.isEmpty($scope.status.results.success) ? 'danger' : 'warning'
@@ -36,27 +22,29 @@ function computerSnapshotModalCtrl ($scope, $uibModalInstance, type, ComputerSna
       }
     }
   })
-  $scope.$watch('status.unsolved', function (numberOfErrorsUnsolved) {
+  $scope.$watch('status.unsolved', numberOfErrorsUnsolved => {
     $scope.status.atLeastOneError = numberOfErrorsUnsolved > 0
     window.onbeforeunload = $scope.status.atLeastOneError ? _.identity(EXIT_QUESTION) : _.noop
   })
-  $scope.done = function () {
+  $scope.done = () => {
     $uibModalInstance.dismiss('cancel')
   }
-  $scope.restartIfConfirms = function () {
+  $scope.restartIfConfirms = () => {
     if (!confirmToStay()) {
-      $scope.options.resetModel()
-      formSchema = new ComputerSnapshotFormSchema($scope.model, $scope.form, $scope.status, $scope.options, $scope)
+      $scope.form.options.resetModel()
+      formSchema = new ComputerSnapshotFormSchema(form.model, form, $scope.status)
     }
   }
 
-  $scope.$on('modal.closing', function (event) {
+  $scope.$on('modal.closing', event => {
     if (confirmToStay()) event.preventDefault()
   })
 
   function confirmToStay () {
     return $scope.status.atLeastOneError && !confirm(EXIT_QUESTION)
   }
+
+  $scope.form = form
 }
 
 module.exports = computerSnapshotModalCtrl

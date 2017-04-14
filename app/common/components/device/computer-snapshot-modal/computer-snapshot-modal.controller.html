@@ -4,9 +4,9 @@
     <uib-progressbar ng-class="{active: !status.done, 'progress-striped': !status.done}"
                      type="{{progressBarType}}"
                      value="status.uploaded"
-                     max="model.files.length">
+                     max="form.model.files.length">
     </uib-progressbar>
-    <div ng-show="status.done" ng-switch="progressBarType">
+    <div ng-show="status.results.error.length > 0 || status.results.success.length > 0" ng-switch="progressBarType">
       <div class="alert alert-warning" ng-switch-when="warning">
         {{status.results.success.length}} computers were successfully uploaded, but
         {{status.results.error.length}} have <strong>not</strong> been uploaded and require attention. See below.
@@ -20,15 +20,10 @@
     </div>
   </div>
   <form uib-collapse="status.working || status.done"
-        ng-submit="submit(model)"
-        name="computer-snapshot-form"
+        ng-submit="submit(form.model)"
         id="computer-snapshot-form"
         novalidate>
-    <formly-form model="model" fields="fields" form="form" options="options">
-      <button type="submit" class="btn btn-primary submit-button" ng-disabled="status.working">
-        <i class="fa fa-upload"></i>
-        Upload
-      </button>
+    <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
     </formly-form>
   </form>
   <div uib-collapse="status.results.error.length === 0">
@@ -41,9 +36,17 @@
   </div>
 </div>
 <div class="modal-footer">
+  <button type="submit" form="computer-snapshot-form" class="btn btn-primary submit-button"
+          ng-disabled="status.loading || status.results.error.length > 0"
+          ng-show="!status.done"
+          dh-submit-button="status.loading"
+  >
+    <i class="fa fa-upload"></i>
+    Upload
+  </button>
   <button ng-show="status.done" class="btn btn-success" type="button" ng-click="restartIfConfirms()">
     <i class="fa fa-plus"></i>
     Upload more Snapshot computers
   </button>
-  <button ng-disabled="status.working" class="btn btn-info" type="button" ng-click="done()">Done</button>
+  <button ng-disabled="status.loading" class="btn btn-info" type="button" ng-click="done()">Done</button>
 </div>

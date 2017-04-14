@@ -1,65 +1,43 @@
-var utils = require('./../../utils.js')
-
+/**
+ * @param {FormSchema} FormSchema
+ * @param ResourceSettings
+ * @returns {SnapshotFormSchema}
+ * @constructor
+ */
 function SnapshotFormSchemaFactory (FormSchema, ResourceSettings) {
   /**
-   * Extends FormSchema. See that class to know how to use it. These are the following changes:
-   * @param {object} model The resource
-   * @param {object} form A reference to formly's form
-   * @param {object} status The status object
-   * @param {array} options It adds a new 'deviceType' field with the type of device
-   * @param {object} scope $scope
-   * @constructor
+   * FormSchema for snapshots, adding key fields for the device.
    */
-  function SnapshotFormSchema (model, form, status, options, scope) {
-    this.deviceRSettings = ResourceSettings(options.deviceType)
-    var deviceSchema = _.cloneDeep(this.deviceRSettings.schema)
-    model.device = {
-      '@type': options.deviceType
-    }
-    model.automatic = false
-    model.snapshotSoftware = 'Web'
-    delete deviceSchema.description
-    delete deviceSchema.place
-    options.schema = {
-      'device': {
-        type: 'dict',
-        'schema': deviceSchema,
-        sink: ResourceSettings(model['@type']).schema.device.sink,
-        required: true
+  class SnapshotFormSchema extends FormSchema {
+    constructor (model, form, status, parserOptions = {}, deviceType) {
+      let deviceRSettings = ResourceSettings(deviceType)
+      let deviceSchema = _.cloneDeep(deviceRSettings.schema)
+      model.device = {'@type': deviceType}
+      model['@type'] = 'devices:Snapshot' // Just in case is not there (ex: ComputerSnapshot)
+      model.automatic = false
+      model.snapshotSoftware = 'Web'
+      delete deviceSchema.description
+      delete deviceSchema.place
+      deviceSchema.manufacturer.data_relation = {
+        'resource': 'manufacturers',
+        'field': 'label',
+        'embeddable': true
       }
+      parserOptions.schema = {
+        device: {
+          type: 'dict',
+          schema: deviceSchema,
+          sink: ResourceSettings(model['@type']).schema.device.sink,
+          required: true
+        }
+      }
+      // Although getSetting can generate exception if setting not found, we know that Device at least has the property
+      let deviceDoNotUse = _.map(deviceRSettings.getSetting('doNotUse'), x => 'device.' + x)
+      parserOptions.doNotUse = _.concat(parserOptions.doNotUse || [], ['software', 'label'], deviceDoNotUse)
+      super(model, form, status, parserOptions)
     }
-    FormSchema.apply(this, arguments)
-    _.remove(this.fields, {key: 'software'})
-    _.remove(this.fields, {key: 'label'})
-  }
 
-  SnapshotFormSchema.prototype = Object.create(FormSchema.prototype)
-  SnapshotFormSchema.prototype.constructor = SnapshotFormSchema
-  var proto = SnapshotFormSchema.prototype
-
-  /**
-   * Add defaults to model prior submitting.
-   * @param originalModel
-   */
-  proto.submit = function (originalModel) {
-    var model = utils.copy(originalModel)
-    return FormSchema.prototype.submit.call(this, model)
-  }
-  /**
-   * We add the doNotUse for the device
-   * @param options
-   * @return {*}
-   */
-  proto.prepareOptions = function (options) {
-    var _options = _.cloneDeep(options)
-    _options.doNotUse = _.concat(
-      _options.doNotUse || [],
-      this.deviceRSettings.settings.doNotUse,
-      ResourceSettings('Device').settings.doNotUse
-    )
-    return FormSchema.prototype.prepareOptions.call(this, _options)
   }
   return SnapshotFormSchema
 }
-
 module.exports = SnapshotFormSchemaFactory
