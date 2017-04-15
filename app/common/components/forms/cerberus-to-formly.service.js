@@ -122,6 +122,7 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
       let [tOpts, type] = this._typeAndOptions(fieldName, fieldPath, subSchema, model, doNotUse, isAModification)
       let field = {
         key: fieldName,
+        name: fieldPath,
         type: type,
         templateOptions: _.assign(tOpts, _.pick(subSchema, COMMON_OPTIONS)),
         sink: subSchema.sink || 0
@@ -163,8 +164,14 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
     const type = fieldSchema.type
     let tOpts = {}
     if ('allowed' in fieldSchema && fieldSchema.allowed.length > 1) {
-      tOpts.options = _.map(fieldSchema.allowed, value => ({name: utils.Naming.humanize(value), value: value}))
-      return [tOpts, 'select']
+      let options
+      if ('allowed_description' in fieldSchema) {
+        options = _(fieldSchema.allowed_description).map((label, key) => ({name: label, value: key}))
+      } else {
+        options = _(fieldSchema.allowed).map(value => ({name: utils.Naming.humanize(value), value: value}))
+      }
+      tOpts.options = options.sortBy(x => x.value).value()
+      return [tOpts, fieldSchema.allowed.length > 6 ? 'select' : 'radio']
     } else if ('get_from_data_relation_or_create' in fieldSchema) {
       this._getDataRelation(type, fieldSchema, tOpts)
       tOpts.schema = this._generateFieldGroup(fieldName, fieldSchema, model, doNotUse, isAModification)
