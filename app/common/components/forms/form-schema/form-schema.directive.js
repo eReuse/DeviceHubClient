@@ -1,7 +1,7 @@
 function formSchema (FormSchema) {
   /**
-   * Generates a form for a resource parsing the information form the schema from the server.
    * @name formSchema
+   * @description Generates a form for a resource parsing the information form the schema from the server.
    * @ngdoc directive
    * @param {object} model - The resource to be submitted.
    * @param {object} options - Options for formSchema directive

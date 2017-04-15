@@ -20,68 +20,64 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
    * the server, allowing you to set specific behaviour per field. If the field is not found in this schema it is
    * used the default Schema from server. The format is identical as the Schema: (fieldName: options} where options
    * are Cerberus style.
-   * @throw NoType - There is no Angular-Formly type to represent a field's type.
-   * @throw SchemaException - Any misconfiguration in the schema.
+   * @throw {NoType} There is no Angular-Formly type to represent the field's type.
+   * @throw {SchemaException} - Any misconfiguration in the schema.
    * @return {object[]} An Angular-Formly **form** array.
    */
   this.parse = (model, options) => {
     const rSettings = ResourceSettings(model['@type'])
     if (!rSettings.schema) throw SchemaException(`Can't parse ${model['@type']} because it's not in the schema.`)
     const _schema = _.assign({}, rSettings.schema, options.schema || {})
-    let form = this.parseFields(options.doNotUse, '_id' in model, _schema, model, '')
-    // Generates non-modifiable array
-    options.nonModifiable = _(form).filter('nonModifiable').map('key').value()
-    _.forEach(form, field => { delete field.nonModifiable })
-    return form
+    return this._parseFields('', options.doNotUse, '_id' in model, _schema, model)
   }
 
   /**
    * Generates the form for the given schema.
-   * @param doNotUse
-   * @param isAModification
-   * @param subSchema
-   * @param model
    * @param path The absolute path where the field is located, used when a field is nested inside field groups
    * (dicts). For example: a.b.c makes reference to a field 'c' whose value is nested inside a.b.c
-   * @throw NoType There is no Angular-Formly type to represent the field's type
-   * @return {Array}
+   * @param {Array} doNotUse - An array with paths of fields that should be excluded.
+   * @param {boolean} isAModification - Does the model exist in the db or it is being created?
+   * @param {object} subSchema - The cerberus schema definition for this field.
+   * @param {object} model - The model being constructed. Used primarily for defaults.
+   * @throw {NoType} There is no Angular-Formly type to represent the field's type.
+   * @return {Object[]}
+   * @private
    */
-  this.parseFields = (doNotUse, isAModification, subSchema, model, path) => {
+  this._parseFields = (path, doNotUse, isAModification, subSchema, model) => {
     let form = []
     for (let fieldName in subSchema) {
       try {
-        form.push(this.parseField(fieldName, doNotUse, isAModification, subSchema[fieldName], model, path))
+        form.push(this._parseField(fieldName, path, doNotUse, isAModification, subSchema[fieldName], model))
       } catch (err) {
         if (!(err instanceof FieldShouldNotBeIncluded)) throw err
       }
     }
     form.sort(schema.compareSink)
-    _.forEach(form, function (field) {
-      delete field.sink
-    })
+    _.forEach(form, field => { delete field.sink })
     return form
   }
 
   /**
    * Generates a specific field.
-   * @param fieldName
-   * @param doNotUse
-   * @param isAModification
-   * @param schema
-   * @param model
-   * @param path
-   * @throw NoType There is no Angular-Formly type to represent the field's type
-   * @throw FieldShouldNotBeIncluded The field should not be added in the form
+   * @param {string} fieldName - The name of the field. Ex: '_id'.
+   * @param {string} path - Path of the field with dot notation. Ex: 'devices._id'.
+   * @param {Array} doNotUse - An array with paths of fields that should be excluded.
+   * @param {boolean} isAModification - Does the model exist in the db or it is being created?
+   * @param {object} subSchema - The cerberus schema definition for this field.
+   * @param {object} model - The model being constructed. Used primarily for defaults.
+   * @throw {NoType} There is no Angular-Formly type to represent the field's type.
+   * @throw {FieldShouldNotBeIncluded} The field should not be added in the form
    * @return object A field.
+   * @private
    */
-  this.parseField = (fieldName, doNotUse, isAModification, schema, model, path) => {
+  this._parseField = (fieldName, path, doNotUse, isAModification, subSchema, model) => {
     const fieldPath = _.isEmpty(path) ? fieldName : path + '.' + fieldName
-    const hasWriteAccess = session.getAccount().role.ge(schema['dh_allowed_write_roles'] || Role.prototype.BASIC)
-    if (!_.includes(doNotUse, fieldPath) && !schema.readonly && !schema.materialized && hasWriteAccess) {
-      if (schema.type === 'dict' && 'schema' in schema) {
-        return this.generateFieldGroup(fieldName, schema, model, doNotUse, isAModification, fieldPath)
+    const hasWriteAccess = session.getAccount().role.ge(subSchema['dh_allowed_write_roles'] || Role.prototype.BASIC)
+    if (!_.includes(doNotUse, fieldPath) && !subSchema.readonly && !subSchema.materialized && hasWriteAccess) {
+      if (subSchema.type === 'dict' && 'schema' in subSchema) {
+        return this._generateFieldGroup(fieldName, fieldPath, subSchema, model, doNotUse, isAModification)
       } else {
-        return this.generateField(fieldName, schema, model, doNotUse, isAModification, fieldPath)
+        return this._generateField(fieldName, fieldPath, subSchema, model, doNotUse, isAModification)
       }
     } else {
       throw new FieldShouldNotBeIncluded(fieldName, model['@type'])
@@ -90,18 +86,20 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
 
   /**
    * Generates a field group, generating and grouping all the inner fields
-   * @param {string} fieldName
-   * @param subSchema
-   * @param model
-   * @param doNotUse
-   * @param isAModification
-   * @throw NoType There is no Angular-Formly type to represent the field's type
+   * @param {string} fieldName - The name of the field. Ex: '_id'.
+   * @param {string} fieldPath - Path of the field with dot notation. Ex: 'devices._id'.
+   * @param {object} subSchema - The cerberus schema definition for this field.
+   * @param {object} model - The model being constructed. Used primarily for defaults.
+   * @param {Array} doNotUse - An array with paths of fields that should be excluded.
+   * @param {boolean} isAModification - Does the model exist in the db or it is being created?
+   * @throw {NoType} There is no Angular-Formly type to represent the field's type.
    * @return {{fieldGroup: Array, key: string, sink: number}}
+   * @private
    */
-  this.generateFieldGroup = (fieldName, subSchema, model, doNotUse, isAModification, fieldPath) => {
+  this._generateFieldGroup = (fieldName, fieldPath, subSchema, model, doNotUse, isAModification) => {
     return {
       fieldGroup: _.concat([{template: '<h4>' + utils.Naming.humanize(fieldName) + '</h4>'}],
-        this.parseFields(doNotUse, isAModification, subSchema.schema, model, fieldPath)),
+        this._parseFields(fieldPath, doNotUse, isAModification, subSchema.schema, model)),
       key: fieldName,
       sink: subSchema.sink || 0
     }
@@ -109,18 +107,19 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
 
   /**
    * Builds a field, creating the Angular-Formly structure from the Cerberus schema.
-   * @param fieldName
-   * @param subSchema
-   * @param model
-   * @param doNotUse
-   * @param isAModification
-   * @param {string} fieldPath - Path of the field with dot notation.
-   * @throw NoType There is no Angular-Formly type to represent the field's type
-   * @return {{key: string, type: string, templateOptions: {label: (*|string)}, sink: number}}
+   * @param {string} fieldName - The name of the field. Ex: '_id'.
+   * @param {string} fieldPath - Path of the field with dot notation. Ex: 'devices._id'.
+   * @param {object} subSchema - The cerberus schema definition for this field.
+   * @param {object} model - The model being constructed. Used primarily for defaults.
+   * @param {Array} doNotUse - An array with paths of fields that should be excluded.
+   * @param {boolean} isAModification - Does the model exist in the db or it is being created?
+   * @throw {NoType} There is no Angular-Formly type to represent the field's type.
+   * @return {{key: string, type: string, templateOptions: object, sink: number}}
+   * @private
    */
-  this.generateField = (fieldName, subSchema, model, doNotUse, isAModification, fieldPath) => {
+  this._generateField = (fieldName, fieldPath, subSchema, model, doNotUse, isAModification) => {
     try {
-      let [tOpts, type] = this.getTypeAndSetTypeOptions(fieldName, subSchema, model, doNotUse, isAModification, fieldPath)
+      let [tOpts, type] = this._typeAndOptions(fieldName, fieldPath, subSchema, model, doNotUse, isAModification)
       let field = {
         key: fieldName,
         type: type,
@@ -136,7 +135,7 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
 
       if ('default' in subSchema) {
         field.templateOptions.placeholder = subSchema.default
-        if (_.isUndefined(model[fieldName])) model[fieldName] = subSchema.default
+        if (!_.has(model, fieldPath)) _.set(model, fieldPath, subSchema.default)
       }
       return field
     } catch (err) {
@@ -147,7 +146,20 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
     }
   }
 
-  this.getTypeAndSetTypeOptions = (fieldName, fieldSchema, model, doNotUse, isAModification, fieldPath) => {
+  /**
+   * Gets the formly *type* field and the formly *templateOptions* for the given cerberus field.
+   *
+   * @param {string} fieldName - The name of the field. Ex: '_id'.
+   * @param {string} fieldPath - Path of the field with dot notation. Ex: 'devices._id'.
+   * @param {object} fieldSchema - The cerberus schema definition for this field.
+   * @param {object} model - The model being constructed. Used primarily for defaults.
+   * @param {Array} doNotUse - An array with paths of fields that should be excluded.
+   * @param {boolean} isAModification - Does the model exist in the db or it is being created?
+   * @throw {NoType} There is no Angular-Formly type to represent the field's type.
+   * @returns {Array} Array[0] is a string with the type and Array[1] the options
+   * @private
+   */
+  this._typeAndOptions = (fieldName, fieldPath, fieldSchema, model, doNotUse, isAModification) => {
     const type = fieldSchema.type
     let tOpts = {}
     if ('allowed' in fieldSchema && fieldSchema.allowed.length > 1) {
@@ -155,7 +167,7 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
       return [tOpts, 'select']
     } else if ('get_from_data_relation_or_create' in fieldSchema) {
       this._getDataRelation(type, fieldSchema, tOpts)
-      tOpts.schema = this.generateFieldGroup(fieldName, fieldSchema, model, doNotUse, isAModification)
+      tOpts.schema = this._generateFieldGroup(fieldName, fieldSchema, model, doNotUse, isAModification)
       tOpts.getFromDataRelationOrCreate = fieldSchema.get_from_data_relation_or_create
       return [tOpts, 'getFromDataRelationOrCreate']
     } else {
@@ -211,6 +223,14 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
     }
   }
 
+  /**
+   * Gets the formly field type for a data relation.
+   * @param {string} type - A cerberus field type.
+   * @param {object} fieldSchema - The cerberus schema definition for the field.
+   * @param {object} options - The formly *templateOptions*
+   * @returns {string}
+   * @private
+   */
   this._getDataRelation = (type, fieldSchema, options) => {
     options.resourceName = fieldSchema.data_relation.resource
     options.keyFieldName = fieldSchema.data_relation.field
