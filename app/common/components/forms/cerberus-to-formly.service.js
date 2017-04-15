@@ -71,7 +71,7 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
    * @private
    */
   this._parseField = (fieldName, path, doNotUse, isAModification, subSchema, model) => {
-    const fieldPath = _.isEmpty(path) ? fieldName : path + '.' + fieldName
+    const fieldPath = this.fieldPath(fieldName, path)
     const hasWriteAccess = session.getAccount().role.ge(subSchema['dh_allowed_write_roles'] || Role.prototype.BASIC)
     if (!_.includes(doNotUse, fieldPath) && !subSchema.readonly && !subSchema.materialized && hasWriteAccess) {
       if (subSchema.type === 'dict' && 'schema' in subSchema) {
@@ -174,7 +174,8 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
       return [tOpts, fieldSchema.allowed.length > 6 ? 'select' : 'radio']
     } else if ('get_from_data_relation_or_create' in fieldSchema) {
       this._getDataRelation(type, fieldSchema, tOpts)
-      tOpts.schema = this._generateFieldGroup(fieldName, fieldSchema, model, doNotUse, isAModification)
+      const groupPath = this.fieldPath(fieldName, fieldPath)
+      tOpts.schema = this._generateFieldGroup(fieldName, groupPath, fieldSchema, model, doNotUse, isAModification)
       tOpts.getFromDataRelationOrCreate = fieldSchema.get_from_data_relation_or_create
       return [tOpts, 'getFromDataRelationOrCreate']
     } else {
@@ -247,6 +248,10 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
     _.assign(options, _.pick(dataRelationSettings, ['label', 'labelFieldName', 'filterFieldName']))
     if ('label' in fieldSchema) options.label = fieldSchema.label // We assign it again so we do not lose it
     return dataRelationSettings.fieldType
+  }
+
+  this.fieldPath = (fieldName, path) => {
+    return _.isEmpty(path) ? fieldName : path + '.' + fieldName
   }
 }
 
