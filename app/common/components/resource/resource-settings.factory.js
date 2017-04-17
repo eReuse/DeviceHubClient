@@ -40,7 +40,7 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
    * @property {object} settings Settings and configurations for the resource, from the server and RESOURCE_CONFIG,
    * you can add more by extending RESOURCE_CONFIG or through DeviceHub.
    * @property {object} server A gateway to send POST and GET petitions
-   * @property {Array} subResourcesNames A list of subresources (excluding itself) in Type convention.
+   * @property {Array} subResourcesNames A list of subresources (excluding itthis) in Type convention.
    * @property {boolean} accessible States if the user has the permission to work with the resource.
    * @property {boolean} isALeaf todo false (counterexample: EraseBasic) In the resource tree leafs (resources without
    * inner resources) are the actual specific resources we work with (you can have an object of devices:Snapshot but
@@ -50,22 +50,17 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
   function ResourceSettings (type) {
     if (!_.isString(type)) throw TypeError('ResourceSettings: type is expected to be string, but it is ' + typeof type)
     if (utils.Naming.type(type) !== type) throw TypeError(type + ' should be of Type convention.')
-    var self = this
     this.type = type
     this.resourceName = utils.Naming.resource(type)
     this.humanName = utils.Naming.humanize(type)
     this.settings = {}
-    this.authorized = self.resourceName in schema.schema // The server only sends the schemas that we have access to
+    this.authorized = this.resourceName in schema.schema // The server only sends the schemas that we have access to
     if (this.authorized) {
-      self.schema = schema.schema[self.resourceName]
-      // DeviceHub sends us data in underscore
-      var settings = _.mapKeys(self.schema['_settings'], function (value, key) {
-        return _.camelCase(key)
-      })
-      self.settings = _.assign(self._getInnerSettings(), settings)
-      self.server = ResourceServer(self.settings)
-      self.subResourcesNames = _.without(self.schema['@type']['allowed'], self.type)
-      self.isALeaf = self.subResourcesNames.length === 0 || self.type === 'devices:EraseBasic' // todo so works redo
+      this.schema = schema.schema[this.resourceName]
+      this.settings = _.assign(this._getInnerSettings(), this.schema._settings)
+      this.server = ResourceServer(this.settings)
+      this.subResourcesNames = _.without(this.schema['@type']['allowed'], this.type)
+      this.isALeaf = this.subResourcesNames.length === 0 || this.type === 'devices:EraseBasic' // todo so works redo
     }
   }
 
@@ -90,7 +85,7 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
   /**
    * Returns if the actual type is a sub-resource of a given parent type.
    *
-   * The parent type is not a subResource of itself.
+   * The parent type is not a subResource of itthis.
    *
    * @param {string} parentType In ResourceType format.
    * @return {boolean}
@@ -100,11 +95,11 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
   }
 
   /**
-   * As *isSubResource* but including itself.
+   * As *isSubResource* but including itthis.
    * @param {string} parentType
    * @returns {boolean}
    */
-  rs.isSubResourceOrItself = function (parentType) {
+  rs.isSubResourceOrItthis = function (parentType) {
     return parentType === this.type || this.isSubResource(parentType)
   }
 
