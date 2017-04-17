@@ -40,8 +40,8 @@
           </th>
           <th ng-repeat="th in config.table.th"
               field-sort sort="setSort(sort)" key="{{::th.key}}" name="{{::th.name}}" group="sort"
+              sort-by-default="th.default"
           ></th>
-          <th field-sort sort="setSort(sort)" key="_created" name="Registered in" group="sort"></th>
           <th></th>
         </tr>
       </thead>
@@ -70,14 +70,14 @@
           </td>
           <td ng-repeat="td in config.table.td" ng-click="subResource.toggle(resource)">
             <div ng-if="td.templateUrl" ng-include="td.templateUrl"></div>
-            <div ng-if="td.value">
-              {{resource[td.value] | limitTo: 19}}
+            <div ng-if="td.value && !$root._.isDate(resource[td.value])">
+              {{::resource[td.value] | limitTo: 19}}
               <small>
-                {{resource[td.value].length > 19? '&hellip;':''}}
+                {{::resource[td.value].length > 19? '&hellip;':''}}
               </small>
             </div>
+            <div ng-if="td.value && $root._.isDate(resource[td.value])">{{::resource[td.value] | timeAgo}}</div>
           </td>
-          <td ng-click="subResource.toggle(resource)">{{resource._created | timeAgo}}</td>
           <td ng-click="subResource.toggle(resource)" class="text-center">
             <resource-icon resource-type="{{resource['@type']}}" resource-subtype="{{resource.type}}"></resource-icon>
           </td>

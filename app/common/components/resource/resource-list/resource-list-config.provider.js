@@ -39,8 +39,10 @@ function resourceListProvider (RESOURCE_SEARCH) {
     to: {th: {key: 'to', name: 'To client'}, td: {value: 'to'}},
     name: {th: {key: 'name', name: 'Name'}, td: {value: 'name'}},
     organization: {th: {key: 'organization', name: 'Organization'}, td: {value: 'organization'}},
-    email: {th: {key: 'email', name: 'email'}, td: {value: 'email'}}
+    email: {th: {key: 'email', name: 'email'}, td: {value: 'email'}},
+    updated: {th: {key: '_updated', name: 'Updated'}, td: {value: '_updated'}}
   }
+  f.updated.thDef = _.assign({default: true}, f.updated.th)
   const SNAPSHOT_SOFTWARE_ALLOWED = ['Workbench', 'AndroidApp', 'Web']
 
   function getIsAncestor (resourceType, value) {
@@ -345,7 +347,11 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-device.html'
         },
         table: {
-          th: [f.id.th, f.label.th, {key: 'model', name: 'Model'}, {key: 'events._updated', name: 'Last event'}],
+          th: [f.id.th, f.label.th, {key: 'model', name: 'Model'}, {
+            key: 'events._updated',
+            name: 'Last event',
+            default: true
+          }],
           td: [f.id.td, {value: 'labelId'}, {value: 'model'},
             {templateUrl: configFolder + '/resource-button-device.html'}]
         }
@@ -404,8 +410,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-lot.html'
         },
         table: {
-          th: [f.label.th, f['@type'].th, f.from.th, f.to.th],
-          td: [f.label.td, f['@type'].td, f.from.td, f.to.td]
+          th: [f.label.th, f['@type'].th, f.from.th, f.to.th, f.updated.thDef],
+          td: [f.label.td, f['@type'].td, f.from.td, f.to.td, f.updated.td]
         }
       },
       Package: {
@@ -429,8 +435,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-package.html'
         },
         table: {
-          th: [f.id.th, f.label.th, f.from.th, f.to.th],
-          td: [f.id.td, f.label.td, f.from.td, f.to.td]
+          th: [f.id.th, f.label.th, f.from.th, f.to.th, f.updated.thDef],
+          td: [f.id.td, f.label.td, f.from.td, f.to.td, f.updated.td]
         }
       },
       Place: {
@@ -467,8 +473,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-place.html'
         },
         table: {
-          th: [f.id.th, f.label.th],
-          td: [f.id.td, f.label.td]
+          th: [f.id.th, f.label.th, f.updated.thDef],
+          td: [f.id.td, f.label.td, f.updated.td]
         }
       },
       Event: {
@@ -512,8 +518,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-event.html'
         },
         table: {
-          th: [f.id.th, f.label.th, f['@type'].th],
-          td: [f.id.td, f.label.td, f['@type'].td]
+          th: [f.id.th, f.label.th, f['@type'].th, f.updated.thDef],
+          td: [f.id.td, f.label.td, f['@type'].td, f.updated.td]
         }
       },
       Account: {
@@ -539,8 +545,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-account.html'
         },
         table: {
-          th: [f.email.th, f.name.th, f.organization.th],
-          td: [f.email.td, f.name.td, f.organization.td]
+          th: [f.email.th, f.name.th, f.organization.th, f.updated.thDef],
+          td: [f.email.td, f.name.td, f.organization.td, f.updated.td]
         }
       }
     }

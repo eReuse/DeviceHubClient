@@ -4,6 +4,8 @@ function ResourceListGetterFactory (ResourceSettings) {
   class ResourceListGetter {
     /**
      * Creates a resourceListGetter for a specific resourceType.
+     *
+     * Note: A limitation of resourceListGetter is that needs a default sort.
      * @param {string} resourceType - The resource type where to get new resources.
      * @param {array} resources - An array of resource objects to update when new resources are got. This array is
      * updated by reference, so do not re-assign it.
@@ -45,6 +47,12 @@ function ResourceListGetterFactory (ResourceSettings) {
       }
 
       this._callbacksOnGetting = []
+
+      // All resourcelists have a sort and a search. Sorts always have a default, and search do not but they are
+      // present. After init, when sort have a default (always) casts an update to sort params, and search does the
+      // same (but independently if there is a default or not). To avoid loading twice (once for sort, once for search)
+      // we wait for both things to happen with these flags:
+      this._onceSort = this._onceSearch = false
     }
 
     /**
@@ -60,7 +68,7 @@ function ResourceListGetterFactory (ResourceSettings) {
       // The 'search' filters have preference over others
       _.merge(this._filters, this._filtersBySource[SEARCH])
       // todo if this is called multiple times for the same parameters use isEqual and firstTime combo
-      this.getResources()
+      if (this._onceSearch && this._onceSort) this.getResources()
     }
 
     /**
@@ -126,6 +134,7 @@ function ResourceListGetterFactory (ResourceSettings) {
 
       _.invokeMap(callbacks, _.call)
 
+      this._onceSearch = true
       this.updateFilters(SEARCH, _filters)
     }
 
@@ -136,7 +145,8 @@ function ResourceListGetterFactory (ResourceSettings) {
     updateSort (newSorts) {
       let oldSort = _.clone(this._sort)
       this._sort = newSorts
-      if (!_.isEqual(this._filters, oldSort)) this.getResources()
+      if (!_.isEqual(this._filters, oldSort) && this._onceSearch) this.getResources()
+      this._onceSort = true
     }
 
     /**

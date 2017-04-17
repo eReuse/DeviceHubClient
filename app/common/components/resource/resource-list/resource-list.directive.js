@@ -40,6 +40,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
             triggerCollapse()
           }
         }
+        window.l = $scope
 
         if ($scope.type === 'big') {
           $scope.$on('refresh@resourceList', initializeDirective)
