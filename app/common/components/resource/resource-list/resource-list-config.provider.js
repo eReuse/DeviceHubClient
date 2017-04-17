@@ -454,7 +454,10 @@ function resourceListProvider (RESOURCE_SEARCH) {
               description: 'The name of the place where the event has been done'
             }
           ),
-          defaultParams: {}
+          defaultParams: {},
+          subResource: {
+            Device: {key: 'device', field: '_id'}
+          }
         },
         buttons: {
           templateUrl: configFolder + '/resource-list-config-event.html'

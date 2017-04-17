@@ -57,7 +57,7 @@ var RESOURCE_CONFIG = (
         },
         Event: {
           view: {},
-          subviews: [v.Dashboard, v.Device, v.Place, v.Detail],
+          subviews: [v.Dashboard, v.Device, v.Detail],
           doNotUse: ['geo'].concat(DO_NOT_USE)
         },
         Account: {

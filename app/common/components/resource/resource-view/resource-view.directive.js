@@ -48,7 +48,7 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
 
           if ($scope.type === BIG) {
             let subviewsConfig = resourceType
-              ? this.getSetting(resourceType, 'subviews')
+              ? Subview.getSetting(resourceType, 'subviews')
               : RESOURCE_CONFIG.inventory.subviews
             let num = subviewsConfig.length - 1
             /**

@@ -1,10 +1,11 @@
 /**
  *
- * @param resourceListProvider
+ * @param {resourceListConfig} resourceListConfig
  * @param {ResourceListGetter} ResourceListGetter
  * @param {ResourceListGetterBig} ResourceListGetterBig
  * @param {ResourceListSelector} ResourceListSelector
- * @param {ResourceSelectorBig} ResourceListSelectorBig
+ * @param {ResourceListSelectorBig} ResourceListSelectorBig
+ * @param {ResourceSettings} ResourceSettings
  */
 function resourceList (resourceListConfig, ResourceListGetter, ResourceListGetterBig, ResourceListSelector,
                        ResourceListSelectorBig, ResourceSettings) {
@@ -21,7 +22,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
     },
     link: {
       // Note that we load on 'pre' to initialize before our child (or inner) directives so they get real config values
-      pre: ($scope) => {
+      pre: $scope => {
         let resourceType = $scope.resourceType
         $scope.resourceName = utils.Naming.resource(resourceType)
         if (!resourceType) throw TypeError('resourceList needs a "resourceType" set, not ' + resourceType)
@@ -34,8 +35,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           isOpened: resourceId => {
             return resourceId === _.get(subResource.resource, '_id')
           },
-          toggle: (resource, $event) => {
-            console.log($event)
+          toggle: resource => {
             subResource.resource = subResource.isOpened(resource['_id']) ? null : resource
             triggerCollapse()
           }
@@ -97,9 +97,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
 
           // Reloading
           // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
-          $scope.reload = () => {
-            resourceListGetter.getResources()
-          }
+          $scope.reload = () => resourceListGetter.getResources()
 
           // Pagination ('load more' button)
           // Let's avoid the user pressing multiple times the 'load more'
