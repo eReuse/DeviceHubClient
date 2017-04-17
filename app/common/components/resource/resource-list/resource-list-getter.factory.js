@@ -76,7 +76,7 @@ function ResourceListGetterFactory (ResourceSettings) {
       let findSettings = _.bind(_.find, null, this.filterSettings.search.params, _)
       _.forOwn(_.cloneDeep(newFilters), (value, key) => {
         let settings = findSettings({key: key})
-        if (!settings){
+        if (!settings) {
           throw TypeError(`The filter with Key ${key} has no configuration parameter`)
         }
         if ('callback' in settings) {
@@ -86,18 +86,22 @@ function ResourceListGetterFactory (ResourceSettings) {
           if ('date' in settings) value = utils.parseDate(value)
           if ('boolean' in settings) value = value === 'Yes' || value === 'Succeed'
           if ('comparison' in settings) {
-            switch (settings.comparison) { // Case '=' is itself so no need to do anything
-              case '<=':
-                value = {$lte: value}
-                break
-              case '>=':
-                value = {$gte: value}
-                break
-              case 'in':
-                value = {$in: _.isArray(value) ? value : [value]}
-                break
-              case 'nin':
-                value = {$nin: _.isArray(value) ? value : [value]}
+            if (_.isFunction(settings.comparison)) { // function comparisons are easier callbacks
+              value = settings.comparison(value, ResourceSettings)
+            } else {
+              switch (settings.comparison) { // Case '=' is itself so no need to do anything
+                case '<=':
+                  value = {$lte: value}
+                  break
+                case '>=':
+                  value = {$gte: value}
+                  break
+                case 'in':
+                  value = {$in: _.isArray(value) ? value : [value]}
+                  break
+                case 'nin':
+                  value = {$nin: _.isArray(value) ? value : [value]}
+              }
             }
           } else {
             // We perform equality, and we could make it faster by using ^ at the beggining of the word

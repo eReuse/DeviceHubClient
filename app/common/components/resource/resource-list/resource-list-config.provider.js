@@ -41,6 +41,7 @@ function resourceListProvider (RESOURCE_SEARCH) {
     organization: {th: {key: 'organization', name: 'Organization'}, td: {value: 'organization'}},
     email: {th: {key: 'email', name: 'email'}, td: {value: 'email'}}
   }
+  const SNAPSHOT_SOFTWARE_ALLOWED = ['Workbench', 'AndroidApp', 'Web']
 
   function getIsAncestor (resourceType, value) {
     let resourceName = utils.Naming.resource(resourceType)
@@ -285,9 +286,57 @@ function resourceListProvider (RESOURCE_SEARCH) {
             },
             INSIDE_LOT,
             INSIDE_PACKAGE,
-            INSIDE_PLACE
+            INSIDE_PLACE,
+            {
+              key: 'snapshot-software',
+              name: 'Has a Snapshot made with',
+              realKey: 'events.snapshotSoftware',
+              select: SNAPSHOT_SOFTWARE_ALLOWED,
+              comparison: '=',
+              description: 'The device has a Snapshot made with a specific software.'
+            },
+            {
+              key: 'not-snapshot-software',
+              name: 'Has not a Snapshot made with',
+              realKey: 'events.snapshotSoftware',
+              select: SNAPSHOT_SOFTWARE_ALLOWED,
+              comparison: '!=',
+              description: 'The device has not a Snapshot made with a specific software.'
+            },
+            {
+              key: 'event-label',
+              realKey: 'events.label',
+              name: 'Label of the event',
+              placeholder: 'Start writing the label...',
+              description: 'The name the user wrote in the event.'
+            },
+            {
+              key: 'placeholder',
+              name: 'Is Placeholder',
+              select: ['Yes', 'No'],
+              boolean: true,
+              comparison: '=',
+              description: 'Match devices that are placeholders.'
+            },
+            {
+              key: 'not-event',
+              name: 'Has not event',
+              select: 'devices:DeviceEvent',
+              comparison: '!=',
+              realKey: 'events.@type',
+              description: 'Match only devices that have not a specific type of event. Example: devices not ready.'
+            },
+            {
+              key: 'is-component',
+              name: 'Is component',
+              realKey: '@type',
+              select: ['Yes', 'No'],
+              boolean: true,
+              comparison: (value, RSettings) => ({[value ? '$in' : '$nin']: RSettings('Component').subResourcesNames}),
+              description: 'Match devices depending if they are components or not.'
+            }
           ]),
-          defaultParams: {'@type': 'Computer'},
+          defaultParams: {'is-component': 'No'},
           subResource: {
             Event: {key: 'device', field: '_id'}
           }

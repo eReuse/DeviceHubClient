@@ -113,6 +113,11 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
   // This is the actual factory
   let resourceTypes = {}
 
+  /**
+   * @param {string} type - The resource type name
+   * @returns {ResourceSettings}
+   * @private
+   */
   function _ResourceSettingsFactory (type) {
     if (!(type in resourceTypes)) resourceTypes[type] = new ResourceSettings(type)
     return resourceTypes[type]
