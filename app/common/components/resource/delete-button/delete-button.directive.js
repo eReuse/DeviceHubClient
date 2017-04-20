@@ -4,10 +4,10 @@ function deleteButton (Notification, $rootScope, ResourceSettings) {
     template: '<i ng-show="canDelete" class="fa fa-lg fa-trash text-danger clickable" ng-click="delete(model)"></i>',
     restrict: 'E',
     scope: {
-      model: '='
+      resource: '='
     },
-    link: function ($scope) {
-      $scope.canDelete = _.includes(ResourceSettings($scope.model['@type']).settings.itemMethods, 'DELETE')
+    link: $scope => {
+      $scope.canDelete = _.includes(ResourceSettings($scope.resource['@type']).settings.itemMethods, 'DELETE')
       $scope.delete = model => {
         if (confirm('Deleting literally erases traceability, and it cannot be undone. Are you sure?')) {
           const title = utils.getResourceTitle(model)
