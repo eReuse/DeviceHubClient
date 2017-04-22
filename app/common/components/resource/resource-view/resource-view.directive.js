@@ -47,15 +47,17 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
           // If small we use the resourceName
 
           if ($scope.type === BIG) {
-            let subviewsConfig = resourceType
+            const subviewsConfig = resourceType
               ? Subview.getSetting(resourceType, 'subviews')
               : RESOURCE_CONFIG.inventory.subviews
-            let num = subviewsConfig.length - 1
+            const num = subviewsConfig.length
             /**
              * Sets the subviews tabs by pressing a number from the keyboard.
              */
             const keyPress = e => {
-              if (e.which >= 49 && e.which <= 49 + num) $scope.$evalAsync(() => { $scope.tabs.active = e.which - 49 })
+              if (e.target.tagName !== 'INPUT' && _.inRange(e.which, 49, 49 + num)) {  // 49 is the keyCode for '1'
+                $scope.$evalAsync(() => { $scope.tabs.active = e.which - 49 })
+              }
             }
             $(document).keypress(keyPress)
             $scope.$on('$destroy', () => $(document).off('keypress', null, keyPress))
