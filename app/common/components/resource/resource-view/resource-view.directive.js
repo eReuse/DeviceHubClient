@@ -51,11 +51,12 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
               ? Subview.getSetting(resourceType, 'subviews')
               : RESOURCE_CONFIG.inventory.subviews
             const num = subviewsConfig.length
+            const AVOID_INPUTS = new Set(['text', 'textarea']) // We want to e.has to be fast
             /**
              * Sets the subviews tabs by pressing a number from the keyboard.
              */
             const keyPress = e => {
-              if (e.target.tagName !== 'INPUT' && _.inRange(e.which, 49, 49 + num)) {  // 49 is the keyCode for '1'
+              if (!AVOID_INPUTS.has(e.target.type) && _.inRange(e.which, 49, 49 + num)) {  // 49 is the keyCode for '1'
                 $scope.$evalAsync(() => { $scope.tabs.active = e.which - 49 })
               }
             }
