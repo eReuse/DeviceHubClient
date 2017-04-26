@@ -25,19 +25,24 @@ function ResourceListGetterFactory (ResourceSettings) {
        * @private
        */
       this._filtersBySource = {}
+
+      // All resource lists have a sort and a search. In init time, sort and search initializes the sort and filters
+      // object, maybe with defaults, maybe not. To avoid double querying (once for sort, once for search), we
+      // wait until _filters and _sort are both initialized, i.e. not null.
       /**
-       * Filter object, containing a *filterName: filterValue* object, result of merging
+       * Filter object, containing a *filterName: filterValue* object, result of merging. If `null` then means
+       * it has not been initialized.
        * _filtersBySource.
-       * @type {{}}
+       * @type {object|null}
        * @private
        */
-      this._filters = {}
+      this._filters = null
       /**
-       * Primitive object containing the sort parameters.
-       * @type {{}}
+       * Primitive object containing the sort parameters. If `null` then means that has not been initialized.
+       * @type {object|null}
        * @private
        */
-      this._sort = {}
+      this._sort = null
 
       this.pagination = {
         morePagesAvailable: true,
@@ -47,12 +52,6 @@ function ResourceListGetterFactory (ResourceSettings) {
       }
 
       this._callbacksOnGetting = []
-
-      // All resourcelists have a sort and a search. Sorts always have a default, and search do not but they are
-      // present. After init, when sort have a default (always) casts an update to sort params, and search does the
-      // same (but independently if there is a default or not). To avoid loading twice (once for sort, once for search)
-      // we wait for both things to happen with these flags:
-      this._onceSort = this._onceSearch = false
     }
 
     /**
@@ -68,7 +67,7 @@ function ResourceListGetterFactory (ResourceSettings) {
       // The 'search' filters have preference over others
       _.merge(this._filters, this._filtersBySource[SEARCH])
       // todo if this is called multiple times for the same parameters use isEqual and firstTime combo
-      if (this._onceSearch && this._onceSort) this.getResources()
+      if (!_.isNull(this._filters) && !_.isNull(this._sort)) this.getResources()
     }
 
     /**
@@ -134,7 +133,6 @@ function ResourceListGetterFactory (ResourceSettings) {
 
       _.invokeMap(callbacks, _.call)
 
-      this._onceSearch = true
       this.updateFilters(SEARCH, _filters)
     }
 
@@ -145,8 +143,8 @@ function ResourceListGetterFactory (ResourceSettings) {
     updateSort (newSorts) {
       let oldSort = _.clone(this._sort)
       this._sort = newSorts
-      if (!_.isEqual(this._filters, oldSort) && this._onceSearch) this.getResources()
-      this._onceSort = true
+      // If there is no sort defined this._filters will equal with oldsort
+      if (!_.isEqual(this._filters, oldSort) && !_.isNull(this._filters)) this.getResources()
     }
 
     /**
