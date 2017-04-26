@@ -14,7 +14,7 @@ function registerButton (SnapshotFormSchema, ResourceSettings, dhModal, FormSche
           deviceType: type,
           title: ResourceSettings(type).humanName
         })
-        return dhModal.open('form', {model: model, options: options})
+        return dhModal.open('form', {model: model, options: options, parserOptions: () => {}})
       }
       open.group = (type) => {
         let model = () => ({'@type': type})
@@ -23,7 +23,7 @@ function registerButton (SnapshotFormSchema, ResourceSettings, dhModal, FormSche
           deviceType: type,
           title: ResourceSettings(type).humanName
         })
-        return dhModal.open('form', {model: model, options: options})
+        return dhModal.open('form', {model: model, options: options, parserOptions: () => {}})
       }
       $scope.open = open
     }

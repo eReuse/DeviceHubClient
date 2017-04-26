@@ -1,4 +1,4 @@
-var utils = require('./../../utils')
+const utils = require('./../../utils')
 
 function formModal ($scope, $uibModalInstance, options, model, parserOptions, ResourceSettings) {
   $scope.model = model
