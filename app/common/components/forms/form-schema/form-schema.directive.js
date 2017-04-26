@@ -10,14 +10,16 @@ function formSchema (FormSchema) {
    * @param {boolean} options.canDelete - Automatically set.
    * @param {boolean} options.delete - API to delete the model, if possible.
    * @param {object} status - Status object as FormSchema requires. See it there.
+   * @param {object} parserOptions - options for the parser in FormSchema. See it in FormSchema.options.
    */
   return {
-    templateUrl: window.COMPONENTS + '/forms/form-schema/form-schema.directive.html',
+    templateUrl: require('./__init__').PATH + '/form-schema.directive.html',
     restrict: 'E',
     scope: {
       model: '=',
       options: '=',
-      status: '='
+      status: '=',
+      parserOptions: '=?'
     },
     link: {
       pre: $scope => {
@@ -25,9 +27,8 @@ function formSchema (FormSchema) {
           model: $scope.model,
           form: null
         }
-        window.a = $scope
         const FS = $scope.options.FormSchema || FormSchema // We let people pass us extended FormSchema
-        let formSchema = new FS($scope.model, form, $scope.status, {}, $scope.options.deviceType)
+        let formSchema = new FS($scope.model, form, $scope.status, $scope.parserOptions || {}, $scope.options.deviceType)
         $scope.submit = model => formSchema.submit(model)
         $scope.options.canDelete = 'remove' in $scope.model
         $scope.options.delete = model => formSchema.delete(model)

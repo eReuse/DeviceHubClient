@@ -1,9 +1,5 @@
-<div class="radio-group">
-  <label ng-repeat="(key, option) in to.options" class="checkbox-inline">
-    <input type="checkbox"
-           id="{{id + '_'+ $index}}"
-           ng-model="multiCheckbox.checked[$index]"
-           ng-change="multiCheckbox.change()">
-    <resource-button resource="option"></resource-button>
-  </label>
-</div>
+<ul class="list-inline">
+  <li ng-repeat="(_, resource) in to._resources">
+    <resource-button resource="resource"></resource-button>
+  </li>
+</ul>

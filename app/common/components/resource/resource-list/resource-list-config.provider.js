@@ -83,9 +83,9 @@ function resourceListProvider (RESOURCE_SEARCH) {
   }
 
   function hasGroupCallback (resourceName) {
-    let resourceType = utils.Naming.type(resourceName)
+    const resourceType = utils.Naming.type(resourceName)
     return (where, ancestors) => {
-      let parents = _(ancestors).filter({'@type': resourceType}).flatMapDeep('label').value()
+      const parents = _(ancestors).filter({'@type': resourceType}).flatMapDeep('label').value()
       where['label'] = {'$in': _(ancestors).flatMapDeep(resourceName).concat(parents).uniq().value()}
     }
   }

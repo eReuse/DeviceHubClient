@@ -2,7 +2,7 @@
   <button id="event-button"
           type="button"
           class="btn"
-          ng-class="{'btn-primary': devices.length > 0}"
+          ng-class="{'btn-primary': resources.length > 0}"
           uib-dropdown-toggle
   >
     <i class="fa fa-plus fa-fw"></i>New event<span class="caret"></span>
@@ -14,8 +14,8 @@
         tooltip-placement="right"
         tooltip-append-to-body="true"
     >
-      <a ng-click="openModal(eventSettings.type, devices)">
-        <resource-icon resource-type="{{eventSettings.type}}" fill-to="true"></resource-icon>
+      <a ng-click="openModal(eventSettings.type, resources)">
+        <resource-icon resource-type="{{::eventSettings.type}}" fill-to="true"></resource-icon>
         {{eventSettings.humanName}}
       </a>
     </li>

@@ -1,39 +1,27 @@
-/**
- * templateOptions: {
- *  options: [ device1, device2... ]
- *  }
- *
- *  device needs _id
- * @param {FormlyConfigProvider}
- */
-function resources (formlyConfigProvider, RESOURCE_CONFIG) {
-  var Naming = require('./../../../utils').Naming
+function resources (formlyConfigProvider) {
+  /**
+   * The Formly type resources is only a preview in a field-esque way of resource buttons, so users can
+   * double check the resources they are submitting. This type only transforms the data introduced by 'resources'
+   * to fit it into its two possible configurations, and it does not let the user to change anything –we could say it
+   * is a *readonly* field.
+   *
+   *  @param {string} key - The name of the key, in *normal* mode.
+   *  @param {object[]} resources - A list of resources to show, transform and submit.
+   */
   formlyConfigProvider.setType({
     name: 'resources',
-    extends: 'multiCheckbox',
+    wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+    templateUrl: require('./__init__').PATH + '/resources.formly-type.config.html',
     defaultOptions: {
       templateOptions: {
-        valueProp: '_id'
+        key: null
       }
     },
-    templateUrl: window.COMPONENTS + '/forms/types/resources/resources.formly-type.config.html'
-  })
-
-  // Note that we cannot use ResourceSettings as this is executed in config time
-  _.forOwn(RESOURCE_CONFIG.resources, function (resourceConfig, typeName) {
-    var type = {
-      name: Naming.resource(typeName),
-      extends: 'resources',
-      defaultOptions: {
-        templateOptions: {
-          type: typeName
-        }
-      }
+    link: $scope => {
+      const key = $scope.options.key
+      $scope.to._resources = $scope.model[key]
+      $scope.model[key] = _.map($scope.model[key], $scope.to.key)
     }
-    if (_.has(resourceConfig, 'dataRelation.keyFieldName')) {
-      type.defaultOptions.templateOptions.keyFieldName = resourceConfig.dataRelation.keyFieldName
-    }
-    formlyConfigProvider.setType(type)
   })
 }
 

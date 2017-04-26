@@ -13,8 +13,8 @@ var CONSTANTS = (function () {
       'Content-Type': 'application/json',
       Accept: 'application/json'
     },
-    // todo this should be taken from the server
-    resourcesChangingNumber: ['device', 'event', 'account', 'place', 'erase', 'project', 'package', 'lot', 'manufacturer'],
+    // We cannot take this from the server as Naming uses it before getting the Schema
+    resourcesChangingNumber: ['device', 'event', 'account', 'place', 'erase', 'project', 'package', 'lot', 'manufacturer', 'group'],
     debug: true
   }
 }())

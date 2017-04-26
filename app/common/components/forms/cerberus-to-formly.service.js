@@ -206,13 +206,10 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
           }
         case 'datetime':
           return [tOpts, 'datepicker']
-        case 'list': // Let's convert the full list of resources to simply a list holding ids
+        case 'list':
           if (_.has(fieldSchema, 'schema.data_relation')) {
-            if (_.has(model, fieldPath)) {
-              tOpts.options = angular.copy(_.get(model, fieldPath) || {})
-              _.set(model, fieldPath, _.map(tOpts.options, '_id'))
-            }
-            return [tOpts, fieldSchema.schema.data_relation.resource]
+            tOpts.key = fieldSchema.schema.data_relation.field
+            return [tOpts, 'resources']
           }
           throw new NoType(type)
         case 'objectid':

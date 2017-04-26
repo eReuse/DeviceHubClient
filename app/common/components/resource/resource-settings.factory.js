@@ -43,10 +43,12 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
      * @param {string} type - The resource type in Type convention.
      * @throw {TypeError} When type is not string.
      * @throw {TypeError} When type is not in Type convention.
+     * @throw {TypeError} When type is the reserved keyword *_settings*
      */
     constructor (type) {
-      if (!_.isString(type)) throw TypeError('ResourceSettings: type is expected to be string, but it is ' + typeof type)
+      if (!_.isString(type)) throw TypeError('Type is expected to be string, but it is ' + typeof type)
       if (utils.Naming.type(type) !== type) throw TypeError(type + ' should be of Type convention.')
+      if (type === '_settings') throw TypeError('\'_settings\' is not a valid resource.')
       this.type = type
       this.resourceName = utils.Naming.resource(type)
       this.humanName = utils.Naming.humanize(type)
