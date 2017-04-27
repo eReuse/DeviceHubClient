@@ -115,7 +115,7 @@ var RESOURCE_CONFIG = (
           subviews: [v.Dashboard, v.Lot, v.Package, v.Device],
           doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
         },
-        InputLot: {
+        IncomingLot: {
           dataRelation: {
             label: 'Name of the input lot',
             labelFieldName: 'label',
@@ -125,7 +125,7 @@ var RESOURCE_CONFIG = (
           },
           doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
         },
-        OutputLot: {
+        OutgoingLot: {
           dataRelation: {
             label: 'Name of the output lot',
             labelFieldName: 'label',

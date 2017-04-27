@@ -60,7 +60,7 @@ function resourceListProvider (RESOURCE_SEARCH) {
     callback: (where, value) => {
       if (!('$or' in where)) where.$or = []
       where.$or = where.$or.concat(getIsAncestor('Lot', value),
-        getIsAncestor('InputLot', value), getIsAncestor('OutputLot', value))
+        getIsAncestor('IncomingLot', value), getIsAncestor('OutgoingLot', value))
     }
   }
   const INSIDE_PACKAGE = {
