@@ -4,11 +4,9 @@
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
         <i class="fa fa-bars fa-lg"></i>
       </button>
-      <div ng-switch="CONSTANTS.showSiteLogo" class="navbar-brand">
-        <img ng-switch-when="true" ng-src="{{CONSTANTS.siteLogo}}" ng-click="setTab(0)"/>
-        <span ng-switch-when="false" ng-click="setTab(0)">{{CONSTANTS.appName}}</span>
-      </div>
-
+      <a class="navbar-brand" ui-sref="index.inventory">
+        <img ng-src="{{::CONSTANTS.siteLogo}}"/>
+      </a>
     </div>
     <div class="collapse navbar-collapse" id="main-navbar">
       <ul class="nav navbar-nav navbar-right">

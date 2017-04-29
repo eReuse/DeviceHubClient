@@ -1,8 +1,7 @@
 <div id="login">
   <form ng-submit="form.login(form.model)" name="loginForm" id="loginForm" novalidate>
     <h1>
-      <span ng-if="!showSiteLogo">{{APP_NAME}}</span>
-      <img ng-if="showSiteLogo" ng-src="{{siteLogo}}"/>
+      <img ng-src="{{::siteLogo}}"/>
     </h1>
     <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
       <button type="submit" class="btn btn-primary submit-button" dh-submit-button="loading">

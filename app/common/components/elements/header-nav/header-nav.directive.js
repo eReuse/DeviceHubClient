@@ -35,6 +35,7 @@ function headerNav ($state, CONSTANTS) {
         $scope.actualTab = index
       }
       $scope.go = go
+      $scope.goToIndex = go('index')
 
       $scope.$on('$stateChangeSuccess', function () {
         $scope.tabs.forEach(function (tab) {

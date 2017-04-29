@@ -50,7 +50,6 @@ function loginController ($scope, $state, authService, CONSTANTS, SubmitForm) {
   $scope.APP_NAME = CONSTANTS.appName
   $scope.siteLogo = CONSTANTS.siteLogo
   $scope.eReuseLogo = CONSTANTS.eReuseLogo
-  $scope.showSiteLogo = CONSTANTS.showSiteLogo
   $('#login').css({'background-image': 'url("' + CONSTANTS.loginBackgroundImage + '")'})
 
   try {
