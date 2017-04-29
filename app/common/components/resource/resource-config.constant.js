@@ -146,7 +146,7 @@ var RESOURCE_CONFIG = (
         }
       },
       inventory: {
-        subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Event, v.Account]
+        subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Event] // removed v.Account
       }
     }
   }()
