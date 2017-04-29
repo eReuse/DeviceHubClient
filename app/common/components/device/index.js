@@ -16,7 +16,6 @@ module.exports = angular.module('common.components.device',
     require('./../authentication').name,
     require('./certificate').name,
     require('./../forms').name,
-    require('./events-per-device').name,
     require('./device-label').name
   ])
   /**
