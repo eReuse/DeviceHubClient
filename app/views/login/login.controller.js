@@ -64,7 +64,7 @@ function loginController ($scope, $state, authService, CONSTANTS, SubmitForm) {
    * Shows an error at the whole form after being Unauthorized by the server
    */
   function setSubmissionError (error) {
-    var $input = $('.formly-field:not(.formly-field:last)')
+    const $input = $('.formly-field:not(.formly-field:last)')
     $scope.submissionError = true
     $input.addClass('has-error')
     $scope.status = error.status
@@ -74,6 +74,8 @@ function loginController ($scope, $state, authService, CONSTANTS, SubmitForm) {
       $scope.$apply()
     })
   }
+
+  window.progressSetVal(3)
 }
 
 module.exports = loginController

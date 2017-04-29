@@ -1,5 +1,5 @@
 require('./init.js')
-var utils = require('./common/components/utils')
+const utils = require('./common/components/utils')
 
 module.exports = window.angular.module('deviceHub', [
   'ui.router',
@@ -9,7 +9,7 @@ module.exports = window.angular.module('deviceHub', [
   require('angular-animate')
 ])
   .config(
-    function ($urlRouterProvider, $stateProvider) {
+    ($urlRouterProvider, $stateProvider) => {
       $stateProvider.state('index', {
         url: '',
         templateUrl: 'views/index/index.controller.html',
@@ -42,12 +42,12 @@ module.exports = window.angular.module('deviceHub', [
       })
       $urlRouterProvider.otherwise('/inventory')
     })
-  .controller('deviceHubCtrl', function (CONSTANTS) {
-    $('#intro-spinner').remove()
+  .controller('deviceHubCtrl', CONSTANTS => {
+    window.progressSetVal(2)
     $('html,body').removeClass('dh-wait')
     window.document.title = CONSTANTS.appName
   })
-  .run(function ($rootScope) {
+  .run($rootScope => {
     $rootScope._ = window._ // We add lodash for usage in templates
     $rootScope.COMMON = window.COMMON
     $rootScope.COMPONENTS = window.COMPONENTS

@@ -19,6 +19,8 @@ const del = require('del')
 // Note that we only use harmony for our code (bundle.js) not vendor.js, where we use normal minify
 const uglifyjs = require('uglify-js-harmony')
 const minifier = require('gulp-uglify/minifier')
+const footer = require('gulp-footer')
+const inlinesource = require('gulp-inline-source')
 
 const filePath = {
   destination: './dist',
@@ -100,7 +102,8 @@ const filePath = {
       './resources/jspdf.min.js',
       './bower_components/Boxer/jquery.ba-dotimeout.js',
       './bower_components/pdfmake/build/pdfmake.js',
-      './bower_components/pdfmake/build/vfs_fonts.js'
+      './bower_components/pdfmake/build/vfs_fonts.js',
+      './app/after-jquery.js'
     ]
   }
 }
@@ -180,6 +183,7 @@ gulp.task('vendorJS', function () {
     .on('error', handleError)
     .pipe(buffer())
     .pipe(uglify())
+    .pipe(footer(`window.progressSetVal(1);`)) // This let us know that vendor.js has been loaded
     .pipe(gulp.dest(filePath.build.jsDest))
 })
 
@@ -197,6 +201,7 @@ gulp.task('images', function () {
 // =======================================================================
 gulp.task('copyIndex', function () {
   return gulp.src(filePath.copyIndex.src)
+    .pipe(inlinesource({compress: false}))
     .pipe(gulp.dest(filePath.build.dest))
 })
 
@@ -280,7 +285,8 @@ gulp.task('build-dev', function (callback) {
   runSequence(
     // images and vendor tasks are removed to speed up build time. Use "gulp build" to do a full re-build of the dev app.
     ['templates'],
-    ['bundle-dev', 'copyIndex', 'sass'],
+    ['bundle-dev', 'sass'],
+    ['copyIndex'],
     ['notify', 'afterClean', 'watch'],
     callback
   )
@@ -291,7 +297,8 @@ gulp.task('build', function (callback) {
   runSequence(
     ['clean'],
     ['templates'],
-    ['bundle-dev', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex', 'copyFonts'],
+    ['bundle-dev', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyFonts'],
+    ['copyIndex'],
     ['afterClean', 'notify'],
     callback
   )
@@ -302,7 +309,8 @@ gulp.task('build-prod', function (callback) {
   runSequence(
     ['clean'],
     ['templates'],
-    ['bundle-prod', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyIndex', 'copyFonts'],
+    ['bundle-prod', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyFonts'],
+    ['copyIndex'],
     ['notify', 'afterClean'],
     callback
   )
