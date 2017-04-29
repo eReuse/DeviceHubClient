@@ -1,23 +1,26 @@
 'use strict'
-var gulp = require('gulp')
+const gulp = require('gulp')
 
-var browserify = require('browserify')
-var clean = require('gulp-clean')
-var source = require('vinyl-source-stream')
-var sass = require('gulp-sass')
-var concat = require('gulp-concat')
-var uglify = require('gulp-uglify')
-var streamify = require('gulp-streamify')
-var watchify = require('watchify')
-var runSequence = require('run-sequence')
-var gulpif = require('gulp-if')
-var buffer = require('vinyl-buffer')
-var sourcemaps = require('gulp-sourcemaps')
-var notify = require('gulp-notify')
-var templateCache = require('gulp-angular-templatecache')
-var del = require('del')
+const browserify = require('browserify')
+const clean = require('gulp-clean')
+const source = require('vinyl-source-stream')
+const sass = require('gulp-sass')
+const concat = require('gulp-concat')
+const uglify = require('gulp-uglify')
+const streamify = require('gulp-streamify')
+const watchify = require('watchify')
+const runSequence = require('run-sequence')
+const gulpif = require('gulp-if')
+const buffer = require('vinyl-buffer')
+const sourcemaps = require('gulp-sourcemaps')
+const notify = require('gulp-notify')
+const templateCache = require('gulp-angular-templatecache')
+const del = require('del')
+// Note that we only use harmony for our code (bundle.js) not vendor.js, where we use normal minify
+const uglifyjs = require('uglify-js-harmony')
+const minifier = require('gulp-uglify/minifier')
 
-var filePath = {
+const filePath = {
   destination: './dist',
   build: {
     dest: './dist',
@@ -111,7 +114,7 @@ function handleError (err) {
 // Browserify Bundle
 // =======================================================================
 
-var bundle = {}
+const bundle = {}
 bundle.conf = {
   entries: filePath.browserify.src,
   external: filePath.vendorJS.src,
@@ -125,17 +128,15 @@ bundle.conf = {
 function rebundle () {
   console.log('bundle started')
   return bundle.bundler.bundle()
-  .pipe(source('bundle.js'))
-  .on('error', handleError)
-  .pipe(buffer())
-  .pipe(gulpif(!bundle.prod, sourcemaps.init({
-    loadMaps: true
-  })))
-  .pipe(gulpif(!bundle.prod, sourcemaps.write('./')))
-  .pipe(gulpif(bundle.prod, streamify(uglify({
-    mangle: false
-  }))))
-  .pipe(gulp.dest(filePath.build.jsDest))
+    .pipe(source('bundle.js'))
+    .on('error', handleError)
+    .pipe(buffer())
+    .pipe(gulpif(!bundle.prod, sourcemaps.init({
+      loadMaps: true
+    })))
+    .pipe(gulpif(!bundle.prod, sourcemaps.write('./')))
+    .pipe(gulpif(bundle.prod, streamify(minifier({mangle: false}, uglifyjs))))
+    .pipe(gulp.dest(filePath.build.jsDest))
 }
 
 gulp.task('bundle-dev-once', function () {
@@ -151,7 +152,7 @@ gulp.task('bundle-dev', function () {
   bundle.bundler.on('update', rebundle)
   bundle.bundler.on('error', handleError)
   bundle.bundler.on('time', function (time) {
-    var text = 'Bundle finished in ' + time / 1000 + ' s'
+    const text = 'Bundle finished in ' + time / 1000 + ' s'
     notifyTask(text)
     console.log(text)
   })
@@ -169,17 +170,17 @@ gulp.task('bundle-prod', function () {
 // Vendor JS Task
 // =======================================================================
 gulp.task('vendorJS', function () {
-  var b = browserify({
+  const b = browserify({
     debug: false,
     require: filePath.vendorJS.src
   })
 
   return b.bundle()
-  .pipe(source('vendor.js'))
-  .on('error', handleError)
-  .pipe(buffer())
-  .pipe(uglify())
-  .pipe(gulp.dest(filePath.build.jsDest))
+    .pipe(source('vendor.js'))
+    .on('error', handleError)
+    .pipe(buffer())
+    .pipe(uglify())
+    .pipe(gulp.dest(filePath.build.jsDest))
 })
 
 // =======================================================================
@@ -187,8 +188,8 @@ gulp.task('vendorJS', function () {
 // =======================================================================
 gulp.task('images', function () {
   return gulp.src(filePath.assets.images.src)
-  .on('error', handleError)
-  .pipe(gulp.dest(filePath.assets.images.dest))
+    .on('error', handleError)
+    .pipe(gulp.dest(filePath.assets.images.dest))
 })
 
 // =======================================================================
@@ -196,16 +197,15 @@ gulp.task('images', function () {
 // =======================================================================
 gulp.task('copyIndex', function () {
   return gulp.src(filePath.copyIndex.src)
-  .pipe(gulp.dest(filePath.build.dest))
+    .pipe(gulp.dest(filePath.build.dest))
 })
-
 
 // =======================================================================
 // Copy Favicon
 // =======================================================================
 gulp.task('copyFavicon', function () {
   return gulp.src(filePath.copyFavicon.src)
-  .pipe(gulp.dest(filePath.build.dest))
+    .pipe(gulp.dest(filePath.build.dest))
 })
 
 // =======================================================================
@@ -222,9 +222,9 @@ gulp.task('watch', function () {
 
 gulp.task('clean', function () {
   return gulp.src(filePath.destination)
-  .pipe(clean({
-    force: true
-  }))
+    .pipe(clean({
+      force: true
+    }))
 })
 
 gulp.task('afterClean', function () {
@@ -236,24 +236,24 @@ gulp.task('afterClean', function () {
 
 gulp.task('templates', function () {
   return gulp.src(filePath.templates.src)
-  .pipe(templateCache('templates.js', {standalone: true, moduleSystem: 'Browserify'}))
-  .pipe(gulp.dest(filePath.destination))
+    .pipe(templateCache('templates.js', {standalone: true, moduleSystem: 'Browserify'}))
+    .pipe(gulp.dest(filePath.destination))
 })
 
 gulp.task('sass', function () {
   return gulp.src([filePath.styles.sass, filePath.styles.src])
-  .pipe(sass({
-    outputStyle: 'compressed'
-  }).on('error', sass.logError))
-  .pipe(concat('app.css'))
-  .pipe(gulp.dest(filePath.build.cssDest))
+    .pipe(sass({
+      outputStyle: 'compressed'
+    }).on('error', sass.logError))
+    .pipe(concat('app.css'))
+    .pipe(gulp.dest(filePath.build.cssDest))
 })
 
 gulp.task('vendorCSS', function () {
   return gulp.src(filePath.vendorCSS.src)
-  .pipe(concat('vendor.css'))
-  .on('error', sass.logError)
-  .pipe(gulp.dest(filePath.build.cssDest))
+    .pipe(concat('vendor.css'))
+    .on('error', sass.logError)
+    .pipe(gulp.dest(filePath.build.cssDest))
 })
 
 // =======================================================================
@@ -267,7 +267,7 @@ gulp.task('copyFonts', function () {
 function notifyTask (text) {
   text = typeof text === 'string' ? text : 'Done!'
   return gulp.src(filePath.copyIndex.src)
-  .pipe(notify(text))
+    .pipe(notify(text))
 }
 gulp.task('notify', notifyTask)
 
@@ -313,10 +313,10 @@ gulp.task('build-prod', function (callback) {
 // =======================================================================
 
 gulp.task('docs', [], function () {
-  var gulpDocs = require('gulp-ngdocs')
+  const gulpDocs = require('gulp-ngdocs')
   return gulp.src('./app/**/*.js')
-  .pipe(gulpDocs.process())
-  .pipe(gulp.dest('./docs'))
+    .pipe(gulpDocs.process())
+    .pipe(gulp.dest('./docs'))
 })
 
 // =======================================================================
@@ -324,7 +324,7 @@ gulp.task('docs', [], function () {
 // =======================================================================
 
 gulp.task('tests', function (done) {
-  var Server = require('karma').Server
+  const Server = require('karma').Server
   new Server({
     configFile: __dirname + '/karma.conf.js',
     singleRun: false
