@@ -13,7 +13,12 @@ function manualEventsButton (ResourceSettings, dhModal) {
       $scope.openModal = (type, resources) => {
         const isGroup = ResourceSettings(resources[0]['@type']).isSubResource('Group')
         // We make it: groups.lots = [objLot1, objLot2...]
-        if (isGroup) resources = _(resources).groupBy('@type').mapKeys((_, type) => Naming.resource(type)).value()
+        if (isGroup) {
+          resources = _(resources).groupBy('@type').mapKeys((_, type) => Naming.resource(type)).value()
+          resources['lots'] = resources['lots'] || []
+          _.arrayExtend(resources['lots'], _.pop(resources, 'incoming-lot', []))
+          _.arrayExtend(resources['lots'], _.pop(resources, 'outgoing-lot', []))
+        }
         const opt = {
           model: () => ({'@type': type, [isGroup ? 'groups' : 'devices']: resources}),
           parserOptions: () => ({doNotUse: isGroup ? ['devices'] : ['groups']}),
