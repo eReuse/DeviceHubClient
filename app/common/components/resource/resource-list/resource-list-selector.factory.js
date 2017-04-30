@@ -68,13 +68,21 @@ function ResourceSelectorFactory () {
     toggleSelectAll (selectAll) {
       let self = this
       if (selectAll) {
-        _.forEach(this.resources, (resource) => { self.add(resource) }) // We cannot bind as add() can return 'false'
-      } else {
-        this.inList.length = 0
-        this.total.length = 0
-        this.selector.checkboxes = {}
-        this._control()
+        _.forEach(this.resources, resource => { self.add(resource) })  // Note that add can return false
       }
+      else {
+        this.deselectAll()
+      }
+    }
+
+    /**
+     * Deselects all devices
+     */
+    deselectAll () {
+      this.inList.length = 0
+      this.total.length = 0
+      this.selector.checkboxes = {}
+      this._control()
     }
 
     /**

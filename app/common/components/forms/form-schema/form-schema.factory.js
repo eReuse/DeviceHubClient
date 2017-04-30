@@ -89,9 +89,8 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
     _succeedSubmissionFactory (operationName, model) {
       return response => {
         let resource = _.isUndefined(response) ? model : response // DELETE operations do not answer with the result
-        $rootScope.$broadcast('submitted@' + resource['@type'])
-        $rootScope.$broadcast('submitted@any')
         Notification.success(utils.getResourceTitle(resource) + ' successfully ' + operationName + '.')
+        $rootScope.$broadcast('submitted@' + resource['@type'])
         return response
       }
     }
