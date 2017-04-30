@@ -68,15 +68,16 @@
                    ng-class="{blink: hoverScreener && resource._id === resources[0]._id && inList.length == 0}"
             >
           </td>
-          <td ng-repeat="td in config.table.td" ng-click="subResource.toggle(resource)">
+          <td ng-repeat="td in config.table.td"
+              ng-click="subResource.toggle(resource)"
+              ng-init="value = $root._.get(resource, td.value)"
+          >
             <div ng-if="td.templateUrl" ng-include="td.templateUrl"></div>
-            <div ng-if="td.value && !$root._.isDate(resource[td.value])">
-              {{::resource[td.value] | limitTo: 19}}
-              <small>
-                {{::resource[td.value].length > 19? '&hellip;':''}}
-              </small>
+            <div ng-if="value && !$root._.isDate(value)">
+              {{::value | limitTo: 19}}
+              <small>{{::value.length > 19? '&hellip;':''}}</small>
             </div>
-            <div ng-if="td.value && $root._.isDate(resource[td.value])">{{::resource[td.value] | timeAgo}}</div>
+            <div ng-if="value && $root._.isDate(value)">{{::value | timeAgo}}</div>
           </td>
           <td ng-click="subResource.toggle(resource)" class="text-center">
             <resource-icon resource-type="{{resource['@type']}}" resource-subtype="{{resource.type}}"></resource-icon>

@@ -5,48 +5,60 @@
 
 function resourceListProvider (RESOURCE_SEARCH) {
   const utils = require('./../../utils')
-  let h = RESOURCE_SEARCH.paramHelpers
-  let ACCOUNT_TYPEAHEAD = {
+  const h = RESOURCE_SEARCH.paramHelpers
+  const ACCOUNT_TYPEAHEAD = {
     keyFieldName: '_id',
     resourceType: 'Account',
     filterFieldName: 'email',
     labelFieldName: 'email'
   }
-  let GROUP_TYPEAHEAD = {
+  const GROUP_TYPEAHEAD = {
     keyFieldName: 'label',
     resourceType: 'Group',
     filterFieldName: 'label',
     labelFieldName: 'label'
   }
-  let DEVICE_TYPEAHEAD = {
+  const DEVICE_TYPEAHEAD = {
     keyFieldName: '_id',
     resourceType: 'Device',
     filterFieldName: '_id',
     labelFieldName: '_id'
   }
-  let LOT_TYPEAHEAD = _.clone(GROUP_TYPEAHEAD)
+  const LAST_EVENT = {
+    key: 'lastEvent',
+    name: 'Last event is',
+    select: 'devices:DeviceEvent',
+    comparison: '=',
+    realKey: 'events.0.@type',
+    description: 'The actual state of the device.'
+  }
+  const LOT_TYPEAHEAD = _.clone(GROUP_TYPEAHEAD)
   LOT_TYPEAHEAD.resourceType = 'Lot'
-  let PACKAGE_TYPEAHEAD = _.clone(GROUP_TYPEAHEAD)
+  const PACKAGE_TYPEAHEAD = _.clone(GROUP_TYPEAHEAD)
   PACKAGE_TYPEAHEAD.resourceType = 'Package'
-  let PLACE_TYPEAHEAD = _.clone(GROUP_TYPEAHEAD)
+  const PLACE_TYPEAHEAD = _.clone(GROUP_TYPEAHEAD)
   PLACE_TYPEAHEAD.resourceType = 'Place'
-  let configFolder = require('./__init__').PATH + '/resource-list-config'
-  let f = {
+  const configFolder = require('./__init__').PATH + '/resource-list-config'
+  const f = {
     id: {th: {key: '_id', name: 'Id'}, td: {value: '_id'}},
     label: {th: {key: 'label', name: 'Label'}, td: {value: 'label'}},
     '@type': {th: {key: '@type', name: 'Type'}, td: {value: '@type'}},
-    from: {th: {key: 'from', name: 'From client'}, td: {value: 'from'}},
-    to: {th: {key: 'to', name: 'To client'}, td: {value: 'to'}},
+    from: {th: {key: 'from', name: 'From client'}, td: {value: 'from.name'}},
+    to: {th: {key: 'to', name: 'To client'}, td: {value: 'to.name'}},
     name: {th: {key: 'name', name: 'Name'}, td: {value: 'name'}},
     organization: {th: {key: 'organization', name: 'Organization'}, td: {value: 'organization'}},
     email: {th: {key: 'email', name: 'email'}, td: {value: 'email'}},
-    updated: {th: {key: '_updated', name: 'Updated'}, td: {value: '_updated'}}
+    updated: {th: {key: '_updated', name: 'Updated'}, td: {value: '_updated'}},
+    lastEvent: {
+      th: {key: 'events._updated', name: 'Last event', default: true},
+      td: {templateUrl: configFolder + '/resource-button-device.html'}
+    }
   }
   f.updated.thDef = _.assign({default: true}, f.updated.th)
   const SNAPSHOT_SOFTWARE_ALLOWED = ['Workbench', 'AndroidApp', 'Web']
 
   function getIsAncestor (resourceType, value) {
-    let resourceName = utils.Naming.resource(resourceType)
+    const resourceName = utils.Naming.resource(resourceType)
     return [
       {'ancestors': {'$elemMatch': {'@type': resourceType, 'label': value}}},
       {'ancestors': {'$elemMatch': {[resourceName]: {'$elemMatch': {$in: [value]}}}}}
@@ -200,14 +212,7 @@ function resourceListProvider (RESOURCE_SEARCH) {
               realKey: 'events.@type',
               description: 'Match only devices that have a specific type of event.'
             },
-            {
-              key: 'lastEvent',
-              name: 'Last event is',
-              select: 'devices:DeviceEvent',
-              comparison: '=',
-              realKey: 'events.0.@type',
-              description: 'The actual state of the device.'
-            },
+            LAST_EVENT,
             {
               key: 'eventIncidence',
               name: 'Has an incidence',
@@ -347,13 +352,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-device.html'
         },
         table: {
-          th: [f.id.th, f.label.th, {key: 'model', name: 'Model'}, {
-            key: 'events._updated',
-            name: 'Last event',
-            default: true
-          }],
-          td: [f.id.td, {value: 'labelId'}, {value: 'model'},
-            {templateUrl: configFolder + '/resource-button-device.html'}]
+          th: [f.id.th, f.label.th, {key: 'model', name: 'Model'}, f.lastEvent.th],
+          td: [f.id.td, {value: 'labelId'}, {value: 'model'}, f.lastEvent.td]
         }
       },
       Lot: {
@@ -382,7 +382,7 @@ function resourceListProvider (RESOURCE_SEARCH) {
               key: 'to',
               name: 'Assigned to account / client',
               typeahead: ACCOUNT_TYPEAHEAD,
-              realKey: 'to',
+              realKey: 'to.email',
               comparison: '=',
               placeholder: 'Type an e-mail',
               description: 'Match Output lots that are assigned to a client.'
@@ -392,10 +392,11 @@ function resourceListProvider (RESOURCE_SEARCH) {
               name: 'From account / client',
               typeahead: ACCOUNT_TYPEAHEAD,
               placeholder: 'Type an e-mail',
-              realKey: 'from',
+              realKey: 'from.email',
               comparison: '=',
               description: 'Match Input Lots that come from a client.'
             },
+            LAST_EVENT,
             INSIDE_PLACE,
             INSIDE_LOT
           ]),
@@ -410,8 +411,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-lot.html'
         },
         table: {
-          th: [f.label.th, f['@type'].th, f.from.th, f.to.th, f.updated.thDef],
-          td: [f.label.td, f['@type'].td, f.from.td, f.to.td, f.updated.td]
+          th: [f.label.th, f['@type'].th, f.from.th, f.to.th, f.updated.thDef, f.lastEvent.th],
+          td: [f.label.td, f['@type'].td, f.from.td, f.to.td, f.updated.td, f.lastEvent.td]
         }
       },
       Package: {
@@ -435,8 +436,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-package.html'
         },
         table: {
-          th: [f.id.th, f.label.th, f.from.th, f.to.th, f.updated.thDef],
-          td: [f.id.td, f.label.td, f.from.td, f.to.td, f.updated.td]
+          th: [f.id.th, f.label.th, f.updated.thDef],
+          td: [f.id.td, f.label.td, f.updated.td]
         }
       },
       Place: {
