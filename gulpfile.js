@@ -68,7 +68,8 @@ const filePath = {
       './node_modules/angular-ui-notification/dist/angular-ui-notification.css',
       './bower_components/angular-dashboard-framework/angular-dashboard-framework.css',
       './node_modules/angular-chart.js/dist/angular-chart.css',
-      './node_modules/font-awesome/css/font-awesome.min.css'
+      './node_modules/font-awesome/css/font-awesome.min.css',
+      './bower_components/ngprogress/ngProgress.css'
     ]
   },
   vendorJS: {
@@ -102,7 +103,8 @@ const filePath = {
       './resources/jspdf.min.js',
       './bower_components/Boxer/jquery.ba-dotimeout.js',
       './bower_components/pdfmake/build/pdfmake.js',
-      './bower_components/pdfmake/build/vfs_fonts.js'
+      './bower_components/pdfmake/build/vfs_fonts.js',
+      './bower_components/ngprogress/build/ngprogress.min.js'
     ]
   }
 }

@@ -1,4 +1,4 @@
-function loginController ($scope, $state, authService, CONSTANTS, SubmitForm) {
+function loginController ($scope, $state, authService, CONSTANTS, SubmitForm, progressBar, $timeout) {
   // note that we do not define form.form or form.options as it needs to be undefined for formly
   $scope.form = {
     fields: [
@@ -39,6 +39,7 @@ function loginController ($scope, $state, authService, CONSTANTS, SubmitForm) {
       let submitForm = new SubmitForm($scope.form, $scope)
       let credentials = _.pick(model, ['email', 'password'])
       if (submitForm.isValid()) {
+        progressBar.start()
         submitForm.prepare()
         let promise = authService.login(credentials, model.saveInBrowser).then(function () {
           $state.go('index.inventory')
@@ -63,6 +64,7 @@ function loginController ($scope, $state, authService, CONSTANTS, SubmitForm) {
    * Shows an error at the whole form after being Unauthorized by the server
    */
   function setSubmissionError (error) {
+    progressBar.complete()
     const $input = $('.formly-field:not(.formly-field:last)')
     $scope.submissionError = true
     $input.addClass('has-error')
@@ -75,6 +77,8 @@ function loginController ($scope, $state, authService, CONSTANTS, SubmitForm) {
   }
 
   window.progressSetVal(3)
+  $scope.isCollapsed = true
+  $timeout(() => { $scope.isCollapsed = false }, 50)
 }
 
 module.exports = loginController

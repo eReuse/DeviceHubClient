@@ -1,5 +1,6 @@
 require('angular-ui-bootstrap')
 require('angular-ui-notification')
+require('./../../../../bower_components/ngprogress/build/ngprogress.min.js')
 /**
  * @ngdoc module
  * @name common.components.utilities
@@ -9,8 +10,10 @@ require('angular-ui-notification')
 module.exports = angular.module('common.components.utilities',
   [
     'ui.bootstrap',
-    'ui-notification'
+    'ui-notification',
+    'ngProgress'
   ])
   .provider('dhModal', require('./dh-modal.provider'))
   .directive('dhSubmitButton', require('./dh-submit-button/dh-submit-button.directive'))
   .factory('SubmitForm', require('./submit-form'))
+  .service('progressBar', require('./progress-bar.factory'))

@@ -10,12 +10,14 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @param {array} resources - An array of resource objects to update when new resources are got. This array is
      * updated by reference, so do not re-assign it.
      * @param {object} filterSettings - Configuration object for the filters.
+     * @param {progressBar} progressBar - An instance of ngProgress.
      */
-    constructor (resourceType, resources, filterSettings) {
+    constructor (resourceType, resources, filterSettings, progressBar) {
       this.resourceType = resourceType
       this.resources = resources
       this.filterSettings = filterSettings
       this.server = ResourceSettings(resourceType).server
+      this.progressBar = progressBar
       /**
        * A key/value object of filters, where every key represents a different source.
        * Clients can update their filter, and all of them are merged into
@@ -156,11 +158,13 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @return {promise} The Restangular promise.
      */
     getResources (getNextPage = false) {
+      this.progressBar.start()
       if (getNextPage && !this.pagination.morePagesAvailable) throw TypeError('There are not more pages available.')
       let self = this
       // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 0
       let page = this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 0
       return this.server.getList({where: this._filters, page: page, sort: this._sort}).then((resources) => {
+        self.progressBar.complete()
         if (!getNextPage) self.resources.length = 0
         _.assign(self.resources, self.resources.concat(resources))
         self.pagination.morePagesAvailable = resources._meta.page * resources._meta.max_results < resources._meta.total

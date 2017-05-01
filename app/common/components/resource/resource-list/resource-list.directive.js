@@ -6,9 +6,10 @@
  * @param {ResourceListSelector} ResourceListSelector
  * @param {ResourceListSelectorBig} ResourceListSelectorBig
  * @param {ResourceSettings} ResourceSettings
+ * @param {progressBar} progressBar
  */
 function resourceList (resourceListConfig, ResourceListGetter, ResourceListGetterBig, ResourceListSelector,
-                       ResourceListSelectorBig, ResourceSettings) {
+                       ResourceListSelectorBig, ResourceSettings, progressBar) {
   const utils = require('./../../utils.js')
   const PATH = require('./__init__').PATH
   return {
@@ -27,6 +28,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         $scope.resourceName = utils.Naming.resource(resourceType)
         if (!resourceType) throw TypeError('resourceList needs a "resourceType" set, not ' + resourceType)
         if (!$scope.type) throw TypeError('resourceLists needs a "type" to be "big"|"medium"|"small", not ' + $scope.type)
+        progressBar.start() // resourceListGetter.getResources will call this too, but doing it here we avoid delay
         const config = _.cloneDeep(resourceListConfig.config.views[resourceType])
         if (_.isUndefined(config)) throw ReferenceError(resourceType + ' has no config.')
         $scope.resources = [] // Do never directly assign (r=[]) to 'resources' as modules depend of its reference
@@ -58,10 +60,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           inList: []
         }
         if ($scope.type === 'big') {
-          resourceListGetter = new ResourceListGetterBig(resourceType, $scope.resources, config)
+          resourceListGetter = new ResourceListGetterBig(resourceType, $scope.resources, config, progressBar)
           resourceListSelector = new ResourceListSelectorBig($scope.selector, $scope.resources, resourceListGetter)
         } else {
-          resourceListGetter = new ResourceListGetter(resourceType, $scope.resources, config)
+          resourceListGetter = new ResourceListGetter(resourceType, $scope.resources, config, progressBar)
           resourceListSelector = new ResourceListSelector($scope.selector, $scope.resources, resourceListGetter)
         }
 

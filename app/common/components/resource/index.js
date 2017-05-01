@@ -18,7 +18,8 @@ module.exports = angular.module('common.components.resource',
     'yaru22.angular-timeago',
     require('./../authentication').name,
     require('./../../constants').name,
-    'uiGmapgoogle-maps'
+    'uiGmapgoogle-maps',
+    require('./../utilities').name
   ])
   .constant('RESOURCE_CONFIG', require('./resource-config.constant'))
   .factory('ResourceServer', require('./resource-server.factory'))

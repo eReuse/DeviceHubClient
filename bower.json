@@ -21,7 +21,8 @@
     "angular-dashboard-framework": "^0.11.0",
     "adf-structures-base": "^0.1.1",
     "Boxer": "ba-dotimeout#*",
-    "pdfmake": "^0.1.24"
+    "pdfmake": "^0.1.24",
+    "ngprogress": "^1.1.3"
   },
   "resolutions": {
     "jquery": ">= 1.9.1",

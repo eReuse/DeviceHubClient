@@ -1,15 +1,14 @@
 <div id="login">
   <form ng-submit="form.login(form.model)" name="loginForm" id="loginForm" novalidate>
-    <h1>
-      <img ng-src="{{::siteLogo}}"/>
-    </h1>
-    <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
-      <button type="submit" class="btn btn-primary submit-button" dh-submit-button="loading">
-        <span>Login</span>
-      </button>
-      <span ng-show="submissionError"
-            class="alert alert-danger ani-show pull-right"
-      >
+    <img ng-src="{{::siteLogo}}" title="{{::APP_NAME}}"/>
+    <div uib-collapse="isCollapsed">
+      <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
+        <button type="submit" class="btn btn-primary submit-button" dh-submit-button="loading">
+          Log in
+        </button>
+        <span ng-show="submissionError"
+              class="alert alert-danger ani-show pull-right"
+        >
         <span ng-switch="status">
           <span ng-switch-when="-1">You are not connected to the Internet &#128534;</span>
           <span ng-switch-when="401">Incorrect username or password.</span>
@@ -18,9 +17,10 @@
         </span>
 
       </span>
-    </formly-form>
+      </formly-form>
+    </div>
   </form>
   <footer class="row">
-    <img ng-src="{{eReuseLogo}}"/>
+    <img ng-src="{{::eReuseLogo}}"/>
   </footer>
 </div>
