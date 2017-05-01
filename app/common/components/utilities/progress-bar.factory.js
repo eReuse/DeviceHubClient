@@ -7,7 +7,7 @@
  */
 function progressBarFactory (ngProgressFactory) {
   const progressBar = ngProgressFactory.createInstance()
-  progressBar.setHeight('3px')
+  progressBar.setHeight('2px')
   return progressBar
 }
 module.exports = progressBarFactory

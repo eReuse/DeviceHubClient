@@ -27,11 +27,11 @@ function groupResourceRemove (ResourceSettings, GroupResourceSubmitter) {
         const gSettings = ResourceSettings(groupType)
         const groupServer = gSettings.server
 
-        let typeahead = {
+        const typeahead = {
           group: null, // The ng-model of the typeahead
           get: _.bind(groupServer.findText, groupServer, 'label', _)
         }
-        let form = { // Note that for the form to work correctly with formly, we need to be in link's pre
+        const form = { // Note that for the form to work correctly with formly, we need to be in link's pre
           fields: [{
             key: 'groupLabel',
             type: 'select',
@@ -39,7 +39,7 @@ function groupResourceRemove (ResourceSettings, GroupResourceSubmitter) {
               label: `${gSettings.humanName} to remove the elements from`,
               valueProp: 'name',
               options: _($scope.resources)
-                .flatMap(resource => _(resource.ancestors).filter({'@type': groupType}).map('label').value())
+                .flatMap(resource => _(resource.ancestors).filter(_.subResourceF(groupType)).map('label').value())
                 .uniq()
                 .map(label => ({name: label}))
                 .value(),
@@ -50,7 +50,7 @@ function groupResourceRemove (ResourceSettings, GroupResourceSubmitter) {
           }],
           model: {}
         }
-        let grs = new GroupResourceSubmitter($scope.resources, $scope.resourceType, groupType, form, $scope, $scope.success, false)
+        const grs = new GroupResourceSubmitter($scope.resources, $scope.resourceType, groupType, form, $scope, $scope.success, false)
         form.submit = model => grs.submit(model.groupLabel)
         $scope.typeahead = typeahead
         $scope.form = form

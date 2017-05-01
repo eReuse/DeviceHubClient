@@ -11,7 +11,7 @@ function ComputerSnapshotFormSchemaFactory (SnapshotFormSchema, $rootScope, $q) 
    * Contains a list of form keys used to create the field
    * @type {string[]}
    */
-  const PICK_FIELDS = ['from', 'place']
+  const PICK_FIELDS = ['place']
 
   /**
    * Enables uploading Snapshot forms containing snapshot files.

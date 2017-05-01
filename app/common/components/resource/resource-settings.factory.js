@@ -58,7 +58,8 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
         this.schema = schema.schema[this.resourceName]
         this.settings = _.assign(this._getInnerSettings(), this.schema._settings)
         this.server = ResourceServer(this.settings)
-        this.subResourcesNames = _.without(this.schema['@type']['allowed'], this.type)
+        this.types = this.schema['@type'].allowed
+        this.subResourcesNames = _.without(this.types, this.type)
         this.isALeaf = this.subResourcesNames.length === 0 || this.type === 'devices:EraseBasic' // todo so works redo
       }
     }
@@ -124,6 +125,16 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
     if (!(type in resourceTypes)) resourceTypes[type] = new ResourceSettings(type)
     return resourceTypes[type]
   }
+
+  // Let's add lodash mixins related to resources
+  window._.mixin({
+    /**
+     * Given a parent type, returns a function that checks if a given resource it is subtype.
+     * @param {string} resourceType - The parent type to check against.
+     * @returns {Function}
+     */
+    subResourceF: resourceType => _.includesF(_ResourceSettingsFactory(resourceType).types, '@type')
+  })
 
   return _ResourceSettingsFactory
 }

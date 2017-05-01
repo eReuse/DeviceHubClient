@@ -158,8 +158,8 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @return {promise} The Restangular promise.
      */
     getResources (getNextPage = false) {
-      this.progressBar.start()
       if (getNextPage && !this.pagination.morePagesAvailable) throw TypeError('There are not more pages available.')
+      this.progressBar.start()
       let self = this
       // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 0
       let page = this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 0

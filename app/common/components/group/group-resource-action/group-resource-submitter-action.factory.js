@@ -23,7 +23,7 @@ function groupResourceSubmitterFactory (SubmitForm, ResourceSettings) {
       this.addingResources = addingResources
       this.success = success
       // We start chaining the children
-      let property = this.rSettings.isSubResourceOrItself('Lot') ||
+      const property = this.rSettings.isSubResourceOrItself('Lot') ||
                      this.rSettings.isSubResourceOrItself('Package') ||
                      this.rSettings.isSubResourceOrItself('Place') ? 'label' : '_id'
       this.children = _(this.resources).map(property)
@@ -42,8 +42,9 @@ function groupResourceSubmitterFactory (SubmitForm, ResourceSettings) {
           group.children[rName] = self.addingResources
             ? self.children.union(group.children[rName]).value()
             : self.children.difference(group.children[rName]).value()
-          let promise = group.patch({'@type': group['@type'], 'children': group.children}).then(self.success)
-          self.submitForm.after(promise, `The items have been removed to the ${self.gSettings.humanName}.`)
+          const promise = group.patch({'@type': group['@type'], 'children': group.children}).then(self.success)
+          const op = self.addingResources ? 'added or moved' : 'removed'
+          self.submitForm.after(promise, `The items have been ${op} from ${self.gSettings.humanName}.`)
         })
       }
     }
