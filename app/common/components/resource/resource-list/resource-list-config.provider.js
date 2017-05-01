@@ -60,9 +60,15 @@ function resourceListProvider (RESOURCE_SEARCH) {
   function getIsAncestor (resourceType, value) {
     const resourceName = utils.Naming.resource(resourceType)
     return [
-      {'ancestors': {'$elemMatch': {'@type': resourceType, 'label': value}}},
-      {'ancestors': {'$elemMatch': {[resourceName]: {'$elemMatch': {$in: [value]}}}}}
+      {ancestors: {$elemMatch: {'@type': resourceType, label: value}}},
+      {ancestors: {$elemMatch: {[resourceName]: {$elemMatch: {$in: [value]}}}}}
     ]
+  }
+
+  function getIsNotAncestor (resourceType, value) {
+    const query = getIsAncestor(resourceType, value)
+    _.forEach(query, partial => { partial.ancestors = {$not: partial.ancestors} })
+    return query
   }
 
   const INSIDE_LOT = {
@@ -71,8 +77,9 @@ function resourceListProvider (RESOURCE_SEARCH) {
     typeahead: LOT_TYPEAHEAD,
     callback: (where, value) => {
       if (!('$or' in where)) where.$or = []
-      where.$or = where.$or.concat(getIsAncestor('Lot', value),
-        getIsAncestor('IncomingLot', value), getIsAncestor('OutgoingLot', value))
+      where.$or = where.$or.concat(getIsAncestor('Lot', value))
+      where.$or.push({ancestors: {$elemMatch: {'@type': 'IncomingLot', label: value}}})
+      where.$or.push({ancestors: {$elemMatch: {'@type': 'OutgoingLot', label: value}}})
     }
   }
   const INSIDE_PACKAGE = {
@@ -91,6 +98,58 @@ function resourceListProvider (RESOURCE_SEARCH) {
     callback: (where, value) => {
       if (!('$or' in where)) where.$or = []
       where.$or = where.$or.concat(getIsAncestor('Place', value))
+    }
+  }
+  const OUTSIDE_LOT = {
+    key: 'lotIsNotAncestor',
+    name: 'Outside of lot',
+    typeahead: LOT_TYPEAHEAD,
+    callback: (where, value) => {
+      if (!('$and' in where)) where.$and = []
+      where.$and = where.$and.concat(getIsNotAncestor('Lot', value),
+        getIsNotAncestor('IncomingLot', value), getIsNotAncestor('OutgoingLot', value))
+    }
+  }
+
+  function notAncestorOfType (groupType, RSettings) {
+    const query = ancestorOfType(groupType, RSettings)
+    _.forEach(query, partial => { partial.ancestors = {$not: partial.ancestors} })
+    return query
+  }
+
+  function ancestorOfType (groupType, RSettings) {
+    const rSettings = RSettings(groupType)
+    return [
+      {ancestors: {$elemMatch: {'@type': {$in: rSettings.types}}}},
+      {ancestors: {$elemMatch: {[rSettings.resourceName]: {$exists: true}}}}
+    ]
+  }
+
+  const OUTSIDE_GROUP = {
+    key: 'outsideGroup',
+    name: 'Outside of lot, package or place',
+    description: 'Match items that are not in a lot, a package or a place',
+    select: ['Lot', 'Place', 'Package'],
+    callback: (where, value, RSettings) => {
+      if (!('$and' in where)) where.$and = []
+      _.arrayExtend(where.$and, notAncestorOfType(value, RSettings))
+    }
+  }
+
+  const GROUP_INCLUSION = {
+    key: 'groupInclusion',
+    name: 'Items in lots, packages or places',
+    description: 'Match items that are in lots, packages or places',
+    select: ['Yes', 'No'],
+    boolean: true,
+    callback: (where, value, RSettings) => {
+      const DIRECT_GROUP_DESCENDANTS = ['Lot', 'Package', 'Place'] // todo get from method children() applied to
+      // abstract and physical (or twice on group?)
+      const inclusion = value === 'Yes'
+      const cond = inclusion ? '$or' : '$and'
+      const func = inclusion ? ancestorOfType : notAncestorOfType
+      if (!(cond in where)) where[cond] = []
+      _.arrayExtend(where[cond], _.flatMap(DIRECT_GROUP_DESCENDANTS, type => func(type, RSettings)))
     }
   }
 
@@ -292,8 +351,11 @@ function resourceListProvider (RESOURCE_SEARCH) {
               description: 'Match devices that are actually not assigned to a specific user.'
             },
             INSIDE_LOT,
+            OUTSIDE_LOT,
             INSIDE_PACKAGE,
             INSIDE_PLACE,
+            GROUP_INCLUSION,
+            OUTSIDE_GROUP,
             {
               key: 'snapshot-software',
               name: 'Has a Snapshot made with',
@@ -343,7 +405,7 @@ function resourceListProvider (RESOURCE_SEARCH) {
               description: 'Match devices depending if they are components or not.'
             }
           ]),
-          defaultParams: {'is-component': 'No'},
+          defaultParams: {'is-component': 'No', 'groupInclusion': 'No'},  // todo create index in mongo
           subResource: {
             Event: {key: 'device', field: '_id'}
           }
@@ -398,7 +460,10 @@ function resourceListProvider (RESOURCE_SEARCH) {
             },
             LAST_EVENT,
             INSIDE_PLACE,
-            INSIDE_LOT
+            INSIDE_LOT,
+            OUTSIDE_LOT,
+            GROUP_INCLUSION,
+            OUTSIDE_GROUP
           ]),
           defaultParams: {},
           subResource: {
@@ -419,8 +484,11 @@ function resourceListProvider (RESOURCE_SEARCH) {
         search: {
           params: RESOURCE_SEARCH.params.concat([
             INSIDE_LOT,
+            OUTSIDE_LOT,
             INSIDE_PLACE,
             INSIDE_PACKAGE,
+            GROUP_INCLUSION,
+            OUTSIDE_GROUP,
             _.assign({}, HAS_DEVICE, {
               callback: hasGroupCallback('packages'),
               description: 'Find packages that have a specific device.'

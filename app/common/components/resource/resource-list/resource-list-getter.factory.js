@@ -90,7 +90,7 @@ function ResourceListGetterFactory (ResourceSettings) {
         }
         if ('callback' in settings) {
           // Save the callbacks to execute them at the end, passing the resulting filters array and the value
-          callbacks.push(_.bind(settings.callback, null, _filters, value))
+          callbacks.push(_.bind(settings.callback, null, _filters, value, ResourceSettings))
         } else {
           if ('date' in settings) value = utils.parseDate(value)
           if ('boolean' in settings) value = value === 'Yes' || value === 'Succeed'

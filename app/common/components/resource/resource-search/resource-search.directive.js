@@ -17,15 +17,15 @@ function resourceSearch (ResourceSettings) {
         }
         $scope.params = angular.copy($scope.defaultParams)
 
-        $scope.$watchCollection('params', function (params) {
+        $scope.$watchCollection('params', function (params, oldParams) {
           if (angular.isDefined(params)) {
             // todo we copy params to delete 'query' in case its there. Query is populated when user
             // types something in search that is not a filter per se. We have to disable that possibility instead
             // of deleting 'behind the scenes' the query
             // note that we copy to not modify params inside its watcher
-            let newParams = _.cloneDeep(params)
-            delete newParams['query']
-            $scope.onParamsChanged({params: newParams})
+            const newParams = _.clone(params)
+            // equal means that the changed has not been provoked by the query
+            if (_.pop(newParams, 'query') === _.pop(oldParams, 'query')) $scope.onParamsChanged({params: newParams})
           }
         })
 
