@@ -72,6 +72,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         // the parent, not all resources. We do this by setting a default parameter in search
         const parentType = _.get($scope, 'parentResource.@type')
         if (parentType) {
+          if (config.search.defaultParamsWhenSubview) {
+            config.search.defaultParams = config.search.defaultParamsWhenSubview
+          }
           // no need to _.clone this setting as we do not modify it
           const path = 'search.subResource.' + resourceType
           const defaultParam = utils.getSetting(resourceListConfig.config.views, ResourceSettings(parentType), path)

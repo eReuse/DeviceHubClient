@@ -190,7 +190,9 @@ function resourceListProvider (RESOURCE_SEARCH) {
       default: { // This is not used, but provided as a template
         search: {
           params: RESOURCE_SEARCH.params,
-          defaultParams: {'@type': 'Computer'}
+          defaultParams: {'@type': 'Computer'},
+          defaultParamsWhenSubview: {} // If set, these default params will be used when resource-list is in a
+          // subview (parent-resource is set)
         },
         buttons: {
           templateUrl: ''
@@ -406,6 +408,7 @@ function resourceListProvider (RESOURCE_SEARCH) {
             }
           ]),
           defaultParams: {'is-component': 'No', 'groupInclusion': 'No'},  // todo create index in mongo
+          defaultParamsWhenSubview: {'is-component': 'No'},
           subResource: {
             Event: {key: 'device', field: '_id'}
           }
