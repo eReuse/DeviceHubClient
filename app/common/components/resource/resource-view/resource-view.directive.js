@@ -1,14 +1,15 @@
-/**
- *
- * Represents a resource. Selects the appropriate view to show the resource, depending of its type.
- *
- */
 function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG) {
   const utils = require('./../../utils')
   const BIG = 'big'
   const MED = 'medium'
   const SM = 'small'
   const TYPES = [BIG, MED, SM]
+  /**
+   *
+   * Represents a resource. Selects the appropriate view to show the resource, depending of its type.
+   * @param {object} resource - The resource to represent.
+   * @param {string} type - The type of the resource.
+   */
   return {
     templateUrl: require('./__init__').PATH + '/resource-view.directive.html',
     restrict: 'E',
@@ -22,8 +23,8 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
           throw TypeError('ResourceView only accepts big, medium and small as types.')
         }
 
-        $scope.setActive = (tabToActivate) => {
-          _.forOwn($scope.tabs, (tab) => { tab.isActive = false })
+        $scope.setActive = tabToActivate => {
+          _.forOwn($scope.tabs, tab => { tab.isActive = false })
           tabToActivate.isActive = true
         }
 
@@ -37,6 +38,8 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
         })
 
         function generateViewAndSubview () {
+          // first at all ensure variables in $scope subviews will use are ready
+          if (!_.isEmpty($scope.resource)) $scope.model = cerberusToView.parse($scope.resource)
           // Gets the info for the view
           let resourceType = _.get($scope, 'resource.@type')
           if (!_.isUndefined(resourceType)) $scope.view = Subview.getSetting(resourceType, 'view')
@@ -70,7 +73,6 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
         } else {
           $scope.srefUiParams = {resourceName: utils.Naming.resource($scope.resource['@type']), id: $scope.resource._id}
         }
-        if (!_.isEmpty($scope.resource)) $scope.model = cerberusToView.parse($scope.resource)
       })
     }
   }
