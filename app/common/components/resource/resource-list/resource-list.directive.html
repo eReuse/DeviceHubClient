@@ -49,11 +49,11 @@
         <tr ng-repeat="resource in resources"
             ng-class="{info: subResource.isOpened(resource._id)}"
 
-            ng-init="popover=popovers[resource._id]"
+            ng-init="popover = popovers[resource._id]"
 
             uib-popover-template="popovers.templateUrl"
             popover-enable="popovers.enable"
-            popover-title="{{popover.title}}"
+            popover-title="{{::popover.title}}"
             popover-is-open="popover.isOpen"
             popover-trigger="click"
             popover-append-to-body="true"

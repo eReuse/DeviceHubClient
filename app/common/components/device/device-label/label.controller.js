@@ -9,6 +9,7 @@ function deviceLabelCtrl ($scope, $uibModalInstance, devices, labelsToPdfService
     // execution is so fast that there is no need for be setting the increments of the bar
     progressBar.start()
     $scope.loading = true
+    $('.modal-body').scrollTop(0) // We scroll to the top to ensure labels are not hidden
     labelsToPdfService.execute($('#labels .labelWidget')).then(() => {
       utils.Progress.stop()
       progressBar.complete()
