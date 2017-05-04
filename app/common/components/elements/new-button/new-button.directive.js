@@ -4,26 +4,27 @@ function registerButton (SnapshotFormSchema, ResourceSettings, dhModal, FormSche
     restrict: 'E',
     replace: true,
     scope: {},
-    link: function ($scope) {
-      let open = {}
+    link: $scope => {
+      const open = {}
       open.computerSnapshot = _.bind(dhModal.open, null, 'computerSnapshot', {type: () => 'Computer'})
       open.snapshot = (type) => {
-        let model = () => ({'@type': 'devices:Snapshot'})
-        let options = () => ({
+        const model = () => ({'@type': 'devices:Snapshot'})
+        const options = () => ({
           FormSchema: SnapshotFormSchema,
           deviceType: type,
           title: ResourceSettings(type).humanName
         })
         return dhModal.open('form', {model: model, options: options, parserOptions: () => {}})
       }
-      open.group = (type) => {
-        let model = () => ({'@type': type})
-        let options = () => ({
+      open.group = type => {
+        const model = () => ({'@type': type})
+        const options = () => ({
           FormSchema: FormSchema,
           deviceType: type,
           title: ResourceSettings(type).humanName
         })
-        return dhModal.open('form', {model: model, options: options, parserOptions: () => {}})
+        const parserOptions = {doNotUse: type === 'Lot' ? ['from', 'to'] : []}
+        return dhModal.open('form', {model: model, options: options, parserOptions: () => parserOptions})
       }
       $scope.open = open
     }

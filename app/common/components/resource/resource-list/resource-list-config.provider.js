@@ -50,10 +50,12 @@ function resourceListProvider (RESOURCE_SEARCH) {
     email: {th: {key: 'email', name: 'email'}, td: {value: 'email'}},
     updated: {th: {key: '_updated', name: 'Updated'}, td: {value: '_updated'}},
     lastEvent: {
-      th: {key: 'events._updated', name: 'Last event', default: true},
+      th: {key: 'events._updated', name: 'Last event'},
       td: {templateUrl: configFolder + '/resource-button-device.html'}
-    }
+    },
+    created: {th: {key: '_created', name: 'Created'}, td: {value: '_created'}}
   }
+  f.lastEvent.thDef = _.assign({default: true}, f.lastEvent.th)
   f.updated.thDef = _.assign({default: true}, f.updated.th)
   const SNAPSHOT_SOFTWARE_ALLOWED = ['Workbench', 'AndroidApp', 'Web']
 
@@ -417,8 +419,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-device.html'
         },
         table: {
-          th: [f.id.th, f.label.th, {key: 'model', name: 'Model'}, f.lastEvent.th],
-          td: [f.id.td, {value: 'labelId'}, {value: 'model'}, f.lastEvent.td]
+          th: [f.id.th, f.label.th, {key: 'model', name: 'Model'}, f.lastEvent.thDef, f.created.th],
+          td: [f.id.td, {value: 'labelId'}, {value: 'model'}, f.lastEvent.td, f.created.td]
         }
       },
       Lot: {
@@ -479,8 +481,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-lot.html'
         },
         table: {
-          th: [f.label.th, f['@type'].th, f.from.th, f.to.th, f.updated.thDef, f.lastEvent.th],
-          td: [f.label.td, f['@type'].td, f.from.td, f.to.td, f.updated.td, f.lastEvent.td]
+          th: [f.label.th, f['@type'].th, f.from.th, f.to.th, f.lastEvent.th, f.updated.thDef],
+          td: [f.label.td, f['@type'].td, f.from.td, f.to.td, f.lastEvent.td, f.updated.td]
         }
       },
       Package: {
@@ -507,8 +509,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-package.html'
         },
         table: {
-          th: [f.id.th, f.label.th, f.updated.thDef],
-          td: [f.id.td, f.label.td, f.updated.td]
+          th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef],
+          td: [f.id.td, f.label.td, f.lastEvent.td, f.updated.td]
         }
       },
       Place: {
@@ -545,8 +547,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-place.html'
         },
         table: {
-          th: [f.id.th, f.label.th, f.updated.thDef],
-          td: [f.id.td, f.label.td, f.updated.td]
+          th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef],
+          td: [f.id.td, f.label.td, f.lastEvent.td, f.updated.td]
         }
       },
       Event: {
