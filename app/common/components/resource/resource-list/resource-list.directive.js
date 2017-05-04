@@ -46,7 +46,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
            * @param {string} resourceId
            */
           close: resourceId => {
-            if (subResource.resource._id === resourceId) {
+            if (_.get(subResource.resource, '_id') === resourceId) {
               subResource.resource = null
               triggerCollapse()
             }
