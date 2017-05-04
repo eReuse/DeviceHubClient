@@ -28,7 +28,8 @@ function ComputerSnapshotFormSchemaFactory (SnapshotFormSchema, $rootScope, $q) 
       status.uploaded = status.unsolved = 0
       status.results = {
         error: [],
-        success: []
+        success: [],
+        progressBar: []
       }
       super(model, form, status, parserOptions, 'Computer')
       // Snapshot is special in that we only use three values, two from the Schema computed in FormSchema
@@ -92,6 +93,7 @@ function ComputerSnapshotFormSchemaFactory (SnapshotFormSchema, $rootScope, $q) 
             fileName: file.name,
             _id: modelFromServer._id
           })
+          self.status.results.progressBar.push('success')
           return modelFromServer
         }).catch(modelFromServer => {
           self.status.results.error.push({
@@ -102,14 +104,12 @@ function ComputerSnapshotFormSchemaFactory (SnapshotFormSchema, $rootScope, $q) 
             solved: false,
             type: 'server'
           })
+          self.status.results.progressBar.push('danger')
           ++self.status.unsolved
           return $q.reject(modelFromServer)
-        }).finally(() => { this._uploadNextFile(originalModel, iterator)})
+        }).finally(() => { this._uploadNextFile(originalModel, iterator) })
       } else { // no more files to process
-        if (this.status.results.success.length > 0) {
-          $rootScope.$broadcast('submitted@Computer')
-          $rootScope.$broadcast('submitted@any')
-        }
+        if (this.status.results.success.length > 0) $rootScope.$broadcast('submitted@devices:Snapshot')
         this.submitForm.final() // Let's say with our flags that we are finished
       }
     }

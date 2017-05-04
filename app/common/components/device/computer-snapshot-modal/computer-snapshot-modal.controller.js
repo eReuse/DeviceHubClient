@@ -13,22 +13,11 @@ function computerSnapshotModalCtrl ($scope, $uibModalInstance, type, ComputerSna
   $scope.type = type
   $scope.title = type
 
-  $scope.$watch('status.done', done => {
-    if (done) {
-      if ($scope.status.results.error.length > 0) {
-        $scope.progressBarType = _.isEmpty($scope.status.results.success) ? 'danger' : 'warning'
-      } else {
-        $scope.progressBarType = 'success'
-      }
-    }
-  })
   $scope.$watch('status.unsolved', numberOfErrorsUnsolved => {
     $scope.status.atLeastOneError = numberOfErrorsUnsolved > 0
     window.onbeforeunload = $scope.status.atLeastOneError ? _.identity(EXIT_QUESTION) : _.noop
   })
-  $scope.done = () => {
-    $uibModalInstance.dismiss('cancel')
-  }
+  $scope.done = () => { $uibModalInstance.dismiss('cancel') }
   $scope.restartIfConfirms = () => {
     if (!confirmToStay()) {
       $scope.form.options.resetModel()
@@ -36,9 +25,7 @@ function computerSnapshotModalCtrl ($scope, $uibModalInstance, type, ComputerSna
     }
   }
 
-  $scope.$on('modal.closing', event => {
-    if (confirmToStay()) event.preventDefault()
-  })
+  $scope.$on('modal.closing', event => { if (confirmToStay()) event.preventDefault() })
 
   function confirmToStay () {
     return $scope.status.atLeastOneError && !confirm(EXIT_QUESTION)

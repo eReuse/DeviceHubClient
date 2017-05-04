@@ -1,25 +1,22 @@
 <div ng-include="'common/elements/modal/header.html'"></div>
 <div class="modal-body">
-  <div uib-collapse="!status.working && !status.done">
-    <uib-progressbar ng-class="{active: !status.done, 'progress-striped': !status.done}"
-                     type="{{progressBarType}}"
-                     value="status.uploaded"
-                     max="form.model.files.length">
-    </uib-progressbar>
-    <div ng-show="status.results.error.length > 0 || status.results.success.length > 0" ng-switch="progressBarType">
-      <div class="alert alert-warning" ng-switch-when="warning">
-        {{status.results.success.length}} computers were successfully uploaded, but
-        {{status.results.error.length}} have <strong>not</strong> been uploaded and require attention. See below.
-      </div>
-      <div class="alert alert-success" ng-switch-when="success">
-        All computers ({{status.results.success.length}}) have been successfully uploaded.
-      </div>
-      <div class="alert alert-danger" ng-switch-when="danger">
-        No computer ({{status.results.error.length}}) has been uploaded, see below how to fix it.
-      </div>
-    </div>
+  <div uib-collapse="!status.loading && !status.done">
+    <uib-progress max="form.model.files.length">
+      <uib-bar ng-repeat="result in status.results.progressBar track by $index" value="1"
+               type="{{::result}}"></uib-bar>
+    </uib-progress>
+    <p>
+      <span ng-show="status.results.success.length > 0" class="text-success">
+        <strong ng-show="status.results.error.length == 0 && status.done">All</strong>
+        {{status.results.success.length}} computers have been successfully uploaded.
+      </span>
+      <span ng-show="status.results.error.length > 0" class="text-warning">
+        {{status.results.error.length}} computers have <strong>not</strong> been uploaded and require attention. See
+        below.
+      </span>
+    </p>
   </div>
-  <form uib-collapse="status.working || status.done"
+  <form uib-collapse="status.loading || status.done"
         ng-submit="submit(form.model)"
         id="computer-snapshot-form"
         novalidate>
