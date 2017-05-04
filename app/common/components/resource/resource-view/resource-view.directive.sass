@@ -7,11 +7,16 @@
       padding-left: 0
       padding-right: 0
 
-#subviews #subviews > .nav-pills .nav-link
-  padding-top: .25em
-  padding-bottom: .25em
-
 #subviews
   .fill-height
     height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$tabsHeight})
     overflow-y: auto
+
+// Only nested subviews
+#subviews #subviews
+  & > .nav-pills .nav-link
+    padding-top: .25em
+    padding-bottom: .25em
+
+    .view-tab-text
+      display: none !important

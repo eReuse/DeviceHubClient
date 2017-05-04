@@ -26,6 +26,8 @@ resource-list
 
   .fill-height-bar
     height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$tabsHeight} - #{$optionsMenuHeight} - #{$searchHeight})
+    @media (max-width: $screen-xs-max)
+      height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$tabsHeight})
     overflow-y: auto
 
   #resource-list-table tr
@@ -46,16 +48,27 @@ resource-list
 
   #aside-subResource
     padding-left: 0
-    border-left: 1px solid $nav-tabs-border-color
-
+    border-left: 2px solid $main-nav-bg
     resource-view
-      .fill-height-bar
+      .fill-height-bar // a subview with a search bar (ex. any resource-list)
         // - 2 * (everything we had in .fill-height-bar above) but calc does not allow 2 * (parenthesis) so we get it by
         // applying the distributive property
-        height: calc(100vh - #{$navbar-height} - #{$footerHeight} - 2 * #{$optionsMenuHeight} - 2 * #{$tabsHeight} - 2 * #{$searchHeight} - #{$subresourceH3Height}) !important
+        height: calc(100vh - #{$navbar-height} - #{$footerHeight} - 2 * #{$optionsMenuHeight} - #{$tabsMenuHeight} - #{$tabsHeight} - 2 * #{$searchHeight} - #{$subresourceH3Height}) !important
+        overflow-y: auto
+        @media (max-width: $screen-xs-max)
+          height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$optionsMenuHeight} - #{$tabsMenuHeight} - 1 * #{$searchHeight} - #{$subresourceH3Height}) !important
+
+      .fill-height // A subview without a search bar nor options buttons (ex. dashboard)
+        // We use fill-height-bar as initial, as only listing have subresources
+        height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$tabsHeight} - #{$tabsMenuHeight}  - #{$searchHeight} - #{$subresourceH3Height}) !important
         overflow-y: auto
 
-      .fill-height
-        // We use fill-height-bar as initial, as only listing have subresources
-        height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$optionsMenuHeight} - 2 * #{$tabsHeight} - #{$searchHeight} - #{$subresourceH3Height}) !important
-        overflow-y: auto
+        @media (max-width: $screen-xs-max)
+          height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$tabsMenuHeight} - 1 * #{$tabsHeight} - #{$subresourceH3Height}) !important
+
+      header
+        background-color: $main-nav-bg
+        h3
+          margin-top: 0
+          margin-bottom: 0
+          padding-top: $line-height-computed / 4

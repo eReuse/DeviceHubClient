@@ -26,7 +26,8 @@
                uib-datepicker-popup
                is-open="searchParam.datepickerOpened"
                nit-set-focus="searchParam.editMode"
-               ng-keydown="typeaheadCanRemove($event)? leaveEditMode($index, true) : null"/>
+               ng-keydown="typeaheadCanRemove($event)? leaveEditMode($index, true) : null"
+               size="10"/>
         <input ng-if="searchParam.select == null && !searchParam.date && !searchParam.typeahead"
                name="value"
                type="text"
@@ -35,7 +36,8 @@
                ng-keydown="keydown($event, $index)"
                ng-blur="leaveEditMode($index)"
                ng-model="searchParam.value"
-               placeholder="{{searchParam.placeholder}}"/>
+               placeholder="{{searchParam.placeholder}}"
+               size="10"/>
         <input
           ng-if="searchParam.typeahead"
           type="text"
@@ -43,7 +45,8 @@
           nit-set-focus="searchParam.editMode"
           uib-typeahead="resource[searchParam.typeahead.keyFieldName] as resource[searchParam.typeahead.labelFieldName] for resource in searchParam.typeahead._get(searchParam.typeahead.filterFieldName, $viewValue)"
           ng-keydown="typeaheadCanRemove($event)? leaveEditMode($index, true) : null"
-          typeahead-editable="false">
+          typeahead-editable="false"
+          size="10">
         </input>
       </div>
     </div>

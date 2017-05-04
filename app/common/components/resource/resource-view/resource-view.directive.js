@@ -71,6 +71,8 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
         if ($scope.type !== SM) {
           generateViewAndSubview()
         } else {
+          // Note that model is computed too in generateViewAndSubview for !sm views
+          if (!_.isEmpty($scope.resource)) $scope.model = cerberusToView.parse($scope.resource)
           $scope.srefUiParams = {resourceName: utils.Naming.resource($scope.resource['@type']), id: $scope.resource._id}
         }
       })

@@ -40,6 +40,16 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           toggle: resource => {
             subResource.resource = subResource.isOpened(resource['_id']) ? null : resource
             triggerCollapse()
+          },
+          /**
+           * Closes a resource if it was the opened one
+           * @param {string} resourceId
+           */
+          close: resourceId => {
+            if (subResource.resource._id === resourceId) {
+              subResource.resource = null
+              triggerCollapse()
+            }
           }
         }
 
@@ -108,17 +118,34 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         }
         $scope.pagination = resourceListGetter.pagination
 
+        // Popover is set on the left or bottom depending screen size (xs)
+        const computePlacement = () => $(window).width() <= 768 ? 'bottom-left' : 'auto left'
+        $scope.popoverPlacement = computePlacement()
+        $(window).resize(() => {
+          const placement = computePlacement()
+          if (placement !== $scope.popoverPlacement) $scope.$evalAsync(() => { $scope.popoverPlacement = placement })
+        })
+
         $scope.popovers = {enable: false}
         if ($scope.type === 'medium') {
           resourceListGetter.callbackOnGetting((resources) => {
             $scope.popovers.enable = true
             $scope.popovers.templateUrl = require('./../__init__').PATH + '/resource-button/resource-button.popover.directive.html'
-            _.forEach(resources, (resource) => {
+            _.forEach(resources, resource => {
               $scope.popovers[resource._id] = {
                 isOpen: false,
-                placement: 'left',
                 title: utils.getResourceTitle(resource)
               }
+              // Extra costly todo find better way
+              $scope.$watch(() => $scope.popovers[resource._id].isOpen, isOpen => {
+                if (isOpen === false) {
+                  $scope.subResource.close(resource._id)
+                } else if (isOpen === true) { // Let's close other popovers
+                  _.forEach(resources, _resource => {
+                    if (_resource._id !== resource._id) $scope.popovers[_resource._id].isOpen = false
+                  })
+                }
+              })
             })
           })
         }

@@ -32,7 +32,7 @@ function SubviewFactory (ResourceViewGenerator, RESOURCE_CONFIG) {
           <uib-tab select="setActive(tabs['${uid}'])">
             <uib-tab-heading>
               ${icon}
-              <span class="visible-sm-inline visible-md-inline visible-lg-inline">${option.name}</span>
+              <span class="visible-sm-inline visible-md-inline visible-lg-inline view-tab-text">${option.name}</span>
             </uib-tab-heading>
             <div ng-if="tabs['${uid}'].isActive" class="container-fluid">
               <div class="row">

@@ -18,11 +18,13 @@
 
   <div ng-if="type !== 'small'">
     <header ng-if="resource['@type']">
-      <resource-icon class="pull-right" resource-type="{{resource['@type']}}"
-                     resource-subtype="{{resource.type}}"></resource-icon>
       <h3 ng-show="view.title" class="display-inline">
         <span ng-repeat="t in view.title">{{resource[t]}}</span>
         <small ng-repeat="s in view.subtitle">&nbsp;{{resource[s]}}</small>
+        <small>
+          <resource-icon class="pull-right" resource-type="{{resource['@type']}}"
+                         resource-subtype="{{resource.type}}"></resource-icon>
+        </small>
       </h3>
     </header>
   </div>

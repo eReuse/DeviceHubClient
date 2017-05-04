@@ -200,11 +200,12 @@ gulp.task('images', function () {
 // =======================================================================
 // Copy index.html
 // =======================================================================
-gulp.task('copyIndex', function () {
+function copyIndex () {
   return gulp.src(filePath.copyIndex.src)
     .pipe(inlinesource({compress: false}))
     .pipe(gulp.dest(filePath.build.dest))
-})
+}
+gulp.task('copyIndex', copyIndex)
 
 // =======================================================================
 // Copy Favicon
@@ -246,13 +247,17 @@ gulp.task('templates', function () {
     .pipe(gulp.dest(filePath.destination))
 })
 
-gulp.task('sass', function () {
+gulp.task('_sass', function () {
   return gulp.src([filePath.styles.sass, filePath.styles.src])
     .pipe(sass({
       outputStyle: 'compressed'
     }).on('error', sass.logError))
     .pipe(concat('app.css'))
     .pipe(gulp.dest(filePath.build.cssDest))
+})
+
+gulp.task('sass', () => {
+  runSequence(['_sass'], ['copyIndex'])
 })
 
 gulp.task('vendorCSS', function () {
@@ -286,7 +291,7 @@ gulp.task('build-dev', function (callback) {
   runSequence(
     // images and vendor tasks are removed to speed up build time. Use "gulp build" to do a full re-build of the dev app.
     ['templates'],
-    ['bundle-dev', 'sass'],
+    ['bundle-dev', '_sass'],
     ['copyIndex'],
     ['notify', 'afterClean', 'watch'],
     callback
@@ -298,7 +303,7 @@ gulp.task('build', function (callback) {
   runSequence(
     ['clean'],
     ['templates'],
-    ['bundle-dev', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyFonts'],
+    ['bundle-dev', 'vendorJS', 'vendorCSS', '_sass', 'images', 'copyFavicon', 'copyFonts'],
     ['copyIndex'],
     ['afterClean', 'notify'],
     callback
@@ -310,7 +315,7 @@ gulp.task('build-prod', function (callback) {
   runSequence(
     ['clean'],
     ['templates'],
-    ['bundle-prod', 'vendorJS', 'vendorCSS', 'sass', 'images', 'copyFavicon', 'copyFonts'],
+    ['bundle-prod', 'vendorJS', 'vendorCSS', '_sass', 'images', 'copyFavicon', 'copyFonts'],
     ['copyIndex'],
     ['notify', 'afterClean'],
     callback
