@@ -17,9 +17,6 @@
   "dependencies": {
     "ngGeolocation": "~0.0.8",
     "html2canvas": "~0.4.1",
-    "angular-timeline": "~1.6.1",
-    "angular-dashboard-framework": "^0.11.0",
-    "adf-structures-base": "^0.1.1",
     "Boxer": "ba-dotimeout#*",
     "pdfmake": "^0.1.24",
     "ngprogress": "^1.1.3"

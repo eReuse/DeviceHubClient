@@ -61,8 +61,6 @@ const filePath = {
   vendorCSS: {
     src: [
       './resources/animate.min.css',
-      './bower_components/angular-timeline/dist/angular-timeline.css',
-      './bower_components/angular-timeline/dist/angular-timeline-bootstrap.css',
       './bower_components/angular-bootstrap-nav-tree/dist/abn_tree.css',
       './node_modules/jsonformatter/dist/json-formatter.min.css',
       './node_modules/angular-ui-notification/dist/angular-ui-notification.css',
@@ -86,7 +84,6 @@ const filePath = {
       './node_modules/angular-bootstrap-nav-tree/dist/abn_tree_directive.js',
       './node_modules/angular-google-maps/dist/angular-google-maps.js',
       './node_modules/angular-qrcode/angular-qrcode.js',
-      './bower_components/angular-timeline/dist/angular-timeline.js',
       './node_modules/angular-ui-router/release/angular-ui-router.js',
       './node_modules/angular-formly/dist/formly.js',
       './node_modules/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js',

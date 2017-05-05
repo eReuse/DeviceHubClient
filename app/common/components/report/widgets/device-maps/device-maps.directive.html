@@ -1,0 +1,10 @@
+<div ng-if="resources.length > 0">
+    <ui-gmap-google-map draggable="false" pan="true" center="center" zoom="zoom" control="control">
+
+        <ui-gmap-markers models="models" coords="'geo'"
+                         type="'cluster'" clusterOptions="clusterOptions" idkey="'_id'">
+        </ui-gmap-markers>
+
+    </ui-gmap-google-map>
+</div>
+<div ng-if="resources.length == 0">No resources to show.</div>
