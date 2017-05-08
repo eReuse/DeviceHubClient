@@ -1,4 +1,4 @@
-function inventoryDashboard (resourceServerAggregations) {
+function inventoryDashboard (resourceServerAggregations, CONSTANTS) {
   return {
     templateUrl: require('./__init__').PATH + '/inventory-dashboard.directive.html',
     restrict: 'E',
@@ -7,6 +7,7 @@ function inventoryDashboard (resourceServerAggregations) {
     },
     link: {
       pre: $scope => {
+        $scope.debug = CONSTANTS.debug
         let placeholders = {
           labels: ['Undiscovered devices', 'Discovered devices'],
           data: [23, 26],

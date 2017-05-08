@@ -1,4 +1,4 @@
-function DeviceMaps () {
+function resourceMapsLocations (ResourceSettings) {
   const CLUSTER_OPTIONS = {
     'title': 'Click to see more devices.',
     'gridSize': 60,
@@ -8,16 +8,13 @@ function DeviceMaps () {
   return {
     templateUrl: require('./__init__').PATH + '/resource-maps-locations.directive.html',
     restrict: 'E',
-    scope: {
-      resources: '=',
-      key: '@?' // The name of the key where the geojson point is in, by default 'geo'
-    },
+    scope: {},
     link: {
       pre: $scope => {
         $scope.key = $scope.key || 'geo'
         let map = {
           markers: {
-            models: $scope.resources,
+            models: ResourceSettings('Event').server.getList({where: {'geo': {'$exists': true}}}).$object,
             clusterOptions: CLUSTER_OPTIONS,
             events: {
               click: (markers, eventName, model) => {
@@ -60,9 +57,9 @@ function DeviceMaps () {
  */
 function ensureMapIsDisplayed (map) {
   map.control = {} // angular-google-maps populates this
-  setTimeout(function () {
+  setTimeout(() => {
     try { window.google.maps.event.trigger(map.control.getGMap(), 'resize') } catch (e) {}
   }, 300)
 }
 
-module.exports = DeviceMaps
+module.exports = resourceMapsLocations
