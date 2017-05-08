@@ -1,5 +1,15 @@
 <li class="dropdown" uib-dropdown id="new-button">
-  <a uib-dropdown-toggle class="text-success">
+  <a uib-dropdown-toggle class="text-success"
+
+     uib-popover-template="popover.templateUrl"
+     popover-enable="popover.enable"
+     popover-title="{{popover.title}}"
+     popover-is-open="popover.isOpen"
+     popover-placement="auto bottom"
+     popover-trigger="'none'"
+
+     ng-click="closePopover()"
+  >
     <i class="fa fa-plus fa-fw fa-lg"></i>Create<span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
@@ -19,6 +29,11 @@
     <li role="menuitem"><a ng-click="open.snapshot('Mobile')">
       <device-icon type="Mobile" subtype="Smartphone"></device-icon>
       Mobile
+    </a></li>
+    <li role="menuitem" class="dropdown-header">New placeholders</li>
+    <li role="menuitem"><a ng-click="open.placeholders()">
+      <device-icon type="Device"></device-icon>
+      Placeholders
     </a></li>
     <li role="menuitem" class="dropdown-header">New group</li>
     <li role="menuitem"><a ng-click="open.group('Place')">
