@@ -54,7 +54,8 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
               ? Subview.getSetting(resourceType, 'subviews')
               : RESOURCE_CONFIG.inventory.subviews
             const num = subviewsConfig.length
-            const AVOID_INPUTS = new Set(['text', 'textarea']) // We want to e.has to be fast
+            const AVOID_INPUTS = new Set(['text', 'textarea', 'number', 'email', 'month', 'password', 'tel', 'time',
+              'url', 'date', 'datetime-local', 'search']) // We want to e.has to be fast
             /**
              * Sets the subviews tabs by pressing a number from the keyboard.
              */
