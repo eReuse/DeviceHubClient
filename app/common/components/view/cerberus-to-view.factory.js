@@ -20,7 +20,7 @@ function parseFactory (schema, UNIT_CODES) {
       }
     }
     fields.sort(schema.compareSink)
-    fields.push({name: 'Updated', value: filters.dateFilter(model._updated, 'short')})
+    fields.push({name: 'Updated', value: filters.dateFilter(model._updated, 'short'), teaser: true})
     fields.push({name: 'Created', value: filters.dateFilter(model._created, 'short')})
     try {
       fields.push({name: 'URL', value: model._links.self.href})
@@ -38,7 +38,7 @@ function generateField (value, fieldSchema, fieldName, UNIT_CODES) {
     sink: fieldSchema.sink || 0,
     teaser: angular.isDefined(fieldSchema.teaser) ? fieldSchema.teaser : true
   }
-  if (angular.isDefined(value)) {
+  if (!_.isEmpty(value)) {
     field.value = getContent(value, fieldSchema)
   }
   try {

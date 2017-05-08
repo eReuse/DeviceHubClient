@@ -1,6 +1,7 @@
 var utils = require('./../../utils')
 
 function tableView () {
+  const filter = value => value.teaser && !_.isEmpty(value.value)
   return {
     templateUrl: window.COMPONENTS + '/view/table-view/table-view.directive.html',
     restrict: 'E',
@@ -8,10 +9,9 @@ function tableView () {
       model: '=',
       teaser: '=?'
     },
-    link: function ($scope) {
+    link: $scope => {
       $scope._teaser = !!$scope.teaser
-      $scope.filterTeaser = {}
-      if ($scope._teaser) $scope.filterTeaser = {teaser: true}
+      $scope.filterTeaser = $scope._teaser ? filter : {}
       $scope.Naming = utils.Naming
     }
   }
