@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-xs-12 col-md-6 col-lg-4">
+  <div class="col-md-6">
     <div class="panel">
       <div class="panel-heading">
         <h3 class="panel-title text-center">Your inventory, in a nutshell</h3>
@@ -9,22 +9,19 @@
       </div>
     </div>
   </div>
-  <div class="col-xs-12 col-md-6 col-lg-4">
+  <div class="col-md-6">
     <div class="panel">
       <div class="panel-heading">
-        <h3 class="panel-title text-center">Discovered vs undiscovered devices</h3>
+        <h3 class="panel-title text-center">State of the devices</h3>
       </div>
       <div class="panel-body">
         <div class="chart-holder">
-          <canvas class="chart chart-pie" chart-data="placeholders.data"
-                  chart-labels="placeholders.labels" chart-legend="true" chart-options="placeholders.options"
-          >
-          </canvas>
+          <type-devices></type-devices>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-xs-12 col-md-6 col-lg-4">
+  <div class="col-md-12">
     <div class="panel">
       <div class="panel-heading">
         <h3 class="panel-title text-center">Location of devices</h3>
@@ -34,22 +31,6 @@
       </div>
       <div class="panel-body text-center" ng-show="debug">
         The map does not appear in debug mode. Turn it off in CONSTANTS.
-      </div>
-    </div>
-  </div>
-  <div class="clearfix"></div>
-  <div class="col-xs-12 col-md-6">
-    <div class="panel">
-      <div class="panel-heading">
-        <h3 class="panel-title text-center">State of the devices</h3>
-      </div>
-      <div class="panel-body">
-        <div class="chart-holder">
-          <canvas class="chart chart-pie" chart-data="state.data"
-                  chart-labels="state.labels" chart-legend="true" chart-options="state.options"
-          >
-          </canvas>
-        </div>
       </div>
     </div>
   </div>

@@ -14,7 +14,7 @@ var CONSTANTS = (function () {
     },
     // We cannot take this from the server as Naming uses it before getting the Schema
     resourcesChangingNumber: ['device', 'event', 'account', 'place', 'erase', 'project', 'package', 'lot', 'manufacturer', 'group'],
-    debug: true
+    debug: false
   }
 }())
 

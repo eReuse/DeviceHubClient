@@ -7,6 +7,7 @@ module.exports = angular.module('common.components.report',
     'uiGmapgoogle-maps'
   ])
   .factory('resourceServerAggregations', require('./resource-server-aggregations'))
-  .directive('deviceMaps', require('./widgets/device-maps/device-maps.directive'))
   .directive('quickview', require('./widgets/quickview/quickview.directive'))
   .directive('inventoryDashboard', require('./inventory-dashboard/inventory-dashboard.directive'))
+  .directive('typeDevices', require('./widgets/type-devices/type-devices.directive'))
+  .directive('resourceMapsLocations', require('./widgets/resource-maps-locations/resource-maps-locations.directive'))
