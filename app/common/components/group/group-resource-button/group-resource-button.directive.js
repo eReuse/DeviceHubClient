@@ -17,12 +17,12 @@ function groupResourceButton () {
     },
     link: $scope => {
       let menu = [
-        {title: 'Lot', group: 'Lot', resourceTypes: ['Package', 'Device', 'Lot']},
+        {title: 'Lot', group: 'Lot', resourceTypes: ['Package', 'Device', 'Lot', 'Pallet']},
         {
           label: 'Add to lot',
           action: 'add',
           group: 'Lot',
-          resourceTypes: ['Package', 'Device', 'Lot'],
+          resourceTypes: ['Package', 'Device', 'Lot', 'Pallet'],
           tooltip: `
                    Add the items to the lot, keeping the lots they are in, plus the new one. An item can be 
                    in different lots at the same time.
@@ -33,11 +33,11 @@ function groupResourceButton () {
           label: 'Remove from lot',
           action: 'remove',
           group: 'Lot',
-          resourceTypes: ['Package', 'Device', 'Lot'],
+          resourceTypes: ['Package', 'Device', 'Lot', 'Pallet'],
           tooltip: `Removes the items from a lot.`,
           fa: 'fa-minus'
         },
-        {title: 'Package', group: 'Package', resourceTypes: ['Device']},
+        {title: 'Package', group: 'Package', resourceTypes: ['Device', 'Package']},
         {
           label: 'Move to package',
           action: 'move',
@@ -54,12 +54,12 @@ function groupResourceButton () {
           tooltip: 'Removes the items from their packages.',
           fa: 'fa-minus'
         },
-        {title: 'Place', group: 'Place', resourceTypes: ['Package', 'Device', 'Lot', 'Place']},
+        {title: 'Place', group: 'Place', resourceTypes: ['Package', 'Device', 'Lot', 'Place', 'Pallet']},
         {
           label: 'Move to place',
           action: 'move',
           group: 'Place',
-          resourceTypes: ['Package', 'Device', 'Lot', 'Place'],
+          resourceTypes: ['Package', 'Device', 'Lot', 'Place', 'Pallet'],
           tooltip: 'Replaces the place of the items.',
           fa: 'fa-long-arrow-right'
         },
@@ -67,8 +67,25 @@ function groupResourceButton () {
           label: 'Remove from places',
           action: 'remove',
           group: 'Place',
-          resourceTypes: ['Package', 'Device', 'Lot', 'Place'],
+          resourceTypes: ['Package', 'Device', 'Lot', 'Place', 'Pallet'],
           tooltip: 'Removes the items from their places.',
+          fa: 'fa-minus'
+        },
+        {title: 'Pallet', group: 'Pallet', resourceTypes: ['Device', 'Package']},
+        {
+          label: 'Move to pallet',
+          action: 'move',
+          group: 'Pallet',
+          resourceTypes: ['Device', 'Package'],
+          tooltip: 'Replaces the pallet of the items.',
+          fa: 'fa-long-arrow-right'
+        },
+        {
+          label: 'Remove from pallets',
+          action: 'remove',
+          group: 'Pallet',
+          resourceTypes: ['Device', 'Package'],
+          tooltip: 'Removes the items from their pallet.',
           fa: 'fa-minus'
         }
       ]

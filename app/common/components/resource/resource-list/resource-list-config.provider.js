@@ -36,6 +36,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
   LOT_TYPEAHEAD.resourceType = 'Lot'
   const PACKAGE_TYPEAHEAD = _.clone(GROUP_TYPEAHEAD)
   PACKAGE_TYPEAHEAD.resourceType = 'Package'
+  const PALLET_TYPEAHEAD = _.clone(GROUP_TYPEAHEAD)
+  PALLET_TYPEAHEAD.resourceType = 'Pallet'
   const PLACE_TYPEAHEAD = _.clone(GROUP_TYPEAHEAD)
   PLACE_TYPEAHEAD.resourceType = 'Place'
   const configFolder = require('./__init__').PATH + '/resource-list-config'
@@ -93,6 +95,15 @@ function resourceListProvider (RESOURCE_SEARCH) {
       where.$or = where.$or.concat(getIsAncestor('Package', value))
     }
   }
+  const INSIDE_PALLET = {
+    key: 'palletIsAncestor',
+    name: 'Inside of pallet',
+    typeahead: PALLET_TYPEAHEAD,
+    callback: (where, value) => {
+      if (!('$or' in where)) where.$or = []
+      where.$or = where.$or.concat(getIsAncestor('Pallet', value))
+    }
+  }
   const INSIDE_PLACE = {
     key: 'placeIsAncestor',
     name: 'Inside of place',
@@ -145,13 +156,12 @@ function resourceListProvider (RESOURCE_SEARCH) {
     select: ['Yes', 'No'],
     boolean: true,
     callback: (where, value, RSettings) => {
-      const DIRECT_GROUP_DESCENDANTS = ['Lot', 'Package', 'Place'] // todo get from method children() applied to
       // abstract and physical (or twice on group?)
       const inclusion = value === 'Yes'
       const cond = inclusion ? '$or' : '$and'
       const func = inclusion ? ancestorOfType : notAncestorOfType
       if (!(cond in where)) where[cond] = []
-      _.arrayExtend(where[cond], _.flatMap(DIRECT_GROUP_DESCENDANTS, type => func(type, RSettings)))
+      _.arrayExtend(where[cond], _.flatMap(RSettings('Group').subResourcesNames, type => func(type, RSettings)))
     }
   }
 
@@ -358,6 +368,7 @@ function resourceListProvider (RESOURCE_SEARCH) {
             OUTSIDE_LOT,
             INSIDE_PACKAGE,
             INSIDE_PLACE,
+            INSIDE_PALLET,
             GROUP_INCLUSION,
             OUTSIDE_GROUP,
             {
@@ -474,7 +485,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           subResource: {
             Device: {key: 'lotIsAncestor', field: 'label'},
             Package: {key: 'lotIsAncestor', field: 'label'},
-            Lot: {key: 'lotIsAncestor', field: 'label'}
+            Lot: {key: 'lotIsAncestor', field: 'label'},
+            Pallet: {key: 'lotIsAncestor', field: 'label'}
           }
         },
         buttons: {
@@ -492,6 +504,7 @@ function resourceListProvider (RESOURCE_SEARCH) {
             OUTSIDE_LOT,
             INSIDE_PLACE,
             INSIDE_PACKAGE,
+            INSIDE_PALLET,
             GROUP_INCLUSION,
             OUTSIDE_GROUP,
             _.assign({}, HAS_DEVICE, {
@@ -507,6 +520,33 @@ function resourceListProvider (RESOURCE_SEARCH) {
         },
         buttons: {
           templateUrl: configFolder + '/resource-list-config-package.html'
+        },
+        table: {
+          th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef],
+          td: [f.id.td, f.label.td, f.lastEvent.td, f.updated.td]
+        }
+      },
+      Pallet: {
+        search: {
+          params: RESOURCE_SEARCH.params.concat([
+            INSIDE_LOT,
+            OUTSIDE_LOT,
+            INSIDE_PLACE,
+            GROUP_INCLUSION,
+            OUTSIDE_GROUP,
+            _.assign({}, HAS_DEVICE, {
+              callback: hasGroupCallback('pallets'),
+              description: 'Find pallets that have a specific device.'
+            })
+          ]),
+          defaultParams: {},
+          subResource: {
+            Device: {key: 'palletIsAncestor', field: 'label'},
+            Package: {key: 'palletIsAncestor', field: 'label'}
+          }
+        },
+        buttons: {
+          templateUrl: configFolder + '/resource-list-config-pallet.html'
         },
         table: {
           th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef],

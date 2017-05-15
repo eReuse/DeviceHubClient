@@ -20,6 +20,7 @@ const v = {
   Event: {view: 'resource-list', resourceType: 'Event', name: 'Events', resourceIcon: 'Event'},
   Place: {view: 'resource-list', resourceType: 'Place', name: 'Places', resourceIcon: 'Place'},
   Lot: {view: 'resource-list', resourceType: 'Lot', name: 'Lots', resourceIcon: 'Lot'},
+  Pallet: {view: 'resource-list', resourceType: 'Pallet', name: 'Pallets', resourceIcon: 'Pallet'},
   Package: {view: 'resource-list', resourceType: 'Package', name: 'Packages', resourceIcon: 'Package'},
   Account: {view: 'resource-list', resourceType: 'Account', name: 'Accounts', resourceIcon: 'Account'}
 }
@@ -100,6 +101,18 @@ const RESOURCE_CONFIG = {
       subviews: [v.Dashboard, v.Package, v.Device],
       doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
     },
+    Pallet: {
+      dataRelation: {
+        label: 'Name of the pallet',
+        labelFieldName: 'label',
+        filterFieldName: 'label',
+        fieldType: 'typeahead',
+        keyFieldName: 'label'
+      },
+      view: {title: ['label'], subtitle: []},
+      subviews: [v.Dashboard, v.Package, v.Device],
+      doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
+    },
     Lot: {
       dataRelation: {
         label: 'Name of the lot',
@@ -143,7 +156,7 @@ const RESOURCE_CONFIG = {
     }
   },
   inventory: {
-    subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Event] // removed v.Account
+    subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Pallet, v.Event] // removed v.Account
   }
 }
 
