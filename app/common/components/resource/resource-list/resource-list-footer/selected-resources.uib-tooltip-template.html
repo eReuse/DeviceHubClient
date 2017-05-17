@@ -1,3 +1,3 @@
 <div ng-repeat="resource in selectedResources" style="text-align: left">
-    {{resource.label || resource._id}}: {{resource.model}}
+    {{resource.label || resource._id}} <span ng-show="resource.model">:</span>{{resource.model}}
 </div>

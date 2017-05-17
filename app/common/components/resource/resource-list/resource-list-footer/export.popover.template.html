@@ -1,0 +1,13 @@
+<div>
+  <span class="text-warning" ng-show="isSafari">Only Safari from 2017+ supported</span>
+  <close-popover popover="popover" close-on-clickout="true"></close-popover>
+  <form ng-submit="form.submit(form.model)" novalidate>
+    <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary" dh-submit-button="loading">
+          <i class="fa fa-file-excel-o fa-fw"></i>Download
+        </button>
+      </div>
+    </formly-form>
+  </form>
+</div>
