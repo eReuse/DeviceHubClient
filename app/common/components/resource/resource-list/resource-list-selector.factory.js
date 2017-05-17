@@ -52,7 +52,7 @@ function ResourceSelectorFactory () {
         if ($event.shiftKey) { // Add multiple
           let foundPreviousSelectedOne = false
           // Selects all resources until finds a previously selected resources or reaches the beginning
-          for (let i = $index - 1; i >= 0 && !foundPreviousSelectedOne; i--) {
+          for (let i = $index; i >= 0 && !foundPreviousSelectedOne; i--) {
             foundPreviousSelectedOne = !this.add(this.resources[i])
           }
         } else {  // Add one
