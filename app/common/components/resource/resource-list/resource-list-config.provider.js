@@ -490,7 +490,7 @@ function resourceListProvider (RESOURCE_SEARCH) {
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-lot.html'
+          templateUrl: configFolder + '/resource-list-config-group.html'
         },
         table: {
           th: [f.label.th, f['@type'].th, f.from.th, f.to.th, f.lastEvent.th, f.updated.thDef],
@@ -519,11 +519,11 @@ function resourceListProvider (RESOURCE_SEARCH) {
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-package.html'
+          templateUrl: configFolder + '/resource-list-config-group.html'
         },
         table: {
-          th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef],
-          td: [f.id.td, f.label.td, f.lastEvent.td, f.updated.td]
+          th: [f.label.th, f.lastEvent.th, f.updated.thDef],
+          td: [f.label.td, f.lastEvent.td, f.updated.td]
         }
       },
       Pallet: {
@@ -546,11 +546,11 @@ function resourceListProvider (RESOURCE_SEARCH) {
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-pallet.html'
+          templateUrl: configFolder + '/resource-list-config-group.html'
         },
         table: {
-          th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef],
-          td: [f.id.td, f.label.td, f.lastEvent.td, f.updated.td]
+          th: [f.label.th, f.lastEvent.th, f.updated.thDef],
+          td: [f.label.td, f.lastEvent.td, f.updated.td]
         }
       },
       Place: {
@@ -584,11 +584,11 @@ function resourceListProvider (RESOURCE_SEARCH) {
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-place.html'
+          templateUrl: configFolder + '/resource-list-config-group.html'
         },
         table: {
-          th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef],
-          td: [f.id.td, f.label.td, f.lastEvent.td, f.updated.td]
+          th: [f.label.th, f.lastEvent.th, f.updated.thDef],
+          td: [f.label.td, f.lastEvent.td, f.updated.td]
         }
       },
       Event: {
