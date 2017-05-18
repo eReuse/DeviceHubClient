@@ -549,8 +549,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
           templateUrl: configFolder + '/resource-list-config-group.html'
         },
         table: {
-          th: [f.label.th, f.lastEvent.th, f.updated.thDef],
-          td: [f.label.td, f.lastEvent.td, f.updated.td]
+          th: [f.label.th, f.lastEvent.th, f.updated.thDef, {key: 'size', name: 'Size'}],
+          td: [f.label.td, f.lastEvent.td, f.updated.td, {templateUrl: configFolder + '/pallet-size.html'}]
         }
       },
       Place: {

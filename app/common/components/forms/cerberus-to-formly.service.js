@@ -166,7 +166,11 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
     if ('allowed' in fieldSchema && fieldSchema.allowed.length > 1) {
       let options
       if ('allowed_description' in fieldSchema) {
-        options = _(fieldSchema.allowed_description).map((label, key) => ({name: label, value: key}))
+        const group = (name, value, group = null) => ({name: name, value: value, group: group})
+        options = _(fieldSchema.allowed_description).flatMap(
+          // If there is a nested object then the select is grouped and we take the nested children
+          (label, key) => _.isObject(label) ? _.map(label, (label, _key) => group(label, _key, key)) : group(label, key)
+        )
       } else {
         options = _(fieldSchema.allowed).map(value => ({name: utils.Naming.humanize(value), value: value}))
       }
