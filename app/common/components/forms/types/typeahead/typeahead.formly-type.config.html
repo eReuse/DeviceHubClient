@@ -1,6 +1,6 @@
 <input type="text"
        ng-model="model[options.key]"
-       uib-typeahead="resource[to.keyFieldName] as resource[to.labelFieldName] for resource in getResources(to.filterFieldName, $viewValue)"
+       uib-typeahead="resource[to.keyFieldName] as resource[to.labelFieldName] for resource in getResources(to.filterFieldNames, $viewValue)"
        class="form-control"
        typeahead-editable="to.options['typeahead-editable']"
        typeahead-select-on-exact="to.options['typeahead-select-on-exact']"

@@ -246,7 +246,7 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
 
     const dataRelationSettings = ResourceSettings(utils.Naming.type(options.resourceName)).settings.dataRelation
     if (!_.isObject(dataRelationSettings)) throw new NoType(type, ` no handle for the objectid ${options.resourceName}`)
-    _.assign(options, _.pick(dataRelationSettings, ['label', 'labelFieldName', 'filterFieldName']))
+    _.assign(options, _.pick(dataRelationSettings, ['label', 'labelFieldName', 'filterFieldNames']))
     if ('label' in fieldSchema) options.label = fieldSchema.label // We assign it again so we do not lose it
     return dataRelationSettings.fieldType
   }

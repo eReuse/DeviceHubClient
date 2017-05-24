@@ -27,7 +27,7 @@ function typeahead (formlyConfigProvider) {
         templateOptions: {
           keyFieldName: check.string,
           resourceName: check.string,
-          filterFieldName: check.string,
+          filterFieldNames: check.array,
           labelFieldName: check.string,
           options: check.object
         }

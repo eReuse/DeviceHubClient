@@ -1,29 +1,18 @@
 /**
- * Creates the configuration dict for resource-list
- * @param RESOURCE_SEARCH
+ * Creates the configuration object for resource-list.
+ * @param {RESOURCE_SEARCH} RESOURCE_SEARCH
+ * @param {ResourceSettings} ResourceSettings
  */
-
-function resourceListProvider (RESOURCE_SEARCH) {
+function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
   const utils = require('./../../utils')
   const h = RESOURCE_SEARCH.paramHelpers
-  const ACCOUNT_TYPEAHEAD = {
-    keyFieldName: '_id',
-    resourceType: 'Account',
-    filterFieldName: 'email',
-    labelFieldName: 'email'
-  }
-  const GROUP_TYPEAHEAD = {
-    keyFieldName: 'label',
-    resourceType: 'Group',
-    filterFieldName: 'label',
-    labelFieldName: 'label'
-  }
-  const DEVICE_TYPEAHEAD = {
-    keyFieldName: '_id',
-    resourceType: 'Device',
-    filterFieldName: '_id',
-    labelFieldName: '_id'
-  }
+  // Typeaheads
+  const ACCOUNT_TYPEAHEAD = ResourceSettings('Account').getSetting('dataRelation')
+  const DEVICE_TYPEAHEAD = ResourceSettings('Device').getSetting('dataRelation')
+  const LOT_TYPEAHEAD = ResourceSettings('Lot').getSetting('dataRelation')
+  const PACKAGE_TYPEAHEAD = ResourceSettings('Package').getSetting('dataRelation')
+  const PALLET_TYPEAHEAD = ResourceSettings('Pallet').getSetting('dataRelation')
+  const PLACE_TYPEAHEAD = ResourceSettings('Place').getSetting('dataRelation')
   const LAST_EVENT = {
     key: 'lastEvent',
     name: 'Last event is',
@@ -32,14 +21,6 @@ function resourceListProvider (RESOURCE_SEARCH) {
     realKey: 'events.0.@type',
     description: 'The actual state of the device.'
   }
-  const LOT_TYPEAHEAD = _.clone(GROUP_TYPEAHEAD)
-  LOT_TYPEAHEAD.resourceType = 'Lot'
-  const PACKAGE_TYPEAHEAD = _.clone(GROUP_TYPEAHEAD)
-  PACKAGE_TYPEAHEAD.resourceType = 'Package'
-  const PALLET_TYPEAHEAD = _.clone(GROUP_TYPEAHEAD)
-  PALLET_TYPEAHEAD.resourceType = 'Pallet'
-  const PLACE_TYPEAHEAD = _.clone(GROUP_TYPEAHEAD)
-  PLACE_TYPEAHEAD.resourceType = 'Place'
   const configFolder = require('./__init__').PATH + '/resource-list-config'
   const f = {
     id: {th: {key: '_id', name: 'Id'}, td: {value: '_id'}},
@@ -64,7 +45,7 @@ function resourceListProvider (RESOURCE_SEARCH) {
   function getIsAncestor (resourceType, value) {
     const resourceName = utils.Naming.resource(resourceType)
     return [
-      {ancestors: {$elemMatch: {'@type': resourceType, label: value}}},
+      {ancestors: {$elemMatch: {'@type': resourceType, _id: value}}},
       {ancestors: {$elemMatch: {[resourceName]: {$elemMatch: {$in: [value]}}}}}
     ]
   }
@@ -82,8 +63,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
     callback: (where, value) => {
       if (!('$or' in where)) where.$or = []
       where.$or = where.$or.concat(getIsAncestor('Lot', value))
-      where.$or.push({ancestors: {$elemMatch: {'@type': 'IncomingLot', label: value}}})
-      where.$or.push({ancestors: {$elemMatch: {'@type': 'OutgoingLot', label: value}}})
+      where.$or.push({ancestors: {$elemMatch: {'@type': 'IncomingLot', _id: value}}})
+      where.$or.push({ancestors: {$elemMatch: {'@type': 'OutgoingLot', _id: value}}})
     }
   }
   const INSIDE_PACKAGE = {
@@ -151,8 +132,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
 
   const GROUP_INCLUSION = {
     key: 'groupInclusion',
-    name: 'Items in lots, packages or places',
-    description: 'Match items that are in lots, packages or places',
+    name: 'Items in a group',
+    description: 'Match items that are in groups –lots, packages, places or pallets.',
     select: ['Yes', 'No'],
     boolean: true,
     callback: (where, value, RSettings) => {
@@ -168,8 +149,8 @@ function resourceListProvider (RESOURCE_SEARCH) {
   function hasGroupCallback (resourceName) {
     const resourceType = utils.Naming.type(resourceName)
     return (where, ancestors) => {
-      const parents = _(ancestors).filter({'@type': resourceType}).flatMapDeep('label').value()
-      where['label'] = {'$in': _(ancestors).flatMapDeep(resourceName).concat(parents).uniq().value()}
+      const parents = _(ancestors).filter({'@type': resourceType}).flatMapDeep('_id').value()
+      where['_id'] = {'$in': _(ancestors).flatMapDeep(resourceName).concat(parents).uniq().value()}
     }
   }
 
@@ -196,8 +177,9 @@ function resourceListProvider (RESOURCE_SEARCH) {
     name: 'Has Place',
     typeahead: _.assign({}, PLACE_TYPEAHEAD, {keyFieldName: 'ancestors'})
   }
+  const INACTIVE_EVENTS = ['devices:Recycle', 'devices:Dispose', 'devices:Migrate']
 
-  this.config = {
+  return {
     views: {
       default: { // This is not used, but provided as a template
         search: {
@@ -418,9 +400,19 @@ function resourceListProvider (RESOURCE_SEARCH) {
               boolean: true,
               comparison: (value, RSettings) => ({[value ? '$in' : '$nin']: RSettings('Component').subResourcesNames}),
               description: 'Match devices depending if they are components or not.'
+            },
+            {
+              key: 'active',
+              name: 'Active',
+              realKey: 'events.@type',
+              select: ['Yes', 'No'],
+              boolean: true,
+              comparison: value => ({[value ? '$nin' : '$in']: INACTIVE_EVENTS}),
+              description: 'Match devices that are not recycled, disposed and not moved to another inventory.'
             }
           ]),
-          defaultParams: {'is-component': 'No', 'groupInclusion': 'No'},  // todo create index in mongo
+          defaultParams: {'is-component': 'No', 'groupInclusion': 'No', 'active': 'Yes'},  // todo
+          // create index in mongo
           defaultParamsWhenSubview: {'is-component': 'No'},
           subResource: {
             Event: {key: 'device', field: '_id'}
@@ -483,10 +475,10 @@ function resourceListProvider (RESOURCE_SEARCH) {
           ]),
           defaultParams: {},
           subResource: {
-            Device: {key: 'lotIsAncestor', field: 'label'},
-            Package: {key: 'lotIsAncestor', field: 'label'},
-            Lot: {key: 'lotIsAncestor', field: 'label'},
-            Pallet: {key: 'lotIsAncestor', field: 'label'}
+            Device: {key: 'lotIsAncestor', field: '_id'},
+            Package: {key: 'lotIsAncestor', field: '_id'},
+            Lot: {key: 'lotIsAncestor', field: '_id'},
+            Pallet: {key: 'lotIsAncestor', field: '_id'}
           }
         },
         buttons: {
@@ -514,16 +506,16 @@ function resourceListProvider (RESOURCE_SEARCH) {
           ]),
           defaultParams: {},
           subResource: {
-            Device: {key: 'packageIsAncestor', field: 'label'},
-            Package: {key: 'packageIsAncestor', field: 'label'}
+            Device: {key: 'packageIsAncestor', field: '_id'},
+            Package: {key: 'packageIsAncestor', field: '_id'}
           }
         },
         buttons: {
           templateUrl: configFolder + '/resource-list-config-group.html'
         },
         table: {
-          th: [f.label.th, f.lastEvent.th, f.updated.thDef],
-          td: [f.label.td, f.lastEvent.td, f.updated.td]
+          th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef],
+          td: [f.id.td, f.label.td, f.lastEvent.td, f.updated.td]
         }
       },
       Pallet: {
@@ -541,16 +533,16 @@ function resourceListProvider (RESOURCE_SEARCH) {
           ]),
           defaultParams: {},
           subResource: {
-            Device: {key: 'palletIsAncestor', field: 'label'},
-            Package: {key: 'palletIsAncestor', field: 'label'}
+            Device: {key: 'palletIsAncestor', field: '_id'},
+            Package: {key: 'palletIsAncestor', field: '_id'}
           }
         },
         buttons: {
           templateUrl: configFolder + '/resource-list-config-group.html'
         },
         table: {
-          th: [f.label.th, f.lastEvent.th, f.updated.thDef, {key: 'size', name: 'Size'}],
-          td: [f.label.td, f.lastEvent.td, f.updated.td, {templateUrl: configFolder + '/pallet-size.html'}]
+          th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef, {key: 'size', name: 'Size'}],
+          td: [f.id.td, f.label.td, f.lastEvent.td, f.updated.td, {templateUrl: configFolder + '/pallet-size.html'}]
         }
       },
       Place: {
@@ -576,10 +568,11 @@ function resourceListProvider (RESOURCE_SEARCH) {
           ]),
           defaultParams: {},
           subResource: {
-            Device: {key: 'placeIsAncestor', field: 'label'},
-            Place: {key: 'placeIsAncestor', field: 'label'},
-            Lot: {key: 'placeIsAncestor', field: 'label'},
-            Package: {key: 'placeIsAncestor', field: 'label'},
+            Device: {key: 'placeIsAncestor', field: '_id'},
+            Place: {key: 'placeIsAncestor', field: '_id'},
+            Lot: {key: 'placeIsAncestor', field: '_id'},
+            Package: {key: 'placeIsAncestor', field: '_id'},
+            Pallet: {key: 'placeIsAncestor', field: '_id'},
             Event: {key: 'place', field: '_id'}
           }
         },
@@ -665,7 +658,6 @@ function resourceListProvider (RESOURCE_SEARCH) {
       }
     }
   }
-  this.$get = () => { return this }
 }
 
-module.exports = resourceListProvider
+module.exports = resourceListConfig

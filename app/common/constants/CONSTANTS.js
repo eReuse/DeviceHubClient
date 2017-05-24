@@ -14,7 +14,7 @@ const CONSTANTS = {
   // We cannot take this from the server as Naming uses it before getting the Schema
   resourcesChangingNumber: ['device', 'event', 'account', 'place', 'erase', 'project', 'package', 'lot',
     'manufacturer', 'group', 'pallet'],
-  debug: true
+  debug: false
 }
 
 module.exports = CONSTANTS

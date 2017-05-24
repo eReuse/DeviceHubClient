@@ -99,6 +99,9 @@ function ResourceListGetterFactory (ResourceSettings) {
               value = settings.comparison(value, ResourceSettings)
             } else {
               switch (settings.comparison) { // Case '=' is itself so no need to do anything
+                case '!=':
+                  value = {$ne: value}
+                  break
                 case '<=':
                   value = {$lte: value}
                   break

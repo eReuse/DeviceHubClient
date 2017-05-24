@@ -25,6 +25,12 @@ window._.mixin({
     return value
   },
   /**
+   * Like 'remove' but returning the first removed element.
+   * @param array
+   * @param predicate
+   */
+  removeOne: (array, predicate) => _.remove(array, predicate)[0],
+  /**
    * Like concat but without creating a new array. Internally uses Jquery's merge
    * @param {Array} array
    * @param {Array} otherArray

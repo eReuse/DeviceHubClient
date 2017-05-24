@@ -6,7 +6,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="field in model | filter: filterTeaser ">
+    <tr ng-repeat="field in model | filter: filterEmptyAndTeaser">
       <td>{{field.name}}</td>
       <td ng-if="$root._.isPlainObject(field.value) || $root._.isArray(field.value) && field.data_relation == undefined">
         <json-formatter json="field.value"></json-formatter>

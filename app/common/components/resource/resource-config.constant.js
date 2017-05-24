@@ -44,94 +44,108 @@ const RESOURCE_CONFIG = {
         'offline', '_uuid', 'geo'].concat(DO_NOT_USE)
     },
     Device: {
+      dataRelation: {
+        label: 'Device id',
+        keyFieldName: '_id',
+        filterFieldName: '_id',
+        labelFieldName: '_id',
+        resourceType: 'Device'
+      },
       view: {
         title: ['_id'],
         subtitle: ['model', 'manufacturer']
       },
       // We pass a 'resource' object to a subview with, at least, @type.
-      subviews: [v.Dashboard, v.Event, v.Detail],
+      subviews: [v.Event, v.Detail],
       doNotUse: DO_NOT_USE.concat(['events', 'owners', 'components', 'isUidSecured', 'public', 'icon', 'pid',
         'labelId', 'placeholder', 'parent', 'place'])
     },
     Event: {
       view: {},
-      subviews: [v.Dashboard, v.Device, v.Detail],
+      subviews: [v.Device, v.Detail],
       doNotUse: ['geo'].concat(DO_NOT_USE)
     },
     Account: {
       dataRelation: {
         label: 'Account\'s e-mail',
         labelFieldName: 'email',
-        filterFieldName: 'email',
-        fieldType: 'typeahead'
+        filterFieldNames: ['email'],
+        fieldType: 'typeahead',
+        keyFieldName: '_id',
+        resourceType: 'Account'
       },
       view: {title: ['label'], subtitle: ['e-mail']},
       doNotUse: DO_NOT_USE,
-      subviews: [v.Dashboard, v.Lot, v.Package, v.Device]
+      subviews: [v.Lot, v.Package, v.Device]
     },
     Place: {
       dataRelation: {
         label: 'Name of the place',
         labelFieldName: 'label',
-        filterFieldName: 'label',
+        filterFieldNames: ['label', '_id'],
         fieldType: 'typeahead',
-        keyFieldName: 'label'
+        resourceType: 'Place',
+        keyFieldName: '_id'
       },
       view: {title: ['label'], subtitle: []},
-      subviews: [v.Dashboard, v.Lot, v.Package, v.Device, v.Place, v.Event],
+      subviews: [v.Lot, v.Place, v.Package, v.Pallet, v.Device, v.Event, v.Detail],
       doNotUse: GROUP_DO_NOT_USE
     },
     Project: {
       dataRelation: {
         label: 'Identifier of the project',
         labelFieldName: 'project',
-        filterFieldName: 'project',
-        fieldType: 'typeahead'
+        filterFieldNames: ['project'],
+        fieldType: 'typeahead',
+        resourceType: 'Project'
       }
     },
     Package: {
       dataRelation: {
         label: 'Name of the package',
         labelFieldName: 'label',
-        filterFieldName: 'label',
+        filterFieldNames: ['label', '_id'],
         fieldType: 'typeahead',
-        keyFieldName: 'label'
+        resourceType: 'Package',
+        keyFieldName: '_id'
       },
       view: {title: ['label'], subtitle: []},
-      subviews: [v.Dashboard, v.Package, v.Device],
+      subviews: [v.Package, v.Device, v.Detail],
       doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
     },
     Pallet: {
       dataRelation: {
         label: 'Name of the pallet',
         labelFieldName: 'label',
-        filterFieldName: 'label',
+        filterFieldNames: ['label', '_id'],
         fieldType: 'typeahead',
-        keyFieldName: 'label'
+        keyFieldName: '_id',
+        resourceType: 'Pallet'
       },
       view: {title: ['label'], subtitle: []},
-      subviews: [v.Dashboard, v.Package, v.Device],
+      subviews: [v.Package, v.Device, v.Detail],
       doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
     },
     Lot: {
       dataRelation: {
         label: 'Name of the lot',
         labelFieldName: 'label',
-        filterFieldName: 'label',
+        filterFieldNames: ['label', '_id'],
         fieldType: 'typeahead',
-        keyFieldName: 'label'
+        keyFieldName: '_id',
+        resourceType: 'Lot'
       },
       view: {title: ['label'], subtitle: ['@type']},
-      subviews: [v.Dashboard, v.Lot, v.Package, v.Device],
+      subviews: [v.Lot, v.Package, v.Pallet, v.Device, v.Detail],
       doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
     },
     IncomingLot: {
       dataRelation: {
         label: 'Name of the input lot',
         labelFieldName: 'label',
-        filterFieldName: 'label',
+        filterFieldNames: ['label', '_id'],
         fieldType: 'typeahead',
-        keyFieldName: 'label'
+        keyFieldName: '_id'
       },
       doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
     },
@@ -139,9 +153,9 @@ const RESOURCE_CONFIG = {
       dataRelation: {
         label: 'Name of the output lot',
         labelFieldName: 'label',
-        filterFieldName: 'label',
+        filterFieldNames: ['label', '_id'],
         fieldType: 'typeahead',
-        keyFieldName: 'label'
+        keyFieldName: '_id'
       },
       doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
     },
@@ -149,14 +163,14 @@ const RESOURCE_CONFIG = {
       dataRelation: {
         label: 'Name of the manufacturer',
         labelFieldName: 'label',
-        filterFieldName: 'label',
+        filterFieldNames: ['label'],
         fieldType: 'typeahead',
         keyFieldName: 'label'
       }
     }
   },
   inventory: {
-    subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Pallet, v.Event] // removed v.Account
+    subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Pallet] // removed v.Account and v.Event
   }
 }
 

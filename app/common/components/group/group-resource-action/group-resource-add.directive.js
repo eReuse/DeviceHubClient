@@ -22,31 +22,19 @@ function groupResourceAdd (ResourceSettings, GroupResourceSubmitter) {
       pre: $scope => {
         const groupType = $scope.groupType
         const gSettings = ResourceSettings(groupType)
-        const groupServer = gSettings.server
-        let typeahead = {
-          group: null, // The ng-model of the typeahead
-          get: _.bind(groupServer.findText, groupServer, 'label', _)
-        }
-        let form = { // Note that for the form to work correctly with formly, we need to be in link's pre
+        const dataRelation = _.clone(gSettings.getSetting('dataRelation'))
+        const form = { // Note that for the form to work correctly with formly, we need to be in link's pre
           fields: [{
-            key: 'groupLabel',
-            templateOptions: {
-              label: `Name of the ${gSettings.humanName}`,
-              keyFieldName: 'label',
-              resourceName: groupType,
-              filterFieldName: 'label',
-              labelFieldName: 'label',
-              required: true
-            },
+            key: 'groupId',
+            templateOptions: _.assign({required: true, resourceName: gSettings.resourceName}, dataRelation),
             type: 'typeahead'
           }],
           model: {
             resources: $scope.resources
           }
         }
-        let grs = new GroupResourceSubmitter($scope.resources, $scope.resourceType, groupType, form, $scope, $scope.success, true)
-        form.submit = model => grs.submit(model.groupLabel)
-        $scope.typeahead = typeahead
+        const grs = new GroupResourceSubmitter($scope.resources, $scope.resourceType, groupType, form, $scope, $scope.success, true)
+        form.submit = model => grs.submit(model.groupId)
         $scope.form = form
       }
     }

@@ -12,7 +12,7 @@ function getFromDataRelationOrCreate (formlyConfigProvider) {
     templateUrl: window.COMPONENTS + '/forms/types/get-from-data-relation-or-create/get-from-data-relation-or-create.formly-type.config.html',
     controller: function ($scope, ResourceSettings) {
       $scope.typeaheadOptions = {
-        templateOptions: _.pick($scope.to, ['filterFieldName', 'label', 'labelFieldName',
+        templateOptions: _.pick($scope.to, ['filterFieldNames', 'label', 'labelFieldName',
           'resourceName', 'required']),
         type: 'typeahead',
         key: 'email'
@@ -79,7 +79,7 @@ function getFromDataRelationOrCreate (formlyConfigProvider) {
         templateOptions: {
           keyFieldName: check.string,
           resourceName: check.string,
-          filterFieldName: check.string,
+          filterFieldNames: check.array,
           labelFieldName: check.string,
           getFromDataRelationOrCreate: check.string,
           schema: check.object

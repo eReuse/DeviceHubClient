@@ -5,7 +5,7 @@
     <span class="remove-all-icon fa fa-trash"></span>
   </a>
   <div>
-    <div class="search-parameter" ng-repeat="searchParam in searchParams">
+    <div class="search-parameter" ng-repeat="searchParam in searchParams" uib-tooltip="{{::searchParam.description}}">
       <a ng-href="" ng-click="removeSearchParam($index)" role="button">
         <span class="remove fa fa-trash"></span>
       </a>
@@ -43,7 +43,7 @@
           type="text"
           ng-model="searchParam.value"
           nit-set-focus="searchParam.editMode"
-          uib-typeahead="resource[searchParam.typeahead.keyFieldName] as resource[searchParam.typeahead.labelFieldName] for resource in searchParam.typeahead._get(searchParam.typeahead.filterFieldName, $viewValue)"
+          uib-typeahead="resource[searchParam.typeahead.keyFieldName] as resource[searchParam.typeahead.labelFieldName] for resource in searchParam.typeahead._get(searchParam.typeahead.filterFieldNames, $viewValue)"
           ng-keydown="typeaheadCanRemove($event)? leaveEditMode($index, true) : null"
           typeahead-editable="false"
           size="10">

@@ -4,6 +4,11 @@ function inventoryDashboard (resourceServerAggregations, CONSTANTS) {
     restrict: 'E',
     scope: {
       resource: '=' // One-way data-binding
+    },
+    link: {
+      pre: $scope => {
+        $scope.debug = CONSTANTS.debug
+      }
     }
   }
 }

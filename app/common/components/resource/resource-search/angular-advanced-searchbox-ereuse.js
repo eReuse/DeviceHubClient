@@ -83,7 +83,8 @@
                 date: 'date' in searchParam ? searchParam.date : false,
                 typeahead: searchParam.typeahead
                   ? _.assign(searchParam.typeahead, {_get: ResourceSettings(searchParam.typeahead.resourceType).server.findText})
-                  : null
+                  : null,
+                description: searchParam.description
               }
             )
             // TODO: hide used suggestion

@@ -29,7 +29,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         if (!resourceType) throw TypeError('resourceList needs a "resourceType" set, not ' + resourceType)
         if (!$scope.type) throw TypeError('resourceLists needs a "type" to be "big"|"medium"|"small", not ' + $scope.type)
         progressBar.start() // resourceListGetter.getResources will call this too, but doing it here we avoid delay
-        const config = _.cloneDeep(resourceListConfig.config.views[resourceType])
+        const config = _.cloneDeep(resourceListConfig.views[resourceType])
         if (_.isUndefined(config)) throw ReferenceError(resourceType + ' has no config.')
         $scope.resources = [] // Do never directly assign (r=[]) to 'resources' as modules depend of its reference
         const subResource = $scope.subResource = {
@@ -87,7 +87,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           }
           // no need to _.clone this setting as we do not modify it
           const path = 'search.subResource.' + resourceType
-          const defaultParam = utils.getSetting(resourceListConfig.config.views, ResourceSettings(parentType), path)
+          const defaultParam = utils.getSetting(resourceListConfig.views, ResourceSettings(parentType), path)
           if (!defaultParam) throw TypeError(`${parentType} does not have default param for subResource ${resourceType}`)
           config.search.defaultParams[defaultParam.key] = $scope.parentResource[defaultParam.field]
         }

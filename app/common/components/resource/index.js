@@ -39,7 +39,7 @@ module.exports = angular.module('common.components.resource',
   .factory('ResourceListSelector', require('./resource-list/resource-list-selector.factory'))
   .factory('ResourceListSelectorBig', require('./resource-list/resource-list-selector-big.factory'))
   .factory('ResourceViewGenerator', require('./resource-view/resource-view-generator.factory'))
-  .provider('resourceListConfig', require('./resource-list/resource-list-config.provider'))
+  .factory('resourceListConfig', require('./resource-list/resource-list-config.factory'))
   .directive('resourceListFooter', require('./resource-list/resource-list-footer/resource-list-footer.directive'))
   .directive('resourceListSelectAll', require('./resource-list/resource-list-select-all/resource-list-select-all.directive'))
   .directive('fieldSort', require('./resource-list/field-sort/field-sort.directive.js'))
