@@ -9,7 +9,7 @@
     <tr ng-repeat="field in model | filter: filterEmptyAndTeaser">
       <td>
         <span class="hidden-xs hidden-sm hidden-md ">{{::field.name}}</span>
-        <span class="hidden-lg">{{::field.short}}</span>
+        <span class="hidden-lg">{{::field.short || field.name}}</span>
       </td>
       <td ng-if="$root._.isPlainObject(field.value) || $root._.isArray(field.value) && field.data_relation == undefined">
         <json-formatter json="field.value"></json-formatter>
