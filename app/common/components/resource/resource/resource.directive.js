@@ -3,30 +3,27 @@
  */
 function resource (RecursionHelper, ResourceSettings) {
   return {
-    templateUrl: window.COMPONENTS + '/resource/resource/resource.directive.html',
+    templateUrl: require('./__init__').PATH + '/resource.directive.html',
     restrict: 'E',
     scope: {
       resource: '=',
       type: '@' // big / medium / small
     },
-    compile: function (element) {
-      return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {
+    compile: element => {
+      return RecursionHelper.compile(element, $scope => {
         $scope.resource = $scope.resource || {}
         let rSettings = ResourceSettings($scope.resource['@type'])
         $scope.isEvent = rSettings.isSubResource('Event')
-        getResource()
-
-        function getResource () {
-          if (rSettings.authorized) {
-            rSettings.server.one($scope.resource._id).get().then(function (resource) {
-              _.assign($scope.resource, resource)
-            }).catch(function (error) {
-              $scope.error = true
-              throw error
-            })
-          } else {
+        // Get the resource
+        if (rSettings.authorized) {
+          rSettings.server.one($scope.resource._id).get().then(resource => {
+            _.assign($scope.resource, resource) // So the value it is already there
+          }).catch(error => {
             $scope.error = true
-          }
+            throw error
+          })
+        } else {
+          $scope.error = true
         }
       })
     }

@@ -1,68 +1,48 @@
-var utils = require('./../utils.js')
-var filters = {}
+const utils = require('./../utils.js')
 
-var DO_NOT_USE = ['request', 'debug', 'events']
-
-function cerberusToView (schema, dateFilter, numberFilter, UNIT_CODES) {
-  filters.dateFilter = dateFilter
-  filters.numberFilter = numberFilter
-  this.parse = parseFactory(schema, UNIT_CODES)
-  return this
-}
-
-function parseFactory (schema, UNIT_CODES) {
-  return function (model) {
-    var fields = []
-    var resourceSchema = schema.schema[utils.Naming.resource(model['@type'])]
-    for (var fieldName in resourceSchema) {
-      if (fieldName in model && !_.includes(DO_NOT_USE, fieldName) && !('writeonly' in resourceSchema[fieldName])) {
-        fields.push(generateField(model[fieldName], resourceSchema[fieldName], fieldName, UNIT_CODES))
-      }
-    }
+function cerberusToView (schema, dateFilter, numberFilter, UNIT_CODES, ResourceSettings) {
+  const DONT_USE = new Set(['request', 'debug', 'events'])
+  /**
+   * Given a resource, returns the fields to be used for table-view and similar 'view' functions.
+   * @param {object} resource - The resource to generate the view.
+   * @return {object[]} An ordered array of fields.
+   */
+  this.parse = resource => {
+    const fields = _(ResourceSettings(resource['@type']).schema)
+      .pickBy((field, name) => name in resource && !DONT_USE.has(name) && !('writeonly' in field))
+      .map((field, name) => ({ // Parses the field
+        name: utils.Naming.humanize(name),
+        short: field.short,
+        value: _.isPresent(resource[name]) ? getContent(resource[name], field) : '',
+        unitCode: UNIT_CODES[field.unitCode],
+        sink: field.sink || 0,
+        teaser: field.teaser || true,
+        data_relation: _.get(field, 'schema.data_relation', _.get(field, 'data_relation'))
+      }))
+      .value()
     fields.sort(schema.compareSink)
-    fields.push({name: 'Updated', value: filters.dateFilter(model._updated, 'short'), teaser: true})
-    fields.push({name: 'Created', value: filters.dateFilter(model._created, 'short')})
-    try {
-      fields.push({name: 'URL', value: model._links.self.href})
-    } catch (error) {
-    }
+    fields.push({name: 'Updated', value: dateFilter(resource._updated, 'short'), teaser: true})
+    fields.push({name: 'Created', value: dateFilter(resource._created, 'short')})
+    try { fields.push({name: 'URL', value: resource._links.self.href}) } catch (error) {}
     return fields
   }
-}
 
-function generateField (value, fieldSchema, fieldName, UNIT_CODES) {
-  var field = {
-    name: utils.Naming.humanize(fieldName),
-    value: '',
-    unitCode: UNIT_CODES[fieldSchema.unitCode],
-    sink: fieldSchema.sink || 0,
-    teaser: angular.isDefined(fieldSchema.teaser) ? fieldSchema.teaser : true
+  function getContent (value, fieldSchema) {
+    switch (fieldSchema.type) {
+      case 'datetime':
+        return dateFilter(value, 'short')
+      case 'float':
+      case 'integer':
+      case 'natural':
+        return numberFilter(value)
+      case 'boolean':
+        return value ? 'Yes' : 'No'
+      default:
+        return value
+    }
   }
-  if (!_.isEmpty(value)) {
-    field.value = getContent(value, fieldSchema)
-  }
-  try {
-    field.data_relation = fieldSchema.schema.data_relation
-  } catch (err) {
-  }
-  if (angular.isUndefined(field.data_relation)) field.data_relation = fieldSchema.data_relation
 
-  return field
-}
-
-function getContent (value, fieldSchema) {
-  switch (fieldSchema.type) {
-    case 'datetime':
-      return filters.dateFilter(value, 'short')
-    case 'float':
-    case 'integer':
-    case 'natural':
-      return filters.numberFilter(value)
-    case 'boolean':
-      return value ? 'Yes' : 'No'
-    default:
-      return value
-  }
+  return this
 }
 
 module.exports = cerberusToView

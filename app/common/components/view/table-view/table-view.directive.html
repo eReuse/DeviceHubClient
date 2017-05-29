@@ -7,12 +7,15 @@
   </thead>
   <tbody>
     <tr ng-repeat="field in model | filter: filterEmptyAndTeaser">
-      <td>{{field.name}}</td>
+      <td>
+        <span class="hidden-xs hidden-sm hidden-md ">{{::field.name}}</span>
+        <span class="hidden-lg">{{::field.short}}</span>
+      </td>
       <td ng-if="$root._.isPlainObject(field.value) || $root._.isArray(field.value) && field.data_relation == undefined">
         <json-formatter json="field.value"></json-formatter>
       </td>
       <td ng-if="!$root._.isPlainObject(field.value) && !$root._.isArray(field.value) && field.data_relation == undefined">
-        {{field.value}}&nbsp;{{field.unitCode}}
+        {{::field.value}}&nbsp;{{::field.unitCode}}
       </td>
       <td ng-if="field.data_relation != undefined">
         <div ng-if="$root._.isArray(field.value)">

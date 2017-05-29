@@ -13,6 +13,7 @@ window.Sortable = require('bower_components/Sortable/Sortable.js')
 require('angular')
 require('angular-ui-router')
 require('bootstrap')
+const isPresent = require('is-present')
 
 // NEW METHODS FOR LODASH //
 window._.mixin({
@@ -42,5 +43,6 @@ window._.mixin({
    * @param {array} array - Array to check against.
    * @return {Function} - A function that performs _.includes for the value in the path for the passed in object.
    */
-  includesF: (array, path) => value => _.includes(array, _.get(value, path))
+  includesF: (array, path) => value => _.includes(array, _.get(value, path)),
+  isPresent: isPresent
 })
