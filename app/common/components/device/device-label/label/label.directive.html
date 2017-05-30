@@ -6,7 +6,7 @@
   <div class="label-body">
     <div ng-style="{height: (set.height / 2.5) - 1 + 'mm'}"><img ng-src="{{set.logo}}"/></div>
     <div>
-      <qrcode data="{{code}}" error-correction-level="Q" size="95" version="5"></qrcode>
+      <qrcode data="{{::code}}" error-correction-level="Q" size="95" version="5"></qrcode>
       <table
         ng-class="{
                     't-nothing': set.width <= 60,
@@ -20,7 +20,7 @@
       >
         <tr ng-repeat="field in set.fields">
           <td ng-show="set.width > 60">{{field.short || field.humanName}}</td>
-          <td>{{device[field.name]}}</td>
+          <td>{{humanizeValue(device[field.name], field.type)}}</td>
         </tr>
       </table>
     </div>

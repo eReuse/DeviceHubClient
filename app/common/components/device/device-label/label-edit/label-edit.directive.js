@@ -1,4 +1,4 @@
-function labelEdit (CONSTANTS, ResourceSettings, $interval) {
+function labelEdit (CONSTANTS, ResourceSettings) {
   var utils = require('../../../utils')
   return {
     templateUrl: require('./__init__').PATH + '/label-edit.directive.html',
@@ -9,7 +9,7 @@ function labelEdit (CONSTANTS, ResourceSettings, $interval) {
       api: '='
     },
     link: function ($scope) {
-      $scope.api.reset = function () {
+      $scope.api.reset = () => {
         $scope.minHeight = 49
         _.assign($scope.set, {
           width: 97,
@@ -18,11 +18,18 @@ function labelEdit (CONSTANTS, ResourceSettings, $interval) {
           logo: CONSTANTS.siteLogo,
           fields: []
         })
-        var schema = ResourceSettings('Device').schema
-        var fields = ['serialNumber', 'pid', 'model', 'manufacturer', 'labelId', 'hid', '_id']
-        $scope.fields = _.map(fields, function (value) {
-          var field = {name: value, humanName: utils.Naming.humanize(value), short: schema[value].short}
-          if (value === 'labelId' || value === '_id') $scope.set.fields.push(field)
+        const schema = ResourceSettings('Device').schema
+        const fields = [
+          'serialNumber', 'pid', 'model', 'manufacturer', 'labelId', 'hid', '_id', 'totalRamSize', 'totalHardDriveSize'
+        ]
+        $scope.fields = _.map(fields, value => {
+          const field = {
+            name: value,
+            humanName: utils.Naming.humanize(value),
+            short: schema[value].short,
+            type: schema[value].type
+          }
+          if (value === 'labelId' || value === '_id') $scope.set.fields.push(field) // Generate defaults
           return field
         })
       }
