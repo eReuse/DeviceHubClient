@@ -586,7 +586,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
       },
       Event: {
         search: {
-          params: RESOURCE_SEARCH.params.concat(
+          params: RESOURCE_SEARCH.params.concat([
             {
               key: '@type',
               name: 'Type',
@@ -615,7 +615,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
               comparison: '=',
               description: 'The name of the place where the event has been done'
             }
-          ),
+          ]),
           defaultParams: {},
           subResource: {
             Device: {key: 'device', field: '_id'}

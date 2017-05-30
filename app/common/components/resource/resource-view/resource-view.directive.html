@@ -21,9 +21,9 @@
       <h3 ng-show="view.title" class="display-inline">
         <span ng-repeat="t in view.title">{{resource[t]}}</span>
         <small ng-repeat="s in view.subtitle">&nbsp;{{resource[s]}}</small>
-        <small>
-          <resource-icon class="pull-right" resource-type="{{resource['@type']}}"
-                         resource-subtype="{{resource.type}}"></resource-icon>
+        <small class="pull-right">
+          <delete-button resource="resource"></delete-button>
+          <resource-icon resource-type="{{resource['@type']}}" resource-subtype="{{resource.type}}"></resource-icon>
         </small>
       </h3>
     </header>
