@@ -41,7 +41,8 @@ const RESOURCE_CONFIG = {
     'devices:Dispose': {manual: true},
     'devices:Snapshot': {
       doNotUse: ['debug', 'version', 'events', 'owners', 'components', 'version', 'snapshotSoftware', 'automatic',
-        'offline', '_uuid', 'geo'].concat(DO_NOT_USE)
+        'offline', '_uuid', 'geo', 'elapsed', 'osInstallation', 'tests', 'inventory', 'date',
+        'autoUploaded'].concat(DO_NOT_USE)
     },
     Device: {
       dataRelation: {
