@@ -89,7 +89,7 @@ function resourceListFooter (session, CONSTANTS, $http, ResourceListGetterBig, R
               method: 'GET',
               url: CONSTANTS.url + '/' + session.activeDatabase + '/export/' + resource,
               params: {
-                ids: _.map($scope.selectedResources, rSettings.isSubResource('Group') ? 'label' : '_id'),
+                ids: _.map($scope.selectedResources, '_id'),
                 type: model.type
               },
               headers: {Accept: mimeType, Authorization: 'Basic ' + session.getAccount().token},
@@ -97,6 +97,7 @@ function resourceListFooter (session, CONSTANTS, $http, ResourceListGetterBig, R
             }).success(data => {
               const file = new File([data], resource + '.' + model.format, {type: mimeType})
               saveAs(file)
+              $scope.popover.isOpen = false // Close popover
             })
             submitForm.after(promise)
           }
