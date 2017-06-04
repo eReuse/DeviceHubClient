@@ -21,6 +21,7 @@ const uglifyjs = require('uglify-js-harmony')
 const minifier = require('gulp-uglify/minifier')
 const footer = require('gulp-footer')
 const inlinesource = require('gulp-inline-source')
+const gulpProtractor = require('gulp-protractor')
 
 const filePath = {
   destination: './dist',
@@ -341,3 +342,15 @@ gulp.task('tests', function (done) {
     singleRun: false
   }, done).start()
 })
+
+// =======================================================================
+// E2E Testing
+// =======================================================================
+/**
+ * Runs the selenium server.
+ */
+gulp.task('Run Selenium', callback => {
+  runSequence(['_webdriverUpdate'], ['_runSelenium'], callback)
+})
+gulp.task('_webdriverUpdate', gulpProtractor.webdriver_update)
+gulp.task('_runSelenium', gulpProtractor.webdriver_standalone)

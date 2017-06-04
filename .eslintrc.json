@@ -1,9 +1,13 @@
 {
-  "extends": "standard",
+  "extends": [
+    "standard",
+    "plugin:protractor/recommended"
+  ],
   "installedESLint": true,
   "plugins": [
     "standard",
-    "promise"
+    "promise",
+    "protractor"
   ],
   "env": {
     "browser": true,

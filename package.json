@@ -63,9 +63,11 @@
     "eslint": "~3.5.0",
     "eslint-config-standard": "~6.0.0",
     "eslint-plugin-promise": "~2.0.1",
+    "eslint-plugin-protractor": "^1.34.2",
     "eslint-plugin-standard": "~2.0.0",
     "gulp-docs": "~0.1.3",
     "gulp-jasmine": "~2.3.0",
+    "gulp-protractor": "^4.1.0",
     "gulp-sourcemaps": "~2.2.0",
     "jasmine": "~2.4.1",
     "jasmine-collection-matchers": "~0.2.0",
@@ -80,7 +82,10 @@
     "karma-phantomjs-launcher": "~1.0.0",
     "karma-spec-reporter": "0.0.26",
     "phantomjs-prebuilt": "~2.1.7",
+    "protractor-console-plugin": "^0.1.1",
     "strictify": "~0.2.0",
-    "watchify": "~3.7.0"
+    "watchify": "~3.7.0",
+    "webpack": "^2.6.1",
+    "webpack-dev-server": "^2.4.5"
   }
 }
