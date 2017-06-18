@@ -1,35 +1,31 @@
 {
   "extends": [
     "standard",
-    "plugin:protractor/recommended"
+    "plugin:jasmine/recommended"
   ],
   "installedESLint": true,
   "plugins": [
     "standard",
     "promise",
-    "protractor"
+    "jasmine"
   ],
   "env": {
     "browser": true,
     "commonjs": true,
     "jasmine": true,
-    "jquery": true
+    "jquery": true,
+    "es6": true
   },
   "globals": {
     "angular": true,
     "_": true,
-    // methods for tests
-    "createResolvedPromiseFactory": true,
-    "mockSchema": true,
-    "schemaInject": true,
-    "propagateSchemaChange": true,
-    "schemaWhenGetFull": true,
-    "schemaWhenGetPublic": true,
-    "createDirective": true,
-    "createDirectiveInject": true,
-    "loginInject": true,
-    "login": true,
-    "removeResourceButtonDirective": true,
-    "inject": true
+    // tests variables
+    "inject": true,
+    "getJSONFixture": true
+  },
+  "rules": {
+    "no-unused-vars": ["error", {"varsIgnorePattern": "_"}],
+    "jasmine/no-global-setup": ["off"],
+    "protractor/no-angular-classes": ["off"]
   }
 }

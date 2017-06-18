@@ -22,6 +22,8 @@ const minifier = require('gulp-uglify/minifier')
 const footer = require('gulp-footer')
 const inlinesource = require('gulp-inline-source')
 const gulpProtractor = require('gulp-protractor')
+const karma = require('karma')
+const stringify = require('stringify')
 
 const filePath = {
   destination: './dist',
@@ -127,6 +129,10 @@ bundle.conf = {
   // transform: [require('strictify').name]
 }
 
+function dhbrowserify () {
+  return browserify(bundle.conf).transform(stringify, {appliesTo: {includeExtensions: ['.html']}})
+}
+
 function rebundle () {
   console.log('bundle started')
   return bundle.bundler.bundle()
@@ -142,14 +148,14 @@ function rebundle () {
 }
 
 gulp.task('bundle-dev-once', function () {
-  bundle.bundler = browserify(bundle.conf)
+  bundle.bundler = dhbrowserify(bundle.conf)
   bundle.prod = false
   rebundle()
   console.log('bundle finished')
 })
 
 gulp.task('bundle-dev', function () {
-  bundle.bundler = watchify(browserify(bundle.conf))
+  bundle.bundler = watchify(dhbrowserify(bundle.conf))
   bundle.prod = false
   bundle.bundler.on('update', rebundle)
   bundle.bundler.on('error', handleError)
@@ -163,7 +169,7 @@ gulp.task('bundle-dev', function () {
 
 gulp.task('bundle-prod', function () {
   'use strict'
-  bundle.bundler = browserify(bundle.conf)
+  bundle.bundler = dhbrowserify(bundle.conf)
   bundle.prod = true
   return rebundle()
 })
@@ -335,11 +341,9 @@ gulp.task('docs', [], function () {
 // Testing
 // =======================================================================
 
-gulp.task('tests', function (done) {
-  const Server = require('karma').Server
-  new Server({
-    configFile: __dirname + '/karma.conf.js',
-    singleRun: false
+gulp.task('Unit tests', done => {
+  new karma.Server({
+    configFile: __dirname + '/karma.conf.js'
   }, done).start()
 })
 

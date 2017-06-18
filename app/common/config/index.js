@@ -2,6 +2,7 @@ require('restangular')
 require('angular-ui-bootstrap')
 require('jsonformatter')
 require('angular-ui-notification')
+require('angular-simple-logger')
 require('angular-google-maps')
 
 module.exports = angular.module('common.config',

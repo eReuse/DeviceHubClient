@@ -1,0 +1,39 @@
+{
+  "_etag": "5be9ecdf01ab5bfcac23153bec0baece7a68bf99",
+  "events": [
+    {
+      "secured": false,
+      "byUser": "59232b557a993d11a1bc4aa6",
+      "_updated": "2017-05-29T08:20:10",
+      "incidence": false,
+      "@type": "devices:Register",
+      "_id": "592bd9ba7a993d06244ea84a"
+    }
+  ],
+  "forceCreation": false,
+  "_updated": "2017-05-29T08:20:10",
+  "components": [],
+  "@type": "Device",
+  "placeholder": true,
+  "public": false,
+  "_id": "452",
+  "_links": {
+    "parent": {
+      "title": "home",
+      "href": "/"
+    },
+    "collection": {
+      "title": "devices",
+      "href": "db1/devices"
+    },
+    "self": {
+      "title": "Device",
+      "href": "db1/devices/452"
+    }
+  },
+  "_created": "2017-05-29T08:20:10",
+  "isUidSecured": true,
+  "ancestors": [],
+  "totalRamSize": 0,
+  "totalHardDriveSize": 0
+}

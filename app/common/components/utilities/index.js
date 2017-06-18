@@ -17,3 +17,4 @@ module.exports = angular.module('common.components.utilities',
   .directive('dhSubmitButton', require('./dh-submit-button/dh-submit-button.directive'))
   .factory('SubmitForm', require('./submit-form'))
   .service('progressBar', require('./progress-bar.factory'))
+  .filter('toInches', require('./to-inches.filter'))
