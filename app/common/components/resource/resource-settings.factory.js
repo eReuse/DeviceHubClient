@@ -19,24 +19,19 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
    * - Stores settings and schema
    * - 'server' variable is a configured Restangular for the resource, use it to get or post.
    *
-   * Note that to use this method you will need
-   *
-   * Classes in angular:
-   * https://medium.com/opinionated-angularjs/angular-model-objects-with-javascript-classes-2e6a067c73bc
-   *
-   * @param {string} type The type of the resource in Type convention.
-   * @property {string} type The type of the resource in Type convention.
-   * @property {string} resourceName The type in resource convention.
-   * @property {object} schema The specific schema of the resource.
-   * @property {object} settings Settings and configurations for the resource, from the server and RESOURCE_CONFIG,
+   * @property {string} type - The type of the resource in Type convention.
+   * @property {string} resourceName - The type in resource convention.
+   * @property {object} schema - The specific schema of the resource.
+   * @property {object} settings - Settings and configurations for the resource, from the server and RESOURCE_CONFIG,
    * you can add more by extending RESOURCE_CONFIG or through DeviceHub.
-   * @property {object} server A gateway to send POST and GET petitions
-   * @property {Array} subResourcesNames A list of subresources (excluding itthis) in Type convention.
-   * @property {boolean} accessible States if the user has the permission to work with the resource.
-   * @property {boolean} isALeaf todo false (counterexample: EraseBasic) In the resource tree leafs (resources without
+   * @property {object} server - A gateway to send POST and GET petitions
+   * @property {Array} subResourcesNames - A list of subresources (excluding itthis) in Type convention.
+   * @property {boolean} accessible - States if the user has the permission to work with the resource.
+   * @property {boolean} isALeaf - todo false (counterexample: EraseBasic) In the resource tree leafs (resources without
    * inner resources) are the actual specific resources we work with (you can have an object of devices:Snapshot but
-   * not an object of
-   * devices:deviceEvent).
+   * not an object of devices:deviceEvent).
+   * @property {ResourceSettings} rootAncestor - The top ancestor for this resource, which can be itself it it is the
+   * root ancestor.
    */
   class ResourceSettings {
     /**
@@ -61,6 +56,14 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
         this.types = this.schema['@type'].allowed
         this.subResourcesNames = _.without(this.types, this.type)
         this.isALeaf = this.subResourcesNames.length === 0 || this.type === 'devices:EraseBasic' // todo so works redo
+        // Get which is our root ancestor
+        if (this.settings._root) { // We avoid infinite recursive calls by not calling isSubResource if we are root
+          this.rootAncestor = this
+        } else {
+          const picked = _.pickBy(RESOURCE_CONFIG.resources, r => r._root) // Can't chain findKey after pickBy
+          const rootAncestorType = _.findKey(picked, (_, resourceType) => this.isSubResource(resourceType))
+          this.rootAncestor = _ResourceSettingsFactory(rootAncestorType)
+        }
       }
     }
 
@@ -89,15 +92,6 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
     }
 
     /**
-     * As *isSubResource* but including itself.
-     * @param {string} parentType
-     * @returns {boolean}
-     */
-    isSubResourceOrItself (parentType) {
-      return parentType === this.type || this.isSubResource(parentType)
-    }
-
-    /**
      * Gets the setting in the settings of the passed-in resource or, if the resource has not
      * the setting, it gets it from one of its ancestors.
      *
@@ -110,6 +104,7 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
     getSetting (path) {
       return utils.getSetting(RESOURCE_CONFIG.resources, this, path)
     }
+
   }
 
   // ResourceSettings are singletons per resource, so we avoid duplicities for the same resource
