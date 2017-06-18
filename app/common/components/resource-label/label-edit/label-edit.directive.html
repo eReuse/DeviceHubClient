@@ -1,0 +1,72 @@
+<table>
+  <tr>
+    <td></td>
+    <td>
+      <div class="form-group">
+        <label for="use-logo">Use a logo</label>
+        <input type="checkbox" class="form-control" id="use-logo" ng-model="model.useLogo"/>
+        <p class="help-block">&nbsp;</p>
+      </div>
+      <div class="form-group" ng-show="model.useLogo">
+        <label for="logoUpload">Logo</label>
+        <input type="file" class="form-control" id="logoUpload" accept="image/png, image/jpg, image/jpeg"/>
+        <p class="help-block">Choose <em>png</em> and <em>jpg</em> images that are not very big.</p>
+      </div>
+    </td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>
+      <div class="form-group">
+        <label for="width">Width</label>
+        <div class="input-group">
+          <input type="number" class="form-control" id="width" ng-model="model.size.width"
+                 min="{{model.size.minWidth}}"
+          />
+          <div class="input-group-addon">mm</div>
+        </div>
+        <p class="help-block">A number greater than {{model.size.minWidth - 1}}.</p>
+        <p class="help-block">{{model.size.width | toInches}} in</p>
+      </div>
+    </td>
+    <td>
+      <resource-label model="model" resource="resource"></resource-label>
+    </td>
+    <td>
+      <div class="form-group">
+        <label for="fields">Fields</label>
+        <div id="list-checkboxes">
+          <div ng-repeat="field in fields">
+            <input id="fields" type="checkbox" checklist-model="model.fields" checklist-value="field">
+            {{field.humanName}}
+          </div>
+        </div>
+      </div>
+      <div class="form-group" style="display: block">
+        <label for="show-field-names">Show field names</label>
+        <input id="show-field-names" type="checkbox" ng-model="model.showFieldNames">
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>
+      <div class="form-group">
+        <label for="height">Height</label>
+        <div class="input-group">
+          <input type="number" class="form-control" id="height" ng-model="model.size.height"
+                 min="{{model.size.minHeight}}"
+          />
+          <div class="input-group-addon">mm</div>
+        </div>
+        <p class="help-block">A number greater than {{model.size.minHeight - 1}}.</p>
+        <p class="help-block">{{model.size.height | toInches}} in</p>
+      </div>
+    </td>
+    <td></td>
+  </tr>
+</table>
+<div ng-show="model.size.width < smallWarning.width || model.size.height < smallWarning.height" class="text-warning">
+  <i class="fa fa-warning"></i>
+  The label is small. Ensure all labels below fit well.
+</div>

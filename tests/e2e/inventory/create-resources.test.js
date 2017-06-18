@@ -51,7 +51,7 @@ function DescribeCreateResources () {
     newButton.newButton.click()
     newButton.newPlaceholders.click()
     browser.wait(EC.presenceOf(newButton.placeholders.input))
-    newButton.placeholders.input.sendKeys('2')
+    newButton.placeholders.input.clear().sendKeys('2')
     newButton.submitAndCheck('submitPopover')
   })
   it('should create a lot', () => {

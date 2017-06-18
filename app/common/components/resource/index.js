@@ -31,7 +31,7 @@ module.exports = angular.module('common.components.resource',
   .directive('resourceButton', require('./resource-button/resource-button.directive'))
   .directive('deleteButton', require('./delete-button/delete-button.directive'))
   .directive('resource', require('./resource/resource.directive'))
-  .filter('palletSizeLocaleFilter', require('./pallet-size-locale.filter'))
+  .filter('palletSizeLocale', require('./pallet-size-locale.filter'))
   // Resource-list
   .directive('resourceList', require('./resource-list/resource-list.directive'))
   .factory('ResourceListGetter', require('./resource-list/resource-list-getter.factory'))

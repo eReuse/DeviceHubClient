@@ -3,7 +3,7 @@
 
 function labelsToPdfService ($q) {
   this.execute = function ($labels) {
-    var $labelEdit = $('device-label-edit')
+    var $labelEdit = $('resource-label-edit')
     var $labelTitle = $('.label-title')
     var deferred = $q.defer()
     $labelEdit.hide()

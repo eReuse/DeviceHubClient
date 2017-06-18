@@ -6,23 +6,23 @@
 </div>
 <div class="modal-body">
   <h2 class="label-title">Design</h2>
-  <device-label-edit device="devices[0]" set="set" api="labelEditApi"></device-label-edit>
+  <resource-label-edit resource="resources[0]" model="model" api="labelEditApi"></resource-label-edit>
   <h2 class="label-title">Preview</h2>
   <div class="row" id="labels">
-      <device-label ng-repeat="device in devices"
-                    set="set"
-                    device="device"
-      ></device-label>
+      <resource-label ng-repeat="resource in resources"
+                    model="model"
+                    resource="resource"
+      ></resource-label>
   </div>
 </div>
 <div class="modal-footer">
   <div class="row">
     <button type="button" class="btn btn-success" ng-click="print()" dh-submit-button="loading">
-      <i class="fa fa-file-pdf-o"></i>
+      <i class="fa fa-file-pdf-o fa-fw"></i>
       Print to PDF
     </button>
     <button type="button" class="btn btn-warning" ng-click="labelEditApi.reset()">
-      <i class="fa fa-eraser"></i>
+      <i class="fa fa-eraser fa-fw"></i>
       Reset label design
     </button>
     <button type="button" class="btn btn-danger" ng-click="cancel()">

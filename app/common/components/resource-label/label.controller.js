@@ -1,7 +1,7 @@
-function deviceLabelCtrl ($scope, $uibModalInstance, devices, labelsToPdfService, progressBar) {
-  const utils = require('./../../utils')
-  $scope.devices = devices
-  $scope.set = {}
+function resourceLabelCtrl ($scope, $uibModalInstance, resources, labelsToPdfService, progressBar) {
+  const utils = require('./../utils')
+  $scope.resources = resources
+  $scope.model = {}
   $scope.labelEditApi = {}
   $scope.cancel = () => { $uibModalInstance.dismiss('cancel') }
   $scope.print = () => {
@@ -10,7 +10,7 @@ function deviceLabelCtrl ($scope, $uibModalInstance, devices, labelsToPdfService
     progressBar.start()
     $scope.loading = true
     $('.modal-body').scrollTop(0) // We scroll to the top to ensure labels are not hidden
-    labelsToPdfService.execute($('#labels .labelWidget')).then(() => {
+    labelsToPdfService.execute($('#labels .resource-label')).then(() => {
       utils.Progress.stop()
       progressBar.complete()
       $scope.loading = false
@@ -18,4 +18,4 @@ function deviceLabelCtrl ($scope, $uibModalInstance, devices, labelsToPdfService
   }
 }
 
-module.exports = deviceLabelCtrl
+module.exports = resourceLabelCtrl

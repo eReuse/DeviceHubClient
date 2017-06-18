@@ -25,8 +25,8 @@ describe('Login and get main view', () => {
   })
   it('should perform logout', () => {
     account.userButton.click()
-    browser.wait(EC.presenceOf(account.logoutButton))
+    browser.wait(EC.presenceOf(account.logoutButton), null, 'The logout button should appear')
     account.logoutButton.click()
-    browser.wait(EC.presenceOf(loginForm.email))
+    browser.wait(EC.presenceOf(loginForm.email), null, 'The login form should appear')
   })
 })

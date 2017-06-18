@@ -1,0 +1,20 @@
+{
+  "extends": [
+    "standard",
+    "plugin:protractor/recommended"
+  ],
+  "installedESLint": true,
+  "plugins": [
+    "protractor"
+  ],
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "jasmine": true,
+    "jquery": true
+  },
+  "globals": {
+    "angular": true,
+    "_": true
+  }
+}

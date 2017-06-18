@@ -59,12 +59,22 @@ const RESOURCE_CONFIG = {
       // We pass a 'resource' object to a subview with, at least, @type.
       subviews: [v.Event, v.Detail],
       doNotUse: DO_NOT_USE.concat(['events', 'owners', 'components', 'isUidSecured', 'public', 'icon', 'pid',
-        'labelId', 'placeholder', 'parent', 'place'])
+        'labelId', 'placeholder', 'parent', 'place']),
+      label: {
+        fields: [
+          'serialNumber', 'pid', 'model', 'manufacturer', 'labelId', 'hid', '_id', 'totalRamSize', 'totalHardDriveSize'
+        ],
+        defaultFields: [
+          'labelId', '_id'
+        ]
+      },
+      _root: true
     },
     Event: {
       view: {},
       subviews: [v.Device, v.Detail],
-      doNotUse: ['geo'].concat(DO_NOT_USE)
+      doNotUse: ['geo'].concat(DO_NOT_USE),
+      _root: true
     },
     Account: {
       dataRelation: {
@@ -77,7 +87,15 @@ const RESOURCE_CONFIG = {
       },
       view: {title: ['label'], subtitle: ['e-mail']},
       doNotUse: DO_NOT_USE,
-      subviews: [v.Lot, v.Package, v.Device]
+      subviews: [v.Lot, v.Package, v.Device],
+      _root: true
+    },
+    Group: {
+      label: {
+        fields: ['_id', 'label'],
+        defaultFields: ['_id', 'label']
+      },
+      _root: true
     },
     Place: {
       dataRelation: {
@@ -167,7 +185,8 @@ const RESOURCE_CONFIG = {
         filterFieldNames: ['label'],
         fieldType: 'typeahead',
         keyFieldName: 'label'
-      }
+      },
+      _root: true
     }
   },
   inventory: {

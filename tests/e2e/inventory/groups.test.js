@@ -8,6 +8,8 @@ function describeGroups () {
   beforeAll(() => inventory.goToTab())
 
   it('should download an spreadsheet', () => inventory.download())
+
+  describe('Should generate labels', () => { inventory.label() })
 }
 
 module.exports = describeGroups
