@@ -1,25 +1,67 @@
-var setImageGetter = require('./../../../utils').setImageGetter
-function labelList (certificateErasureFactory) {
+function certificateErasure (certificateErasureFactory, SubmitForm) {
   return {
-    templateUrl: window.COMPONENTS + '/device/certificate/certificate-erasure/certificate-erasure.directive.html',
+    template: require('./../certificate-form.html'),
     restrict: 'E',
     scope: {
-      devices: '='
+      resources: '=',
+      status: '='
     },
-    link: function ($scope) {
-      $scope.languages = {
-        ES: 'Español',
-        EN: 'English'
+    link: {
+      pre: $scope => {
+        const form = {
+          fields: [
+            {
+              key: 'lan',
+              type: 'radio',
+              templateOptions: {
+                label: 'Language',
+                options: [
+                  {name: 'Español', value: 'ES'},
+                  {name: 'English', value: 'EN'}
+                ],
+                required: true
+              }
+            },
+            {
+              key: 'org',
+              type: 'input',
+              templateOptions: {
+                label: 'Organization that erased the devices',
+                placeholder: 'ACME',
+                description: 'This is only added into the resulting PDF certificate.',
+                required: true
+              }
+            },
+            {
+              key: 'logo',
+              type: 'upload',
+              templateOptions: {
+                label: 'Logo of the organization',
+                description: 'This is only added into the resulting PDF certificate. Only PNG and JPG. Big images' +
+                ' can take long to process.',
+                accept: 'image/png, image/jpg',
+                required: true
+              }
+            }
+          ],
+          model: {
+            resources: $scope.resources,
+            lan: 'EN'
+          },
+          submit: model => {
+            if (submitForm.isValid()) {
+              submitForm.prepare()
+              const certificate = new certificateErasureFactory(model.resources, model, model.logo.data)
+              const promise = certificate.generatePdf()
+              submitForm.after(promise)
+            }
+          }
+        }
+        const submitForm = new SubmitForm(form, $scope.status)
+        $scope.form = form
       }
-      $scope.model = {
-        lan: 'EN'
-      }
-      $scope.print = function (device, model, logo) {
-        (new certificateErasureFactory(device, model, logo)).generatePdf()
-      }
-      setImageGetter($scope, '#logoUpload', 'logo')
     }
   }
 }
 
-module.exports = labelList
+module.exports = certificateErasure

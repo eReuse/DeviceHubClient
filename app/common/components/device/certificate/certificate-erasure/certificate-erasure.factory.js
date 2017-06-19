@@ -29,7 +29,7 @@ function certificateErasureFactory (CONSTANTS, CERTIFICATE_ERASURE_FACTORY_STRIN
 
   proto.generatePdf = function () {
     var self = this
-    this.promise.then(function () {
+    return this.promise.then(function () {
       self._add(self._header(self.s.DOCU_TITLE))
       self._add(self._introduction())
       self._add(self._devicesResume(self.reports))

@@ -17,6 +17,8 @@ function describeDevices () {
     inventory.removeFromLot()
     inventory.moveToPallet()
   })
+
+  inventory.describeCertificateErasure()
 }
 
 module.exports = describeDevices

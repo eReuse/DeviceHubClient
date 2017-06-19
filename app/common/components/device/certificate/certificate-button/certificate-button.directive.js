@@ -1,49 +1,33 @@
-var PATH = window.COMPONENTS + '/device/certificate/certificate-button'
-function certificateButton ($uibModal, ResourceSettings) {
+function certificateButton (dhModal) {
   return {
-    templateUrl: PATH + '/certificate-button.directive.html',
+    template: require('./certificate-button.directive.html'),
     restrict: 'E',
     scope: {
-      devices: '<'
+      resources: '='
     },
-    link: function ($scope) {
+    link: $scope => {
       $scope.dropDownIsOpen = false
-      $scope.$watchCollection('devices', function (devices) {
-        $scope.allComputers = _.every(devices, {'@type': 'Computer'})
+      $scope.$watchCollection('resources', resources => {
+        $scope.allComputers = _.every(resources, {'@type': 'Computer'})
       })
       $scope.certificates = [
         {
           title: 'Erasure',
           icon: 'fa-eraser',
           description: 'Shows a brief and the details of the hard-drives erased.'
-        },
-        {
-          title: 'Receipt',
-          icon: ResourceSettings('devices:Receive').settings.fa,
-          description: 'Generates a legal receipt for a receiver to sign.'
         }
       ]
-
+      /*{
+       title: 'Receipt',
+       icon: ResourceSettings('resources:Receive').settings.fa,
+       description: 'Generates a legal receipt for a receiver to sign.'
+       }*/
       $scope.openDropdown = function ($event) {
-        if ($scope.allComputers && $scope.devices.length > 0) $scope.dropDownIsOpen = true
+        if ($scope.allComputers && $scope.resources.length > 0) $scope.dropDownIsOpen = true
         $event.stopPropagation()  // https://github.com/angular-ui/bootstrap/issues/6038
       }
-
-      $scope.openModal = function (title, devices) {
-        if ($scope.allComputers) {
-          $uibModal.open({
-            templateUrl: PATH + '/certificate-button-modal.controller.html',
-            controller: 'certButtModalCtrl',
-            resolve: {
-              devices: function () {
-                return devices
-              },
-              title: function () {
-                return title
-              }
-            }
-          })
-        }
+      $scope.openModal = title => {
+        dhModal.open('certificate', {title: () => title, resources: () => $scope.resources})
       }
     }
   }

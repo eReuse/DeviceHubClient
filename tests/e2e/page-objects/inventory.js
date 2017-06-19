@@ -3,6 +3,8 @@ const path = require('path')
 const jsonfile = require('jsonfile')
 const Base = require('./base')
 const EC = protractor.ExpectedConditions
+const JSON_LOGO = path.join(__dirname, '/../../fixtures/logo.json')
+const IMG_LOGO = path.join(__dirname, '/../../fixtures/logo.png')
 
 class Inventory extends Base {
   constructor (resourceType) {
@@ -13,6 +15,7 @@ class Inventory extends Base {
     this._selectAll = this.table.$('thead .resource-list-checkbox')
     this.tab = element(by.cssContainingText('#subviews .view-tab-text', resourceType))
     this.buttons = this.resourceList.$('#buttons')
+    this.listOfResources = this.table.$('tbody>tr')
     this.resourceListFooter = $('resource-list-footer')
     this.downloadButton = this.resourceListFooter.$('[class*=download]')
     this.submitDownload = this.resourceListFooter.$('.popover [type=submit]')
@@ -50,7 +53,9 @@ class Inventory extends Base {
     const search = this.resourceList.$('resource-search')
     this.search = {
       self: search,
-      groupInclusion: search.$('[data-e2e=groupInclusion]')
+      searchbox: search.$('[name=searchbox]'),
+      groupInclusion: search.$('[data-e2e=groupInclusion]'),
+      type: search.$('[data-e2e="@type"]')
     }
     // Groups
     const groupResourceButton = this.buttons.$('group-resource-button')
@@ -68,6 +73,18 @@ class Inventory extends Base {
       select: select,
       selectFirstOption: select.$$('option').get(1), // get(0) is the undefined one
       submit: this.popover.$('[type=submit]')
+    }
+    // Certificate
+    const certificateButton = this.buttons.$('certificate-button')
+    this.certificateButton = {
+      self: certificateButton,
+      erasure: certificateButton.$('[data-e2e=Erasure]')
+    }
+    this.certificateErasure = {
+      lanEs: this.modal.$('[type=radio][value=ES]'),
+      org: this.modal.$('[id*=org]'),
+      logo: this.modal.$('[id*=logo]'),
+      submit: this.modal.$('[type=submit]')
     }
   }
 
@@ -171,11 +188,11 @@ class Inventory extends Base {
 
       // Add another logo
       let dataUrl
-      jsonfile.readFile(path.join(__dirname, '/../../fixtures/logo.json'), (_, json) => {
-        dataUrl = json['logo']
+      jsonfile.readFile(JSON_LOGO, (_, json) => {
+        dataUrl = json.logo
       })
-      self.labelEdit.logoUpload.sendKeys(path.join(__dirname, '/../../fixtures/logo.png'))
-      browser.wait(EC.presenceOf(self.labels.logo))
+      self.labelEdit.logoUpload.sendKeys(IMG_LOGO)
+      self.waitPresenceFor(self.labels.logo, 'Logo should load')
       self.labels.logo.getAttribute('ng-src').then(ngSrc => {
         _.forEach(ngSrc, src => { expect(src).toEqual(dataUrl) })
       })
@@ -209,7 +226,7 @@ class Inventory extends Base {
     const self = this
     beforeAll(function removeGroupInclusionSearchParameter () {
       self.search.groupInclusion.$('.remove').click()
-      self.waitPresenceFor(self.table.$('tbody>tr'))
+      self.waitPresenceFor(self.listOfResources)
       self.toggleSelectAll()
     })
     beforeEach(function openGroupMenu () {
@@ -255,6 +272,38 @@ class Inventory extends Base {
       self.group.input.sendKeys('p').sendKeys(protractor.Key.ENTER)
       self.group.submit.click()
       self.waitForNotifySuccess()
+    })
+  }
+
+  describeCertificateErasure () {
+    const self = this
+    describe('Certificate Erasure', () => {
+      beforeAll(function selectOnlyComputers () {
+        self.search.searchbox.sendKeys('type').sendKeys(protractor.Key.ENTER)
+        self.search.type.$('option[value="string:Computer"]').click()
+        self.waitPresenceFor(self.listOfResources, 'Resources should re-load')
+        self.toggleSelectAll()
+      })
+      beforeAll(function openModal() {
+        self.certificateButton.self.click()
+        self.certificateButton.erasure.click()
+        self.waitPresenceFor(self.modal, 'Modal should open')
+      })
+      it('Should generate and download the erasure certificate', () => {
+        self.certificateErasure.logo.sendKeys(IMG_LOGO)
+        self.certificateErasure.org.sendKeys('ACME')
+        self.certificateErasure.submit.click()
+      })
+      it('Should generate and download the erasure certificate in Spanish', () => {
+        self.certificateErasure.lanEs.click()
+        self.certificateErasure.logo.sendKeys(IMG_LOGO)
+        self.certificateErasure.org.sendKeys('ACME')
+        self.certificateErasure.submit.click()
+      })
+      afterAll(() => {
+        self.closeModal.click()
+        self.waitStalenessFor(self.modal, 'Modal should disappear.')
+      })
     })
   }
 }
