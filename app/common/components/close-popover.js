@@ -12,7 +12,7 @@ function closePopover () {
    * 'clickout'.
    */
   return {
-    template: '<i class="fa fa-lg fa-border fa-times" ng-click="closePopover()"></i>',
+    template: '<i class="fa fa-times" ng-click="closePopover()"></i>',
     restrict: 'E',
     scope: {
       popover: '=',
