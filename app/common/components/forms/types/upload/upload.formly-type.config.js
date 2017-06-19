@@ -22,7 +22,8 @@ function typeahead (formlyConfigProvider) {
             if (!angular.isFunction(file[properties])) fileProp[properties] = file[properties]
           }
           model.push(fileProp)
-          scope.fc.$setViewValue(model)
+          // If multiple then model = [file1 ,file2, ...] else model = file1
+          scope.fc.$setViewValue(scope.to.multiple ? model : fileProp)
           var reader = new FileReader()
           reader.onload = function (e) {
             fileProp.data = e.target.result
@@ -43,7 +44,9 @@ function typeahead (formlyConfigProvider) {
         accept: '*/*',
         type: 'file',
         multiple: false,
-        readAs: 'readAsDataUrl' // see http://blog.teamtreehouse.com/reading-files-using-the-html5-filereader-api
+        readAs: 'readAsDataURL' // see http://blog.teamtreehouse.com/reading-files-using-the-html5-filereader-api
+        // readAsDataUrl = image
+        // readAsText = json or similar
       }
     }
   })
