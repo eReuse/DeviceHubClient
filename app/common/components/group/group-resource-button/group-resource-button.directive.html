@@ -24,12 +24,15 @@
         tooltip-append-to-body="true"
     >
       <span ng-show="item.title">
-        <resource-icon resource-type="{{item.group}}"></resource-icon>
-        {{item.title}}
+        <resource-icon resource-type="{{::item.group}}"></resource-icon>
+        {{::item.title}}
       </span>
-      <a ng-click="openPopover(item.group, item.action, item.label)" ng-hide="item.title">
-        <i class="fa fa-fw {{item.fa}}"></i>
-        {{item.label}}
+      <a ng-click="openPopover(item.group, item.action, item.label)"
+         data-e2e="{{::item.group}}-{{::item.action}}"
+         ng-if="!item.title"
+      >
+        <i class="fa fa-fw {{::item.fa}}"></i>
+        {{::item.label}}
       </a>
     </li>
   </ul>

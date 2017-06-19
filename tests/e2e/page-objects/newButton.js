@@ -1,9 +1,11 @@
 const _ = require('lodash')
+const Base = require('./base')
 const EC = protractor.ExpectedConditions
 
-class NewButton {
+class NewButton extends Base {
 
   constructor () {
+    super()
     this.newButton = element(by.id('new-button'))
     this.newComputer = this.newButton.$('a[ng-click*=computerSnapshot]')
     this.newMonitor = this.newButton.$('a[ng-click*=ComputerMonitor]')
@@ -48,11 +50,8 @@ class NewButton {
 
   submitAndCheck (submit = 'submit') {
     this[submit].click()
-    const uiNotification = $('.ui-notification')
-    return browser.wait(EC.presenceOf(uiNotification)).then(() => {
-      expect(uiNotification.getAttribute('class')).toContain('success')
-      browser.wait(EC.not(EC.presenceOf(this[submit])))
-    })
+    this.waitForNotifySuccess()
+    return browser.wait(EC.not(EC.presenceOf(this[submit])))
   }
 
 }

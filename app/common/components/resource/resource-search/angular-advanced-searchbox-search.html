@@ -5,7 +5,11 @@
     <span class="remove-all-icon fa fa-trash"></span>
   </a>
   <div>
-    <div class="search-parameter" ng-repeat="searchParam in searchParams" uib-tooltip="{{::searchParam.description}}">
+    <div class="search-parameter"
+         ng-repeat="searchParam in searchParams"
+         uib-tooltip="{{::searchParam.description}}"
+         data-e2e="{{::searchParam.key}}"
+    >
       <a ng-href="" ng-click="removeSearchParam($index)" role="button">
         <span class="remove fa fa-trash"></span>
       </a>

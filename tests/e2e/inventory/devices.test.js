@@ -10,6 +10,13 @@ function describeDevices () {
   it('should download an spreadsheet', () => inventory.download())
 
   describe('Should generate labels', () => { inventory.label() })
+
+  describe('Should integrate with groups', () => {
+    inventory.prepareGroup()
+    inventory.addToLot()
+    inventory.removeFromLot()
+    inventory.moveToPallet()
+  })
 }
 
 module.exports = describeDevices

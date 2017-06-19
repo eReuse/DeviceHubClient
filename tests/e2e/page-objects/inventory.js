@@ -1,11 +1,12 @@
 const _ = require('lodash')
 const path = require('path')
 const jsonfile = require('jsonfile')
+const Base = require('./base')
 const EC = protractor.ExpectedConditions
 
-class Inventory {
-
+class Inventory extends Base {
   constructor (resourceType) {
+    super()
     this.resourceList = $('resource-list')
     this.table = $('#resource-list-table')
     this.firstRow = this.table.$('tbody tr:first-child')
@@ -15,6 +16,7 @@ class Inventory {
     this.resourceListFooter = $('resource-list-footer')
     this.downloadButton = this.resourceListFooter.$('[class*=download]')
     this.submitDownload = this.resourceListFooter.$('.popover [type=submit]')
+    this.popover = $('.popover')
     // Modals
     this.modal = $('.modal')
     this.closeModal = this.modal.$('[ng-click*=cancel]')
@@ -43,6 +45,29 @@ class Inventory {
       table: table,
       fieldNames: table.$$('small'),
       fields: labels.$$('table td:last-child')
+    }
+    // Search
+    const search = this.resourceList.$('resource-search')
+    this.search = {
+      self: search,
+      groupInclusion: search.$('[data-e2e=groupInclusion]')
+    }
+    // Groups
+    const groupResourceButton = this.buttons.$('group-resource-button')
+    const groupRButtonList = groupResourceButton.$('ul')
+    this.groupButton = {
+      button: groupResourceButton.$('button'),
+      list: groupRButtonList,
+      addToLot: groupRButtonList.$('[data-e2e=Lot-add]'),
+      removeFromLot: groupRButtonList.$('[data-e2e=Lot-remove]'),
+      moveToPallet: groupRButtonList.$('[data-e2e=Pallet-move]')
+    }
+    const select = this.popover.$('group-resource-remove select')
+    this.group = {
+      input: this.popover.$('input'),
+      select: select,
+      selectFirstOption: select.$$('option').get(1), // get(0) is the undefined one
+      submit: this.popover.$('[type=submit]')
     }
   }
 
@@ -86,8 +111,8 @@ class Inventory {
     })
     it('Should reset the design of the label', () => {
       self.reset.click()
-      browser.wait(EC.presenceOf(self.labels.self.first()), 500, 'A label should appear')
-      browser.wait(EC.presenceOf(self.labels.self.get(2)), 500, 'A label should appear')
+      self.waitPresenceFor(self.labels.self.first(), 'A label should appear')
+      self.waitPresenceFor(self.labels.self.get(2), 'A label should appear')
       expect(self.labelEdit.self.$$('#list-checkboxes #fields.ng-not-empty').isSelected()).not.toContain(false)
       expect(self.labelEdit.useLogo.isSelected()).toEqual(true)
       expect(self.labelEdit.showFieldNames.isSelected()).toEqual(true)
@@ -170,14 +195,66 @@ class Inventory {
     it('Should print the PDF', () => {
       // Print the PDF
       self.print.click()
-      // While generating the PDF the button is not clickable
-      browser.wait(EC.not(EC.elementToBeClickable(self.print)), null, 'Print should not be clickable while printing')
+      // While generating the PDF the button is not clickable, but checking it is complex as it happens quite fast
       browser.wait(EC.elementToBeClickable(self.print), null, 'Print should be clickable after printing.')
     })
     afterAll(() => {
       // Close it
       self.closeModal.click()
-      browser.wait(EC.stalenessOf(self.modal))
+      self.waitStalenessFor(self.modal, 'Modal should close')
+    })
+  }
+
+  prepareGroup () {
+    const self = this
+    beforeAll(function removeGroupInclusionSearchParameter () {
+      self.search.groupInclusion.$('.remove').click()
+      self.waitPresenceFor(self.table.$('tbody>tr'))
+      self.toggleSelectAll()
+    })
+    beforeEach(function openGroupMenu () {
+      self.groupButton.button.click()
+      self.waitPresenceFor(self.groupButton.list, 'Should open the list')
+    })
+    afterEach(function waitForPopoverToDisappear () {
+      self.waitStalenessFor(self.popover, 'Popover should disappear')
+    })
+    afterAll(function deselectAll () {
+      self.toggleSelectAll()
+    })
+  }
+
+  addToLot () {
+    const self = this
+    it('Should add to lot', () => {
+      self.groupButton.addToLot.click()
+      self.waitPresenceFor(self.popover, 'Should open the popover')
+      expect(self.group.input.isDisplayed()).toBe(true)
+      self.group.input.sendKeys('l').sendKeys(protractor.Key.ENTER)
+      self.group.submit.click()
+      self.waitForNotifySuccess()
+    })
+  }
+
+  removeFromLot () {
+    const self = this
+    it('Should remove a lot', () => {
+      self.groupButton.removeFromLot.click()
+      self.waitPresenceFor(self.popover, 'Should open the popover')
+      self.group.selectFirstOption.click()
+      self.group.submit.click()
+      self.waitForNotifySuccess()
+    })
+  }
+
+  moveToPallet () {
+    const self = this
+    it('Should move to pallet', () => {
+      self.groupButton.moveToPallet.click()
+      self.waitPresenceFor(self.popover, 'Should open the popover')
+      self.group.input.sendKeys('p').sendKeys(protractor.Key.ENTER)
+      self.group.submit.click()
+      self.waitForNotifySuccess()
     })
   }
 }
