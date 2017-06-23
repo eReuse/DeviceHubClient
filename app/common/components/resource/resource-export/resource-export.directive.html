@@ -1,0 +1,12 @@
+<button type="button"
+        class="btn"
+        ng-class="{'btn-primary': resources.length > 0}"
+
+        uib-popover-template="popover.templateUrl"
+        popover-title="{{::popover.title}}"
+        popover-is-open="popover.isOpen"
+        popover-placement="bottom-right"
+>
+  <i class="fa fa-share-square-o"></i>
+  Export
+</button>

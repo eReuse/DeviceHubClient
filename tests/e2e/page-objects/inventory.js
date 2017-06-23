@@ -16,9 +16,8 @@ class Inventory extends Base {
     this.tab = element(by.cssContainingText('#subviews .view-tab-text', resourceType))
     this.buttons = this.resourceList.$('#buttons')
     this.listOfResources = this.table.$('tbody>tr')
-    this.resourceListFooter = $('resource-list-footer')
-    this.downloadButton = this.resourceListFooter.$('[class*=download]')
-    this.submitDownload = this.resourceListFooter.$('.popover [type=submit]')
+    this.exportButton = this.buttons.$('resource-export')
+    this.submitDownload = this.exportButton.$('.popover [type=submit]')
     this.popover = $('.popover')
     // Modals
     this.modal = $('.modal')
@@ -105,7 +104,7 @@ class Inventory extends Base {
   download () {
     const self = this
     this.toggleSelectAll()
-    this.downloadButton.click()
+    this.exportButton.click()
     browser.wait(EC.presenceOf(this.submitDownload))
     self.submitDownload.click()
     browser.wait(EC.stalenessOf(this.submitDownload))
@@ -284,7 +283,7 @@ class Inventory extends Base {
         self.waitPresenceFor(self.listOfResources, 'Resources should re-load')
         self.toggleSelectAll()
       })
-      beforeAll(function openModal() {
+      beforeAll(function openModal () {
         self.certificateButton.self.click()
         self.certificateButton.erasure.click()
         self.waitPresenceFor(self.modal, 'Modal should open')
