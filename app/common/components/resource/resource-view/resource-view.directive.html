@@ -22,8 +22,7 @@
         <span ng-repeat="t in view.title">{{resource[t]}}</span>
         <small ng-repeat="s in view.subtitle">&nbsp;{{resource[s]}}</small>
         <small class="pull-right">
-          <delete-button resource="resource"></delete-button>
-          <resource-icon resource-type="{{resource['@type']}}" resource-subtype="{{resource.type}}"></resource-icon>
+          <resource-icon resource-type="{{::resource['@type']}}" resource-subtype="{{::resource.type}}"></resource-icon>
         </small>
       </h3>
     </header>

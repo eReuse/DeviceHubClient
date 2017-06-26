@@ -15,7 +15,7 @@ const v = {
     fa: 'fa-dashboard'
   },
   Dashboard: {view: 'resource-dashboard', name: 'Dashboard', 'class': 'fill-height show', fa: 'fa-dashboard'},
-  Detail: {view: 'table-view', name: 'Detail', 'class': 'fill-height show', fa: 'fa-info'},
+  Detail: {view: 'table-view', name: 'Detail', 'class': 'fill-height show', fa: ['fa-info', 'fa-edit']},
   Device: {view: 'resource-list', resourceType: 'Device', name: 'Devices', fa: 'fa-desktop'},
   Event: {view: 'resource-list', resourceType: 'Event', name: 'Events', resourceIcon: 'Event'},
   Place: {view: 'resource-list', resourceType: 'Place', name: 'Places', resourceIcon: 'Place'},

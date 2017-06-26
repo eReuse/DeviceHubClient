@@ -26,7 +26,7 @@ function SubviewFactory (ResourceViewGenerator, RESOURCE_CONFIG) {
         let uid = option.view + option.resourceType
         $scope.tabs[uid] = {isActive: false}
         let icon = option.fa
-          ? `<i class="fa ${option.fa} fa-fw fa-lg"></i>`
+          ? _.map(_.isArray(option.fa) ? option.fa : [option.fa], fa => `<i class="fa ${fa} fa-fw fa-lg"></i>`).join('')
           : `<resource-icon resource-type="${option.resourceIcon}"></resource-icon>`
         body += `
           <uib-tab select="setActive(tabs['${uid}'])">
