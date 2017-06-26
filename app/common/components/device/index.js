@@ -19,14 +19,6 @@ module.exports = angular.module('common.components.device',
     require('./../utilities').name
   ])
   /**
-   * Shows all the hardware and related information (not events) of a device, and its components.
-   * @ngdoc directive
-   * @name deviceView
-   * @param {Object} identifier Object with one property: _id, which is a string identifying the device. We use an object
-   * to be able to watch over it, and load a new device when the _id changes.
-   */
-  .directive('deviceView', require('./device-view/device-view.directive'))
-  /**
    * @ngdoc directive
    * @name placeIcon
    * @description Gets and shows the icon that represents a device.
