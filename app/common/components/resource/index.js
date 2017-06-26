@@ -6,6 +6,7 @@ require('angular-recursion')
 require('angular-animate')
 require('angular-timeago')
 require('angular-google-maps')
+require('meanie-angular-focus')
 
 module.exports = angular.module('common.components.resource',
   [
@@ -19,7 +20,8 @@ module.exports = angular.module('common.components.resource',
     require('./../authentication').name,
     require('./../../constants').name,
     'uiGmapgoogle-maps',
-    require('./../utilities').name
+    require('./../utilities').name,
+    'Focus.Service'
   ])
   .constant('RESOURCE_CONFIG', require('./resource-config.constant'))
   .factory('ResourceServer', require('./resource-server.factory'))
@@ -45,4 +47,4 @@ module.exports = angular.module('common.components.resource',
   .directive('fieldSort', require('./resource-list/field-sort/field-sort.directive.js'))
   .directive('resourceDashboard', require('./resource-dashboard/resource-dashboard.directive'))
   .directive('resourceExport', require('./resource-export/resource-export.directive'))
-
+  .directive('resourceFieldEdit', require('./resource-field-edit/resource-field-edit.directive'))

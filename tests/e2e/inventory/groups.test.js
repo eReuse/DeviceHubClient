@@ -10,6 +10,8 @@ function describeGroups () {
   it('should download an spreadsheet', () => inventory.download())
 
   describe('Should generate labels', () => { inventory.label() })
+
+  describe('Should edit a field', () => { inventory.testEditField() })
 }
 
 module.exports = describeGroups

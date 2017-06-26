@@ -1,0 +1,11 @@
+<span ng-show="field.editable" class="pull-right buttons">
+  <i class="fa fa-edit fa-fw clickable" ng-click="edit.edit()" ng-hide="edit.editing"></i>
+  <i class="fa fa-check clickable" ng-click="form.submit()" ng-show="edit.editing"></i>
+  <i class="fa fa-ban fa-fw clickable" ng-click="edit.stopEdit()" ng-show="edit.editing"></i>
+</span>
+<span ng-transclude ng-show="!edit.editing"></span>
+<form ng-if="edit.editing" ng-submit="form.submit()" novalidate id="edit-form">
+  <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
+  </formly-form>
+</form>
+

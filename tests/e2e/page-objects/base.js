@@ -10,6 +10,10 @@ class Base {
     }
   }
 
+  static random () {
+    return Math.random().toString(36).substring(2)
+  }
+
   waitForNotifySuccess () {
     // We add some more time as this is usually for requests
     return this.waitPresenceFor(this.notification.success, 'Should notify success', 5000)

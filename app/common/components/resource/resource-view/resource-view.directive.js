@@ -11,7 +11,7 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
    * @param {string} type - The type of the resource.
    */
   return {
-    templateUrl: require('./__init__').PATH + '/resource-view.directive.html',
+    template: require('./resource-view.directive.html'),
     restrict: 'E',
     scope: {
       resource: '=?',
@@ -30,10 +30,10 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
 
         $scope.$on('changeTab', () => $scope.setActive())
 
-        $scope.$watchCollection('resource', (newResource, oldResource) => {
+        $scope.$watch('resource._id', (newResourceId, oldResourceId) => {
           // We create the tabs with the subviews embedded
           // Note that resourceView is re-used to hold different types of resources at different times
-          if (newResource !== oldResource) generateViewAndSubview()
+          if (newResourceId !== oldResourceId) generateViewAndSubview()
         })
 
         function generateViewAndSubview () {

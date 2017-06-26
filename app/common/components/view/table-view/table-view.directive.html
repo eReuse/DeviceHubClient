@@ -11,23 +11,30 @@
         <span class="hidden-xs hidden-sm hidden-md ">{{::field.name}}</span>
         <span class="hidden-lg">{{::field.short || field.name}}</span>
       </td>
-      <td ng-if="$root._.isPlainObject(field.value) || $root._.isArray(field.value) && field.data_relation == undefined">
-        <json-formatter json="field.value"></json-formatter>
-      </td>
-      <td ng-if="!$root._.isPlainObject(field.value) && !$root._.isArray(field.value) && field.data_relation == undefined">
-        {{::field.value}}&nbsp;{{::field.unitCode}}
-      </td>
-      <td ng-if="field.data_relation != undefined">
-        <div ng-if="$root._.isArray(field.value)">
-          <span ng-repeat="value in field.value">
-              <resource-button resource="{_id: value, '@type': Naming.type(field.data_relation.resource)}">
-              </resource-button>
+      <td
+        ng-init="is = {
+                        plain: $root._.isPlainObject(field.value),
+                        array: $root._.isArray(field.value),
+                        dataRelationUndef: $root._.isUndefined(field.data_relation)
+                      }"
+      >
+        <resource-field-edit field="field" model="model" resource="resource">
+          <json-formatter json="field.value" ng-if="is.dataRelationUndef && (is.plain || is.array)"></json-formatter>
+          <span ng-if="is.dataRelationUndef && !is.plain && !is.array">
+            {{field.value}}&nbsp;{{::field.unitCode}}
           </span>
-        </div>
-        <div ng-if="!$root._.isArray(field.value)">
-          <resource-button resource="{_id: field.value, '@type': Naming.type(field.data_relation.resource)}">
-          </resource-button>
-        </div>
+          <span ng-if="!is.dataRelationUndef">
+            <span ng-if="is.array">
+              <span ng-repeat="value in field.value">
+                <resource-button resource="{_id: value, '@type': Naming.type(field.data_relation.resource)}">
+                </resource-button>
+              </span>
+            </span>
+            <resource-button ng-if="!is.array"
+                             resource="{_id: field.value, '@type': Naming.type(field.data_relation.resource)}">
+            </resource-button>
+          </span>
+        </resource-field-edit>
       </td>
     </tr>
   </tbody>

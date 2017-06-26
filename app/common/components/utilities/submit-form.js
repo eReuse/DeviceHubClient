@@ -59,13 +59,15 @@ function submitFormFactory (Notification) {
      *
      * @param {$q} promise - The backend's service promise.
      * @param {string} [notifyText] - If set, notifies the user with the following **success** text.
+     * @param {string} [errorText] - If set, notifies the user with an error message in case of error.
      */
-    after (promise, notifyText) {
+    after (promise, notifyText, errorText) {
       let self = this
       promise.then(() => {
         if (notifyText) Notification.success(notifyText)
         self.status.succeeded = true
       }).catch((response) => {
+        if (errorText) Notification.error(notifyText)
         self.form.form.triedSubmission = true
         self.status.errorListFromServer = response.data._issues
       }).finally(() => {

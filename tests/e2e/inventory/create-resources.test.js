@@ -1,6 +1,7 @@
 const _ = require('lodash')
 const NewButton = require('../page-objects/newButton')
 const path = require('path')
+const Base = require('./../page-objects/base')
 const EC = protractor.ExpectedConditions
 
 /**
@@ -8,10 +9,6 @@ const EC = protractor.ExpectedConditions
  */
 function DescribeCreateResources () {
   const newButton = new NewButton()
-
-  function random () {
-    return Math.random().toString(36).substring(2)
-  }
 
   it('should snapshot a computer', () => {
     newButton.newButton.click()
@@ -39,7 +36,7 @@ function DescribeCreateResources () {
     browser.wait(EC.presenceOf(newButton.label))
     // Create random SN so DB does not need to be depleted
     // Inspired from https://stackoverflow.com/a/8084248
-    cm.serialNumber.sendKeys(random())
+    cm.serialNumber.sendKeys(Base.random())
     cm.model.sendKeys('foobar')
     cm.manufacturer.sendKeys('Apple')
     browser.wait(EC.presenceOf(cm.manufacturerTypeahead))
@@ -66,7 +63,7 @@ function DescribeCreateResources () {
     newButton.newButton.click()
     newButton.newPallet.click()
     browser.wait(EC.presenceOf(newButton.label))
-    newButton.label.sendKeys(random())
+    newButton.label.sendKeys(Base.random())
     newButton.submitAndCheck()
   })
 }

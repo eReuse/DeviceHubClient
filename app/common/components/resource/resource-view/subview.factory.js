@@ -38,7 +38,8 @@ function SubviewFactory (ResourceViewGenerator, RESOURCE_CONFIG) {
               <div class="row">
                 <${option.view} resource-type="${option.resourceType}" 
                                 type="{{type}}" 
-                                parent-resource="resource" 
+                                parent-resource="resource"
+                                resource="resource"
                                 model="model"
                                 class="${option.class} col-xs-12"
                 >

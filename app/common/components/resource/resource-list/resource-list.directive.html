@@ -74,13 +74,17 @@
           >
             <div ng-if="td.templateUrl" ng-include="td.templateUrl"></div>
             <div ng-if="value && !$root._.isDate(value)">
-              {{::value | limitTo: 19}}
-              <small>{{::value.length > 19? '&hellip;':''}}</small>
+              <!-- We cannot use the value from ng-init if we want it to be updateable -->
+              {{(resource[td.value] || '') | limitTo: 19}}
+              <small>{{(resource[td.value] || '') > 19? '&hellip;':''}}</small>
             </div>
             <div ng-if="value && $root._.isDate(value)">{{::value | timeAgo}}</div>
           </td>
           <td ng-click="subResource.toggle(resource)" class="text-center">
-            <resource-icon resource-type="{{resource['@type']}}" resource-subtype="{{resource.type}}"></resource-icon>
+            <resource-icon resource-type="{{::resource['@type']}}"
+                           resource-subtype="{{::resource.type}}"
+            >
+            </resource-icon>
           </td>
         </tr>
       </tbody>

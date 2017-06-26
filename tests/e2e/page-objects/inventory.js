@@ -85,6 +85,19 @@ class Inventory extends Base {
       logo: this.modal.$('[id*=logo]'),
       submit: this.modal.$('[type=submit]')
     }
+    // Edit field
+    this.subResource = this.table.$$('tbody>tr').first()
+    this.subResourceView = this.resourceList.$('resource-view')
+    this.infoTab = this.subResourceView.$('.fa-info')
+    const editField = this.subResourceView.$$('resource-field-edit').first()
+    this.editField = {
+      self: editField,
+      edit: editField.$('.fa-edit'),
+      input: editField.$('input'),
+      submit: editField.$('.fa-check'),
+      cancel: editField.$('.fa-ban'),
+      field: editField.$('[ng-transclude]'),
+    }
   }
 
   /**
@@ -298,11 +311,56 @@ class Inventory extends Base {
         self.certificateErasure.logo.sendKeys(IMG_LOGO)
         self.certificateErasure.org.sendKeys('ACME')
         self.certificateErasure.submit.click()
+        browser.sleep(1000)
+        browser.getAllWindowHandles().then(function (handles) {
+          browser.driver.switchTo().window(handles[1])
+          browser.driver.close()
+          browser.driver.switchTo().window(handles[0])
+        })
       })
       afterAll(() => {
         self.closeModal.click()
         self.waitStalenessFor(self.modal, 'Modal should disappear.')
       })
+    })
+  }
+
+  testEditField () {
+    const self = this
+    beforeAll(function goToInfo () {
+      self.subResource.click()
+      self.infoTab.click()
+    })
+    it('Should edit the field', () => {
+      self.editField.edit.click()
+      const text = Base.random()
+      self.editField.input.sendKeys(text).sendKeys(protractor.Key.ENTER)
+      self.waitPresenceFor(self.notification.success)
+      self.waitStalenessFor(self.editField.input)
+      self.waitPresenceFor(self.editField.field)
+      // The field has been modified
+      expect(self.editField.field.getText()).toContain(text)
+      // Our field in in resource-list has been modified
+      expect(self.subResource.getText()).toContain(text.substr(0, 5))
+    })
+    it('Should not let edit the field when is the same value', () => {
+      self.editField.edit.click()
+      const text = Base.random()
+      self.editField.input.sendKeys(text)
+      self.editField.submit.click() // This is equal as pressing ENTER in the field
+      self.editField.edit.click()
+      self.waitPresenceFor(self.notification.success)
+      self.editField.input.sendKeys(text).sendKeys(protractor.Key.ENTER)
+      self.waitPresenceFor(self.notification.warning)
+    }, 15000)
+    it('Should cancel editing when pressing cancel', () => {
+      self.editField.edit.click()
+      self.editField.cancel.click()
+      self.waitStalenessFor(self.editField.input)
+      self.waitPresenceFor(self.editField.field)
+    })
+    afterAll(function exitSubResource () {
+      self.subResource.click()
     })
   }
 }

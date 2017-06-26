@@ -8,17 +8,19 @@ function resourceSearch (ResourceSettings) {
       defaultParams: '=' // object
     },
     link: {
-      pre: function ($scope) {
+      pre: $scope => {
         if (!$scope.settings.resourceSearchProcessed) {  // The creation of the directive has to be idempotent
           $scope._settings = unpackSettings($scope.settings)
           $scope.settings.resourceSearchProcessed = true
         } else {
           $scope._settings = $scope.settings
         }
-        $scope.params = angular.copy($scope.defaultParams)
+        $scope.params = _.clone($scope.defaultParams)
+        $scope.onParamsChanged({params: $scope.params})
 
-        $scope.$watchCollection('params', function (params, oldParams) {
-          if (angular.isDefined(params)) {
+        $scope.$watchCollection('params', function checkForChangeAndPropagate (params, oldParams) {
+          // We need to use isEqual because of bug https://github.com/angular/angular.js/issues/2621
+          if (angular.isDefined(params) && !_.isEqual(params, oldParams)) {
             // todo we copy params to delete 'query' in case its there. Query is populated when user
             // types something in search that is not a filter per se. We have to disable that possibility instead
             // of deleting 'behind the scenes' the query

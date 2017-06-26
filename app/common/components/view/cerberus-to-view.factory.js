@@ -14,18 +14,20 @@ function cerberusToView (schema, dateFilter, numberFilter, UNIT_CODES, ResourceS
       .pickBy((field, name) => name in resource && !DONT_USE.has(name) && !('writeonly' in field))
       .map((field, name) => ({ // Parses the field
         name: utils.Naming.humanize(name),
+        key: name,
         short: field.short,
         value: _.isPresent(resource[name]) ? self.humanizeValue(resource[name], field.type) : '',
         unitCode: UNIT_CODES[field.unitCode],
         sink: field.sink || 0,
         teaser: field.teaser || true,
-        data_relation: _.get(field, 'schema.data_relation', _.get(field, 'data_relation'))
+        data_relation: _.get(field, 'schema.data_relation', _.get(field, 'data_relation')),
+        editable: !!field.editable
       }))
       .value()
     fields.sort(schema.compareSink)
     fields.push({name: 'Updated', value: self.humanizeValue(resource._updated, 'datetime'), teaser: true})
     fields.push({name: 'Created', value: self.humanizeValue(resource._created, 'datetime')})
-    try { fields.push({name: 'URL', value: resource._links.self.href}) } catch (error) {}
+    // try { fields.push({name: 'URL', value: resource._links.self.href}) } catch (error) {}
     return fields
   }
 
