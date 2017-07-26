@@ -67,7 +67,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           checkboxes: {}, // ng-model for the checkboxes in the list. Only for representational purposes.
           // The selected resources of the actual list. Although resourceListSelector uses its own
           // list, it can optionally populate this one if passed for use to use in the template
-          inList: []
+          inList: [],
+          // The same as inList but for the total of resources through all lists
+          total: []
         }
         if ($scope.type === 'big') {
           resourceListGetter = new ResourceListGetterBig(resourceType, $scope.resources, config, progressBar)

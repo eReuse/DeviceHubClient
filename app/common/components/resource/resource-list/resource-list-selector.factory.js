@@ -32,7 +32,7 @@ function ResourceSelectorFactory () {
        * Resources selected through all lists.
        * @type {Array}
        */
-      this.total = []
+      this.total = selector.total = []
       resourceListGetter.callbackOnGetting(_.bind(this.reAddToActualList, this, _))
       this.callbacksForSelections = []
     }
@@ -123,7 +123,13 @@ function ResourceSelectorFactory () {
     add (resource, inListOnly = false) {
       if (!this.isInList(resource)) {
         this.inList.push(resource)
-        if (!inListOnly) this.total.push(resource)
+        if (!inListOnly) {
+          this.total.push(resource)
+        } else {
+          // Although we don't add the resource to the total list, if the result existed in the total list, we update it
+          const indexOfExistingResource = _.findIndex(this.total, {'_id': resource._id})
+          if (indexOfExistingResource !== -1) this.total[indexOfExistingResource] = resource
+        }
         this.selector.checkboxes[resource['_id']] = true
         this._control()
         return true
@@ -157,6 +163,7 @@ function ResourceSelectorFactory () {
     }
 
   }
+
   return ResourceListSelector
 }
 
