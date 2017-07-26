@@ -55,7 +55,7 @@ function DescribeCreateResources () {
     newButton.newButton.click()
     newButton.newLot.click()
     browser.wait(EC.presenceOf(newButton.label)).then(() => {
-      newButton.label.sendKeys('This is the label of the lot')
+      newButton.label.sendKeys(Base.random() + 'l') // let's ensure the existence of a specific letter
       newButton.submitAndCheck()
     })
   })
@@ -63,7 +63,7 @@ function DescribeCreateResources () {
     newButton.newButton.click()
     newButton.newPallet.click()
     browser.wait(EC.presenceOf(newButton.label))
-    newButton.label.sendKeys(Base.random())
+    newButton.label.sendKeys(Base.random() + 'p')
     newButton.submitAndCheck()
   })
 }

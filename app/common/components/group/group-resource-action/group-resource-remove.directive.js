@@ -34,7 +34,7 @@ function groupResourceRemove (ResourceSettings, GroupResourceSubmitter) {
               label: `${gSettings.humanName} to remove the elements from`,
               options: _($scope.resources)
                 .flatMap(res => _(res.ancestors).filter(_.subResourceF(groupType)).value())
-                .uniq()
+                .uniqBy('_id')
                 .map(ancestor => ({name: getResourceTitle(ancestor), value: ancestor._id}))
                 .value(),
               description: `We only show ${gSettings.humanName} that contain, are strictly parents, 
