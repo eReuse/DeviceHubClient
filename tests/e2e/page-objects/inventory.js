@@ -1,8 +1,8 @@
-const _ = require('lodash')
-const path = require('path')
-const jsonfile = require('jsonfile')
 const Base = require('./base')
+const _ = require('lodash')
+const jsonfile = require('jsonfile')
 const EC = protractor.ExpectedConditions
+const path = require('path')
 const JSON_LOGO = path.join(__dirname, '/../../fixtures/logo.json')
 const IMG_LOGO = path.join(__dirname, '/../../fixtures/logo.png')
 
@@ -115,18 +115,12 @@ class Inventory extends Base {
    * Downloads stuff.
    */
   download () {
-    const self = this
     this.toggleSelectAll()
     this.exportButton.click()
-    browser.wait(EC.presenceOf(this.submitDownload))
-    self.submitDownload.click()
-    browser.wait(EC.stalenessOf(this.submitDownload))
+    this.waitPresenceFor(this.submitDownload, 'The "export" popover did not appear.')
+    this.submitDownload.click()
+    this.waitStalenessFor(this.submitDownload, 'The "export" popover did not disappear.')
     this.toggleSelectAll()
-  }
-
-  goToTab () {
-    this.tab.click()
-    browser.wait(EC.presenceOf(this.firstRow))
   }
 
   label () {
@@ -134,9 +128,9 @@ class Inventory extends Base {
     beforeAll(() => {
       self.toggleSelectAll()
       self.labelButton.click()
-      browser.wait(EC.presenceOf(self.modal))
-      browser.wait(EC.presenceOf(self.labelEdit.self))
-      browser.wait(EC.presenceOf(self.labels.self))
+      self.waitPresenceFor(self.modal, 'Modal did not load.')
+      self.waitPresenceFor(self.labelEdit.self, 'Label edit did not load')
+      self.waitPresenceFor(self.labels.self, 'Labels did not load')
     })
     it('Should reset the design of the label', () => {
       self.reset.click()
@@ -231,14 +225,24 @@ class Inventory extends Base {
       // Close it
       self.closeModal.click()
       self.waitStalenessFor(self.modal, 'Modal should close')
+      self.toggleSelectAll()
     })
+  }
+
+  /**
+   * Clicks the specified high-level tab (Inventory, Dashboard...) and waits for the first row of resources
+   * to appear.
+   *
+   * Ensure that there are resources to fetch with the default filters.
+   */
+  goToTab () {
+    this.tab.click()
+    this.waitPresenceFor(this.firstRow, 'No resources were fetched from server.')
   }
 
   prepareGroup () {
     const self = this
-    beforeAll(function removeGroupInclusionSearchParameter () {
-      self.search.groupInclusion.$('.remove').click()
-      self.waitPresenceFor(self.listOfResources)
+    beforeAll(function selectAll () {
       self.toggleSelectAll()
     })
     beforeEach(function openGroupMenu () {
@@ -284,44 +288,6 @@ class Inventory extends Base {
       self.group.input.sendKeys('p').sendKeys(protractor.Key.ENTER)
       self.group.submit.click()
       self.waitForNotifySuccess()
-    })
-  }
-
-  describeCertificateErasure () {
-    const self = this
-    describe('Certificate Erasure', () => {
-      beforeAll(function selectOnlyComputers () {
-        self.search.searchbox.sendKeys('type').sendKeys(protractor.Key.ENTER)
-        self.search.type.$('option[value="string:Computer"]').click()
-        self.waitPresenceFor(self.listOfResources, 'Resources should re-load')
-        self.toggleSelectAll()
-      })
-      beforeAll(function openModal () {
-        self.certificateButton.self.click()
-        self.certificateButton.erasure.click()
-        self.waitPresenceFor(self.modal, 'Modal should open')
-      })
-      it('Should generate and download the erasure certificate', () => {
-        self.certificateErasure.logo.sendKeys(IMG_LOGO)
-        self.certificateErasure.org.sendKeys('ACME')
-        self.certificateErasure.submit.click()
-      })
-      it('Should generate and download the erasure certificate in Spanish', () => {
-        self.certificateErasure.lanEs.click()
-        self.certificateErasure.logo.sendKeys(IMG_LOGO)
-        self.certificateErasure.org.sendKeys('ACME')
-        self.certificateErasure.submit.click()
-        browser.sleep(1000)
-        browser.getAllWindowHandles().then(function (handles) {
-          browser.driver.switchTo().window(handles[1])
-          browser.driver.close()
-          browser.driver.switchTo().window(handles[0])
-        })
-      })
-      afterAll(() => {
-        self.closeModal.click()
-        self.waitStalenessFor(self.modal, 'Modal should disappear.')
-      })
     })
   }
 

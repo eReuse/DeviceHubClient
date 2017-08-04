@@ -1,4 +1,5 @@
 const _ = require('lodash')
+
 class LoginForm {
 
   constructor () {
@@ -12,8 +13,11 @@ class LoginForm {
   }
 
   waiUntilInventoryLoaded () {
-    // wait will wait until a) fulfilled (not error) promise or b) timeout (the second parameter '3000')
-    return browser.wait(() => browser.getCurrentUrl().then(url => _.includes(url, 'inventory')), 3000)
+    function urlIsInventory () {
+      return browser.getCurrentUrl().then(url => _.includes(url, 'inventory'))
+    }
+
+    return browser.wait(urlIsInventory, 3000, 'Inventory is not loaded.')
   }
 
 }
