@@ -34,7 +34,7 @@
 exports.config = {
   framework: 'jasmine',
   seleniumAddress: 'http://localhost:4444/wd/hub',
-  baseUrl: 'http://localhost:63342/DeviceHubClient/dist/',
+  baseUrl: 'http://localhost:63345/DeviceHubClient/dist/',
   specs: ['./tests/e2e/*.test.js'],
   plugins: [{
     package: 'protractor-console-plugin',
