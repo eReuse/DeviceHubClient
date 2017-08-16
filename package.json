@@ -7,8 +7,9 @@
     "url": "https://github.com/eReuse/DeviceHubClient.git"
   },
   "author": "eReuse.org",
-  "license": "Affero",
+  "license": "AGPL-1.0",
   "scripts": {
+    "install": "node node_modules/bower/bin/bower install",
     "test": "node ./node_modules/gulp/bin/gulp.js unit-test-once",
     "build-prod": "node ./node_modules/gulp/bin/gulp.js build-prod"
   },
@@ -34,6 +35,7 @@
     "bootstrap": "~3.3.6",
     "bootstrap-sass": "~3.3.7",
     "bootswatch": "~3.3.7",
+    "bower": "^1.8.0",
     "browserify": "~13.1.1",
     "checklist-model": "~0.10.0",
     "del": "~2.2.0",
