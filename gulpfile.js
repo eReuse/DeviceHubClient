@@ -93,7 +93,6 @@ const filePath = {
       './node_modules/angular-ui-notification/dist/angular-ui-notification.js',
       './node_modules/pluralize/pluralize.js',
       './bower_components/Sortable/Sortable.js',
-      './bower_components/adf-structures-base/dist/adf-structures-base.js',
       './node_modules/angular-chart.js/angular-chart.js',
       './node_modules/chart.js/src/chart.js',
       './node_modules/lodash/lodash.js',
