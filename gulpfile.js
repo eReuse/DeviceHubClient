@@ -341,9 +341,16 @@ gulp.task('docs', [], function () {
 // Testing
 // =======================================================================
 
-gulp.task('Unit tests', done => {
+gulp.task('unit-test', done => {
   new karma.Server({
     configFile: __dirname + '/karma.conf.js'
+  }, done).start()
+})
+
+gulp.task('unit-test-once', done => {
+  new karma.Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
   }, done).start()
 })
 

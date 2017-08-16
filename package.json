@@ -1,7 +1,17 @@
 {
   "name": "devicehubclient",
-  "version": "0.0.1",
-  "main": "dist/angular-ui-router.js",
+  "version": "0.4.1",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eReuse/DeviceHubClient.git"
+  },
+  "author": "eReuse.org",
+  "license": "Affero",
+  "scripts": {
+    "test": "node ./node_modules/gulp/bin/gulp.js unit-test-once",
+    "build-prod": "node ./node_modules/gulp/bin/gulp.js build-prod"
+  },
   "dependencies": {
     "angular": "~1.5.7",
     "angular-animate": "~1.5.0",
