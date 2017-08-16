@@ -19,7 +19,8 @@
     "html2canvas": "~0.4.1",
     "Boxer": "ba-dotimeout#*",
     "pdfmake": "^0.1.24",
-    "ngprogress": "^1.1.3"
+    "ngprogress": "^1.1.3",
+    "Sortable": "^1.6.0"
   },
   "resolutions": {
     "jquery": ">= 1.9.1",
