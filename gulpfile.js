@@ -67,7 +67,6 @@ const filePath = {
       './bower_components/angular-bootstrap-nav-tree/dist/abn_tree.css',
       './node_modules/jsonformatter/dist/json-formatter.min.css',
       './node_modules/angular-ui-notification/dist/angular-ui-notification.css',
-      './bower_components/angular-dashboard-framework/angular-dashboard-framework.css',
       './node_modules/angular-chart.js/dist/angular-chart.css',
       './node_modules/font-awesome/css/font-awesome.min.css',
       './bower_components/ngprogress/ngProgress.css'
@@ -93,9 +92,7 @@ const filePath = {
       './node_modules/jsonformatter/dist/json-formatter.js',
       './node_modules/angular-ui-notification/dist/angular-ui-notification.js',
       './node_modules/pluralize/pluralize.js',
-      './bower_components/angular-dashboard-framework/dist/angular-dashboard-framework.js',
       './bower_components/Sortable/Sortable.js',
-      './bower_components/adf-structures-base/dist/adf-structures-base.js',
       './node_modules/angular-chart.js/angular-chart.js',
       './node_modules/chart.js/src/chart.js',
       './node_modules/lodash/lodash.js',
@@ -341,9 +338,16 @@ gulp.task('docs', [], function () {
 // Testing
 // =======================================================================
 
-gulp.task('Unit tests', done => {
+gulp.task('unit-test', done => {
   new karma.Server({
     configFile: __dirname + '/karma.conf.js'
+  }, done).start()
+})
+
+gulp.task('unit-test-once', done => {
+  new karma.Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
   }, done).start()
 })
 

@@ -87,3 +87,5 @@ This is just a sneak peak of some things DeviceHub(Client) can do.
   This config includes the necessary to work with HTML5 mode, and using a cache. Use [this page](http://www.control-escape.com/web/configuring-apache2-debian.html)
    to know how to install the modules.
 5.  Set the url in the constants of Config.js to whatever URL the DeviceHub is in.
+
+.

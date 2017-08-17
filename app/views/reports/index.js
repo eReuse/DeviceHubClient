@@ -1,6 +1,4 @@
 require('angular-ui-bootstrap')
-require('bower_components/angular-dashboard-framework/dist/angular-dashboard-framework.js')
-require('bower_components/adf-structures-base/dist/adf-structures-base.js')
 /**
  * Represents the main devices view
  */

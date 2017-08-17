@@ -1,7 +1,18 @@
 {
   "name": "devicehubclient",
-  "version": "0.0.1",
-  "main": "dist/angular-ui-router.js",
+  "version": "0.4.1",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eReuse/DeviceHubClient.git"
+  },
+  "author": "eReuse.org",
+  "license": "AGPL-1.0",
+  "scripts": {
+    "install": "node node_modules/bower/bin/bower install",
+    "test": "node ./node_modules/gulp/bin/gulp.js unit-test-once",
+    "build-prod": "node ./node_modules/gulp/bin/gulp.js build-prod"
+  },
   "dependencies": {
     "angular": "~1.5.7",
     "angular-animate": "~1.5.0",
@@ -24,6 +35,7 @@
     "bootstrap": "~3.3.6",
     "bootstrap-sass": "~3.3.7",
     "bootswatch": "~3.3.7",
+    "bower": "^1.8.0",
     "browserify": "~13.1.1",
     "checklist-model": "~0.10.0",
     "del": "~2.2.0",
@@ -81,9 +93,7 @@
     "karma-jasmine": "~1.0.2",
     "karma-jasmine-matchers": "~3.0.1",
     "karma-notify-reporter": "~1.0.1",
-    "karma-phantomjs-launcher": "~1.0.0",
     "karma-spec-reporter": "0.0.26",
-    "phantomjs-prebuilt": "~2.1.7",
     "protractor-console-plugin": "~0.1.1",
     "strictify": "~0.2.0",
     "stringify": "^5.1.0",
