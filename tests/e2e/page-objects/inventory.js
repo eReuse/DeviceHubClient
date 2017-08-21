@@ -134,8 +134,8 @@ class Inventory extends Base {
     })
     it('Should reset the design of the label', () => {
       self.reset.click()
-      self.waitPresenceFor(self.labels.self.first(), 'A label should appear')
-      self.waitPresenceFor(self.labels.self.get(2), 'A label should appear')
+      self.waitPresenceFor(self.labels.self.first(), 'The first label should appear. Is there a first resource?')
+      self.waitPresenceFor(self.labels.self.get(2), 'The second label should appear. Is there a second resource?')
       expect(self.labelEdit.self.$$('#list-checkboxes #fields.ng-not-empty').isSelected()).not.toContain(false)
       expect(self.labelEdit.useLogo.isSelected()).toEqual(true)
       expect(self.labelEdit.showFieldNames.isSelected()).toEqual(true)

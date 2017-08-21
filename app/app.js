@@ -34,11 +34,6 @@ module.exports = window.angular.module('deviceHub', [
         url: '/login',
         templateUrl: 'views/login/login.controller.html',
         controller: 'loginCtrl as LnCl'
-      }).state('index.reports', {
-        url: '/reports',
-        templateUrl: 'views/reports/reports.controller.html',
-        controller: 'reportsCtrl as RsCl',
-        resolve: {schemaLoaded: utils.schemaIsLoaded}
       })
       $urlRouterProvider.otherwise('/inventory')
     })

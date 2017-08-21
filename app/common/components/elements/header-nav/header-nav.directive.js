@@ -24,7 +24,6 @@ function headerNav ($state, CONSTANTS) {
       // Note that as we are using only one tab I have commented it in html, discoment to show them
       $scope.tabs = [
         {heading: 'Inventory', route: 'index.inventory', fa: 'list'}
-        // {heading: 'Reports', route: 'index.reports', glyphicon: 'file'}
       ]
       $scope.tabs.forEach(function (tab, index) {
         if (active(tab.route)) {
