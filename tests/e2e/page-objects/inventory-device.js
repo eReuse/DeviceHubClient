@@ -38,19 +38,28 @@ class InventoryDevice extends Inventory {
         self.certificateErasure.logo.sendKeys(IMG_LOGO)
         self.certificateErasure.org.sendKeys('ACME')
         self.certificateErasure.submit.click()
+        closeWindow()
       })
       it('Should generate and download the erasure certificate in Spanish', () => {
         self.certificateErasure.lanEs.click()
         self.certificateErasure.logo.sendKeys(IMG_LOGO)
         self.certificateErasure.org.sendKeys('ACME')
         self.certificateErasure.submit.click()
+        closeWindow()
+      })
+
+      /**
+       * The browser opens a window with the PDF. This closes such window after a delay.
+       */
+      function closeWindow () {
         browser.sleep(1000)
         browser.getAllWindowHandles().then(function (handles) {
           browser.driver.switchTo().window(handles[1])
           browser.driver.close()
           browser.driver.switchTo().window(handles[0])
         })
-      })
+      }
+
       afterAll(() => {
         self.closeModal.click()
         self.waitStalenessFor(self.modal, 'Modal should disappear.')
