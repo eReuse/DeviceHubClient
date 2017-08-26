@@ -101,7 +101,8 @@ const filePath = {
       './bower_components/Boxer/jquery.ba-dotimeout.js',
       './bower_components/pdfmake/build/pdfmake.js',
       './bower_components/pdfmake/build/vfs_fonts.js',
-      './bower_components/ngprogress/build/ngprogress.min.js'
+      './bower_components/ngprogress/build/ngprogress.min.js',
+      './resources/ng-sglclick.min.js'
     ]
   }
 }

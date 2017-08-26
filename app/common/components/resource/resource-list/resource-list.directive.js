@@ -7,9 +7,10 @@
  * @param {ResourceListSelectorBig} ResourceListSelectorBig
  * @param {ResourceSettings} ResourceSettings
  * @param {progressBar} progressBar
+ * @param {ResourceBreadcrumb} ResourceBreadcrumb
  */
 function resourceList (resourceListConfig, ResourceListGetter, ResourceListGetterBig, ResourceListSelector,
-                       ResourceListSelectorBig, ResourceSettings, progressBar) {
+                       ResourceListSelectorBig, ResourceSettings, progressBar, ResourceBreadcrumb) {
   const utils = require('./../../utils.js')
   const PATH = require('./__init__').PATH
   return {
@@ -32,11 +33,20 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         const config = _.cloneDeep(resourceListConfig.views[resourceType])
         if (_.isUndefined(config)) throw ReferenceError(resourceType + ' has no config.')
         $scope.resources = [] // Do never directly assign (r=[]) to 'resources' as modules depend of its reference
+
+        /**
+         * Object to handle accessing sub resources.
+         * @prop {object} resource - The resource
+         */
         const subResource = $scope.subResource = {
           resource: null, // The opened subResource
           isOpened: resourceId => {
             return resourceId === _.get(subResource.resource, '_id')
           },
+          /**
+           * Open / close the right window.
+           * @param {Object} resource
+           */
           toggle: resource => {
             subResource.resource = subResource.isOpened(resource['_id']) ? null : resource
             triggerCollapse()
@@ -50,6 +60,14 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
               subResource.resource = null
               triggerCollapse()
             }
+          },
+          /**
+           * Gets into the resource; traverse one step into the resource hierarchy by opening the resource in the
+           * main window.
+           * @param {Object} resource - Minimum properties are @type and _id
+           */
+          openFull: resource => {
+            ResourceBreadcrumb.go(resource)
           }
         }
 

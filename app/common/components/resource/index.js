@@ -7,6 +7,7 @@ require('angular-animate')
 require('angular-timeago')
 require('angular-google-maps')
 require('meanie-angular-focus')
+require('./../../../../resources/ng-sglclick.min')
 
 module.exports = angular.module('common.components.resource',
   [
@@ -21,7 +22,8 @@ module.exports = angular.module('common.components.resource',
     require('./../../constants').name,
     'uiGmapgoogle-maps',
     require('./../utilities').name,
-    'Focus.Service'
+    'Focus.Service',
+    'ngSglclick'
   ])
   .constant('RESOURCE_CONFIG', require('./resource-config.constant'))
   .factory('ResourceServer', require('./resource-server.factory'))
@@ -48,3 +50,5 @@ module.exports = angular.module('common.components.resource',
   .directive('resourceDashboard', require('./resource-dashboard/resource-dashboard.directive'))
   .directive('resourceExport', require('./resource-export/resource-export.directive'))
   .directive('resourceFieldEdit', require('./resource-field-edit/resource-field-edit.directive'))
+  .directive('resourceBreadcrumb', require('./resource-breadcrumb/resource-breadcrumb.directive'))
+  .service('ResourceBreadcrumb', require('./resource-breadcrumb/resource-breadcrumb.service'))

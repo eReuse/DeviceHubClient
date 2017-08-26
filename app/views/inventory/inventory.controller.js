@@ -1,8 +1,6 @@
-function inventoryCtrl ($scope, $stateParams, progressBar) {
-  const utils = require('./../../common/components/utils')
-  let resourceName = $scope.resourceName = $stateParams.resourceName
-  let id = $scope.id = $stateParams.id
-  if (resourceName && id) $scope.resource = {'@type': utils.Naming.type(resourceName), '_id': id}
+function inventoryCtrl ($scope, $stateParams, progressBar, ResourceBreadcrumb) {
+  const entry = _.last(ResourceBreadcrumb.log) // This resource might only be @type and _id
+  if (!_.isEmpty(entry)) $scope.resource = entry
   window.progressSetVal(3)
   progressBar.complete()
 }

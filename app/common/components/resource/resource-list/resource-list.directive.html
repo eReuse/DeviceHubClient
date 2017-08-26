@@ -69,7 +69,8 @@
             >
           </td>
           <td ng-repeat="td in config.table.td"
-              ng-click="subResource.toggle(resource)"
+              ng-sglclick="subResource.toggle(resource)"
+              ng-dblclick="subResource.openFull(resource)"
               ng-init="value = $root._.get(resource, td.value)"
           >
             <div ng-if="td.templateUrl" ng-include="td.templateUrl"></div>
@@ -80,7 +81,10 @@
             </div>
             <div ng-if="value && $root._.isDate(value)">{{::value | timeAgo}}</div>
           </td>
-          <td ng-click="subResource.toggle(resource)" class="text-center">
+          <td ng-sglclick="subResource.toggle(resource)"
+              ng-dblclick="subResource.openFull(resource)"
+              class="text-center"
+          >
             <resource-icon resource-type="{{::resource['@type']}}"
                            resource-subtype="{{::resource.type}}"
             >

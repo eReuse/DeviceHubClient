@@ -114,6 +114,7 @@ var Naming = {
 function NoPrefix (message) {
   this.message = message
 }
+
 NoPrefix.prototype = Object.create(Error.prototype)
 
 /**
@@ -122,14 +123,7 @@ NoPrefix.prototype = Object.create(Error.prototype)
  * @return {string}
  */
 function getResourceTitle (resource) {
-  var text = ''
-  text += resource.label || ''
-  if (text === '') {
-    text += resource.email || ''
-  }
-  if (text === '') {
-    text += resource._id
-  }
+  const text = resource.label || resource.email || resource._id
   return Naming.humanize(resource['@type']) + ' ' + text
 }
 
