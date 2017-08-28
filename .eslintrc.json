@@ -26,6 +26,7 @@
   "rules": {
     "no-unused-vars": ["error", {"varsIgnorePattern": "_"}],
     "jasmine/no-global-setup": ["off"],
-    "protractor/no-angular-classes": ["off"]
+    "protractor/no-angular-classes": ["off"],
+    "jasmine/new-line-before-expect": 0
   }
 }
