@@ -145,12 +145,12 @@ class Inventory extends Base {
     it('Should edit the checkboxes', () => {
       // We remove the first and second checkboxes
       $$('#list-checkboxes #fields.ng-not-empty').click() // We click both checkboxes
-      browser.wait(EC.stalenessOf(self.labels.fields)) // Removing all fields from the labels
+      self.waitStalenessFor(self.labels.fields, 'Removing all fields from the labels (td in label)')
       expect(self.labelEdit.checkboxes.isSelected()).not.toContain(true)
 
       // We re-click the checkboxes
       self.labelEdit.checkboxes.click()
-      browser.wait(EC.presenceOf(self.labels.fields))
+      self.waitPresenceFor(self.labels.fields, 'Fields are back to the labels (td in label)')
       expect(self.labelEdit.checkboxes.isSelected()).not.toContain(false)
       // We just keep one checkbox
       self.labelEdit.checkboxes.click()
@@ -181,13 +181,13 @@ class Inventory extends Base {
     it('Should change logo', () => {
       // Hide logo
       self.labelEdit.useLogo.click()
-      browser.wait(EC.stalenessOf(self.labels.logo))
+      self.waitStalenessFor(self.labels.logo, 'Logo should hide')
       // The size of the label adapts to the non-logo version
       browser.wait(EC.textToBePresentInElementValue(self.labelEdit.width, '97'))
       browser.wait(EC.textToBePresentInElementValue(self.labelEdit.height, '32'))
       // Show again logo
       self.labelEdit.useLogo.click()
-      browser.wait(EC.presenceOf(self.labels.logo))
+      self.waitPresenceFor(self.labels.logo, 'Logo should appear')
       // The size of the label adapts to the non-logo version
       browser.wait(EC.textToBePresentInElementValue(self.labelEdit.width, '97'))
       browser.wait(EC.textToBePresentInElementValue(self.labelEdit.height, '59'))

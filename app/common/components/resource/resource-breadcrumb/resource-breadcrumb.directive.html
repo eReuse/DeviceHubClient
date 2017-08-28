@@ -1,0 +1,17 @@
+<ol class="breadcrumb">
+  <li ng-repeat="resource in log" ng-class="{active: $last}">
+    <strong ng-if="resource._id && $last">
+      <resource-icon resource-type="{{::resource['@type']}}" resourceSubtype="{{::resource.type}}"></resource-icon>
+      {{resource | resourceTitle}}
+    </strong>
+    <strong ng-if="!resource._id && $last">
+      My inventory
+    </strong>
+    <a ng-if="resource._id && !$last" ng-click="goTo(resource)">
+      {{resource | resourceTitle}}
+    </a>
+    <a ng-if="!resource._id && !$last" ui-sref="index.inventory({})">
+      My inventory
+    </a>
+  </li>
+</ol>

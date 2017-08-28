@@ -1,4 +1,4 @@
-function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG) {
+function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG, ResourceBreadcrumb) {
   const utils = require('./../../utils')
   const BIG = 'big'
   const MED = 'medium'
@@ -35,6 +35,8 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
           // Note that resourceView is re-used to hold different types of resources at different times
           if (newResourceId !== oldResourceId) generateViewAndSubview()
         })
+
+        $scope.goTo = resource => ResourceBreadcrumb.go(resource)
 
         function generateViewAndSubview () {
           if ($scope.type === SM) {
@@ -76,6 +78,7 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
             }
           }
         }
+
         generateViewAndSubview()
       })
     }

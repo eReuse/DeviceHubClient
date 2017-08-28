@@ -37,9 +37,7 @@ module.exports = () => {
       })
       return this
     }),
-    resourceServer: () => jasmine.createSpy('resourceServer')
+    resourceServer: () => jasmine.createSpy('resourceServer'),
+    spyf: spyf
   }
 }
-
-
-

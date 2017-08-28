@@ -48,3 +48,5 @@ module.exports = angular.module('common.components.resource',
   .directive('resourceDashboard', require('./resource-dashboard/resource-dashboard.directive'))
   .directive('resourceExport', require('./resource-export/resource-export.directive'))
   .directive('resourceFieldEdit', require('./resource-field-edit/resource-field-edit.directive'))
+  .directive('resourceBreadcrumb', require('./resource-breadcrumb/resource-breadcrumb.directive'))
+  .service('ResourceBreadcrumb', require('./resource-breadcrumb/resource-breadcrumb.service'))

@@ -25,9 +25,9 @@ resource-list
     outline-offset: -2px
 
   .fill-height-bar
-    height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$tabsHeight} - #{$optionsMenuHeight} - #{$searchHeight})
+    height: calc(100vh - #{$navbar-height} - #{$line-height-computed} - #{$breadcrumb-padding-vertical} - #{$footerHeight} - #{$tabsHeight} - #{$optionsMenuHeight} - #{$searchHeight})
     @media (max-width: $screen-xs-max)
-      height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$tabsHeight})
+      height: calc(100vh - #{$navbar-height} - #{$line-height-computed} - #{$breadcrumb-padding-vertical} - #{$footerHeight} - #{$tabsHeight})
     overflow-y: auto
 
   #resource-list-table tr
@@ -53,19 +53,20 @@ resource-list
     resource-view
       .fill-height-bar // a subview with a search bar (ex. any resource-list)
         // - 2 * (everything we had in .fill-height-bar above) but calc does not allow 2 * (parenthesis) so we get it by
+        // breadcrumb is represented by $line-height-computed - $breadcrumb-padding-vertical
         // applying the distributive property
-        height: calc(100vh - #{$navbar-height} - #{$footerHeight} - 2 * #{$optionsMenuHeight} - #{$tabsMenuHeight} - #{$tabsHeight} - 2 * #{$searchHeight} - #{$subresourceH3Height}) !important
+        height: calc(100vh - #{$navbar-height} - #{$line-height-computed} - #{$breadcrumb-padding-vertical} - #{$footerHeight} - 2 * #{$optionsMenuHeight} - #{$tabsMenuHeight} - #{$tabsHeight} - 2 * #{$searchHeight} - #{$subresourceH3Height}) !important
         overflow-y: auto
         @media (max-width: $screen-xs-max)
-          height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$optionsMenuHeight} - #{$tabsMenuHeight} - 1 * #{$searchHeight} - #{$subresourceH3Height}) !important
+          height: calc(100vh - #{$navbar-height} - #{$line-height-computed} - #{$breadcrumb-padding-vertical} - #{$footerHeight} - #{$optionsMenuHeight} - #{$tabsMenuHeight} - 1 * #{$searchHeight} - #{$subresourceH3Height}) !important
 
       .fill-height // A subview without a search bar nor options buttons (ex. dashboard)
         // We use fill-height-bar as initial, as only listing have subresources
-        height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$tabsHeight} - #{$tabsMenuHeight}  - #{$searchHeight} - #{$subresourceH3Height}) !important
+        height: calc(100vh - #{$navbar-height} - #{$line-height-computed} - #{$breadcrumb-padding-vertical} - #{$footerHeight} - #{$tabsHeight} - #{$tabsMenuHeight}  - #{$searchHeight} - #{$subresourceH3Height}) !important
         overflow-y: auto
 
         @media (max-width: $screen-xs-max)
-          height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$tabsMenuHeight} - 1 * #{$tabsHeight} - #{$subresourceH3Height}) !important
+          height: calc(100vh - #{$navbar-height} - #{$line-height-computed} - #{$breadcrumb-padding-vertical} - #{$footerHeight} - #{$tabsMenuHeight} - 1 * #{$tabsHeight} - #{$subresourceH3Height}) !important
 
       header
         background-color: $main-nav-bg

@@ -1,7 +1,6 @@
 @import '_resource-view.directive.sass'
 
 #subviews .nav-pills
-  background-color: lighten($main-nav-bg, 4)
   @media (max-width: $screen-xs)
     a
       padding-left: 0
@@ -9,7 +8,7 @@
 
 #subviews
   .fill-height
-    height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$tabsHeight})
+    height: calc(100vh - #{$navbar-height} - #{$line-height-computed} - #{$breadcrumb-padding-vertical} - #{$footerHeight} - #{$tabsHeight})
     overflow-y: auto
 
 // Only nested subviews

@@ -18,3 +18,4 @@ module.exports = angular.module('common.components.utilities',
   .factory('SubmitForm', require('./submit-form'))
   .service('progressBar', require('./progress-bar.factory'))
   .filter('toInches', require('./to-inches.filter'))
+  .filter('resourceTitle', require('./resource-title.filter'))
