@@ -1,6 +1,6 @@
 require('bower_components/Boxer/jquery.ba-dotimeout.js')
 require('angular')
-var inflection = require('inflection')
+const inflection = require('inflection')
 
 /**
  * Tries to copy a value using an own 'clone' property of it, or uses the angular standard way of doing it.
@@ -18,7 +18,7 @@ function copy (value) {
 /**
  * Port from DeviceHub.utils.Naming. See that project for an explanation of the cases.
  */
-var Naming = {
+const Naming = {
   RESOURCE_PREFIX: '_',
   TYPE_PREFIX: ':',
   RESOURCES_CHANGING_NUMBER: require('./../constants/CONSTANTS.js').resourcesChangingNumber,
@@ -28,10 +28,10 @@ var Naming = {
    * @returns {string} e.x.: 'devices_snapshot', 'component', 'events'
    */
   resource: function (string) {
-    var prefix
-    var type = string
+    let prefix
+    let type = string
     try {
-      var values = this.popPrefix(string)
+      const values = this.popPrefix(string)
       prefix = values[0] + this.RESOURCE_PREFIX
       type = values[1]
     } catch (err) {
@@ -47,20 +47,22 @@ var Naming = {
    * @returns {string} e.x.: 'devices:Snapshot', 'Component', 'Event'
    */
   type: function (string) {
-    var prefix
-    var type = string
+    let prefix
+    let type = string
     try {
-      var values = this.popPrefix(string)
+      const values = this.popPrefix(string)
       prefix = values[0] + this.TYPE_PREFIX
       type = values[1]
     } catch (err) {
       prefix = ''
     }
-    return prefix + inflection.camelize(this._pluralize(type) ? inflection.singularize(type) : type)
+    let resultingType = this._pluralize(type) ? inflection.singularize(type) : type
+    resultingType = resultingType.replace('-', '_')
+    return prefix + inflection.camelize(resultingType)
   },
 
   _pluralize: function (string) {
-    var value = inflection.dasherize(inflection.underscore(string))
+    const value = inflection.dasherize(inflection.underscore(string))
     return _.includes(this.RESOURCES_CHANGING_NUMBER, value) || _.includes(this.RESOURCES_CHANGING_NUMBER, inflection.singularize(value))
   },
 
@@ -71,7 +73,7 @@ var Naming = {
    * @returns {Array} Two values: [prefix, type]
    */
   popPrefix: function (string) {
-    var result = _.split(string, this.TYPE_PREFIX)
+    let result = _.split(string, this.TYPE_PREFIX)
     if (result.length === 1) {
       result = _.split(string, this.RESOURCE_PREFIX)
       if (result.length === 1) {
@@ -92,7 +94,7 @@ var Naming = {
    * @returns {string}
    */
   humanize: function (string) {
-    var converted = string
+    let converted = string
     try {
       converted = this.popPrefix(string)[1]
     } catch (err) {}
@@ -146,7 +148,7 @@ function applyAfterScrolling (element, $scope) {
  * @returns {string}
  */
 function parseDate (oldDate) {
-  var datetime = oldDate.toISOString()
+  const datetime = oldDate.toISOString()
   return datetime.substring(0, datetime.indexOf('.'))
 }
 
@@ -163,7 +165,7 @@ function schemaIsLoaded (schema) {
 function setImageGetter ($scope, jqueryExpression, pathToStore) {
   $(jqueryExpression).change(function () {
     if (this.files && this.files[0]) {
-      var reader = new FileReader()
+      const reader = new FileReader()
       reader.onload = function (e) {
         $scope.$evalAsync(function (scope) {
           _.set(scope, pathToStore, e.target.result)
@@ -178,7 +180,7 @@ function setImageGetter ($scope, jqueryExpression, pathToStore) {
  * Barebone for a progress package that handles switching a global progress (cursor style). It is interesting
  * to handle different begin and end globally (e.x. only stopping the cursor after all end() have been executed)
  */
-var Progress = {
+const Progress = {
   PROGRESS_NAME: 'dh-progress',
   running: false,
   start: function () {

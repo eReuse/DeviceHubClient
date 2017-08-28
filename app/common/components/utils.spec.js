@@ -11,9 +11,10 @@ describe('Test Utils', () => {
       Naming.popPrefix('accounts')
     }).toThrowErrorOfType('Error') // todo error of type 'NoPrefix'
   })
-
   it('works with a type that doesn\'t change the number (singular - plural)', () => {
     expect(Naming.resource('devices:Snapshot')).toEqual('devices_snapshot')
+    expect(Naming.resource('IncomingLot')).toEqual('incoming-lot')
+    expect(Naming.type('incoming-lot')).toEqual('IncomingLot')
     expect(Naming.type('devices_snapshot')).toEqual('devices:Snapshot')
     expect(Naming.new_type('Snapshot', 'devices')).toEqual('devices:Snapshot')
   })
