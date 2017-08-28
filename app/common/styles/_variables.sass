@@ -8,7 +8,7 @@ $main-nav-bg: #EFEFEF !default
 $icon-font-path: './fonts/'
 $navbar-height: 42px !default
 $tabsHeight: $navbar-height !default
-$footerHeight: 21px - 5px !default
+
 $nav-pills-bg: lighten($main-nav-bg, 4) !default
 
 $brand-primary: #2780E3 !default
@@ -21,3 +21,7 @@ $breadcrumb-bg: $nav-pills-bg
 
 @import "./../../../node_modules/bootswatch/cosmo/variables"
 @import ./../../../node_modules/font-awesome/scss/variables
+
+$footer-font-size: $font-size-small !default
+$footer-computed-line-height: floor($footer-font-size * $line-height-small)
+$footerHeight: $footer-computed-line-height

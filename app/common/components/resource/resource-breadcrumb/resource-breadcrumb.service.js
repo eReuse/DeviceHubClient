@@ -36,7 +36,7 @@ class ResourceBreadcrumb {
       // if the user manually set the URL in the browser
       this._assign($state.params.folderPath)
     }
-    $rootScope.$on('$stateChangeSuccess', (event, toState, toParams) => {
+    $rootScope.$on('$stateChangeSuccess', (_, toState, toParams) => {
       // We listen for successful changes in the state (URL)
       // If we navigate to a resource state we assign our path to the breadcrumb
       // Otherwise we reset the breadcrumb by passing an empty string

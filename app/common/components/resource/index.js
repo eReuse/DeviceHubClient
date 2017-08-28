@@ -7,7 +7,6 @@ require('angular-animate')
 require('angular-timeago')
 require('angular-google-maps')
 require('meanie-angular-focus')
-require('./../../../../resources/ng-sglclick.min')
 
 module.exports = angular.module('common.components.resource',
   [
@@ -22,8 +21,7 @@ module.exports = angular.module('common.components.resource',
     require('./../../constants').name,
     'uiGmapgoogle-maps',
     require('./../utilities').name,
-    'Focus.Service',
-    'ngSglclick'
+    'Focus.Service'
   ])
   .constant('RESOURCE_CONFIG', require('./resource-config.constant'))
   .factory('ResourceServer', require('./resource-server.factory'))
