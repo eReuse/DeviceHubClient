@@ -177,7 +177,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         }
 
         if ($scope.type === 'big') {
-          $scope.$on('refresh@deviceHub', hardReload)
           $scope.$on('submitted@' + resourceType, hardReload)
           // We register ourselves for any event type, excluding Snapshot if the list is not about devices
           let eventTypes = ResourceSettings('Event').subResourcesNames

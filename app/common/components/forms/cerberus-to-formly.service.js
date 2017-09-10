@@ -72,7 +72,7 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
    */
   this._parseField = (fieldName, path, doNotUse, isAModification, subSchema, model) => {
     const fieldPath = this.fieldPath(fieldName, path)
-    const hasWriteAccess = session.getAccount().role.ge(subSchema['dh_allowed_write_roles'] || Role.prototype.BASIC)
+    const hasWriteAccess = session.role.ge(subSchema['dh_allowed_write_role'] || Role.prototype.USER)
     if (!_.includes(doNotUse, fieldPath) && !subSchema.readonly && !subSchema.materialized && hasWriteAccess) {
       if (subSchema.type === 'dict' && 'schema' in subSchema) {
         return this._generateFieldGroup(fieldName, fieldPath, subSchema, model, doNotUse, isAModification)

@@ -1,22 +1,15 @@
-function userButton (session, $uibModal) {
+function userButton (session, $state) {
   return {
-    templateUrl: window.COMPONENTS + '/account/user-button/user-button.directive.html',
+    template: require('./user-button.directive.html'),
     restrict: 'E',
     replace: true,
     scope: {},
-    link: function ($scope, $element, $attrs) {
-      $scope.account = session.getAccount()
-      $scope.openModal = function (type) {
-        var modalInstance = $uibModal.open({
-          templateUrl: window.COMPONENTS + '/account/user-modal/user-modal.controller.html',
-          controller: 'userModalCtrl'
-        })
-        modalInstance.result.then(function (selectedItem) {
-          $scope.selected = selectedItem
-        })
-      }
-      $scope.logout = function () {
+    link: $scope => {
+      $scope.account = session.account
+      $scope.logout = () => {
         session.destroy()
+        $state.go('login')
+        // We could avoid reloading if we had a way to reset promises like the ones used in schema or session
         location.reload(false)
       }
     }

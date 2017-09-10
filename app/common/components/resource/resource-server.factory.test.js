@@ -9,7 +9,7 @@ describe('Test ResourceServer', function () {
   beforeEach(angular.mock.module(require('./../../../app').name))
   beforeEach(angular.mock.module({
     session: {
-      callWhenDatabaseChanges: function (callback) { // With this we can change the database in run-time
+      callWhenDbChanges: function (callback) { // With this we can change the database in run-time
         setDatabaseInUrl = callback
       }
     },

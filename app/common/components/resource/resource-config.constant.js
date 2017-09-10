@@ -1,5 +1,5 @@
 const DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url', '_settings', 'hid']
-const GROUP_DO_NOT_USE = DO_NOT_USE.concat(['children', 'policies'])
+const GROUP_DO_NOT_USE = DO_NOT_USE.concat(['children', 'policies', 'perms', 'sharedWith'])
 
 /**
  * Specifies custom settings for the resources to be used through the app.
@@ -59,7 +59,7 @@ const RESOURCE_CONFIG = {
       // We pass a 'resource' object to a subview with, at least, @type.
       subviews: [v.Event, v.Detail],
       doNotUse: DO_NOT_USE.concat(['events', 'owners', 'components', 'isUidSecured', 'public', 'icon', 'pid',
-        'labelId', 'placeholder', 'parent', 'place']),
+        'labelId', 'placeholder', 'parent', 'place', 'perms']),
       label: {
         fields: [
           'serialNumber', 'pid', 'model', 'manufacturer', 'labelId', 'hid', '_id', 'totalRamSize', 'totalHardDriveSize'

@@ -1,118 +1,147 @@
-var ACCOUNT_STORAGE = 'account'
-
-function Session ($q, $rootScope, Role) {
-  this._account = {}
-  this.saveInBrowser = true
-  this.first_time = true
-  this.callbacksForDatabaseChange = []
-  this.activeDatabase = null
-  this._accountIsSet = $q.defer()
-  this._accountIsSetPromise = this._accountIsSet.promise
-  this.$rootScope = $rootScope
-  this._Role = Role
-}
-
-Session.prototype.accountIsSet = function () {
-  return this._accountIsSetPromise
-}
-
-Session.prototype.create = function (account, saveInBrowser) {
-  this._account = account
-  this.saveInBrowser = saveInBrowser
-  this._prepareAccount()
-  this.setInBrowser(this.saveInBrowser)
-}
-Session.prototype.destroy = function () {
-  this._account.length = 0
-  localStorage.clear()
-  sessionStorage.clear()
-}
-Session.prototype.isAccountSet = function () {
-  return !_.isEmpty(this.getAccount())
-}
-
-Session.prototype._isAccountSet = function () {
-  return !_.isEmpty(this._account)
-}
-
 /**
- * Gets the account. This method can trigger retrieval from session/localStorage.
- * @return {object} Account.
+ * Service to interact with the actual logged-in account.
+ *
+ * To set a logged-in account use save(), if you have performed logged-in and might want to save the account
+ * to the browser storage, or use load() to try get the account from the local storage.
+ *
+ * This method has a promise that resolves once the account is obtained, and a callback that is triggered every time
+ * the database changes (but not the first time the database is set, as you can get this from the promise).
+ *
+ * @property {string} ACCOUNT_STORAGE - Constant. The name of the property used in the browser storage.
+ * @property {Object} account - The logged-in account.
+ * @property {string} db - The active database. This is, the database of the account that is being in use. Users
+ * can only have one active database at a time, and they can change it. This field only contains the name of the
+ * database. Go to this.account.databases[nameOfTheDatabase] to get the permission the account has on the database.
+ * @property {Promise} loaded - A promise that resolves once the account has been correctly loaded. It contains the
+ * account as first parameter, and the active database as the second one.
+ * @property {Role} role - The role of the account.
  */
-Session.prototype.getAccount = function () {
-  if (!this._isAccountSet()) {
-    var account = sessionStorage.getItem(ACCOUNT_STORAGE) || localStorage.getItem(ACCOUNT_STORAGE) || '{}'
-    _.extend(this._account, JSON.parse(account))
-    this._prepareAccount()
+class Session {
+  constructor ($q, $rootScope, Role, $state) {
+    this.ACCOUNT_STORAGE = 'account'
+    this.Role = Role
+    this.$state = $state
+    this.$q = $q
+
+    this._defer = $q.defer()
+    this.loaded = this._defer.promise
+
+    this._callbacksForDatabaseChange = []
+    this.account = null
+    this.$rootScope = $rootScope
+    this.db = null
   }
-  return this._account
-}
 
-/**
- * Changes the string representing the role of the account for a Role instance.
- * @private
- */
-Session.prototype._prepareAccount = function () {
-  if (typeof this._account['role'] === 'string') { // In some scenarios this can be already an instance of Role
-    this._account['role'] = new this._Role(this._account['role'])
-  }
-}
-
-/**
- * Used in Stringify, undoes '_prepareAccount' so it can be represented in a JSON.
- * @returns {*}
- */
-Session.prototype.stringifyAccountField = function (key, value) {
-  if (key === 'role') value = value.role
-  return value
-}
-
-/**
- * Resolves or rejects accountIsSet and triggers the callbacks of callWhenDatabaseChanges, depending if
- * the account is set.
- */
-Session.prototype.broadcast = function () {
-  if (this._isAccountSet()) {
-    if (this.first_time) {
-      this.setActiveDefaultDatabase()
-      this.first_time = false
-      this._accountIsSet.resolve(this._account)
+  /**
+   * The logged-in account.
+   *
+   * This will lazy load the account from local / session storage.
+   */
+  get account () {
+    if (!this.isAccountSet()) {
+      throw Error('No account set')
     }
-  } else {
-    this._accountIsSet.reject()
+    return this._account
   }
-}
 
-Session.prototype.update = function (email, password, name) {
-  this._account.email = email
-  this._account.password = password
-  this._account.name = name
-  this.setInBrowser(this.saveInBrowser)
-}
-Session.prototype.setInBrowser = function (persistence) {
-  var storage = persistence ? localStorage : sessionStorage
-  try { // Private mode in safari causes an exception
-    storage.setItem(ACCOUNT_STORAGE, JSON.stringify(this._account, this.stringifyAccountField))
-  } catch (err) {
+  set account (account) {
+    this._account = account
   }
-}
 
-/* Databases */
-Session.prototype.setActiveDefaultDatabase = function () {
-  this.setActiveDatabase(this._account.defaultDatabase || this._account.databases[0], false)
-}
-Session.prototype.setActiveDatabase = function (database, refresh) {
-  this.activeDatabase = database
-  _.forEach(this.callbacksForDatabaseChange, function (val) {
-    val(database, refresh)
-  })
-  if (refresh) this.$rootScope.$broadcast('refresh@deviceHub')
-}
-Session.prototype.removeActiveDatabase = function () {
-  this.setActiveDatabase(null, false)
-}
-Session.prototype.callWhenDatabaseChanges = function (callback) {
-  this.callbacksForDatabaseChange.push(callback)
+  /**
+   * Sets the account as the logged in one and, if set, it saves it to the browser.
+   * @param {Object} account
+   * @param {boolean} saveInBrowser - Should the account be saved in localStorage?
+   * @throw URIError - The user has no access to the database. Note that the account is still loaded.
+   */
+  save (account, saveInBrowser) {
+    this.account = account
+    const storage = saveInBrowser ? localStorage : sessionStorage
+    try { // Private mode in safari causes an exception
+      storage.setItem(this.ACCOUNT_STORAGE, JSON.stringify(this.account))
+    } catch (err) {}
+    this._afterGettingAccount(this.account.defaultDatabase)
+  }
+
+  /**
+   * Loads the account from the browser storage and sets the database.
+   *
+   * @param {string} db - Optional. A database (for example from the URL params). If null, the account's default
+   * database is used.
+   * @throw Error - The account is already set.
+   * @throw Error - There is no account in the browser storage.
+   * @throw URIError - The user has no access to the database. Note that the account is still loaded.
+   */
+  load (db = this.account.defaultDatabase) {
+    if (this.isAccountSet()) throw Error('Account already set')
+    const account = sessionStorage.getItem(this.ACCOUNT_STORAGE) || localStorage.getItem(this.ACCOUNT_STORAGE) || null
+    if (account === null) throw Error('No account in the browser')
+    this.account = JSON.parse(account)
+    this._afterGettingAccount(db)
+  }
+
+  /**
+   * Erases the account from the browser, part of performing log-out.
+   */
+  destroy () {
+    this.account = null
+    this.db = null
+    localStorage.clear()
+    sessionStorage.clear()
+  }
+
+  /**
+   * Is the account set?
+   * @returns {boolean}
+   */
+  isAccountSet () {
+    return !_.isEmpty(this._account)
+  }
+
+  /**
+   * Resolves the account and sets the active database.
+   * @throw URIError - The user has no access to the database.
+   * @private
+   */
+  _afterGettingAccount (db) {
+    this.role = new this.Role(this.account.role)
+    this._setActiveDb(db)
+    this._defer.resolve(this.account)
+  }
+
+  /* Databases */
+  /**
+   * @param {string} db - The new database. This method assumes the database exists and the user has access at it.
+   * @throw URIError - The user has no access to the database.
+   */
+  _setActiveDb (db) {
+    if (!_.includes(Object.keys(this.account.databases), db)) {
+      throw URIError(`Account has no access to ${db}.`)
+    }
+    this.db = db
+    this._callbacksForDatabaseChange.forEach(f => { f(db) })
+  }
+
+  /**
+   * Change the active database, going to 'index.inventory' and calling the callbacks sets by
+   * callWhenDatabaseChanges, so the modules that show content based on the
+   * active database can reload their content.
+   * @param db
+   * @return {Promise} - The $state.go promise
+   */
+  changeDb (db) {
+    this._setActiveDb(db)
+    return this.$state.go('index.inventory', {db: db})
+  }
+
+  /**
+   * Add a callback for when database changes. The callback will receive the new database.
+   * @param {Function} callback
+   */
+  callWhenDbChanges (callback) {
+    this._callbacksForDatabaseChange.push(callback)
+  }
+
 }
 
 module.exports = Session

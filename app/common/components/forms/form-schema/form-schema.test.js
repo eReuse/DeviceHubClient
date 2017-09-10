@@ -36,7 +36,7 @@ describe('Test FormSchema', function () {
   propagateSchemaChange()
   beforeEach(inject(function (_ResourceServer_, _session_, _SnapshotFormSchema_) {
     session = _session_
-    session.setActiveDatabase('db1', false)
+    //session.setActiveDb('db1', false)
     session._account.role = 'employee'
     session._prepareAccount()
     SnapshotFormSchema = _SnapshotFormSchema_

@@ -38,8 +38,6 @@ module.exports = angular.module('common.components.device',
    * @description Shows a button that lets the user to register a device. This directive calls registerModalCtrl.
    */
   .directive('computerSnapshotError', require('./computer-snapshot-modal/computer-snapshot-error/computer-snapshot-error.directive'))
-  .directive('share', require('./share/share.directive'))
-  .controller('shareModalCtrl', require('./share/share-modal.controller'))
   .factory('SnapshotFormSchema', require('./snapshot/snapshot.form-schema.factory'))
   .factory('ComputerSnapshotFormSchema', require('./computer-snapshot-modal/computer-snapshot.form-schema.factory'))
   .config(require('./computer-snapshot-modal/computer-snapshot-modal.config'))

@@ -15,7 +15,7 @@ module.exports = window.angular.module('deviceHub', [
         templateUrl: 'views/index/index.controller.html',
         abstract: true
       }).state('index.inventory', {
-        url: '/inventory',
+        url: '/inventories/:db',
         templateUrl: 'views/inventory/inventory.controller.html',
         controller: 'inventoryCtrl as inCl',
         resolve: {schemaLoaded: utils.schemaIsLoaded}
@@ -24,23 +24,23 @@ module.exports = window.angular.module('deviceHub', [
         templateUrl: 'views/inventory/inventory.controller.html',
         controller: 'inventoryCtrl as inCl',
         resolve: {schemaLoaded: utils.schemaIsLoaded}
-      }).state('fullDevice', {
-        url: '/:db/devices/:id',
-        templateUrl: 'views/full-device/full-device.controller.html',
-        controller: 'fullDeviceCtrl as FeCl',
-        resolve: {schemaLoaded: utils.schemaIsLoaded},
-        public: true // This is custom value used in shield-states
       }).state('login', {
         url: '/login',
         templateUrl: 'views/login/login.controller.html',
         controller: 'loginCtrl as LnCl'
+      }).state('redirect', {
+        url: '/',
+        controller: ($state, session) => {
+          try {
+            $state.go('index.inventory', {db: session.account.defaultDatabase})
+          } catch (err) {} // user without database
+        }
       })
-      $urlRouterProvider.otherwise('/inventory')
+      $urlRouterProvider.otherwise('/')
     })
-  .controller('deviceHubCtrl', CONSTANTS => {
+  .controller('deviceHubCtrl', () => {
     window.progressSetVal(2)
     $('html,body').removeClass('dh-wait')
-    window.document.title = CONSTANTS.appName
   })
   .run($rootScope => {
     $rootScope._ = window._ // We add lodash for usage in templates

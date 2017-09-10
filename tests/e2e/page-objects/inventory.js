@@ -96,7 +96,7 @@ class Inventory extends Base {
       input: editField.$('input'),
       submit: editField.$('.fa-check'),
       cancel: editField.$('.fa-ban'),
-      field: editField.$('[ng-transclude]'),
+      field: editField.$('[ng-transclude]')
     }
   }
 
@@ -139,8 +139,8 @@ class Inventory extends Base {
       expect(self.labelEdit.self.$$('#list-checkboxes #fields.ng-not-empty').isSelected()).not.toContain(false)
       expect(self.labelEdit.useLogo.isSelected()).toEqual(true)
       expect(self.labelEdit.showFieldNames.isSelected()).toEqual(true)
-      browser.wait(EC.textToBePresentInElementValue(self.labelEdit.width, '97'))
-      browser.wait(EC.textToBePresentInElementValue(self.labelEdit.height, '59'))
+      browser.wait(EC.textToBePresentInElementValue(self.labelEdit.width, '97'), 2500, 'Text should be 97')
+      browser.wait(EC.textToBePresentInElementValue(self.labelEdit.height, '59'), 2500, 'Text should be 59')
     })
     it('Should edit the checkboxes', () => {
       // We remove the first and second checkboxes
@@ -183,14 +183,14 @@ class Inventory extends Base {
       self.labelEdit.useLogo.click()
       self.waitStalenessFor(self.labels.logo, 'Logo should hide')
       // The size of the label adapts to the non-logo version
-      browser.wait(EC.textToBePresentInElementValue(self.labelEdit.width, '97'))
-      browser.wait(EC.textToBePresentInElementValue(self.labelEdit.height, '32'))
+      browser.wait(EC.textToBePresentInElementValue(self.labelEdit.width, '97'), 2500, 'Text shuold be 97')
+      browser.wait(EC.textToBePresentInElementValue(self.labelEdit.height, '32'), 2500, 'Text shuold be 32')
       // Show again logo
       self.labelEdit.useLogo.click()
       self.waitPresenceFor(self.labels.logo, 'Logo should appear')
       // The size of the label adapts to the non-logo version
-      browser.wait(EC.textToBePresentInElementValue(self.labelEdit.width, '97'))
-      browser.wait(EC.textToBePresentInElementValue(self.labelEdit.height, '59'))
+      browser.wait(EC.textToBePresentInElementValue(self.labelEdit.width, '97'), 2500, 'Text should be 97 (2)')
+      browser.wait(EC.textToBePresentInElementValue(self.labelEdit.height, '59'), 2500, 'Text should be 59 (2)')
 
       // Add another logo
       let dataUrl

@@ -71,43 +71,42 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
    those parameters.
    */
   var RestangularConfigurerResource = Restangular.withConfig(function (RestangularProvider) {
-      /**
-       * Parses resources received from the server.
-       */
-      RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response, deferred) {
-        if (resourceName in schema.schema) {
-          if (operation === 'getList') {
-            for (var i = 0; i < data.length; i++) parse(data[i], schema.schema[resourceName])
-          } else if (response.status !== 204) parse(data, schema.schema[resourceName])
-        }
-        return data
-      })
+    /**
+     * Parses resources received from the server.
+     */
+    RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response, deferred) {
+      if (resourceName in schema.schema) {
+        if (operation === 'getList') {
+          for (var i = 0; i < data.length; i++) parse(data[i], schema.schema[resourceName])
+        } else if (response.status !== 204) parse(data, schema.schema[resourceName])
+      }
+      return data
+    })
 
-      /**
-       * Parses resources sent to the server.
-       */
-      RestangularProvider.addRequestInterceptor(function (originalElement, operation, what, url) {
-        var element = utils.copy(originalElement)
-        if (operation === 'post') {
-          for (var fieldName in element) {
-            if (element[fieldName] instanceof Date) {
-              element[fieldName] = utils.parseDate(element[fieldName])
-            }
+    /**
+     * Parses resources sent to the server.
+     */
+    RestangularProvider.addRequestInterceptor(function (originalElement, operation, what, url) {
+      var element = utils.copy(originalElement)
+      if (operation === 'post') {
+        for (var fieldName in element) {
+          if (element[fieldName] instanceof Date) {
+            element[fieldName] = utils.parseDate(element[fieldName])
           }
         }
-        if (operation === 'put') {
-          for (fieldName in element) {
-            if (fieldName === '_created' ||
-              fieldName === '_updated' ||
-              fieldName === '_links') {
-              delete element[fieldName]
-            }
+      }
+      if (operation === 'put') {
+        for (fieldName in element) {
+          if (fieldName === '_created' ||
+            fieldName === '_updated' ||
+            fieldName === '_links') {
+            delete element[fieldName]
           }
         }
-        return element
-      })
-    }
-  )
+      }
+      return element
+    })
+  })
 
   /**
    * A special configuration for Restangular that has the database preppended in the base url, used for
@@ -115,18 +114,12 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
    */
   var RestangularConfigurerCustomDB = RestangularConfigurerResource.withConfig(_.noop) // We can configure it outside
 
-  /**
-   * Changes the database in the url for the configuration with databases
-   * @param {string} database New database to override existing
-   */
-  function setDatabaseInUrl (database) {
-    RestangularConfigurerCustomDB.setBaseUrl(CONSTANTS.url + '/' + database)
+  function setDatabaseInUrl (db) {
+    RestangularConfigurerCustomDB.setBaseUrl(CONSTANTS.url + '/' + db)
   }
 
-  session.callWhenDatabaseChanges(setDatabaseInUrl)
-  if (!_.isNull(session.activeDatabase)) {
-    setDatabaseInUrl(session.activeDatabase)
-  } // In case there is already a database set
+  session.loaded.then(() => setDatabaseInUrl(session.db)) // Session may load before us
+  session.callWhenDbChanges(setDatabaseInUrl) // For next changes
 
   return _ResourceServer
 }

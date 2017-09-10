@@ -1,4 +1,5 @@
 const EC = protractor.ExpectedConditions
+const _ = require('lodash')
 
 class Base {
   constructor () {
@@ -29,6 +30,18 @@ class Base {
 
   waitStalenessFor (protractorElement, message, time = 2500) {
     return browser.wait(EC.stalenessOf(protractorElement), time, message)
+  }
+
+  /**
+   * Watis for browser URL to partially contain passed-in url.
+   */
+  waitForUrl (partialUrl, message, time = 2500) {
+    const isUrl = () => browser.getCurrentUrl().then(u => _.includes(u, partialUrl))
+    return browser.wait(isUrl, time, message || 'The browser does not contain ' + partialUrl)
+  }
+
+  filterByText (elements, text) {
+    return elements.filter(elem => elem.getText().then(t => _.includes(t, text))).first()
   }
 }
 

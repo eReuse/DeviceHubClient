@@ -77,12 +77,12 @@ function resourceExport (session, CONSTANTS, $http, ResourceSettings, SubmitForm
             const resource = rSettings.resourceName
             const promise = $http({
               method: 'GET',
-              url: CONSTANTS.url + '/' + session.activeDatabase + '/export/' + resource,
+              url: CONSTANTS.url + '/' + session.db + '/export/' + resource,
               params: {
                 ids: _.map($scope.resources, '_id'),
                 type: model.type
               },
-              headers: {Accept: mimeType, Authorization: 'Basic ' + session.getAccount().token},
+              headers: {Accept: mimeType, Authorization: 'Basic ' + session.account.token},
               responseType: 'arraybuffer'
             }).success(data => {
               const file = new File([data], resource + '.' + model.format, {type: mimeType})
