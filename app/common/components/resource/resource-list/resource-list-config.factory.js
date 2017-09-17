@@ -411,7 +411,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
               description: 'Match devices that are not recycled, disposed and not moved to another inventory.'
             }
           ]),
-          defaultParams: {'is-component': 'No', 'groupInclusion': 'No', 'active': 'Yes'},  // todo
+          defaultParams: {'is-component': 'No', 'active': 'Yes'},  // todo
           // create index in mongo
           defaultParamsWhenSubview: {'is-component': 'No'},
           subResource: {
@@ -597,15 +597,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
             {
               key: 'device',
               name: 'Event of device',
+              realKey: 'dh$eventOfDevice',
               typeahead: DEVICE_TYPEAHEAD,
-              callback: (where, value) => {
-                if (!('$or' in where)) where.$or = []
-                where.$or = where.$or.concat([
-                  {device: value},
-                  {devices: {$in: [value]}},
-                  {components: {$in: [value]}}
-                ])
-              },
               placeholder: 'The id of the device'
             },
             {
