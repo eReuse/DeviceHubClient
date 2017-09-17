@@ -1,3 +1,5 @@
+const utils = require('./../utils')
+
 /**
  * Service to interact with the actual logged-in account.
  *
@@ -140,6 +142,14 @@ class Session {
    */
   callWhenDbChanges (callback) {
     this._callbacksForDatabaseChange.push(callback)
+  }
+
+  /**
+   * Does the actual user have explicit perms over the actual database?
+   * @returns {boolean}
+   */
+  hasExplicitPerms () {
+    return utils.perms.EXPLICIT_DB_PERMS.has(this.account.databases[this.db])
   }
 
 }
