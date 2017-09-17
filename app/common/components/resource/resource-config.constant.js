@@ -39,6 +39,7 @@ const RESOURCE_CONFIG = {
     'devices:ProveUsage': {manual: true},
     'devices:ToDispose': {manual: true},
     'devices:Dispose': {manual: true},
+    'devices:Reserve': {manual: true},
     'devices:Snapshot': {
       doNotUse: ['debug', 'version', 'events', 'owners', 'components', 'version', 'snapshotSoftware', 'automatic',
         'offline', '_uuid', 'geo', 'elapsed', 'osInstallation', 'tests', 'inventory', 'date',

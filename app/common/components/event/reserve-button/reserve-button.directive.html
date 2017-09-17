@@ -1,0 +1,8 @@
+<button type="button"
+        class="btn"
+        ng-class="{'btn-primary': resources.length > 0}"
+        ng-click="openModal(ReserveSettings.type, resources)"
+>
+  <resource-icon resource-type="{{::ReserveSettings.type}}"></resource-icon>
+  {{::ReserveSettings.humanName}}
+</button>

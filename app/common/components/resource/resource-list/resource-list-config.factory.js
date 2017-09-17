@@ -419,7 +419,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-device.html'
+          templateUrl: configFolder + '/resource-list-config-device'
         },
         table: {
           th: [f.id.th, f.label.th, {key: 'model', name: 'Model'}, f.lastEvent.thDef, f.created.th],
@@ -482,7 +482,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-group.html'
+          templateUrl: configFolder + '/resource-list-config-group'
         },
         table: {
           th: [f.label.th, f['@type'].th, f.from.th, f.to.th, f.lastEvent.th, f.updated.thDef],
@@ -511,7 +511,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-group.html'
+          templateUrl: configFolder + '/resource-list-config-group'
         },
         table: {
           th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef],
@@ -538,7 +538,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-group.html'
+          templateUrl: configFolder + '/resource-list-config-group'
         },
         table: {
           th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef, {key: 'size', name: 'Size'}],
@@ -577,7 +577,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-group.html'
+          templateUrl: configFolder + '/resource-list-config-group'
         },
         table: {
           th: [f.label.th, f.lastEvent.th, f.updated.thDef],
@@ -599,7 +599,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
               name: 'Event of device',
               realKey: 'dh$eventOfDevice',
               typeahead: DEVICE_TYPEAHEAD,
-              placeholder: 'The id of the device'
+              comparison: '=',
+              placeholder: 'System ID of the device.'
             },
             {
               key: 'place',
@@ -615,7 +616,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-event.html'
+          templateUrl: configFolder + '/resource-list-config-event'
         },
         table: {
           th: [f.id.th, f.label.th, f['@type'].th, f.updated.thDef],
@@ -642,7 +643,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           defaultParams: {}
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-account.html'
+          templateUrl: configFolder + '/resource-list-config-account'
         },
         table: {
           th: [f.email.th, f.name.th, f.organization.th, f.updated.thDef],

@@ -8,9 +8,10 @@
  * @param {ResourceSettings} ResourceSettings
  * @param {progressBar} progressBar
  * @param {ResourceBreadcrumb} ResourceBreadcrumb
+ * @param {Session} session
  */
 function resourceList (resourceListConfig, ResourceListGetter, ResourceListGetterBig, ResourceListSelector,
-                       ResourceListSelectorBig, ResourceSettings, progressBar, ResourceBreadcrumb) {
+                       ResourceListSelectorBig, ResourceSettings, progressBar, ResourceBreadcrumb, session) {
   const utils = require('./../../utils.js')
   const PATH = require('./__init__').PATH
   return {
@@ -25,6 +26,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
     link: {
       // Note that we load on 'pre' to initialize before our child (or inner) directives so they get real config values
       pre: $scope => {
+        $scope.session = session
         const resourceType = $scope.resourceType
         $scope.resourceName = utils.Naming.resource(resourceType)
         if (!resourceType) throw TypeError('resourceList needs a "resourceType" set, not ' + resourceType)

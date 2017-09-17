@@ -15,7 +15,7 @@
        ng-mouseleave="hoverScreener = false"
   >
     <div ng-show="selector.inList.length == 0"></div>
-    <div ng-include="config.buttons.templateUrl"></div>
+    <div ng-include="config.buttons.templateUrl + (session.hasExplicitPerms()? '' : '-shared') + '.html'"></div>
   </div>
 </div>
 

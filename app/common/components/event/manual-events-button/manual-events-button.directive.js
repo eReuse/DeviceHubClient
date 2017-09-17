@@ -1,7 +1,6 @@
 function manualEventsButton (ResourceSettings, dhModal) {
-  const Naming = require('./../../utils').Naming
   return {
-    templateUrl: require('./__init__').PATH + '/manual-events-button.directive.html',
+    template: require('./manual-events-button.directive.html'),
     restrict: 'E',
     scope: {
       resources: '='
@@ -10,22 +9,7 @@ function manualEventsButton (ResourceSettings, dhModal) {
       $scope.events = ResourceSettings('devices:DeviceEvent').getSubResources()
       // If the passed-in resources are groups, we won't use the 'devices' field of the event, and otherwise
 
-      $scope.openModal = (type, resources) => {
-        const isGroup = ResourceSettings(resources[0]['@type']).isSubResource('Group')
-        // We make it: groups.lots = [objLot1, objLot2...]
-        if (isGroup) {
-          resources = _(resources).groupBy('@type').mapKeys((_, type) => Naming.resource(type)).value()
-          resources['lots'] = resources['lots'] || []
-          _.arrayExtend(resources['lots'], _.pop(resources, 'incoming-lot', []))
-          _.arrayExtend(resources['lots'], _.pop(resources, 'outgoing-lot', []))
-        }
-        const opt = {
-          model: () => ({'@type': type, [isGroup ? 'groups' : 'devices']: resources}),
-          parserOptions: () => ({doNotUse: isGroup ? ['devices'] : ['groups']}),
-          options: () => ({})
-        }
-        dhModal.open('form', opt)
-      }
+      $scope.openModal = require('./../open-event-modal')(ResourceSettings, dhModal)
     }
   }
 }
