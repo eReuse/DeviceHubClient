@@ -261,11 +261,19 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
             },
             {
               key: 'event',
-              name: 'Has event',
+              name: 'Has event of type',
               select: 'devices:DeviceEvent',
               comparison: '=',
               realKey: 'events.@type',
               description: 'Match only devices that have a specific type of event.'
+            },
+            {
+              key: 'event_id',
+              name: 'Has event',
+              realKey: 'events._id',
+              placeholder: 'ID of event',
+              comparison: '=',
+              description: 'Match only devices that have a specific event.'
             },
             LAST_EVENT,
             {
@@ -612,7 +620,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           ]),
           defaultParams: {},
           subResource: {
-            Device: {key: 'device', field: '_id'}
+            Device: {key: 'event_id', field: '_id'}
           }
         },
         buttons: {
