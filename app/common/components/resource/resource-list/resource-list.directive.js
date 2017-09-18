@@ -15,7 +15,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
   const utils = require('./../../utils.js')
   const PATH = require('./__init__').PATH
   return {
-    templateUrl: PATH + '/resource-list.directive.html',
+    template: require('./resource-list.directive.html'),
     restrict: 'E',
     scope: {
       // The parent resource. If it does not have @type, then we are the list of the main inventory view.
@@ -152,7 +152,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         if ($scope.type === 'medium') {
           resourceListGetter.callbackOnGetting((resources) => {
             $scope.popovers.enable = true
-            $scope.popovers.templateUrl = require('./../__init__').PATH + '/resource-button/resource-button.popover.directive.html'
+            $scope.popovers.templateUrl = PATH + '/resource-button/resource-button.popover.directive.html'
             _.forEach(resources, resource => {
               $scope.popovers[resource._id] = {
                 isOpen: false,

@@ -11,7 +11,7 @@
  */
 function fieldSort () {
   return {
-    templateUrl: require('./__init__').PATH + '/field-sort.directive.html',
+    template: require('./field-sort.directive.html'),
     restrict: 'A',
     scope: {
       sort: '&',
