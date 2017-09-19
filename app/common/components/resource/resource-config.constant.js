@@ -40,6 +40,7 @@ const RESOURCE_CONFIG = {
     'devices:ToDispose': {manual: true},
     'devices:Dispose': {manual: true},
     'devices:Reserve': {manual: true},
+    'devices:Sell': {manual: true},
     'devices:Snapshot': {
       doNotUse: ['debug', 'version', 'events', 'owners', 'components', 'version', 'snapshotSoftware', 'automatic',
         'offline', '_uuid', 'geo', 'elapsed', 'osInstallation', 'tests', 'inventory', 'date',
@@ -49,7 +50,7 @@ const RESOURCE_CONFIG = {
       dataRelation: {
         label: 'Device id',
         keyFieldName: '_id',
-        filterFieldName: '_id',
+        filterFieldNames: ['_id'],
         labelFieldName: '_id',
         resourceType: 'Device'
       },
@@ -75,6 +76,14 @@ const RESOURCE_CONFIG = {
       view: {},
       subviews: [v.Device, v.Detail],
       doNotUse: ['geo'].concat(DO_NOT_USE),
+      dataRelation: {
+        label: 'Event id',
+        keyFieldName: '_id',
+        filterFieldNames: ['_id'],
+        fieldType: 'typeahead',
+        labelFieldName: '_id',
+        resourceType: 'Event'
+      },
       _root: true
     },
     Account: {

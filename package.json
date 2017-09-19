@@ -63,7 +63,7 @@
     "meanie-angular-focus": "~1.5.1",
     "opener": "~1.4.1",
     "pluralize": "~3.0.0",
-    "restangular": "~1.5.2",
+    "restangular": "~1.6.1",
     "run-sequence": "~1.1.5",
     "uglify-js-harmony": "^2.7.5",
     "vinyl-buffer": "~1.0.0",

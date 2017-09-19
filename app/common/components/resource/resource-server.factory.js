@@ -1,4 +1,4 @@
-var utils = require('./../utils.js')
+const utils = require('./../utils.js')
 
 /**
  * Provides a suitable connexion to DeviceHub, personalised for the resource.
@@ -19,11 +19,13 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
    * @return {Object} A Restangular connexion with get, getList and post.
    */
   function _ResourceServer (settings) {
-    var url = settings.url.split('/')
+    const url = settings.url.split('/')
 
     // We use the settings for default database or custom one
-    var CustomRestangular = settings.useDefaultDatabase ? RestangularConfigurerResource : RestangularConfigurerCustomDB
-    var restangularConfig
+    const CustomRestangular = settings.useDefaultDatabase
+      ? RestangularConfigurerResource
+      : RestangularConfigurerCustomDB
+    let restangularConfig
     switch (url.length) {
       case 2:
         restangularConfig = CustomRestangular.all(url[0])
@@ -32,7 +34,7 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
         restangularConfig = CustomRestangular.one(url[0], url[1])
         break
     }
-    var service = CustomRestangular.service(url[url.length - 1], restangularConfig)
+    const service = CustomRestangular.service(url[url.length - 1], restangularConfig)
     /**
      * Finds the given text in field. Text can be a partial word.
      * @param {string[]} names The name of the field
@@ -57,6 +59,28 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
       if (_.isInteger(maxResults)) searchParams.max_results = maxResults
       return service.getList(searchParams)
     }
+
+    /**
+     * Regular POST containing files, complying with Python-eve 'media' rules.
+     *
+     * See http://python-eve.org/features.html#file-storage
+     * @param {Object} model
+     * @param {string} fileKey - The property in model where the files are (if any). Use only
+     * when models carry a property describing the fields that **you don't want to upload**, as
+     * this property is not included.
+     * @param {File[]} files - An array of file objects.
+     * @returns {Promise} - Restangular promise.
+     */
+    service.postWithFiles = (model, fileKey, files) => {
+      // python-eve requires content-type: form-data when uploading files
+      // from https://github.com/mgonto/restangular/#how-can-i-send-files-in-my-request-using-restangular
+      // and https://github.com/mgonto/restangular/issues/420#issuecomment-223011383
+      const fd = new FormData()
+      for (const key in model) if (key !== fileKey) fd.append(key, JSON.stringify(model[key]))
+      files.forEach(f => { fd.append(this._uploadsFile.key, f) })
+      return service.withHttpConfig({transformRequest: angular.identity})
+        .customPOST(fd, undefined, undefined, {'Content-Type': _.noop})
+    }
     return service
   }
 
@@ -70,14 +94,14 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
    configuration we want, and then we extend this one for the specific case of the databases, modifying again
    those parameters.
    */
-  var RestangularConfigurerResource = Restangular.withConfig(function (RestangularProvider) {
+  const RestangularConfigurerResource = Restangular.withConfig(function (RestangularProvider) {
     /**
      * Parses resources received from the server.
      */
-    RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response, deferred) {
+    RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response) {
       if (resourceName in schema.schema) {
         if (operation === 'getList') {
-          for (var i = 0; i < data.length; i++) parse(data[i], schema.schema[resourceName])
+          for (let i = 0; i < data.length; i++) parse(data[i], schema.schema[resourceName])
         } else if (response.status !== 204) parse(data, schema.schema[resourceName])
       }
       return data
@@ -86,17 +110,11 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
     /**
      * Parses resources sent to the server.
      */
-    RestangularProvider.addRequestInterceptor(function (originalElement, operation, what, url) {
-      var element = utils.copy(originalElement)
-      if (operation === 'post') {
-        for (var fieldName in element) {
-          if (element[fieldName] instanceof Date) {
-            element[fieldName] = utils.parseDate(element[fieldName])
-          }
-        }
-      }
+    RestangularProvider.addRequestInterceptor(function (element, operation) {
       if (operation === 'put') {
-        for (fieldName in element) {
+        // Note we can't copy FormData
+        element = utils.copy(element) // We don't want to touch the passed-in element
+        for (const fieldName in element) {
           if (fieldName === '_created' ||
             fieldName === '_updated' ||
             fieldName === '_links') {
@@ -112,7 +130,7 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
    * A special configuration for Restangular that has the database preppended in the base url, used for
    * some resources.
    */
-  var RestangularConfigurerCustomDB = RestangularConfigurerResource.withConfig(_.noop) // We can configure it outside
+  const RestangularConfigurerCustomDB = RestangularConfigurerResource.withConfig(_.noop) // We can configure it outside
 
   function setDatabaseInUrl (db) {
     RestangularConfigurerCustomDB.setBaseUrl(CONSTANTS.url + '/' + db)
@@ -133,7 +151,7 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
  */
 function parse (item, schema) {
   // todo this first for should be nested
-  for (var fieldName in schema) {
+  for (const fieldName in schema) {
     switch (schema[fieldName].type) {
       case 'datetime':
         item[fieldName] = new Date(item[fieldName])
@@ -154,7 +172,7 @@ function parse (item, schema) {
     _parseDate(val, '_created')
 
     function _parseDate (value, propertyName) {
-      var a = new Date(value[propertyName])
+      const a = new Date(value[propertyName])
       if (!_.isNaN(a.getTime())) value[propertyName] = a
     }
   }

@@ -44,8 +44,8 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
    * @private
    */
   this._parseFields = (path, doNotUse, isAModification, subSchema, model) => {
-    let form = []
-    for (let fieldName in subSchema) {
+    const form = []
+    for (const fieldName in subSchema) {
       try {
         form.push(this._parseField(fieldName, path, doNotUse, isAModification, subSchema[fieldName], model))
       } catch (err) {
@@ -119,8 +119,8 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
    */
   this._generateField = (fieldName, fieldPath, subSchema, model, doNotUse, isAModification) => {
     try {
-      let [tOpts, type] = this._typeAndOptions(fieldName, fieldPath, subSchema, model, doNotUse, isAModification)
-      let field = {
+      const [tOpts, type] = this._typeAndOptions(fieldName, fieldPath, subSchema, model, doNotUse, isAModification)
+      const field = {
         key: fieldName,
         name: fieldPath,
         type: type,
@@ -162,7 +162,7 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
    */
   this._typeAndOptions = (fieldName, fieldPath, fieldSchema, model, doNotUse, isAModification) => {
     const type = fieldSchema.type
-    let tOpts = {}
+    const tOpts = {}
     if ('allowed' in fieldSchema && fieldSchema.allowed.length > 1) {
       let options
       if ('allowed_description' in fieldSchema) {
@@ -214,6 +214,10 @@ function cerberusToFormly (ResourceSettings, schema, UNIT_CODES, session, Role) 
           if (_.has(fieldSchema, 'schema.data_relation')) {
             tOpts.key = fieldSchema.schema.data_relation.field
             return [tOpts, 'resources']
+          } else if (_.get(fieldSchema, 'schema.type') === 'media') {
+            tOpts.accept = fieldSchema.schema.accept
+            tOpts.multiple = true
+            return [tOpts, 'upload']
           }
           throw new NoType(type)
         case 'objectid':

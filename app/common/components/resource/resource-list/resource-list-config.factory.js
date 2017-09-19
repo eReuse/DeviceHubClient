@@ -203,7 +203,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
             {key: 'label', name: 'Label', placeholder: 'Label...', realKey: 'labelId'},
             {
               key: '@type',
-              name: 'Type',
+              name: 'Type of device',
               select: 'Device',
               comparison: '=',
               description: 'The type of the device: Computer, Mobile, Computer monitor...'

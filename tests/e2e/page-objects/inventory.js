@@ -53,7 +53,6 @@ class Inventory extends Base {
     this.search = {
       self: search,
       searchbox: search.$('[name=searchbox]'),
-      groupInclusion: search.$('[data-e2e=groupInclusion]'),
       type: search.$('[data-e2e="@type"]')
     }
     // Groups

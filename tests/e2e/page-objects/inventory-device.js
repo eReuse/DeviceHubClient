@@ -4,19 +4,12 @@ const IMG_LOGO = path.join(__dirname, '/../../fixtures/logo.png')
 const Inventory = require('./inventory')
 
 class InventoryDevice extends Inventory {
-  constructor (resourceType) {
-    super(resourceType)
-    const search = this.resourceList.$('resource-search')
-    this.search.groupInclusion = search.$('[data-e2e=groupInclusion]')
-  }
-
   /**
    * GoToTab does not wait for
    * @param waitForFirstRow
    */
   goToTab (waitForFirstRow = true) {
     this.tab.click()
-    this.search.groupInclusion.$('.remove').click()
     this.waitPresenceFor(this.listOfResources)
   }
 
@@ -24,7 +17,7 @@ class InventoryDevice extends Inventory {
     const self = this
     describe('Certificate Erasure', () => {
       beforeAll(function selectOnlyComputers () {
-        self.search.searchbox.sendKeys('type').sendKeys(protractor.Key.ENTER)
+        self.search.searchbox.sendKeys('type of device').sendKeys(protractor.Key.ENTER)
         self.search.type.$('option[value="string:Computer"]').click()
         self.waitPresenceFor(self.listOfResources, 'Resources should re-load')
         self.toggleSelectAll()
