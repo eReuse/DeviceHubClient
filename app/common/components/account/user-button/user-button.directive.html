@@ -1,9 +1,6 @@
 <li uib-dropdown id="user-button">
-  <a uib-dropdown-toggle id="img-button">
-    <img gravatar-src-once="account.email"
-         gravatar-size="50"
-         gravatar-default="https://www.ereuse.org/files/2017/04/timmy-avatar.png"
-    />
+  <a uib-dropdown-toggle>
+    <i class="fa fa-user-circle fa-fw fa-lg"></i>Me<span class="caret"></span>
   </a>
   <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="single-button">
     <li role="menuitem" class="dropdown-header">{{::account.email}}</li>

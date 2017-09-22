@@ -1,6 +1,5 @@
 require('angular-ui-bootstrap')
 require('angular-recursion')
-require('angular-gravatar')
 
 module.exports = angular.module('common.components.accounts',
   [
@@ -8,8 +7,7 @@ module.exports = angular.module('common.components.accounts',
     'ui.bootstrap',
     require('./../../constants/').name,
     require('./../resource').name,
-    'RecursionHelper',
-    'ui.gravatar'
+    'RecursionHelper'
   ])
   .directive('userButton', require('./user-button/user-button.directive.js'))
   .directive('accountRole', require('./account-role/account-role.directive.js'))
