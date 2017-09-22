@@ -200,7 +200,7 @@ const RESOURCE_CONFIG = {
     }
   },
   inventory: {
-    subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Pallet] // removed v.Account and v.Event
+    subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Pallet, v.Event]
   }
 }
 

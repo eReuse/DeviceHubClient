@@ -419,8 +419,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
               description: 'Match devices that are not recycled, disposed and not moved to another inventory.'
             }
           ]),
-          defaultParams: {'is-component': 'No', 'active': 'Yes'},  // todo
-          // create index in mongo
+          defaultParams: {'is-component': 'No', 'active': 'Yes'},
           defaultParamsWhenSubview: {'is-component': 'No'},
           subResource: {
             Event: {key: 'device', field: '_id'}
