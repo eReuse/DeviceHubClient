@@ -3,7 +3,7 @@
  */
 function resource (RecursionHelper, ResourceSettings) {
   return {
-    templateUrl: require('./__init__').PATH + '/resource.directive.html',
+    template: require('./resource.directive.html'),
     restrict: 'E',
     scope: {
       resource: '=',
