@@ -33,7 +33,15 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
         $scope.$watch('resource._id', (newResourceId, oldResourceId) => {
           // We create the tabs with the subviews embedded
           // Note that resourceView is re-used to hold different types of resources at different times
-          if (newResourceId !== oldResourceId) generateViewAndSubview()
+          if (newResourceId !== oldResourceId) {
+            // Destroy children scopes
+            // We use jquery to replace the HTML of the child scopes
+            // so we need to destroy them through the angular way
+            for (let childScope = $scope.$$childHead; childScope; childScope = childScope.$$nextSibling) {
+              childScope.$destroy()
+            }
+            generateViewAndSubview()
+          }
         })
 
         $scope.goTo = resource => ResourceBreadcrumb.go(resource)
