@@ -26,6 +26,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
     id: {th: {key: '_id', name: 'Id'}, td: {value: '_id'}},
     label: {th: {key: 'label', name: 'Label'}, td: {value: 'label'}},
     '@type': {th: {key: '@type', name: 'Type'}, td: {value: '@type'}},
+    type: {th: {key: 'type', name: 'Subtype'}, td: {value: 'type'}},
     from: {th: {key: 'from', name: 'From client'}, td: {value: 'from.name'}},
     to: {th: {key: 'to', name: 'To client'}, td: {value: 'to.name'}},
     name: {th: {key: 'name', name: 'Name'}, td: {value: 'name'}},
@@ -36,7 +37,9 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
       th: {key: 'events._updated', name: 'Last event'},
       td: {templateUrl: configFolder + '/resource-button-device.html'}
     },
-    created: {th: {key: '_created', name: 'Created'}, td: {value: '_created'}}
+    created: {th: {key: '_created', name: 'Created'}, td: {value: '_created'}},
+    range: {th: {key: 'condition.general.range', name: 'Range'}, td: {value: 'condition.general.range'}},
+    model: {th: {key: 'model', name: 'Model'}, td: {value: 'model'}}
   }
   f.lastEvent.thDef = _.assign({default: true}, f.lastEvent.th)
   f.updated.thDef = _.assign({default: true}, f.updated.th)
@@ -429,8 +432,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           templateUrl: configFolder + '/resource-list-config-device'
         },
         table: {
-          th: [f.id.th, f.label.th, {key: 'model', name: 'Model'}, f.lastEvent.thDef, f.created.th],
-          td: [f.id.td, {value: 'labelId'}, {value: 'model'}, f.lastEvent.td, f.created.td]
+          th: [f.id.th, f['@type'].th, f.type.th, f.model.th, f.range.th, f.lastEvent.thDef, f.created.th],
+          td: [f.id.td, f['@type'].td, f.type.td, f.model.td, f.range.td, f.lastEvent.td, f.created.td]
         }
       },
       Lot: {
