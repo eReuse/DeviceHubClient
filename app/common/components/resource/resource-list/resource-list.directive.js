@@ -13,7 +13,7 @@
 function resourceList (resourceListConfig, ResourceListGetter, ResourceListGetterBig, ResourceListSelector,
                        ResourceListSelectorBig, ResourceSettings, progressBar, ResourceBreadcrumb, session) {
   const utils = require('./../../utils.js')
-  const PATH = require('./__init__').PATH
+  const PARENT_PATH = require('./../__init__').PATH
   return {
     template: require('./resource-list.directive.html'),
     restrict: 'E',
@@ -152,7 +152,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         if ($scope.type === 'medium') {
           resourceListGetter.callbackOnGetting((resources) => {
             $scope.popovers.enable = true
-            $scope.popovers.templateUrl = PATH + '/resource-button/resource-button.popover.directive.html'
+            $scope.popovers.templateUrl = PARENT_PATH + '/resource-button/resource-button.popover.directive.html'
             _.forEach(resources, resource => {
               $scope.popovers[resource._id] = {
                 isOpen: false,
