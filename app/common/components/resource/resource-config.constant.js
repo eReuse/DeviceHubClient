@@ -22,7 +22,9 @@ const v = {
   Lot: {view: 'resource-list', resourceType: 'Lot', name: 'Lots', resourceIcon: 'Lot'},
   Pallet: {view: 'resource-list', resourceType: 'Pallet', name: 'Pallets', resourceIcon: 'Pallet'},
   Package: {view: 'resource-list', resourceType: 'Package', name: 'Packages', resourceIcon: 'Package'},
-  Account: {view: 'resource-list', resourceType: 'Account', name: 'Accounts', resourceIcon: 'Account'}
+  Account: {view: 'resource-list', resourceType: 'Account', name: 'Accounts', resourceIcon: 'Account'},
+  Reserve: {view: 'reserve-view', name: 'Reserve', 'class': 'fill-height show', resourceIcon: 'devices:Reserve'},
+  Sell: {view: 'sell-view', name: 'Sell', 'class': 'fill-height show', resourceIcon: 'devices:Sell'}
 }
 const RESOURCE_CONFIG = {
   resources: {
@@ -39,12 +41,19 @@ const RESOURCE_CONFIG = {
     'devices:ProveUsage': {manual: true},
     'devices:ToDispose': {manual: true},
     'devices:Dispose': {manual: true},
-    'devices:Reserve': {manual: true},
-    'devices:Sell': {manual: true},
+    'devices:Reserve': {
+      manual: true,
+      subviews: [v.Reserve, v.Device, v.Detail]
+    },
+    'devices:Sell': {
+      manual: true,
+      subviews: [v.Sell, v.Device, v.Detail]
+    },
     'devices:Snapshot': {
       doNotUse: ['debug', 'version', 'events', 'owners', 'components', 'version', 'snapshotSoftware', 'automatic',
         'offline', '_uuid', 'geo', 'elapsed', 'osInstallation', 'tests', 'inventory', 'date',
-        'autoUploaded', 'condition.general', 'condition.scoringSoftware', 'condition.created'].concat(DO_NOT_USE)
+        'autoUploaded', 'condition.general', 'condition.scoringSoftware', 'condition.created',
+        'group'].concat(DO_NOT_USE)
     },
     Device: {
       dataRelation: {
@@ -73,7 +82,7 @@ const RESOURCE_CONFIG = {
       _root: true
     },
     Event: {
-      view: {},
+      view: {title: ['@type', 'label'], subtitle: ['_id']},
       subviews: [v.Device, v.Detail],
       doNotUse: ['geo'].concat(DO_NOT_USE),
       dataRelation: {

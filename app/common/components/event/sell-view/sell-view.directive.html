@@ -1,0 +1,14 @@
+<div>
+  <article ng-if="!_.isEmpty(resource.invoices)">
+    <h4>Invoices</h4>
+    <div class="list-group">
+      <button type="button" class="list-group-item"
+             ng-repeat="invoice in resource.invoices"
+             ng-click="download(invoice.name, invoice.file, invoice.mime_type)">
+        <i class="fa fa-download fa-fw"></i>
+        <i class="fa fa-file-pdf-o fa-fw"></i>
+        {{invoice.name}}
+      </button>
+    </div>
+  </article>
+</div>

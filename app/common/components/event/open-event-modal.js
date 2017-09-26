@@ -8,7 +8,14 @@ const Naming = require('./../utils').Naming
  * @returns {function(string, Array)}
  */
 function openModalFactory (ResourceSettings, dhModal) {
-  return (type, resources) => {
+  /**
+   * Opens the modal.
+   * @param {string} type - The @type of the event to perform.
+   * @param {Object[]} resources - devices xor groups to perform the event on.
+   * @param {Object} model - Optional. Pre-built model where type and resources are appended. This param is mutated.
+   * @param {Object} options - Opotional. Options to pass to FormSchema.
+   */
+  return (type, resources, model = {}, options = {}) => {
     const isGroup = ResourceSettings(resources[0]['@type']).isSubResource('Group')
     // We make it: groups.lots = [objLot1, objLot2...]
     if (isGroup) {
@@ -17,10 +24,12 @@ function openModalFactory (ResourceSettings, dhModal) {
       _.arrayExtend(resources['lots'], _.pop(resources, 'incoming-lot', []))
       _.arrayExtend(resources['lots'], _.pop(resources, 'outgoing-lot', []))
     }
+    model['@type'] = type
+    model[isGroup ? 'groups' : 'devices'] = resources
     const opt = {
-      model: () => ({'@type': type, [isGroup ? 'groups' : 'devices']: resources}),
+      model: () => model,
       parserOptions: () => ({doNotUse: isGroup ? ['devices'] : ['groups']}),
-      options: () => ({})
+      options: () => options
     }
     dhModal.open('form', opt)
   }

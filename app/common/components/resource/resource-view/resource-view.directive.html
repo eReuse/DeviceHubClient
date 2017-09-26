@@ -18,10 +18,10 @@
   <div ng-switch-when="medium">
     <header ng-if="resource['@type']">
       <h3 ng-show="view.title" class="display-inline">
-        <span ng-repeat="t in view.title">{{resource[t]}}</span>
-        <small ng-repeat="s in view.subtitle">&nbsp;{{resource[s]}}</small>
+        <span ng-repeat="t in view.title">{{resource[t]}}<span ng-show="!$last">&nbsp;</span></span>
+        <small ng-repeat="s in view.subtitle">&nbsp;{{resource[s]}}<span ng-show="!$last">&nbsp;</span></small>
         <small class="pull-right">
-          <resource-icon resource-type="{{::resource['@type']}}" resource-subtype="{{::resource.type}}"></resource-icon>
+          <resource-icon resource-type="{{resource['@type']}}" resource-subtype="{{resource.type}}"></resource-icon>
         </small>
       </h3>
     </header>
