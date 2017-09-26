@@ -77,7 +77,7 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
       // and https://github.com/mgonto/restangular/issues/420#issuecomment-223011383
       const fd = new FormData()
       for (const key in model) if (key !== fileKey) fd.append(key, JSON.stringify(model[key]))
-      files.forEach(f => { fd.append(this._uploadsFile.key, f) })
+      files.forEach(f => { fd.append(fileKey, f) })
       return service.withHttpConfig({transformRequest: angular.identity})
         .customPOST(fd, undefined, undefined, {'Content-Type': _.noop})
     }
