@@ -7,8 +7,10 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
   const utils = require('./../../utils')
   const h = RESOURCE_SEARCH.paramHelpers
   // Typeaheads
+  const deviceSettings = ResourceSettings('Device')
+  const conditionRange = deviceSettings.schema.condition.schema.general.schema.range.allowed
   const ACCOUNT_TYPEAHEAD = ResourceSettings('Account').getSetting('dataRelation')
-  const DEVICE_TYPEAHEAD = ResourceSettings('Device').getSetting('dataRelation')
+  const DEVICE_TYPEAHEAD = deviceSettings.getSetting('dataRelation')
   const LOT_TYPEAHEAD = ResourceSettings('Lot').getSetting('dataRelation')
   const PACKAGE_TYPEAHEAD = ResourceSettings('Package').getSetting('dataRelation')
   const PALLET_TYPEAHEAD = ResourceSettings('Pallet').getSetting('dataRelation')
@@ -188,6 +190,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
         search: {
           params: RESOURCE_SEARCH.params,
           defaultParams: {'@type': 'Computer'},
+          defaultParamsForNotOwners: {}, // Params for the users that don't have explicit access to the DB
           defaultParamsWhenSubview: {} // If set, these default params will be used when resource-list is in a
           // subview (parent-resource is set)
         },
@@ -420,9 +423,34 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
               boolean: true,
               comparison: value => ({[value ? '$nin' : '$in']: INACTIVE_EVENTS}),
               description: 'Match devices that are not recycled, disposed and not moved to another inventory.'
+            },
+            {
+              key: 'rangeIsAtLeast',
+              name: 'Range is at least',
+              realKey: 'condition.general.range',
+              select: conditionRange,
+              comparison: value => ({'$nin': _.takeWhile(conditionRange, v => v !== value)}),
+              description: 'Match devices that are of range or above.'
+            },
+            {
+              key: 'rangeIs',
+              name: 'Range is',
+              realKey: 'condition.general.range',
+              select: conditionRange,
+              comparison: '=',
+              description: 'Match devices that are of range.'
+            },
+            {
+              key: 'rangeIsAtMost',
+              name: 'Range is at most',
+              realKey: 'condition.general.range',
+              select: conditionRange,
+              comparison: value => ({'$nin': _.takeRightWhile(conditionRange, v => v !== value)}),
+              description: 'Match devices that are of range or below.'
             }
           ]),
           defaultParams: {'is-component': 'No', 'active': 'Yes'},
+          defaultParamsForNotOwners: {lastEvent: 'devices:Ready', rangeIsAtLeast: 'Low'},
           defaultParamsWhenSubview: {'is-component': 'No'},
           subResource: {
             Event: {key: 'device', field: '_id'}

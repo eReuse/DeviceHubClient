@@ -34,6 +34,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         progressBar.start() // resourceListGetter.getResources will call this too, but doing it here we avoid delay
         const config = _.cloneDeep(resourceListConfig.views[resourceType])
         if (_.isUndefined(config)) throw ReferenceError(resourceType + ' has no config.')
+        if (!session.hasExplicitPerms()) _.assign(config.search.defaultParams, config.search.defaultParamsForNotOwners)
         $scope.resources = [] // Do never directly assign (r=[]) to 'resources' as modules depend of its reference
 
         /**
@@ -105,7 +106,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         const parentType = _.get($scope, 'parentResource.@type')
         if (parentType) {
           if (config.search.defaultParamsWhenSubview) {
-            config.search.defaultParams = config.search.defaultParamsWhenSubview
+            _.assign(config.search.defaultParams, config.search.defaultParamsWhenSubview)
+            if (!session.hasExplicitPerms()) {
+              _.assign(config.search.defaultParams, config.search.defaultParamsForNotOwners)
+            }
           }
           // no need to _.clone this setting as we do not modify it
           const path = 'search.subResource.' + resourceType
