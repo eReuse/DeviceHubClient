@@ -24,7 +24,8 @@ const v = {
   Package: {view: 'resource-list', resourceType: 'Package', name: 'Packages', resourceIcon: 'Package'},
   Account: {view: 'resource-list', resourceType: 'Account', name: 'Accounts', resourceIcon: 'Account'},
   Reserve: {view: 'reserve-view', name: 'Reserve', 'class': 'fill-height show', resourceIcon: 'devices:Reserve'},
-  Sell: {view: 'sell-view', name: 'Sell', 'class': 'fill-height show', resourceIcon: 'devices:Sell'}
+  Sell: {view: 'sell-view', name: 'Sell', 'class': 'fill-height show', resourceIcon: 'devices:Sell'},
+  DeviceDashboard: {view: 'device-dashboard', name: 'Dashboard', 'class': 'fill-height show', fa: 'fa-dashboard'}
 }
 const RESOURCE_CONFIG = {
   resources: {
@@ -68,7 +69,7 @@ const RESOURCE_CONFIG = {
         subtitle: ['model', 'manufacturer']
       },
       // We pass a 'resource' object to a subview with, at least, @type.
-      subviews: [v.Event, v.Detail],
+      subviews: [v.DeviceDashboard, v.Event, v.Detail],
       doNotUse: DO_NOT_USE.concat(['events', 'owners', 'components', 'isUidSecured', 'public', 'icon', 'pid',
         'labelId', 'placeholder', 'parent', 'place', 'perms']),
       label: {

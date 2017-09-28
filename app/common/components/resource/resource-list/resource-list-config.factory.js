@@ -40,7 +40,10 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
       td: {templateUrl: configFolder + '/resource-button-device.html'}
     },
     created: {th: {key: '_created', name: 'Created'}, td: {value: '_created'}},
-    range: {th: {key: 'condition.general.range', name: 'Range'}, td: {value: 'condition.general.range'}},
+    range: {
+      th: {key: 'condition.general.range', name: 'Range'},
+      td: {templateUrl: configFolder + '/device-range.html'}
+    },
     model: {th: {key: 'model', name: 'Model'}, td: {value: 'model'}}
   }
   f.lastEvent.thDef = _.assign({default: true}, f.lastEvent.th)
