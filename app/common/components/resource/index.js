@@ -45,7 +45,6 @@ module.exports = angular.module('common.components.resource',
   .directive('resourceListFooter', require('./resource-list/resource-list-footer/resource-list-footer.directive'))
   .directive('resourceListSelectAll', require('./resource-list/resource-list-select-all/resource-list-select-all.directive'))
   .directive('fieldSort', require('./resource-list/field-sort/field-sort.directive.js'))
-  .directive('resourceDashboard', require('./resource-dashboard/resource-dashboard.directive'))
   .directive('resourceExport', require('./resource-export/resource-export.directive'))
   .directive('resourceFieldEdit', require('./resource-field-edit/resource-field-edit.directive'))
   .directive('resourceBreadcrumb', require('./resource-breadcrumb/resource-breadcrumb.directive'))
