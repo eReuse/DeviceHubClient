@@ -1,10 +1,10 @@
 /**
- * Filter that transforms mm to inches. This filter returns a string with only two decimals.
- * @return {function(int|string): string}
+ * Returns a human friendly version of the string.
+ * @return {function(string): string}
  */
-function humanize () {
+function resourceTitle () {
   const utils = require('./../utils')
-  return input => utils.Naming.humanize(input)
+  return input => utils.getResourceTitle(input)
 }
 
-module.exports = humanize
+module.exports = resourceTitle
