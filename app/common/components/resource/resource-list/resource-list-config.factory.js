@@ -27,8 +27,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
   const f = {
     id: {th: {key: '_id', name: 'Id'}, td: {value: '_id'}},
     label: {th: {key: 'label', name: 'Label'}, td: {value: 'label'}},
-    '@type': {th: {key: '@type', name: 'Type'}, td: {value: '@type'}},
-    type: {th: {key: 'type', name: 'Subtype'}, td: {value: 'type'}},
+    '@type': {th: {key: '@type', name: 'Type'}, td: {value: '@type', humanize: true}},
+    type: {th: {key: 'type', name: 'Subtype'}, td: {value: 'type', humanize: true}},
     from: {th: {key: 'from', name: 'From client'}, td: {value: 'from.name'}},
     to: {th: {key: 'to', name: 'To client'}, td: {value: 'to.name'}},
     name: {th: {key: 'name', name: 'Name'}, td: {value: 'name'}},
@@ -44,7 +44,11 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
       th: {key: 'condition.general.range', name: 'Range'},
       td: {templateUrl: configFolder + '/device-range.html'}
     },
-    model: {th: {key: 'model', name: 'Model'}, td: {value: 'model'}}
+    model: {th: {key: 'model', name: 'Model'}, td: {value: 'model'}},
+    state: {
+      th: {key: 'model', name: 'State'},
+      td: {templateUrl: configFolder + '/event-state.html'}
+    }
   }
   f.lastEvent.thDef = _.assign({default: true}, f.lastEvent.th)
   f.updated.thDef = _.assign({default: true}, f.updated.th)
@@ -660,8 +664,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           templateUrl: configFolder + '/resource-list-config-event'
         },
         table: {
-          th: [f.id.th, f.label.th, f['@type'].th, f.updated.thDef],
-          td: [f.id.td, f.label.td, f['@type'].td, f.updated.td]
+          th: [f.id.th, f.label.th, f['@type'].th, f.state.th, f.updated.thDef],
+          td: [f.id.td, f.label.td, f['@type'].td, f.state.td, f.updated.td]
         }
       },
       Account: {

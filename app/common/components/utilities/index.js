@@ -19,3 +19,4 @@ module.exports = angular.module('common.components.utilities',
   .service('progressBar', require('./progress-bar.factory'))
   .filter('toInches', require('./to-inches.filter'))
   .filter('resourceTitle', require('./resource-title.filter'))
+  .filter('humanize', require('./humanize'))

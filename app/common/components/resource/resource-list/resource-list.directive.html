@@ -74,13 +74,18 @@
               ng-dblclick="subResource.openFull(resource)"
               ng-init="value = $root._.get(resource, td.value)"
           >
-            <div ng-if="td.templateUrl" ng-include="td.templateUrl"></div>
-            <div ng-if="value && !$root._.isDate(value)">
+            <div ng-if="::td.templateUrl" ng-include="td.templateUrl"></div>
+            <div ng-if="::value && !$root._.isDate(value)">
               <!-- We cannot use the value from ng-init if we want it to be updateable -->
-              {{$root._.get(resource, td.value) | limitTo: 19}}
-              <small>{{$root._.get(resource, td.value) > 19? '&hellip;':''}}</small>
+              <span ng-if="::td.humanize">
+                {{$root._.get(resource, td.value) | humanize}}
+              </span>
+              <span ng-if="::!td.humanize">
+                {{$root._.get(resource, td.value) | limitTo: 19}}
+                <small>{{$root._.get(resource, td.value).length > 19? '&hellip;':''}}</small>
+              </span>
             </div>
-            <div ng-if="value && $root._.isDate(value)">{{::value | timeAgo}}</div>
+            <div ng-if="::value && $root._.isDate(value)">{{::value | timeAgo}}</div>
           </td>
           <td ng-click="$evalAsync(subResource.toggle(resource))"
               ng-dblclick="subResource.openFull(resource)"
