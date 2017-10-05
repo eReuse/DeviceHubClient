@@ -4,7 +4,7 @@
     <div class="list-group">
       <button type="button" class="list-group-item"
              ng-repeat="invoice in resource.invoices"
-             ng-click="download(invoice.name, invoice.file, invoice.mime_type)">
+             ng-click="download(invoice.name, invoice.file, invoice.content_type)">
         <i class="fa fa-download fa-fw"></i>
         <i class="fa fa-file-pdf-o fa-fw"></i>
         {{invoice.name}}
