@@ -3,7 +3,7 @@
  * @param {RESOURCE_SEARCH} RESOURCE_SEARCH
  * @param {ResourceSettings} ResourceSettings
  */
-function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
+function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
   const utils = require('./../../utils')
   const h = RESOURCE_SEARCH.paramHelpers
   // Typeaheads
@@ -48,6 +48,9 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
     state: {
       th: {key: 'model', name: 'State'},
       td: {templateUrl: configFolder + '/event-state.html'}
+    },
+    price: {
+      th: {key: 'pricing.total', name: `Price ${CONSTANTS.currency}`}, td: {value: 'pricing.total', number: true}
     }
   }
   f.lastEvent.thDef = _.assign({default: true}, f.lastEvent.th)
@@ -467,8 +470,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           templateUrl: configFolder + '/resource-list-config-device'
         },
         table: {
-          th: [f.id.th, f['@type'].th, f.type.th, f.model.th, f.range.th, f.lastEvent.thDef, f.created.th],
-          td: [f.id.td, f['@type'].td, f.type.td, f.model.td, f.range.td, f.lastEvent.td, f.created.td]
+          th: [f.id.th, f['@type'].th, f.type.th, f.model.th, f.price.th, f.range.th, f.lastEvent.thDef, f.created.th],
+          td: [f.id.td, f['@type'].td, f.type.td, f.model.td, f.price.td, f.range.td, f.lastEvent.td, f.created.td]
         }
       },
       Lot: {

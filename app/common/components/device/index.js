@@ -2,6 +2,7 @@ require('angular-ui-bootstrap')
 require('angular-animate')
 require('angular-sanitize')
 require('angular-recursion')
+require('bower_components/angular-percentage-directive/percentage.js')
 
 module.exports = angular.module('common.components.device',
   [
@@ -16,7 +17,8 @@ module.exports = angular.module('common.components.device',
     require('./../authentication').name,
     require('./certificate').name,
     require('./../forms').name,
-    require('./../utilities').name
+    require('./../utilities').name,
+    'percentage'
   ])
   /**
    * @ngdoc directive

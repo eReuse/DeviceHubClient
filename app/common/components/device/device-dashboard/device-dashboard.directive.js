@@ -1,4 +1,5 @@
-function deviceDashboard (ResourceSettings, UNIT_CODES) {
+
+function deviceDashboard (ResourceSettings, UNIT_CODES, CONSTANTS) {
   return {
     template: require('./device-dashboard.directive.html'),
     restrict: 'E',
@@ -8,6 +9,11 @@ function deviceDashboard (ResourceSettings, UNIT_CODES) {
     link: $scope => {
       const manufacturerSettings = ResourceSettings('Manufacturer')
       const deviceSettings = ResourceSettings('Device')
+      $scope.currencyOptions = {
+        currency: CONSTANTS.currency,
+        val: 'standard',
+        roles: ['retailer', 'platform', 'refurbisher']
+      }
       $scope.hardDriveSizeUnit = UNIT_CODES[deviceSettings.schema.totalHardDriveSize.unitCode]
       $scope.ramSizeUnit = UNIT_CODES[deviceSettings.schema.totalRamSize.unitCode]
       $scope.appearance = deviceSettings.schema.condition.schema.appearance.schema.general.allowed_description

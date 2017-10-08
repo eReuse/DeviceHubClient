@@ -80,9 +80,12 @@
               <span ng-if="::td.humanize">
                 {{$root._.get(resource, td.value) | humanize}}
               </span>
-              <span ng-if="::!td.humanize">
-                {{$root._.get(resource, td.value) | limitTo: 19}}
-                <small>{{$root._.get(resource, td.value).length > 19? '&hellip;':''}}</small>
+              <span ng-if="::td.number">
+                {{$root._.get(resource, td.value) | number}}
+              </span>
+              <span ng-if="::!td.humanize && !td.number">
+                {{$root._.get(resource, td.value) | limitTo: 15}}
+                <small>{{$root._.get(resource, td.value).length > 15? '&hellip;':''}}</small>
               </span>
             </div>
             <div ng-if="::value && $root._.isDate(value)">{{::value | timeAgo}}</div>
