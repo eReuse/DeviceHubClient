@@ -56,12 +56,17 @@ class ResourceBreadcrumb {
    *
    * This method builds the new path to navigate to.
    * @param {Object} resource - A Resource.
+   * @param append
    */
-  go (resource) {
-    const i = _.findIndex(this.log, resource)
+  go (resource, append = true) {
     this.resources[resource['@type'] + this.FOLDER + resource._id] = resource // Add to cache
+    if (!append) {
+      this.log.length = 0
+      this.log.push({})
+    }
+    const i = _.findIndex(this.log, resource)
     // We only append a new /resource-id in the end of the url (eg, going deeper to the jerarchy) if the
-    // resource is not already in the path, in such case we go up to the jierarchy until our resource
+    // resource is not already in the path, in such case we go up to the hierarchy until our resource
     const path = this._logToPath(i === -1 ? this.log.concat([resource]) : _.take(this.log, i + 1))
     this.$state.go(this.STATE, {folderPath: path})
   }

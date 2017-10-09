@@ -107,7 +107,7 @@ class Session {
    */
   _afterGettingAccount (db) {
     this.role = new this.Role(this.account.role)
-    this._setActiveDb(db)
+    this.setActiveDb(db)
     this._defer.resolve(this.account)
   }
 
@@ -116,12 +116,14 @@ class Session {
    * @param {string} db - The new database. This method assumes the database exists and the user has access at it.
    * @throw URIError - The user has no access to the database.
    */
-  _setActiveDb (db) {
+  setActiveDb (db) {
     if (!_.includes(Object.keys(this.account.databases), db)) {
       throw URIError(`Account has no access to ${db}.`)
     }
-    this.db = db
-    this._callbacksForDatabaseChange.forEach(f => { f(db) })
+    if (this.db !== db) {
+      this.db = db
+      this._callbacksForDatabaseChange.forEach(f => { f(db) })
+    }
   }
 
   /**
@@ -132,7 +134,7 @@ class Session {
    * @return {Promise} - The $state.go promise
    */
   changeDb (db) {
-    this._setActiveDb(db)
+    this.setActiveDb(db)
     return this.$state.go('index.inventory', {db: db})
   }
 

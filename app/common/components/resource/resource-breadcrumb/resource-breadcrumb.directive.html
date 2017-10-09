@@ -10,8 +10,10 @@
     <a ng-if="resource._id && !$last" ng-click="goTo(resource)">
       {{resource | resourceTitle}}
     </a>
-    <a ng-if="!resource._id && !$last" ui-sref="index.inventory({})">
+    <!-- ui-router doesn't reload controller if the previous state was from index.inventory or a children -->
+    <a ng-if="!resource._id && !$last" ui-sref="index.inventory({})" ui-sref-opts="{reload: true}">
       My inventory
     </a>
   </li>
 </ol>
+

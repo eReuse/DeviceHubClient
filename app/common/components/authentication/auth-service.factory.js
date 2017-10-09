@@ -31,7 +31,7 @@ function authServiceFactory (Restangular, session, $state) {
     if (toState.name !== 'login') {
       if (session.isAccountSet()) { // User has performed login
         try {
-          session._setActiveDb(params.db)
+          session.setActiveDb(params.db)
         } catch (err) {
           event.preventDefault()
           $state.go('index.inventory', {db: session.account.defaultDatabase})

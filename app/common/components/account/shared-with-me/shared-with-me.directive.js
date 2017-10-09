@@ -22,10 +22,10 @@ function sharedWithMe (session, ResourceBreadcrumb) {
           if (session.db !== db) {
             session.changeDb(db).then(() => {
               // We wait for the first transition (db change) to happen before initiating another one
-              goToResource(sharedResource)
+              goToResource(sharedResource, false)
             })
           } else {
-            goToResource(sharedResource)
+            goToResource(sharedResource, false)
           }
           // We don't want some properties of the sharedResource object
         }
