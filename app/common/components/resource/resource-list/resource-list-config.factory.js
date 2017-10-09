@@ -41,7 +41,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
     },
     created: {th: {key: '_created', name: 'Created'}, td: {value: '_created'}},
     range: {
-      th: {key: 'condition.general.range', name: 'Range'},
+      th: {key: 'condition.general.score', name: 'Range'},
       td: {templateUrl: configFolder + '/device-range.html'}
     },
     model: {th: {key: 'model', name: 'Model'}, td: {value: 'model'}},
@@ -50,7 +50,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
       td: {templateUrl: configFolder + '/event-state.html'}
     },
     price: {
-      th: {key: 'pricing.total', name: `Price ${CONSTANTS.currency}`}, td: {value: 'pricing.total', number: true}
+      th: {key: 'pricing.total.standard', name: `Price ${CONSTANTS.currency}`},
+      td: {value: 'pricing.total.standard', number: true}
     }
   }
   f.lastEvent.thDef = _.assign({default: true}, f.lastEvent.th)
@@ -439,7 +440,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
               name: 'Range is at least',
               realKey: 'condition.general.range',
               select: conditionRange,
-              comparison: value => ({'$nin': _.takeWhile(conditionRange, v => v !== value)}),
+              comparison: value => ({$nin: _.takeWhile(conditionRange, v => v !== value), $ne: null}),
               description: 'Match devices that are of range or above.'
             },
             {

@@ -61,7 +61,7 @@
           <tr class="active">
             <td>Total</td>
             <td></td>
-            <td>{{::resource.pricing.total | currency: currencyOptions.currency}}</td>
+            <td>{{resource.pricing.total[currencyOptions.val] | currency: currencyOptions.currency}}</td>
           </tr>
         </tbody>
       </table>
