@@ -1,4 +1,4 @@
-function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notification, cerberusToFormly, $q) {
+function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notification, cerberusToFormly, Restangular) {
   const utils = require('./../../utils.js')
   const CannotSubmit = require('./cannot-submit.exception')
   const OPERATION = {
@@ -17,6 +17,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
      * @param {object} form - A form object containing a reference to formly's form.
      * @param {object} form.form - A formly form. It is ok if this is not set yet when creating
      * FormSchema, but it will need to be set when submitting. This is usual workflow when leading
+     * @param {object[]} form.fields - formly form's fields, usually from *cerberusToFormly* service.
      * with formly forms, as until the formly form is instantiated this value won't be populated.
      * @param {object} status - Flags of the submission.
      * @param {boolean} status.errorFromLocal - An error has been detected through validation in the browser prior
@@ -26,6 +27,9 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
      * @param {boolean} status.done - If the execution has done. Prior first execution is false too.
      * @param {boolean} status.succeeded - Flag set true when the execution is done successfully (HTTP 2XX).
      * @param {object} [parserOptions] - Options for cerberusToFormly. See it there.
+     * @property {object|undefined} _uploadsFile - Does this form upload a file? If yes, the schema of such field or
+     * undefined.
+     * API.
      */
     constructor (model, form, status, parserOptions = {}) {
       this.rSettings = ResourceSettings(model['@type'])
@@ -43,6 +47,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
         parserOptions.doNotUse = _.concat(parserOptions.doNotUse || [], this.rSettings.getSetting('doNotUse'))
       } catch (err) {}  // doNotUse not in getSetting
       this.fields = this.form.fields = cerberusToFormly.parse(model, parserOptions)
+      this._uploadsFile = _.find(this.fields, {type: 'upload'})
       this.submitForm = new SubmitForm(form, status)
     }
 
@@ -67,12 +72,20 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
      * @private
      */
     _submit (originalModel) {
-      let model = utils.copy(originalModel) // We are going to change stuff in model
+      const model = utils.copy(originalModel) // We are going to change stuff in model
       // Remove helper values todo necessary still?
-      for (let fieldName in model) if (_.includes(fieldName, 'exclude_')) delete model[fieldName]
+      for (const fieldName in model) if (_.includes(fieldName, 'exclude_')) delete model[fieldName]
       // Upload
-      let promise = 'put' in model ? model.put() : this.rSettings.server.post(model)
-        .then(this._succeedSubmissionFactory(OPERATION['put' in model ? 'put' : 'post'], model))
+      let promise
+      if ('put' in model) {
+        promise = model.put()
+      } else if (this._uploadsFile) {
+        const field = this._uploadsFile
+        promise = this.rSettings.server.postWithFiles(model, field.key, field.templateOptions.files)
+      } else {
+        promise = this.rSettings.server.post(model)
+      }
+      promise.then(this._succeedSubmissionFactory(OPERATION['put' in model ? 'put' : 'post'], model))
       this._final(promise)
       return promise
     }
@@ -88,7 +101,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
 
     _succeedSubmissionFactory (operationName, model) {
       return response => {
-        let resource = _.isUndefined(response) ? model : response // DELETE operations do not answer with the result
+        const resource = _.isUndefined(response) ? model : response // DELETE operations do not answer with the result
         Notification.success(utils.getResourceTitle(resource) + ' successfully ' + operationName + '.')
         $rootScope.$broadcast('submitted@' + resource['@type'])
         return response
@@ -100,6 +113,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
     }
 
   }
+
   return FormSchema
 }
 

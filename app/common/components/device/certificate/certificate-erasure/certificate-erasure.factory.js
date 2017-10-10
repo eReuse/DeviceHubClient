@@ -43,7 +43,7 @@ function certificateErasureFactory (CONSTANTS, CERTIFICATE_ERASURE_FACTORY_STRIN
    * @private
    */
   proto._introduction = function () {
-    var account = session.getAccount()
+    var account = session.account
     var content = [
       {
         columns: [

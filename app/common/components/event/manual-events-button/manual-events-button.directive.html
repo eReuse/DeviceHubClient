@@ -9,14 +9,14 @@
   </button>
   <ul uib-dropdown-menu role="menu" aria-labelledby="event-button">
     <li role="menuitem"
-        ng-repeat="eventSettings in events | orderBy:'settings.sink':true" ng-if="eventSettings.settings.manual"
+        ng-repeat="eventSettings in events | orderBy:'settings.sink':true" ng-if="::eventSettings.settings.manual"
         uib-tooltip-html="eventSettings.settings.shortDescription"
         tooltip-placement="right"
         tooltip-append-to-body="true"
     >
       <a ng-click="openModal(eventSettings.type, resources)">
         <resource-icon resource-type="{{::eventSettings.type}}" fill-to="true"></resource-icon>
-        {{eventSettings.humanName}}
+        {{::eventSettings.humanName}}
       </a>
     </li>
   </ul>

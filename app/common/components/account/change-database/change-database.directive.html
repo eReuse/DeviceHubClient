@@ -1,12 +1,19 @@
-<li ng-if="session._account.databases.length > 1" uib-dropdown>
-    <a uib-dropdown-toggle>
-        <i class="fa fa-database fa-fw fa-lg"></i>{{session.activeDatabase}}<span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu dropdown-menu-right">
-        <li role="menuitem" ng-repeat="database in session._account.databases | orderBy">
-            <a ng-click="session.setActiveDatabase(database, true)">
-                {{::database}}
-            </a>
-        </li>
-    </ul>
+<li ng-if="_.size(session.account.databases) > 1" uib-dropdown data-e2e="change-database">
+  <a uib-dropdown-toggle>
+    <i class="fa fa-database fa-fw fa-lg"></i>{{session.db}}<span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu dropdown-menu-right">
+    <li class="dropdown-header">My inventories</li>
+    <li role="menuitem" ng-repeat="db in ::dbs.full | orderBy">
+      <a ng-click="session.changeDb(db, true)">
+        {{::db}}
+      </a>
+    </li>
+    <li class="dropdown-header" ng-show="dbs.shared.length > 0">Other inventories</li>
+    <li role="menuitem" ng-repeat="db in ::dbs.shared | orderBy">
+      <a ng-click="session.changeDb(db)">
+        {{::db}}
+      </a>
+    </li>
+  </ul>
 </li>

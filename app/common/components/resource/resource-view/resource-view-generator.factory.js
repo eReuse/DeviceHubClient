@@ -9,6 +9,12 @@ function ResourceViewGeneratorFactory (RESOURCE_CONFIG, ResourceSettings, $compi
       return ResourceSettings(resourceType).getSetting(settingName)
     }
 
+    /**
+     *
+     * @param options
+     * @param $scope
+     * @returns {*} The $scope.
+     */
     static compile (options, $scope) {
       let view = angular.element(this._template(options, $scope))
       $compile(view)($scope)

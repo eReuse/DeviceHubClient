@@ -1,5 +1,5 @@
 const DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url', '_settings', 'hid']
-const GROUP_DO_NOT_USE = DO_NOT_USE.concat(['children', 'policies'])
+const GROUP_DO_NOT_USE = DO_NOT_USE.concat(['children', 'policies', 'perms', 'sharedWith'])
 
 /**
  * Specifies custom settings for the resources to be used through the app.
@@ -22,7 +22,10 @@ const v = {
   Lot: {view: 'resource-list', resourceType: 'Lot', name: 'Lots', resourceIcon: 'Lot'},
   Pallet: {view: 'resource-list', resourceType: 'Pallet', name: 'Pallets', resourceIcon: 'Pallet'},
   Package: {view: 'resource-list', resourceType: 'Package', name: 'Packages', resourceIcon: 'Package'},
-  Account: {view: 'resource-list', resourceType: 'Account', name: 'Accounts', resourceIcon: 'Account'}
+  Account: {view: 'resource-list', resourceType: 'Account', name: 'Accounts', resourceIcon: 'Account'},
+  Reserve: {view: 'reserve-view', name: 'Reserve', 'class': 'fill-height show', resourceIcon: 'devices:Reserve'},
+  Sell: {view: 'sell-view', name: 'Sell', 'class': 'fill-height show', resourceIcon: 'devices:Sell'},
+  DeviceDashboard: {view: 'device-dashboard', name: 'Dashboard', 'class': 'fill-height show', fa: 'fa-dashboard'}
 }
 const RESOURCE_CONFIG = {
   resources: {
@@ -39,16 +42,25 @@ const RESOURCE_CONFIG = {
     'devices:ProveUsage': {manual: true},
     'devices:ToDispose': {manual: true},
     'devices:Dispose': {manual: true},
+    'devices:Reserve': {
+      manual: true,
+      subviews: [v.Reserve, v.Device, v.Detail]
+    },
+    'devices:Sell': {
+      manual: true,
+      subviews: [v.Sell, v.Device, v.Detail]
+    },
     'devices:Snapshot': {
       doNotUse: ['debug', 'version', 'events', 'owners', 'components', 'version', 'snapshotSoftware', 'automatic',
         'offline', '_uuid', 'geo', 'elapsed', 'osInstallation', 'tests', 'inventory', 'date',
-        'autoUploaded', 'condition.general', 'condition.scoringSoftware', 'condition.created'].concat(DO_NOT_USE)
+        'autoUploaded', 'condition.general', 'condition.scoringSoftware', 'condition.created',
+        'group'].concat(DO_NOT_USE)
     },
     Device: {
       dataRelation: {
         label: 'Device id',
         keyFieldName: '_id',
-        filterFieldName: '_id',
+        filterFieldNames: ['_id'],
         labelFieldName: '_id',
         resourceType: 'Device'
       },
@@ -57,9 +69,9 @@ const RESOURCE_CONFIG = {
         subtitle: ['model', 'manufacturer']
       },
       // We pass a 'resource' object to a subview with, at least, @type.
-      subviews: [v.Event, v.Detail],
+      subviews: [v.DeviceDashboard, v.Event, v.Detail],
       doNotUse: DO_NOT_USE.concat(['events', 'owners', 'components', 'isUidSecured', 'public', 'icon', 'pid',
-        'labelId', 'placeholder', 'parent', 'place']),
+        'labelId', 'placeholder', 'parent', 'place', 'perms']),
       label: {
         fields: [
           'serialNumber', 'pid', 'model', 'manufacturer', 'labelId', 'hid', '_id', 'totalRamSize', 'totalHardDriveSize'
@@ -71,9 +83,17 @@ const RESOURCE_CONFIG = {
       _root: true
     },
     Event: {
-      view: {},
+      view: {title: ['@type', 'label'], subtitle: ['_id']},
       subviews: [v.Device, v.Detail],
       doNotUse: ['geo'].concat(DO_NOT_USE),
+      dataRelation: {
+        label: 'Event id',
+        keyFieldName: '_id',
+        filterFieldNames: ['_id'],
+        fieldType: 'typeahead',
+        labelFieldName: '_id',
+        resourceType: 'Event'
+      },
       _root: true
     },
     Account: {
@@ -190,7 +210,7 @@ const RESOURCE_CONFIG = {
     }
   },
   inventory: {
-    subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Pallet] // removed v.Account and v.Event
+    subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Pallet, v.Event]
   }
 }
 

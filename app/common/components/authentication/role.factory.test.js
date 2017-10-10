@@ -1,28 +1,29 @@
 require('./../../../../test/init.js')
 
-describe('Test Role', function () {
-  var Role
+describe('Test Role', () => {
+  let Role
 
   beforeEach(angular.mock.module(require('./../../../app').name))
+
   beforeEach(
     inject(function (_Role_) { // We inject it.
       Role = _Role_
     })
   )
 
-  it('should be defined', function () {
+  it('should be defined', () => {
     expect(Role).toBeDefined()
   })
-  it('should work', function () {
-    var employee = new Role('employee')
-    expect(employee.gt('basic')).toBeTrue()
-    expect(employee.gt(new Role('basic'))).toBeTrue()
-    expect(employee.le(new Role('admin'))).toBeTrue()
-    expect(employee.le('admin')).toBeTrue()
-    expect(employee.isManager()).toBeFalse()
-    var admin = new Role('admin')
-    expect(admin.gt(employee)).toBeTrue()
-    expect(admin.lt(employee)).toBeFalse()
-    expect(function () { admin.lt('foo') }).toThrowError(TypeError)
+
+  it('should work', () => {
+    const machine = new Role(Role.prototype.MACHINE)
+    expect(machine.gt(Role.prototype.USER)).toBeTrue()
+    expect(machine.gt(new Role(Role.prototype.USER))).toBeTrue()
+    expect(machine.le(new Role(Role.prototype.ADMIN))).toBeTrue()
+    expect(machine.le(Role.prototype.ADMIN)).toBeTrue()
+    const admin = new Role(Role.prototype.ADMIN)
+    expect(admin.gt(machine)).toBeTrue()
+    expect(admin.lt(machine)).toBeFalse()
+    expect(() => { admin.lt('foo') }).toThrowError(TypeError)
   })
 })

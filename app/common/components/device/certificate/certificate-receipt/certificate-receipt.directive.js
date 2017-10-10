@@ -7,7 +7,7 @@ function labelList (certificateReceiptFactory, ResourceSettings, session) {
       devices: '='
     },
     link: function ($scope) {
-      var account = session.getAccount()
+      var account = session.account
       // For 'form' param in formly, if we use form.form as in loginController it doesn't work, we need to use a
       // standalone var. Why?
       $scope.form = {

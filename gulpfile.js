@@ -24,6 +24,7 @@ const inlinesource = require('gulp-inline-source')
 const gulpProtractor = require('gulp-protractor')
 const karma = require('karma')
 const stringify = require('stringify')
+const sassUnicode = require('gulp-sass-unicode')
 
 const filePath = {
   destination: './dist',
@@ -68,7 +69,6 @@ const filePath = {
       './node_modules/jsonformatter/dist/json-formatter.min.css',
       './node_modules/angular-ui-notification/dist/angular-ui-notification.css',
       './node_modules/angular-chart.js/dist/angular-chart.css',
-      './node_modules/font-awesome/css/font-awesome.min.css',
       './bower_components/ngprogress/ngProgress.css'
     ]
   },
@@ -250,9 +250,10 @@ gulp.task('templates', function () {
 
 gulp.task('_sass', function () {
   return gulp.src([filePath.styles.sass, filePath.styles.src])
-    .pipe(sass({
-      outputStyle: 'compressed'
-    }).on('error', sass.logError))
+    .pipe(sass())
+    // Used to correctly compile glyphicons
+    // see https://github.com/sass/sass/issues/1395#issuecomment-211974664
+    .pipe(sassUnicode())
     .pipe(concat('app.css'))
     .pipe(gulp.dest(filePath.build.cssDest))
 })

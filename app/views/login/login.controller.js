@@ -1,4 +1,4 @@
-function loginController ($scope, $state, authService, CONSTANTS, SubmitForm, progressBar, $timeout) {
+function loginController ($scope, $state, authService, CONSTANTS, SubmitForm, progressBar, $timeout, session) {
   // note that we do not define form.form or form.options as it needs to be undefined for formly
   $scope.form = {
     fields: [
@@ -36,13 +36,13 @@ function loginController ($scope, $state, authService, CONSTANTS, SubmitForm, pr
       saveInBrowser: false
     },
     login: function (model) {
-      let submitForm = new SubmitForm($scope.form, $scope)
-      let credentials = _.pick(model, ['email', 'password'])
+      const submitForm = new SubmitForm($scope.form, $scope)
+      const credentials = _.pick(model, ['email', 'password'])
       if (submitForm.isValid()) {
         progressBar.start()
         submitForm.prepare()
-        let promise = authService.login(credentials, model.saveInBrowser).then(function () {
-          $state.go('index.inventory')
+        const promise = authService.login(credentials, model.saveInBrowser).then(function () {
+          $state.go('index.inventory', {db: session.db})
         }, setSubmissionError)
         submitForm.after(promise)
       }
@@ -79,6 +79,7 @@ function loginController ($scope, $state, authService, CONSTANTS, SubmitForm, pr
   window.progressSetVal(3)
   $scope.isCollapsed = true
   $timeout(() => { $scope.isCollapsed = false }, 50)
+  window.document.title = CONSTANTS.appName + ' login'
 }
 
 module.exports = loginController

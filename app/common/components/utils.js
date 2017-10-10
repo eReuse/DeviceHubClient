@@ -214,6 +214,18 @@ function getSetting (settings, rSettings, path) {
   return value
 }
 
+const perms = {
+  READ: 'r',
+  EDIT: 'e',
+  RESTRICTED_EDIT: 're',
+  ADMIN: 'ad',
+  ACCESS: 'ac',
+  PARTIAL_ACCESS: 'pa'
+}
+perms.RESOURCE_PERMS = new Set([perms.READ, perms.EDIT, perms.RESTRICTED_EDIT, perms.ADMIN])
+perms.DB_PERMS = new Set([perms.DB_PERMS, perms.PARTIAL_ACCESS, perms.ADMIN])
+perms.EXPLICIT_DB_PERMS = new Set([perms.ACCESS, perms.ADMIN])
+
 module.exports = {
   Naming: Naming,
   copy: copy,
@@ -224,5 +236,6 @@ module.exports = {
   NoPrefix: NoPrefix,
   setImageGetter: setImageGetter,
   Progress: Progress,
-  getSetting: getSetting
+  getSetting: getSetting,
+  perms: perms
 }

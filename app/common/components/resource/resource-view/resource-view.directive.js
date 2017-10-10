@@ -19,6 +19,7 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
     },
     compile: element => {
       return RecursionHelper.compile(element, ($scope, iElement) => {
+        let tabs  // We keep a reference of the tabs to be able to $destroy and replace them when changing resource
         if (!_.includes(TYPES, $scope.type)) {
           throw TypeError('ResourceView only accepts big, medium and small as types.')
         }
@@ -50,12 +51,16 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
             // first at all ensure variables in $scope subviews will use are ready
             if (!_.isEmpty($scope.resource)) $scope.model = cerberusToView.parse($scope.resource)
             // Gets the info for the view
-            let resourceType = _.get($scope, 'resource.@type')
+            const resourceType = _.get($scope, 'resource.@type')
             if (!_.isUndefined(resourceType)) $scope.view = Subview.getSetting(resourceType, 'view')
             // Generates the subviews
             $scope.tabs = {} // Stores for each tab if it is the active one
             $scope.tabs.active = 0  // Let's make the first tab the active one initially
-            iElement.find('#resource-view-body').html(Subview.generate($scope, resourceType))
+            // We need to manually destory the tabs and their children because we are replacing them through
+            // jquery (.html() function) and not through an angular way
+            if (tabs) tabs.isolateScope().$destroy()
+            tabs = Subview.generate($scope, resourceType)
+            iElement.find('#resource-view-body').html(tabs)
             // If small we use the resourceName
 
             if ($scope.type === BIG) {

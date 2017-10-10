@@ -1,6 +1,6 @@
 function typeDevices (resourceServerAggregations) {
   const Naming = require('./../../../utils').Naming
-  const server = resourceServerAggregations('devices', 'type')
+  const server = resourceServerAggregations('devices', 'types')
   return {
     templateUrl: require('./__init__').PATH + '/type-devices.directive.html',
     restrict: 'E',

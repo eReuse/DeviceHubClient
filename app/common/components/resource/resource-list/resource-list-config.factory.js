@@ -3,12 +3,14 @@
  * @param {RESOURCE_SEARCH} RESOURCE_SEARCH
  * @param {ResourceSettings} ResourceSettings
  */
-function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
+function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
   const utils = require('./../../utils')
   const h = RESOURCE_SEARCH.paramHelpers
   // Typeaheads
+  const deviceSettings = ResourceSettings('Device')
+  const conditionRange = deviceSettings.schema.condition.schema.general.schema.range.allowed
   const ACCOUNT_TYPEAHEAD = ResourceSettings('Account').getSetting('dataRelation')
-  const DEVICE_TYPEAHEAD = ResourceSettings('Device').getSetting('dataRelation')
+  const DEVICE_TYPEAHEAD = deviceSettings.getSetting('dataRelation')
   const LOT_TYPEAHEAD = ResourceSettings('Lot').getSetting('dataRelation')
   const PACKAGE_TYPEAHEAD = ResourceSettings('Package').getSetting('dataRelation')
   const PALLET_TYPEAHEAD = ResourceSettings('Pallet').getSetting('dataRelation')
@@ -25,7 +27,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
   const f = {
     id: {th: {key: '_id', name: 'Id'}, td: {value: '_id'}},
     label: {th: {key: 'label', name: 'Label'}, td: {value: 'label'}},
-    '@type': {th: {key: '@type', name: 'Type'}, td: {value: '@type'}},
+    '@type': {th: {key: '@type', name: 'Type'}, td: {value: '@type', humanize: true}},
+    type: {th: {key: 'type', name: 'Subtype'}, td: {value: 'type', humanize: true}},
     from: {th: {key: 'from', name: 'From client'}, td: {value: 'from.name'}},
     to: {th: {key: 'to', name: 'To client'}, td: {value: 'to.name'}},
     name: {th: {key: 'name', name: 'Name'}, td: {value: 'name'}},
@@ -36,7 +39,20 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
       th: {key: 'events._updated', name: 'Last event'},
       td: {templateUrl: configFolder + '/resource-button-device.html'}
     },
-    created: {th: {key: '_created', name: 'Created'}, td: {value: '_created'}}
+    created: {th: {key: '_created', name: 'Created'}, td: {value: '_created'}},
+    range: {
+      th: {key: 'condition.general.score', name: 'Range'},
+      td: {templateUrl: configFolder + '/device-range.html'}
+    },
+    model: {th: {key: 'model', name: 'Model'}, td: {value: 'model'}},
+    state: {
+      th: {key: 'model', name: 'State'},
+      td: {templateUrl: configFolder + '/event-state.html'}
+    },
+    price: {
+      th: {key: 'pricing.total.standard', name: `Price ${CONSTANTS.currency}`},
+      td: {value: 'pricing.total.standard', number: true}
+    }
   }
   f.lastEvent.thDef = _.assign({default: true}, f.lastEvent.th)
   f.updated.thDef = _.assign({default: true}, f.updated.th)
@@ -185,6 +201,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
         search: {
           params: RESOURCE_SEARCH.params,
           defaultParams: {'@type': 'Computer'},
+          defaultParamsForNotOwners: {}, // Params for the users that don't have explicit access to the DB
           defaultParamsWhenSubview: {} // If set, these default params will be used when resource-list is in a
           // subview (parent-resource is set)
         },
@@ -203,7 +220,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
             {key: 'label', name: 'Label', placeholder: 'Label...', realKey: 'labelId'},
             {
               key: '@type',
-              name: 'Type',
+              name: 'Type of device',
               select: 'Device',
               comparison: '=',
               description: 'The type of the device: Computer, Mobile, Computer monitor...'
@@ -261,11 +278,19 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
             },
             {
               key: 'event',
-              name: 'Has event',
+              name: 'Has event of type',
               select: 'devices:DeviceEvent',
               comparison: '=',
               realKey: 'events.@type',
               description: 'Match only devices that have a specific type of event.'
+            },
+            {
+              key: 'event_id',
+              name: 'Has event',
+              realKey: 'events._id',
+              placeholder: 'ID of event',
+              comparison: '=',
+              description: 'Match only devices that have a specific event.'
             },
             LAST_EVENT,
             {
@@ -409,21 +434,45 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
               boolean: true,
               comparison: value => ({[value ? '$nin' : '$in']: INACTIVE_EVENTS}),
               description: 'Match devices that are not recycled, disposed and not moved to another inventory.'
+            },
+            {
+              key: 'rangeIsAtLeast',
+              name: 'Range is at least',
+              realKey: 'condition.general.range',
+              select: conditionRange,
+              comparison: value => ({$nin: _.takeWhile(conditionRange, v => v !== value), $ne: null}),
+              description: 'Match devices that are of range or above.'
+            },
+            {
+              key: 'rangeIs',
+              name: 'Range is',
+              realKey: 'condition.general.range',
+              select: conditionRange,
+              comparison: '=',
+              description: 'Match devices that are of range.'
+            },
+            {
+              key: 'rangeIsAtMost',
+              name: 'Range is at most',
+              realKey: 'condition.general.range',
+              select: conditionRange,
+              comparison: value => ({'$nin': _.takeRightWhile(conditionRange, v => v !== value)}),
+              description: 'Match devices that are of range or below.'
             }
           ]),
-          defaultParams: {'is-component': 'No', 'groupInclusion': 'No', 'active': 'Yes'},  // todo
-          // create index in mongo
+          defaultParams: {'is-component': 'No', 'active': 'Yes'},
+          defaultParamsForNotOwners: {lastEvent: 'devices:Ready', rangeIsAtLeast: 'Low'},
           defaultParamsWhenSubview: {'is-component': 'No'},
           subResource: {
             Event: {key: 'device', field: '_id'}
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-device.html'
+          templateUrl: configFolder + '/resource-list-config-device'
         },
         table: {
-          th: [f.id.th, f.label.th, {key: 'model', name: 'Model'}, f.lastEvent.thDef, f.created.th],
-          td: [f.id.td, {value: 'labelId'}, {value: 'model'}, f.lastEvent.td, f.created.td]
+          th: [f.id.th, f['@type'].th, f.type.th, f.model.th, f.price.th, f.range.th, f.lastEvent.thDef, f.created.th],
+          td: [f.id.td, f['@type'].td, f.type.td, f.model.td, f.price.td, f.range.td, f.lastEvent.td, f.created.td]
         }
       },
       Lot: {
@@ -482,7 +531,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-group.html'
+          templateUrl: configFolder + '/resource-list-config-group'
         },
         table: {
           th: [f.label.th, f['@type'].th, f.from.th, f.to.th, f.lastEvent.th, f.updated.thDef],
@@ -511,7 +560,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-group.html'
+          templateUrl: configFolder + '/resource-list-config-group'
         },
         table: {
           th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef],
@@ -538,7 +587,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-group.html'
+          templateUrl: configFolder + '/resource-list-config-group'
         },
         table: {
           th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef, {key: 'size', name: 'Size'}],
@@ -577,7 +626,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-group.html'
+          templateUrl: configFolder + '/resource-list-config-group'
         },
         table: {
           th: [f.label.th, f.lastEvent.th, f.updated.thDef],
@@ -597,16 +646,10 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
             {
               key: 'device',
               name: 'Event of device',
+              realKey: 'dh$eventOfDevice',
               typeahead: DEVICE_TYPEAHEAD,
-              callback: (where, value) => {
-                if (!('$or' in where)) where.$or = []
-                where.$or = where.$or.concat([
-                  {device: value},
-                  {devices: {$in: [value]}},
-                  {components: {$in: [value]}}
-                ])
-              },
-              placeholder: 'The id of the device'
+              comparison: '=',
+              placeholder: 'System ID of the device.'
             },
             {
               key: 'place',
@@ -618,15 +661,15 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           ]),
           defaultParams: {},
           subResource: {
-            Device: {key: 'device', field: '_id'}
+            Device: {key: 'event_id', field: '_id'}
           }
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-event.html'
+          templateUrl: configFolder + '/resource-list-config-event'
         },
         table: {
-          th: [f.id.th, f.label.th, f['@type'].th, f.updated.thDef],
-          td: [f.id.td, f.label.td, f['@type'].td, f.updated.td]
+          th: [f.id.th, f.label.th, f['@type'].th, f.state.th, f.updated.thDef],
+          td: [f.id.td, f.label.td, f['@type'].td, f.state.td, f.updated.td]
         }
       },
       Account: {
@@ -649,7 +692,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings) {
           defaultParams: {}
         },
         buttons: {
-          templateUrl: configFolder + '/resource-list-config-account.html'
+          templateUrl: configFolder + '/resource-list-config-account'
         },
         table: {
           th: [f.email.th, f.name.th, f.organization.th, f.updated.thDef],

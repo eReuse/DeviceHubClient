@@ -1,6 +1,5 @@
 require('angular-ui-bootstrap')
 require('angular-recursion')
-require('angular-gravatar')
 
 module.exports = angular.module('common.components.accounts',
   [
@@ -8,11 +7,10 @@ module.exports = angular.module('common.components.accounts',
     'ui.bootstrap',
     require('./../../constants/').name,
     require('./../resource').name,
-    'RecursionHelper',
-    'ui.gravatar'
+    'RecursionHelper'
   ])
-.directive('userButton', require('./user-button/user-button.directive.js'))
-.controller('userModalCtrl', require('./user-modal/user-modal.controller.js'))
-.directive('accountRole', require('./account-role/account-role.directive.js'))
-.directive('changeDatabase', require('./change-database/change-database.directive.js'))
-.directive('accountView', require('./account-view/account-view.directive.js'))
+  .directive('userButton', require('./user-button/user-button.directive.js'))
+  .directive('accountRole', require('./account-role/account-role.directive.js'))
+  .directive('changeDatabase', require('./change-database/change-database.directive.js'))
+  .directive('accountView', require('./account-view/account-view.directive.js'))
+  .directive('sharedWithMe', require('./shared-with-me/shared-with-me.directive'))

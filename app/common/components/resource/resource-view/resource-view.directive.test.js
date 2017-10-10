@@ -21,7 +21,7 @@ describe('Test ResourceView', function () {
   propagateSchemaChange()
   beforeEach(inject(function (_ResourceServer_, _session_) {
     session = _session_
-    session.setActiveDatabase('db1', false)
+    //session.setActiveDatabase('db1', false)
   }))
   describe('Forms-schema with events', function () {
     testCreateFormSchema('Device', 'device-view')

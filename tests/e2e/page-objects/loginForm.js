@@ -1,25 +1,33 @@
-const _ = require('lodash')
+const Base = require('./base')
 
-class LoginForm {
+class LoginForm extends Base {
 
   constructor () {
-    this.email = element(by.id('formly_1_input_email_0'))
-    this.password = element(by.id('formly_1_input_password_1'))
-    this.submit = element(by.css('#loginForm [type=submit]'))
+    super()
+    this.form = $('form#loginForm')
+    this.email = this.form.$('input[type=email]')
+    this.password = this.form.$('input[type=password]')
+    this.submit = this.form.$('[type=submit]')
+
+    this.userButton = $('#user-button')
+    this.logoutButton = this.userButton.$('[ng-click="logout()"]')
   }
 
-  get () {
+  login (account) {
     browser.get('index.html')
+    this.email.sendKeys(account.credentials.email)
+    this.password.sendKeys(account.credentials.password)
+    return this.submit.click().then(() => {
+      return this.waitForUrl('inventories', 'Inventory is not loaded.', 3000)
+    })
   }
 
-  waiUntilInventoryLoaded () {
-    function urlIsInventory () {
-      return browser.getCurrentUrl().then(url => _.includes(url, 'inventory'))
-    }
-
-    return browser.wait(urlIsInventory, 3000, 'Inventory is not loaded.')
+  logout () {
+    this.userButton.click()
+    this.waitPresenceFor(this.logoutButton, 'The logout button should appear')
+    this.logoutButton.click()
+    this.waitPresenceFor(this.email, 'The login email should appear')
   }
-
 }
 
 module.exports = LoginForm

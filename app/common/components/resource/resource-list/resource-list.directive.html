@@ -15,7 +15,7 @@
        ng-mouseleave="hoverScreener = false"
   >
     <div ng-show="selector.inList.length == 0"></div>
-    <div ng-include="config.buttons.templateUrl"></div>
+    <div ng-include="config.buttons.templateUrl + (session.hasExplicitPerms()? '' : '-shared') + '.html'"></div>
   </div>
 </div>
 
@@ -74,13 +74,21 @@
               ng-dblclick="subResource.openFull(resource)"
               ng-init="value = $root._.get(resource, td.value)"
           >
-            <div ng-if="td.templateUrl" ng-include="td.templateUrl"></div>
-            <div ng-if="value && !$root._.isDate(value)">
+            <div ng-if="::td.templateUrl" ng-include="td.templateUrl"></div>
+            <div ng-if="::value && !$root._.isDate(value)">
               <!-- We cannot use the value from ng-init if we want it to be updateable -->
-              {{(resource[td.value] || '') | limitTo: 19}}
-              <small>{{(resource[td.value] || '') > 19? '&hellip;':''}}</small>
+              <span ng-if="::td.humanize">
+                {{$root._.get(resource, td.value) | humanize}}
+              </span>
+              <span ng-if="::td.number">
+                {{$root._.get(resource, td.value) | number}}
+              </span>
+              <span ng-if="::!td.humanize && !td.number">
+                {{$root._.get(resource, td.value) | limitTo: 15}}
+                <small>{{$root._.get(resource, td.value).length > 15? '&hellip;':''}}</small>
+              </span>
             </div>
-            <div ng-if="value && $root._.isDate(value)">{{::value | timeAgo}}</div>
+            <div ng-if="::value && $root._.isDate(value)">{{::value | timeAgo}}</div>
           </td>
           <td ng-click="$evalAsync(subResource.toggle(resource))"
               ng-dblclick="subResource.openFull(resource)"

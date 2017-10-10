@@ -2,6 +2,7 @@ require('angular-ui-bootstrap')
 require('angular-animate')
 require('angular-sanitize')
 require('angular-recursion')
+require('bower_components/angular-percentage-directive/percentage.js')
 
 module.exports = angular.module('common.components.device',
   [
@@ -16,7 +17,8 @@ module.exports = angular.module('common.components.device',
     require('./../authentication').name,
     require('./certificate').name,
     require('./../forms').name,
-    require('./../utilities').name
+    require('./../utilities').name,
+    'percentage'
   ])
   /**
    * @ngdoc directive
@@ -38,8 +40,8 @@ module.exports = angular.module('common.components.device',
    * @description Shows a button that lets the user to register a device. This directive calls registerModalCtrl.
    */
   .directive('computerSnapshotError', require('./computer-snapshot-modal/computer-snapshot-error/computer-snapshot-error.directive'))
-  .directive('share', require('./share/share.directive'))
-  .controller('shareModalCtrl', require('./share/share-modal.controller'))
   .factory('SnapshotFormSchema', require('./snapshot/snapshot.form-schema.factory'))
   .factory('ComputerSnapshotFormSchema', require('./computer-snapshot-modal/computer-snapshot.form-schema.factory'))
   .config(require('./computer-snapshot-modal/computer-snapshot-modal.config'))
+  .directive('deviceDashboard', require('./device-dashboard/device-dashboard.directive'))
+  .directive('deviceRange', require('./device-range.directive'))

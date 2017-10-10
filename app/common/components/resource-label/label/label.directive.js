@@ -1,4 +1,3 @@
-/* eslint-disable yoda */
 function label (cerberusToView) {
   return {
     template: require('./label.directive.html'),

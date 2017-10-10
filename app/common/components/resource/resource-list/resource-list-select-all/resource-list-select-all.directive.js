@@ -6,7 +6,7 @@
  */
 function resourceListSelectAll () {
   return {
-    templateUrl: require('./__init__').PATH + '/resource-list-select-all.directive.html',
+    template: require('./resource-list-select-all.directive.html'),
     restrict: 'E',
     scope: false, // We are using the same parent's scope
     link: function ($scope) {

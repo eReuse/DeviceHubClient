@@ -18,7 +18,7 @@ function testIndexDevicesView () {
   beforeEach(function () {
     callable = {foo: _.noop}
     spyOn(callable, 'foo')
-    session.callWhenDatabaseChanges(callable.foo)
+    session.callWhenDbChanges(callable.foo)
   })
 
   it('sets to the view when logged in', function () {

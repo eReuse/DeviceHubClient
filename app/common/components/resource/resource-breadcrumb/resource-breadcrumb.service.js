@@ -23,7 +23,8 @@ const utils = require('./../../utils')
  * @prop {{}} objects - Internal. A cache of full resources used for paths in the lifetime of the app.
  */
 class ResourceBreadcrumb {
-  constructor ($rootScope, $state) {
+  constructor ($rootScope, $state, session) {
+    const self = this
     this.STATE = 'index.inventory.resource'
     this.$state = $state
     this.FOLDER = '|' // todo new ui-router versions allows us to use '/'
@@ -31,30 +32,41 @@ class ResourceBreadcrumb {
     this.log = [{}] // Default view with inventory
     this.path = ''
     this.resources = {}
+    this.session = session
     if ($state.current.name === this.STATE && $state.params.folderPath) {
       // When the service is created we can already be in a resource view,
       // if the user manually set the URL in the browser
       this._assign($state.params.folderPath)
+    } else if ($state.current.name === 'index.inventory') {
+      this._assign('')
     }
     $rootScope.$on('$stateChangeSuccess', (_, toState, toParams) => {
       // We listen for successful changes in the state (URL)
       // If we navigate to a resource state we assign our path to the breadcrumb
       // Otherwise we reset the breadcrumb by passing an empty string
-      this._assign(toState.name === this.STATE ? toParams.folderPath : '')
+      self._assign(toState.name === this.STATE ? toParams.folderPath : '')
+    })
+    session.callWhenDbChanges(function resetPath () {
+      self._assign('') // Reset the path when the database changes, so we start clean
     })
   }
 
   /**
-   * Goes or opens a resource, changing angular-ui-router's state.
+   * Goes (eg: opens) a resource, changing angular-ui-router's state.
    *
    * This method builds the new path to navigate to.
    * @param {Object} resource - A Resource.
+   * @param append
    */
-  go (resource) {
-    const i = _.findIndex(this.log, resource)
+  go (resource, append = true) {
     this.resources[resource['@type'] + this.FOLDER + resource._id] = resource // Add to cache
+    if (!append) {
+      this.log.length = 0
+      this.log.push({})
+    }
+    const i = _.findIndex(this.log, resource)
     // We only append a new /resource-id in the end of the url (eg, going deeper to the jerarchy) if the
-    // resource is not already in the path, in such case we go up to the jierarchy until our resource
+    // resource is not already in the path, in such case we go up to the hierarchy until our resource
     const path = this._logToPath(i === -1 ? this.log.concat([resource]) : _.take(this.log, i + 1))
     this.$state.go(this.STATE, {folderPath: path})
   }
@@ -96,6 +108,9 @@ class ResourceBreadcrumb {
     this.path = path
     this.log.length = 0 // We reset the log
     _.assign(this.log, this._pathToLog(this.path))
+    window.document.title = this.log.length === 1
+      ? 'Inventory of ' + this.session.db
+      : utils.getResourceTitle(_.last(this.log)) + ' – ' + this.session.db
   }
 }
 

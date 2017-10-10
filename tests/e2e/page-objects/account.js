@@ -1,10 +1,8 @@
 class Account {
-  constructor () {
-    this.userButton = $('#user-button')
-    this.logoutButton = this.userButton.$('[ng-click="logout()"]')
+  constructor (email = 'a@a.a', password = '1234') {
     this.credentials = {
-      email: 'a@a.a',
-      password: '1234'
+      email: email,
+      password: password
     }
   }
 }

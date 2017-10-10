@@ -1,6 +1,6 @@
 function shieldStatesRun (authService, $rootScope) {
-  $rootScope.$on('$stateChangeStart', function (event, next) {
-    authService.shieldStates(event, next)
+  $rootScope.$on('$stateChangeStart', (event, next, params) => {
+    authService.shieldStates(event, next, params)
   })
 }
 

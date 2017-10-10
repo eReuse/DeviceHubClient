@@ -1,45 +1,48 @@
 function RoleFactory () {
-  function Role (representation) {
-    if (_.includes(this.ROLES, representation)) {
-      this.role = representation
-    } else {
-      throw TypeError(representation + ' is not a role.')
+  class Role {
+    constructor (role) {
+      if (!_.includes(this.ROLES, role)) throw TypeError(role + ' is not a role.')
+      this.role = role
+    }
+
+    lt (other) {
+      return this._i(this.role) < this._i(other)
+    }
+
+    le (other) {
+      return this._i(this.role) <= this._i(other)
+    }
+
+    gt (other) {
+      return !this.le(other)
+    }
+
+    ge (other) {
+      return !this.lt(other)
+    }
+
+    eq (other) {
+      return this._i(this.role) === this._i(other)
+    }
+
+    neq (other) {
+      return !this.eq(other)
+    }
+
+    _i (role) {
+      return this.ROLES.indexOf(_.isString(role) ? (new Role(role)).role : role.role)
     }
   }
 
-  var proto = Role.prototype
-  proto.BASIC = 'basic'
-  proto.AMATEUR = 'amateur'
-  proto.EMPLOYEE = 'employee'
-  proto.ADMIN = 'admin'
-  proto.SUPERUSER = 'superuser'
-  proto.ROLES = [proto.BASIC, proto.AMATEUR, proto.EMPLOYEE, proto.ADMIN, proto.SUPERUSER]
+  const proto = Role.prototype
+  proto.MACHINE = 'm'
+  proto.USER = 'u'
+  proto.SUPERMACHINE = 'sm'
+  proto.ADMIN = 'a'
+  proto.SUPERUSER = 'su'
+  proto.ROLES = [proto.MACHINE, proto.USER, proto.SUPERMACHINE, proto.ADMIN, proto.SUPERUSER]
   proto.MANAGERS = [proto.ADMIN, proto.SUPERUSER]
-
-  proto.isManager = function () {
-    return _.includes(this.MANAGERS, this.role)
-  }
-  proto.lt = function (other) {
-    return this._getIndexOfRole(this.role) < this._getIndexOfRole(other)
-  }
-  proto.le = function (other) {
-    return this._getIndexOfRole(this.role) <= this._getIndexOfRole(other)
-  }
-  proto.gt = function (other) {
-    return !this.le(other)
-  }
-  proto.ge = function (other) {
-    return !this.lt(other)
-  }
-  proto.eq = function (other) {
-    return this._getIndexOfRole(this.role) === this._getIndexOfRole(other)
-  }
-  proto.neq = function (other) {
-    return !this.eq(other)
-  }
-  proto._getIndexOfRole = function (role) {
-    return this.ROLES.indexOf(_.isString(role) ? (new Role(role)).role : role.role)
-  }
+  proto.MACHINES = [proto.MACHINE, proto.SUPERMACHINE]
 
   return Role
 }

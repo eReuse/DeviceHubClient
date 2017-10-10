@@ -8,13 +8,14 @@
  * @param {ResourceSettings} ResourceSettings
  * @param {progressBar} progressBar
  * @param {ResourceBreadcrumb} ResourceBreadcrumb
+ * @param {Session} session
  */
 function resourceList (resourceListConfig, ResourceListGetter, ResourceListGetterBig, ResourceListSelector,
-                       ResourceListSelectorBig, ResourceSettings, progressBar, ResourceBreadcrumb) {
+                       ResourceListSelectorBig, ResourceSettings, progressBar, ResourceBreadcrumb, session) {
   const utils = require('./../../utils.js')
-  const PATH = require('./__init__').PATH
+  const PARENT_PATH = require('./../__init__').PATH
   return {
-    templateUrl: PATH + '/resource-list.directive.html',
+    template: require('./resource-list.directive.html'),
     restrict: 'E',
     scope: {
       // The parent resource. If it does not have @type, then we are the list of the main inventory view.
@@ -25,6 +26,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
     link: {
       // Note that we load on 'pre' to initialize before our child (or inner) directives so they get real config values
       pre: $scope => {
+        $scope.session = session
         const resourceType = $scope.resourceType
         $scope.resourceName = utils.Naming.resource(resourceType)
         if (!resourceType) throw TypeError('resourceList needs a "resourceType" set, not ' + resourceType)
@@ -32,6 +34,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         progressBar.start() // resourceListGetter.getResources will call this too, but doing it here we avoid delay
         const config = _.cloneDeep(resourceListConfig.views[resourceType])
         if (_.isUndefined(config)) throw ReferenceError(resourceType + ' has no config.')
+        if (!session.hasExplicitPerms()) _.assign(config.search.defaultParams, config.search.defaultParamsForNotOwners)
         $scope.resources = [] // Do never directly assign (r=[]) to 'resources' as modules depend of its reference
 
         /**
@@ -103,7 +106,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         const parentType = _.get($scope, 'parentResource.@type')
         if (parentType) {
           if (config.search.defaultParamsWhenSubview) {
-            config.search.defaultParams = config.search.defaultParamsWhenSubview
+            _.assign(config.search.defaultParams, config.search.defaultParamsWhenSubview)
+            if (!session.hasExplicitPerms()) {
+              _.assign(config.search.defaultParams, config.search.defaultParamsForNotOwners)
+            }
           }
           // no need to _.clone this setting as we do not modify it
           const path = 'search.subResource.' + resourceType
@@ -150,7 +156,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         if ($scope.type === 'medium') {
           resourceListGetter.callbackOnGetting((resources) => {
             $scope.popovers.enable = true
-            $scope.popovers.templateUrl = require('./../__init__').PATH + '/resource-button/resource-button.popover.directive.html'
+            $scope.popovers.templateUrl = PARENT_PATH + '/resource-button/resource-button.popover.directive.html'
             _.forEach(resources, resource => {
               $scope.popovers[resource._id] = {
                 isOpen: false,
@@ -177,7 +183,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         }
 
         if ($scope.type === 'big') {
-          $scope.$on('refresh@deviceHub', hardReload)
           $scope.$on('submitted@' + resourceType, hardReload)
           // We register ourselves for any event type, excluding Snapshot if the list is not about devices
           let eventTypes = ResourceSettings('Event').subResourcesNames

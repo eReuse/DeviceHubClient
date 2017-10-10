@@ -1,6 +1,6 @@
 function toolsButton (CONSTANTS) {
   return {
-    templateUrl: window.COMPONENTS + '/tools/tools-button.directive.html',
+    template: require('./tools-button.directive.html'),
     restrict: 'E',
     replace: true,
     link: function ($scope) {
