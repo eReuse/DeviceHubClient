@@ -18,14 +18,15 @@ function deviceRange () {
       score: '='
     },
     link: $scope => {
+      // todo take the values from the server
       function conversion (newV) {
-        if (newV <= 2) {
+        if (newV < 2) {
           $scope.range = 'VeryLow'
-        } else if (newV <= 2.5) {
+        } else if (newV < 3) {
           $scope.range = 'Low'
-        } else if (newV <= 3.25) {
+        } else if (newV < 4) {
           $scope.range = 'Medium'
-        } else if (newV > 3.25) {
+        } else if (newV >= 4) {
           $scope.range = 'High'
         } else {
           $scope.range = '?'
