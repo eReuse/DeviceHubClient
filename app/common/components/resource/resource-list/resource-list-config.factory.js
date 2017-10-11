@@ -193,7 +193,6 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
     name: 'Has Place',
     typeahead: _.assign({}, PLACE_TYPEAHEAD, {keyFieldName: 'ancestors'})
   }
-  const INACTIVE_EVENTS = ['devices:Recycle', 'devices:Dispose', 'devices:Migrate']
 
   return {
     views: {
@@ -429,10 +428,10 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
             {
               key: 'active',
               name: 'Active',
-              realKey: 'events.@type',
+              realKey: 'dh$active',
               select: ['Yes', 'No'],
               boolean: true,
-              comparison: value => ({[value ? '$nin' : '$in']: INACTIVE_EVENTS}),
+              comparison: '=',
               description: 'Match devices that are not recycled, disposed and not moved to another inventory.'
             },
             {
