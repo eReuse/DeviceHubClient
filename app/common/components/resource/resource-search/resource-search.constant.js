@@ -5,7 +5,7 @@ const RESOURCE_SEARCH = {
     {key: 'label', name: 'Label', placeholder: 'Label...'},
     {
       key: '_created',
-      name: 'Registered in before or eq',
+      name: 'Created in before or eq',
       date: true,
       comparison: '<=',
       placeholder: datePlaceholder,
@@ -13,7 +13,7 @@ const RESOURCE_SEARCH = {
     },
     {
       key: '_createdAfter',
-      name: 'Registered in after or eq',
+      name: 'Created in after or eq',
       date: true,
       comparison: '>=',
       realKey: '_created',
