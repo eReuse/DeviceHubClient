@@ -75,40 +75,30 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
   const INSIDE_LOT = {
     key: 'lotIsAncestor',
     name: 'Inside of lot',
-    typeahead: LOT_TYPEAHEAD,
-    callback: (where, value) => {
-      if (!('$or' in where)) where.$or = []
-      where.$or = where.$or.concat(getIsAncestor('Lot', value))
-      where.$or.push({ancestors: {$elemMatch: {'@type': 'IncomingLot', _id: value}}})
-      where.$or.push({ancestors: {$elemMatch: {'@type': 'OutgoingLot', _id: value}}})
-    }
+    realKey: 'dh$insideLot',
+    comparison: '=',
+    typeahead: LOT_TYPEAHEAD
   }
   const INSIDE_PACKAGE = {
     key: 'packageIsAncestor',
     name: 'Inside of package',
-    typeahead: PACKAGE_TYPEAHEAD,
-    callback: (where, value) => {
-      if (!('$or' in where)) where.$or = []
-      where.$or = where.$or.concat(getIsAncestor('Package', value))
-    }
+    realKey: 'dh$insidePackage',
+    comparison: '=',
+    typeahead: PACKAGE_TYPEAHEAD
   }
   const INSIDE_PALLET = {
     key: 'palletIsAncestor',
     name: 'Inside of pallet',
-    typeahead: PALLET_TYPEAHEAD,
-    callback: (where, value) => {
-      if (!('$or' in where)) where.$or = []
-      where.$or = where.$or.concat(getIsAncestor('Pallet', value))
-    }
+    realKey: 'dh$insidePallet',
+    comparison: '=',
+    typeahead: PALLET_TYPEAHEAD
   }
   const INSIDE_PLACE = {
     key: 'placeIsAncestor',
     name: 'Inside of place',
-    typeahead: PLACE_TYPEAHEAD,
-    callback: (where, value) => {
-      if (!('$or' in where)) where.$or = []
-      where.$or = where.$or.concat(getIsAncestor('Place', value))
-    }
+    realKey: 'dh$insidePlace',
+    comparison: '=',
+    typeahead: PLACE_TYPEAHEAD
   }
   const OUTSIDE_LOT = {
     key: 'lotIsNotAncestor',
@@ -157,8 +147,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
       const inclusion = value === 'Yes'
       const cond = inclusion ? '$or' : '$and'
       const func = inclusion ? ancestorOfType : notAncestorOfType
-      if (!(cond in where)) where[cond] = []
-      _.arrayExtend(where[cond], _.flatMap(RSettings('Group').subResourcesNames, type => func(type, RSettings)))
+      if (!(cond in where)) where['$and'] = []
+      _.arrayExtend(where['$'], _.flatMap(RSettings('Group').subResourcesNames, type => func(type, RSettings)))
     }
   }
 
