@@ -183,7 +183,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         }
 
         if ($scope.type === 'big') {
-          $scope.$on('submitted@' + resourceType, hardReload)
+          ResourceSettings(resourceType).types.forEach(type => { $scope.$on('submitted@' + type, hardReload) })
           // We register ourselves for any event type, excluding Snapshot if the list is not about devices
           let eventTypes = ResourceSettings('Event').subResourcesNames
           if (resourceType !== 'Device') eventTypes = _.without(eventTypes, 'devices:Snapshot', 'devices:Register')
