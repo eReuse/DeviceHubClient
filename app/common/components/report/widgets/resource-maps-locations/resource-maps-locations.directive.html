@@ -1,5 +1,6 @@
 <div ng-if="loaded">
-  <ui-gmap-google-map draggable="false"
+  <ui-gmap-google-map ng-if="map.markers.models.length"
+                      draggable="false"
                       pan="true"
                       center="map.center"
                       zoom="map.zoom"
@@ -26,7 +27,7 @@
     >
     </ui-gmap-window>
   </ui-gmap-google-map>
-  <div ng-if="map.markers.models.length == 0" class="text-center">
+  <div ng-if="!map.markers.models.length" class="text-center">
     You don't have geolocated devices.
   </div>
 </div>
