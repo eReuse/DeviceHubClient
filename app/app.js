@@ -12,21 +12,21 @@ module.exports = window.angular.module('deviceHub', [
     ($urlRouterProvider, $stateProvider) => {
       $stateProvider.state('index', {
         url: '',
-        templateUrl: 'views/index/index.controller.html',
+        template: require('./views/index/index.controller.html'),
         abstract: true
       }).state('index.inventory', {
         url: '/inventories/:db',
-        templateUrl: 'views/inventory/inventory.controller.html',
+        template: require('./views/inventory/inventory.controller.html'),
         controller: 'inventoryCtrl as inCl',
         resolve: {schemaLoaded: utils.schemaIsLoaded}
       }).state('index.inventory.resource', {
         url: "/{folderPath:[a-zA-Z0-9-.'_|]*}?filters",
-        templateUrl: 'views/inventory/inventory.controller.html',
+        template: require('./views/inventory/inventory.controller.html'),
         controller: 'inventoryCtrl as inCl',
         resolve: {schemaLoaded: utils.schemaIsLoaded}
       }).state('login', {
         url: '/login',
-        templateUrl: 'views/login/login.controller.html',
+        template: require('./views/login/login.controller.html'),
         controller: 'loginCtrl as LnCl'
       }).state('redirect', {
         url: '/',
