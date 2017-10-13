@@ -19,11 +19,12 @@ const utils = require('./../utils')
  * @property {Role} role - The role of the account.
  */
 class Session {
-  constructor ($q, $rootScope, Role, $state) {
+  constructor ($q, $rootScope, Role, $state, Restangular) {
     this.ACCOUNT_STORAGE = 'account'
     this.Role = Role
     this.$state = $state
     this.$q = $q
+    this.Restangular = Restangular
 
     this._defer = $q.defer()
     this.loaded = this._defer.promise
@@ -80,6 +81,7 @@ class Session {
     if (account === null) throw Error('No account in the browser')
     this.account = JSON.parse(account)
     this._afterGettingAccount(db)
+    this.updateAccount()
   }
 
   /**
@@ -152,6 +154,26 @@ class Session {
    */
   hasExplicitPerms () {
     return utils.perms.EXPLICIT_DB_PERMS.has(this.account.databases[this.db])
+  }
+
+  /**
+   * Performs logout, reloading the app to the login screen.
+   */
+  logout () {
+    this.destroy()
+    this.$state.go('login')
+    // We could avoid reloading if we had a way to reset promises like the ones used in schema or session
+    location.reload(false)
+  }
+
+  updateAccount () {
+    const headers = {'Authorization': 'Basic ' + this.account.token}
+    this.Restangular.one('accounts', this.account.email).get({}, headers).then(account => {
+      _.assignIn(this._account, account)
+    }).catch(error => {
+      if (error.status === 401) this.logout()
+      throw error
+    })
   }
 
 }
