@@ -1,6 +1,6 @@
-function inventoryDashboard (resourceServerAggregations, CONSTANTS) {
+function inventoryDashboard (CONSTANTS) {
   return {
-    templateUrl: require('./__init__').PATH + '/inventory-dashboard.directive.html',
+    template: require('./inventory-dashboard.directive.html'),
     restrict: 'E',
     scope: {
       resource: '=' // One-way data-binding

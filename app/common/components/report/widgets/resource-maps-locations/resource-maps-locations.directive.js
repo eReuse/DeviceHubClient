@@ -6,15 +6,17 @@ function resourceMapsLocations (ResourceSettings) {
     'minimumClusterSize': 2
   }
   return {
-    templateUrl: require('./__init__').PATH + '/resource-maps-locations.directive.html',
+    template: require('./resource-maps-locations.directive.html'),
     restrict: 'E',
     scope: {},
     link: {
       pre: $scope => {
+        const promise = ResourceSettings('Event').server.getList({where: {'geo': {'$exists': true}}})
+        promise.then(() => { $scope.loaded = true })
         $scope.key = $scope.key || 'geo'
         let map = {
           markers: {
-            models: ResourceSettings('Event').server.getList({where: {'geo': {'$exists': true}}}).$object,
+            models: promise.$object,
             clusterOptions: CLUSTER_OPTIONS,
             events: {
               click: (markers, eventName, model) => {
