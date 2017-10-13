@@ -40,8 +40,12 @@ function groupResourceSubmitterFactory (SubmitForm, ResourceSettings) {
             ? self.children.union(group.children[rName]).value()
             : self.children.difference(group.children[rName]).value()
           const promise = group.patch({'@type': group['@type'], 'children': group.children}).then(self.success)
-          const op = self.addingResources ? 'added or moved' : 'removed'
-          self.submitForm.after(promise, `The items have been ${op} from ${self.gSettings.humanName}.`)
+          const humanName = self.gSettings.humanName
+          self.submitForm.after(promise,
+            `The items have been ${self.addingResources ? 'added or moved' : 'removed'} from ${humanName}.`,
+            `We couldn't ${self.addingResources ? 'add or move' : 'remove'} from ${humanName}.
+             Ensure you have permissions on all devices.`
+          )
         })
       }
     }
