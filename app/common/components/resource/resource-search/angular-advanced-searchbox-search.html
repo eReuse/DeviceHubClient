@@ -62,7 +62,7 @@
            placeholder="{{placeholder}}"
            ng-focus="focus = true"
            ng-blur="focus = false"
-           uib-typeahead="parameter as parameter.name for parameter in parameters | filter:{name:$viewValue} | limitTo:8"
+           uib-typeahead="parameter as parameter.name for parameter in parameters | filter:{name:$viewValue} | limitTo:15 | orderBy:'name'"
            typeahead-on-select="typeaheadOnSelect($item, $model, $label)"
            ng-model="searchQuery"/>
   </div>
