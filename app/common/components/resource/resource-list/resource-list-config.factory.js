@@ -3,8 +3,9 @@
  * @param {RESOURCE_SEARCH} RESOURCE_SEARCH
  * @param {ResourceSettings} ResourceSettings
  */
-function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
+function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schema) {
   const utils = require('./../../utils')
+  const Naming = utils.Naming
   const h = RESOURCE_SEARCH.paramHelpers
   // Typeaheads
   const deviceSettings = ResourceSettings('Device')
@@ -59,7 +60,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
   const SNAPSHOT_SOFTWARE_ALLOWED = ['Workbench', 'AndroidApp', 'Web']
 
   function getIsAncestor (resourceType, value) {
-    const resourceName = utils.Naming.resource(resourceType)
+    const resourceName = Naming.resource(resourceType)
     return [
       {ancestors: {$elemMatch: {'@type': resourceType, _id: value}}},
       {ancestors: {$elemMatch: {[resourceName]: {$elemMatch: {$in: [value]}}}}}
@@ -153,7 +154,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
   }
 
   function hasGroupCallback (resourceName) {
-    const resourceType = utils.Naming.type(resourceName)
+    const resourceType = Naming.type(resourceName)
     return (where, ancestors) => {
       const parents = _(ancestors).filter({'@type': resourceType}).flatMapDeep('_id').value()
       where['_id'] = {'$in': _(ancestors).flatMapDeep(resourceName).concat(parents).uniq().value()}
@@ -231,32 +232,14 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
             },
             {
               key: 'type',
-              name: 'Computers',
-              select: ['Desktop', 'Laptop', 'Netbook', 'Server', 'Microtower'],
+              name: 'Subtype of device',
+              select: _(schema.schema)  // We get all subtypes of devices
+                .filter((r, n) => _.isObject(r) && 'type' in r && _.includes(deviceSettings.types, Naming.type(n)))
+                .flatMap(r => r['type']['allowed'])
+                .uniq()
+                .value(),
               comparison: '=',
-              description: 'Types of computers: Desktops, laptops, servers...'
-            },
-            {
-              key: 'type',
-              name: 'Peripherals',
-              select: ['Router', 'Switch', 'Printer', 'Scanner', 'Multifunction printer', 'Terminal', 'HUB', 'SAI',
-                'Keyboard', 'Mouse'],
-              comparison: '=',
-              description: 'Types of peripherals: keyboards, printers, switchs...'
-            },
-            {
-              key: 'type',
-              name: 'Monitors',
-              select: ['TFT', 'LCD', 'LED', 'OLED'],
-              comparison: '=',
-              description: 'Types of monitors: TFT, LED...'
-            },
-            {
-              key: 'type',
-              name: 'Mobiles',
-              select: ['Smartphone', 'Tablet'],
-              comparison: '=',
-              description: 'Types of mobiles: smartphones and tablets.'
+              description: 'Subtypes of devices...'
             },
             {key: 'serialNumber', name: 'Serial Number', placeholder: 'S/N...'},
             {key: 'model', name: 'Model', placeholder: 'Vaio...'},
@@ -457,6 +440,18 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
               select: conditionRange,
               comparison: value => ({'$nin': _.takeRightWhile(conditionRange, v => v !== value)}),
               description: 'Match devices that are of range or below.'
+            },
+            {
+              key: 'pricing.total.standard',
+              name: 'Price is at most',
+              comparison: '<=',
+              number: true
+            },
+            {
+              key: 'pricing.total.standard',
+              name: 'Price is at least',
+              comparison: '>=',
+              number: true
             }
           ]),
           defaultParams: {'is-component': 'No', 'active': 'Yes'},

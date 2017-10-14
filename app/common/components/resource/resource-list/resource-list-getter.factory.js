@@ -93,6 +93,7 @@ function ResourceListGetterFactory (ResourceSettings) {
           callbacks.push(_.bind(settings.callback, null, _filters, value, ResourceSettings))
         } else {
           if ('date' in settings) value = utils.parseDate(value)
+          if ('number' in settings) value = Number.parseFloat(value)
           if ('boolean' in settings) value = value === 'Yes' || value === 'Succeed'
           if ('comparison' in settings) {
             if (_.isFunction(settings.comparison)) { // function comparisons are easier callbacks
