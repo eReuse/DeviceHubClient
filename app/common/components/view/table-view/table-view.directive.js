@@ -11,10 +11,11 @@ function tableView () {
     },
     link: $scope => {
       $scope._teaser = !!$scope.teaser
-      // Filter only values with something
+      // Filter only values with something or that are editable
       // And then, if teaser, only show teaser values
-      $scope.filterEmptyAndTeaser =
-        value => (_.isPresent(value.value) || value.editable) && ($scope._teaser ? value.teaser : true)
+      $scope.filterEmptyAndTeaser = field => {
+        return (_.isPresent(field.value) || field.editable) && ($scope._teaser ? field.teaser : true)
+      }
       $scope.Naming = utils.Naming
     }
   }
