@@ -26,7 +26,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
   const configFolder = require('./__init__').PATH + '/resource-list-config'
   const f = {
     id: {th: {key: '_id', name: 'Id'}, td: {value: '_id'}},
-    label: {th: {key: 'label', name: 'Label'}, td: {value: 'label'}},
+    label: {th: {key: 'label', name: 'Label'}, td: {value: 'label', limitTo: 30}},
     '@type': {th: {key: '@type', name: 'Type'}, td: {value: '@type', humanize: true}},
     type: {th: {key: 'type', name: 'Subtype'}, td: {value: 'type', humanize: true}},
     from: {th: {key: 'from', name: 'From client'}, td: {value: 'from.name'}},

@@ -84,8 +84,15 @@
                 {{$root._.get(resource, td.value) | number}}
               </span>
               <span ng-if="::!td.humanize && !td.number">
-                {{$root._.get(resource, td.value) | limitTo: 15}}
-                <small>{{$root._.get(resource, td.value).length > 15? '&hellip;':''}}</small>
+                <!-- Let's show more characters if we have a lg screen -->
+                <span class="hidden-lg">
+                  {{$root._.get(resource, td.value) | limitTo: (td.limitTo || 15)}}
+                  <small ng-show="$root._.get(resource, td.value).length > (td.limitTo || 15)">&hellip;</small>
+                </span>
+                <span class="hidden-xs hidden-sm hidden-md">
+                  {{$root._.get(resource, td.value) | limitTo: (td.limitTo || 15) + 7}}
+                  <small ng-show="$root._.get(resource, td.value).length > (td.limitTo || 15) + 7">&hellip;</small>
+                </span>
               </span>
             </div>
             <div ng-if="::value && $root._.isDate(value)">{{::value | timeAgo}}</div>
