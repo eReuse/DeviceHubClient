@@ -220,6 +220,16 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS) {
               placeholder: 'The Platform Identifier...'
             },
             {
+              key: 'gid',
+              name: 'Gid',
+              placeholder: 'The Giver Identifier...'
+            },
+            {
+              key: 'rid',
+              name: 'Rid',
+              placeholder: 'The Refurbisher Identifier...'
+            },
+            {
               key: 'type',
               name: 'Computers',
               select: ['Desktop', 'Laptop', 'Netbook', 'Server', 'Microtower'],
