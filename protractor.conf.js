@@ -41,7 +41,7 @@ exports.config = {
     failOnWarning: true,
     failOnError: true
   }],
-  jasmineNodeOpts: {defaultTimeoutInterval: 15000},
+  jasmineNodeOpts: {defaultTimeoutInterval: 20000},
   capabilities: {
     browserName: 'chrome',
     chromeOptions: {

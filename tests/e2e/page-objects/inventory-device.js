@@ -17,7 +17,7 @@ class InventoryDevice extends Inventory {
     const self = this
     describe('Certificate Erasure', () => {
       beforeAll(function selectOnlyComputers () {
-        self.search.searchbox.sendKeys('type of device').sendKeys(protractor.Key.ENTER)
+        self.search.searchbox.sendKeys('type of device').sendKeys(protractor.Key.ARROW_DOWN, protractor.Key.ENTER)
         self.search.type.$('option[value="string:Computer"]').click()
         self.waitPresenceFor(self.listOfResources, 'Resources should re-load')
         self.toggleSelectAll()
