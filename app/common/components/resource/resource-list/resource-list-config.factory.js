@@ -75,35 +75,35 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
 
   const INSIDE_LOT = {
     key: 'lotIsAncestor',
-    name: 'Inside of lot',
+    name: 'In lot',
     realKey: 'dh$insideLot',
     comparison: '=',
     typeahead: LOT_TYPEAHEAD
   }
   const INSIDE_PACKAGE = {
     key: 'packageIsAncestor',
-    name: 'Inside of package',
+    name: 'In package',
     realKey: 'dh$insidePackage',
     comparison: '=',
     typeahead: PACKAGE_TYPEAHEAD
   }
   const INSIDE_PALLET = {
     key: 'palletIsAncestor',
-    name: 'Inside of pallet',
+    name: 'In pallet',
     realKey: 'dh$insidePallet',
     comparison: '=',
     typeahead: PALLET_TYPEAHEAD
   }
   const INSIDE_PLACE = {
     key: 'placeIsAncestor',
-    name: 'Inside of place',
+    name: 'In place',
     realKey: 'dh$insidePlace',
     comparison: '=',
     typeahead: PLACE_TYPEAHEAD
   }
   const OUTSIDE_LOT = {
     key: 'lotIsNotAncestor',
-    name: 'Outside of lot',
+    name: 'Out of lot',
     typeahead: LOT_TYPEAHEAD,
     callback: (where, value) => {
       if (!('$and' in where)) where.$and = []
