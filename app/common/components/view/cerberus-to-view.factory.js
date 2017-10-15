@@ -5,13 +5,15 @@ function cerberusToView (schema, dateFilter, numberFilter, UNIT_CODES, ResourceS
   const self = this
   /**
    * Given a resource, returns the fields to be used for table-view and similar 'view' functions.
+   *
+   * Note that this method returns all fields, regardless of the fields that are empty for the resource.
    * @param {object} resource - The resource to generate the view.
    * @return {object[]} An ordered array of fields.
    */
   this.parse = resource => {
     const rSettings = ResourceSettings(resource['@type'])
     const fields = _(rSettings.schema)
-      .pickBy((field, name) => name in resource && !DONT_USE.has(name) && !('writeonly' in field))
+      .pickBy((field, name) => !DONT_USE.has(name) && !('writeonly' in field))
       .map((field, name) => ({ // Parses the field
         name: utils.Naming.humanize(name),
         key: name,
