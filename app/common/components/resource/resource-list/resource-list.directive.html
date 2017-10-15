@@ -29,91 +29,100 @@
     }"
     class="fill-height-bar"
   >
-    <table id="resource-list-table" class="table table-striped table-hover">
-      <thead>
-        <tr>
-          <th ng-class="{'hidden-xs': subResource.resource}">
-            <input type="checkbox"
-                   class="resource-list-checkbox"
-                   ng-click="toggleSelectAll(selector.checked)"
-                   ng-model="selector.checked">
+    <div infinite-scroll="loadMore()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
+         infinite-scroll-parent infinite-scroll-disabled="loadMoreIsBusy || !morePagesAvailable"
+         infinite-scroll-listen-for-event="list:filtered"
+    >
+      <table id="resource-list-table" class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th ng-class="{'hidden-xs': subResource.resource}">
+              <input type="checkbox"
+                     class="resource-list-checkbox"
+                     ng-click="toggleSelectAll(selector.checked)"
+                     ng-model="selector.checked">
 
-          </th>
-          <th ng-repeat="th in config.table.th"
-              field-sort sort="setSort(sort)" key="{{::th.key}}" name="{{::th.name}}" group="sort"
-              sort-by-default="th.default"
-          ></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="resource in resources"
-            ng-class="{info: subResource.isOpened(resource._id)}"
+            </th>
+            <th ng-repeat="th in config.table.th"
+                field-sort sort="setSort(sort)" key="{{::th.key}}" name="{{::th.name}}" group="sort"
+                sort-by-default="th.default"
+            ></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="resource in resources"
+              ng-class="{info: subResource.isOpened(resource._id)}"
 
-            ng-init="popover = popovers[resource._id]"
+              ng-init="popover = popovers[resource._id]"
 
-            uib-popover-template="popovers.templateUrl"
-            popover-enable="popovers.enable"
-            popover-title="{{::popover.title}}"
-            popover-is-open="popover.isOpen"
-            popover-trigger="click"
-            popover-append-to-body="true"
-            popover-placement="{{popoverPlacement}}"
-            popover-class="resource-button-popover"
-        >
-          <td ng-class="{'hidden-xs': subResource.resource}">
-            <input class="resource-list-checkbox"
-                   type="checkbox"
-                   ng-click="toggleSelect(resource, $event, $index)"
-                   ng-model="selector.checkboxes[resource['_id']]"
-                   ng-class="{blink: hoverScreener && resource._id === resources[0]._id && inList.length == 0}"
-            >
-          </td>
-          <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
-          <td ng-repeat="td in config.table.td"
-              ng-click="$evalAsync(subResource.toggle(resource))"
-              ng-dblclick="subResource.openFull(resource)"
-              ng-init="value = $root._.get(resource, td.value)"
+              uib-popover-template="popovers.templateUrl"
+              popover-enable="popovers.enable"
+              popover-title="{{::popover.title}}"
+              popover-is-open="popover.isOpen"
+              popover-trigger="click"
+              popover-append-to-body="true"
+              popover-placement="{{popoverPlacement}}"
+              popover-class="resource-button-popover"
           >
-            <div ng-if="::td.templateUrl" ng-include="td.templateUrl"></div>
-            <div ng-if="::value && !$root._.isDate(value)">
-              <!-- We cannot use the value from ng-init if we want it to be updateable -->
-              <span ng-if="::td.humanize">
-                {{$root._.get(resource, td.value) | humanize}}
-              </span>
-              <span ng-if="::td.number">
-                {{$root._.get(resource, td.value) | number}}
-              </span>
-              <span ng-if="::!td.humanize && !td.number">
-                <!-- Let's show more characters if we have a lg screen -->
-                <span class="hidden-lg">
-                  {{$root._.get(resource, td.value) | limitTo: (td.limitTo || 15)}}
-                  <small ng-show="$root._.get(resource, td.value).length > (td.limitTo || 15)">&hellip;</small>
-                </span>
-                <span class="hidden-xs hidden-sm hidden-md">
-                  {{$root._.get(resource, td.value) | limitTo: (td.limitTo || 15) + 7}}
-                  <small ng-show="$root._.get(resource, td.value).length > (td.limitTo || 15) + 7">&hellip;</small>
-                </span>
-              </span>
-            </div>
-            <div ng-if="::value && $root._.isDate(value)">{{::value | timeAgo}}</div>
-          </td>
-          <td ng-click="$evalAsync(subResource.toggle(resource))"
-              ng-dblclick="subResource.openFull(resource)"
-              class="text-center"
-          >
-            <resource-icon resource-type="{{::resource['@type']}}"
-                           resource-subtype="{{::resource.type}}"
+            <td ng-class="{'hidden-xs': subResource.resource}">
+              <input class="resource-list-checkbox"
+                     type="checkbox"
+                     ng-click="toggleSelect(resource, $event, $index)"
+                     ng-model="selector.checkboxes[resource['_id']]"
+                     ng-class="{blink: hoverScreener && resource._id === resources[0]._id && inList.length == 0}"
+              >
+            </td>
+            <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
+            <td ng-repeat="td in config.table.td"
+                ng-click="$evalAsync(subResource.toggle(resource))"
+                ng-dblclick="subResource.openFull(resource)"
+                ng-init="value = $root._.get(resource, td.value)"
             >
-            </resource-icon>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="text-center" ng-show="!loadMoreIsBusy && pagination.morePagesAvailable">
-      <button class="btn btn-primary btn-sm" ng-click="loadMore()">
-        Load more&nbsp;<i class="fa fa-plus"></i>
-      </button>
+              <div ng-if="::td.templateUrl" ng-include="td.templateUrl"></div>
+              <div ng-if="::value && !$root._.isDate(value)">
+                <!-- We cannot use the value from ng-init if we want it to be updateable -->
+                <span ng-if="::td.humanize">
+                  {{$root._.get(resource, td.value) | humanize}}
+                </span>
+                <span ng-if="::td.number">
+                  {{$root._.get(resource, td.value) | number}}
+                </span>
+                <span ng-if="::!td.humanize && !td.number">
+                  <!-- Let's show more characters if we have a lg screen -->
+                  <span class="hidden-lg">
+                    {{$root._.get(resource, td.value) | limitTo: (td.limitTo || 15)}}
+                    <small ng-show="$root._.get(resource, td.value).length > (td.limitTo || 15)">&hellip;</small>
+                  </span>
+                  <span class="hidden-xs hidden-sm hidden-md">
+                    {{$root._.get(resource, td.value) | limitTo: (td.limitTo || 15) + 7}}
+                    <small ng-show="$root._.get(resource, td.value).length > (td.limitTo || 15) + 7">&hellip;</small>
+                  </span>
+                </span>
+              </div>
+              <div ng-if="::value && $root._.isDate(value)">{{::value | timeAgo}}</div>
+            </td>
+            <td ng-click="$evalAsync(subResource.toggle(resource))"
+                ng-dblclick="subResource.openFull(resource)"
+                class="text-center"
+            >
+              <resource-icon resource-type="{{::resource['@type']}}"
+                             resource-subtype="{{::resource.type}}"
+              >
+              </resource-icon>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-center">
+        <i
+          ng-class="{
+                      'fa fa-circle-o-notch fa-spin fa-lg': loadMoreIsBusy && morePagesAvailable,
+                      'fa fa-ellipsis-h fa-lg': !morePagesAvailable
+                    }
+                   "
+        ></i>
+      </div>
     </div>
   </div>
   <!-- SubResource in right-bar -->

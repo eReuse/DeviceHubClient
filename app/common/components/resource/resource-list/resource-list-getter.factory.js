@@ -1,6 +1,8 @@
 function ResourceListGetterFactory (ResourceSettings) {
   const SEARCH = 'search'
-  let utils = require('./../../utils.js')
+  const utils = require('./../../utils.js')
+  const NoMorePagesAvailableException = require('./no-more-pages-available.exception')
+
   class ResourceListGetter {
     /**
      * Creates a resourceListGetter for a specific resourceType.
@@ -159,22 +161,23 @@ function ResourceListGetterFactory (ResourceSettings) {
      * You do not usually need to call this method, as it is automatically done by the other 'update' methods.
      *
      * @param {boolean} getNextPage - Shall we get the next page? If *false* then the first page is returned.
+     * @param {boolean} showProgressBar - Should the progress bar be shown?
      * @return {promise} The Restangular promise.
      */
-    getResources (getNextPage = false) {
-      if (getNextPage && !this.pagination.morePagesAvailable) throw TypeError('There are not more pages available.')
-      this.progressBar.start()
-      let self = this
+    getResources (getNextPage = false, showProgressBar = true) {
+      if (getNextPage && !this.pagination.morePagesAvailable) throw new NoMorePagesAvailableException()
+      if (showProgressBar) this.progressBar.start()
       // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 0
-      let page = this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 0
-      return this.server.getList({where: this._filters, page: page, sort: this._sort}).then((resources) => {
-        self.progressBar.complete()
-        if (!getNextPage) self.resources.length = 0
-        _.assign(self.resources, self.resources.concat(resources))
-        self.pagination.morePagesAvailable = resources._meta.page * resources._meta.max_results < resources._meta.total
-        self.pagination.totalPages = resources._meta.total
+      const page = this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 0
+      const q = {where: this._filters, page: page, sort: this._sort}
+      return this.server.getList(q).then(resources => {
+        if (showProgressBar) this.progressBar.complete()
+        if (!getNextPage) this.resources.length = 0
+        _.assign(this.resources, this.resources.concat(resources))
+        this.pagination.morePagesAvailable = resources._meta.page * resources._meta.max_results < resources._meta.total
+        this.pagination.totalPages = resources._meta.total
         // broadcast to callbacks
-        _.invokeMap(this._callbacksOnGetting, _.call, null, self.resources, self.resourceType, self.pagination)
+        _.invokeMap(this._callbacksOnGetting, _.call, null, this.resources, this.resourceType, this.pagination, getNextPage)
       })
     }
 
@@ -188,6 +191,7 @@ function ResourceListGetterFactory (ResourceSettings) {
       this._callbacksOnGetting.push(callback)
     }
   }
+
   return ResourceListGetter
 }
 

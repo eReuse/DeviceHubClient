@@ -21,7 +21,8 @@ module.exports = angular.module('common.components.resource',
     require('./../../constants').name,
     'uiGmapgoogle-maps',
     require('./../utilities').name,
-    'Focus.Service'
+    'Focus.Service',
+    require('ng-infinite-scroll')
   ])
   .constant('RESOURCE_CONFIG', require('./resource-config.constant'))
   .factory('ResourceServer', require('./resource-server.factory'))

@@ -14,6 +14,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
                        ResourceListSelectorBig, ResourceSettings, progressBar, ResourceBreadcrumb, session) {
   const utils = require('./../../utils.js')
   const PARENT_PATH = require('./../__init__').PATH
+  const NoMorePagesAvailableException = require('./no-more-pages-available.exception')
   return {
     template: require('./resource-list.directive.html'),
     restrict: 'E',
@@ -25,7 +26,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
     },
     link: {
       // Note that we load on 'pre' to initialize before our child (or inner) directives so they get real config values
-      pre: $scope => {
+      pre: ($scope, element) => {
         $scope.session = session
         const resourceType = $scope.resourceType
         $scope.resourceName = utils.Naming.resource(resourceType)
@@ -36,7 +37,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         if (_.isUndefined(config)) throw ReferenceError(resourceType + ' has no config.')
         if (!session.hasExplicitPerms()) _.assign(config.search.defaultParams, config.search.defaultParamsForNotOwners)
         $scope.resources = [] // Do never directly assign (r=[]) to 'resources' as modules depend of its reference
-
         /**
          * Object to handle accessing sub resources.
          * @prop {object} resource - The resource
@@ -133,16 +133,33 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
         $scope.reload = () => resourceListGetter.getResources()
 
-        // Pagination ('load more' button)
+        // Pagination
         // Let's avoid the user pressing multiple times the 'load more'
         $scope.loadMoreIsBusy = false
+        $scope.morePagesAvailable = true
+        let loadMoreFirstTime = false
         $scope.loadMore = () => {
-          if (!$scope.loadMoreIsBusy) {
+          if (!$scope.loadMoreIsBusy && loadMoreFirstTime) {
             $scope.loadMoreIsBusy = true
-            resourceListGetter.getResources(true).finally(() => { $scope.loadMoreIsBusy = false })
+            try {
+              resourceListGetter.getResources(true, false).finally(() => { $scope.loadMoreIsBusy = false })
+            } catch (err) {
+              $scope.loadMoreIsBusy = false
+              if (!(err instanceof NoMorePagesAvailableException)) throw err
+              $scope.morePagesAvailable = false
+            }
           }
+          loadMoreFirstTime = true
         }
-        $scope.pagination = resourceListGetter.pagination
+        // If we don't want to collision with tables of subResources we
+        // need to do this when declaring the directive
+        const $table = element.find('.fill-height-bar')
+        resourceListGetter.callbackOnGetting((_, __, ___, getNextPage) => {
+          if (!getNextPage) {
+            $table.scrollTop(0) // Scroll up to the table when loading from page 0 again
+            $scope.morePagesAvailable = true // Reset
+          }
+        })
 
         // Popover is set on the left or bottom depending screen size (xs)
         const computePlacement = () => $(window).width() <= 768 ? 'bottom-left' : 'auto left'
@@ -154,7 +171,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
 
         $scope.popovers = {enable: false}
         if ($scope.type === 'medium') {
-          resourceListGetter.callbackOnGetting((resources) => {
+          resourceListGetter.callbackOnGetting(resources => {
             $scope.popovers.enable = true
             $scope.popovers.templateUrl = PARENT_PATH + '/resource-button/resource-button.popover.directive.html'
             _.forEach(resources, resource => {
