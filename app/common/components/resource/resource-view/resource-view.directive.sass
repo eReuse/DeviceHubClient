@@ -8,10 +8,12 @@
 
 #subviews
   .fill-height
-    height: calc(100vh - #{$navbar-height} - #{$line-height-computed} - #{$breadcrumb-padding-vertical} - #{$footerHeight} - #{$tabsHeight})
+    height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight} - #{$tabsHeight})
     overflow-y: auto
 
+
 // Only nested subviews
+// A nested subview is, for example, the right subResource
 #subviews #subviews
   & > .nav-pills .nav-link
     padding-top: .25em
@@ -19,3 +21,10 @@
 
     .view-tab-text
       display: none !important
+
+  .subview-12
+    // Override col-* by setting a 100% width for nested subviews
+    width: 100%
+  .subview-offset-0
+    // Override *offset-* by setting a 0 for nested subviews
+    margin-left: 0
