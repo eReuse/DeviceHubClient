@@ -455,8 +455,12 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
             }
           ]),
           defaultParams: {'is-component': 'No', 'active': 'Yes'},
-          defaultParamsForNotOwners: {lastEvent: 'devices:Ready', rangeIsAtLeast: 'Low'},
+          defaultParamsForNotOwners: {'not-event': 'devices:Sell', rangeIsAtLeast: 'Low'},
           defaultParamsWhenSubview: {'is-component': 'No'},
+          defaultParamsWhenSubviewForNotOwners: {
+            Event: {'is-component': 'No'},
+            default: {'not-event': 'devices:Sell', rangeIsAtLeast: 'Low'}
+          },
           subResource: {
             Event: {key: 'device', field: '_id'}
           }
