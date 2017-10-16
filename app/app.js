@@ -42,8 +42,9 @@ module.exports = window.angular.module('deviceHub', [
     window.progressSetVal(2)
     $('html,body').removeClass('dh-wait')
   })
-  .run($rootScope => {
+  .run(($rootScope, CONSTANTS) => {
     $rootScope._ = window._ // We add lodash for usage in templates
     $rootScope.COMMON = window.COMMON
     $rootScope.COMPONENTS = window.COMPONENTS
+    $rootScope.CONSTANTS = CONSTANTS
   })
