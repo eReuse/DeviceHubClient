@@ -64,6 +64,9 @@
               popover-append-to-body="true"
               popover-placement="{{popoverPlacement}}"
               popover-class="resource-button-popover"
+
+              ng-click="$evalAsync(subResource.toggle(resource))"
+              ng-dblclick="subResource.openFull(resource)"
           >
             <td ng-class="{'hidden-xs': subResource.resource}">
               <input class="resource-list-checkbox"
@@ -75,8 +78,6 @@
             </td>
             <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
             <td ng-repeat="td in ::config.table.td"
-                ng-click="$evalAsync(subResource.toggle(resource))"
-                ng-dblclick="subResource.openFull(resource)"
                 ng-init="value = $root._.get(resource, td.value)"
             >
               <div ng-if="::td.templateUrl" ng-include="td.templateUrl"></div>

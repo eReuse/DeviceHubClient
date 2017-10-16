@@ -128,6 +128,11 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         // Selecting
         $scope.toggleSelectAll = _.bind(resourceListSelector.toggleSelectAll, resourceListSelector, _)
         $scope.toggleSelect = _.bind(resourceListSelector.toggle, resourceListSelector, _)
+        $scope.toggleSelect = (resource, $event, $index) => {
+          resourceListSelector.toggle(resource, $event, $index)
+          // Avoids the ng-click from the row (<tr>) to trigger
+          $event.stopPropagation()
+        }
 
         // Reloading
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
