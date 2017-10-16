@@ -1,4 +1,4 @@
-const DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url', '_settings', 'hid']
+const DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url', '_settings', 'hid', 'comment']
 const GROUP_DO_NOT_USE = DO_NOT_USE.concat(['children', 'policies', 'perms', 'sharedWith'])
 
 /**
@@ -65,8 +65,8 @@ const RESOURCE_CONFIG = {
         resourceType: 'Device'
       },
       view: {
-        title: ['_id'],
-        subtitle: ['model', 'manufacturer']
+        title: [{key: '_id'}],
+        subtitle: [{key: 'model'}, {key: 'manufacturer'}]
       },
       // We pass a 'resource' object to a subview with, at least, @type.
       subviews: [v.DeviceDashboard, v.Event, v.Detail],
@@ -83,7 +83,7 @@ const RESOURCE_CONFIG = {
       _root: true
     },
     Event: {
-      view: {title: ['@type', 'label'], subtitle: ['_id']},
+      view: {title: [{key: '@type', humanize: true}, {key: 'label'}], subtitle: [{key: '_id'}]},
       subviews: [v.Device, v.Detail],
       doNotUse: ['geo'].concat(DO_NOT_USE),
       dataRelation: {
@@ -105,7 +105,7 @@ const RESOURCE_CONFIG = {
         keyFieldName: '_id',
         resourceType: 'Account'
       },
-      view: {title: ['label'], subtitle: ['e-mail']},
+      view: {title: [{key: 'label'}], subtitle: [{key: 'e-mail'}]},
       doNotUse: DO_NOT_USE,
       subviews: [v.Lot, v.Package, v.Device],
       _root: true
@@ -126,7 +126,7 @@ const RESOURCE_CONFIG = {
         resourceType: 'Place',
         keyFieldName: '_id'
       },
-      view: {title: ['label'], subtitle: []},
+      view: {title: [{key: 'label'}], subtitle: []},
       subviews: [v.Lot, v.Place, v.Package, v.Pallet, v.Device, v.Event, v.Detail],
       doNotUse: GROUP_DO_NOT_USE
     },
@@ -148,7 +148,7 @@ const RESOURCE_CONFIG = {
         resourceType: 'Package',
         keyFieldName: '_id'
       },
-      view: {title: ['label'], subtitle: []},
+      view: {title: [{key: 'label'}], subtitle: []},
       subviews: [v.Package, v.Device, v.Detail],
       doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
     },
@@ -161,7 +161,7 @@ const RESOURCE_CONFIG = {
         keyFieldName: '_id',
         resourceType: 'Pallet'
       },
-      view: {title: ['label'], subtitle: []},
+      view: {title: [{key: 'label'}], subtitle: []},
       subviews: [v.Package, v.Device, v.Detail],
       doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
     },
@@ -174,7 +174,7 @@ const RESOURCE_CONFIG = {
         keyFieldName: '_id',
         resourceType: 'Lot'
       },
-      view: {title: ['label'], subtitle: ['@type']},
+      view: {title: [{key: 'label'}], subtitle: [{key: '@type', humanize: true}]},
       subviews: [v.Lot, v.Package, v.Pallet, v.Device, v.Detail],
       doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
     },
