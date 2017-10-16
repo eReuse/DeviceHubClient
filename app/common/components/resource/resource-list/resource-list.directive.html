@@ -56,7 +56,7 @@
 
               ng-init="popover = popovers[resource._id]"
 
-              uib-popover-template="popovers.templateUrl"
+              uib-popover-template="::popovers.templateUrl"
               popover-enable="popovers.enable"
               popover-title="{{::popover.title}}"
               popover-is-open="popover.isOpen"
@@ -74,7 +74,7 @@
               >
             </td>
             <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
-            <td ng-repeat="td in config.table.td"
+            <td ng-repeat="td in ::config.table.td"
                 ng-click="$evalAsync(subResource.toggle(resource))"
                 ng-dblclick="subResource.openFull(resource)"
                 ng-init="value = $root._.get(resource, td.value)"
@@ -83,11 +83,13 @@
               <div ng-if="::value && !$root._.isDate(value)">
                 <!-- We cannot use the value from ng-init if we want it to be updateable -->
                 <span ng-if="::td.humanize">
-                  {{$root._.get(resource, td.value) | humanize}}
+                  {{::$root._.get(resource, td.value) | humanize}}
                 </span>
                 <span ng-if="::td.number">
-                  {{$root._.get(resource, td.value) | number}}
+                  {{::$root._.get(resource, td.value) | number}}
                 </span>
+                <!-- For now only label can be changed from a resource without refreshing the list, and label field
+                falls in here -->
                 <span ng-if="::!td.humanize && !td.number">
                   <!-- Let's show more characters if we have a lg screen -->
                   <span class="hidden-lg">
@@ -100,7 +102,7 @@
                   </span>
                 </span>
               </div>
-              <div ng-if="::value && $root._.isDate(value)">{{::value | timeAgo}}</div>
+              <div ng-if="::value && $root._.isDate(value)">{{value | timeAgo}}</div>
             </td>
             <td ng-click="$evalAsync(subResource.toggle(resource))"
                 ng-dblclick="subResource.openFull(resource)"
