@@ -42,8 +42,8 @@ function groupResourceSubmitterFactory (SubmitForm, ResourceSettings) {
           const promise = group.patch({'@type': group['@type'], 'children': group.children}).then(self.success)
           const humanName = self.gSettings.humanName
           self.submitForm.after(promise,
-            `The items have been ${self.addingResources ? 'added or moved' : 'removed'} from ${humanName}.`,
-            `We couldn't ${self.addingResources ? 'add or move' : 'remove'} from ${humanName}.
+            `The items have been ${self.addingResources ? 'added or moved' : 'removed'} to ${humanName}.`,
+            `We couldn't ${self.addingResources ? 'add or move to' : 'remove from'} ${humanName}.
              Ensure you have permissions on all devices.`
           )
         })
