@@ -154,7 +154,9 @@ function parse (item, schema) {
   for (const fieldName in schema) {
     switch (schema[fieldName].type) {
       case 'datetime':
-        if (item[fieldName]) item[fieldName] = new Date(item[fieldName])
+        if (item[fieldName]) {
+          item[fieldName] = new Date(item[fieldName] + 'z') // z stands for 'utc'
+        }
         break
     }
   }
@@ -172,7 +174,7 @@ function parse (item, schema) {
     _parseDate(val, '_created')
 
     function _parseDate (value, propertyName) {
-      const a = new Date(value[propertyName])
+      const a = new Date(value[propertyName] + 'z') // z stands for 'utc'
       if (!_.isNaN(a.getTime())) value[propertyName] = a
     }
   }
