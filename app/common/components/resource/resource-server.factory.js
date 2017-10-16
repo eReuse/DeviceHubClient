@@ -154,7 +154,7 @@ function parse (item, schema) {
   for (const fieldName in schema) {
     switch (schema[fieldName].type) {
       case 'datetime':
-        item[fieldName] = new Date(item[fieldName])
+        if (item[fieldName]) item[fieldName] = new Date(item[fieldName])
         break
     }
   }
