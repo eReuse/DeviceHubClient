@@ -532,8 +532,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
           templateUrl: configFolder + '/resource-list-config-group'
         },
         table: {
-          th: [f.label.th, f['@type'].th, f.from.th, f.to.th, f.lastEvent.th, f.updated.thDef],
-          td: [f.label.td, f['@type'].td, f.from.td, f.to.td, f.lastEvent.td, f.updated.td]
+          th: [f.id.th, f.label.th, f['@type'].th, f.from.th, f.to.th, f.lastEvent.th, f.updated.thDef],
+          td: [f.id.td, f.label.td, f['@type'].td, f.from.td, f.to.td, f.lastEvent.td, f.updated.td]
         }
       },
       Package: {
