@@ -9,7 +9,7 @@
         {{::db}}
       </a>
     </li>
-    <li class="dropdown-header" ng-show="dbs.shared.length > 0">Other inventories</li>
+    <li class="dropdown-header" ng-show="dbs.shared.length > 0">Inventories shared to me</li>
     <li role="menuitem" ng-repeat="db in ::dbs.shared | orderBy">
       <a ng-click="session.changeDb(db)">
         {{::db}}
