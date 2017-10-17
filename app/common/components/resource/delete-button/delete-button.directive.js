@@ -2,10 +2,10 @@ function deleteButton (Notification, $rootScope, ResourceSettings) {
   const utils = require('./../../utils.js')
   return {
     template: `
-      <button class="btn btn-warning btn-sm" ng-show="canDelete" ng-click="delete(resource)">
+      <!--<button class="btn btn-warning btn-sm" ng-show="canDelete" ng-click="delete(resource)">
         <i class="fa fa-trash fa-fw"></i>
         Delete
-      </button>`,
+      </button>-->`,
     restrict: 'E',
     scope: {
       resource: '='
