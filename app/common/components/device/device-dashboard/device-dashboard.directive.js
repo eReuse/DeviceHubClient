@@ -4,7 +4,8 @@ function deviceDashboard (ResourceSettings, UNIT_CODES, CONSTANTS) {
     template: require('./device-dashboard.directive.html'),
     restrict: 'E',
     scope: {
-      resource: '='
+      resource: '=',
+      type: '@'
     },
     link: $scope => {
       const manufacturerSettings = ResourceSettings('Manufacturer')

@@ -22,7 +22,7 @@
     </div>
   </div>
   <div class="row">
-    <article class="col-lg-4" ng-if="::resource.pricing.refurbisher.standard">
+    <article class="col-lg-4" ng-if="::resource.pricing.refurbisher.standard && type !== 'small'">
       <h3>Pricing</h3>
       <div class="text-center">
         <div class="btn-group btn-group-sm">
@@ -67,7 +67,7 @@
       </table>
     </article>
 
-    <article ng-class="{'col-lg-8': resource.pricing.refurbisher.standard}">
+    <article ng-class="{'col-lg-8': resource.pricing.refurbisher.standard && type !== 'small'}">
       <h3>Condition score</h3>
       <table class="table" id="device-dashboard-condition">
         <thead>

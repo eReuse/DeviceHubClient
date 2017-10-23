@@ -44,11 +44,13 @@ const RESOURCE_CONFIG = {
     'devices:Dispose': {manual: true},
     'devices:Reserve': {
       manual: true,
-      subviews: [v.Reserve, v.Device, v.Detail]
+      subviews: [v.Reserve, v.Device, v.Detail],
+      subviewSmall: v.Reserve
     },
     'devices:Sell': {
       manual: true,
-      subviews: [v.Sell, v.Device, v.Detail]
+      subviews: [v.Sell, v.Device, v.Detail],
+      subviewSmall: v.Sell
     },
     'devices:Snapshot': {
       doNotUse: ['debug', 'version', 'events', 'owners', 'components', 'version', 'snapshotSoftware', 'automatic',
@@ -70,6 +72,7 @@ const RESOURCE_CONFIG = {
       },
       // We pass a 'resource' object to a subview with, at least, @type.
       subviews: [v.DeviceDashboard, v.Event, v.Detail],
+      subviewSmall: v.DeviceDashboard,
       doNotUse: DO_NOT_USE.concat(['events', 'owners', 'components', 'isUidSecured', 'public', 'icon', 'pid',
         'labelId', 'placeholder', 'parent', 'place', 'perms']),
       label: {
@@ -85,6 +88,7 @@ const RESOURCE_CONFIG = {
     Event: {
       view: {title: [{key: '@type', humanize: true}, {key: 'label'}], subtitle: [{key: '_id'}]},
       subviews: [v.Device, v.Detail],
+      subviewSmall: v.Detail,
       doNotUse: ['geo'].concat(DO_NOT_USE),
       dataRelation: {
         label: 'Event id',
@@ -107,7 +111,8 @@ const RESOURCE_CONFIG = {
       },
       view: {title: [{key: 'label'}], subtitle: [{key: 'e-mail'}]},
       doNotUse: DO_NOT_USE,
-      subviews: [v.Lot, v.Package, v.Device],
+      subviews: [v.Detail, v.Lot, v.Package, v.Device],
+      subviewSmall: v.Detail,
       _root: true
     },
     Group: {
@@ -115,6 +120,7 @@ const RESOURCE_CONFIG = {
         fields: ['_id', 'label'],
         defaultFields: ['_id', 'label']
       },
+      subviewSmall: v.Detail,
       _root: true
     },
     Place: {

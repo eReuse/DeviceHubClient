@@ -1,36 +1,25 @@
-<article ng-switch="type">
-  <div ng-switch-when="small">
-    <div class="pull-right">
-      <a class="fa fa-window-maximize"
-         ng-click="goTo(resource)"
-         uib-tooltip="Maximize it"
-         tooltip-append-to-body="true"
-      ></a>
-      <!--<a class="fa fa-external-link"
-         ui-sref="index.inventory.resource(srefUiParams)"
-         target="_blank"
-         uib-tooltip="Open it in a new tab"
-         tooltip-append-to-body="true"
-      ></a>-->
-    </div>
-    <table-view model="model" teaser="true" resource="resource"></table-view>
-  </div>
-  <div ng-switch-when="medium">
-    <header ng-if="resource['@type']">
-      <h3 ng-show="view.title" class="display-inline">
+<article>
+  <header ng-if="type==='medium' && resource['@type']">
+    <h3 ng-show="view.title" class="display-inline">
         <span ng-repeat="t in view.title">
           <span ng-if="t.humanize">{{resource[t.key] | humanize}}</span>
           <span ng-if="!t.humanize">{{resource[t.key]}}</span>
         </span>
-        <small ng-repeat="s in view.subtitle">
-          <span ng-if="s.humanize">{{resource[s.key] | humanize}}</span>
-          <span ng-if="!s.humanize">{{resource[s.key]}}</span>
-        </small>
-        <small class="pull-right">
-          <resource-icon resource-type="{{resource['@type']}}" resource-subtype="{{resource.type}}"></resource-icon>
-        </small>
-      </h3>
-    </header>
-  </div>
+      <small ng-repeat="s in view.subtitle">
+        <span ng-if="s.humanize">{{resource[s.key] | humanize}}</span>
+        <span ng-if="!s.humanize">{{resource[s.key]}}</span>
+      </small>
+      <small class="pull-right">
+        <resource-icon resource-type="{{resource['@type']}}" resource-subtype="{{resource.type}}"></resource-icon>
+      </small>
+    </h3>
+  </header>
   <div id="resource-view-body"></div>
+  <div ng-if="type==='small'">
+    <div>&nbsp;</div><!-- Don't know why a margin-top doesn't work here -->
+    <button ng-if="type==='small'" class="btn btn-default btn-block" ng-click="goTo(resource)">
+      Open it
+      <i class="fa fa-folder-open"></i>
+    </button>
+  </div>
 </article>

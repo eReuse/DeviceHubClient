@@ -1,4 +1,5 @@
-function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG, ResourceBreadcrumb) {
+function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG, ResourceBreadcrumb, ResourceSettings,
+                       $compile) {
   const utils = require('./../../utils')
   const BIG = 'big'
   const MED = 'medium'
@@ -41,12 +42,16 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
 
         function generateViewAndSubview () {
           if ($scope.type === SM) {
-            // Note that model is computed too in generateViewAndSubview for !sm views
-            if (!_.isEmpty($scope.resource)) $scope.model = cerberusToView.parse($scope.resource)
             $scope.srefUiParams = {
               resourceName: utils.Naming.resource($scope.resource['@type']),
               id: $scope.resource._id
             }
+            // todo integrate this 3 lines with Subview class
+            const rSettings = ResourceSettings($scope.resource['@type'])
+            let view = angular.element(Subview.view(rSettings.getSetting('subviewSmall')))
+            $compile(view)($scope)
+            if (!_.isEmpty($scope.resource)) $scope.model = cerberusToView.parse($scope.resource)
+            iElement.find('#resource-view-body').html(view)
           } else {
             // first at all ensure variables in $scope subviews will use are ready
             if (!_.isEmpty($scope.resource)) $scope.model = cerberusToView.parse($scope.resource)

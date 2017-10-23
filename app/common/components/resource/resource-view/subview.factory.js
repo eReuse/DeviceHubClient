@@ -35,23 +35,29 @@ function SubviewFactory (ResourceViewGenerator, RESOURCE_CONFIG) {
               <span class="visible-sm-inline visible-md-inline visible-lg-inline view-tab-text">${option.name}</span>
             </uib-tab-heading>
             <div ng-if="tabs['${uid}'].isActive" class="container-fluid">
-              <div class="row">
-                <${option.view} resource-type="${option.resourceType}" 
-                                type="{{type}}" 
-                                parent-resource="resource"
-                                resource="resource"
-                                model="model"
-                                class="${option.class} col-xs-12"
-                >
-                </${option.view}>
-              </div>
+              <div class="row">${this.view(option)}</div>
             </div>
           </uib-tab>
         `
       })
       return body + '</uib-tabset>'
     }
+
+    static view (option) {
+      return `
+        <${option.view} resource-type="${option.resourceType}" 
+                        type="{{type}}" 
+                        parent-resource="resource"
+                        resource="resource"
+                        model="model"
+                        class="${option.class} col-xs-12"
+        >
+        </${option.view}>
+      `
+    }
+
   }
+
   return Subview
 }
 
