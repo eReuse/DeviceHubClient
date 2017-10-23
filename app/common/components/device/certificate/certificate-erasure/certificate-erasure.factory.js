@@ -11,7 +11,7 @@ function certificateErasureFactory (CONSTANTS, CERTIFICATE_ERASURE_FACTORY_STRIN
     this.s = CERTIFICATE_ERASURE_FACTORY_STRINGS[model.lan]
     // We get the hard-drives whose parents are the passed-in computers
     this.reports = []
-    var query = {where: {parent: {'$in': _.map(computers, '_id')}}, embedded: {erasures: 1}}
+    var query = {where: {parent: {'$in': _.map(computers, '_id')}}, embedded: {erasures: 1}, max_results: 100}
     this.promise = ResourceSettings('HardDrive').server.getList(query).then(function (hardDrives) {
       _.forEach(hardDrives, function (hdd) {
         _.forEach(hdd.erasures, function (erasure) {
