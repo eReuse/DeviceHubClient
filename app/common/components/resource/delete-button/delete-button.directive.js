@@ -1,17 +1,27 @@
-function deleteButton (Notification, $rootScope, ResourceSettings) {
+/**
+ *
+ * @param Notification
+ * @param $rootScope
+ * @param ResourceSettings
+ * @param {Session} session
+ * @returns {{template: string, restrict: string, scope: {resource: string}, link: (function(*))}}
+ */
+function deleteButton (Notification, $rootScope, ResourceSettings, session) {
   const utils = require('./../../utils.js')
   return {
     template: `
-      <!--<button class="btn btn-warning btn-sm" ng-show="canDelete" ng-click="delete(resource)">
+      <button class="btn btn-warning btn-sm" ng-show="canDelete" ng-click="delete(resource)">
         <i class="fa fa-trash fa-fw"></i>
         Delete
-      </button>-->`,
+      </button>`,
     restrict: 'E',
     scope: {
       resource: '='
     },
     link: $scope => {
-      $scope.canDelete = _.includes(ResourceSettings($scope.resource['@type']).settings.itemMethods, 'DELETE')
+      const rSettings = ResourceSettings($scope.resource['@type'])
+      $scope.canDelete = _.includes(rSettings.settings.itemMethods, 'DELETE') &&
+        session.hasExplicitPerms() && rSettings.isSubResource('Group') // todo remove 'Event' from equation
       $scope.delete = resource => {
         if (confirm('Deleting literally erases traceability, and it cannot be undone. Are you sure?')) {
           const title = utils.getResourceTitle(resource)
