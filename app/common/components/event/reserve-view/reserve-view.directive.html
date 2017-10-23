@@ -10,14 +10,14 @@
     <h4>Description</h4>
     <p>{{::resource.description}}</p>
   </blockquote>
-  <div ng-if="!finalState && session.hasExplicitPerms()">
+  <div ng-if="!finalState">
     <h3>Process the reservation</h3>
     <p>
       Perform one of the following events to process and close this reservation. We will notify through e-mail
       to the person only if they have an active account in {{::$root.CONSTANTS.appName}}.
     </p>
     <div class="btn-group btn-group-justified">
-      <div class="btn-group">
+      <div class="btn-group" ng-if="session.hasExplicitPerms()">
         <button type="button" class="btn btn-primary" ng-click="openModal('devices:Sell')">
           <resource-icon resource-type="devices:Sell"></resource-icon>
           Sell the devices
