@@ -29,8 +29,8 @@
     }"
     class="fill-height-bar"
   >
-    <div infinite-scroll="loadMore()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
-         infinite-scroll-parent infinite-scroll-disabled="loadMoreIsBusy || !morePagesAvailable"
+    <div infinite-scroll="getMore()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
+         infinite-scroll-parent infinite-scroll-disabled="getMoreIsBusy || !morePagesAvailable"
          infinite-scroll-listen-for-event="list:filtered"
     >
       <table id="resource-list-table" class="table table-striped table-hover">
@@ -120,7 +120,7 @@
       <div class="text-center">
         <i
           ng-class="{
-                      'fa fa-circle-o-notch fa-spin fa-lg': loadMoreIsBusy && morePagesAvailable,
+                      'fa fa-circle-o-notch fa-spin fa-lg': getMoreIsBusy && morePagesAvailable,
                       'fa fa-ellipsis-h fa-lg': !morePagesAvailable
                     }
                    "

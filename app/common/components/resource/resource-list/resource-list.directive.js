@@ -140,21 +140,21 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
 
         // Pagination
         // Let's avoid the user pressing multiple times the 'load more'
-        $scope.loadMoreIsBusy = false
+        $scope.getMoreIsBusy = false
         $scope.morePagesAvailable = true
-        let loadMoreFirstTime = false
-        $scope.loadMore = () => {
-          if (!$scope.loadMoreIsBusy && loadMoreFirstTime) {
-            $scope.loadMoreIsBusy = true
+        let getMoreFirstTime = false
+        $scope.getMore = () => {
+          if (!$scope.getMoreIsBusy && getMoreFirstTime) {
+            $scope.getMoreIsBusy = true
             try {
-              resourceListGetter.getResources(true, false).finally(() => { $scope.loadMoreIsBusy = false })
+              resourceListGetter.getResources(true, false).finally(() => { $scope.getMoreIsBusy = false })
             } catch (err) {
-              $scope.loadMoreIsBusy = false
+              $scope.getMoreIsBusy = false
               if (!(err instanceof NoMorePagesAvailableException)) throw err
               $scope.morePagesAvailable = false
             }
           }
-          loadMoreFirstTime = true
+          getMoreFirstTime = true
         }
         // If we don't want to collision with tables of subResources we
         // need to do this when declaring the directive

@@ -52,7 +52,7 @@ function ResourceListGetterFactory (ResourceSettings) {
         morePagesAvailable: true,
         pagesAvailable: null,
         totalPages: null,
-        pageNumber: 0
+        pageNumber: 1
       }
 
       this._callbacksOnGetting = []
@@ -167,9 +167,9 @@ function ResourceListGetterFactory (ResourceSettings) {
     getResources (getNextPage = false, showProgressBar = true) {
       if (getNextPage && !this.pagination.morePagesAvailable) throw new NoMorePagesAvailableException()
       if (showProgressBar) this.progressBar.start()
-      // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 0
-      const page = this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 0
-      const q = {where: this._filters, page: page, sort: this._sort}
+      // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 1
+      this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 1
+      const q = {where: this._filters, page: this.pagination.pageNumber, sort: this._sort}
       return this.server.getList(q).then(resources => {
         if (showProgressBar) this.progressBar.complete()
         if (!getNextPage) this.resources.length = 0
@@ -196,15 +196,3 @@ function ResourceListGetterFactory (ResourceSettings) {
 }
 
 module.exports = ResourceListGetterFactory
-
-
-
-
-
-
-
-
-
-
-
-
