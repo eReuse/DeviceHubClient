@@ -23,7 +23,7 @@ function groupResourceSubmitterFactory (SubmitForm, ResourceSettings) {
       this.addingResources = addingResources
       this.success = success
       // We start chaining the children
-      this.children = _(this.resources).map('_id')
+      this.children = _(this.resources).map('_id').value()
     }
 
     /**
@@ -31,19 +31,18 @@ function groupResourceSubmitterFactory (SubmitForm, ResourceSettings) {
      * @param {string} groupId - The *_id* of the group to perform the operation with the resources.
      */
     submit (groupId) {
-      let self = this
       if (this.submitForm.isValid()) {
-        this.groupServer.one(groupId).get().then((group) => {
-          const rName = self.rSettings.resourceName
-          self.submitForm.prepare()
-          group.children[rName] = self.addingResources
-            ? self.children.union(group.children[rName]).value()
-            : self.children.difference(group.children[rName]).value()
-          const promise = group.patch({'@type': group['@type'], 'children': group.children}).then(self.success)
-          const humanName = self.gSettings.humanName
-          self.submitForm.after(promise,
-            `The items have been ${self.addingResources ? 'added or moved' : 'removed'} to ${humanName}.`,
-            `We couldn't ${self.addingResources ? 'add or move to' : 'remove from'} ${humanName}.
+        this.groupServer.one(groupId).get().then(group => {
+          const rName = this.rSettings.resourceName
+          this.submitForm.prepare()
+          group.children[rName] = this.addingResources
+            ? _(group.children[rName]).union(this.children).value()
+            : _(group.children[rName]).difference(this.children).value()
+          const promise = group.patch({'@type': group['@type'], 'children': group.children}).then(this.success)
+          const humanName = this.gSettings.humanName
+          this.submitForm.after(promise,
+            `The items have been ${this.addingResources ? 'added or moved' : 'removed'} to ${humanName}.`,
+            `We couldn't ${this.addingResources ? 'add or move to' : 'remove from'} ${humanName}.
              Ensure you have permissions on all devices.`
           )
         })

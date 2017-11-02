@@ -7,7 +7,7 @@ function dhSubmitButton () {
    * @param {bool} dhSubmitButton - A flag that sets the button in loading or not
    */
   return {
-    templateUrl: require('./__init__').PATH + '/dh-submit-button.directive.html',
+    template: require('./dh-submit-button.directive.html'),
     restrict: 'A',
     transclude: true,
     scope: {

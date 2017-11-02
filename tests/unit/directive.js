@@ -43,7 +43,6 @@ class Directive {
   compileAndCheck (parameters) {
     this.compile(parameters)
     expect(this.$scope).toBeNonEmptyObject()
-    expect(this.$scope.resource).toBeNonEmptyObject()
   }
 }
 

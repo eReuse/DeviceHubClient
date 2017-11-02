@@ -38,6 +38,9 @@ module.exports = () => {
       return this
     }),
     resourceServer: () => jasmine.createSpy('resourceServer'),
+    GroupResourceSubmitter: () => spyf('GroupResourceSubmitter')(() => {
+      this.submit = jasmine.createSpy('submit')
+    }),
     spyf: spyf
   }
 }

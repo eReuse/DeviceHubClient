@@ -10,7 +10,7 @@ function groupResourceAdd (ResourceSettings, GroupResourceSubmitter) {
    * @param {expression} success - & Expression executed when the *add* has been successful.
    */
   return {
-    templateUrl: require('./__init__').PATH + '/group-resource-action.directive.html',
+    template: require('./group-resource-action.directive.html'),
     restrict: 'E',
     scope: {
       resources: '=',
