@@ -9,6 +9,9 @@
           <li>{{::resource.manufacturer}}</li>
           <li ng-if="::resource.serialNumber">S/N {{::resource.serialNumber | limitTo: 30}}</li>
           <li ng-if="::resource.pricing.total">{{::resource.pricing.total | currency: currencyOptions.currency}}</li>
+          <li ng-if="::hasExplicitPerms" ng-repeat="parent in ::resource.ancestors">
+            <resource-button resource="parent"></resource-button>
+          </li>
         </ul>
       </h4>
     </div>
@@ -27,19 +30,16 @@
       <div class="text-center">
         <div class="btn-group btn-group-sm">
           <h4 class="text-left">Warranty</h4>
-          <label class="btn btn-primary">
-            <input type="radio" ng-model="currencyOptions.val" value="standard">
+          <label class="btn btn-primary" ng-model="currencyOptions.val" uib-btn-radio="'standard'">
             Standard
           </label>
           <label class="btn btn-primary"
                  ng-disabled="::!resource.pricing.refurbisher.warranty2"
                  uib-tooltip="No 2 year warranty option for this device."
                  tooltip-enable="::!resource.pricing.refurbisher.warranty2"
+                 ng-model="currencyOptions.val"
+                 uib-btn-radio="'warranty2'"
           >
-            <input ng-disabled="::!resource.pricing.refurbisher.warranty2"
-                   type="radio"
-                   ng-model="currencyOptions.val"
-                   value="warranty2">
             2 year warranty
           </label>
         </div>
