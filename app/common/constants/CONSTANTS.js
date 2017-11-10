@@ -16,7 +16,9 @@ const CONSTANTS = {
   resourcesChangingNumber: ['device', 'event', 'account', 'place', 'erase', 'project', 'package', 'lot',
     'manufacturer', 'group', 'pallet'],
   debug: true,
-  currency: '€'
+  currency: '€',
+  workbenchPollingDelay: 2650,
+  workbench: 'http://localhost:8091'
 }
 
 module.exports = CONSTANTS

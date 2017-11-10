@@ -15,6 +15,7 @@ module.exports = angular.module('common.components.elements',
     require('./../tools').name,
     require('./../../constants').name,
     require('./../forms').name,
+    require('./../workbench').name,
     'ui.router'
   ])
   .directive('newButton', require('./new-button/new-button.directive'))

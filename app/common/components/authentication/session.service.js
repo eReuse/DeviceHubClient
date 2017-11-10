@@ -137,7 +137,8 @@ class Session {
    */
   changeDb (db) {
     this.setActiveDb(db)
-    return this.$state.go('index.inventory', {db: db})
+    const name = this.$state.current.name === 'index.workbench' ? 'index.workbench' : 'index.inventory'
+    return this.$state.go(name, {db: db})
   }
 
   /**
