@@ -67,7 +67,7 @@ function submitFormFactory (Notification) {
         if (notifyText) Notification.success(notifyText)
         self.status.succeeded = true
       }).catch((response) => {
-        if (errorText) Notification.error(notifyText)
+        if (errorText) Notification.error(errorText)
         self.form.form.triedSubmission = true
         self.status.errorListFromServer = response.data._issues
       }).finally(() => {
