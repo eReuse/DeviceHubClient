@@ -34,7 +34,7 @@ function authServiceFactory (Restangular, session, $state) {
           session.setActiveDb(params.db)
         } catch (err) {
           event.preventDefault()
-          $state.go('index.inventory', {db: session.account.defaultDatabase})
+          $state.go(toState.name, {db: session.account.defaultDatabase})
         }
       } else {
         try {

@@ -1,0 +1,8 @@
+<li ng-repeat="usb in usbs">
+  <a ng-click="openWorkbenchLink(usb._uuid)">
+    <i class="fa fa-usb fa-fw fa-lg fa-rotate-270"></i>
+    <strong>{{::usb.product}}</strong>
+    {{::usb.usb}}
+    <i class="fa fa-ban fa-border" ng-click="removeUsb(usb._uuid, $event)"></i>
+  </a>
+</li>

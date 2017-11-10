@@ -1,0 +1,15 @@
+<li>
+  <a ng-hide="$state.current.name == 'index.workbench'"
+     ui-sref="index.workbench({db: session.db})"
+     ui-sref-opts="{reload: true}"
+  >
+    <i class="fa fa-wrench fa-fw fa-lg"></i>Workbench
+  </a>
+  <a ng-show="$state.current.name == 'index.workbench'"
+     ui-sref="index.inventory({db: session.db})"
+     ui-sref-opts="{reload: true}"
+  >
+    <i class="fa fa-list fa-fw fa-lg"></i>Inventory
+  </a>
+</li>
+

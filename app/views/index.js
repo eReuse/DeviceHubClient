@@ -6,5 +6,6 @@
 module.exports = angular.module('views',
   [
     require('./inventory').name,
-    require('./login').name
+    require('./login').name,
+    require('./workbench').name
   ])

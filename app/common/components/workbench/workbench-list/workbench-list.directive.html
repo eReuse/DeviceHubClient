@@ -1,0 +1,43 @@
+<div class="row" ng-if="$root._.isArray(snapshots)">
+  <div class="fill-height-bar">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>System ID</th><th>Model</th><th>Manufacturer</th><th>S/N</th><th>Phase</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="snapshot_i in snapshots" ng-init="">
+          <td>{{snapshot_i.val._id}}</td>
+          <td>{{::snapshot_i.val.device.model}}</td>
+          <td>{{::snapshot_i.val.device.manufacturer}}</td>
+          <td>{{::snapshot_i.val.device.serialNumber}}</td>
+          <td>
+            <div class="label center-block"
+                 ng-class="
+                 {
+                    'label-default': $root._.size(snapshot_i.val.times) <= 2,
+                    'label-primary': $root._.size(snapshot_i.val.times) > 2 && $root._.size(snapshot_i.val.times) < 6,
+                    'label-success': $root._.size(snapshot_i.val.times) === 6
+                 }">
+              <strong>
+                <big>
+                  {{$root._.size(snapshot_i.val.times) - 1}}
+                  <i ng-show="snapshot_i.val.device.type" class="fa fa-usb fa-fw"></i>
+                </big>
+              </strong>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row text-center" ng-hide="$root._.isArray(snapshots)">
+  <img src="https://www.ereuse.org/files/2017/01/eReuse-Workbench.png" width="300px"
+       alt="eReuse.org Workbench" title="eReuse.org Workbench">
+  <h1>Looking for a WorkbenchServer&hellip;</h1>
+  <i class="fa fa-circle-o-notch fa-spin fa-3x"></i>
+  <h2>Ensure you are on the same network (Wi-Fi or cable) than the WorkbenchServer and that WorkbenchServer is on.</h2>
+  <p>This page will automatically change once we find a WorkbenchServer.</p>
+</div>

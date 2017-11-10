@@ -16,6 +16,7 @@ module.exports = angular.module('common.components',
     require('./utilities').name,
     require('./elements').name,
     require('./group').name,
-    require('./resource-label').name
+    require('./resource-label').name,
+    require('./workbench').name
   ])
 .directive('closePopover', require('./close-popover'))
