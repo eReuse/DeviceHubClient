@@ -1,3 +1,4 @@
+/* global AndroidApp */
 const utils = require('./../utils')
 
 /**
@@ -77,7 +78,8 @@ class Session {
    */
   load (db = this.account.defaultDatabase) {
     if (this.isAccountSet()) throw Error('Account already set')
-    const account = sessionStorage.getItem(this.ACCOUNT_STORAGE) || localStorage.getItem(this.ACCOUNT_STORAGE) || null
+    const account = _.invoke(AndroidApp, 'account') || sessionStorage.getItem(this.ACCOUNT_STORAGE) ||
+      localStorage.getItem(this.ACCOUNT_STORAGE) || null
     if (account === null) throw Error('No account in the browser')
     this.account = JSON.parse(account)
     this._afterGettingAccount(db)

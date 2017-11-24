@@ -8,22 +8,32 @@ function workbenchLink ($scope, workbenchPoller, _uuid, ResourceSettings, $uibMo
   const sSettings = ResourceSettings('devices:Snapshot')
   const appearance = sSettings.schema.condition.schema.appearance.schema.general
   const functionality = sSettings.schema.condition.schema.functionality.schema.general
+  const addonRightScan = (id, getIdFromUrl = false) => {
+    return window.AndroidApp ? {
+      onClick: `window.AndroidApp.startJSScan('${id}', getIdFromUrl=${getIdFromUrl})`,
+      class: 'fa fa-camera'
+    } : null
+  }
   $scope.form = {
     fields: [
       {
         key: '_id',
         type: 'input',
+        id: '_id',
         templateOptions: {
           label: 'System ID',
-          description: 'The Identifier printed in the tag or label.'
+          description: 'The Identifier printed in the tag or label.',
+          addonRight: addonRightScan('_id', true)
         }
       },
       {
         key: 'gid',
         type: 'input',
+        id: 'gid',
         templateOptions: {
           label: 'Giver ID',
-          description: 'An internal identifier of the giver.'
+          description: 'An internal identifier of the giver.',
+          addonRight: addonRightScan('gid')
         }
       },
       {
