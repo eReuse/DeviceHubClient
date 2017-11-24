@@ -18,7 +18,7 @@ const CONSTANTS = {
   debug: true,
   currency: '€',
   workbenchPollingDelay: 2650,
-  workbench: 'https://localhost:8091'
+  workbench: 'AndroidApp' in window ? 'https://192.168.1.105:8091' : 'https://localhost:8091'
 }
 
 module.exports = CONSTANTS
