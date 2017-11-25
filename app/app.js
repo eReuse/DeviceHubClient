@@ -43,9 +43,10 @@ module.exports = window.angular.module('deviceHub', [
       })
       $urlRouterProvider.otherwise('/')
     })
-  .controller('deviceHubCtrl', () => {
+  .controller('deviceHubCtrl', $scope => {
     window.progressSetVal(2)
     $('html,body').removeClass('dh-wait')
+    $scope.isNotAndroid = !('AndroidApp' in window)
   })
   .run(($rootScope, CONSTANTS) => {
     $rootScope._ = window._ // We add lodash for usage in templates

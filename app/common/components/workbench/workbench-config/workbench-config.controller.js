@@ -1,4 +1,4 @@
-function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitForm, workbenchPoller) {
+function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitForm, workbenchPoller, workbenchServer) {
   $scope.cancel = () => $uibModalInstance.dismiss('cancel')
   const yesNo = [
     {
@@ -126,7 +126,7 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
         submitForm.prepare()
         const promise = $http({
           method: 'POST',
-          url: CONSTANTS.workbench + '/config',
+          url: workbenchServer.host + '/config',
           data: model
         }).then($scope.cancel)
         submitForm.after(promise, 'Configuration updated.',
@@ -137,7 +137,7 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
   const submitForm = new SubmitForm($scope.form, $scope)
   $http({
     method: 'GET',
-    url: CONSTANTS.workbench + '/config'
+    url: workbenchServer.host + '/config'
   }).success(data => {
     $scope.form.model = data
   })

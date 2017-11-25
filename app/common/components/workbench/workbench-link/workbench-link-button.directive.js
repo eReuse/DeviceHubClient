@@ -1,4 +1,4 @@
-function workbenchLinkButton (workbenchPoller, dhModal, $http, CONSTANTS, Notification) {
+function workbenchLinkButton (workbenchPoller, dhModal, $http, workbenchServer, Notification) {
   return {
     template: require('./workbench-link-button.directive.html'),
     restrict: 'E',
@@ -11,7 +11,7 @@ function workbenchLinkButton (workbenchPoller, dhModal, $http, CONSTANTS, Notifi
       $scope.removeUsb = (_uuid, $event) => {
         $http({
           method: 'DELETE',
-          url: CONSTANTS.workbench + '/usbs/' + _uuid
+          url: workbenchServer.host + '/usbs/' + _uuid
         }).success(() => {
           _.remove($scope.usbs, {_uuid: _uuid})
         }).catch(() => {

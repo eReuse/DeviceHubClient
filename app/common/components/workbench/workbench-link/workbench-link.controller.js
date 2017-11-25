@@ -1,8 +1,8 @@
 const utils = require('./../../utils')
 const Naming = utils.Naming
 
-function workbenchLink ($scope, workbenchPoller, _uuid, ResourceSettings, $uibModalInstance, SubmitForm, CONSTANTS,
-                        $http) {
+function workbenchLink ($scope, workbenchPoller, _uuid, ResourceSettings, $uibModalInstance, SubmitForm,
+                        workbenchServer, $http) {
   // Stop polling while we are in this window
   const rSettings = ResourceSettings('Computer')
   const sSettings = ResourceSettings('devices:Snapshot')
@@ -83,7 +83,7 @@ function workbenchLink ($scope, workbenchPoller, _uuid, ResourceSettings, $uibMo
         submitForm.prepare()
         const promise = $http({
           method: 'POST',
-          url: CONSTANTS.workbench + '/link',
+          url: workbenchServer.host + '/link',
           data: model
         }).then($scope.cancel)
         submitForm.after(promise, 'Device linked.',

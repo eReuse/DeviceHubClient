@@ -1,7 +1,7 @@
 class WorkbenchPoller {
-  constructor (poller, CONSTANTS) {
+  constructor (poller, CONSTANTS, workbenchServer) {
     this.poller = poller
-    this.host = CONSTANTS.workbench
+    this.host = workbenchServer.host
     this.delay = CONSTANTS.workbenchPollingDelay
     this.p = null
   }

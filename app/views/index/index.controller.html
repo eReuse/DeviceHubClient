@@ -1,6 +1,6 @@
-<header-nav class="show"></header-nav>
+<header-nav class="show" ng-if="::isNotAndroid"></header-nav>
 <section ui-view></section>
-<footer id="footer">
+<footer id="footer" ng-if="::isNotAndroid">
   <span id="links">
     <a href="https://www.devicetag.io/support/" target="_blank">Support</a>
     <a class="hidden-xs"
