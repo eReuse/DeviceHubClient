@@ -46,3 +46,28 @@ window._.mixin({
   includesF: (array, path) => value => _.includes(array, _.get(value, path)),
   isPresent: isPresent
 })
+
+window.AndroidApp = {
+  account: () => {
+    return JSON.stringify({
+      _id: '59fb459a7a993d08078b2b44',
+      email: 'a@a.a',
+      token: 'Tk9GQVRETk5VQjo=',
+      role: 'a',
+      databases: {
+        db1: 'ad',
+        db2: 'ad'
+      },
+      defaultDatabase: 'db1'
+    })
+  },
+  startJSScan: (htmlField, isUrlField) => {
+    console.log(`Scan with id ${htmlField} and isUrlField: ${isUrlField}`)
+  },
+  workbenchServerAddress: () => {
+    return 'as'
+  },
+  setWorkbenchServerAddress: a => {
+    console.log(a)
+  }
+}

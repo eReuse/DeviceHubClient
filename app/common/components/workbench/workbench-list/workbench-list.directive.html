@@ -34,10 +34,24 @@
   </div>
 </div>
 <div class="row text-center" ng-hide="$root._.isArray(snapshots)">
-  <img src="https://www.ereuse.org/files/2017/01/eReuse-Workbench.png" width="300px"
-       alt="eReuse.org Workbench" title="eReuse.org Workbench">
-  <h1>Looking for a WorkbenchServer&hellip;</h1>
-  <i class="fa fa-circle-o-notch fa-spin fa-3x"></i>
-  <h2>Ensure you are on the same network (Wi-Fi or cable) than the WorkbenchServer and that WorkbenchServer is on.</h2>
-  <p>This page will automatically change once we find a WorkbenchServer.</p>
+  <div class="col-xs-12">
+    <img src="https://www.ereuse.org/files/2017/01/eReuse-Workbench.png" width="300px"
+         alt="eReuse.org Workbench" title="eReuse.org Workbench">
+    <div ng-if="::isAndroid">
+      <h2>Looking for a Workbench Server in the IP:</h2>
+      <big>
+        <div class="form-group">
+          <input type="text" class="form-control" ng-model="workbenchServerAddress"
+                 ng-change="setWorkbenchServerAddress(workbenchServerAddress)">
+        </div>
+      </big>
+    </div>
+    <div class="col-xs-12" ng-if="!isAndroid">
+      <h1>Looking for a local Workbench Server&hellip;</h1>
+      <h2>Ensure the Workbench Server is ON.</h2>
+    </div>
+    <i class="fa fa-circle-o-notch fa-spin fa-3x"></i>
+    <p>This page will automatically change once we find a WorkbenchServer.</p>
+  </div>
+
 </div>
