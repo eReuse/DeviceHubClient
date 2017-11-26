@@ -10,7 +10,7 @@ function workbenchLink ($scope, workbenchPoller, _uuid, ResourceSettings, $uibMo
   const functionality = sSettings.schema.condition.schema.functionality.schema.general
   const addonRightScan = (id, getIdFromUrl = false) => {
     return window.AndroidApp ? {
-      onClick: `window.AndroidApp.startJSScan('${id}', getIdFromUrl=${getIdFromUrl})`,
+      onClick: () => { window.AndroidApp.startJSScan(id, getIdFromUrl) },
       class: 'fa fa-camera'
     } : null
   }
