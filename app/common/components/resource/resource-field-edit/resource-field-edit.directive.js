@@ -7,8 +7,8 @@ function resourceFieldEdit (SubmitForm, $focus, $timeout, Notification) {
     transclude: true,
     scope: {
       field: '=',
-      model: '=',
-      resource: '=?'
+      resource: '=?',
+      editing: '&?'
     },
     link: {
       pre: ($scope, $element) => {
@@ -45,12 +45,14 @@ function resourceFieldEdit (SubmitForm, $focus, $timeout, Notification) {
             editing: false,
             status: {},
             edit: () => {
+              if ($scope.editing) $scope.editing({editing: true})
               form.model.value = $scope.field.value
               $scope.edit.editing = true
               // It takes some time for the input to appear
               $timeout(() => $focus($element.find('input'), true), 250)
             },
             stopEdit: () => {
+              if ($scope.editing) $scope.editing({editing: false})
               $scope.edit.editing = false
             }
           }

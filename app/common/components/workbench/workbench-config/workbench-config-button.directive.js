@@ -4,7 +4,7 @@ function workbenchConfigButton (dhModal) {
     restrict: 'E',
     replace: true,
     link: $scope => {
-      $scope.open = () => dhModal.open('workbenchConfig', {})
+      $scope.openConfigWorkbench = () => dhModal.open('workbenchConfig', {})
     }
   }
 }

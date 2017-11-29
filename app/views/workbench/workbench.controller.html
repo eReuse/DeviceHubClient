@@ -1,24 +1,17 @@
 <div ui-view id="workbench">
   <nav class="breadcrumb navbar">
+    <div class="text-center">
+      <select ng-model="selectedNames" multiple>
+        <option ng-repeat="name in names" value="{{::name}}">{{::name}}</option>
+      </select>
+    </div>
     <ul class="nav navbar-nav navbar-left">
       <workbench-link-button></workbench-link-button>
     </ul>
     <ul class="nav navbar-nav navbar-right" ng-if="::isNotAndroid">
       <workbench-config-button></workbench-config-button>
+      <workbench-name-button></workbench-name-button>
     </ul>
   </nav>
-  <ul class="list-inline text-center" ng-if="::isNotAndroid">
-    <li ng-show="info.ip" class="text-success">
-      <i class="fa fa-wifi"></i>
-      Connected to Workbench Server with IP {{info.ip}}.
-    </li>
-    <li ng-hide="info.ip" class="text-danger">
-      <span class="fa-stack">
-        <i class="fa fa-wifi fa-stack-1x text-muted"></i>
-        <i class="fa fa-ban fa-stack-2x"></i>
-      </span>
-      Workbench has no Internet connection. It won't upload to DeviceHub and Android phones won't connect at it.
-    </li>
-  </ul>
   <workbench-list></workbench-list>
 </div>

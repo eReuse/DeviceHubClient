@@ -7,7 +7,9 @@ function workbenchLinkButton (workbenchPoller, dhModal, $http, workbenchServer, 
       workbenchPoller.callback(response => {
         $scope.usbs = response.data.usbs
       })
-      $scope.openWorkbenchLink = _uuid => dhModal.open('workbenchLink', {_uuid: () => _uuid})
+      $scope.openWorkbenchLink = _uuid => {
+        dhModal.open('workbenchLink', {_uuid: () => _uuid})
+      }
       $scope.removeUsb = (_uuid, $event) => {
         $http({
           method: 'DELETE',
@@ -19,6 +21,7 @@ function workbenchLinkButton (workbenchPoller, dhModal, $http, workbenchServer, 
         })
         $event.stopPropagation()
       }
+      $scope.filterName = name => _.isEmpty($scope.selectedNames) ? true : _.includes($scope.selectedNames, name)
     }
   }
 }

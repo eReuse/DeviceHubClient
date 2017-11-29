@@ -1,0 +1,46 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    <i class="fa fa-edit fa-fw fa-lg"></i>Name USB Flash drives
+  </h3>
+</div>
+<div class="modal-body">
+  <div ng-repeat="type in types">
+    <h2 class="table-title">{{::type.title}}</h2>
+    <p>{{::type.description}}</p>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Model</th>
+          <th>Manufacturer</th>
+          <th>S/N</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="usb in usbs[type.type]">
+          <td>
+            <resource-field-edit field="{editable: true, key: 'name', value: usb.name || '', name: 'Name'}"
+                                 resource="usb"
+                                 editing="isEditing(editing)">
+              {{usb.name}}
+            </resource-field-edit>
+          </td>
+          <td>{{::usb.model}}</td>
+          <td>{{::usb.manufacturer}}</td>
+          <td>{{::usb.serialNumber}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="modal-footer">
+  <div class="row">
+    <button class="btn btn-warning"
+            type="button"
+            ng-click="cancel()"
+            ng-disabled="status.loading"
+    >
+      Done
+    </button>
+  </div>
+</div>

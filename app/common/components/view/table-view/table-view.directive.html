@@ -18,7 +18,7 @@
                         dataRelationUndef: $root._.isUndefined(field.data_relation)
                       }"
       >
-        <resource-field-edit field="field" model="model" resource="resource">
+        <resource-field-edit field="field" resource="resource">
           <json-formatter json="field.value" ng-if="is.dataRelationUndef && (is.plain || is.array)"></json-formatter>
           <span ng-if="is.dataRelationUndef && !is.plain && !is.array">
             {{field.value}}&nbsp;{{::field.unitCode}}
