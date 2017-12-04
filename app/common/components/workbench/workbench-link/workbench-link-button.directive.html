@@ -3,8 +3,8 @@
     <i class="fa fa-usb fa-fw fa-lg fa-rotate-270"></i>
     <strong ng-show="usb.name">{{usb.name}}</strong>
     <span ng-hide="usb.name">
-      <strong>{{::usb.product}}</strong>
-      {{::usb.usb}}
+      <strong>{{::usb.model}}</strong>
+      {{::usb.manufacturer}}
     </span>
     <i class="fa fa-times" ng-click="removeUsb(usb._uuid, $event)"></i>
   </a>
