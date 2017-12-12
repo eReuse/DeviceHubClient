@@ -1,4 +1,11 @@
-<div class="row" ng-if="$root._.isArray(snapshots)">
+<div class="row" ng-if="$root._.isArray(keyedSnapshots)">
+  <ul class="list-inline text-center text-muted" ng-show="::isNotAndroid">
+    <li class="text-info">{{waitingToLink}} waiting to link</li>
+    <li class="text-success">{{uploaded}} completed</li>
+    <li class="text-warning">{{error}} to upload manually</li>
+    <li>Auto-uploading to {{session.db}} as {{session.account.name || session.account.email}}</li>
+    <li><i class="fa fa-fw fa-wifi"></i>{{ip}}</li>
+  </ul>
   <div class="fill-height-bar">
     <table class="table table-striped">
       <thead>
@@ -11,25 +18,29 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="snapshot_i in snapshots" ng-init="">
-          <td>{{snapshot_i.val._id}}</td>
-          <td>{{::snapshot_i.val.device.model}}</td>
-          <td>{{::snapshot_i.val.device.manufacturer}}</td>
-          <td>{{::snapshot_i.val.device.serialNumber}}</td>
+        <tr ng-repeat="keyedSnapshot in keyedSnapshots | orderBy:'date':true "
+            ng-init="snapshot = keyedSnapshot.snapshot"
+            ng-class="
+          {
+            'info': snapshot._phases === snapshot._totalPhases && !snapshot._linked,
+            'success': snapshot._saved,
+            'warning': snapshot._error
+          }
+          ">
+          <td>{{snapshot.device._id}}</td>
+          <td>{{::snapshot.device.model}}</td>
+          <td>{{::snapshot.device.manufacturer}}</td>
+          <td>{{::snapshot.device.serialNumber}}</td>
           <td>
-            <div class="label center-block"
-                 ng-class="
-                 {
-                    'label-default': $root._.size(snapshot_i.val.times) <= 2,
-                    'label-primary': $root._.size(snapshot_i.val.times) > 2 && $root._.size(snapshot_i.val.times) < 6,
-                    'label-success': $root._.size(snapshot_i.val.times) === 6
-                 }">
-              <strong>
-                <big>
-                  {{$root._.size(snapshot_i.val.times) - 1}}
-                  <i ng-show="snapshot_i.val.device.type" class="fa fa-usb fa-fw"></i>
-                </big>
-              </strong>
+            <div class="center-block">
+              {{snapshot._phases}} /
+              <small>{{::snapshot._totalPhases}}</small>
+              <a ng-show="!isAndroid && snapshot._saved"
+                 ng-href="{{workbenchServer.host}}/snapshots/{{::snapshot._uuid}}"
+                 target="_blank"
+              >
+                <i class="fa fa-lg fa-file fa-fw"></i>
+              </a>
             </div>
           </td>
         </tr>
@@ -37,7 +48,7 @@
     </table>
   </div>
 </div>
-<div class="row text-center" ng-hide="$root._.isArray(snapshots)">
+<div class="row text-center" ng-hide="$root._.isArray(keyedSnapshots)">
   <div class="col-xs-12">
     <img src="https://www.ereuse.org/files/2017/01/eReuse-Workbench.png" width="300px"
          alt="eReuse.org Workbench" title="eReuse.org Workbench">

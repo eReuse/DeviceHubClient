@@ -13,7 +13,10 @@ function formlyConfig (formlyConfigProvider, CONSTANTS) {
     templateUrl: window.COMMON + '/config/error-messages.formly.config.html'
   })
 
-
+  formlyConfigProvider.setWrapper({
+    name: 'panel',
+    template: require('./panel.wrapper.formly.html')
+  })
 }
 
 module.exports = formlyConfig

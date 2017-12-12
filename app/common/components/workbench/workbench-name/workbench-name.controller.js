@@ -13,7 +13,7 @@ function workbenchConfig ($scope, $uibModalInstance, poller, workbenchServer, wo
   function submitNameChange (model) {
     return $http({
       method: 'POST',
-      url: workbenchServer.host + '/usbs/name',
+      url: workbenchServer.host + '/usbs/named',
       data: model
     })
   }

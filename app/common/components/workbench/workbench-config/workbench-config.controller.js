@@ -3,45 +3,45 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
   const yesNo = [
     {
       name: 'No',
-      value: 'no'
+      value: false
     },
     {
       name: 'Yes',
-      value: 'yes'
+      value: true
     }
   ]
   $scope.form = {
     fields: [
       {
-        key: 'SMART',
+        key: 'smart',
         type: 'radio',
         templateOptions: {
-          label: 'Test the Hard-drive',
+          label: 'Test the hard-drives',
           description: 'Perform SMART test on hard-drives.',
-          required: true,
           options: [
             {
-              name: 'Do not test',
-              value: 'none'
+              name: 'Don\'t test the hard-drive.',
+              value: null
             },
             {
-              name: 'Short test',
+              name: 'Short test: Checks in general the health of the hard-drives and extensively in some parts. ' +
+              'ETA: ~ 2 minutes.',
               value: 'short'
             },
             {
-              name: 'Long test',
+              name: 'Long test: Checks hard-drives extensively for errors.',
               value: 'long'
             }
           ]
         }
       },
       {
-        key: 'STRESS',
+        key: 'stress',
         type: 'input',
+        defaultValue: 0,
         templateOptions: {
           label: 'Stress test time',
-          description: `Execute a stress test for the amount of minutes.
-           The stress test puts the computer to 100%. Specify 0 minutes to skip the test.`,
+          description: `Execute a stress test for the amount of minutes. Set to 0 to skip it.`,
           type: 'number',
           min: 0,
           max: 100,
@@ -50,74 +50,64 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
         }
       },
       {
-        key: 'ERASE',
-        type: 'radio',
-        templateOptions: {
-          label: 'Erase the hard-drive?',
-          options: yesNo
-        }
-      },
-      {
-        key: 'MODE',
+        key: 'erase',
         type: 'radio',
         templateOptions: {
           label: 'Erasure type',
-          description: 'Both types can generate a certificate, however only the Secure uses an official certified' +
-          ' erasure process, as it guarantees all data has been erased. The normal erasure can take up to an hour and' +
-          ' the secure one several hours.',
+          description: 'Shall we erase the hard-drives?' +
+          ' Both types can generate a certificate, however only the Secure uses an official certified' +
+          ' erasure process, as it guarantees all data has been erased.',
           options: [
             {
-              name: 'Normal',
+              name: 'Don\'t erase.',
+              value: null
+            },
+            {
+              name: 'Normal: faster but does not follow standard certifiable process. ETA: ~ 1 hour.',
               value: 'EraseBasic'
             },
             {
-              name: 'Secure',
+              name: 'Secure: slower but follows standard 100% guaranteed process. ETA: + 2 hours.',
               value: 'EraseSectors'
             }
           ]
-        },
-        hideExpression: 'model.ERASE == "no"'
+        }
       },
       {
-        key: 'STEPS',
+        key: 'erase_steps',
         type: 'input',
+        defaultValue: 1,
         templateOptions: {
           label: 'Number of erasure steps',
           description: 'Can be enforced by company policies.',
           type: 'number',
           min: 1,
           max: 100,
-          step: 1
+          step: 1,
+          addonRight: {text: 'steps'}
         },
-        hideExpression: 'model.ERASE == "no"'
+        hideExpression: '!model.erase'
       },
       {
-        key: 'ZEROS',
+        key: 'erase_leading_zeros',
         type: 'radio',
+        defaultValue: false,
         templateOptions: {
           label: 'Overwrite with zeros?',
           description: 'Can be enforced by company policies.',
           options: yesNo
         },
-        hideExpression: 'model.ERASE == "no"'
+        hideExpression: '!model.erase'
       },
       {
-        key: 'INSTALL',
-        type: 'radio',
-        templateOptions: {
-          label: 'Install an Operative System (OS)?',
-          options: yesNo
-        }
-      },
-      {
-        key: 'IMAGE_NAME',
+        key: 'install',
         type: 'input',
         templateOptions: {
-          label: 'Name of the image to install',
-          description: 'The name of the FSA image to install, without the ".fsa"',
+          label: 'Install an Operative System',
+          description: 'Write the name of the FSA image to install, without the ".fsa",' +
+          'or leave it blank to avoid installation.',
           addonRight: {text: '.fsa'}
-        },
-        hideExpression: 'model.INSTALL == "no"'
+        }
       }
     ],
     model: null,

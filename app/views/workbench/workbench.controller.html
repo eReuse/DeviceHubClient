@@ -1,6 +1,6 @@
 <div ui-view id="workbench">
   <nav class="breadcrumb navbar">
-    <div class="text-center">
+    <div class="text-center" ng-if="::isAndroid">
       <select ng-model="selectedNames" multiple>
         <option ng-repeat="name in names" value="{{::name}}">{{::name}}</option>
       </select>

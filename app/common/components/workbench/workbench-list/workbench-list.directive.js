@@ -1,10 +1,12 @@
-function workbenchList (workbenchPoller, workbenchServer) {
+function workbenchList (workbenchPoller, workbenchServer, session) {
   return {
     template: require('./workbench-list.directive.html'),
     restrict: 'E',
     link: $scope => {
-      $scope.snapshots = null
+      $scope.keyedSnapshots = null
       $scope.isAndroid = 'AndroidApp' in window
+      $scope.isNotAndroid = !('AndroidApp' in window)
+      $scope.session = session
       if ($scope.isAndroid) {
         $scope.workbenchServerAddress = window.AndroidApp.workbenchServerAddress()
         $scope.setWorkbenchServerAddress = value => {
@@ -15,8 +17,14 @@ function workbenchList (workbenchPoller, workbenchServer) {
         }
       }
       workbenchPoller.callback(response => {
-        $scope.snapshots = response.data.devices
+        $scope.keyedSnapshots = response.data.snapshots
+        const snapshots = _.map($scope.keyedSnapshots, 'snapshot')
+        $scope.waitingToLink = _.filter(snapshots, s => s._phases === s._totalPhases && !s._linked).length
+        $scope.error = _.filter(snapshots, '_error').length
+        $scope.uploaded = _.filter(snapshots, '_uploaded').length
+        $scope.ip = response.data.ip
       })
+      $scope.workbenchServer = workbenchServer
     }
   }
 }

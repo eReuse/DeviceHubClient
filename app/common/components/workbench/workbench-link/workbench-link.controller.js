@@ -10,61 +10,81 @@ function workbenchLink ($scope, workbenchPoller, _uuid, ResourceSettings, $uibMo
   const functionality = sSettings.schema.condition.schema.functionality.schema.general
   const addonRightScan = (id, getIdFromUrl = false) => {
     return window.AndroidApp ? {
-      onClick: () => { window.AndroidApp.startJSScan(id, getIdFromUrl) },
+      onClick: () => {
+        window.AndroidApp.startJSScan(id, getIdFromUrl)
+      },
       class: 'fa fa-camera'
     } : null
   }
   $scope.form = {
     fields: [
       {
-        key: '_id',
-        type: 'input',
-        id: '_id',
+        key: 'device',
+        wrapper: 'panel',
         templateOptions: {
-          label: 'System ID',
-          description: 'The Identifier printed in the tag or label.',
-          addonRight: addonRightScan('_id', true)
-        }
+          label: 'Device'
+        },
+        fieldGroup: [
+          {
+            key: '_id',
+            type: 'input',
+            id: '_id',
+            templateOptions: {
+              label: 'System ID',
+              description: 'The Identifier printed in the tag or label.',
+              addonRight: addonRightScan('_id', true)
+            }
+          },
+          {
+            key: 'gid',
+            type: 'input',
+            id: 'gid',
+            templateOptions: {
+              label: 'Giver ID',
+              description: 'An internal identifier of the giver.',
+              addonRight: addonRightScan('gid')
+            }
+          },
+          {
+            key: 'device_type',
+            type: 'radio',
+            templateOptions: {
+              label: 'Device type',
+              description: 'The Identifier printed in the tag or label.',
+              options: _.map(rSettings.schema.type.allowed, value => ({name: Naming.humanize(value), value: value})),
+              required: true
+            }
+          }
+        ]
       },
       {
-        key: 'gid',
-        type: 'input',
-        id: 'gid',
+        key: 'condition',
+        wrapper: 'panel',
         templateOptions: {
-          label: 'Giver ID',
-          description: 'An internal identifier of the giver.',
-          addonRight: addonRightScan('gid')
-        }
-      },
-      {
-        key: 'device_type',
-        type: 'radio',
-        templateOptions: {
-          label: 'Device type',
-          description: 'The Identifier printed in the tag or label.',
-          options: _.map(rSettings.schema.type.allowed, value => ({name: Naming.humanize(value), value: value})),
-          required: true
-        }
-      },
-      {
-        key: 'visual_grade',
-        type: 'radio',
-        templateOptions: {
-          label: 'Appearance',
-          description: appearance.description,
-          options: _.map(appearance.allowed_description, (name, value) => ({name: name, value: value})),
-          required: true
-        }
-      },
-      {
-        key: 'functional_grade',
-        type: 'radio',
-        templateOptions: {
-          label: 'Functionality',
-          description: functionality.description,
-          options: _.map(functionality.allowed_description, (name, value) => ({name: name, value: value})),
-          required: true
-        }
+          label: 'Device condition'
+        },
+        fieldGroup: [
+          {
+            key: 'appearance.general',
+            type: 'radio',
+            templateOptions: {
+              label: 'Appearance',
+              description: appearance.description,
+              options: _.map(appearance.allowed_description, (name, value) => ({name: name, value: value})),
+              required: true
+            }
+          },
+          {
+            key: 'functionality.general',
+            type: 'radio',
+            templateOptions: {
+              label: 'Functionality',
+              description: functionality.description,
+              options: _.map(functionality.allowed_description, (name, value) => ({name: name, value: value})),
+              required: true
+            }
+          }
+        ]
       },
       {
         key: 'comment',
@@ -76,14 +96,14 @@ function workbenchLink ($scope, workbenchPoller, _uuid, ResourceSettings, $uibMo
       }
     ],
     model: {
-      _uuid: _uuid
+      _linked: true
     },
     submit: model => {
       if (submitForm.isValid()) {
         submitForm.prepare()
         const promise = $http({
-          method: 'POST',
-          url: workbenchServer.host + '/link',
+          method: 'PATCH',
+          url: `${workbenchServer.host}/snapshots/${_uuid}`,
           data: model
         }).then($scope.cancel)
         submitForm.after(promise, 'Device linked.',

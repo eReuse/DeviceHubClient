@@ -1,11 +1,9 @@
 <li ng-repeat="usb in usbs | filter: filterName">
-  <a ng-click="openWorkbenchLink(usb._uuid)">
-    <i class="fa fa-usb fa-fw fa-lg fa-rotate-270"></i>
-    <strong ng-show="usb.name">{{usb.name}}</strong>
-    <span ng-hide="usb.name">
-      <strong>{{::usb.model}}</strong>
-      {{::usb.manufacturer}}
-    </span>
-    <i class="fa fa-times" ng-click="removeUsb(usb._uuid, $event)"></i>
+  <a ng-click="openWorkbenchLink(usb._uuid)" class="workbench-link-button">
+    <i class="fa fa-usb fa-lg fa-rotate-270"></i>
+    <div class="divided">
+      <strong>{{usb.name || usb.model}}</strong>
+      <small>{{usb.name ? usb.model : usb.manufacturer}}</small>
+    </div>
   </a>
 </li>
