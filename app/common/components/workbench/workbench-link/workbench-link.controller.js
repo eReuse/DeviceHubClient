@@ -16,75 +16,48 @@ function workbenchLink ($scope, workbenchPoller, _uuid, ResourceSettings, $uibMo
       class: 'fa fa-camera'
     } : null
   }
+  const getOptions = _().map((name, value) => ({name: name, value: value})).sortBy(['value'])
   $scope.form = {
     fields: [
       {
-        key: 'device',
-        wrapper: 'panel',
+        key: 'device._id',
+        type: 'input',
+        id: '_id',
         templateOptions: {
-          label: 'Device'
-        },
-        fieldGroup: [
-          {
-            key: '_id',
-            type: 'input',
-            id: '_id',
-            templateOptions: {
-              label: 'System ID',
-              description: 'The Identifier printed in the tag or label.',
-              addonRight: addonRightScan('_id', true)
-            }
-          },
-          {
-            key: 'gid',
-            type: 'input',
-            id: 'gid',
-            templateOptions: {
-              label: 'Giver ID',
-              description: 'An internal identifier of the giver.',
-              addonRight: addonRightScan('gid')
-            }
-          },
-          {
-            key: 'device_type',
-            type: 'radio',
-            templateOptions: {
-              label: 'Device type',
-              description: 'The Identifier printed in the tag or label.',
-              options: _.map(rSettings.schema.type.allowed, value => ({name: Naming.humanize(value), value: value})),
-              required: true
-            }
-          }
-        ]
+          label: 'System ID',
+          description: 'The Identifier printed in the tag or label.',
+          addonRight: addonRightScan('_id', true)
+        }
       },
       {
-        key: 'condition',
-        wrapper: 'panel',
+        key: 'device.gid',
+        type: 'input',
+        id: 'gid',
         templateOptions: {
-          label: 'Device condition'
-        },
-        fieldGroup: [
-          {
-            key: 'appearance.general',
-            type: 'radio',
-            templateOptions: {
-              label: 'Appearance',
-              description: appearance.description,
-              options: _.map(appearance.allowed_description, (name, value) => ({name: name, value: value})),
-              required: true
-            }
-          },
-          {
-            key: 'functionality.general',
-            type: 'radio',
-            templateOptions: {
-              label: 'Functionality',
-              description: functionality.description,
-              options: _.map(functionality.allowed_description, (name, value) => ({name: name, value: value})),
-              required: true
-            }
-          }
-        ]
+          label: 'Giver ID',
+          description: 'An internal identifier of the giver.',
+          addonRight: addonRightScan('gid')
+        }
+      },
+      {
+        key: 'condition.appearance.general',
+        type: 'radio',
+        templateOptions: {
+          label: 'Appearance',
+          description: appearance.description,
+          options: getOptions.plant(appearance.allowed_description).value(),
+          required: true
+        }
+      },
+      {
+        key: 'condition.functionality.general',
+        type: 'radio',
+        templateOptions: {
+          label: 'Functionality',
+          description: functionality.description,
+          options: getOptions.plant(functionality.allowed_description).value(),
+          required: true
+        }
       },
       {
         key: 'comment',
