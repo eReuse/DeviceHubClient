@@ -77,7 +77,8 @@ const RESOURCE_CONFIG = {
         'labelId', 'placeholder', 'parent', 'place', 'perms']),
       label: {
         fields: [
-          'serialNumber', 'pid', 'model', 'manufacturer', 'labelId', 'hid', '_id', 'totalRamSize', 'totalHardDriveSize'
+          'serialNumber', 'pid', 'model', 'manufacturer', 'labelId',
+          'hid', '_id', 'totalRamSize', 'totalHardDriveSize', 'processorModel'
         ],
         defaultFields: [
           'labelId', '_id'
