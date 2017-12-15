@@ -1,11 +1,26 @@
-<div class="row" ng-if="$root._.isArray(keyedSnapshots)">
+<div class="row" ng-if="$root._.isArray(snapshots)">
   <ul class="list-inline text-center text-muted" ng-show="::isNotAndroid">
     <li class="text-info">{{waitingToLink}} waiting to link</li>
     <li class="text-success">{{uploaded}} completed</li>
     <li class="text-warning">{{error}} to upload manually</li>
-    <li>Auto-uploading to {{session.db}} as {{session.account.name || session.account.email}}</li>
+    <li ng-show="attempts === 0">
+      <i class="fa fa-link"></i>
+      Auto-uploading to {{session.db}} as {{session.account.name || session.account.email}}
+    </li>
+    <li ng-show="attempts > 0">
+      <i class="fa fa-unlink"></i>
+      Can't upload. Retrying&hellip;
+    </li>
     <li><i class="fa fa-fw fa-wifi"></i>{{ip}}</li>
   </ul>
+  <div ng-show="attempts === 1" class="text-warning text-center">
+    <i class="fa fa-warning"></i>
+    Unstable connection to {{::appName}}. Check Wi-Fi and Internet.
+  </div>
+  <div ng-show="attempts >= 2" class="alert alert-danger text-center">
+    <i class="fa fa-warning fa-lg"></i>
+    Connection to {{::appName}} lost. Check Wi-Fi and Internet.
+  </div>
   <div class="fill-height-bar">
     <table class="table table-striped">
       <thead>
@@ -18,8 +33,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="keyedSnapshot in keyedSnapshots | orderBy:'date':true "
-            ng-init="snapshot = keyedSnapshot.snapshot"
+        <tr ng-repeat="snapshot in snapshots | orderBy:'date':true "
             ng-class="
           {
             'info': snapshot._phases === snapshot._totalPhases && !snapshot._linked,
@@ -48,7 +62,7 @@
     </table>
   </div>
 </div>
-<div class="row text-center" ng-hide="$root._.isArray(keyedSnapshots)">
+<div class="row text-center" ng-hide="$root._.isArray(snapshots)">
   <div class="col-xs-12">
     <img src="https://www.ereuse.org/files/2017/01/eReuse-Workbench.png" width="300px"
          alt="eReuse.org Workbench" title="eReuse.org Workbench">
