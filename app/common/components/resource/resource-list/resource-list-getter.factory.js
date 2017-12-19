@@ -169,7 +169,12 @@ function ResourceListGetterFactory (ResourceSettings) {
       if (showProgressBar) this.progressBar.start()
       // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 1
       this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 1
-      const q = {where: this._filters, page: this.pagination.pageNumber, sort: this._sort}
+      const q = {
+        where: this._filters,
+        page: this.pagination.pageNumber,
+        sort: this._sort,
+        max_results: $(window).height() < 800 ? 20 : 30
+      }
       return this.server.getList(q).then(resources => {
         if (showProgressBar) this.progressBar.complete()
         if (!getNextPage) this.resources.length = 0
