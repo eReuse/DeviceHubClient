@@ -4,7 +4,7 @@
   </h3>
 </div>
 <div class="modal-body">
-  <div ng-repeat="type in types">
+  <div ng-repeat="type in ::types">
     <h2 class="table-title">{{::type.title}}</h2>
     <p>{{::type.description}}</p>
     <table class="table table-striped">
@@ -17,7 +17,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="usb in usbs[type.type]">
+        <tr ng-repeat="usb in usbs[type.type] track by usb.hid">
           <td>
             <resource-field-edit field="{editable: true, key: 'name', value: usb.name || '', name: 'Name'}"
                                  resource="usb"

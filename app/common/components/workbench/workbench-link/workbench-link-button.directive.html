@@ -1,8 +1,8 @@
-<li ng-repeat="usb in usbs | filter: filterName" ng-class="{disabled: usb._saved}">
+<li ng-repeat="usb in usbs | filter: filterName track by usb.hid" ng-class="{disabled: usb._saved}">
   <a ng-click="openWorkbenchLink(usb._uuid, usb._saved)" class="workbench-link-button">
     <i class="fa fa-usb fa-lg fa-rotate-270"></i>
     <div class="divided">
-      <strong>{{usb.name || usb.model}}</strong>
+      <strong>{{usb.name || ::usb.model}}</strong>
       <small ng-hide="usb._saved">{{usb.name ? usb.model : usb.manufacturer}}</small>
       <small ng-show="usb._saved">Already uploaded; unplug USB.</small>
     </div>

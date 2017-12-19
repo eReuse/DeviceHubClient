@@ -51,7 +51,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="resource in resources"
+          <tr ng-repeat="resource in resources track by resource._id"
               ng-class="{info: subResource.isOpened(resource._id)}"
 
               ng-init="popover = popovers[resource._id]"
