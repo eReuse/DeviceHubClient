@@ -19,7 +19,7 @@ function workbenchList (workbenchPoller, workbenchServer, session, CONSTANTS) {
       }
       workbenchPoller.callback(response => {
         const snapshots = $scope.snapshots = response.data.snapshots
-        $scope.waitingToLink = _.filter(snapshots, s => s._phases === s._totalPhases && !s._linked).length
+        $scope.waitingToLink = _.filter(snapshots, s => s._phases === s._totalPhases && !s._linked && !s._uploaded).length
         $scope.error = _.filter(snapshots, '_error').length
         $scope.uploaded = _.filter(snapshots, '_uploaded').length
         $scope.ip = response.data.ip

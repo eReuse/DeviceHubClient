@@ -36,7 +36,7 @@
         <tr ng-repeat="snapshot in snapshots | orderBy:'date':true track by snapshot._uuid"
             ng-class="
           {
-            'info': snapshot._phases === snapshot._totalPhases && !snapshot._linked,
+            'info': snapshot._phases === snapshot._totalPhases && !snapshot._linked && !snapshot._saved,
             'success': snapshot._saved,
             'warning': snapshot._error
           }
