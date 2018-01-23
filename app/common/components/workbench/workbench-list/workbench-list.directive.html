@@ -37,8 +37,8 @@
             ng-class="
           {
             'info': snapshot._phases === snapshot._totalPhases && !snapshot._linked && !snapshot._saved,
-            'success': snapshot._saved,
-            'warning': snapshot._error
+            'success': snapshot._uploaded,
+            'warning': snapshot._error && !snashot._uploaded
           }
           ">
           <td>{{snapshot.device._id}}</td>
