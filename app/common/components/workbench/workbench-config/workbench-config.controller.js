@@ -13,6 +13,19 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
   $scope.form = {
     fields: [
       {
+        key: 'link',
+        type: 'radio',
+        defaultValue: true,  // Please keep default in sync with WorkbenchServer
+        templateOptions: {
+          label: 'Link computers with labels and grade them?',
+          description: 'Set to yes for you to be able to use the eReuse.org Android App to link ' +
+          'and grade the computers. If you set to yes, we won\'t upload the computers until ' +
+          'you link/grade them with the Android App. Set to no to auto-upload them without ' +
+          'you being able to link/grade them.',
+          options: yesNo
+        }
+      },
+      {
         key: 'smart',
         type: 'radio',
         templateOptions: {
