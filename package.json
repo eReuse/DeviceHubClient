@@ -11,6 +11,7 @@
   "scripts": {
     "install": "node node_modules/bower/bin/bower install",
     "test": "node ./node_modules/gulp/bin/gulp.js unit-test-once",
+    "build": "node ./node_modules/gulp/bin/gulp.js build",
     "build-prod": "node ./node_modules/gulp/bin/gulp.js build-prod"
   },
   "dependencies": {

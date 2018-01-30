@@ -6,59 +6,38 @@ that showcases DeviceHubClient](https://www.devicetag.io/support/quick-start/).
 
 ## Installation
 ### Requirements
-- NodeJS 7.4 or greater with npm (usually bundled).
-- Several javascript packages that are automatically installed. Get
-  a list of those [here](package.json) and [here](bower.json).
+- NodeJS 7.4 or greater with npm (usually bundled together).
+- Several npm and bower packages that are automatically installed. See them [here](package.json)
+  and [here](bower.json).
  
 ### Install and build
 1. Download or clone this project.
-2. In the folder of the project, execute `npm install`. This will
-   install both npm and bower dependencies.
-3. Change the settings modify the content of 
+2. In the folder of the project, execute `npm install`. This will install both npm and bower
+   dependencies.
+3. Configure the project by modifying
    [the constants file](app/common/config/constants/CONSTANTS.js).
-4. To build the project, execute in the folder of the project 
-   `npm run-script build-prod`.
-2.  In the folder of the project, execute:
-    ```
-    bower install bower.json
-    ```
-    This will install the dependencies of the project.
-3. If using Apache 2, an example config is:
-    ```
-    <VirtualHost *:80>
-        ServerName www.example.com
+4. Build the project by executing `npm run-script build-prod` in the project folder.
+   This will create an inner folder called `dist` containing an `index.html` that you can run with
+   your favorite server.
 
-        DocumentRoot /absolute/path/to/project/folder
+## Testing
+You can run the project locally for manual testing. In such case build the project with 
+`npm run-script build`. This will build the project with *sourcemaps* and auto-build when you save 
+a file, which is very handy.
 
-        <Directory /absolute/path/to/project/folder>
-            Order allow,deny
-            Allow from all
-            Require all granted
+To run the **unit** tests, execute `npm run-script test`. This will run the tests once. You can
+keep a daemon open which will re-run the tests once it detects a change in the code. For that
+execute `node ./node_modules/gulp/bin/gulp.js unit-test`.
 
-            <IfModule rewrite.c>
-                # Optional. HTML5 mode
-                RewriteEngine on
-    
-                # Don't rewrite files or directories
-                RewriteCond %{REQUEST_FILENAME} -f [OR]
-                RewriteCond %{REQUEST_FILENAME} -d
-                RewriteRule ^ - [L]
-    
-                # Rewrite everything else to index.html to allow html5 state links
-                RewriteRule ^ index.html [L]
-            </IfModule>
-            
-            <IfModule mod_expires.c>
-                # Optional. Cache control
-                ExpiresActive On
-                ExpiresDefault "access plus 2 hours"
-            </IfModule>
-        </Directory>
-        #LogLevel debug
-    </VirtualHost>
-  ```
-  This config includes the necessary to work with HTML5 mode, and using a cache. Use [this page](http://www.control-escape.com/web/configuring-apache2-debian.html)
-   to know how to install the modules.
-5.  Set the url in the constants of Config.js to whatever URL the DeviceHub is in.
+To run the **E2E** tests you will require access to a DeviceHub, so your DeviceHubClient will
+need to be configured to connect to a DeviceHub. Moreover, this DeviceHub will need to have
+populated the database with the **dummy** values. 
+1. Execute `node ./node_modules/gulp/bin/gulp.js run-selenium`. This will install and run
+   Selenium, which is a server specialized in E2E tests.
+2. Run `node ./node_modules/protractor/bin/protractor protractor.conf.js` in another terminal.
+   This will open a Chrome window and run the tests there. I recommend not putting something
+   above the Chrome window or minimizing it, as it can break the tests.
 
-.
+Note that you can ease the execution of the tests using a good IDE, like WebStorm.
+See [how to configure Protractor](https://www.jetbrains.com/help/webstorm/2018.1/protractor.html)
+and [Gulp](https://blog.jetbrains.com/webstorm/2014/11/gulp-in-webstorm-9/) in WebStorm.
