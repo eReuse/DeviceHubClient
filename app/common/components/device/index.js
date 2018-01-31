@@ -1,6 +1,5 @@
 require('angular-ui-bootstrap')
 require('angular-animate')
-require('angular-sanitize')
 require('angular-recursion')
 require('bower_components/angular-percentage-directive/percentage.js')
 
@@ -10,7 +9,6 @@ module.exports = angular.module('common.components.device',
     'ui.bootstrap',
     require('./../event').name,
     'ngAnimate',
-    'ngSanitize',
     'RecursionHelper',
     'restangular',
     require('./../view').name,

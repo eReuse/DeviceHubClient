@@ -1,3 +1,5 @@
+window.qrcode = require('./../../../../resources/qrcode.js')
+require('angular-qrcode')
 require('restangular')
 require('angular-ui-bootstrap')
 require('jsonformatter')
@@ -7,6 +9,7 @@ require('angular-animate')
 require('angular-timeago')
 require('angular-google-maps')
 require('meanie-angular-focus')
+require('checklist-model')
 
 module.exports = angular.module('common.components.resource',
   [
@@ -22,7 +25,12 @@ module.exports = angular.module('common.components.resource',
     'uiGmapgoogle-maps',
     require('./../utilities').name,
     'Focus.Service',
-    require('ng-infinite-scroll')
+    require('ng-infinite-scroll'),
+    require('./../view').name,
+    require('./../report').name,
+    'monospaced.qrcode',
+    'checklist-model',
+    require('./../group').name // the button in resource-list
   ])
   .constant('RESOURCE_CONFIG', require('./resource-config.constant'))
   .factory('ResourceServer', require('./resource-server.factory'))
@@ -50,3 +58,35 @@ module.exports = angular.module('common.components.resource',
   .directive('resourceFieldEdit', require('./resource-field-edit/resource-field-edit.directive'))
   .directive('resourceBreadcrumb', require('./resource-breadcrumb/resource-breadcrumb.directive'))
   .service('ResourceBreadcrumb', require('./resource-breadcrumb/resource-breadcrumb.service'))
+  // Resource-label
+  /**
+   * @ngdoc directive
+   * @name label
+   * @description Generates a label for a given resource.
+   * @param {Object} resource - resource object with, at least, the fields that are going to be shown in the label and
+   * ``@type``.
+   * @param {Object} model - The model or properties that defines the representation of the label.
+   * @param {object} model.size - The size of the label.
+   * @param {int} model.size.width
+   * @param {int} model.size.height
+   * @param {int} model.size.minWidth
+   * @param {int} model.size.minHeight
+   * @param {boolean} model.useLogo - True if a logo should be use, false otherwise.
+   * @param {string} model.logo - The URL or base62 representation of a logo.
+   * @param {object[]} model.fields
+   * @param {string} model.fields[].name - The machine name of the field.
+   * @param {string} model.fields[].humanName - The human representation of the field name.
+   * @param {string} model.fields[].short - An abbreviation for the name, if possible.
+   * @param {string} model.fields[].type - The type of field as for Formly.
+   */
+  .directive('resourceLabel', require('./resource-label/label/label.directive'))
+  .directive('resourceLabelEdit', require('./resource-label/label-edit/label-edit.directive'))
+  .directive('resourceLabelButton', require('./resource-label/label-button/label-button.directive'))
+  .controller('resourceLabelCtrl', require('./resource-label/label.controller'))
+  .service('labelsToPdfService', require('./resource-label/labels-to-pdf'))
+  /**
+   * @ngdoc service
+   * @name labelModal
+   * @description Service to open a modal to label.
+   */
+  .config(require('./resource-label/label-modal.config'))

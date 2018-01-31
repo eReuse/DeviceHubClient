@@ -1,5 +1,10 @@
 /**
- * Represents the main devices view
+ * @ngdoc module
+ * @name views.inventory
+ * @description
+ * The inventory view is the main view of the application. This views
+ * comes by default after performing logging and has a path of
+ * `/:db/inventory`.
  */
 module.exports = angular.module('views.inventory',
   [

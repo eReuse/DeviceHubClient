@@ -13,6 +13,7 @@ window.Sortable = require('bower_components/Sortable/Sortable.js')
 require('angular')
 require('angular-ui-router')
 require('bootstrap')
+require('angular-sanitize')
 const isPresent = require('is-present')
 
 // NEW METHODS FOR LODASH //

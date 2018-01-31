@@ -1,9 +1,9 @@
-const test = require('./../../../../../tests/unit')
-const Directive = require('./../../../../../tests/unit/directive')
-const mock = require('./../../../../../tests/unit/mock')()
+const test = require('./../../../../../../tests/unit')
+const Directive = require('./../../../../../../tests/unit/directive')
+const mock = require('./../../../../../../tests/unit/mock')()
 
 describe('Test label edit', () => {
-  beforeEach(angular.mock.module(require('./../').name))
+  beforeEach(angular.mock.module(require('./../../').name))
   beforeEach(angular.mock.module({resourceLabelDirective: {}}))
   beforeEach(angular.mock.module($provide => {
     $provide.factory('resourceServer', mock.resourceServer)

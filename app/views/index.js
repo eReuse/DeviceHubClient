@@ -1,11 +1,16 @@
 /**
- * @overview
+ * @ngdoc module
  * @name views
- * @description Aggregates all the views of the project, with the controllers, etc.
+ * @description
+ *
+ * Aggregates the views of the application.
  */
 module.exports = angular.module('views',
   [
     require('./inventory').name,
     require('./login').name,
-    require('./workbench').name
+    require('./workbench').name,
+    require('./../common/components/elements').name,
+    require('./../common/components/resource').name,
+    require('./../common/components/event').name
   ])

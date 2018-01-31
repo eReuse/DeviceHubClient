@@ -1,9 +1,9 @@
-require('./../../../../../tests/unit')
-const Directive = require('./../../../../../tests/unit/directive')
+require('./../../../../../../tests/unit')
+const Directive = require('./../../../../../../tests/unit/directive')
 
 describe('Test label', () => {
   let cerberusToView
-  beforeEach(angular.mock.module(require('./../').name))
+  beforeEach(angular.mock.module(require('./../../').name))
   beforeEach(angular.mock.module({qrcodeDirective: {}}))
   beforeEach(angular.mock.module(function mockCerberusToViewWithASpy ($provide) {
     cerberusToView = {

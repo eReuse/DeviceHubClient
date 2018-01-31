@@ -1,5 +1,5 @@
 function resourceLabelCtrl ($scope, $uibModalInstance, resources, labelsToPdfService, progressBar) {
-  const utils = require('./../utils')
+  const utils = require('./../../utils')
   $scope.resources = resources
   $scope.model = {}
   $scope.labelEditApi = {}

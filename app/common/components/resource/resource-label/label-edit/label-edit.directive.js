@@ -1,4 +1,4 @@
-const utils = require('../../utils')
+const utils = require('../../../utils')
 const isPresent = require('is-present')
 
 function labelEdit (CONSTANTS, ResourceSettings) {
