@@ -1,15 +1,10 @@
-function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitForm, workbenchPoller, workbenchServer) {
+function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitForm, workbenchPoller,
+                          workbenchServer) {
   $scope.cancel = () => $uibModalInstance.dismiss('cancel')
-  const yesNo = [
-    {
-      name: 'No',
-      value: false
-    },
-    {
-      name: 'Yes',
-      value: true
-    }
-  ]
+  const CUSTOM = 'CUSTOM'
+  const HMG_IS_5 = 'HMG_IS_5'
+  const EraseSectors = 'EraseSectors'
+  const erasureHideExpression = `model._erase !== '${CUSTOM}'`
   $scope.form = {
     fields: [
       {
@@ -22,28 +17,16 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
           'and grade the computers. If you set to yes, we won\'t upload the computers until ' +
           'you link/grade them with the Android App. Set to no to auto-upload them without ' +
           'you being able to link/grade them.',
-          options: yesNo
-        }
-      },
-      {
-        key: 'smart',
-        type: 'radio',
-        templateOptions: {
-          label: 'Test the hard-drives',
-          description: 'Perform SMART test on hard-drives.',
           options: [
             {
-              name: 'Don\'t test the hard-drive.',
-              value: null
+              name: 'No. I won\'t stick labels to the computers nor there are labels ' +
+              'I want to relate with the computers.',
+              value: false
             },
             {
-              name: 'Short test: Checks in general the health of the hard-drives and extensively in some parts. ' +
-              'ETA: ~ 2 minutes.',
-              value: 'short'
-            },
-            {
-              name: 'Long test: Checks hard-drives extensively for errors.',
-              value: 'long'
+              name: 'Yes. I will stick labels to computers or there are already labels I want ' +
+              'to register with the computer.',
+              value: true
             }
           ]
         }
@@ -53,7 +36,7 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
         type: 'input',
         defaultValue: 0,
         templateOptions: {
-          label: 'Stress test time',
+          label: 'Stress the computer for an amount of time',
           description: `Execute a stress test for the amount of minutes. Set to 0 to skip it.`,
           type: 'number',
           min: 0,
@@ -63,43 +46,100 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
         }
       },
       {
-        key: 'erase',
+        key: 'smart',
         type: 'radio',
+        defaultValue: null,
         templateOptions: {
-          label: 'Erasure type',
-          description: 'Shall we erase the hard-drives?' +
-          ' Both types can generate a certificate, however only the Secure uses an official certified' +
-          ' erasure process, as it guarantees all data has been erased.',
+          label: 'Test the hard-drives',
+          description: 'Perform SMART test on hard-drives.',
           options: [
             {
-              name: 'Don\'t erase.',
+              name: 'Don\'t test the hard-drive.',
               value: null
             },
             {
-              name: 'Normal: faster but does not follow standard certifiable process. ETA: ~ 1 hour.',
-              value: 'EraseBasic'
+              name: 'Short test: Checks one part of the hard-drive to guess the overall health. ' +
+              'ETA: ~ 2 minutes.',
+              value: 'short'
             },
             {
-              name: 'Secure: slower but follows standard 100% guaranteed process. ETA: + 2 hours.',
-              value: 'EraseSectors'
+              name: 'Long test: Fully checks hard-drives for errors, taking way more time.',
+              value: 'long'
             }
           ]
         }
+      },
+      {
+        key: '_erase',
+        type: 'radio',
+        defaultValue: null,
+        templateOptions: {
+          label: 'Erase the hard-drives',
+          description: 'Shall we erase the hard-drives? ',
+          onChange: function setErasureOptions () {
+            const model = $scope.form.model
+            switch (model._erase) {
+              case HMG_IS_5:
+                model.erase = EraseSectors
+                model.erase_steps = 1
+                model.erase_leading_zeros = true
+                break
+              case null:
+                model.erase = null
+            }
+          },
+          options: [
+            {
+              name: 'Don\'t erase the hard-drives.',
+              value: null // erase = null
+            },
+            {
+              name: 'Erase the hard-drives with the standard "British HMG Infosec Standard 5".',
+              value: HMG_IS_5
+            },
+            {
+              name: 'Customize the erasure. Choose yourself the erasure options.',
+              value: CUSTOM
+            }
+          ]
+        }
+      },
+      {
+        key: 'erase',
+        type: 'radio',
+        defaultValue: EraseSectors,
+        templateOptions: {
+          label: 'Erasure type',
+          description: 'Type of erasure.' +
+          ' Both types can generate a certificate, however only the Secure uses an official ' +
+          'certified erasure process, as it guarantees all data has been erased.',
+          options: [
+            {
+              name: 'Normal: faster but without final verification.',
+              value: 'EraseBasic'
+            },
+            {
+              name: 'Secure: slower but verifies erasure for each disk sector.',
+              value: EraseSectors
+            }
+          ]
+        },
+        hideExpression: erasureHideExpression
       },
       {
         key: 'erase_steps',
         type: 'input',
         defaultValue: 1,
         templateOptions: {
-          label: 'Number of erasure steps',
-          description: 'Can be enforced by company policies.',
+          label: 'Number of erasure steps.',
+          description: 'Usually 1. More can be enforced by policy.',
           type: 'number',
           min: 1,
           max: 100,
           step: 1,
           addonRight: {text: 'steps'}
         },
-        hideExpression: '!model.erase'
+        hideExpression: erasureHideExpression
       },
       {
         key: 'erase_leading_zeros',
@@ -107,14 +147,24 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
         defaultValue: false,
         templateOptions: {
           label: 'Overwrite with zeros?',
-          description: 'Can be enforced by company policies.',
-          options: yesNo
+          description: 'Can be enforced by policy.',
+          options: [
+            {
+              name: 'No.',
+              value: false
+            },
+            {
+              name: 'Yes.',
+              value: true
+            }
+          ]
         },
-        hideExpression: '!model.erase'
+        hideExpression: erasureHideExpression
       },
       {
         key: 'install',
         type: 'input',
+        defaultValue: null,
         templateOptions: {
           label: 'Install an Operative System',
           description: 'Write the name of the FSA image to install, without the ".fsa",' +
@@ -133,8 +183,18 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
           data: model
         }).then($scope.cancel)
         submitForm.after(promise, 'Configuration updated.',
-          'We couldn\'t update the configuration. Ensure you are still connected to WorkbenchServer.')
+          'We couldn\'t update the configuration.' +
+          'Ensure you are still connected to WorkbenchServer.')
       }
+    },
+    /**
+     * Resets the values of the form to their defaults.
+     */
+    reset: () => {
+      $scope.form.model = _($scope.form.fields)
+        .map(field => [field.key, field.defaultValue])
+        .fromPairs()
+        .value()
     }
   }
   const submitForm = new SubmitForm($scope.form, $scope)

@@ -8,6 +8,15 @@
     We apply the configuration to the new computers that connect to the
     WorkbenchServer.
   </p>
+  <p>
+    <a
+      href="https://ereuse-org.gitbooks.io/faq/content/w-hich-is-the-data-wiping-process-performed.html"
+      target="_blank"
+    >
+      Take a look at the FAQ
+    </a>
+    to know more about the erasure process.
+  </p>
   <div ng-if="form.model">
     <form id="form-workbench-config" ng-submit="form.submit(form.model)" novalidate>
       <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
@@ -30,6 +39,9 @@
             ng-disabled="status.loading"
     >
       Cancel
+    </button>
+    <button ng-click="form.reset()" class="btn btn-info">
+      Reset to default values
     </button>
   </div>
 </div>
