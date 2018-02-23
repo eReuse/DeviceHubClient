@@ -2,7 +2,9 @@
 
 workbench-list
   .fill-height-bar
-    height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight} - #{info-height})
+    height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight} - #{$info-height})
+    @media (max-width: $screen-md-max)
+      height: calc(100vh - #{$navbar-height} - 3 * #{$breadcrumb-height} - #{$footerHeight} - #{$info-height})
     @media (max-width: $screen-xs-max)
       height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight})
     overflow-y: auto
