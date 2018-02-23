@@ -1,5 +1,6 @@
 <div class="row" ng-if="$root._.isArray(snapshots)">
   <ul class="list-inline text-center text-muted" ng-show="::isNotAndroid">
+    <li>{{working}} working</li>
     <li class="text-info">{{waitingToLink}} waiting to link</li>
     <li class="text-success">{{uploaded}} completed</li>
     <li class="text-warning">{{error}} to upload manually</li>
