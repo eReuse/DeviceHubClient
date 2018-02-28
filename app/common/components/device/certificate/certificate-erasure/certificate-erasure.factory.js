@@ -114,7 +114,6 @@ function certificateErasureFactory (CONSTANTS, CERTIFICATE_ERASURE_FACTORY_STRIN
             self._field(self.s.ERASURE_TYPE, report.isBasic ? self.s.REPORT_BASIC : self.s.REPORT_PER_SECTORS)
           ]
         },
-        self._field(self.s.ERASURE_METHOD, self.s.ERASURE_METHOD_EXPLANATION),
         self._field(self.s.ERASURE_TOOL, report.isBasic ? 'Shred' : 'Badblocks'),
         {
           columns: [
