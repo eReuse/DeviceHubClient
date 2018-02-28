@@ -14,8 +14,6 @@ const CERTIFICATE_ERASURE_FACTORY_STRINGS = {
     ERASURE_BASIC: 'Normal',
     OUTLINE: 'Resumen',
     REPORT_TITLE: 'Informes de borrado',
-    STARTING_TIME: 'Inicio',
-    ENDING_TIME: 'Final',
     ELAPSED_TIME: 'Tiempo requerido',
     STEPS: 'Pasos',
     CLEAN_WITH_ZEROS: 'Limpieza final con ceros',

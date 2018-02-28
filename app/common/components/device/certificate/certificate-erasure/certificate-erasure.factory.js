@@ -104,11 +104,10 @@ function certificateErasureFactory (CONSTANTS, CERTIFICATE_ERASURE_FACTORY_STRIN
         self.ts(self.s.DISK + ' ' + report.hdd.serialNumber, 'h2'),
         {
           columns: [
-            self._field(self.s.STARTING_TIME, startingTime.toLocaleString()),
-            self._field(self.s.ENDING_TIME, endingTime.toLocaleString())
+            self._field(self.s.DATE, report.erasure._updated.toLocaleDateString()),
+            self._field(self.s.ELAPSED_TIME, Math.floor((endingTime - startingTime) / (1000 * 60)) + ' min'),
           ]
         },
-        self._field(self.s.ELAPSED_TIME, Math.floor((endingTime - startingTime) / (1000 * 60)) + ' min'),
         {
           columns: [
             self._field(self.s.STEPS, self.get(report.erasure.steps.length)),
