@@ -191,8 +191,6 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
         search: {
           params: RESOURCE_SEARCH.params,
           defaultParams: {'@type': 'Computer'},
-          defaultParamsForNotOwners: {}, // Params for the users that don't have explicit access to the DB
-          defaultParamsWhenSubview: {} // If set, these default params will be used when resource-list is in a
           // subview (parent-resource is set)
         },
         buttons: {
@@ -415,7 +413,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
               select: ['Yes', 'No'],
               boolean: true,
               comparison: '=',
-              description: 'Match devices that are not recycled, disposed and not moved to another inventory.'
+              description: 'Match devices that are not recycled, disposed, a final user received, or moved to another inventory.'
             },
             {
               key: 'rangeIsAtLeast',
@@ -455,12 +453,6 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
             }
           ]),
           defaultParams: {'is-component': 'No', 'active': 'Yes'},
-          defaultParamsForNotOwners: {'not-event': 'devices:Sell', rangeIsAtLeast: 'Low'},
-          defaultParamsWhenSubview: {'is-component': 'No'},
-          defaultParamsWhenSubviewForNotOwners: {
-            Event: {'is-component': 'No'},
-            default: {'not-event': 'devices:Sell', rangeIsAtLeast: 'Low'}
-          },
           subResource: {
             Event: {key: 'device', field: '_id'}
           }

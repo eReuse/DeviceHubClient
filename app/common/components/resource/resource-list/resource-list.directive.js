@@ -102,11 +102,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         // Search
         const parentType = _.get($scope, 'parentResource.@type')
         if (parentType) {
-          const parentSettings = ResourceSettings(parentType)
-          config.search.defaultParams =
-            _.get(config.search, `defaultParamsWhenSubviewForNotOwners.${parentSettings.rootAncestor.type}`) ||
-            _.get(config.search, `defaultParamsWhenSubviewForNotOwners.default`) ||
-            config.search.defaultParamsWhenSubview || config.search.defaultParams
           // If we are the subresource of a parent, we can only show the resources that are tied somehow with
           // the parent, not all resources. We do this by setting a default parameter in search
           // no need to _.clone this setting as we do not modify it
@@ -114,8 +109,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           const defaultParam = utils.getSetting(resourceListConfig.views, ResourceSettings(parentType), path)
           if (!defaultParam) throw TypeError(`${parentType} does not have default param for subResource ${resourceType}`)
           config.search.defaultParams[defaultParam.key] = $scope.parentResource[defaultParam.field]
-        } else if (!session.hasExplicitPerms() && config.search.defaultParamsForNotOwners) {
-          config.search.defaultParams = config.search.defaultParamsForNotOwners
         }
 
         // Sorting
