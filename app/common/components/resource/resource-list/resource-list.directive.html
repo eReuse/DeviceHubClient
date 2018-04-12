@@ -7,26 +7,12 @@
   ></resource-search>
 </div>
 
-<!-- Butttons -->
-<div id="buttons" class="row text-center" ng-class="{'hidden-xs': subResource.resource}">
-  <div id="screener"
-       uib-tooltip="Select some {{resourceName}} first."
-       tooltip-enable="selector.inList.length == 0"
-       ng-mouseenter="hoverScreener = true"
-       ng-mouseleave="hoverScreener = false"
-  >
-    <div ng-show="selector.inList.length == 0"></div>
-    <div ng-include="config.buttons.templateUrl + (session.hasExplicitPerms()? '' : '-shared') + '.html'"></div>
-  </div>
-</div>
+
 
 <!-- Listing -->
 <div class="row">
   <div
-    ng-class="{
-      'col-xs-12': type !== 'big' || !subResource.resource,
-      'col-xs-2 col-sm-4 col-lg-5': type === 'big' && subResource.resource
-    }"
+    ng-class="'col-xs-2 col-sm-4 col-lg-5'"
     class="fill-height-bar"
   >
     <div infinite-scroll="getMore()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
@@ -66,16 +52,17 @@
               popover-class="resource-button-popover"
 
               ng-click="$evalAsync(subResource.toggle(resource))"
-              ng-dblclick="subResource.openFull(resource)"
-          >
-            <td ng-class="{'hidden-xs': subResource.resource}">
-              <input class="resource-list-checkbox"
-                     type="checkbox"
-                     ng-click="toggleSelect(resource, $event, $index)"
-                     ng-model="selector.checkboxes[resource['_id']]"
-                     ng-class="{blink: hoverScreener && resource._id === resources[0]._id && inList.length == 0}"
               >
-            </td>
+            <!--ng-dblclick="subResource.openFull(resource)"-->
+
+          <!--<td ng-class="{'hidden-xs': subResource.resource}">
+            <input class="resource-list-checkbox"
+                   type="checkbox"
+                   ng-click="toggleSelect(resource, $event, $index)"
+                   ng-model="selector.checkboxes[resource['_id']]"
+                   ng-class="{blink: hoverScreener && resource._id === resources[0]._id && inList.length == 0}"
+            >
+          </td>-->
             <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
             <td ng-repeat="td in ::config.table.td"
                 ng-init="value = $root._.get(resource, td.value)"
@@ -129,8 +116,23 @@
     </div>
   </div>
   <!-- SubResource in right-bar -->
-  <aside ng-if="type === 'big' && subResource.resource" class="col-xs-10 col-sm-8 col-lg-7" id="aside-subResource">
-    <resource-view resource="subResource.resource" type="medium"></resource-view>
+  <aside class="col-xs-10 col-sm-8 col-lg-7" id="aside-subResource">
+    <div>
+      Right panel
+    </div>
+    <!-- Butttons -->
+    <div id="buttons" class="row text-center" ng-class="{'hidden-xs': subResource.resource}">
+      <div id="screener"
+           uib-tooltip="Select some {{resourceName}} first."
+           tooltip-enable="selector.inList.length == 0"
+           ng-mouseenter="hoverScreener = true"
+           ng-mouseleave="hoverScreener = false"
+      >
+        <div ng-show="selector.inList.length == 0"></div>
+        <div ng-include="config.buttons.templateUrl + (session.hasExplicitPerms()? '' : '-shared') + '.html'"></div>
+      </div>
+    </div>
+    <!-- <resource-view resource="subResource.resource" type="medium"></resource-view> -->
   </aside>
 </div>
 

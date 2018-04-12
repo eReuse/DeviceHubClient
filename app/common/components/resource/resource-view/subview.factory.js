@@ -20,7 +20,18 @@ function SubviewFactory (ResourceViewGenerator, RESOURCE_CONFIG) {
       return this.compile(subviewsConfig, $scope)
     }
 
-    static _template (subviewsConfig, $scope) {
+    static _template () {
+      return `
+        <resource-list resource-type="Device" 
+                        type="big" 
+                        parent-resource="resource"
+                        resource="resource"
+                        model="model"
+                        class="col-xs-12"
+        >
+        </resource-list>
+      `
+      /*
       let body = `<uib-tabset id="subviews" type="pills" justified="true" active="tabs.active">`
       _.forEach(subviewsConfig, (option) => {
         let uid = option.view + option.resourceType
@@ -35,12 +46,13 @@ function SubviewFactory (ResourceViewGenerator, RESOURCE_CONFIG) {
               <span class="visible-sm-inline visible-md-inline visible-lg-inline view-tab-text">${option.name}</span>
             </uib-tab-heading>
             <div ng-if="tabs['${uid}'].isActive" class="container-fluid">
-              <div class="row">${this.view(option)}</div>
+              <div class="row"></div>
             </div>
           </uib-tab>
         `
       })
       return body + '</uib-tabset>'
+      */
     }
 
     static view (option) {

@@ -1,10 +1,11 @@
+// TODO Deprecated
 function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG, ResourceBreadcrumb, ResourceSettings,
                        $compile) {
   const utils = require('./../../utils')
   const BIG = 'big'
   const MED = 'medium'
   const SM = 'small'
-  const TYPES = [BIG, MED, SM]
+  const TYPES = [BIG, MED, SM] // What are types?
   /**
    *
    * Represents a resource. Selects the appropriate view to show the resource, depending of its type.
@@ -68,6 +69,7 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
             iElement.find('#resource-view-body').html(tabs)
             // If small we use the resourceName
 
+            /* DEPRECATED
             if ($scope.type === BIG) {
               const subviewsConfig = resourceType
                 ? Subview.getSetting(resourceType, 'subviews')
@@ -77,7 +79,7 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
                 'url', 'date', 'datetime-local', 'search']) // We want to e.has to be fast
               /**
                * Sets the subviews tabs by pressing a number from the keyboard.
-               */
+               *
               const keyPress = e => {
                 if (!AVOID_INPUTS.has(e.target.type) && _.inRange(e.which, 49, 49 + num)) {  // 49 is the keyCode for '1'
                   $scope.$evalAsync(() => { $scope.tabs.active = e.which - 49 })
@@ -86,6 +88,7 @@ function resourceView (RecursionHelper, Subview, cerberusToView, RESOURCE_CONFIG
               $(document).keypress(keyPress)
               $scope.$on('$destroy', () => $(document).off('keypress', null, keyPress))
             }
+            */
           }
         }
 

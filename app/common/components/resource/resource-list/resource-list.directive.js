@@ -22,7 +22,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
       // The parent resource. If it does not have @type, then we are the list of the main inventory view.
       parentResource: '=?',
       resourceType: '@', // The type of resource this list is representing.
-      type: '@' // Type of resource-view this list is in: big, medium, small
+      type: '@' // Type of resource-view this list is in: big, medium, small TODO Deprecated
     },
     link: {
       // Note that we load on 'pre' to initialize before our child (or inner) directives so they get real config values
@@ -31,7 +31,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         const resourceType = $scope.resourceType
         $scope.resourceName = utils.Naming.resource(resourceType)
         if (!resourceType) throw TypeError('resourceList needs a "resourceType" set, not ' + resourceType)
-        if (!$scope.type) throw TypeError('resourceLists needs a "type" to be "big"|"medium"|"small", not ' + $scope.type)
+        if (!$scope.type) throw TypeError('resourceLists needs a "type" to be "big"|"medium"|"small", not ' + $scope.type) // TODO Deprecated
         progressBar.start() // resourceListGetter.getResources will call this too, but doing it here we avoid delay
         const config = _.cloneDeep(resourceListConfig.views[resourceType])
         if (_.isUndefined(config)) throw ReferenceError(resourceType + ' has no config.')

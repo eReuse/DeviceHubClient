@@ -1,5 +1,6 @@
-<article>
-  <header ng-if="type==='medium' && resource['@type']">
+<article> <!-- TODO Deprecated -->
+  <h1>Deprecated</h1>
+  <!--<header ng-if="type==='medium' && resource['@type']">
     <h3 ng-show="view.title" class="display-inline">
         <span ng-repeat="t in view.title">
           <span ng-if="t.humanize">{{resource[t.key] | humanize}}</span>
@@ -13,7 +14,7 @@
         <resource-icon resource-type="{{resource['@type']}}" resource-subtype="{{resource.type}}"></resource-icon>
       </small>
     </h3>
-  </header>
+  </header>-->
   <div id="resource-view-body"></div>
   <div ng-if="type==='small'">
     <div>&nbsp;</div><!-- Don't know why a margin-top doesn't work here -->
