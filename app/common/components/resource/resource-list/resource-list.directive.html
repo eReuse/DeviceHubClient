@@ -125,6 +125,12 @@
     <div>
       Display lot resume or device information
     </div>
+    <div ng-if="selector.inList.length == 0">
+      Lot info
+    </div>
+    <div ng-if="selector.inList.length > 0">
+      Device info
+    </div>
     <!--<h1>{{resource.summary.numberDevices}}</h1>-->
     <!-- Butttons -->
     <div id="buttons" class="row text-center" ng-class="{'hidden-xs': subResource.resource}">

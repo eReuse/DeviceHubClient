@@ -26,6 +26,40 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
       // Note that we load on 'pre' to initialize before our child (or inner) directives so they get real config values
       pre: ($scope, element) => {
         console.log('scope', JSON.stringify($scope.resource), ', parent', JSON.stringify($scope.parentResource))
+        $scope.lot = {
+          id: '',
+          name: '',
+          resume: {
+            deviceInfo: {
+              type: '',
+              subType: '',
+              brand: '',
+              model: '',
+              serialNumber: ''
+            },
+            status: '',
+            price: {
+              amount: 150,
+              currency: 'euro'
+            },
+            components: {
+
+            },
+            donor: '',
+            owner: '',
+            distributor: '',
+            user: '',
+            events: ''
+          },
+          parentLots: [
+          ],
+          childLots: [
+          ],
+          devices: [
+          ],
+          shared: [
+          ]
+        }
         $scope.session = session
         progressBar.start() // resourceListGetter.getResources will call this too, but doing it here we avoid delay
         const config = _.cloneDeep(resourceListConfig)
