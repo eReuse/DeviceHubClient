@@ -67,7 +67,7 @@ function ResourceListGetterFactory (ResourceSettings) {
       this._filtersBySource[source] = newFilters
       // Let's merge the different filters in a single one
       this._filters = {}
-      _.merge.call(_, this._filters, ..._.values(this._filtersBySource))
+      _.merge(this._filters, ..._.values(this._filtersBySource))
       // The 'search' filters have preference over others
       _.merge(this._filters, this._filtersBySource[SEARCH])
       // todo if this is called multiple times for the same parameters use isEqual and firstTime combo
@@ -178,9 +178,187 @@ function ResourceListGetterFactory (ResourceSettings) {
       return this.server.getList(q).then(resources => {
         if (showProgressBar) this.progressBar.complete()
         if (!getNextPage) this.resources.length = 0
+        // console.log('Resources' + JSON.stringify(resources))
+        resources = [
+          {
+            'label': 'BDR',
+            '_updated': '2018-04-11T10:11:49',
+            '_links': {
+              'self': {
+                'href': 'db1/lots/NCZ0iW0mC',
+                'title': 'Lot'
+              }
+            },
+            'perms': [],
+            'children': {},
+            'byUser': '5ac49232a0961e72684082dc',
+            '_created': '2018-04-11T10:11:49',
+            '@type': 'Lot',
+            '_id': 'NCZ0iW0mC',
+            'sharedWith': [],
+            'ancestors': []
+          },
+          {
+            'label': 'lot1',
+            '_updated': '2018-04-04T08:52:46',
+            '_links': {
+              'self': {
+                'href': 'db1/lots/PuDTLblX',
+                'title': 'Lot'
+              }
+            },
+            'perms': [
+              {
+                'perm': 'r',
+                'account': '5ac4925da0961e72684083e8'
+              }
+            ],
+            'children': {
+              'pallets': [
+                'PuDTdt9X'
+              ]
+            },
+            'byUser': '5ac49232a0961e72684082dc',
+            '_created': '2018-04-04T08:52:34',
+            '@type': 'Lot',
+            '_id': 'PuDTLblX',
+            'sharedWith': [
+              '5ac4925da0961e72684083e8'
+            ],
+            'ancestors': [
+              {
+                'component': [],
+                'packages': [],
+                'incoming-lot': [],
+                'places': [],
+                'pallets': [],
+                'lots': [],
+                '_id': 'XuRYHTxP',
+                'outgoing-lot': [],
+                'devices': [],
+                '@type': 'Place'
+              }
+            ]
+          },
+          {
+            'label': 'Lot from User',
+            '_updated': '2018-04-04T08:52:45',
+            '_links': {
+              'self': {
+                'href': 'db1/lots/XOmGHs3i',
+                'title': 'Lot'
+              }
+            },
+            'perms': [],
+            'children': {},
+            'byUser': '5ac49232a0961e72684082dc',
+            '_created': '2018-04-04T08:52:45',
+            '@type': 'Lot',
+            '_id': 'XOmGHs3i',
+            'sharedWith': [],
+            'ancestors': []
+          },
+          {
+            'placeholder': true,
+            '_links': {
+              'self': {
+                'href': 'db1/devices/469',
+                'title': 'Device'
+              }
+            },
+            'isUidSecured': true,
+            'components': [],
+            '_created': '2018-04-11T16:28:24',
+            '_id': '469',
+            'ancestors': [],
+            '_updated': '2018-04-11T16:28:24',
+            'events': [
+              {
+                '_updated': '2018-04-11T16:28:24',
+                'byUser': '5ac49232a0961e72684082dc',
+                'secured': false,
+                'incidence': false,
+                '_id': '5ace37a8a0961e0651b59a50',
+                '@type': 'devices:Register'
+              }
+            ],
+            '@type': 'Device',
+            'totalHardDriveSize': 0,
+            'forceCreation': false,
+            '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
+            'public': false,
+            'perms': [],
+            'totalRamSize': 0
+          },
+          {
+            'placeholder': true,
+            '_links': {
+              'self': {
+                'href': 'db1/devices/468',
+                'title': 'Device'
+              }
+            },
+            'isUidSecured': true,
+            'components': [],
+            '_created': '2018-04-11T16:28:24',
+            '_id': '468',
+            'ancestors': [],
+            '_updated': '2018-04-11T16:28:24',
+            'events': [
+              {
+                '_updated': '2018-04-11T16:28:24',
+                'byUser': '5ac49232a0961e72684082dc',
+                'secured': false,
+                'incidence': false,
+                '_id': '5ace37a8a0961e0651b59a4f',
+                '@type': 'devices:Register'
+              }
+            ],
+            '@type': 'Device',
+            'totalHardDriveSize': 0,
+            'forceCreation': false,
+            '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
+            'public': false,
+            'perms': [],
+            'totalRamSize': 0
+          },
+          {
+            'placeholder': true,
+            '_links': {
+              'self': {
+                'href': 'db1/devices/467',
+                'title': 'Device'
+              }
+            },
+            'isUidSecured': true,
+            'components': [],
+            '_created': '2018-04-11T16:28:24',
+            '_id': '467',
+            'ancestors': [],
+            '_updated': '2018-04-11T16:28:24',
+            'events': [
+              {
+                '_updated': '2018-04-11T16:28:24',
+                'byUser': '5ac49232a0961e72684082dc',
+                'secured': false,
+                'incidence': false,
+                '_id': '5ace37a8a0961e0651b59a4e',
+                '@type': 'devices:Register'
+              }
+            ],
+            '@type': 'Device',
+            'totalHardDriveSize': 0,
+            'forceCreation': false,
+            '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
+            'public': false,
+            'perms': [],
+            'totalRamSize': 0
+          }
+        ]
+
         _.assign(this.resources, this.resources.concat(resources))
-        this.pagination.morePagesAvailable = resources._meta.page * resources._meta.max_results < resources._meta.total
-        this.pagination.totalPages = resources._meta.total
+        this.pagination.morePagesAvailable = resources._meta && resources._meta.page * resources._meta.max_results < resources._meta.total
+        this.pagination.totalPages = resources._meta && resources._meta.total
         // broadcast to callbacks
         _.invokeMap(this._callbacksOnGetting, _.call, null, this.resources, this.resourceType, this.pagination, getNextPage)
       })

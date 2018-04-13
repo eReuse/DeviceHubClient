@@ -153,13 +153,14 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
     }
   }
 
-  function hasGroupCallback (resourceName) {
+ /* function hasGroupCallback (resourceName) {
     const resourceType = Naming.type(resourceName)
     return (where, ancestors) => {
       const parents = _(ancestors).filter({'@type': resourceType}).flatMapDeep('_id').value()
       where['_id'] = {'$in': _(ancestors).flatMapDeep(resourceName).concat(parents).uniq().value()}
     }
   }
+  */
 
   // We use the typeahead to retrieve us the ancestors of the device :-)
   // todo ^ makes to show [object Object] in the typeahead field
@@ -186,285 +187,268 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
   }
 
   return {
-    views: {
-      default: { // This is not used, but provided as a template
-        search: {
-          params: RESOURCE_SEARCH.params,
-          defaultParams: {'@type': 'Computer'},
-          // subview (parent-resource is set)
+    search: {
+      params: RESOURCE_SEARCH.params.concat([
+        {key: 'label', name: 'Label', placeholder: 'Label...', realKey: 'labelId'},
+        {
+          key: '@type',
+          name: 'Type of device',
+          select: 'Device',
+          comparison: '=',
+          description: 'The type of the device: Computer, Mobile, Computer monitor...'
         },
-        buttons: {
-          templateUrl: ''
+        {
+          key: 'pid',
+          name: 'Pid',
+          placeholder: 'The Platform Identifier...'
         },
-        table: {
-          // th and td need to share the same order
-          th: [{key: '', name: ''}],
-          td: [{value: ''}, {templateUrl: ''}]
+        {
+          key: 'gid',
+          name: 'Gid',
+          placeholder: 'The Giver Identifier...'
+        },
+        {
+          key: 'rid',
+          name: 'Rid',
+          placeholder: 'The Refurbisher Identifier...'
+        },
+        {
+          key: 'type',
+          name: 'Subtype of device',
+          select: _(schema.schema)  // We get all subtypes of devices
+            .filter((r, n) => _.isObject(r) && 'type' in r && _.includes(deviceSettings.types, Naming.type(n)))
+            .flatMap(r => r['type']['allowed'])
+            .uniq()
+            .value(),
+          comparison: '=',
+          description: 'Subtypes of devices...'
+        },
+        {key: 'serialNumber', name: 'Serial Number', placeholder: 'S/N...'},
+        {key: 'model', name: 'Model', placeholder: 'Vaio...'},
+        {key: 'manufacturer', name: 'Manufacturer', placeholder: 'Apple...'},
+        {key: 'parent', name: 'Components of', placeholder: 'Identifier of the computer'},
+        // { key: 'totalMemory', name: 'Total of RAM', placeholder: 'In Gigabytes...'},
+        // { key: 'event', name: 'Type of event', placeholder: 'Devices with this event...'}, todo
+        // { key: 'byUser', name: 'Author', placeholder: 'email or name of the author...'}, // todo
+        // { key: '_created', name: 'Registered in', placeholder: 'YYYY-MM-DD' },
+        // { key: '_updated', name: 'Last updated in', placeholder: 'YYYY-MM-DD'},
+        {
+          key: 'public',
+          name: 'Is public',
+          select: ['Yes', 'No'],
+          boolean: true,
+          comparison: '=',
+          description: 'Match devices that have a public link.'
+        },
+        {
+          key: 'event',
+          name: 'Has event of type',
+          select: 'devices:DeviceEvent',
+          comparison: '=',
+          realKey: 'events.@type',
+          description: 'Match only devices that have a specific type of event.'
+        },
+        {
+          key: 'event_id',
+          name: 'Has event',
+          realKey: 'events._id',
+          placeholder: 'ID of event',
+          comparison: '=',
+          description: 'Match only devices that have a specific event.'
+        },
+        LAST_EVENT,
+        {
+          key: 'eventIncidence',
+          name: 'Has an incidence',
+          realKey: 'events.incidence',
+          select: ['Yes', 'No'],
+          boolean: true,
+          comparison: '='
+        },
+        {
+          key: 'eventUpdatedBefore',
+          name: 'Event performed before or eq',
+          date: true,
+          comparison: '<=',
+          placeholder: h.datePlaceholder,
+          realKey: 'events._updated'
+        },
+        {
+          key: 'eventUpdatedAfter',
+          name: 'Event performed after or eq',
+          date: true,
+          comparison: '>=',
+          placeholder: h.datePlaceholder,
+          realKey: 'events._updated'
+        },
+        {
+          key: 'erase',
+          name: 'Erasure has',
+          realKey: 'events.success', // todo this works because success field is only for erasures
+          select: ['Succeed', 'Failed'],
+          boolean: true,
+          comparison: '=',
+          description: 'Computers or their hard-drives that have such erasures.'
+        },
+        {
+          key: 'receiver',
+          name: 'Receiver',
+          typeahead: ACCOUNT_TYPEAHEAD,
+          realKey: 'events.receiver',
+          comparison: '=',
+          placeholder: 'Type an e-mail',
+          description: 'Match devices that were given to a specific user.'
+        },
+        {
+          key: 'to',
+          name: 'Assigned to',
+          typeahead: ACCOUNT_TYPEAHEAD,
+          realKey: 'events.to',
+          comparison: '=',
+          placeholder: 'Type an e-mail',
+          description: 'Match devices that were assigned to a specific user.'
+        },
+        {
+          key: 'from',
+          name: 'Deassigned from',
+          typeahead: ACCOUNT_TYPEAHEAD,
+          placeholder: 'Type an e-mail',
+          realKey: 'events.to',
+          comparison: '=',
+          description: 'Match devices that were de-assigned from a specific user.'
+        },
+        {
+          key: 'own',
+          name: 'Owns',
+          typeahead: ACCOUNT_TYPEAHEAD,
+          realKey: 'owners',
+          comparison: 'in',
+          placeholder: 'Type an e-mail',
+          description: 'Match devices that are actually assigned to a specific user.'
+        },
+        {
+          key: 'not-own',
+          name: 'Does not own',
+          typeahead: ACCOUNT_TYPEAHEAD,
+          realKey: 'owners',
+          comparison: 'nin',
+          placeholder: 'Type an e-mail',
+          description: 'Match devices that are actually not assigned to a specific user.'
+        },
+        INSIDE_LOT,
+        OUTSIDE_LOT,
+        INSIDE_PACKAGE,
+        INSIDE_PLACE,
+        INSIDE_PALLET,
+        GROUP_INCLUSION,
+        OUTSIDE_GROUP,
+        {
+          key: 'snapshot-software',
+          name: 'Has a Snapshot made with',
+          realKey: 'events.snapshotSoftware',
+          select: SNAPSHOT_SOFTWARE_ALLOWED,
+          comparison: '=',
+          description: 'The device has a Snapshot made with a specific software.'
+        },
+        {
+          key: 'not-snapshot-software',
+          name: 'Has not a Snapshot made with',
+          realKey: 'events.snapshotSoftware',
+          select: SNAPSHOT_SOFTWARE_ALLOWED,
+          comparison: '!=',
+          description: 'The device has not a Snapshot made with a specific software.'
+        },
+        {
+          key: 'event-label',
+          realKey: 'events.label',
+          name: 'Label of the event',
+          placeholder: 'Start writing the label...',
+          description: 'The name the user wrote in the event.'
+        },
+        {
+          key: 'placeholder',
+          name: 'Is Placeholder',
+          select: ['Yes', 'No'],
+          boolean: true,
+          comparison: '=',
+          description: 'Match devices that are placeholders.'
+        },
+        {
+          key: 'not-event',
+          name: 'Has not event',
+          select: 'devices:DeviceEvent',
+          comparison: '!=',
+          realKey: 'events.@type',
+          description: 'Match only devices that have not a specific type of event. Example: devices not ready.'
+        },
+        {
+          key: 'is-component',
+          name: 'Is component',
+          realKey: '@type',
+          select: ['Yes', 'No'],
+          boolean: true,
+          comparison: (value, RSettings) => ({[value ? '$in' : '$nin']: RSettings('Component').subResourcesNames}),
+          description: 'Match devices depending if they are components or not.'
+        },
+        {
+          key: 'active',
+          name: 'Active',
+          realKey: 'dh$active',
+          select: ['Yes', 'No'],
+          boolean: true,
+          comparison: '=',
+          description: 'Match devices that are not recycled, disposed, a final user received, or moved to another inventory.'
+        },
+        {
+          key: 'rangeIsAtLeast',
+          name: 'Range is at least',
+          realKey: 'condition.general.range',
+          select: conditionRange,
+          comparison: value => ({$nin: _.takeWhile(conditionRange, v => v !== value), $ne: null}),
+          description: 'Match devices that are of range or above.'
+        },
+        {
+          key: 'rangeIs',
+          name: 'Range is',
+          realKey: 'condition.general.range',
+          select: conditionRange,
+          comparison: '=',
+          description: 'Match devices that are of range.'
+        },
+        {
+          key: 'rangeIsAtMost',
+          name: 'Range is at most',
+          realKey: 'condition.general.range',
+          select: conditionRange,
+          comparison: value => ({'$nin': _.takeRightWhile(conditionRange, v => v !== value)}),
+          description: 'Match devices that are of range or below.'
+        },
+        {
+          key: 'pricing.total.standard',
+          name: 'Price is at most',
+          comparison: '<=',
+          number: true
+        },
+        {
+          key: 'pricing.total.standard',
+          name: 'Price is at least',
+          comparison: '>=',
+          number: true
         }
-      },
-      Device: {
-        search: {
-          params: RESOURCE_SEARCH.params.concat([
-            {key: 'label', name: 'Label', placeholder: 'Label...', realKey: 'labelId'},
-            {
-              key: '@type',
-              name: 'Type of device',
-              select: 'Device',
-              comparison: '=',
-              description: 'The type of the device: Computer, Mobile, Computer monitor...'
-            },
-            {
-              key: 'pid',
-              name: 'Pid',
-              placeholder: 'The Platform Identifier...'
-            },
-            {
-              key: 'gid',
-              name: 'Gid',
-              placeholder: 'The Giver Identifier...'
-            },
-            {
-              key: 'rid',
-              name: 'Rid',
-              placeholder: 'The Refurbisher Identifier...'
-            },
-            {
-              key: 'type',
-              name: 'Subtype of device',
-              select: _(schema.schema)  // We get all subtypes of devices
-                .filter((r, n) => _.isObject(r) && 'type' in r && _.includes(deviceSettings.types, Naming.type(n)))
-                .flatMap(r => r['type']['allowed'])
-                .uniq()
-                .value(),
-              comparison: '=',
-              description: 'Subtypes of devices...'
-            },
-            {key: 'serialNumber', name: 'Serial Number', placeholder: 'S/N...'},
-            {key: 'model', name: 'Model', placeholder: 'Vaio...'},
-            {key: 'manufacturer', name: 'Manufacturer', placeholder: 'Apple...'},
-            {key: 'parent', name: 'Components of', placeholder: 'Identifier of the computer'},
-            // { key: 'totalMemory', name: 'Total of RAM', placeholder: 'In Gigabytes...'},
-            // { key: 'event', name: 'Type of event', placeholder: 'Devices with this event...'}, todo
-            // { key: 'byUser', name: 'Author', placeholder: 'email or name of the author...'}, // todo
-            // { key: '_created', name: 'Registered in', placeholder: 'YYYY-MM-DD' },
-            // { key: '_updated', name: 'Last updated in', placeholder: 'YYYY-MM-DD'},
-            {
-              key: 'public',
-              name: 'Is public',
-              select: ['Yes', 'No'],
-              boolean: true,
-              comparison: '=',
-              description: 'Match devices that have a public link.'
-            },
-            {
-              key: 'event',
-              name: 'Has event of type',
-              select: 'devices:DeviceEvent',
-              comparison: '=',
-              realKey: 'events.@type',
-              description: 'Match only devices that have a specific type of event.'
-            },
-            {
-              key: 'event_id',
-              name: 'Has event',
-              realKey: 'events._id',
-              placeholder: 'ID of event',
-              comparison: '=',
-              description: 'Match only devices that have a specific event.'
-            },
-            LAST_EVENT,
-            {
-              key: 'eventIncidence',
-              name: 'Has an incidence',
-              realKey: 'events.incidence',
-              select: ['Yes', 'No'],
-              boolean: true,
-              comparison: '='
-            },
-            {
-              key: 'eventUpdatedBefore',
-              name: 'Event performed before or eq',
-              date: true,
-              comparison: '<=',
-              placeholder: h.datePlaceholder,
-              realKey: 'events._updated'
-            },
-            {
-              key: 'eventUpdatedAfter',
-              name: 'Event performed after or eq',
-              date: true,
-              comparison: '>=',
-              placeholder: h.datePlaceholder,
-              realKey: 'events._updated'
-            },
-            {
-              key: 'erase',
-              name: 'Erasure has',
-              realKey: 'events.success', // todo this works because success field is only for erasures
-              select: ['Succeed', 'Failed'],
-              boolean: true,
-              comparison: '=',
-              description: 'Computers or their hard-drives that have such erasures.'
-            },
-            {
-              key: 'receiver',
-              name: 'Receiver',
-              typeahead: ACCOUNT_TYPEAHEAD,
-              realKey: 'events.receiver',
-              comparison: '=',
-              placeholder: 'Type an e-mail',
-              description: 'Match devices that were given to a specific user.'
-            },
-            {
-              key: 'to',
-              name: 'Assigned to',
-              typeahead: ACCOUNT_TYPEAHEAD,
-              realKey: 'events.to',
-              comparison: '=',
-              placeholder: 'Type an e-mail',
-              description: 'Match devices that were assigned to a specific user.'
-            },
-            {
-              key: 'from',
-              name: 'Deassigned from',
-              typeahead: ACCOUNT_TYPEAHEAD,
-              placeholder: 'Type an e-mail',
-              realKey: 'events.to',
-              comparison: '=',
-              description: 'Match devices that were de-assigned from a specific user.'
-            },
-            {
-              key: 'own',
-              name: 'Owns',
-              typeahead: ACCOUNT_TYPEAHEAD,
-              realKey: 'owners',
-              comparison: 'in',
-              placeholder: 'Type an e-mail',
-              description: 'Match devices that are actually assigned to a specific user.'
-            },
-            {
-              key: 'not-own',
-              name: 'Does not own',
-              typeahead: ACCOUNT_TYPEAHEAD,
-              realKey: 'owners',
-              comparison: 'nin',
-              placeholder: 'Type an e-mail',
-              description: 'Match devices that are actually not assigned to a specific user.'
-            },
-            INSIDE_LOT,
-            OUTSIDE_LOT,
-            INSIDE_PACKAGE,
-            INSIDE_PLACE,
-            INSIDE_PALLET,
-            GROUP_INCLUSION,
-            OUTSIDE_GROUP,
-            {
-              key: 'snapshot-software',
-              name: 'Has a Snapshot made with',
-              realKey: 'events.snapshotSoftware',
-              select: SNAPSHOT_SOFTWARE_ALLOWED,
-              comparison: '=',
-              description: 'The device has a Snapshot made with a specific software.'
-            },
-            {
-              key: 'not-snapshot-software',
-              name: 'Has not a Snapshot made with',
-              realKey: 'events.snapshotSoftware',
-              select: SNAPSHOT_SOFTWARE_ALLOWED,
-              comparison: '!=',
-              description: 'The device has not a Snapshot made with a specific software.'
-            },
-            {
-              key: 'event-label',
-              realKey: 'events.label',
-              name: 'Label of the event',
-              placeholder: 'Start writing the label...',
-              description: 'The name the user wrote in the event.'
-            },
-            {
-              key: 'placeholder',
-              name: 'Is Placeholder',
-              select: ['Yes', 'No'],
-              boolean: true,
-              comparison: '=',
-              description: 'Match devices that are placeholders.'
-            },
-            {
-              key: 'not-event',
-              name: 'Has not event',
-              select: 'devices:DeviceEvent',
-              comparison: '!=',
-              realKey: 'events.@type',
-              description: 'Match only devices that have not a specific type of event. Example: devices not ready.'
-            },
-            {
-              key: 'is-component',
-              name: 'Is component',
-              realKey: '@type',
-              select: ['Yes', 'No'],
-              boolean: true,
-              comparison: (value, RSettings) => ({[value ? '$in' : '$nin']: RSettings('Component').subResourcesNames}),
-              description: 'Match devices depending if they are components or not.'
-            },
-            {
-              key: 'active',
-              name: 'Active',
-              realKey: 'dh$active',
-              select: ['Yes', 'No'],
-              boolean: true,
-              comparison: '=',
-              description: 'Match devices that are not recycled, disposed, a final user received, or moved to another inventory.'
-            },
-            {
-              key: 'rangeIsAtLeast',
-              name: 'Range is at least',
-              realKey: 'condition.general.range',
-              select: conditionRange,
-              comparison: value => ({$nin: _.takeWhile(conditionRange, v => v !== value), $ne: null}),
-              description: 'Match devices that are of range or above.'
-            },
-            {
-              key: 'rangeIs',
-              name: 'Range is',
-              realKey: 'condition.general.range',
-              select: conditionRange,
-              comparison: '=',
-              description: 'Match devices that are of range.'
-            },
-            {
-              key: 'rangeIsAtMost',
-              name: 'Range is at most',
-              realKey: 'condition.general.range',
-              select: conditionRange,
-              comparison: value => ({'$nin': _.takeRightWhile(conditionRange, v => v !== value)}),
-              description: 'Match devices that are of range or below.'
-            },
-            {
-              key: 'pricing.total.standard',
-              name: 'Price is at most',
-              comparison: '<=',
-              number: true
-            },
-            {
-              key: 'pricing.total.standard',
-              name: 'Price is at least',
-              comparison: '>=',
-              number: true
-            }
-          ]),
-          defaultParams: {'is-component': 'No', 'active': 'Yes'},
-          subResource: {
-            Event: {key: 'device', field: '_id'}
-          }
-        },
-        buttons: {
-          templateUrl: configFolder + '/resource-list-config-device'
-        },
-        table: {
-          th: [f.id.th, f['@type'].th, f.type.th, f.model.th, f.price.th, f.range.th, f.lastEvent.thDef, f.created.th],
-          td: [f.id.td, f['@type'].td, f.type.td, f.model.td, f.price.td, f.range.td, f.lastEvent.td, f.created.td]
-        }
-      },
+      ]),
+      defaultParams: {'is-component': 'No', 'active': 'Yes'},
+      subResource: {
+        Event: {key: 'device', field: '_id'}
+      }
+    },
+    buttons: {
+      templateUrl: configFolder + '/resource-list-config-device'
+    },
+    table: {
+      th: [f.id.th, f['@type'].th, f.type.th, f.model.th, f.price.th, f.range.th, f.lastEvent.thDef, f.created.th],
+      td: [f.id.td, f['@type'].td, f.type.td, f.model.td, f.price.td, f.range.td, f.lastEvent.td, f.created.td]
+    }
+      /*
       Lot: {
         search: {
           params: RESOURCE_SEARCH.params.concat([
@@ -689,7 +673,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
           td: [f.email.td, f.name.td, f.organization.td, f.updated.td]
         }
       }
-    }
+      */
   }
 }
 

@@ -43,21 +43,12 @@ function ResourceSelectorFactory () {
      *
      * @param {object} resource - The resource to select/deselect
      * @param {$event} $event - JQuery's/JQLite event object
-     * @param {number} $index - The index of the resource in the *resources* list.
      */
-    toggle (resource, $event, $index) {
+    toggle (resource) {
       if (this.isInList(resource)) { // Remove
         this.remove(resource)
       } else { // Add
-        if ($event.shiftKey) { // Add multiple
-          let foundPreviousSelectedOne = false
-          // Selects all resources until finds a previously selected resources or reaches the beginning
-          for (let i = $index; i >= 0 && !foundPreviousSelectedOne; i--) {
-            foundPreviousSelectedOne = !this.add(this.resources[i])
-          }
-        } else {  // Add one
-          this.add(resource)
-        }
+        this.add(resource)
       }
     }
 
@@ -69,8 +60,7 @@ function ResourceSelectorFactory () {
       let self = this
       if (selectAll) {
         _.forEach(this.resources, resource => { self.add(resource) })  // Note that add can return false
-      }
-      else {
+      } else {
         this.deselectAll()
       }
     }

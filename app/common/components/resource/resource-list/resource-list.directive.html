@@ -1,4 +1,4 @@
-<!-- Resource Search -->
+<!-- Resource Filters -->
 <div class="row" ng-class="{'hidden-xs': subResource.resource}">
   <resource-search class="col-md-10 col-xs-offset-0 col-md-offset-1 show subview-12 subview-offset-0"
                    settings="config.search.params"
@@ -22,13 +22,18 @@
       <table id="resource-list-table" class="table table-striped table-hover">
         <thead>
           <tr>
+            <!--
+              TODO select all
             <th ng-class="{'hidden-xs': subResource.resource}">
+
               <input type="checkbox"
                      class="resource-list-checkbox"
                      ng-click="toggleSelectAll(selector.checked)"
                      ng-model="selector.checked">
 
+
             </th>
+            -->
             <th ng-repeat="th in config.table.th"
                 field-sort sort="setSort(sort)" key="{{::th.key}}" name="{{::th.name}}" group="sort"
                 sort-by-default="th.default"
@@ -38,7 +43,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="resource in resources track by resource._id"
-              ng-class="{info: subResource.isOpened(resource._id)}"
+              ng-class="{info: selector.checkboxes[resource['_id']]}"
 
               ng-init="popover = popovers[resource._id]"
 
@@ -51,14 +56,14 @@
               popover-placement="{{popoverPlacement}}"
               popover-class="resource-button-popover"
 
-              ng-click="$evalAsync(subResource.toggle(resource))"
+              ng-click="$evalAsync(toggleSelect(resource, $event, $index))"
               >
             <!--ng-dblclick="subResource.openFull(resource)"-->
 
           <!--<td ng-class="{'hidden-xs': subResource.resource}">
             <input class="resource-list-checkbox"
                    type="checkbox"
-                   ng-click="toggleSelect(resource, $event, $index)"
+                   ng-click=""
                    ng-model="selector.checkboxes[resource['_id']]"
                    ng-class="{blink: hoverScreener && resource._id === resources[0]._id && inList.length == 0}"
             >
@@ -118,8 +123,9 @@
   <!-- SubResource in right-bar -->
   <aside class="col-xs-10 col-sm-8 col-lg-7" id="aside-subResource">
     <div>
-      Right panel
+      Display lot resume or device information
     </div>
+    <!--<h1>{{resource.summary.numberDevices}}</h1>-->
     <!-- Butttons -->
     <div id="buttons" class="row text-center" ng-class="{'hidden-xs': subResource.resource}">
       <div id="screener"

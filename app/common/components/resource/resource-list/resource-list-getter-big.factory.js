@@ -2,6 +2,7 @@
  * @param {ResourceListGetter} ResourceListGetter
  * @returns {ResourceListGetterBig}
  * @constructor
+ * TODO Merge to ResourceListGetter
  */
 function ResourceListGetterFactoryBig (ResourceListGetter) {
   /**

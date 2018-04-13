@@ -20,23 +20,20 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
     restrict: 'E',
     scope: {
       // The parent resource. If it does not have @type, then we are the list of the main inventory view.
-      parentResource: '=?',
-      resourceType: '@', // The type of resource this list is representing.
-      type: '@' // Type of resource-view this list is in: big, medium, small TODO Deprecated
+      parentResource: '=?'
     },
     link: {
       // Note that we load on 'pre' to initialize before our child (or inner) directives so they get real config values
       pre: ($scope, element) => {
+        console.log('scope', JSON.stringify($scope.resource), ', parent', JSON.stringify($scope.parentResource))
         $scope.session = session
-        const resourceType = $scope.resourceType
-        $scope.resourceName = utils.Naming.resource(resourceType)
-        if (!resourceType) throw TypeError('resourceList needs a "resourceType" set, not ' + resourceType)
-        if (!$scope.type) throw TypeError('resourceLists needs a "type" to be "big"|"medium"|"small", not ' + $scope.type) // TODO Deprecated
         progressBar.start() // resourceListGetter.getResources will call this too, but doing it here we avoid delay
-        const config = _.cloneDeep(resourceListConfig.views[resourceType])
-        if (_.isUndefined(config)) throw ReferenceError(resourceType + ' has no config.')
+        const config = _.cloneDeep(resourceListConfig)
         $scope.resources = [] // Do never directly assign (r=[]) to 'resources' as modules depend of its reference
+        const resourceType = 'Device' // TODO remove and remove usages
+
         /**
+         * TODO adapt this for lots + devices
          * Object to handle accessing sub resources.
          * @prop {object} resource - The resource
          */
@@ -83,21 +80,16 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         let resourceListSelector
         $scope.resources.length = 0
         $scope.selector = { // resourceListSelector needs the following vars
-          checked: false, // ng-model for the 'selectAll' checkbox
-          checkboxes: {}, // ng-model for the checkboxes in the list. Only for representational purposes.
+          checked: false, // ng-model for the 'selectAll' checkbox TODO Deprecated
+          checkboxes: {}, // ng-model for the checkboxes in the list. Only for representational purposes. TODO Deprecated
           // The selected resources of the actual list. Although resourceListSelector uses its own
           // list, it can optionally populate this one if passed for use to use in the template
           inList: [],
           // The same as inList but for the total of resources through all lists
           total: []
         }
-        if ($scope.type === 'big') {
-          resourceListGetter = new ResourceListGetterBig(resourceType, $scope.resources, config, progressBar)
-          resourceListSelector = new ResourceListSelectorBig($scope.selector, $scope.resources, resourceListGetter)
-        } else {
-          resourceListGetter = new ResourceListGetter(resourceType, $scope.resources, config, progressBar)
-          resourceListSelector = new ResourceListSelector($scope.selector, $scope.resources, resourceListGetter)
-        }
+        resourceListGetter = new ResourceListGetterBig(resourceType, $scope.resources, config, progressBar)
+        resourceListSelector = new ResourceListSelectorBig($scope.selector, $scope.resources, resourceListGetter)
 
         // Search
         const parentType = _.get($scope, 'parentResource.@type')
@@ -105,7 +97,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           // If we are the subresource of a parent, we can only show the resources that are tied somehow with
           // the parent, not all resources. We do this by setting a default parameter in search
           // no need to _.clone this setting as we do not modify it
-          const path = 'search.subResource.' + resourceType
+          const path = 'search.subResource.Device'
           const defaultParam = utils.getSetting(resourceListConfig.views, ResourceSettings(parentType), path)
           if (!defaultParam) throw TypeError(`${parentType} does not have default param for subResource ${resourceType}`)
           config.search.defaultParams[defaultParam.key] = $scope.parentResource[defaultParam.field]
@@ -168,6 +160,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         })
 
         $scope.popovers = {enable: false}
+        /* TODO DEPRECATED
         if ($scope.type === 'medium') {
           resourceListGetter.callbackOnGetting(resources => {
             $scope.popovers.enable = true
@@ -190,6 +183,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
             })
           })
         }
+        */
 
         function hardReload () {
           $scope.checked = false
@@ -197,13 +191,11 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           $scope.reload()
         }
 
-        if ($scope.type === 'big') {
-          ResourceSettings(resourceType).types.forEach(type => { $scope.$on('submitted@' + type, hardReload) })
-          // We register ourselves for any event type, excluding Snapshot if the list is not about devices
-          let eventTypes = ResourceSettings('Event').subResourcesNames
-          if (resourceType !== 'Device') eventTypes = _.without(eventTypes, 'devices:Snapshot', 'devices:Register')
-          _.forEach(eventTypes, eventType => { $scope.$on('submitted@' + eventType, hardReload) })
-        }
+        ResourceSettings(resourceType).types.forEach(type => { $scope.$on('submitted@' + type, hardReload) })
+        // We register ourselves for any event type, excluding Snapshot if the list is not about devices
+        let eventTypes = ResourceSettings('Event').subResourcesNames
+        if (resourceType !== 'Device') eventTypes = _.without(eventTypes, 'devices:Snapshot', 'devices:Register')
+        _.forEach(eventTypes, eventType => { $scope.$on('submitted@' + eventType, hardReload) })
 
         // As we touch config in the init, we add it to $scope at the end to avoid $watch triggering multiple times
         $scope.config = config
