@@ -19,21 +19,19 @@ function ResourceSelectorFactory () {
      * @param {array} resources - The array that will hold the resources
      * @param {ResourceListGetter} resourceListGetter - An instance of ResourceListGetter
      */
-    constructor (selector, resources, resourceListGetter) {
-      this.selector = selector
+    constructor (resources) {
       this.resources = resources
 
       /**
        * Array holding the resources that are selected in the actual list.
        * @type {Array}
        */
-      this.inList = selector.inList = []
+      this.inList = []
       /**
        * Resources selected through all lists.
        * @type {Array}
        */
-      this.total = selector.total = []
-      resourceListGetter.callbackOnGetting(_.bind(this.reAddToActualList, this, _))
+      this.total = []
       this.callbacksForSelections = []
     }
 
@@ -71,7 +69,6 @@ function ResourceSelectorFactory () {
     deselectAll () {
       this.inList.length = 0
       this.total.length = 0
-      this.selector.checkboxes = {}
       this._control()
     }
 
@@ -87,7 +84,6 @@ function ResourceSelectorFactory () {
       let self = this
       this.inList.length = 0
       this._control()
-      this.selector.checkboxes = {} // todo is ok with ng-model?
       _.forEach(resources, function (resource) {
         if (_.find(self.total, {_id: resource._id})) {
           self.add(resource, true) // 2nd parameter -> We add it only to inList
@@ -120,7 +116,6 @@ function ResourceSelectorFactory () {
           const indexOfExistingResource = _.findIndex(this.total, {'_id': resource._id})
           if (indexOfExistingResource !== -1) this.total[indexOfExistingResource] = resource
         }
-        this.selector.checkboxes[resource['_id']] = true
         this._control()
         return true
       } else {
@@ -135,7 +130,6 @@ function ResourceSelectorFactory () {
     remove (resource) {
       _.remove(this.inList, {'_id': resource['_id']})
       _.remove(this.total, {'_id': resource['_id']})
-      this.selector.checkboxes[resource['_id']] = false
       this._control()
     }
 
@@ -144,7 +138,7 @@ function ResourceSelectorFactory () {
      * @private
      */
     _control () {
-      this.selector.checked = this.inList.length === this.resources.length
+      // TODO Update: this.selector.checked = this.inList.length === this.resources.length
       _.invokeMap(this.callbacksForSelections, _.call, null, this.total, this.inList, this.resources)
     }
 

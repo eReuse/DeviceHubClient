@@ -109,21 +109,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         const triggerCollapse = require('./collapse-table.js')($scope)
         $(window).resize(triggerCollapse)
 
-        // Note that some values of $scope are sate inside the constructors of ResourceListGetter and ResourceListSelector
-        let resourceListGetter
-        let resourceListSelector
-        $scope.resources.length = 0
-        $scope.selector = { // resourceListSelector needs the following vars
-          checked: false, // ng-model for the 'selectAll' checkbox TODO Deprecated
-          checkboxes: {}, // ng-model for the checkboxes in the list. Only for representational purposes. TODO Deprecated
-          // The selected resources of the actual list. Although resourceListSelector uses its own
-          // list, it can optionally populate this one if passed for use to use in the template
-          inList: [],
-          // The same as inList but for the total of resources through all lists
-          total: []
-        }
-        resourceListGetter = new ResourceListGetterBig(resourceType, $scope.resources, config, progressBar)
-        resourceListSelector = new ResourceListSelectorBig($scope.selector, $scope.resources, resourceListGetter)
+        const resourceListGetter = new ResourceListGetterBig(resourceType, $scope.resources, config, progressBar)
+        const resourceListSelector = $scope.selector = new ResourceListSelectorBig($scope.resources)
+        resourceListGetter.callbackOnGetting(_.bind(resourceListSelector.reAddToActualList, resourceListSelector, _))
 
         // Search
         const parentType = _.get($scope, 'parentResource.@type')

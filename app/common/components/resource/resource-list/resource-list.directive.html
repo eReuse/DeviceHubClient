@@ -43,7 +43,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="resource in resources track by resource._id"
-              ng-class="{info: selector.checkboxes[resource['_id']]}"
+              ng-class="{info: selector.isInList(resource)}"
 
               ng-init="popover = popovers[resource._id]"
 
