@@ -1,7 +1,7 @@
 <h2>Resource list</h2>
 
 <!-- Resource Filters -->
-<div class="row" ng-class="{'hidden-xs': subResource.resource}">
+<div class="row">
   <resource-search class="col-md-10 col-xs-offset-0 col-md-offset-1 show subview-12 subview-offset-0"
                    settings="config.search.params"
                    on-params-changed="onSearchParamsChanged(params)"
@@ -59,7 +59,7 @@
               popover-class="resource-button-popover"
 
               ng-click="$evalAsync(toggleSelect(resource, $event, $index))"
-              ng-dblclick="subResource.openFull(resource)"
+              ng-dblclick="openFull(resource)"
           >
 
           <!--<td ng-class="{'hidden-xs': subResource.resource}">
@@ -99,15 +99,6 @@
               </div>
               <div ng-if="::value && $root._.isDate(value)">{{value | timeAgo}}</div>
             </td>
-            <td ng-click="$evalAsync(subResource.toggle(resource))"
-                ng-dblclick="subResource.openFull(resource)"
-                class="text-center"
-            >
-              <resource-icon resource-type="{{::resource['@type']}}"
-                             resource-subtype="{{::resource.type}}"
-              >
-              </resource-icon>
-            </td>
           </tr>
         </tbody>
       </table>
@@ -132,10 +123,12 @@
     </div>
     <div ng-if="selector.inList.length > 0">
       Device info
+      <div>Events: {{selector.inList[0].events.length}}</div>
     </div>
+
     <!--<h1>{{resource.summary.numberDevices}}</h1>-->
     <!-- Butttons -->
-    <div id="buttons" class="row text-center" ng-class="{'hidden-xs': subResource.resource}">
+    <div id="buttons" class="row text-center">
       <div id="screener"
            uib-tooltip="Select some {{resourceName}} first."
            tooltip-enable="selector.inList.length == 0"

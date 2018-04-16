@@ -33,41 +33,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         const resourceType = 'Device' // TODO remove and remove usages
 
         /**
-         * TODO adapt this for lots + devices
-         * Object to handle accessing sub resources.
-         * @prop {object} resource - The resource
+         * Gets into the resource; traverse one step into the resource hierarchy by opening the resource in the
+         * main window.
+         * @param {Object} resource - Minimum properties are @type and _id
          */
-        const subResource = $scope.subResource = {
-          resource: null, // The opened subResource
-          isOpened: resourceId => {
-            return resourceId === _.get(subResource.resource, '_id')
-          },
-          /**
-           * Open / close the right window.
-           * @param {Object} resource
-           */
-          toggle: resource => {
-            subResource.resource = subResource.isOpened(resource['_id']) ? null : resource
-            triggerCollapse()
-          },
-          /**
-           * Closes a resource if it was the opened one
-           * @param {string} resourceId
-           */
-          close: resourceId => {
-            if (_.get(subResource.resource, '_id') === resourceId) {
-              subResource.resource = null
-              triggerCollapse()
-            }
-          },
-          /**
-           * Gets into the resource; traverse one step into the resource hierarchy by opening the resource in the
-           * main window.
-           * @param {Object} resource - Minimum properties are @type and _id
-           */
-          openFull: resource => {
-            ResourceBreadcrumb.go(resource)
-          }
+        $scope.openFull = resource => {
+          ResourceBreadcrumb.go(resource)
         }
 
         // Makes the table collapsible when window resizes
@@ -100,9 +71,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
 
         // Selecting
         $scope.toggleSelectAll = _.bind(resourceListSelector.toggleSelectAll, resourceListSelector, _)
-        $scope.toggleSelect = _.bind(resourceListSelector.toggle, resourceListSelector, _)
-        $scope.toggleSelect = (resource, $event, $index) => {
-          resourceListSelector.toggle(resource, $event, $index)
+        // $scope.toggleSelect = _.bind(resourceListSelector.toggle, resourceListSelector, _)
+        $scope.toggleSelect = (resource, $event) => {
+          resourceListSelector.toggle(resource)
           // Avoids the ng-click from the row (<tr>) to trigger
           $event.stopPropagation()
         }

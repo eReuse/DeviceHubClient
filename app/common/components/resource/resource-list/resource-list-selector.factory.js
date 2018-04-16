@@ -46,6 +46,7 @@ function ResourceSelectorFactory () {
       if (this.isInList(resource)) { // Remove
         this.remove(resource)
       } else { // Add
+        console.log('Adding resource', resource)
         this.add(resource)
       }
     }
