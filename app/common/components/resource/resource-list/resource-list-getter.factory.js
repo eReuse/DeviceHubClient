@@ -214,9 +214,6 @@ function ResourceListGetterFactory (ResourceSettings) {
               }
             ],
             'children': {
-              'pallets': [
-                'PuDTdt9X'
-              ]
             },
             'byUser': '5ac49232a0961e72684082dc',
             '_created': '2018-04-04T08:52:34',
@@ -225,20 +222,7 @@ function ResourceListGetterFactory (ResourceSettings) {
             'sharedWith': [
               '5ac4925da0961e72684083e8'
             ],
-            'ancestors': [
-              {
-                'component': [],
-                'packages': [],
-                'incoming-lot': [],
-                'places': [],
-                'pallets': [],
-                'lots': [],
-                '_id': 'XuRYHTxP',
-                'outgoing-lot': [],
-                'devices': [],
-                '@type': 'Place'
-              }
-            ]
+            'ancestors': []
           },
           {
             'label': 'Lot from User',

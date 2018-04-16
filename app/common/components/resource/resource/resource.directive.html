@@ -1,5 +1,7 @@
+<h1>Resource</h1>
 <!--
   We will only pass the resource after getting it from server (the ng-if)
   this is needed when entering directly to a view (viewing a resource by entering through its URL)
 -->
-<resource-view ng-if="resource.fromServer" resource="resource" type="{{type}}"></resource-view>
+<resource-view resource="resource" type="big"></resource-view>
+<!-- TODO Following original does not work <resource-view ng-if="resource.fromServer" resource="resource" type="{{type}}"></resource-view> -->

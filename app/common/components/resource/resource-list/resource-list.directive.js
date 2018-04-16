@@ -12,7 +12,6 @@
  */
 function resourceList (resourceListConfig, ResourceListGetter, ResourceListGetterBig, ResourceListSelector,
                        ResourceListSelectorBig, ResourceSettings, progressBar, ResourceBreadcrumb, session) {
-  const utils = require('./../../utils.js')
   const PARENT_PATH = require('./../__init__').PATH
   const NoMorePagesAvailableException = require('./no-more-pages-available.exception')
   return {
@@ -26,40 +25,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
       // Note that we load on 'pre' to initialize before our child (or inner) directives so they get real config values
       pre: ($scope, element) => {
         console.log('scope', JSON.stringify($scope.resource), ', parent', JSON.stringify($scope.parentResource))
-        $scope.lot = {
-          id: '',
-          name: '',
-          resume: {
-            deviceInfo: {
-              type: '',
-              subType: '',
-              brand: '',
-              model: '',
-              serialNumber: ''
-            },
-            status: '',
-            price: {
-              amount: 150,
-              currency: 'euro'
-            },
-            components: {
 
-            },
-            donor: '',
-            owner: '',
-            distributor: '',
-            user: '',
-            events: ''
-          },
-          parentLots: [
-          ],
-          childLots: [
-          ],
-          devices: [
-          ],
-          shared: [
-          ]
-        }
         $scope.session = session
         progressBar.start() // resourceListGetter.getResources will call this too, but doing it here we avoid delay
         const config = _.cloneDeep(resourceListConfig)
@@ -114,16 +80,16 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         resourceListGetter.callbackOnGetting(_.bind(resourceListSelector.reAddToActualList, resourceListSelector, _))
 
         // Search
-        const parentType = _.get($scope, 'parentResource.@type')
-        if (parentType) {
-          // If we are the subresource of a parent, we can only show the resources that are tied somehow with
-          // the parent, not all resources. We do this by setting a default parameter in search
-          // no need to _.clone this setting as we do not modify it
-          const path = 'search.subResource.Device'
-          const defaultParam = utils.getSetting(resourceListConfig.views, ResourceSettings(parentType), path)
-          if (!defaultParam) throw TypeError(`${parentType} does not have default param for subResource ${resourceType}`)
-          config.search.defaultParams[defaultParam.key] = $scope.parentResource[defaultParam.field]
-        }
+        // const parentType = _.get($scope, 'parentResource.@type')
+        // if (parentType) {
+        //   // If we are the subresource of a parent, we can only show the resources that are tied somehow with
+        //   // the parent, not all resources. We do this by setting a default parameter in search
+        //   // no need to _.clone this setting as we do not modify it
+        //   const path = 'search.subResource.Device'
+        //   const defaultParam = utils.getSetting(resourceListConfig.views, ResourceSettings(parentType), path)
+        //   if (!defaultParam) throw TypeError(`${parentType} does not have default param for subResource ${resourceType}`)
+        //   config.search.defaultParams[defaultParam.key] = $scope.parentResource[defaultParam.field]
+        // }
 
         // Sorting
         $scope.sort = {}
