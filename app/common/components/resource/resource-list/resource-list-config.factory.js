@@ -10,12 +10,12 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
   // Typeaheads
   const deviceSettings = ResourceSettings('Device')
   const conditionRange = deviceSettings.schema.condition.schema.general.schema.range.allowed
-  const ACCOUNT_TYPEAHEAD = ResourceSettings('Account').getSetting('dataRelation')
+  // const ACCOUNT_TYPEAHEAD = ResourceSettings('Account').getSetting('dataRelation')
   const DEVICE_TYPEAHEAD = deviceSettings.getSetting('dataRelation')
   const LOT_TYPEAHEAD = ResourceSettings('Lot').getSetting('dataRelation')
-  const PACKAGE_TYPEAHEAD = ResourceSettings('Package').getSetting('dataRelation')
-  const PALLET_TYPEAHEAD = ResourceSettings('Pallet').getSetting('dataRelation')
-  const PLACE_TYPEAHEAD = ResourceSettings('Place').getSetting('dataRelation')
+  // const PACKAGE_TYPEAHEAD = ResourceSettings('Package').getSetting('dataRelation')
+  // const PALLET_TYPEAHEAD = ResourceSettings('Pallet').getSetting('dataRelation')
+  // const PLACE_TYPEAHEAD = ResourceSettings('Place').getSetting('dataRelation')
   const LAST_EVENT = {
     key: 'lastEvent',
     name: 'Last event is',
@@ -69,7 +69,9 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
 
   function getIsNotAncestor (resourceType, value) {
     const query = getIsAncestor(resourceType, value)
-    _.forEach(query, partial => { partial.ancestors = {$not: partial.ancestors} })
+    _.forEach(query, partial => {
+      partial.ancestors = {$not: partial.ancestors}
+    })
     return query
   }
 
@@ -80,27 +82,27 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
     comparison: '=',
     typeahead: LOT_TYPEAHEAD
   }
-  const INSIDE_PACKAGE = {
-    key: 'packageIsAncestor',
-    name: 'In package',
-    realKey: 'dh$insidePackage',
-    comparison: '=',
-    typeahead: PACKAGE_TYPEAHEAD
-  }
-  const INSIDE_PALLET = {
-    key: 'palletIsAncestor',
-    name: 'In pallet',
-    realKey: 'dh$insidePallet',
-    comparison: '=',
-    typeahead: PALLET_TYPEAHEAD
-  }
-  const INSIDE_PLACE = {
-    key: 'placeIsAncestor',
-    name: 'In place',
-    realKey: 'dh$insidePlace',
-    comparison: '=',
-    typeahead: PLACE_TYPEAHEAD
-  }
+  // const INSIDE_PACKAGE = {
+  //   key: 'packageIsAncestor',
+  //   name: 'In package',
+  //   realKey: 'dh$insidePackage',
+  //   comparison: '=',
+  //   typeahead: PACKAGE_TYPEAHEAD
+  // }
+  // const INSIDE_PALLET = {
+  //   key: 'palletIsAncestor',
+  //   name: 'In pallet',
+  //   realKey: 'dh$insidePallet',
+  //   comparison: '=',
+  //   typeahead: PALLET_TYPEAHEAD
+  // }
+  // const INSIDE_PLACE = {
+  //   key: 'placeIsAncestor',
+  //   name: 'In place',
+  //   realKey: 'dh$insidePlace',
+  //   comparison: '=',
+  //   typeahead: PLACE_TYPEAHEAD
+  // }
   const OUTSIDE_LOT = {
     key: 'lotIsNotAncestor',
     name: 'Out of lot',
@@ -114,7 +116,9 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
 
   function notAncestorOfType (groupType, RSettings) {
     const query = ancestorOfType(groupType, RSettings)
-    _.forEach(query, partial => { partial.ancestors = {$not: partial.ancestors} })
+    _.forEach(query, partial => {
+      partial.ancestors = {$not: partial.ancestors}
+    })
     return query
   }
 
@@ -153,14 +157,14 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
     }
   }
 
- /* function hasGroupCallback (resourceName) {
-    const resourceType = Naming.type(resourceName)
-    return (where, ancestors) => {
-      const parents = _(ancestors).filter({'@type': resourceType}).flatMapDeep('_id').value()
-      where['_id'] = {'$in': _(ancestors).flatMapDeep(resourceName).concat(parents).uniq().value()}
-    }
-  }
-  */
+  /* function hasGroupCallback (resourceName) {
+     const resourceType = Naming.type(resourceName)
+     return (where, ancestors) => {
+       const parents = _(ancestors).filter({'@type': resourceType}).flatMapDeep('_id').value()
+       where['_id'] = {'$in': _(ancestors).flatMapDeep(resourceName).concat(parents).uniq().value()}
+     }
+   }
+   */
 
   // We use the typeahead to retrieve us the ancestors of the device :-)
   // todo ^ makes to show [object Object] in the typeahead field
@@ -170,21 +174,21 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
     name: 'Has lot',
     typeahead: _.assign({}, LOT_TYPEAHEAD, {keyFieldName: 'ancestors'})
   }
-  const HAS_PACKAGE = {
-    key: 'hasPackage',
-    name: 'Has Package',
-    typeahead: _.assign({}, PACKAGE_TYPEAHEAD, {keyFieldName: 'ancestors'})
-  }
+  // const HAS_PACKAGE = {
+  //   key: 'hasPackage',
+  //   name: 'Has Package',
+  //   typeahead: _.assign({}, PACKAGE_TYPEAHEAD, {keyFieldName: 'ancestors'})
+  // }
   const HAS_DEVICE = {
     key: 'hasDevice',
     name: 'Has Device',
     typeahead: _.assign({}, DEVICE_TYPEAHEAD, {keyFieldName: 'ancestors'})
   }
-  const HAS_PLACE = {
-    key: 'hasPlace',
-    name: 'Has Place',
-    typeahead: _.assign({}, PLACE_TYPEAHEAD, {keyFieldName: 'ancestors'})
-  }
+  // const HAS_PLACE = {
+  //   key: 'hasPlace',
+  //   name: 'Has Place',
+  //   typeahead: _.assign({}, PLACE_TYPEAHEAD, {keyFieldName: 'ancestors'})
+  // }
 
   return {
     search: {
@@ -290,56 +294,56 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
           comparison: '=',
           description: 'Computers or their hard-drives that have such erasures.'
         },
-        {
-          key: 'receiver',
-          name: 'Receiver',
-          typeahead: ACCOUNT_TYPEAHEAD,
-          realKey: 'events.receiver',
-          comparison: '=',
-          placeholder: 'Type an e-mail',
-          description: 'Match devices that were given to a specific user.'
-        },
-        {
-          key: 'to',
-          name: 'Assigned to',
-          typeahead: ACCOUNT_TYPEAHEAD,
-          realKey: 'events.to',
-          comparison: '=',
-          placeholder: 'Type an e-mail',
-          description: 'Match devices that were assigned to a specific user.'
-        },
-        {
-          key: 'from',
-          name: 'Deassigned from',
-          typeahead: ACCOUNT_TYPEAHEAD,
-          placeholder: 'Type an e-mail',
-          realKey: 'events.to',
-          comparison: '=',
-          description: 'Match devices that were de-assigned from a specific user.'
-        },
-        {
-          key: 'own',
-          name: 'Owns',
-          typeahead: ACCOUNT_TYPEAHEAD,
-          realKey: 'owners',
-          comparison: 'in',
-          placeholder: 'Type an e-mail',
-          description: 'Match devices that are actually assigned to a specific user.'
-        },
-        {
-          key: 'not-own',
-          name: 'Does not own',
-          typeahead: ACCOUNT_TYPEAHEAD,
-          realKey: 'owners',
-          comparison: 'nin',
-          placeholder: 'Type an e-mail',
-          description: 'Match devices that are actually not assigned to a specific user.'
-        },
+        // {
+        //   key: 'receiver',
+        //   name: 'Receiver',
+        //   typeahead: ACCOUNT_TYPEAHEAD,
+        //   realKey: 'events.receiver',
+        //   comparison: '=',
+        //   placeholder: 'Type an e-mail',
+        //   description: 'Match devices that were given to a specific user.'
+        // },
+        // {
+        //   key: 'to',
+        //   name: 'Assigned to',
+        //   typeahead: ACCOUNT_TYPEAHEAD,
+        //   realKey: 'events.to',
+        //   comparison: '=',
+        //   placeholder: 'Type an e-mail',
+        //   description: 'Match devices that were assigned to a specific user.'
+        // },
+        // {
+        //   key: 'from',
+        //   name: 'Deassigned from',
+        //   typeahead: ACCOUNT_TYPEAHEAD,
+        //   placeholder: 'Type an e-mail',
+        //   realKey: 'events.to',
+        //   comparison: '=',
+        //   description: 'Match devices that were de-assigned from a specific user.'
+        // },
+        // {
+        //   key: 'own',
+        //   name: 'Owns',
+        //   typeahead: ACCOUNT_TYPEAHEAD,
+        //   realKey: 'owners',
+        //   comparison: 'in',
+        //   placeholder: 'Type an e-mail',
+        //   description: 'Match devices that are actually assigned to a specific user.'
+        // },
+        // {
+        //   key: 'not-own',
+        //   name: 'Does not own',
+        //   typeahead: ACCOUNT_TYPEAHEAD,
+        //   realKey: 'owners',
+        //   comparison: 'nin',
+        //   placeholder: 'Type an e-mail',
+        //   description: 'Match devices that are actually not assigned to a specific user.'
+        // },
         INSIDE_LOT,
         OUTSIDE_LOT,
-        INSIDE_PACKAGE,
-        INSIDE_PLACE,
-        INSIDE_PALLET,
+        // INSIDE_PACKAGE,
+        // INSIDE_PLACE,
+        // INSIDE_PALLET,
         GROUP_INCLUSION,
         OUTSIDE_GROUP,
         {
@@ -448,232 +452,258 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
       th: [f.id.th, f['@type'].th, f.type.th, f.model.th, f.price.th, f.range.th, f.lastEvent.thDef, f.created.th],
       td: [f.id.td, f['@type'].td, f.type.td, f.model.td, f.price.td, f.range.td, f.lastEvent.td, f.created.td]
     }
-      /*
-      Lot: {
-        search: {
-          params: RESOURCE_SEARCH.params.concat([
-            {
-              key: '@type',
-              name: 'Type',
-              select: 'Lot',
-              comparison: '=',
-              description: 'The type of the lot'
-            },
-            _.assign({}, HAS_DEVICE, {
-              callback: hasGroupCallback('lots'),
-              description: 'Find lots that have a specific device.'
-            }),
-            _.assign({}, HAS_LOT, {
-              callback: hasGroupCallback('lots'),
-              description: 'Find lots that have a specific lot.'
-            }),
-            _.assign({}, HAS_PACKAGE, {
-              callback: hasGroupCallback('lots'),
-              description: 'Find lots that have a specific package.'
-            }),
-            {
-              key: 'to',
-              name: 'Assigned to account / client',
-              typeahead: ACCOUNT_TYPEAHEAD,
-              realKey: 'to.email',
-              comparison: '=',
-              placeholder: 'Type an e-mail',
-              description: 'Match Output lots that are assigned to a client.'
-            },
-            {
-              key: 'from',
-              name: 'From account / client',
-              typeahead: ACCOUNT_TYPEAHEAD,
-              placeholder: 'Type an e-mail',
-              realKey: 'from.email',
-              comparison: '=',
-              description: 'Match Input Lots that come from a client.'
-            },
-            LAST_EVENT,
-            INSIDE_PLACE,
-            INSIDE_LOT,
-            OUTSIDE_LOT,
-            GROUP_INCLUSION,
-            OUTSIDE_GROUP
-          ]),
-          defaultParams: {},
-          subResource: {
-            Device: {key: 'lotIsAncestor', field: '_id'},
-            Package: {key: 'lotIsAncestor', field: '_id'},
-            Lot: {key: 'lotIsAncestor', field: '_id'},
-            Pallet: {key: 'lotIsAncestor', field: '_id'}
-          }
-        },
-        buttons: {
-          templateUrl: configFolder + '/resource-list-config-group'
-        },
-        table: {
-          th: [f.id.th, f.label.th, f['@type'].th, f.from.th, f.to.th, f.lastEvent.th, f.updated.thDef],
-          td: [f.id.td, f.label.td, f['@type'].td, f.from.td, f.to.td, f.lastEvent.td, f.updated.td]
-        }
-      },
-      Package: {
-        search: {
-          params: RESOURCE_SEARCH.params.concat([
-            INSIDE_LOT,
-            OUTSIDE_LOT,
-            INSIDE_PLACE,
-            INSIDE_PACKAGE,
-            INSIDE_PALLET,
-            GROUP_INCLUSION,
-            OUTSIDE_GROUP,
-            _.assign({}, HAS_DEVICE, {
-              callback: hasGroupCallback('packages'),
-              description: 'Find packages that have a specific device.'
-            })
-          ]),
-          defaultParams: {},
-          subResource: {
-            Device: {key: 'packageIsAncestor', field: '_id'},
-            Package: {key: 'packageIsAncestor', field: '_id'}
-          }
-        },
-        buttons: {
-          templateUrl: configFolder + '/resource-list-config-group'
-        },
-        table: {
-          th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef],
-          td: [f.id.td, f.label.td, f.lastEvent.td, f.updated.td]
-        }
-      },
-      Pallet: {
-        search: {
-          params: RESOURCE_SEARCH.params.concat([
-            INSIDE_LOT,
-            OUTSIDE_LOT,
-            INSIDE_PLACE,
-            GROUP_INCLUSION,
-            OUTSIDE_GROUP,
-            _.assign({}, HAS_DEVICE, {
-              callback: hasGroupCallback('pallets'),
-              description: 'Find pallets that have a specific device.'
-            })
-          ]),
-          defaultParams: {},
-          subResource: {
-            Device: {key: 'palletIsAncestor', field: '_id'},
-            Package: {key: 'palletIsAncestor', field: '_id'}
-          }
-        },
-        buttons: {
-          templateUrl: configFolder + '/resource-list-config-group'
-        },
-        table: {
-          th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef, {key: 'size', name: 'Size'}],
-          td: [f.id.td, f.label.td, f.lastEvent.td, f.updated.td, {templateUrl: configFolder + '/pallet-size.html'}]
-        }
-      },
-      Place: {
-        search: {
-          params: RESOURCE_SEARCH.params.concat([
-            INSIDE_PLACE,
-            _.assign({}, HAS_PACKAGE, {
-              callback: hasGroupCallback('places'),
-              description: 'Find packages that have a specific package.'
-            }),
-            _.assign({}, HAS_LOT, {
-              callback: hasGroupCallback('places'),
-              description: 'Find places that have a specific lot.'
-            }),
-            _.assign({}, HAS_DEVICE, {
-              callback: hasGroupCallback('places'),
-              description: 'Find places that have a specific device.'
-            }),
-            _.assign({}, HAS_PLACE, {
-              callback: hasGroupCallback('places'),
-              description: 'Find places that have a specific place.'
-            })
-          ]),
-          defaultParams: {},
-          subResource: {
-            Device: {key: 'placeIsAncestor', field: '_id'},
-            Place: {key: 'placeIsAncestor', field: '_id'},
-            Lot: {key: 'placeIsAncestor', field: '_id'},
-            Package: {key: 'placeIsAncestor', field: '_id'},
-            Pallet: {key: 'placeIsAncestor', field: '_id'},
-            Event: {key: 'place', field: '_id'}
-          }
-        },
-        buttons: {
-          templateUrl: configFolder + '/resource-list-config-group'
-        },
-        table: {
-          th: [f.label.th, f.lastEvent.th, f.updated.thDef],
-          td: [f.label.td, f.lastEvent.td, f.updated.td]
-        }
-      },
-      Event: {
-        search: {
-          params: RESOURCE_SEARCH.params.concat([
-            {
-              key: '@type',
-              name: 'Type',
-              select: 'Event',
-              comparison: '=',
-              description: 'The type of event'
-            },
-            {
-              key: 'device',
-              name: 'Event of device',
-              realKey: 'dh$eventOfDevice',
-              typeahead: DEVICE_TYPEAHEAD,
-              comparison: '=',
-              placeholder: 'System ID of the device.'
-            },
-            {
-              key: 'place',
-              name: 'Event made in place',
-              typeahead: PLACE_TYPEAHEAD,
-              comparison: '=',
-              description: 'The name of the place where the event has been done'
-            }
-          ]),
-          defaultParams: {},
-          subResource: {
-            Device: {key: 'event_id', field: '_id'}
-          }
-        },
-        buttons: {
-          templateUrl: configFolder + '/resource-list-config-event'
-        },
-        table: {
-          th: [f.id.th, f.label.th, f['@type'].th, f.state.th, f.updated.thDef],
-          td: [f.id.td, f.label.td, f['@type'].td, f.state.td, f.updated.td]
-        }
-      },
-      Account: {
-        search: {
-          params: RESOURCE_SEARCH.params.concat([
-            {
-              key: 'email',
-              name: 'email',
-              typeahead: ACCOUNT_TYPEAHEAD,
-              comparison: '=',
-              description: 'Match account by their e-mail.'
-            },
-            {
-              key: 'organization',
-              name: 'Organization',
-              comparison: '=',
-              description: 'Match accounts by the organization they are in.'
-            }
-          ]),
-          defaultParams: {}
-        },
-        buttons: {
-          templateUrl: configFolder + '/resource-list-config-account'
-        },
-        table: {
-          th: [f.email.th, f.name.th, f.organization.th, f.updated.thDef],
-          td: [f.email.td, f.name.td, f.organization.td, f.updated.td]
-        }
-      }
-      */
+//     Lot:{
+//     search: {
+//       params: RESOURCE_SEARCH.params.concat([
+//         {
+//           key: '@type',
+//           name: 'Type',
+//           select: 'Lot',
+//           comparison: '=',
+//           description: 'The type of the lot'
+//         },
+//         _.assign({}, HAS_DEVICE, {
+//           callback: hasGroupCallback('lots'),
+//           description: 'Find lots that have a specific device.'
+//         }),
+//         _.assign({}, HAS_LOT, {
+//           callback: hasGroupCallback('lots'),
+//           description: 'Find lots that have a specific lot.'
+//         }),
+//         _.assign({}, HAS_PACKAGE, {
+//           callback: hasGroupCallback('lots'),
+//           description: 'Find lots that have a specific package.'
+//         }),
+//         {
+//           key: 'to',
+//           name: 'Assigned to account / client',
+//           typeahead: ACCOUNT_TYPEAHEAD,
+//           realKey: 'to.email',
+//           comparison: '=',
+//           placeholder: 'Type an e-mail',
+//           description: 'Match Output lots that are assigned to a client.'
+//         },
+//         {
+//           key: 'from',
+//           name: 'From account / client',
+//           typeahead: ACCOUNT_TYPEAHEAD,
+//           placeholder: 'Type an e-mail',
+//           realKey: 'from.email',
+//           comparison: '=',
+//           description: 'Match Input Lots that come from a client.'
+//         },
+//         LAST_EVENT,
+//         INSIDE_PLACE,
+//         INSIDE_LOT,
+//         OUTSIDE_LOT,
+//         GROUP_INCLUSION,
+//         OUTSIDE_GROUP
+//       ]),
+//         defaultParams
+//     :
+//       {
+//       }
+//     ,
+//       subResource: {
+//         Device: {
+//           key: 'lotIsAncestor', field
+//         :
+//           '_id'
+//         }
+//       ,
+//         Package: {
+//           key: 'lotIsAncestor', field
+//         :
+//           '_id'
+//         }
+//       ,
+//         Lot: {
+//           key: 'lotIsAncestor', field
+//         :
+//           '_id'
+//         }
+//       ,
+//         Pallet: {
+//           key: 'lotIsAncestor', field
+//         :
+//           '_id'
+//         }
+//       }
+//     }
+//   ,
+//     buttons: {
+//       templateUrl: configFolder + '/resource-list-config-group'
+//     }
+//   ,
+//     table: {
+//       th: [f.id.th, f.label.th, f['@type'].th, f.from.th, f.to.th, f.lastEvent.th, f.updated.thDef],
+//         td
+//     :
+//       [f.id.td, f.label.td, f['@type'].td, f.from.td, f.to.td, f.lastEvent.td, f.updated.td]
+//     }
+//   }
+// ,
+  // Package: {
+  //   search: {
+  //     params: RESOURCE_SEARCH.params.concat([
+  //       INSIDE_LOT,
+  //       OUTSIDE_LOT,
+  //       INSIDE_PLACE,
+  //       INSIDE_PACKAGE,
+  //       INSIDE_PALLET,
+  //       GROUP_INCLUSION,
+  //       OUTSIDE_GROUP,
+  //       _.assign({}, HAS_DEVICE, {
+  //         callback: hasGroupCallback('packages'),
+  //         description: 'Find packages that have a specific device.'
+  //       })
+  //     ]),
+  //     defaultParams: {},
+  //     subResource: {
+  //       Device: {key: 'packageIsAncestor', field: '_id'},
+  //       Package: {key: 'packageIsAncestor', field: '_id'}
+  //     }
+  //   },
+  //   buttons: {
+  //     templateUrl: configFolder + '/resource-list-config-group'
+  //   },
+  //   table: {
+  //     th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef],
+  //     td: [f.id.td, f.label.td, f.lastEvent.td, f.updated.td]
+  //   }
+  // },
+  // Pallet: {
+  //   search: {
+  //     params: RESOURCE_SEARCH.params.concat([
+  //       INSIDE_LOT,
+  //       OUTSIDE_LOT,
+  //       INSIDE_PLACE,
+  //       GROUP_INCLUSION,
+  //       OUTSIDE_GROUP,
+  //       _.assign({}, HAS_DEVICE, {
+  //         callback: hasGroupCallback('pallets'),
+  //         description: 'Find pallets that have a specific device.'
+  //       })
+  //     ]),
+  //     defaultParams: {},
+  //     subResource: {
+  //       Device: {key: 'palletIsAncestor', field: '_id'},
+  //       Package: {key: 'palletIsAncestor', field: '_id'}
+  //     }
+  //   },
+  //   buttons: {
+  //     templateUrl: configFolder + '/resource-list-config-group'
+  //   },
+  //   table: {
+  //     th: [f.id.th, f.label.th, f.lastEvent.th, f.updated.thDef, {key: 'size', name: 'Size'}],
+  //     td: [f.id.td, f.label.td, f.lastEvent.td, f.updated.td, {templateUrl: configFolder + '/pallet-size.html'}]
+  //   }
+  // },
+  // Place: {
+  //   search: {
+  //     params: RESOURCE_SEARCH.params.concat([
+  //       INSIDE_PLACE,
+  //       _.assign({}, HAS_PACKAGE, {
+  //         callback: hasGroupCallback('places'),
+  //         description: 'Find packages that have a specific package.'
+  //       }),
+  //       _.assign({}, HAS_LOT, {
+  //         callback: hasGroupCallback('places'),
+  //         description: 'Find places that have a specific lot.'
+  //       }),
+  //       _.assign({}, HAS_DEVICE, {
+  //         callback: hasGroupCallback('places'),
+  //         description: 'Find places that have a specific device.'
+  //       }),
+  //       _.assign({}, HAS_PLACE, {
+  //         callback: hasGroupCallback('places'),
+  //         description: 'Find places that have a specific place.'
+  //       })
+  //     ]),
+  //     defaultParams: {},
+  //     subResource: {
+  //       Device: {key: 'placeIsAncestor', field: '_id'},
+  //       Place: {key: 'placeIsAncestor', field: '_id'},
+  //       Lot: {key: 'placeIsAncestor', field: '_id'},
+  //       Package: {key: 'placeIsAncestor', field: '_id'},
+  //       Pallet: {key: 'placeIsAncestor', field: '_id'},
+  //       Event: {key: 'place', field: '_id'}
+  //     }
+  //   },
+  //   buttons: {
+  //     templateUrl: configFolder + '/resource-list-config-group'
+  //   },
+  //   table: {
+  //     th: [f.label.th, f.lastEvent.th, f.updated.thDef],
+  //     td: [f.label.td, f.lastEvent.td, f.updated.td]
+  //   }
+  // },
+  // Event: {
+  //   search: {
+  //     params: RESOURCE_SEARCH.params.concat([
+  //       {
+  //         key: '@type',
+  //         name: 'Type',
+  //         select: 'Event',
+  //         comparison: '=',
+  //         description: 'The type of event'
+  //       },
+  //       {
+  //         key: 'device',
+  //         name: 'Event of device',
+  //         realKey: 'dh$eventOfDevice',
+  //         typeahead: DEVICE_TYPEAHEAD,
+  //         comparison: '=',
+  //         placeholder: 'System ID of the device.'
+  //       },
+  //       {
+  //         key: 'place',
+  //         name: 'Event made in place',
+  //         typeahead: PLACE_TYPEAHEAD,
+  //         comparison: '=',
+  //         description: 'The name of the place where the event has been done'
+  //       }
+  //     ]),
+  //     defaultParams: {},
+  //     subResource: {
+  //       Device: {key: 'event_id', field: '_id'}
+  //     }
+  //   },
+  //   buttons: {
+  //     templateUrl: configFolder + '/resource-list-config-event'
+  //   },
+  //   table: {
+  //     th: [f.id.th, f.label.th, f['@type'].th, f.state.th, f.updated.thDef],
+  //     td: [f.id.td, f.label.td, f['@type'].td, f.state.td, f.updated.td]
+  //   }
+  // },
+  // Account: {
+  //   search: {
+  //     params: RESOURCE_SEARCH.params.concat([
+  //       {
+  //         key: 'email',
+  //         name: 'email',
+  //         typeahead: ACCOUNT_TYPEAHEAD,
+  //         comparison: '=',
+  //         description: 'Match account by their e-mail.'
+  //       },
+  //       {
+  //         key: 'organization',
+  //         name: 'Organization',
+  //         comparison: '=',
+  //         description: 'Match accounts by the organization they are in.'
+  //       }
+  //     ]),
+  //     defaultParams: {}
+  //   },
+  //   buttons: {
+  //     templateUrl: configFolder + '/resource-list-config-account'
+  //   },
+  //   table: {
+  //     th: [f.email.th, f.name.th, f.organization.th, f.updated.thDef],
+  //     td: [f.email.td, f.name.td, f.organization.td, f.updated.td]
+  //   }
+  // }
   }
 }
 
