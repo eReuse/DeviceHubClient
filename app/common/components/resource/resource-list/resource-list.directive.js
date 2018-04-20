@@ -129,7 +129,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
 
         // Reloading
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
-        $scope.reload = () => resourceListGetter.getResources()
+        $scope.reload = () => {
+          resourceListGetter.getResources()
+          resourceListSelector.deselectAll()
+        }
 
         // Pagination
         // Let's avoid the user pressing multiple times the 'load more'
