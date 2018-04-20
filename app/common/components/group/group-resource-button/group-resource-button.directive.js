@@ -17,7 +17,7 @@ function groupResourceButton () {
     },
     link: $scope => {
       let menu = [
-        {title: 'Lot', group: 'Lot', resourceTypes: ['Package', 'Device', 'Lot', 'Pallet']},
+        // {title: 'Lot', group: 'Lot', resourceTypes: ['Package', 'Device', 'Lot', 'Pallet']},
         {
           label: 'Add to lot',
           action: 'add',
@@ -36,58 +36,58 @@ function groupResourceButton () {
           resourceTypes: ['Package', 'Device', 'Lot', 'Pallet'],
           tooltip: `Removes the items from a lot.`,
           fa: 'fa-minus'
-        },
-        {title: 'Package', group: 'Package', resourceTypes: ['Device', 'Package']},
-        {
-          label: 'Move to package',
-          action: 'move',
-          group: 'Package',
-          resourceTypes: ['Device'],
-          tooltip: 'Replaces the package of the items.',
-          fa: 'fa-long-arrow-right'
-        },
-        {
-          label: 'Remove from packages',
-          action: 'remove',
-          group: 'Package',
-          resourceTypes: ['Device'],
-          tooltip: 'Removes the items from their packages.',
-          fa: 'fa-minus'
-        },
-        {title: 'Place', group: 'Place', resourceTypes: ['Package', 'Device', 'Lot', 'Place', 'Pallet']},
-        {
-          label: 'Move to place',
-          action: 'move',
-          group: 'Place',
-          resourceTypes: ['Package', 'Device', 'Lot', 'Place', 'Pallet'],
-          tooltip: 'Replaces the place of the items.',
-          fa: 'fa-long-arrow-right'
-        },
-        {
-          label: 'Remove from places',
-          action: 'remove',
-          group: 'Place',
-          resourceTypes: ['Package', 'Device', 'Lot', 'Place', 'Pallet'],
-          tooltip: 'Removes the items from their places.',
-          fa: 'fa-minus'
-        },
-        {title: 'Pallet', group: 'Pallet', resourceTypes: ['Device', 'Package']},
-        {
-          label: 'Move to pallet',
-          action: 'move',
-          group: 'Pallet',
-          resourceTypes: ['Device', 'Package'],
-          tooltip: 'Replaces the pallet of the items.',
-          fa: 'fa-long-arrow-right'
-        },
-        {
-          label: 'Remove from pallets',
-          action: 'remove',
-          group: 'Pallet',
-          resourceTypes: ['Device', 'Package'],
-          tooltip: 'Removes the items from their pallet.',
-          fa: 'fa-minus'
         }
+        // {title: 'Package', group: 'Package', resourceTypes: ['Device', 'Package']},
+        // {
+        //   label: 'Move to package',
+        //   action: 'move',
+        //   group: 'Package',
+        //   resourceTypes: ['Device'],
+        //   tooltip: 'Replaces the package of the items.',
+        //   fa: 'fa-long-arrow-right'
+        // },
+        // {
+        //   label: 'Remove from packages',
+        //   action: 'remove',
+        //   group: 'Package',
+        //   resourceTypes: ['Device'],
+        //   tooltip: 'Removes the items from their packages.',
+        //   fa: 'fa-minus'
+        // },
+        // {title: 'Place', group: 'Place', resourceTypes: ['Package', 'Device', 'Lot', 'Place', 'Pallet']},
+        // {
+        //   label: 'Move to place',
+        //   action: 'move',
+        //   group: 'Place',
+        //   resourceTypes: ['Package', 'Device', 'Lot', 'Place', 'Pallet'],
+        //   tooltip: 'Replaces the place of the items.',
+        //   fa: 'fa-long-arrow-right'
+        // },
+        // {
+        //   label: 'Remove from places',
+        //   action: 'remove',
+        //   group: 'Place',
+        //   resourceTypes: ['Package', 'Device', 'Lot', 'Place', 'Pallet'],
+        //   tooltip: 'Removes the items from their places.',
+        //   fa: 'fa-minus'
+        // },
+        // {title: 'Pallet', group: 'Pallet', resourceTypes: ['Device', 'Package']},
+        // {
+        //   label: 'Move to pallet',
+        //   action: 'move',
+        //   group: 'Pallet',
+        //   resourceTypes: ['Device', 'Package'],
+        //   tooltip: 'Replaces the pallet of the items.',
+        //   fa: 'fa-long-arrow-right'
+        // },
+        // {
+        //   label: 'Remove from pallets',
+        //   action: 'remove',
+        //   group: 'Pallet',
+        //   resourceTypes: ['Device', 'Package'],
+        //   tooltip: 'Removes the items from their pallet.',
+        //   fa: 'fa-minus'
+        // }
       ]
       $scope.menu = _(menu).remove(menuItem => _.includes(menuItem.resourceTypes, $scope.resourceType)).value()
 
