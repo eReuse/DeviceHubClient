@@ -9,6 +9,7 @@
 
 <!-- Butttons -->
 <div id="buttons" class="row text-center" ng-class="{'hidden-xs': subResource.resource}">
+  <span style="margin-right: 10px; font-weight: bold;">{{selector.total.length}} items selected: </span>
   <div id="screener"
        uib-tooltip="Select some {{resourceName}} first."
        tooltip-enable="selector.inList.length == 0"
@@ -16,6 +17,7 @@
        ng-mouseleave="hoverScreener = false"
   >
     <div ng-show="selector.inList.length == 0"></div>
+
     <div ng-include="config.buttons.templateUrl + (session.hasExplicitPerms()? '' : '-shared') + '.html'"></div>
   </div>
 </div>
