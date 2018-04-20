@@ -71,7 +71,7 @@ const RESOURCE_CONFIG = {
         subtitle: [{key: 'model'}, {key: 'manufacturer'}]
       },
       // We pass a 'resource' object to a subview with, at least, @type.
-      subviews: [v.DeviceDashboard, v.Event, v.Detail],
+      subviews: [v.DeviceDashboard, v.Event],
       subviewSmall: v.DeviceDashboard,
       doNotUse: DO_NOT_USE.concat(['events', 'owners', 'components', 'isUidSecured', 'public', 'icon', 'pid',
         'labelId', 'placeholder', 'parent', 'place', 'perms']),
@@ -182,7 +182,7 @@ const RESOURCE_CONFIG = {
         resourceType: 'Lot'
       },
       view: {title: [{key: 'label'}], subtitle: [{key: '@type', humanize: true}]},
-      subviews: [v.Lot, v.Package, v.Pallet, v.Device, v.Detail],
+      subviews: [v.Lot, v.Device],
       doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
     },
     IncomingLot: {
@@ -217,7 +217,7 @@ const RESOURCE_CONFIG = {
     }
   },
   inventory: {
-    subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Pallet, v.Event]
+    subviews: [v.Lot, v.Device, v.Event]
   }
 }
 

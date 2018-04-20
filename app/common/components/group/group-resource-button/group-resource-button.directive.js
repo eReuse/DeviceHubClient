@@ -22,7 +22,7 @@ function groupResourceButton () {
           label: 'Add to lot',
           action: 'add',
           group: 'Lot',
-          resourceTypes: ['Package', 'Device', 'Lot', 'Pallet'],
+          resourceTypes: ['Device', 'Lot'],
           tooltip: `
                    Add the items to the lot, keeping the lots they are in, plus the new one. An item can be 
                    in different lots at the same time.
@@ -33,7 +33,7 @@ function groupResourceButton () {
           label: 'Remove from lot',
           action: 'remove',
           group: 'Lot',
-          resourceTypes: ['Package', 'Device', 'Lot', 'Pallet'],
+          resourceTypes: ['Device', 'Lot'],
           tooltip: `Removes the items from a lot.`,
           fa: 'fa-minus'
         }
