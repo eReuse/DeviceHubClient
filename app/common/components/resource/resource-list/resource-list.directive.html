@@ -9,6 +9,26 @@
   ></resource-search>
 </div>
 
+<div class="row">
+  <span>Selected {{selector.total.length}} in total, {{selector.inList.length}} in this list</span>
+  <button type="button"
+          class="btn"
+          ng-class="{'btn-primary': resources.length > 0}"
+          ng-show="selector.inList.length != resources.length"
+          ng-click="selector.toggleSelectAll(true)"
+  >
+    <span><i class="fa fa-select fa-fw"></i>Select all</span>
+  </button>
+  <button type="button"
+          class="btn"
+          ng-class="{'btn-primary': resources.length > 0}"
+          ng-show="selector.inList.length == resources.length"
+          ng-click="selector.toggleSelectAll(false)"
+  >
+    <span><i class="fa fa-select fa-fw"></i>Deselect all</span>
+  </button>
+</div>
+
 <!-- Listing -->
 <div class="row">
   <div
@@ -22,18 +42,6 @@
       <table id="resource-list-table" class="table table-striped table-hover">
         <thead>
           <tr>
-            <!--
-              TODO select all
-            <th ng-class="{'hidden-xs': subResource.resource}">
-
-              <input type="checkbox"
-                     class="resource-list-checkbox"
-                     ng-click="toggleSelectAll(selector.checked)"
-                     ng-model="selector.checked">
-
-
-            </th>
-            -->
             <th ng-repeat="th in config.table.th"
                 field-sort sort="setSort(sort)" key="{{::th.key}}" name="{{::th.name}}" group="sort"
                 sort-by-default="th.default"

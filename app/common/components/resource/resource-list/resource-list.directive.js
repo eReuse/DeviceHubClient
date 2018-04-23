@@ -70,7 +70,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         $scope.onSearchParamsChanged = _.bind(resourceListGetter.updateFiltersFromSearch, resourceListGetter, _)
 
         // Selecting
-        $scope.toggleSelectAll = _.bind(resourceListSelector.toggleSelectAll, resourceListSelector, _)
         // $scope.toggleSelect = _.bind(resourceListSelector.toggle, resourceListSelector, _)
         $scope.toggleSelect = (resource, $event) => {
           resourceListSelector.toggle(resource)
