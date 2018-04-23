@@ -121,22 +121,38 @@
   </div>
   <!-- SubResource in right-bar -->
   <aside class="col-xs-10 col-sm-8 col-lg-7" id="aside-subResource">
-    <div>
-      Display lot resume or device information
-    </div>
     <div ng-if="selector.total.length == 0">
-      Lot info
+      <h4>Summary</h4>
+      <h3>{{ parentResource.summary.totalNumberDevices }} devices in lot</h3>
+      <ul>
+        <li>Device: {{parentResource.summary.deviceType}}</li>
+        <li>Status: {{parentResource.summary.status}}</li>
+        <li>Price: {{parentResource.summary.price}}, Range: {{parentResource.summary.range}}</li>
+        <li>Components: {{parentResource.summary.components}}</li>
+        <li>Donors: {{parentResource.summary.donors.join(',')}}, Owner: {{parentResource.summary.owner}}, Distributor:{{parentResource.summary.distributor}}</li>
+        <li>Possessor: {{parentResource.summary.possessor}}, Location: {{parentResource.summary.location}}</li>
+        <li>Events: {{parentResource.summary.events.join('')}}</li>
+      </ul>
     </div>
-    <div ng-if="selector.total.length == 1 && selector.total[0]['@type'] == 'Lot'">
-      Lot info {{selector.total[0]['@type']}}
-    </div>
-    <div ng-if="selector.total.length == 1 && selector.total[0]['@type'] == 'Device'">
-      Device info {{selector.total[0]['@type']}}
-      <div>Events: {{selector.total[0].events.length}}</div>
-    </div>
-    <div ng-if="selector.total.length > 1">
-      Device info
-      <div>Events: {{selector.total[0].events.length}}</div>
+
+    <div ng-if="selector.total.length > 0">
+      <h4>Current selection</h4>
+      <!--<ul> TODO group selected items by lot
+        <li
+          ng-repeat="lot in ::selector.selectedLots"
+          >
+          {{ lot.label }} ({{ lot.selectedDevices.length }})
+        </li>
+      </ul>-->
+      <!--<ul> TODO summary for all selected devices (total)
+        <li>Device: {{selector.total.summary.deviceType}}</li>
+        <li>Status: {{selector.total.summary.status}}</li>
+        <li>Price: {{selector.total.summary.price}}, Range: {{selector.total.summary.range}}</li>
+        <li>Components: {{selector.total.summary.components}}</li>
+        <li>Donors: {{selector.total.summary.donors.join(',')}}, Owner: {{selector.total.summary.owner}}, Distributor:{{selector.total.summary.distributor}}</li>
+        <li>Possessor: {{selector.total.summary.possessor}}, Location: {{selector.total.summary.location}}</li>
+        <li>Events: {{selector.total.summary.events.join('')}}</li>
+      </ul>-->
     </div>
 
     <!--<h1>{{resource.summary.numberDevices}}</h1>-->

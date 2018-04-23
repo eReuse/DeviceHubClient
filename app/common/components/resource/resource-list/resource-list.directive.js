@@ -26,6 +26,39 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
       pre: ($scope, element) => {
         console.log('scope', JSON.stringify($scope.resource), ', parent', JSON.stringify($scope.parentResource))
 
+        $scope.parentResource = {
+          'label': 'Inventory',
+          '_updated': '2018-04-11T10:11:49',
+          '_links': {
+            'self': {
+              'href': 'db1/lots/NCZ0iW0mC',
+              'title': 'Lot'
+            }
+          },
+          'summary': {
+            'totalNumberDevices': 256,
+            'deviceType': 'Netbook HP',
+            'status': 'Ready',
+            'price': '150 - 300',
+            'range': 'Very low - High',
+            'components': 'Various components',
+            'donors': ['BCN Activa', 'BCN Ayto.'],
+            'owner': 'Solidança',
+            'distributor': null,
+            'possessor': 'Solidança',
+            'location': 'Cede Solidança',
+            'events:': []
+          },
+          'perms': [],
+          'children': {},
+          'byUser': '5ac49232a0961e72684082dc',
+          '_created': '2018-04-11T10:11:49',
+          '@type': 'Lot',
+          '_id': 'NCZ0iW0mC',
+          'sharedWith': [],
+          'ancestors': []
+        }
+
         $scope.session = session
         progressBar.start() // resourceListGetter.getResources will call this too, but doing it here we avoid delay
         const config = _.cloneDeep(resourceListConfig)
