@@ -445,9 +445,6 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
         Event: {key: 'device', field: '_id'}
       }
     },
-    buttons: {
-      templateUrl: configFolder + '/resource-list-config-device'
-    },
     table: {
       th: [f.id.th, f['@type'].th, f.type.th, f.model.th, f.price.th, f.range.th, f.lastEvent.thDef, f.created.th],
       td: [f.id.td, f['@type'].td, f.type.td, f.model.td, f.price.td, f.range.td, f.lastEvent.td, f.created.td]
