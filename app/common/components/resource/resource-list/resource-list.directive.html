@@ -124,12 +124,19 @@
     <div>
       Display lot resume or device information
     </div>
-    <div ng-if="selector.inList.length == 0">
+    <div ng-if="selector.total.length == 0">
       Lot info
     </div>
-    <div ng-if="selector.inList.length > 0">
+    <div ng-if="selector.total.length == 1 && selector.total[0]['@type'] == 'Lot'">
+      Lot info {{selector.total[0]['@type']}}
+    </div>
+    <div ng-if="selector.total.length == 1 && selector.total[0]['@type'] == 'Device'">
+      Device info {{selector.total[0]['@type']}}
+      <div>Events: {{selector.total[0].events.length}}</div>
+    </div>
+    <div ng-if="selector.total.length > 1">
       Device info
-      <div>Events: {{selector.inList[0].events.length}}</div>
+      <div>Events: {{selector.total[0].events.length}}</div>
     </div>
 
     <!--<h1>{{resource.summary.numberDevices}}</h1>-->
@@ -137,11 +144,11 @@
     <div id="buttons" class="row text-center">
       <div id="screener"
            uib-tooltip="Select some {{resourceName}} first."
-           tooltip-enable="selector.inList.length == 0"
+           tooltip-enable="selector.total.length == 0"
            ng-mouseenter="hoverScreener = true"
            ng-mouseleave="hoverScreener = false"
       >
-        <div ng-show="selector.inList.length == 0"></div>
+        <div ng-show="selector.total.length == 0"></div>
         <div ng-include="config.buttons.templateUrl + (session.hasExplicitPerms()? '' : '-shared') + '.html'"></div>
       </div>
     </div>
