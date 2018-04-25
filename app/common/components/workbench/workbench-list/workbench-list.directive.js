@@ -22,6 +22,7 @@ function workbenchList (workbenchPoller, workbenchServer, session, CONSTANTS) {
         $scope.waitingToLink = _.filter(snapshots, s => s._phases === s._totalPhases && !s._linked && !s._uploaded).length
         $scope.error = _.filter(snapshots, '_error').length
         $scope.uploaded = _.filter(snapshots, '_uploaded').length
+        $scope.working = $scope.snapshots.length - $scope.error - $scope.uploaded
         $scope.ip = response.data.ip
         $scope.attempts = response.data.attempts
       })

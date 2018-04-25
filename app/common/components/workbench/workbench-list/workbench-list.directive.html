@@ -1,5 +1,6 @@
 <div class="row" ng-if="$root._.isArray(snapshots)">
   <ul class="list-inline text-center text-muted" ng-show="::isNotAndroid">
+    <li>{{working}} working</li>
     <li class="text-info">{{waitingToLink}} waiting to link</li>
     <li class="text-success">{{uploaded}} completed</li>
     <li class="text-warning">{{error}} to upload manually</li>
@@ -26,6 +27,7 @@
       <thead>
         <tr>
           <th>System ID</th>
+          <th>GID</th>
           <th>Model</th>
           <th ng-hide="::isAndroid">Manufacturer</th>
           <th ng-hide="::isAndroid">S/N</th>
@@ -42,6 +44,7 @@
           }
           ">
           <td>{{snapshot.device._id}}</td>
+          <td>{{snapshot.device.gid}}</td>
           <td>{{::snapshot.device.model}}</td>
           <td ng-if="::isNotAndroid">{{::snapshot.device.manufacturer}}</td>
           <td ng-if="::isNotAndroid">{{::snapshot.device.serialNumber}}</td>

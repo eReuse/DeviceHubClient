@@ -74,7 +74,7 @@ function certificateErasureFactory (CONSTANTS, CERTIFICATE_ERASURE_FACTORY_STRIN
           headerRows: 1,
           widths: [40, '*', '*', 30, 70, 55],
           body: [
-            [this.ts(this.s.PID, 'th'), this.ts(this.s.COMPUTER, 'th'), this.ts(this.s.DISK, 'th'),
+            [this.ts(this.s.GID, 'th'), this.ts(this.s.COMPUTER, 'th'), this.ts(this.s.DISK, 'th'),
               this.ts(this.s.STATUS, 'th'), this.ts(this.s.DATE, 'th'), this.ts(this.s.ERASURE_TYPE, 'th')]
           ]
         },
@@ -84,7 +84,7 @@ function certificateErasureFactory (CONSTANTS, CERTIFICATE_ERASURE_FACTORY_STRIN
 
     _.forEach(reports, function (report) {
       var type = report.isBasic ? self.s.ERASURE_BASIC : self.s.ERASURE_SECTORS
-      var row = [self.get(report.computer.pid), self.get(report.computer.serialNumber), self.get(report.hdd.serialNumber),
+      var row = [self.get(report.computer.gid), self.get(report.computer.serialNumber), self.get(report.hdd.serialNumber),
         self.getStatus(report.erasure.success), report.erasure._updated.toLocaleDateString(), type]
       content[1].table.body.push(row)
     })
@@ -104,18 +104,16 @@ function certificateErasureFactory (CONSTANTS, CERTIFICATE_ERASURE_FACTORY_STRIN
         self.ts(self.s.DISK + ' ' + report.hdd.serialNumber, 'h2'),
         {
           columns: [
-            self._field(self.s.STARTING_TIME, startingTime.toLocaleString()),
-            self._field(self.s.ENDING_TIME, endingTime.toLocaleString())
+            self._field(self.s.DATE, report.erasure._updated.toLocaleDateString()),
+            self._field(self.s.ELAPSED_TIME, Math.floor((endingTime - startingTime) / (1000 * 60)) + ' min'),
           ]
         },
-        self._field(self.s.ELAPSED_TIME, Math.floor((endingTime - startingTime) / (1000 * 60)) + ' min'),
         {
           columns: [
             self._field(self.s.STEPS, self.get(report.erasure.steps.length)),
             self._field(self.s.ERASURE_TYPE, report.isBasic ? self.s.REPORT_BASIC : self.s.REPORT_PER_SECTORS)
           ]
         },
-        self._field(self.s.ERASURE_METHOD, self.s.ERASURE_METHOD_EXPLANATION),
         self._field(self.s.ERASURE_TOOL, report.isBasic ? 'Shred' : 'Badblocks'),
         {
           columns: [
@@ -146,7 +144,7 @@ function certificateErasureFactory (CONSTANTS, CERTIFICATE_ERASURE_FACTORY_STRIN
         {
           columns: [
             self._field(self.s.COMPUTER_MANUFACTURER, self.get(report.computer.manufacturer)),
-            self._field(self.s.PID, self.get(report.computer.pid))
+            self._field(self.s.GID, self.get(report.computer.gid))
           ]
         }
       ]

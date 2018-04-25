@@ -182,7 +182,7 @@ const RESOURCE_CONFIG = {
         resourceType: 'Lot'
       },
       view: {title: [{key: 'label'}], subtitle: [{key: '@type', humanize: true}]},
-      subviews: [v.Lot, v.Package, v.Pallet, v.Device, v.Detail],
+      subviews: [v.Lot, v.Device, v.Detail],
       doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
     },
     IncomingLot: {
@@ -217,7 +217,7 @@ const RESOURCE_CONFIG = {
     }
   },
   inventory: {
-    subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Pallet, v.Event]
+    subviews: [v.Lot, v.Device, v.Event]
   }
 }
 
