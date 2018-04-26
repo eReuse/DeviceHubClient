@@ -19,10 +19,10 @@ function ResourceSelectorFactory () {
      * @param {array} resources - The array that will hold the resources
      * @param {ResourceListGetter} resourceListGetter - An instance of ResourceListGetter
      */
-    constructor (_resources) {
+    constructor (_resources, _lots) {
       let resources = _resources
       let callbacksForSelections = []
-      let lots = {}
+      let lots = _lots
 
       /**
        * Toggles the selected state of given resource, selecting (or deselecting) the device(s)
@@ -50,11 +50,12 @@ function ResourceSelectorFactory () {
       }
 
       /**
-       * Deselects all devices
+       * Deselects all given devices
        */
-      this.deselectAll = () => {
-        this.getLotsAsList().forEach(lot => {
-          lot.selectedDevices.length = 0
+      this.deselectAll = devices => {
+        devices = devices.slice() // given devices might the same array we remove devices from
+        _.forEach(devices, device => {
+          this.remove(device)
         })
         _control()
       }
@@ -70,7 +71,7 @@ function ResourceSelectorFactory () {
       this.reAddToLot = (resources, lotID) => {
         console.log('repopulating lot', lotID, 'with', resources.length, 'resources')
         // We re-populate inList from the actual resources that are in total
-        lots[lotID] && (lots[lotID].length = 0)
+        this.getLotByID(lotID) && (this.getLotByID(lotID).length = 0)
         _control()
 
         // TODO refactor for lots: only add resources that are already selected in a lot
@@ -103,15 +104,14 @@ function ResourceSelectorFactory () {
         if (resource['@type'] !== 'Device') {
           return false
         }
-        resource.lots.forEach(lot => {
-          lots[lot._id] = lots[lot._id] || {
-            lot: lot,
-            selectedDevices: []
-          }
+        console.log('resource.lots', resource.lots)
+        resource.lots.forEach(_lot => {
+          let lot = this.getOrCreateLot(_lot)
 
-          let existingResource = _.find(lots[lot._id].selectedDevices, {_id: resource._id})
+          let existingResource = _.find(lot.selectedDevices, {_id: resource._id})
+          console.log('existingResource', existingResource)
           if (!existingResource) {
-            lots[lot._id].selectedDevices.push(resource)
+            lot.selectedDevices.push(resource)
           }
         })
         _control()
@@ -135,7 +135,7 @@ function ResourceSelectorFactory () {
        */
       this.remove = resource => {
         resource.lots.forEach(lot => {
-          _.remove(lots[lot._id].selectedDevices, {'_id': resource['_id']})
+          _.remove(this.getLotByID(lot._id).selectedDevices, {'_id': resource['_id']})
           // TODO if selectedDevices.length === 0, delete lots[lot._id] ?
         })
         _control()
@@ -156,11 +156,28 @@ function ResourceSelectorFactory () {
       }
 
       this.getNumberOfSelectedDevicesInLot = (lotID) => {
-        return (lots[lotID] && lots[lotID].selectedDevices.length) || 0
+        return (this.getLotByID(lotID) && this.getLotByID(lotID).selectedDevices.length) || 0
       }
 
       this.getLotsAsList = () => {
-        return _.values(lots)
+        return lots
+      }
+
+      this.getLotByID = lotID => {
+        return _.find(lots, {_id: lotID})
+      }
+
+      this.getOrCreateLot = _lot => {
+        let lot = this.getLotByID(_lot._id)
+        if (!lot) {
+          lot = {
+            _id: _lot._id,
+            lot: _lot,
+            selectedDevices: []
+          }
+          lots.push(lot)
+        }
+        return lot
       }
 
       /**

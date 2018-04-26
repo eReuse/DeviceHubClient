@@ -183,68 +183,6 @@ function ResourceListGetterFactory (ResourceSettings) {
         // console.log('Resources' + JSON.stringify(resources))
         resources = [
           {
-            'label': 'BDR',
-            '_updated': '2018-04-11T10:11:49',
-            '_links': {
-              'self': {
-                'href': 'db1/lots/NCZ0iW0mC',
-                'title': 'Lot'
-              }
-            },
-            'perms': [],
-            'children': {},
-            'byUser': '5ac49232a0961e72684082dc',
-            '_created': '2018-04-11T10:11:49',
-            '@type': 'Lot',
-            '_id': 'NCZ0iW0mC',
-            'sharedWith': [],
-            'ancestors': []
-          },
-          {
-            'label': 'lot1',
-            '_updated': '2018-04-04T08:52:46',
-            '_links': {
-              'self': {
-                'href': 'db1/lots/PuDTLblX',
-                'title': 'Lot'
-              }
-            },
-            'perms': [
-              {
-                'perm': 'r',
-                'account': '5ac4925da0961e72684083e8'
-              }
-            ],
-            'children': {
-            },
-            'byUser': '5ac49232a0961e72684082dc',
-            '_created': '2018-04-04T08:52:34',
-            '@type': 'Lot',
-            '_id': 'PuDTLblX',
-            'sharedWith': [
-              '5ac4925da0961e72684083e8'
-            ],
-            'ancestors': []
-          },
-          {
-            'label': 'Lot from User',
-            '_updated': '2018-04-04T08:52:45',
-            '_links': {
-              'self': {
-                'href': 'db1/lots/XOmGHs3i',
-                'title': 'Lot'
-              }
-            },
-            'perms': [],
-            'children': {},
-            'byUser': '5ac49232a0961e72684082dc',
-            '_created': '2018-04-04T08:52:45',
-            '@type': 'Lot',
-            '_id': 'XOmGHs3i',
-            'sharedWith': [],
-            'ancestors': []
-          },
-          {
             'placeholder': true,
             '_links': {
               'self': {

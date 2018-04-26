@@ -56,13 +56,78 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           '@type': 'Lot',
           '_id': '1234',
           'sharedWith': [],
-          'ancestors': []
+          'ancestors': [],
+          lots: [
+            {
+              'label': 'BDR',
+              '_updated': '2018-04-11T10:11:49',
+              '_links': {
+                'self': {
+                  'href': 'db1/lots/NCZ0iW0mC',
+                  'title': 'Lot'
+                }
+              },
+              'perms': [],
+              'children': {},
+              'byUser': '5ac49232a0961e72684082dc',
+              '_created': '2018-04-11T10:11:49',
+              '@type': 'Lot',
+              '_id': 'NCZ0iW0mC',
+              'sharedWith': [],
+              'ancestors': []
+            },
+            {
+              'label': 'lot1',
+              '_updated': '2018-04-04T08:52:46',
+              '_links': {
+                'self': {
+                  'href': 'db1/lots/PuDTLblX',
+                  'title': 'Lot'
+                }
+              },
+              'perms': [
+                {
+                  'perm': 'r',
+                  'account': '5ac4925da0961e72684083e8'
+                }
+              ],
+              'children': {
+              },
+              'byUser': '5ac49232a0961e72684082dc',
+              '_created': '2018-04-04T08:52:34',
+              '@type': 'Lot',
+              '_id': 'PuDTLblX',
+              'sharedWith': [
+                '5ac4925da0961e72684083e8'
+              ],
+              'ancestors': []
+            },
+            {
+              'label': 'Lot from User',
+              '_updated': '2018-04-04T08:52:45',
+              '_links': {
+                'self': {
+                  'href': 'db1/lots/XOmGHs3i',
+                  'title': 'Lot'
+                }
+              },
+              'perms': [],
+              'children': {},
+              'byUser': '5ac49232a0961e72684082dc',
+              '_created': '2018-04-04T08:52:45',
+              '@type': 'Lot',
+              '_id': 'XOmGHs3i',
+              'sharedWith': [],
+              'ancestors': []
+            }
+          ]
         }
 
         $scope.session = session
         progressBar.start() // resourceListGetter.getResources will call this too, but doing it here we avoid delay
         const config = _.cloneDeep(resourceListConfig)
         $scope.resources = [] // Do never directly assign (r=[]) to 'resources' as modules depend of its reference
+        $scope.lots = []
         $scope.getDevices = () => {
           return $scope.resources.filter(r => r['@type'] === 'Device')
         }
@@ -83,7 +148,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         $(window).resize(triggerCollapse)
 
         const resourceListGetter = new ResourceListGetterBig(resourceType, $scope.resources, config, progressBar)
-        const resourceListSelector = $scope.selector = new ResourceListSelectorBig($scope.resources)
+        const resourceListSelector = $scope.selector = new ResourceListSelectorBig($scope.resources, $scope.lots)
         resourceListGetter.callbackOnGetting(_.bind(resourceListSelector.reAddToLot, resourceListSelector, _))
 
         // Search
