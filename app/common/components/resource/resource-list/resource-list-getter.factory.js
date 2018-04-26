@@ -8,7 +8,7 @@ function ResourceListGetterFactory (ResourceSettings) {
      * Creates a resourceListGetter for a specific resourceType.
      *
      * Note: A limitation of resourceListGetter is that needs a default sort.
-     * @param {string} resourceType - The resource type where to get new resources.
+     * @param {string} resourceType - The resource type where to get new resources. //TODO Deprecated
      * @param {array} resources - An array of resource objects to update when new resources are got. This array is
      * updated by reference, so do not re-assign it.
      * @param {object} filterSettings - Configuration object for the filters.
@@ -17,6 +17,7 @@ function ResourceListGetterFactory (ResourceSettings) {
     constructor (resourceType, resources, filterSettings, progressBar) {
       this.resourceType = resourceType
       this.resources = resources
+      this.lotID = '1234' // TODO update
       this.filterSettings = filterSettings
       this.server = ResourceSettings(resourceType).server
       this.progressBar = progressBar
@@ -170,6 +171,7 @@ function ResourceListGetterFactory (ResourceSettings) {
       // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 1
       this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 1
       const q = {
+        lotID: this.lotID,
         where: this._filters,
         page: this.pagination.pageNumber,
         sort: this._sort,
@@ -272,7 +274,17 @@ function ResourceListGetterFactory (ResourceSettings) {
             '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
             'public': false,
             'perms': [],
-            'totalRamSize': 0
+            'totalRamSize': 0,
+            lots: [
+              {
+                '_id': '1234',
+                'label': 'Donación BCN Activa'
+              },
+              {
+                '_id': '1234678',
+                'label': 'Venta Ayuntamiento'
+              }
+            ]
           },
           {
             'placeholder': true,
@@ -304,7 +316,13 @@ function ResourceListGetterFactory (ResourceSettings) {
             '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
             'public': false,
             'perms': [],
-            'totalRamSize': 0
+            'totalRamSize': 0,
+            lots: [
+              {
+                '_id': '1234',
+                'label': 'Donación BCN Activa'
+              }
+            ]
           },
           {
             'placeholder': true,
@@ -336,7 +354,13 @@ function ResourceListGetterFactory (ResourceSettings) {
             '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
             'public': false,
             'perms': [],
-            'totalRamSize': 0
+            'totalRamSize': 0,
+            lots: [
+              {
+                '_id': '1234',
+                'label': 'Donación BCN Activa'
+              }
+            ]
           }
         ]
 
@@ -344,7 +368,7 @@ function ResourceListGetterFactory (ResourceSettings) {
         this.pagination.morePagesAvailable = resources._meta && resources._meta.page * resources._meta.max_results < resources._meta.total
         this.pagination.totalPages = resources._meta && resources._meta.total
         // broadcast to callbacks
-        _.invokeMap(this._callbacksOnGetting, _.call, null, this.resources, this.resourceType, this.pagination, getNextPage)
+        _.invokeMap(this._callbacksOnGetting, _.call, null, this.resources, this.lotID, this.resourceType, this.pagination, getNextPage)
       })
     }
 

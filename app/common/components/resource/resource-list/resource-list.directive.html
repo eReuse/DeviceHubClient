@@ -10,22 +10,22 @@
 </div>
 
 <div class="row">
-  <span>Selected {{selector.total.length}} in total, {{selector.inList.length}} in this list</span>
+  <span>Selected {{selector.getTotalNumberOfSelectedDevices() }} in total, {{selector.getNumberOfSelectedDevicesInLot(parentResource._id)}} in this list</span>
   <button type="button"
           class="btn"
           ng-class="{'btn-primary': resources.length > 0}"
-          ng-show="selector.inList.length != resources.length"
-          ng-click="selector.toggleSelectAll(true)"
+          ng-show="selector.getNumberOfSelectedDevicesInLot(parentResource._id) != getDevices().length"
+          ng-click="selector.selectAll(resources)"
   >
-    <span><i class="fa fa-select fa-fw"></i>Select all</span>
+    <span><i class="fa fa-select fa-fw"></i>Select all devices</span>
   </button>
   <button type="button"
           class="btn"
           ng-class="{'btn-primary': resources.length > 0}"
-          ng-show="selector.inList.length == resources.length"
-          ng-click="selector.toggleSelectAll(false)"
+          ng-show="selector.getNumberOfSelectedDevicesInLot(parentResource._id) === getDevices().length"
+          ng-click="selector.deselectAll()"
   >
-    <span><i class="fa fa-select fa-fw"></i>Deselect all</span>
+    <span><i class="fa fa-select fa-fw"></i>Deselect all devices</span>
   </button>
 </div>
 
@@ -51,7 +51,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="resource in resources track by resource._id"
-              ng-class="{info: selector.isInList(resource)}"
+              ng-class="{info: resource['@type'] === 'Device' && selector.isSelected(resource)}"
 
               ng-init="popover = popovers[resource._id]"
 
@@ -121,7 +121,7 @@
   </div>
   <!-- SubResource in right-bar -->
   <aside class="col-xs-10 col-sm-8 col-lg-7" id="aside-subResource">
-    <div ng-if="selector.total.length == 0">
+    <div ng-if="selector.getTotalNumberOfSelectedDevices() === 0">
       <h4>Summary</h4>
       <h3>{{ parentResource.summary.totalNumberDevices }} devices in lot</h3>
       <ul>
@@ -135,15 +135,15 @@
       </ul>
     </div>
 
-    <div ng-if="selector.total.length > 0">
+    <div ng-if="selector.getTotalNumberOfSelectedDevices() > 0">
       <h4>Current selection</h4>
-      <!--<ul> TODO group selected items by lot
+      <ul>
         <li
-          ng-repeat="lot in ::selector.selectedLots"
+          ng-repeat="lot in ::selector.getLotsAsList()"
           >
-          {{ lot.label }} ({{ lot.selectedDevices.length }})
+          {{ lot.lot.label }} ({{ lot.selectedDevices.length }})
         </li>
-      </ul>-->
+      </ul>
       <!--<ul> TODO summary for all selected devices (total)
         <li>Device: {{selector.total.summary.deviceType}}</li>
         <li>Status: {{selector.total.summary.status}}</li>

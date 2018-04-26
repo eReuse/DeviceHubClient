@@ -54,7 +54,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           'byUser': '5ac49232a0961e72684082dc',
           '_created': '2018-04-11T10:11:49',
           '@type': 'Lot',
-          '_id': 'NCZ0iW0mC',
+          '_id': '1234',
           'sharedWith': [],
           'ancestors': []
         }
@@ -63,6 +63,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         progressBar.start() // resourceListGetter.getResources will call this too, but doing it here we avoid delay
         const config = _.cloneDeep(resourceListConfig)
         $scope.resources = [] // Do never directly assign (r=[]) to 'resources' as modules depend of its reference
+        $scope.getDevices = () => {
+          return $scope.resources.filter(r => r['@type'] === 'Device')
+        }
         const resourceType = 'Device' // TODO remove and remove usages
 
         /**
@@ -81,7 +84,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
 
         const resourceListGetter = new ResourceListGetterBig(resourceType, $scope.resources, config, progressBar)
         const resourceListSelector = $scope.selector = new ResourceListSelectorBig($scope.resources)
-        resourceListGetter.callbackOnGetting(_.bind(resourceListSelector.reAddToActualList, resourceListSelector, _))
+        resourceListGetter.callbackOnGetting(_.bind(resourceListSelector.reAddToLot, resourceListSelector, _))
 
         // Search
         // const parentType = _.get($scope, 'parentResource.@type')

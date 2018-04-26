@@ -19,134 +19,163 @@ function ResourceSelectorFactory () {
      * @param {array} resources - The array that will hold the resources
      * @param {ResourceListGetter} resourceListGetter - An instance of ResourceListGetter
      */
-    constructor (resources) {
-      this.resources = resources
+    constructor (_resources) {
+      let resources = _resources
+      let callbacksForSelections = []
+      let lots = {}
 
       /**
-       * Array holding the resources that are selected in the actual list.
-       * @type {Array}
+       * Toggles the selected state of given resource, selecting (or deselecting) the device(s)
+       * accordingly. It can be multiple devices if *shift* is pressed.
+       *
+       * @param {object} resource - The resource to select/deselect
        */
-      this.inList = []
+      this.toggle = resource => {
+        if (this.isSelected(resource)) { // Remove
+          this.remove(resource)
+        } else { // Add
+          console.log('Adding resource', resource)
+          this.add(resource)
+        }
+      }
+
       /**
-       * Resources selected through all lists.
-       * @type {Array}
+       * Selects all given resources
+       * @param resources
        */
-      this.total = []
-      this.callbacksForSelections = []
-    }
-
-    /**
-     * Toggles the checkbox where the resource is in, selecting (or deselecting) the device(s)
-     * accordingly. It can be multiple devices if *shift* is pressed.
-     *
-     * @param {object} resource - The resource to select/deselect
-     * @param {$event} $event - JQuery's/JQLite event object
-     */
-    toggle (resource) {
-      if (this.isInList(resource)) { // Remove
-        this.remove(resource)
-      } else { // Add
-        console.log('Adding resource', resource)
-        this.add(resource)
+      this.selectAll = resources => {
+        _.forEach(resources, resource => {
+          this.add(resource)
+        })
       }
-    }
 
-    /**
-     * Toggles the checkbox that lets selecting all resources on the list or unselect all resources, in general.
-     * @param selectAll
-     */
-    toggleSelectAll (selectAll) {
-      let self = this
-      if (selectAll) {
-        _.forEach(this.resources, resource => { self.add(resource) })  // Note that add can return false
-      } else {
-        this.deselectAll()
+      /**
+       * Deselects all devices
+       */
+      this.deselectAll = () => {
+        this.getLotsAsList().forEach(lot => {
+          lot.selectedDevices.length = 0
+        })
+        _control()
       }
-    }
 
-    /**
-     * Deselects all devices
-     */
-    deselectAll () {
-      this.inList.length = 0
-      this.total.length = 0
-      this._control()
-    }
+      /**
+       * Re-populate the actual list of resources with the passed-in resources.
+       *
+       * This method is used after getting new resources, as some resources may have been
+       * selected in other lists (they are in the total list).
+       * @param resources
+       * TODO refactor to use lots
+       */
+      this.reAddToLot = (resources, lotID) => {
+        console.log('repopulating lot', lotID, 'with', resources.length, 'resources')
+        // We re-populate inList from the actual resources that are in total
+        lots[lotID] && (lots[lotID].length = 0)
+        _control()
 
-    /**
-     * Re-populate the actual list of resources with the passed-in resources.
-     *
-     * This method is used after getting new resources, as some resources may have been
-     * selected in other lists (they are in the total list).
-     * @param resources
-     */
-    reAddToActualList (resources) {
-      // We re-populate inList from the actual resources that are in total
-      let self = this
-      this.inList.length = 0
-      this._control()
-      _.forEach(resources, function (resource) {
-        if (_.find(self.total, {_id: resource._id})) {
-          self.add(resource, true) // 2nd parameter -> We add it only to inList
+        // TODO refactor for lots: only add resources that are already selected in a lot
+        // _.forEach(resources, resource => {
+        //   this.add(resource) // 2nd parameter -> We add it only to inList
+        // })
+      }
+
+      /**
+       * Returns true if the resource is selected, i.e. is in one of the lots
+       * @param {object} resource
+       * @returns {boolean}
+       */
+      this.isSelected = resource => {
+        let lotsList = this.getLotsAsList()
+        for (let i = 0; i < lotsList.length; i++) {
+          let existingResource = _.find(lotsList[i].selectedDevices, {_id: resource._id})
+          if (existingResource) {
+            return true
+          }
         }
-      })
-    }
-
-    /**
-     * Returns true if the resource is in the *actual* list.
-     * @param {object} resource
-     * @returns {boolean}
-     */
-    isInList (resource) {
-      return _.find(this.inList, {_id: resource._id})
-    }
-
-    /**
-     * Adds a resource to the actual list and to the total, if it was not there before.
-     * @param {object} resource - The resource to add
-     * @param {boolean} inListOnly - True for not adding it to the total list
-     * @return {boolean} True if a *new* resource has been added to the list
-     */
-    add (resource, inListOnly = false) {
-      if (!this.isInList(resource)) {
-        this.inList.push(resource)
-        if (!inListOnly) {
-          this.total.push(resource)
-        } else {
-          // Although we don't add the resource to the total list, if the result existed in the total list, we update it
-          const indexOfExistingResource = _.findIndex(this.total, {'_id': resource._id})
-          if (indexOfExistingResource !== -1) this.total[indexOfExistingResource] = resource
-        }
-        this._control()
-        return true
-      } else {
         return false
       }
-    }
 
-    /**
-     * Removes a resources from the actual and total lists, if it was there.
-     * @param resource
-     */
-    remove (resource) {
-      _.remove(this.inList, {'_id': resource['_id']})
-      _.remove(this.total, {'_id': resource['_id']})
-      this._control()
-    }
+      /**
+       * Adds given resource to all parent lots of the resource, if it was not there before.
+       * @param {object} resource - The resource to add
+       */
+      this.add = resource => {
+        if (resource['@type'] !== 'Device') {
+          return false
+        }
+        resource.lots.forEach(lot => {
+          lots[lot._id] = lots[lot._id] || {
+            lot: lot,
+            selectedDevices: []
+          }
 
-    /**
-     * Performs common tasks after adding/removing resources on both lists.
-     * @private
-     */
-    _control () {
-      // TODO Update: this.selector.checked = this.inList.length === this.resources.length
-      _.invokeMap(this.callbacksForSelections, _.call, null, this.total, this.inList, this.resources)
-    }
+          let existingResource = _.find(lots[lot._id].selectedDevices, {_id: resource._id})
+          if (!existingResource) {
+            lots[lot._id].selectedDevices.push(resource)
+          }
+        })
+        _control()
 
-    callbackOnSelection (callback) {
-      this.callbacksForSelections.push(callback)
-    }
+        // Lot selection
+        // let isLot = resource['@type'] === 'Lot'
+        // if (isLot) {
+        //   this.lots[resource._id] = {
+        //     _id: resource._id,
+        //     numSelectedDevices: resource.numDevicesTotal,
+        //     allDevicesSelected: true,
+        //     searchQuery: 'query', //query at time of selection or at time of event?
+        //     filters: { price: { from: 0, to: 170 }} //filters at time of selection or at time of event?
+        //   }
+        // }
+      }
 
+      /**
+       * Removes a resources from the actual and total lists, if it was there.
+       * @param resource
+       */
+      this.remove = resource => {
+        resource.lots.forEach(lot => {
+          _.remove(lots[lot._id].selectedDevices, {'_id': resource['_id']})
+          // TODO if selectedDevices.length === 0, delete lots[lot._id] ?
+        })
+        _control()
+      }
+
+      this.callbackOnSelection = callback => {
+        callbacksForSelections.push(callback)
+      }
+
+      this.getTotalNumberOfSelectedDevices = () => {
+        let devices = {}
+        this.getLotsAsList().forEach(lot => {
+          lot.selectedDevices.forEach(device => {
+            devices[device._id] = device
+          })
+        })
+        return _.values(devices).length
+      }
+
+      this.getNumberOfSelectedDevicesInLot = (lotID) => {
+        return (lots[lotID] && lots[lotID].selectedDevices.length) || 0
+      }
+
+      this.getLotsAsList = () => {
+        return _.values(lots)
+      }
+
+      /**
+       * Performs common tasks after adding/removing resources on both lists.
+       * @private
+       */
+      let _control = () => {
+        console.log('control',
+          this.getTotalNumberOfSelectedDevices(),
+          'devices in',
+          this.getLotsAsList().length,
+          'lots have been selected')
+        _.invokeMap(callbacksForSelections, _.call, null, lots, resources)
+      }
+    }
   }
 
   return ResourceListSelector
