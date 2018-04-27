@@ -21,14 +21,22 @@
 </ul>
 
 <h2>Devices</h2>
-<span>{{selector.getTotalNumberOfSelectedDevices() }} in total, {{selector.getNumberOfSelectedDevicesInLot(parentResource._id)}}</span>
+<span>{{parentResource.totalNumDevices}} in total, {{getDevices().length }} shown</span>
 <button type="button"
         class="btn"
         ng-class="{'btn-primary': getDevices().length > 0}"
-        ng-show="selector.getNumberOfSelectedDevicesInLot(parentResource._id) != getDevices().length"
+        ng-show="selector.getNumberOfSelectedDevicesInLot(parentResource._id) !== getDevices().length"
         ng-click="selector.selectAll(getDevices())"
 >
   <span><i class="fa fa-select fa-fw"></i>Select all</span>
+</button>
+<button type="button"
+        class="btn"
+        ng-class="{'btn-primary': getDevices().length > 0}"
+        ng-show="selector.getNumberOfSelectedDevicesInLot(parentResource._id) === getDevices().length"
+        ng-click="selector.deselectAll(getDevices())"
+>
+  <span><i class="fa fa-select fa-fw"></i>Deselect all</span>
 </button>
 <!-- Listing -->
 <div class="row">

@@ -57,6 +57,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           '_id': '1234',
           'sharedWith': [],
           'ancestors': [],
+          totalNumDevices: 12,
           lots: [
             {
               'label': 'BDR',
@@ -131,6 +132,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         $scope.getDevices = () => {
           return $scope.resources.filter(r => r['@type'] === 'Device')
         }
+
         const resourceType = 'Device' // TODO remove and remove usages
 
         /**
