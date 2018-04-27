@@ -206,13 +206,22 @@ function ResourceListGetterFactory (ResourceSettings) {
                 '@type': 'devices:Register'
               }
             ],
+            'status': 'Ready',
             '@type': 'Device',
-            'totalHardDriveSize': 0,
+            'type': 'Netbook',
+            'manufacturer': 'HP',
+            'model': 'XS1',
+            'price': 150,
+            'donor': 'BCN Ayuntamiento',
+            'owner': 'Solidança',
+            'distributor': 'Donalo',
+            'processorModel': 'Intel(R) Dual Core(TM) CPU 540 @ 2.35GHz',
+            'totalRamSize': 1024,
+            'totalHardDriveSize': 255245.3359375,
             'forceCreation': false,
             '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
             'public': false,
             'perms': [],
-            'totalRamSize': 0,
             lots: [
               {
                 '_id': '1234',
@@ -248,13 +257,22 @@ function ResourceListGetterFactory (ResourceSettings) {
                 '@type': 'devices:Register'
               }
             ],
+            'status': 'Ready',
             '@type': 'Device',
-            'totalHardDriveSize': 0,
+            'type': 'Netbook',
+            'manufacturer': 'HP',
+            'model': 'XS1',
+            'price': 150,
+            'donor': 'BCN Ayuntamiento',
+            'owner': 'Solidança',
+            'distributor': 'Donalo',
+            'processorModel': 'Intel(R) Dual Core(TM) CPU 540 @ 2.35GHz',
+            'totalRamSize': 1024,
+            'totalHardDriveSize': 255245.3359375,
             'forceCreation': false,
             '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
             'public': false,
             'perms': [],
-            'totalRamSize': 0,
             lots: [
               {
                 '_id': '1234',
@@ -286,13 +304,22 @@ function ResourceListGetterFactory (ResourceSettings) {
                 '@type': 'devices:Register'
               }
             ],
+            'status': 'Registered',
             '@type': 'Device',
-            'totalHardDriveSize': 0,
+            'type': 'Netbook',
+            'manufacturer': 'Dell',
+            'model': 'ASD1',
+            'price': 270,
+            'processorModel': 'Intel(R) Atom(TM) CPU 330 @ 1.60GHz',
+            'totalRamSize': 2048,
+            'totalHardDriveSize': 305245.3359375,
+            'donor': 'BCN Activa',
+            'owner': 'Alencop',
+            'distributor': null,
             'forceCreation': false,
             '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
             'public': false,
             'perms': [],
-            'totalRamSize': 0,
             lots: [
               {
                 '_id': '1234',

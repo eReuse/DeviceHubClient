@@ -145,14 +145,14 @@ function ResourceSelectorFactory () {
         callbacksForSelections.push(callback)
       }
 
-      this.getTotalNumberOfSelectedDevices = () => {
+      this.getAllSelectedDevices = () => {
         let devices = {}
         this.getLotsAsList().forEach(lot => {
           lot.selectedDevices.forEach(device => {
             devices[device._id] = device
           })
         })
-        return _.values(devices).length
+        return _.values(devices)
       }
 
       this.getNumberOfSelectedDevicesInLot = (lotID) => {
@@ -180,13 +180,48 @@ function ResourceSelectorFactory () {
         return lot
       }
 
+      this.getAggregatedPropertyOfSelected = (property, valueIfDifferent = 'Various', postfix) => {
+        let aggregatedValue = this.getAllSelectedDevices().reduce((accumulate, device) => {
+          let value = accumulate[property]
+          if (_.has(device, property) && value !== device[property]) {
+            value = valueIfDifferent
+            postfix = ''
+          }
+          return {
+            [property]: value
+          }
+        })[property]
+
+        if (postfix) {
+          aggregatedValue += postfix
+        }
+        return aggregatedValue
+      }
+
+      this.getRangeOfPropertyOfSelected = (property) => {
+        let min = 0
+        let max = 0
+        this.getAllSelectedDevices().forEach(device => {
+          if (_.has(device, property) && !min || device[property] < min) {
+            min = device[property]
+          }
+          if (_.has(device, property) && device[property] > max) {
+            max = device[property]
+          }
+        })
+        if (min === max) {
+          return min
+        }
+        return min + ' - ' + max
+      }
+
       /**
        * Performs common tasks after adding/removing resources on both lists.
        * @private
        */
       let _control = () => {
         console.log('control',
-          this.getTotalNumberOfSelectedDevices(),
+          this.getAllSelectedDevices().length,
           'devices in',
           this.getLotsAsList().length,
           'lots have been selected')

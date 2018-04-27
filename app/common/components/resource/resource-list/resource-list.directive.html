@@ -129,7 +129,7 @@
   </div>
   <!-- SubResource in right-bar -->
   <aside class="col-xs-10 col-sm-8 col-lg-7" id="aside-subResource">
-    <div ng-if="selector.getTotalNumberOfSelectedDevices() === 0">
+    <div ng-if="selector.getAllSelectedDevices().length === 0">
       <h4>Summary</h4>
       <h3>{{ parentResource.summary.totalNumberDevices }} devices in lot</h3>
       <ul>
@@ -143,8 +143,8 @@
       </ul>
     </div>
 
-    <div ng-if="selector.getTotalNumberOfSelectedDevices() > 0">
-      <h4>Current selection: {{selector.getTotalNumberOfSelectedDevices()}} devices in {{selector.getLotsAsList().length}} lots</h4>
+    <div ng-if="selector.getAllSelectedDevices().length > 0">
+      <h4>Current selection: {{selector.getAllSelectedDevices().length}} devices in {{selector.getLotsAsList().length}} lots</h4>
       <ul>
 
         <li
@@ -158,6 +158,47 @@
             <span><i class="fa fa-select fa-fw"></i>Deselect</span>
           </button>
         </li>
+      </ul>
+      <ul>
+        <!--'serialNumber': 'foo',
+        '@type': 'Computer',
+        'type': 'Microtower',
+        'placeholder': false,
+        'components': ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11'],
+        'processorModel': 'Intel(R) Atom(TM) CPU 330 @ 1.60GHz',
+        'totalRamSize': 2048
+        'totalHardDriveSize': 305245.3359375,
+        'manufacturer': 'barx',
+        'model': 'bar',
+        'condition': {
+          'components': {'ram': 1.54, 'hardDrives': 3.82, 'processors': 3.59},
+          'appearance': {'score': 0.0, 'general': 'B'},
+          'functionality': {'score': -0.5, 'general': 'B'},
+          'general': {'range': 'Low', 'score': 2.09},
+        },
+        'pricing': {
+          'total': {'standard': 57.6},
+          'platform': {'standard': {'percentage': 0.3, 'amount': 17.78}},
+          'retailer': {'standard': {'percentage': 0.18, 'amount': 10.87}},
+          'refurbisher': {'standard': {'percentage': 0.5, 'amount': 28.94}}
+        },
+        'events': [{
+          'label': 'Test',
+          '_updated': '2018-04-20T09:32:16',
+          'secured': false,
+          'incidence': false,
+          '@type': 'devices:Sell',
+          '_id': '5ad9b3a0a0961e1c60fa6c38',
+          'byUser': '5acfa56aa0961e1b7f28c34a',
+          'to': {'email': 'x.bustamante@ereuse.org'}
+          },
+          ...
+        ]-->
+        <li>Device: {{selector.getAggregatedPropertyOfSelected('@type', 'Various types')}} {{selector.getAggregatedPropertyOfSelected('type', 'Various subtypes')}} {{selector.getAggregatedPropertyOfSelected('manufacturer', '')}} {{selector.getAggregatedPropertyOfSelected('model', '')}}</li>
+        <li>Status: {{selector.getAggregatedPropertyOfSelected('status')}}</li>
+        <li>Price: {{selector.getRangeOfPropertyOfSelected('price')}}</li>
+        <li>Components: {{selector.getAggregatedPropertyOfSelected('processorModel')}}, {{selector.getAggregatedPropertyOfSelected('totalHardDriveSize', 'Various', ' GB HardDrive')}}, {{selector.getAggregatedPropertyOfSelected('totalRamSize', 'Various', ' MB RAM')}}</li>
+        <li>Donor: {{selector.getAggregatedPropertyOfSelected('donor') || 'No donor'}}, Owner: {{selector.getAggregatedPropertyOfSelected('donor') || 'No owner'}} , Distributor: {{selector.getAggregatedPropertyOfSelected('distributor') || 'No distributor' }} </li>
       </ul>
 
       <!--<ul> TODO summary for all selected devices (total)
