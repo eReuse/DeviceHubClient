@@ -206,6 +206,7 @@ function ResourceListGetterFactory (ResourceSettings) {
                 '@type': 'devices:Register'
               }
             ],
+            'title': 'Netbook HP XS1',
             'status': 'Ready',
             '@type': 'Device',
             'type': 'Netbook',
@@ -257,6 +258,7 @@ function ResourceListGetterFactory (ResourceSettings) {
                 '@type': 'devices:Register'
               }
             ],
+            'title': 'Netbook HP XS1',
             'status': 'Ready',
             '@type': 'Device',
             'type': 'Netbook',
@@ -304,6 +306,7 @@ function ResourceListGetterFactory (ResourceSettings) {
                 '@type': 'devices:Register'
               }
             ],
+            'title': 'Netbook Dell ASD1',
             'status': 'Registered',
             '@type': 'Device',
             'type': 'Netbook',

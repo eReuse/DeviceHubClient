@@ -28,6 +28,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
   const f = {
     id: {th: {key: '_id', name: 'Id'}, td: {value: '_id'}},
     label: {th: {key: 'label', name: 'Label'}, td: {value: 'label', limitTo: 30}},
+    title: {th: {key: 'title', name: 'Title'}, td: {value: 'title', humanize: false}},
     '@type': {th: {key: '@type', name: 'Type'}, td: {value: '@type', humanize: true}},
     type: {th: {key: 'type', name: 'Subtype'}, td: {value: 'type', humanize: true}},
     from: {th: {key: 'from', name: 'From client'}, td: {value: 'from.name'}},
@@ -36,6 +37,10 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
     organization: {th: {key: 'organization', name: 'Organization'}, td: {value: 'organization'}},
     email: {th: {key: 'email', name: 'email'}, td: {value: 'email'}},
     updated: {th: {key: '_updated', name: 'Updated'}, td: {value: '_updated'}},
+    status: {
+      th: {key: 'status', name: 'Status'},
+      td: {value: 'status'}
+    },
     lastEvent: {
       th: {key: 'events._updated', name: 'Last event'},
       td: {templateUrl: configFolder + '/resource-button-device.html'}
@@ -56,6 +61,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
     }
   }
   f.lastEvent.thDef = _.assign({default: true}, f.lastEvent.th)
+  f.status.thDef = _.assign({default: true}, f.status.th)
   f.updated.thDef = _.assign({default: true}, f.updated.th)
   const SNAPSHOT_SOFTWARE_ALLOWED = ['Workbench', 'AndroidApp', 'Web']
 
@@ -446,8 +452,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
       }
     },
     table: {
-      th: [f.id.th, f['@type'].th, f.type.th, f.model.th, f.price.th, f.range.th, f.lastEvent.thDef, f.created.th],
-      td: [f.id.td, f['@type'].td, f.type.td, f.model.td, f.price.td, f.range.td, f.lastEvent.td, f.created.td]
+      th: [f.id.th, f.title.th, f.price.th, f.range.th, f.status.thDef, f.created.th],
+      td: [f.id.td, f.title.td, f.price.td, f.range.td, f.status.td, f.created.td]
     }
 //     Lot:{
 //     search: {
