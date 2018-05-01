@@ -26,7 +26,7 @@
 </div>
 
 <h2>Devices</h2>
-<span>{{parentResource.totalNumDevices}} in total, {{getDevices().length }} shown</span>
+<span>{{getTotalNumberOfDevices() }} in total, {{getDevices().length }} shown</span>
 <button type="button"
         class="btn"
         ng-class="{'btn-primary': getDevices().length > 0}"

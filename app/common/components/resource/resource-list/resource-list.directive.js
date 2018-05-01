@@ -26,103 +26,103 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
       pre: ($scope, element) => {
         console.log('scope', JSON.stringify($scope.resource), ', parent', JSON.stringify($scope.parentResource))
 
-        $scope.parentResource = {
-          'label': 'Inventory',
-          '_updated': '2018-04-11T10:11:49',
-          '_links': {
-            'self': {
-              'href': 'db1/lots/NCZ0iW0mC',
-              'title': 'Lot'
-            }
-          },
-          'summary': {
-            'totalNumberDevices': 256,
-            'deviceType': 'Netbook HP',
-            'status': 'Ready',
-            'price': '150 - 300',
-            'range': 'Very low - High',
-            'components': 'Various components',
-            'donors': ['BCN Activa', 'BCN Ayto.'],
-            'owner': 'Solidança',
-            'distributor': null,
-            'possessor': 'Solidança',
-            'location': 'Cede Solidança',
-            'events:': []
-          },
-          'perms': [],
-          'children': {},
-          'byUser': '5ac49232a0961e72684082dc',
-          '_created': '2018-04-11T10:11:49',
-          '@type': 'Lot',
-          '_id': 'n98tkSWa',
-          'sharedWith': [],
-          'ancestors': [],
-          totalNumDevices: 12,
-          lots: [
-            {
-              'label': 'BDR',
-              '_updated': '2018-04-11T10:11:49',
-              '_links': {
-                'self': {
-                  'href': 'db1/lots/NCZ0iW0mC',
-                  'title': 'Lot'
-                }
-              },
-              'perms': [],
-              'children': {},
-              'byUser': '5ac49232a0961e72684082dc',
-              '_created': '2018-04-11T10:11:49',
-              '@type': 'Lot',
-              '_id': 'NCZ0iW0mC',
-              'sharedWith': [],
-              'ancestors': []
-            },
-            {
-              'label': 'lot1',
-              '_updated': '2018-04-04T08:52:46',
-              '_links': {
-                'self': {
-                  'href': 'db1/lots/PuDTLblX',
-                  'title': 'Lot'
-                }
-              },
-              'perms': [
-                {
-                  'perm': 'r',
-                  'account': '5ac4925da0961e72684083e8'
-                }
-              ],
-              'children': {
-              },
-              'byUser': '5ac49232a0961e72684082dc',
-              '_created': '2018-04-04T08:52:34',
-              '@type': 'Lot',
-              '_id': 'PuDTLblX',
-              'sharedWith': [
-                '5ac4925da0961e72684083e8'
-              ],
-              'ancestors': []
-            },
-            {
-              'label': 'Lot from User',
-              '_updated': '2018-04-04T08:52:45',
-              '_links': {
-                'self': {
-                  'href': 'db1/lots/XOmGHs3i',
-                  'title': 'Lot'
-                }
-              },
-              'perms': [],
-              'children': {},
-              'byUser': '5ac49232a0961e72684082dc',
-              '_created': '2018-04-04T08:52:45',
-              '@type': 'Lot',
-              '_id': 'XOmGHs3i',
-              'sharedWith': [],
-              'ancestors': []
-            }
-          ]
-        }
+        // $scope.parentResource = {
+        //   'label': 'Inventory',
+        //   '_updated': '2018-04-11T10:11:49',
+        //   '_links': {
+        //     'self': {
+        //       'href': 'db1/lots/NCZ0iW0mC',
+        //       'title': 'Lot'
+        //     }
+        //   },
+        //   'summary': {
+        //     'totalNumberDevices': 256,
+        //     'deviceType': 'Netbook HP',
+        //     'status': 'Ready',
+        //     'price': '150 - 300',
+        //     'range': 'Very low - High',
+        //     'components': 'Various components',
+        //     'donors': ['BCN Activa', 'BCN Ayto.'],
+        //     'owner': 'Solidança',
+        //     'distributor': null,
+        //     'possessor': 'Solidança',
+        //     'location': 'Cede Solidança',
+        //     'events:': []
+        //   },
+        //   'perms': [],
+        //   'children': {},
+        //   'byUser': '5ac49232a0961e72684082dc',
+        //   '_created': '2018-04-11T10:11:49',
+        //   '@type': 'Lot',
+        //   '_id': 'n98tkSWa',
+        //   'sharedWith': [],
+        //   'ancestors': [],
+        //   totalNumDevices: 12,
+        //   lots: [
+        //     {
+        //       'label': 'BDR',
+        //       '_updated': '2018-04-11T10:11:49',
+        //       '_links': {
+        //         'self': {
+        //           'href': 'db1/lots/NCZ0iW0mC',
+        //           'title': 'Lot'
+        //         }
+        //       },
+        //       'perms': [],
+        //       'children': {},
+        //       'byUser': '5ac49232a0961e72684082dc',
+        //       '_created': '2018-04-11T10:11:49',
+        //       '@type': 'Lot',
+        //       '_id': 'NCZ0iW0mC',
+        //       'sharedWith': [],
+        //       'ancestors': []
+        //     },
+        //     {
+        //       'label': 'lot1',
+        //       '_updated': '2018-04-04T08:52:46',
+        //       '_links': {
+        //         'self': {
+        //           'href': 'db1/lots/PuDTLblX',
+        //           'title': 'Lot'
+        //         }
+        //       },
+        //       'perms': [
+        //         {
+        //           'perm': 'r',
+        //           'account': '5ac4925da0961e72684083e8'
+        //         }
+        //       ],
+        //       'children': {
+        //       },
+        //       'byUser': '5ac49232a0961e72684082dc',
+        //       '_created': '2018-04-04T08:52:34',
+        //       '@type': 'Lot',
+        //       '_id': 'PuDTLblX',
+        //       'sharedWith': [
+        //         '5ac4925da0961e72684083e8'
+        //       ],
+        //       'ancestors': []
+        //     },
+        //     {
+        //       'label': 'Lot from User',
+        //       '_updated': '2018-04-04T08:52:45',
+        //       '_links': {
+        //         'self': {
+        //           'href': 'db1/lots/XOmGHs3i',
+        //           'title': 'Lot'
+        //         }
+        //       },
+        //       'perms': [],
+        //       'children': {},
+        //       'byUser': '5ac49232a0961e72684082dc',
+        //       '_created': '2018-04-04T08:52:45',
+        //       '@type': 'Lot',
+        //       '_id': 'XOmGHs3i',
+        //       'sharedWith': [],
+        //       'ancestors': []
+        //     }
+        //   ]
+        // }
 
         $scope.session = session
         progressBar.start() // getterDevices.getResources will call this too, but doing it here we avoid delay
@@ -150,7 +150,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         const triggerCollapse = require('./collapse-table.js')($scope)
         $(window).resize(triggerCollapse)
 
-        const defaultFilters = { 'dh$insideLot': $scope.parentResource._id } // TODO dh$insideLot returns devices that are in specified lot OR any sublot of specified lot
+        const defaultFilters = ($scope.parentResource && $scope.parentResource._id)
+          ? { 'dh$insideLot': $scope.parentResource._id } // TODO dh$insideLot returns devices that are in specified lot OR any sublot of specified lot
+          : null
         const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar, _.cloneDeep(defaultFilters))
         const selectorDevices = $scope.selector = new ResourceListSelectorBig($scope.devices)
         getterDevices.callbackOnGetting(_.bind(selectorDevices.reAddToLot, selectorDevices, _))
@@ -168,6 +170,11 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         //   if (!defaultParam) throw TypeError(`${parentType} does not have default param for subResource ${'Device'}`)
         //   config.search.defaultParams[defaultParam.key] = $scope.parentResource[defaultParam.field]
         // }
+
+        // Total number of devices
+        $scope.getTotalNumberOfDevices = () => {
+          return getterDevices.getTotalNumberResources()
+        }
 
         // Sorting
         $scope.sort = {}

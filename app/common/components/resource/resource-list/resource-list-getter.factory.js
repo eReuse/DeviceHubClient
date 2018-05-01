@@ -55,6 +55,8 @@ function ResourceListGetterFactory (ResourceSettings) {
         pageNumber: 1
       }
 
+      this.totalNumberResources = 0
+
       this._callbacksOnGetting = []
     }
 
@@ -350,11 +352,16 @@ function ResourceListGetterFactory (ResourceSettings) {
         }
 
         _.assign(this.resources, this.resources.concat(resources))
+        this.totalNumberResources = (resources._meta && resources._meta.total) || 0 // TODO sometimes total number is not returned
         this.pagination.morePagesAvailable = resources._meta && resources._meta.page * resources._meta.max_results < resources._meta.total
         this.pagination.totalPages = resources._meta && resources._meta.total
         // broadcast to callbacks
         _.invokeMap(this._callbacksOnGetting, _.call, null, this.resources, this.lotID, this.resourceType, this.pagination, getNextPage)
       })
+    }
+
+    getTotalNumberResources () {
+      return this.totalNumberResources || 0
     }
 
     /**
