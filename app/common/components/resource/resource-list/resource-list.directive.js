@@ -54,7 +54,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           'byUser': '5ac49232a0961e72684082dc',
           '_created': '2018-04-11T10:11:49',
           '@type': 'Lot',
-          '_id': '1234',
+          '_id': 'n98tkSWa',
           'sharedWith': [],
           'ancestors': [],
           totalNumDevices: 12,
@@ -150,11 +150,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         const triggerCollapse = require('./collapse-table.js')($scope)
         $(window).resize(triggerCollapse)
 
-        const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar)
+        const defaultFilters = { 'dh$insideLot': $scope.parentResource._id } // TODO dh$insideLot returns devices that are in specified lot OR any sublot of specified lot
+        const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar, _.cloneDeep(defaultFilters))
         const selectorDevices = $scope.selector = new ResourceListSelectorBig($scope.devices)
         getterDevices.callbackOnGetting(_.bind(selectorDevices.reAddToLot, selectorDevices, _))
 
-        const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar)
+        const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar, _.cloneDeep(defaultFilters))
         getterLots.updateSort('-label')
         // Search
         // const parentType = _.get($scope, 'parentResource.@type')
@@ -176,7 +177,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         $scope.onSearchParamsChanged = newFilters => {
           console.log('filters changed to', newFilters)
           getterDevices.updateFiltersFromSearch(newFilters)
-          getterLots.updateFiltersFromSearch(newFilters)
+          getterLots.updateFiltersFromSearch(newFilters) // TODO update lots on filter update?
         }
 
         // Selecting

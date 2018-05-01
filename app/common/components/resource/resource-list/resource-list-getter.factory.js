@@ -14,10 +14,9 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @param {object} filterSettings - Configuration object for the filters.
      * @param {progressBar} progressBar - An instance of ngProgress.
      */
-    constructor (resourceType, resources, filterSettings, progressBar) {
+    constructor (resourceType, resources, filterSettings, progressBar, defaultFilters) {
       this.resourceType = resourceType
       this.resources = resources
-      this.lotID = '1234' // TODO update
       this.filterSettings = filterSettings
       this.server = ResourceSettings(resourceType).server
       this.progressBar = progressBar
@@ -41,7 +40,7 @@ function ResourceListGetterFactory (ResourceSettings) {
        * @type {object|null}
        * @private
        */
-      this._filters = null
+      this._filters = defaultFilters // TODO create own variable default filters to ensure they don't get overwritten?
       /**
        * Primitive object containing the sort parameters. If `null` then means that has not been initialized.
        * @type {object|null}
@@ -175,7 +174,6 @@ function ResourceListGetterFactory (ResourceSettings) {
       // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 1
       this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 1
       const q = {
-        lotID: this.lotID,
         where: this._filters,
         page: this.pagination.pageNumber,
         sort: this._sort,
