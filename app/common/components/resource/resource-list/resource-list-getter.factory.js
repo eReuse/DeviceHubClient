@@ -20,6 +20,7 @@ function ResourceListGetterFactory (ResourceSettings) {
       this.filterSettings = filterSettings
       this.server = ResourceSettings(resourceType).server
       this.progressBar = progressBar
+      this.defaultFilters = defaultFilters
       /**
        * A key/value object of filters, where every key represents a different source.
        * Clients can update their filter, and all of them are merged into
@@ -40,7 +41,7 @@ function ResourceListGetterFactory (ResourceSettings) {
        * @type {object|null}
        * @private
        */
-      this._filters = defaultFilters // TODO create own variable default filters to ensure they don't get overwritten?
+      this._filters = null
       /**
        * Primitive object containing the sort parameters. If `null` then means that has not been initialized.
        * @type {object|null}
@@ -73,6 +74,8 @@ function ResourceListGetterFactory (ResourceSettings) {
       _.merge(this._filters, ..._.values(this._filtersBySource))
       // The 'search' filters have preference over others
       _.merge(this._filters, this._filtersBySource[SEARCH])
+      // The default filters have preference over others
+      _.merge(this._filters, this.defaultFilters)
       // todo if this is called multiple times for the same parameters use isEqual and firstTime combo
       if (!_.isNull(this._filters) && !_.isNull(this._sort)) this.getResources()
     }
@@ -209,6 +212,7 @@ function ResourceListGetterFactory (ResourceSettings) {
             })
             return r
           })
+          console.log('received devices', resources.map((d) => { return d.title }))
           // resources = [
           //   {
           //     'placeholder': true,
@@ -349,6 +353,8 @@ function ResourceListGetterFactory (ResourceSettings) {
           //     ]
           //   }
           // ]
+        } else {
+          console.log('received lots', resources.map((l) => { return l.label }))
         }
 
         _.assign(this.resources, this.resources.concat(resources))
