@@ -16,6 +16,8 @@ function resourceSearch (ResourceSettings) {
           $scope._settings = $scope.settings
         }
         $scope.params = _.clone($scope.defaultParams)
+
+        // trigger first resource load
         $scope.onParamsChanged({params: $scope.params})
 
         $scope.$watchCollection('params', function checkForChangeAndPropagate (params, oldParams) {

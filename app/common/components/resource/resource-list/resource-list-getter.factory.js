@@ -65,6 +65,7 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @param {object} newFilters - Key/value of parameters
      */
     updateFilters (source, newFilters) {
+      console.log('updating filters for resourcetype', this.resourceType, 'to', newFilters, 'this._sort', this._sort)
       this._filtersBySource[source] = newFilters
       // Let's merge the different filters in a single one
       this._filters = {}
@@ -83,6 +84,7 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @param {object} newFilters
      */
     updateFiltersFromSearch (newFilters) {
+      console.log('updatefiltersfrom search of', this.resourceType, 'to', newFilters)
       let _filters = {}
       let callbacks = []
       let findSettings = _.bind(_.find, null, this.filterSettings.search.params, _)
@@ -150,6 +152,8 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @param newSorts
      */
     updateSort (newSorts) {
+      console.log('update sort to', newSorts)
+      console.trace()
       let oldSort = _.clone(this._sort)
       this._sort = newSorts
       // If there is no sort defined this._filters will equal with oldsort
@@ -175,162 +179,177 @@ function ResourceListGetterFactory (ResourceSettings) {
         where: this._filters,
         page: this.pagination.pageNumber,
         sort: this._sort,
-        max_results: $(window).height() < 800 ? 20 : 30
+        max_results: 5 // TODO move to config $(window).height() < 800 ? 20 : 30
       }
+      console.log('get resources of', this.resourceType)
       return this.server.getList(q).then(resources => {
         if (showProgressBar) this.progressBar.complete()
         if (!getNextPage) this.resources.length = 0
+        console.log('received', resources.length, this.resourceType + 's')
         // console.log('Resources' + JSON.stringify(resources))
-        resources = [
-          {
-            'placeholder': true,
-            '_links': {
-              'self': {
-                'href': 'db1/devices/469',
-                'title': 'Device'
-              }
-            },
-            'isUidSecured': true,
-            'components': [],
-            '_created': '2018-04-11T16:28:24',
-            '_id': '469',
-            'ancestors': [],
-            '_updated': '2018-04-11T16:28:24',
-            'events': [
-              {
-                '_updated': '2018-04-11T16:28:24',
-                'byUser': '5ac49232a0961e72684082dc',
-                'secured': false,
-                'incidence': false,
-                '_id': '5ace37a8a0961e0651b59a50',
-                '@type': 'devices:Register'
-              }
-            ],
-            'title': 'Netbook HP XS1',
-            'status': 'Ready',
-            '@type': 'Device',
-            'type': 'Netbook',
-            'manufacturer': 'HP',
-            'model': 'XS1',
-            'price': 150,
-            'donor': 'BCN Ayuntamiento',
-            'owner': 'Solidança',
-            'distributor': 'Donalo',
-            'processorModel': 'Intel(R) Dual Core(TM) CPU 540 @ 2.35GHz',
-            'totalRamSize': 1024,
-            'totalHardDriveSize': 255245.3359375,
-            'forceCreation': false,
-            '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
-            'public': false,
-            'perms': [],
-            lots: [
-              {
-                '_id': '1234',
-                'label': 'Donación BCN Activa'
-              },
-              {
-                '_id': '1234678',
-                'label': 'Venta Ayuntamiento'
-              }
-            ]
-          },
-          {
-            'placeholder': true,
-            '_links': {
-              'self': {
-                'href': 'db1/devices/468',
-                'title': 'Device'
-              }
-            },
-            'isUidSecured': true,
-            'components': [],
-            '_created': '2018-04-11T16:28:24',
-            '_id': '468',
-            'ancestors': [],
-            '_updated': '2018-04-11T16:28:24',
-            'events': [
-              {
-                '_updated': '2018-04-11T16:28:24',
-                'byUser': '5ac49232a0961e72684082dc',
-                'secured': false,
-                'incidence': false,
-                '_id': '5ace37a8a0961e0651b59a4f',
-                '@type': 'devices:Register'
-              }
-            ],
-            'title': 'Netbook HP XS1',
-            'status': 'Ready',
-            '@type': 'Device',
-            'type': 'Netbook',
-            'manufacturer': 'HP',
-            'model': 'XS1',
-            'price': 150,
-            'donor': 'BCN Ayuntamiento',
-            'owner': 'Solidança',
-            'distributor': 'Donalo',
-            'processorModel': 'Intel(R) Dual Core(TM) CPU 540 @ 2.35GHz',
-            'totalRamSize': 1024,
-            'totalHardDriveSize': 255245.3359375,
-            'forceCreation': false,
-            '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
-            'public': false,
-            'perms': [],
-            lots: [
-              {
-                '_id': '1234',
-                'label': 'Donación BCN Activa'
-              }
-            ]
-          },
-          {
-            'placeholder': true,
-            '_links': {
-              'self': {
-                'href': 'db1/devices/467',
-                'title': 'Device'
-              }
-            },
-            'isUidSecured': true,
-            'components': [],
-            '_created': '2018-04-11T16:28:24',
-            '_id': '467',
-            'ancestors': [],
-            '_updated': '2018-04-11T16:28:24',
-            'events': [
-              {
-                '_updated': '2018-04-11T16:28:24',
-                'byUser': '5ac49232a0961e72684082dc',
-                'secured': false,
-                'incidence': false,
-                '_id': '5ace37a8a0961e0651b59a4e',
-                '@type': 'devices:Register'
-              }
-            ],
-            'title': 'Netbook Dell ASD1',
-            'status': 'Registered',
-            '@type': 'Device',
-            'type': 'Netbook',
-            'manufacturer': 'Dell',
-            'model': 'ASD1',
-            'price': 270,
-            'processorModel': 'Intel(R) Atom(TM) CPU 330 @ 1.60GHz',
-            'totalRamSize': 2048,
-            'totalHardDriveSize': 305245.3359375,
-            'donor': 'BCN Activa',
-            'owner': 'Alencop',
-            'distributor': null,
-            'forceCreation': false,
-            '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
-            'public': false,
-            'perms': [],
-            lots: [
-              {
-                '_id': '1234',
-                'label': 'Donación BCN Activa'
-              }
-            ]
-          }
-        ]
+        if (this.resourceType === 'Device') {
+          resources = resources.map(r => {
+            _.assign(r, {
+              'status': (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
+              '@type': 'Device',
+              'title': r.type + ' ' + r.manufacturer + ' ' + r.model,
+              // 'price': 150,
+              'donor': 'BCN Ayuntamiento',
+              'owner': 'Solidança',
+              'distributor': 'Donalo',
+              'lots': r.ancestors
+                .filter(r => {
+                  return r['@type'] === 'Lot' || r['@type'] === 'Package'
+                }).map(l => {
+                  l.label = l._id
+                  return l
+                })
+              // 'processorModel': 'Intel(R) Dual Core(TM) CPU 540 @ 2.35GHz',
+              // 'totalRamSize': 1024,
+            })
+            return r
+          })
+          // resources = [
+          //   {
+          //     'placeholder': true,
+          //     '_links': {
+          //       'self': {
+          //         'href': 'db1/devices/469',
+          //         'title': 'Device'
+          //       }
+          //     },
+          //     'isUidSecured': true,
+          //     'components': [],
+          //     '_created': '2018-04-11T16:28:24',
+          //     '_id': '469',
+          //     'ancestors': [],
+          //     '_updated': '2018-04-11T16:28:24',
+          //     'events': [
+          //       {
+          //         '_updated': '2018-04-11T16:28:24',
+          //         'byUser': '5ac49232a0961e72684082dc',
+          //         'secured': false,
+          //         'incidence': false,
+          //         '_id': '5ace37a8a0961e0651b59a50',
+          //         '@type': 'devices:Register'
+          //       }
+          //     ],
+          //     'title': 'Netbook HP XS1',
+          //
+          //     'totalHardDriveSize': 255245.3359375,
+          //     'forceCreation': false,
+          //     '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
+          //     'public': false,
+          //     'perms': [],
+          //     lots: [
+          //       {
+          //         '_id': '1234',
+          //         'label': 'Donación BCN Activa'
+          //       },
+          //       {
+          //         '_id': '1234678',
+          //         'label': 'Venta Ayuntamiento'
+          //       }
+          //     ]
+          //   },
+          //   {
+          //     'placeholder': true,
+          //     '_links': {
+          //       'self': {
+          //         'href': 'db1/devices/468',
+          //         'title': 'Device'
+          //       }
+          //     },
+          //     'isUidSecured': true,
+          //     'components': [],
+          //     '_created': '2018-04-11T16:28:24',
+          //     '_id': '468',
+          //     'ancestors': [],
+          //     '_updated': '2018-04-11T16:28:24',
+          //     'events': [
+          //       {
+          //         '_updated': '2018-04-11T16:28:24',
+          //         'byUser': '5ac49232a0961e72684082dc',
+          //         'secured': false,
+          //         'incidence': false,
+          //         '_id': '5ace37a8a0961e0651b59a4f',
+          //         '@type': 'devices:Register'
+          //       }
+          //     ],
+          //     'title': 'Netbook HP XS1',
+          //     'status': 'Ready',
+          //     '@type': 'Device',
+          //     'type': 'Netbook',
+          //     'manufacturer': 'HP',
+          //     'model': 'XS1',
+          //     'price': 150,
+          //     'donor': 'BCN Ayuntamiento',
+          //     'owner': 'Solidança',
+          //     'distributor': 'Donalo',
+          //     'processorModel': 'Intel(R) Dual Core(TM) CPU 540 @ 2.35GHz',
+          //     'totalRamSize': 1024,
+          //     'totalHardDriveSize': 255245.3359375,
+          //     'forceCreation': false,
+          //     '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
+          //     'public': false,
+          //     'perms': [],
+          //     lots: [
+          //       {
+          //         '_id': '1234',
+          //         'label': 'Donación BCN Activa'
+          //       }
+          //     ]
+          //   },
+          //   {
+          //     'placeholder': true,
+          //     '_links': {
+          //       'self': {
+          //         'href': 'db1/devices/467',
+          //         'title': 'Device'
+          //       }
+          //     },
+          //     'isUidSecured': true,
+          //     'components': [],
+          //     '_created': '2018-04-11T16:28:24',
+          //     '_id': '467',
+          //     'ancestors': [],
+          //     '_updated': '2018-04-11T16:28:24',
+          //     'events': [
+          //       {
+          //         '_updated': '2018-04-11T16:28:24',
+          //         'byUser': '5ac49232a0961e72684082dc',
+          //         'secured': false,
+          //         'incidence': false,
+          //         '_id': '5ace37a8a0961e0651b59a4e',
+          //         '@type': 'devices:Register'
+          //       }
+          //     ],
+          //     'title': 'Netbook Dell ASD1',
+          //     'status': 'Registered',
+          //     '@type': 'Device',
+          //     'type': 'Netbook',
+          //     'manufacturer': 'Dell',
+          //     'model': 'ASD1',
+          //     'price': 270,
+          //     'processorModel': 'Intel(R) Atom(TM) CPU 330 @ 1.60GHz',
+          //     'totalRamSize': 2048,
+          //     'totalHardDriveSize': 305245.3359375,
+          //     'donor': 'BCN Activa',
+          //     'owner': 'Alencop',
+          //     'distributor': null,
+          //     'forceCreation': false,
+          //     '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
+          //     'public': false,
+          //     'perms': [],
+          //     lots: [
+          //       {
+          //         '_id': '1234',
+          //         'label': 'Donación BCN Activa'
+          //       }
+          //     ]
+          //   }
+          // ]
+        }
 
         _.assign(this.resources, this.resources.concat(resources))
         this.pagination.morePagesAvailable = resources._meta && resources._meta.page * resources._meta.max_results < resources._meta.total

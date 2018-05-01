@@ -10,7 +10,7 @@
  * @param {ResourceBreadcrumb} ResourceBreadcrumb
  * @param {Session} session
  */
-function resourceList (resourceListConfig, ResourceListGetter, ResourceListGetterBig, ResourceListSelector,
+function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector,
                        ResourceListSelectorBig, ResourceSettings, progressBar, ResourceBreadcrumb, session) {
   const PARENT_PATH = require('./../__init__').PATH
   const NoMorePagesAvailableException = require('./no-more-pages-available.exception')
@@ -125,15 +125,16 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         }
 
         $scope.session = session
-        progressBar.start() // resourceListGetter.getResources will call this too, but doing it here we avoid delay
+        progressBar.start() // getterDevices.getResources will call this too, but doing it here we avoid delay
         const config = _.cloneDeep(resourceListConfig)
-        $scope.resources = [] // Do never directly assign (r=[]) to 'resources' as modules depend of its reference
-        $scope.lots = []
-        $scope.getDevices = () => {
-          return $scope.resources.filter(r => r['@type'] === 'Device')
+        $scope.devices = [] // Do never directly assign (r=[]) to 'devices' as modules depend of its reference
+        $scope.getDevices = () => { // TODO needed?
+          return $scope.devices.filter(r => r['@type'] === 'Device')
         }
-
-        const resourceType = 'Device' // TODO remove and remove usages
+        $scope.lots = []
+        $scope.getLots = () => { // TODO needed?
+          return $scope.lots.filter(r => r['@type'] === 'Lot')
+        }
 
         /**
          * Gets into the resource; traverse one step into the resource hierarchy by opening the resource in the
@@ -149,10 +150,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         const triggerCollapse = require('./collapse-table.js')($scope)
         $(window).resize(triggerCollapse)
 
-        const resourceListGetter = new ResourceListGetterBig(resourceType, $scope.resources, config, progressBar)
-        const resourceListSelector = $scope.selector = new ResourceListSelectorBig($scope.resources, $scope.lots)
-        resourceListGetter.callbackOnGetting(_.bind(resourceListSelector.reAddToLot, resourceListSelector, _))
+        const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar)
+        const selectorDevices = $scope.selector = new ResourceListSelectorBig($scope.devices)
+        getterDevices.callbackOnGetting(_.bind(selectorDevices.reAddToLot, selectorDevices, _))
 
+        const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar)
+        getterLots.updateSort('-label')
         // Search
         // const parentType = _.get($scope, 'parentResource.@type')
         // if (parentType) {
@@ -161,21 +164,25 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         //   // no need to _.clone this setting as we do not modify it
         //   const path = 'search.subResource.Device'
         //   const defaultParam = utils.getSetting(resourceListConfig.views, ResourceSettings(parentType), path)
-        //   if (!defaultParam) throw TypeError(`${parentType} does not have default param for subResource ${resourceType}`)
+        //   if (!defaultParam) throw TypeError(`${parentType} does not have default param for subResource ${'Device'}`)
         //   config.search.defaultParams[defaultParam.key] = $scope.parentResource[defaultParam.field]
         // }
 
         // Sorting
         $scope.sort = {}
-        $scope.setSort = _.bind(resourceListGetter.updateSort, resourceListGetter, _)
+        $scope.setSort = _.bind(getterDevices.updateSort, getterDevices, _)
 
         // Filtering
-        $scope.onSearchParamsChanged = _.bind(resourceListGetter.updateFiltersFromSearch, resourceListGetter, _)
+        $scope.onSearchParamsChanged = newFilters => {
+          console.log('filters changed to', newFilters)
+          getterDevices.updateFiltersFromSearch(newFilters)
+          getterLots.updateFiltersFromSearch(newFilters)
+        }
 
         // Selecting
-        // $scope.toggleSelect = _.bind(resourceListSelector.toggle, resourceListSelector, _)
+        // $scope.toggleSelect = _.bind(selectorDevices.toggle, selectorDevices, _)
         $scope.toggleSelect = (resource, $event) => {
-          resourceListSelector.toggle(resource)
+          selectorDevices.toggle(resource)
           // Avoids the ng-click from the row (<tr>) to trigger
           $event.stopPropagation()
         }
@@ -183,20 +190,21 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         // Reloading
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
         $scope.reload = () => {
-          resourceListGetter.getResources()
-          resourceListSelector.deselectAll()
+          getterDevices.getResources()
+          selectorDevices.deselectAll()
         }
 
-        // Pagination
+        // Pagination Devices
         // Let's avoid the user pressing multiple times the 'load more'
         $scope.getMoreIsBusy = false
         $scope.morePagesAvailable = true
         let getMoreFirstTime = false
         $scope.getMore = () => {
+          console.log('getMore (devices) called. getMoreFirstTime', getMoreFirstTime)
           if (!$scope.getMoreIsBusy && getMoreFirstTime) {
             $scope.getMoreIsBusy = true
             try {
-              resourceListGetter.getResources(true, false).finally(() => { $scope.getMoreIsBusy = false })
+              getterDevices.getResources(true, false).finally(() => { $scope.getMoreIsBusy = false })
             } catch (err) {
               $scope.getMoreIsBusy = false
               if (!(err instanceof NoMorePagesAvailableException)) throw err
@@ -205,10 +213,33 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           }
           getMoreFirstTime = true
         }
+
+        // Pagination lots
+        // Let's avoid the user pressing multiple times the 'load more'
+        $scope.getMoreLotsIsBusy = false
+        $scope.morePagesAvailableLots = true
+        let getMoreLotsFirstTime = false
+        $scope.getMoreLots = () => {
+          console.log('getMore (lots) called. getMoreLotsFirstTime', getMoreLotsFirstTime)
+          if (!$scope.getMoreLotsIsBusy && getMoreLotsFirstTime) {
+            $scope.getMoreLotsIsBusy = true
+            try {
+              getterLots.getResources(true, false).finally(() => {
+                $scope.getMoreLotsIsBusy = false
+              })
+            } catch (err) {
+              $scope.getMoreLotsIsBusy = false
+              if (!(err instanceof NoMorePagesAvailableException)) throw err
+              $scope.morePagesAvailableLots = false
+            }
+          }
+          getMoreLotsFirstTime = true
+        }
+
         // If we don't want to collision with tables of subResources we
         // need to do this when declaring the directive
         const $table = element.find('.fill-height-bar')
-        resourceListGetter.callbackOnGetting((_, __, ___, getNextPage) => {
+        getterDevices.callbackOnGetting((_, __, ___, getNextPage) => {
           if (!getNextPage) {
             $table.scrollTop(0) // Scroll up to the table when loading from page 0 again
             $scope.morePagesAvailable = true // Reset
@@ -226,7 +257,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         $scope.popovers = {enable: false}
         /* TODO DEPRECATED
         if ($scope.type === 'medium') {
-          resourceListGetter.callbackOnGetting(resources => {
+          getterDevices.callbackOnGetting(resources => {
             $scope.popovers.enable = true
             $scope.popovers.templateUrl = PARENT_PATH + '/resource-button/resource-button.popover.directive.html'
             _.forEach(resources, resource => {
@@ -250,15 +281,17 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
         */
 
         function hardReload () {
-          $scope.checked = false
-          resourceListSelector.deselectAll()
+          selectorDevices.deselectAll()
           $scope.reload()
         }
 
-        ResourceSettings(resourceType).types.forEach(type => { $scope.$on('submitted@' + type, hardReload) })
+        // TODO what does next line?
+        ResourceSettings('Device').types.forEach(type => { $scope.$on('submitted@' + type, hardReload) })
+
         // We register ourselves for any event type, excluding Snapshot if the list is not about devices
         let eventTypes = ResourceSettings('Event').subResourcesNames
-        if (resourceType !== 'Device') eventTypes = _.without(eventTypes, 'devices:Snapshot', 'devices:Register')
+        // TODO do we need next line? resourceType is always 'Device' for now
+        // if (resourceType !== 'Device') eventTypes = _.without(eventTypes, 'devices:Snapshot', 'devices:Register')
         _.forEach(eventTypes, eventType => { $scope.$on('submitted@' + eventType, hardReload) })
 
         // As we touch config in the init, we add it to $scope at the end to avoid $watch triggering multiple times

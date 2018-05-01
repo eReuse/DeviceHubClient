@@ -45,7 +45,6 @@ module.exports = angular.module('common.components.resource',
   // Resource-list
   .directive('resourceList', require('./resource-list/resource-list.directive'))
   .factory('ResourceListGetter', require('./resource-list/resource-list-getter.factory'))
-  .factory('ResourceListGetterBig', require('./resource-list/resource-list-getter-big.factory'))
   .factory('ResourceListSelector', require('./resource-list/resource-list-selector.factory'))
   .factory('ResourceListSelectorBig', require('./resource-list/resource-list-selector-big.factory'))
   .factory('ResourceViewGenerator', require('./resource-view/resource-view-generator.factory'))

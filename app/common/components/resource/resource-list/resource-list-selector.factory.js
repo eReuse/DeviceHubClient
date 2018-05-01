@@ -16,13 +16,12 @@ function ResourceSelectorFactory () {
      * @param {object} selector - A selector object with the ng-models of the checkboxes
      *  - 'checked': the ng-model for the 'selectAll' checkbox
      *  - 'checkboxes': an array of ng-models for the individual resource select checkboxes where the '_id' is the key.
-     * @param {array} resources - The array that will hold the resources
-     * @param {ResourceListGetter} resourceListGetter - An instance of ResourceListGetter
+     * @param {array} _resources - The array that will hold the resources
      */
-    constructor (_resources, _lots) {
+    constructor (_resources) {
       let resources = _resources
       let callbacksForSelections = []
-      let lots = _lots
+      let lots = []
 
       /**
        * Toggles the selected state of given resource, selecting (or deselecting) the device(s)
@@ -106,7 +105,7 @@ function ResourceSelectorFactory () {
         }
         console.log('resource.lots', resource.lots)
         resource.lots.forEach(_lot => {
-          let lot = this.getOrCreateLot(_lot)
+          let lot = getOrCreateLot(_lot)
 
           let existingResource = _.find(lot.selectedDevices, {_id: resource._id})
           console.log('existingResource', existingResource)
@@ -163,11 +162,15 @@ function ResourceSelectorFactory () {
         return lots
       }
 
+      this.getNonEmptyLotsAsList = () => {
+        return this.getLotsAsList().filter(l => { return l.selectedDevices.length > 0 })
+      }
+
       this.getLotByID = lotID => {
         return _.find(lots, {_id: lotID})
       }
 
-      this.getOrCreateLot = _lot => {
+      let getOrCreateLot = _lot => {
         let lot = this.getLotByID(_lot._id)
         if (!lot) {
           lot = {

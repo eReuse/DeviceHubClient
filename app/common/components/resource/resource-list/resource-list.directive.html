@@ -9,16 +9,21 @@
   ></resource-search>
 </div>
 
-<h2>Lots</h2>
-<ul>
-  <li
-          ng-repeat="lot in ::parentResource.lots"
-  >
-    <a href="#" ng-click="openFull(lot)">
-      {{ lot.label }}
-    </a>
-  </li>
-</ul>
+<h2>Lots ({{ getLots().length }})</h2>
+<div infinite-scroll="getMoreLots()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
+     infinite-scroll-parent infinite-scroll-disabled="getMoreLotsIsBusy || !morePagesAvailableLots"
+     infinite-scroll-listen-for-event="list:filtered"
+>
+  <ul>
+    <li
+            ng-repeat="lot in getLots()"
+    >
+      <a href="#" ng-click="openFull(lot)">
+        {{ lot.label }}
+      </a>
+    </li>
+  </ul>
+</div>
 
 <h2>Devices</h2>
 <span>{{parentResource.totalNumDevices}} in total, {{getDevices().length }} shown</span>
@@ -59,7 +64,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="resource in resources track by resource._id"
+          <tr ng-repeat="resource in devices track by resource._id"
               ng-class="{info: resource['@type'] === 'Device' && selector.isSelected(resource)}"
 
               ng-init="popover = popovers[resource._id]"
@@ -81,7 +86,7 @@
                    type="checkbox"
                    ng-click=""
                    ng-model="selector.checkboxes[resource['_id']]"
-                   ng-class="{blink: hoverScreener && resource._id === resources[0]._id && inList.length == 0}"
+                   ng-class="{blink: hoverScreener && resource._id === devices[0]._id && inList.length == 0}"
             >
           </td>-->
             <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
@@ -144,11 +149,11 @@
     </div>
 
     <div ng-if="selector.getAllSelectedDevices().length > 0">
-      <h4>Current selection: {{selector.getAllSelectedDevices().length}} devices in {{selector.getLotsAsList().length}} lots</h4>
+      <h4>Current selection: {{selector.getAllSelectedDevices().length}} devices in {{selector.getNonEmptyLotsAsList().length }} lots</h4>
       <ul>
 
         <li
-          ng-repeat="lot in ::lots track by lot._id"
+          ng-repeat="lot in selector.getNonEmptyLotsAsList() track by lot._id"
           >
           {{ lot.lot.label }} ({{ lot.selectedDevices.length }})
           <button type="button"
@@ -213,17 +218,17 @@
     </div>
 
     <!-- Buttons -->
-    <div id="buttons" class="row text-center">
-      <resource-label-button resources="selector.total"></resource-label-button>
-      <manual-events-button resources="selector.total"></manual-events-button>
-      <!--<share devices="selector.total"></share>-->
-      <certificate-button resources="selector.total"></certificate-button>
-      <group-resource-button resources="selector.total"
-                             resource-type="{{resourceType}}"
+    <!--<div id="buttons" class="row text-center">
+      <resource-label-button resources="selector.getAllSelectedDevices()"></resource-label-button>
+      <manual-events-button resources="selector.getAllSelectedDevices()"></manual-events-button>
+      &lt;!&ndash;<share devices="selector.getAllSelectedDevices()"></share>&ndash;&gt;
+      <certificate-button resources="selector.getAllSelectedDevices()"></certificate-button>
+      <group-resource-button resources="selector.getAllSelectedDevices()"
+                             resource-type="Device"
                              success="reload()"
       ></group-resource-button>
-      <resource-export resources="selector.total"></resource-export>
-    </div>
+      <resource-export resources="selector.getAllSelectedDevices()"></resource-export>
+    </div>-->
   </aside>
 </div>
 
