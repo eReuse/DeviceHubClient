@@ -10,8 +10,7 @@
  * @param {ResourceBreadcrumb} ResourceBreadcrumb
  * @param {Session} session
  */
-function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector,
-                       ResourceListSelectorBig, ResourceSettings, progressBar, ResourceBreadcrumb, session) {
+function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session) {
   const PARENT_PATH = require('./../__init__').PATH
   const NoMorePagesAvailableException = require('./no-more-pages-available.exception')
   return {
@@ -127,6 +126,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         $scope.session = session
         progressBar.start() // getterDevices.getResources will call this too, but doing it here we avoid delay
         const config = _.cloneDeep(resourceListConfig)
+
+        // TODO move to service
         $scope.devices = [] // Do never directly assign (r=[]) to 'devices' as modules depend of its reference
         $scope.getDevices = () => { // TODO needed?
           return $scope.devices.filter(r => r['@type'] === 'Device')
@@ -154,8 +155,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           ? { 'dh$insideLot': $scope.parentResource._id } // TODO dh$insideLot returns devices that are in specified lot OR any sublot of specified lot
           : null
         const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar, _.cloneDeep(defaultFilters))
-        const selectorDevices = $scope.selector = new ResourceListSelectorBig($scope.devices)
-        getterDevices.callbackOnGetting(_.bind(selectorDevices.reAddToLot, selectorDevices, _))
+        const selector = $scope.selector = ResourceListSelector
+        getterDevices.callbackOnGetting(_.bind(selector.reAddToLot, selector, _))
 
         const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar, _.cloneDeep(defaultFilters))
         getterLots.updateSort('-label')
@@ -188,9 +189,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         // Selecting
-        // $scope.toggleSelect = _.bind(selectorDevices.toggle, selectorDevices, _)
+        // $scope.toggleSelect = _.bind(selector.toggle, selector, _)
         $scope.toggleSelect = (resource, $event) => {
-          selectorDevices.toggle(resource)
+          selector.toggle(resource)
           // Avoids the ng-click from the row (<tr>) to trigger
           $event.stopPropagation()
         }
@@ -199,7 +200,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
         $scope.reload = () => {
           getterDevices.getResources()
-          selectorDevices.deselectAll()
+          selector.deselectAll()
         }
 
         // Pagination Devices
@@ -289,7 +290,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         */
 
         function hardReload () {
-          selectorDevices.deselectAll()
+          selector.deselectAll()
           $scope.reload()
         }
 
