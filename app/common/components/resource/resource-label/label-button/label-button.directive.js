@@ -2,6 +2,7 @@ function labelButton (dhModal, ResourceListSelector) {
   return {
     template: require('./label-button.directive.html'),
     restrict: 'E',
+    scope: {},
     link: $scope => {
       $scope.selector = ResourceListSelector
 

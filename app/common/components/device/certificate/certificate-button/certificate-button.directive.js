@@ -2,6 +2,7 @@ function certificateButton (dhModal, ResourceListSelector) {
   return {
     template: require('./certificate-button.directive.html'),
     restrict: 'E',
+    scope: {},
     link: $scope => {
       $scope.dropDownIsOpen = false
 
