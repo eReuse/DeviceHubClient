@@ -194,7 +194,6 @@ function ResourceListGetterFactory (ResourceSettings) {
           resources = resources.map(r => {
             _.assign(r, {
               'status': (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
-              '@type': 'Device',
               'title': r.type + ' ' + r.manufacturer + ' ' + r.model,
               // 'price': 150,
               'donor': 'BCN Ayuntamiento',

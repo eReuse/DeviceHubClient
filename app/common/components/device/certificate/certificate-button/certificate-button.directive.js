@@ -1,15 +1,17 @@
-function certificateButton (dhModal) {
+function certificateButton (dhModal, ResourceListSelector) {
   return {
     template: require('./certificate-button.directive.html'),
     restrict: 'E',
-    scope: {
-      resources: '='
-    },
     link: $scope => {
       $scope.dropDownIsOpen = false
-      $scope.$watchCollection('resources', resources => {
-        $scope.allComputers = _.every(resources, {'@type': 'Computer'})
-      })
+
+      function setView () {
+        $scope.resources = ResourceListSelector.getAllSelectedDevices()
+        $scope.allComputers = _.every($scope.resources, {'@type': 'Computer'})
+      }
+      setView()
+      ResourceListSelector.callbackOnSelection(setView)
+
       $scope.certificates = [
         {
           title: 'Erasure',
@@ -17,11 +19,11 @@ function certificateButton (dhModal) {
           description: 'Shows a brief and the details of the hard-drives erased.'
         }
       ]
-      /*{
+      /* {
        title: 'Receipt',
        icon: ResourceSettings('resources:Receive').settings.fa,
        description: 'Generates a legal receipt for a receiver to sign.'
-       }*/
+       } */
       $scope.openDropdown = function ($event) {
         if ($scope.allComputers && $scope.resources.length > 0) $scope.dropDownIsOpen = true
         $event.stopPropagation()  // https://github.com/angular-ui/bootstrap/issues/6038

@@ -97,8 +97,8 @@ class ResourceListSelector {
      * @param {object} resource - The resource to add
      */
     this.add = resource => {
-      if (resource['@type'] !== 'Device') {
-        return false
+      if (resource['@type'] === 'Lot') {
+        throw new Error('tried to add lot to selection')
       }
       console.log('resource.lots', resource.lots)
       resource.lots.forEach(_lot => {

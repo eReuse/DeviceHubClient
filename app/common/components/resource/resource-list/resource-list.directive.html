@@ -63,7 +63,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="resource in devices track by resource._id"
-              ng-class="{info: resource['@type'] === 'Device' && selector.isSelected(resource)}"
+              ng-class="{info: selector.isSelected(resource)}"
 
               ng-init="popover = popovers[resource._id]"
 
@@ -217,10 +217,11 @@
 
     <!-- Buttons -->
     <div id="buttons" class="row text-center">
-      <resource-label-button resources="selector.getAllSelectedDevices()"></resource-label-button>
-      <!--<manual-events-button resources="selector.getAllSelectedDevices()"></manual-events-button>
+      <resource-label-button></resource-label-button>
+      <!--<manual-events-button resources="selector.getAllSelectedDevices()"></manual-events-button>-->
       &lt;!&ndash;<share devices="selector.getAllSelectedDevices()"></share>&ndash;&gt;
-      <certificate-button resources="selector.getAllSelectedDevices()"></certificate-button>
+      <certificate-button></certificate-button>
+      <!--
       <group-resource-button resources="selector.getAllSelectedDevices()"
                              resource-type="Device"
                              success="reload()"
