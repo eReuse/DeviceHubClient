@@ -59,7 +59,7 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
         // Get which is our root ancestor
         // TODO do we need root ancestor / sub resource?
         // if (this.settings._root) { // We avoid infinite recursive calls by not calling isSubResource if we are root
-        //   this.rootAncestor = this
+        this.rootAncestor = this
         // } else {
         //   const picked = _.pickBy(RESOURCE_CONFIG.resources, r => r._root) // Can't chain findKey after pickBy
         //   const rootAncestorType = _.findKey(picked, (_, resourceType) => this.isSubResource(resourceType))

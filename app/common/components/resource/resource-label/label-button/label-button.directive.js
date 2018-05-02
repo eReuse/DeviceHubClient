@@ -1,12 +1,14 @@
-function labelButton (dhModal) {
+function labelButton (dhModal, ResourceListSelector) {
   return {
     template: require('./label-button.directive.html'),
     restrict: 'E',
-    scope: {
-      resources: '='
-    },
     link: $scope => {
-      $scope.openModal = () => dhModal.open('resourceLabel', {resources: () => $scope.resources})
+      $scope.openModal = () => dhModal.open('resourceLabel', {
+        resources: () => {
+          let resources = ResourceListSelector.getAllSelectedDevices()
+          return resources
+        }
+      })
     }
   }
 }
