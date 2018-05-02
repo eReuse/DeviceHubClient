@@ -1,7 +1,7 @@
 <div class="btn-group" uib-dropdown is-open="status.isopen">
   <button type="button"
           class="btn"
-          ng-class="{'btn-primary': resources.length > 0}"
+          ng-class="{'btn-primary': selector.getAllSelectedDevices().length > 0}"
           uib-dropdown-toggle
 
           uib-popover-template="popover.templateUrl"

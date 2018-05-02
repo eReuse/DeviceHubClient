@@ -1,9 +1,8 @@
-function groupResourceButton () {
+function groupResourceButton (ResourceListSelector) {
   /**
    * @ngdoc directive
    * @name groupResourceButton
    * @description Button with drop-down to add, move and remove resources within groups.
-   * @param {'resource'[]} resources - The resources.
    * @param {string} resourceType - The type of the resources.
    * @param {expression} success - Callback executed when an action has been executed successfully.
    */
@@ -11,11 +10,17 @@ function groupResourceButton () {
     templateUrl: require('./__init__').PATH + '/group-resource-button.directive.html',
     restrict: 'E',
     scope: {
-      resources: '=',
       resourceType: '@',
       success: '&'
     },
     link: $scope => {
+      function setView () {
+        $scope.resources = ResourceListSelector.getAllSelectedDevices()
+      }
+      setView()
+      ResourceListSelector.callbackOnSelection(setView)
+
+      $scope.selector = ResourceListSelector
       $scope.menu = [
         // {title: 'Lot', group: 'Lot', resourceTypes: ['Package', 'Device', 'Lot', 'Pallet']},
         {

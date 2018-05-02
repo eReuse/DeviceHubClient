@@ -129,12 +129,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         // TODO move to service
         $scope.devices = [] // Do never directly assign (r=[]) to 'devices' as modules depend of its reference
-        $scope.getDevices = () => { // TODO needed?
-          return $scope.devices.filter(r => r['@type'] === 'Device')
+        $scope.getDevices = () => {
+          return $scope.devices
         }
         $scope.lots = []
-        $scope.getLots = () => { // TODO needed?
-          return $scope.lots.filter(r => r['@type'] === 'Lot')
+        $scope.getLots = () => {
+          return $scope.lots
         }
 
         /**
