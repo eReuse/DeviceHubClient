@@ -86,36 +86,36 @@ const RESOURCE_CONFIG = {
       },
       _root: true
     },
-    // Event: {
-    //   view: {title: [{key: '@type', humanize: true}, {key: 'label'}], subtitle: [{key: '_id'}]},
-    //   subviews: [v.Device, v.Detail],
-    //   subviewSmall: v.Detail,
-    //   doNotUse: ['geo'].concat(DO_NOT_USE),
-    //   dataRelation: {
-    //     label: 'Event id',
-    //     keyFieldName: '_id',
-    //     filterFieldNames: ['_id'],
-    //     fieldType: 'typeahead',
-    //     labelFieldName: '_id',
-    //     resourceType: 'Event'
-    //   },
-    //   _root: true
-    // },
-    // Account: {
-    //   dataRelation: {
-    //     label: 'Account\'s e-mail',
-    //     labelFieldName: 'email',
-    //     filterFieldNames: ['email'],
-    //     fieldType: 'typeahead',
-    //     keyFieldName: '_id',
-    //     resourceType: 'Account'
-    //   },
-    //   view: {title: [{key: 'label'}], subtitle: [{key: 'e-mail'}]},
-    //   doNotUse: DO_NOT_USE,
-    //   subviews: [v.Detail, v.Lot, v.Package, v.Device],
-    //   subviewSmall: v.Detail,
-    //   _root: true
-    // },
+    Event: {
+      // view: {title: [{key: '@type', humanize: true}, {key: 'label'}], subtitle: [{key: '_id'}]},
+      // subviews: [v.Device, v.Detail],
+      // subviewSmall: v.Detail,
+      doNotUse: ['geo'].concat(DO_NOT_USE),
+      dataRelation: {
+        label: 'Event id',
+        keyFieldName: '_id',
+        filterFieldNames: ['_id'],
+        fieldType: 'typeahead',
+        labelFieldName: '_id',
+        resourceType: 'Event'
+      },
+      _root: true
+    },
+    Account: {
+      dataRelation: {
+        label: 'Account\'s e-mail',
+        labelFieldName: 'email',
+        filterFieldNames: ['email'],
+        fieldType: 'typeahead',
+        keyFieldName: '_id',
+        resourceType: 'Account'
+      },
+      // view: {title: [{key: 'label'}], subtitle: [{key: 'e-mail'}]},
+      doNotUse: DO_NOT_USE,
+      // subviews: [v.Detail, v.Lot, v.Package, v.Device],
+      // subviewSmall: v.Detail,
+      _root: true
+    },
     // Group: {
     //   label: {
     //     fields: ['_id', 'label'],
@@ -124,19 +124,19 @@ const RESOURCE_CONFIG = {
     //   subviewSmall: v.Detail,
     //   _root: true
     // },
-    // Place: {
-    //   dataRelation: {
-    //     label: 'Name of the place',
-    //     labelFieldName: 'label',
-    //     filterFieldNames: ['label', '_id'],
-    //     fieldType: 'typeahead',
-    //     resourceType: 'Place',
-    //     keyFieldName: '_id'
-    //   },
-    //   view: {title: [{key: 'label'}], subtitle: []},
-    //   subviews: [v.Lot, v.Place, v.Package, v.Pallet, v.Device, v.Event, v.Detail],
-    //   doNotUse: GROUP_DO_NOT_USE
-    // },
+    Place: {
+      dataRelation: {
+        label: 'Name of the place',
+        labelFieldName: 'label',
+        filterFieldNames: ['label', '_id'],
+        fieldType: 'typeahead',
+        resourceType: 'Place',
+        keyFieldName: '_id'
+      },
+      // view: {title: [{key: 'label'}], subtitle: []},
+      // subviews: [v.Lot, v.Place, v.Package, v.Pallet, v.Device, v.Event, v.Detail],
+      doNotUse: GROUP_DO_NOT_USE
+    },
     // Project: {
     //   dataRelation: {
     //     label: 'Identifier of the project',
@@ -184,7 +184,7 @@ const RESOURCE_CONFIG = {
       view: {title: [{key: 'label'}], subtitle: [{key: '@type', humanize: true}]},
       subviews: [v.Lot, v.Device],
       doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
-    }
+    },
     // IncomingLot: {
     //   dataRelation: {
     //     label: 'Name of the input lot',
@@ -205,16 +205,16 @@ const RESOURCE_CONFIG = {
     //   },
     //   doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
     // },
-    // Manufacturer: {
-    //   dataRelation: {
-    //     label: 'Name of the manufacturer',
-    //     labelFieldName: 'label',
-    //     filterFieldNames: ['label'],
-    //     fieldType: 'typeahead',
-    //     keyFieldName: 'label'
-    //   },
-    //   _root: true
-    // }
+    Manufacturer: {
+      dataRelation: {
+        label: 'Name of the manufacturer',
+        labelFieldName: 'label',
+        filterFieldNames: ['label'],
+        fieldType: 'typeahead',
+        keyFieldName: 'label'
+      },
+      _root: true
+    }
   }
   // inventory: {
   //   subviews: [v.InventoryDashboard, v.Lot, v.Package, v.Device, v.Place, v.Pallet, v.Event]
