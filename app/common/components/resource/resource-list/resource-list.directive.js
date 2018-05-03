@@ -190,8 +190,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         // Selecting
         // $scope.toggleSelect = _.bind(selector.toggle, selector, _)
-        $scope.toggleSelect = (resource, $event) => {
-          selector.toggle(resource)
+        $scope.toggleSelect = (resource, $event, parentResourceID) => {
+          selector.toggle(resource, parentResourceID)
           // Avoids the ng-click from the row (<tr>) to trigger
           $event.stopPropagation()
         }

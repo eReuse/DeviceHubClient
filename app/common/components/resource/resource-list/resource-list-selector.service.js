@@ -19,6 +19,13 @@ class ResourceListSelector {
   constructor () {
     let callbacksForSelections = []
     let lots = []
+    /*
+     * {
+     *  selectedDevices: [
+     *
+     *  ]
+     * }
+     */
 
     /**
      * Toggles the selected state of given resource, selecting (or deselecting) the device(s)
@@ -26,12 +33,12 @@ class ResourceListSelector {
      *
      * @param {object} resource - The resource to select/deselect
      */
-    this.toggle = resource => {
+    this.toggle = (resource, parentLot) => {
       if (this.isSelected(resource)) { // Remove
         this.remove(resource)
       } else { // Add
         console.log('Adding resource', resource)
-        this.add(resource)
+        this.add(resource, parentLot)
       }
     }
 
@@ -39,9 +46,9 @@ class ResourceListSelector {
      * Selects all given resources
      * @param resources
      */
-    this.selectAll = resources => {
+    this.selectAll = (resources, parentLot) => {
       _.forEach(resources, resource => {
-        this.add(resource)
+        this.add(resource, parentLot)
       })
     }
 
@@ -87,7 +94,7 @@ class ResourceListSelector {
     this.isSelected = resource => {
       let lotsList = this.getLotsAsList()
       for (let i = 0; i < lotsList.length; i++) {
-        let existingResource = _.find(lotsList[i].selectedDevices, {_id: resource._id})
+        let existingResource = _.find(getSelectedDevices(lotsList[i]), {_id: resource._id})
         if (existingResource) {
           return true
         }
@@ -98,21 +105,40 @@ class ResourceListSelector {
     /**
      * Adds given resource to all parent lots of the resource, if it was not there before.
      * @param {object} resource - The resource to add
+     * @param {object} parentLot - Parent lot of given resource
      */
-    this.add = resource => {
+    this.add = (resource, parentLot) => {
       if (resource['@type'] === 'Lot') {
         throw new Error('tried to add lot to selection')
       }
+      if (!parentLot || !parentLot._id) {
+        throw new Error('parentLot must be defined and have _id property set')
+      }
       console.log('resource.lots', resource.lots)
+
       resource.lots.forEach(_lot => {
         let lot = getOrCreateLot(_lot)
 
         let existingResource = _.find(lot.selectedDevices, {_id: resource._id})
         console.log('existingResource', existingResource)
         if (!existingResource) {
-          lot.selectedDevices.push(resource)
+          lot.selectedDevices.push({
+            _id: resource._id,
+            device: resource,
+            selectedInThisLot: _lot._id === parentLot._id
+          })
         }
       })
+
+      // let lot = getOrCreateLot(parentLot)
+      //
+      //
+      // let existingResource = _.find(getSelectedDevices(lot), {_id: resource._id})
+      // console.log('existingResource', existingResource)
+      // if (!existingResource) {
+      //   getSelectedDevices(lot).push(resource)
+      // }
+
       _control()
 
       // Lot selection
@@ -136,7 +162,7 @@ class ResourceListSelector {
       resource.lots.forEach(lot => {
         let selectedLot = this.getLotByID(lot._id)
         if (selectedLot) {
-          _.remove(selectedLot.selectedDevices, {'_id': resource['_id']})
+          _.remove(getSelectedDevices(selectedLot), {'_id': resource['_id']})
         }
         // TODO if selectedDevices.length === 0, delete lots[lot._id] ?
       })
@@ -150,30 +176,66 @@ class ResourceListSelector {
     this.getAllSelectedDevices = () => {
       let devices = {}
       this.getLotsAsList().forEach(lot => {
-        lot.selectedDevices.forEach(device => {
+        getSelectedDevices(lot).forEach(device => {
           devices[device._id] = device
         })
       })
       return _.values(devices)
     }
 
-    this.getNumberOfSelectedDevicesInLot = (lotID) => {
-      return (this.getLotByID(lotID) && this.getLotByID(lotID).selectedDevices.length) || 0
+    this.getSelectedDevicesInLot = (lotID) => {
+      return (this.getLotByID(lotID) && getSelectedDevices(this.getLotByID(lotID))) || []
     }
 
     this.getLotsAsList = () => {
       return lots
     }
 
-    this.getNonEmptyLotsAsList = () => {
-      return this.getLotsAsList().filter(l => { return l.selectedDevices.length > 0 })
+    this.getNonEmptyLotsAsList = (excludeID) => {
+      return this.getLotsAsList().filter(lot => {
+        return getSelectedDevices(lot).length > 0 && lot._id !== excludeID
+      })
+    }
+
+    this.getNonEmptyOriginallySelectedLotsAsList = (excludedLotID) => {
+      return this.getLotsAsList().map(lot => {
+        if (lot._id === excludedLotID) {
+          return _.assign({}, lot, { selectedDevices: 0 })
+        }
+
+        let originallySelectedDevices = getOriginallySelectedDevices(lot)
+
+        // only count devices that were not added to the excluded lot (excludedLotID)
+        let originallyNonExcludedSelectedDevices = []
+        for (let i = 0; i < originallySelectedDevices.length; i++) {
+          let device = _.find(originallySelectedDevices[i].lots, {_id: excludedLotID})
+          if (!device) {
+            originallyNonExcludedSelectedDevices.push(device)
+          }
+        }
+        return _.assign({}, lot, { selectedDevices: originallyNonExcludedSelectedDevices })
+      }).filter(lot => {
+        return lot.selectedDevices.length > 0
+      })
     }
 
     this.getLotByID = lotID => {
       return _.find(lots, {_id: lotID})
     }
 
-    let getOrCreateLot = _lot => {
+    let getSelectedDevices = lot => {
+      return lot.selectedDevices.map(device => {
+        return device.device
+      })
+    }
+
+    let getOriginallySelectedDevices = lot => {
+      return lot.selectedDevices.filter(device => {
+        return device.selectedInThisLot
+      })
+    }
+
+    let getOrCreateLot = (_lot) => {
       let lot = this.getLotByID(_lot._id)
       if (!lot) {
         lot = {

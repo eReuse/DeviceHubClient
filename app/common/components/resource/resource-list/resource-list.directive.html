@@ -28,7 +28,7 @@
 <button type="button"
         class="btn"
         ng-class="{'btn-primary': getDevices().length > 0}"
-        ng-show="selector.getNumberOfSelectedDevicesInLot(parentResource._id) !== getDevices().length"
+        ng-show="selector.getSelectedDevicesInLot(parentResource._id).length !== getDevices().length"
         ng-click="selector.selectAll(getDevices())"
 >
   <span><i class="fa fa-select fa-fw"></i>Select all</span>
@@ -36,7 +36,7 @@
 <button type="button"
         class="btn"
         ng-class="{'btn-primary': getDevices().length > 0}"
-        ng-show="selector.getNumberOfSelectedDevicesInLot(parentResource._id) === getDevices().length"
+        ng-show="selector.getSelectedDevicesInLot(parentResource._id).length === getDevices().length"
         ng-click="selector.deselectAll(getDevices())"
 >
   <span><i class="fa fa-select fa-fw"></i>Deselect all</span>
@@ -76,7 +76,7 @@
               popover-placement="{{popoverPlacement}}"
               popover-class="resource-button-popover"
 
-              ng-click="toggleSelect(resource, $event, $index)"
+              ng-click="toggleSelect(resource, $event, parentResource)"
           >
 
           <!--<td ng-class="{'hidden-xs': subResource.resource}">
@@ -147,11 +147,19 @@
     </div>
 
     <div ng-if="selector.getAllSelectedDevices().length > 0">
-      <h4>Current selection: {{selector.getAllSelectedDevices().length}} devices in {{selector.getNonEmptyLotsAsList().length }} lots</h4>
+      <h4>Current selection: {{selector.getAllSelectedDevices().length}} devices in {{selector.getNonEmptyOriginallySelectedLotsAsList().length }} lots</h4>
       <ul>
-
+        <li ng-show="selector.getSelectedDevicesInLot(parentResource._id).length > 0">
+          Current lot ({{ selector.getSelectedDevicesInLot(parentResource._id).length }})
+          <button type="button"
+                  class="btn"
+                  ng-click="selector.deselectAll(selector.getSelectedDevicesInLot(parentResource._id))"
+          >
+            <span><i class="fa fa-select fa-fw"></i>Deselect</span>
+          </button>
+        </li>
         <li
-          ng-repeat="lot in selector.getNonEmptyLotsAsList() track by lot._id"
+          ng-repeat="lot in selector.getNonEmptyOriginallySelectedLotsAsList(parentResource._id) track by lot._id"
           >
           {{ lot.lot.label }} ({{ lot.selectedDevices.length }})
           <button type="button"
