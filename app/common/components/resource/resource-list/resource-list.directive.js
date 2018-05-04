@@ -196,6 +196,41 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           $event.stopPropagation()
         }
 
+        // mark all selected devices of current lot as originally selected TODO in the future parentResource will have to be set!
+        $scope.parentResource && selector.markSelectedDevicesInLotAsOriginal($scope.parentResource._id)
+
+        function updateSelection () {
+          $scope.allSelectedDevices = selector.getAllSelectedDevices()
+          $scope.selectedLots = selector.getLotsWithOriginallySelectedDevicesOnly()
+          if ($scope.parentResource) { // TODO in the future parentResource will have to be set!
+            $scope.selectedDevicesInThisLot = selector.getSelectedDevicesInLot($scope.parentResource._id)
+            $scope.areAllDevicesOfCurrentLotSelected = $scope.selectedDevicesInThisLot.length === $scope.getDevices().length
+            $scope.selectedLots = $scope.selectedLots.filter((lot) => {
+              return lot._id !== $scope.parentResource._id
+            })
+          }
+        }
+        selector.callbackOnSelection(updateSelection)
+        updateSelection()
+        //
+        // $scope.getSelectedLots = () => {
+        //   // TODO to be safe count devices twice
+        //   // make sure devices are not counted twice
+        //   // give preference to counting to current lot
+        //   let originallySelectedLots = this.getLotsWithOriginallySelectedDevicesOnly()
+        //   originallySelectedLots = originallySelectedLots.filter((lot) => {
+        //     return lot.selectedDevices.length > 0
+        //   })
+        //   originallySelectedLots.push({
+        //     label: 'Current lot',
+        //     _id: $scope.parentResource._id,
+        //     // id,
+        //     selectDevices: this.getSelectedDevicesInLot($scope.parentResource._id)
+        //   })
+        //   console.log('originallySelectedLots', originallySelectedLots )
+        //   return originallySelectedLots
+        // }
+
         // Reloading
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
         $scope.reload = () => {

@@ -157,7 +157,6 @@ function ResourceListGetterFactory (ResourceSettings) {
      */
     updateSort (newSorts) {
       console.log('update sort to', newSorts)
-      console.trace()
       let oldSort = _.clone(this._sort)
       this._sort = newSorts
       // If there is no sort defined this._filters will equal with oldsort

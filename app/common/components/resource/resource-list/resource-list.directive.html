@@ -28,15 +28,15 @@
 <button type="button"
         class="btn"
         ng-class="{'btn-primary': getDevices().length > 0}"
-        ng-show="selector.getSelectedDevicesInLot(parentResource._id).length !== getDevices().length"
-        ng-click="selector.selectAll(getDevices())"
+        ng-show="!areAllDevicesOfCurrentLotSelected"
+        ng-click="selector.selectAll(getDevices(), parentResource)"
 >
   <span><i class="fa fa-select fa-fw"></i>Select all</span>
 </button>
 <button type="button"
         class="btn"
         ng-class="{'btn-primary': getDevices().length > 0}"
-        ng-show="selector.getSelectedDevicesInLot(parentResource._id).length === getDevices().length"
+        ng-show="areAllDevicesOfCurrentLotSelected"
         ng-click="selector.deselectAll(getDevices())"
 >
   <span><i class="fa fa-select fa-fw"></i>Deselect all</span>
@@ -146,22 +146,24 @@
       </ul>
     </div>
 
-    <div ng-if="selector.getAllSelectedDevices().length > 0">
-      <h4>Current selection: {{selector.getAllSelectedDevices().length}} devices in {{selector.getNonEmptyOriginallySelectedLotsAsList().length }} lots</h4>
+    <div ng-if="allSelectedDevices.length > 0">
+      <h4>Current selection: {{allSelectedDevices.length}} devices:</h4>
       <ul>
-        <li ng-show="selector.getSelectedDevicesInLot(parentResource._id).length > 0">
-          Current lot ({{ selector.getSelectedDevicesInLot(parentResource._id).length }})
+        <li ng-show="selectedDevicesInThisLot.length > 0">
+          Current lot ({{ selectedDevicesInThisLot.length }})
           <button type="button"
                   class="btn"
-                  ng-click="selector.deselectAll(selector.getSelectedDevicesInLot(parentResource._id))"
+                  ng-click="selector.deselectAll(selectedDevicesInThisLot)"
           >
             <span><i class="fa fa-select fa-fw"></i>Deselect</span>
           </button>
         </li>
         <li
-          ng-repeat="lot in selector.getNonEmptyOriginallySelectedLotsAsList(parentResource._id) track by lot._id"
+          ng-repeat="lot in selectedLots track by lot._id"
           >
-          {{ lot.lot.label }} ({{ lot.selectedDevices.length }})
+          <div>
+            {{ lot.label }} ({{ lot.selectedDevices.length }})
+          </div>
           <button type="button"
                   class="btn"
                   ng-click="selector.deselectAll(lot.selectedDevices)"
