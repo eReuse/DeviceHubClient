@@ -35,11 +35,12 @@ class ResourceListSelector {
      */
     this.toggle = (resource, parentLot) => {
       if (this.isSelected(resource)) { // Remove
-        this.remove(resource)
+        remove(resource)
       } else { // Add
         console.log('Adding resource', resource)
-        this.add(resource, parentLot)
+        add(resource, parentLot)
       }
+      _control()
     }
 
     /**
@@ -51,8 +52,9 @@ class ResourceListSelector {
         throw new Error('parentLot must be set')
       }
       _.forEach(resources, resource => {
-        this.add(resource, parentLot)
+        add(resource, parentLot)
       })
+      _control()
     }
 
     /**
@@ -64,7 +66,7 @@ class ResourceListSelector {
       }
       devices = devices.slice() // given devices might the same array we remove devices from
       devices.forEach(device => {
-        this.remove(device)
+        remove(device)
       })
       _control()
     }
@@ -85,7 +87,7 @@ class ResourceListSelector {
 
       // TODO refactor for lots: only add resources that are already selected in a lot
       // _.forEach(resources, resource => {
-      //   this.add(resource) // 2nd parameter -> We add it only to inList
+      //   add(resource) // 2nd parameter -> We add it only to inList
       // })
     }
 
@@ -110,7 +112,7 @@ class ResourceListSelector {
      * @param {object} resource - The resource to add
      * @param {object} parentLot - Parent lot of given resource
      */
-    this.add = (resource, parentLot) => {
+    let add = (resource, parentLot) => {
       if (resource['@type'] === 'Lot') {
         throw new Error('tried to add lot to selection')
       }
@@ -142,8 +144,6 @@ class ResourceListSelector {
       //   getSelectedDevices(lot).push(resource)
       // }
 
-      _control()
-
       // Lot selection
       // let isLot = resource['@type'] === 'Lot'
       // if (isLot) {
@@ -161,7 +161,7 @@ class ResourceListSelector {
      * Removes a resources from the actual and total lists, if it was there.
      * @param resource
      */
-    this.remove = resource => {
+    let remove = resource => {
       resource.lots.forEach(lot => {
         let selectedLot = this.getLotByID(lot._id)
         if (selectedLot) {
@@ -169,7 +169,6 @@ class ResourceListSelector {
         }
         // TODO if selectedDevices.length === 0, delete lots[lot._id] ?
       })
-      _control()
     }
 
     this.callbackOnSelection = callback => {
