@@ -208,6 +208,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             $scope.selectedLots = $scope.selectedLots.filter((lot) => {
               return lot._id !== $scope.parentResource._id
             })
+            if ($scope.selectedDevicesInThisLot.length > 0) {
+              $scope.selectedLots.unshift({
+                _id: $scope.parentResource._id,
+                label: 'Current lot',
+                selectedDevices: $scope.selectedDevicesInThisLot
+              })
+            }
           }
         }
         selector.callbackOnSelection(updateSelection)

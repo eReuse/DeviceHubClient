@@ -79,3 +79,17 @@ resource-list
 
 #device-dashboard-components td:last-child span
   display: block
+
+.pill-deselect-selected-in-lot
+  list-style: none
+  display: inline-flex
+  border-radius: 4px
+  padding: 5px
+  border: 1px solid #666666
+  button
+    background-color: transparent
+    padding: 0
+    &.btn:hover, &.btn:focus, &.btn.focus
+      color: #333333
+  &:not(:first-child)
+    margin-left: 15px

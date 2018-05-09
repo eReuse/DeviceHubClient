@@ -149,18 +149,10 @@
     <div ng-if="allSelectedDevices.length > 0">
       <h4>Current selection: {{allSelectedDevices.length}} devices:</h4>
       <ul>
-        <li ng-show="selectedDevicesInThisLot.length > 0">
-          Current lot ({{ selectedDevicesInThisLot.length }})
-          <button type="button"
-                  class="btn"
-                  ng-click="selector.deselectAll(selectedDevicesInThisLot)"
-          >
-            <span><i class="fa fa-select fa-fw"></i>Deselect</span>
-          </button>
-        </li>
         <li
           ng-repeat="lot in selectedLots track by lot._id"
-          >
+          class="pill-deselect-selected-in-lot"
+        >
           <div>
             {{ lot.label }} ({{ lot.selectedDevices.length }})
           </div>
@@ -168,7 +160,7 @@
                   class="btn"
                   ng-click="selector.deselectAll(lot.selectedDevices)"
           >
-            <span><i class="fa fa-select fa-fw"></i>Deselect</span>
+            <span><i class="fa fa-close fa-fw"></i></span>
           </button>
         </li>
       </ul>
