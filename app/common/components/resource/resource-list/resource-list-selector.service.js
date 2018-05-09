@@ -246,7 +246,11 @@ class ResourceListSelector {
     }
 
     this.getAggregatedPropertyOfSelected = (property, valueIfDifferent = 'Various', postfix) => {
-      let aggregatedValue = this.getAllSelectedDevices().reduce((accumulate, device) => {
+      let selectedDevices = this.getAllSelectedDevices()
+      if (selectedDevices.length === 0) {
+        return null
+      }
+      let aggregatedValue = selectedDevices.reduce((accumulate, device) => {
         let value = accumulate[property]
         if (_.has(device, property) && value !== device[property]) {
           value = valueIfDifferent

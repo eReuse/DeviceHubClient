@@ -201,6 +201,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         function updateSelection () {
           $scope.allSelectedDevices = selector.getAllSelectedDevices()
+
+          // Update selected lots
           $scope.selectedLots = selector.getLotsWithOriginallySelectedDevicesOnly()
           if ($scope.parentResource) { // TODO in the future parentResource will have to be set!
             $scope.selectedDevicesInThisLot = selector.getSelectedDevicesInLot($scope.parentResource._id)
@@ -216,6 +218,38 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               })
             }
           }
+
+          // Update selection info info
+          $scope.showContent = {}
+          $scope.selectionSummary = [
+            {
+              title: 'Device',
+              contentSummary: selector.getAggregatedPropertyOfSelected('@type', 'Various types') + ' ' + selector.getAggregatedPropertyOfSelected('type', 'Various subtypes') + ' ' + selector.getAggregatedPropertyOfSelected('manufacturer', '') + ' ' + selector.getAggregatedPropertyOfSelected('model', ''),
+              content: 'Type: ' + selector.getAggregatedPropertyOfSelected('@type', 'Various types')
+            },
+            {
+              title: 'Status',
+              contentSummary: selector.getAggregatedPropertyOfSelected('status'),
+              content: 'Status'
+            },
+            {
+              title: 'Price',
+              contentSummary: selector.getRangeOfPropertyOfSelected('price'),
+              content: 'Price'
+            },
+            {
+              title: 'Components',
+              contentSummary: selector.getAggregatedPropertyOfSelected('processorModel') + ' ' + selector.getAggregatedPropertyOfSelected('totalHardDriveSize', 'Various', ' GB HardDrive') + ' ' + selector.getAggregatedPropertyOfSelected('totalRamSize', 'Various', ' MB RAM'),
+              content: 'Components'
+            },
+            {
+              title: 'Providers',
+              contentSummary: 'Donor:' + selector.getAggregatedPropertyOfSelected('donor') || 'No donor' +
+              'Owner:' + selector.getAggregatedPropertyOfSelected('donor') || 'No owner' +
+              'Distributor:' + selector.getAggregatedPropertyOfSelected('distributor') || 'No distributor',
+              content: 'Providers'
+            }
+          ]
         }
         selector.callbackOnSelection(updateSelection)
         updateSelection()

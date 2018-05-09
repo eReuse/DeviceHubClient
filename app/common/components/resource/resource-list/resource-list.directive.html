@@ -132,18 +132,18 @@
   </div>
   <!-- SubResource in right-bar -->
   <aside class="col-xs-10 col-sm-8 col-lg-7" id="aside-subResource">
-    <div ng-if="selector.getAllSelectedDevices().length === 0">
-      <h4>Summary</h4>
-      <h3>{{ parentResource.summary.totalNumberDevices }} devices in lot</h3>
-      <ul>
-        <li>Device: {{parentResource.summary.deviceType}}</li>
-        <li>Status: {{parentResource.summary.status}}</li>
-        <li>Price: {{parentResource.summary.price}}, Range: {{parentResource.summary.range}}</li>
-        <li>Components: {{parentResource.summary.components}}</li>
-        <li>Donors: {{parentResource.summary.donors.join(',')}}, Owner: {{parentResource.summary.owner}}, Distributor:{{parentResource.summary.distributor}}</li>
-        <li>Possessor: {{parentResource.summary.possessor}}, Location: {{parentResource.summary.location}}</li>
-        <li>Events: {{parentResource.summary.events.join('')}}</li>
-      </ul>
+    <div ng-if="allSelectedDevices.length === 0">
+      <h4>Select devices to view more details</h4>
+      <!--<h3>{{ parentResource.summary.totalNumberDevices }} devices in lot</h3>-->
+      <!--<ul>-->
+        <!--<li>Device: {{parentResource.summary.deviceType}}</li>-->
+        <!--<li>Status: {{parentResource.summary.status}}</li>-->
+        <!--<li>Price: {{parentResource.summary.price}}, Range: {{parentResource.summary.range}}</li>-->
+        <!--<li>Components: {{parentResource.summary.components}}</li>-->
+        <!--<li>Donors: {{parentResource.summary.donors.join(',')}}, Owner: {{parentResource.summary.owner}}, Distributor:{{parentResource.summary.distributor}}</li>-->
+        <!--<li>Possessor: {{parentResource.summary.possessor}}, Location: {{parentResource.summary.location}}</li>-->
+        <!--<li>Events: {{parentResource.summary.events.join('')}}</li>-->
+      <!--</ul>-->
     </div>
 
     <div ng-if="allSelectedDevices.length > 0">
@@ -200,25 +200,23 @@
             },
             ...
           ]-->
-          <li>
+          <li ng-repeat="row in selectionSummary track by row.title">
             <button type="button"
                     class="btn"
-                    ng-click="showContent['device'] = true"
+                    ng-click="showContent[row.title] = true"
             >
-              Device: {{selector.getAggregatedPropertyOfSelected('@type', 'Various types')}} {{selector.getAggregatedPropertyOfSelected('type', 'Various subtypes')}} {{selector.getAggregatedPropertyOfSelected('manufacturer', '')}} {{selector.getAggregatedPropertyOfSelected('model', '')}}
+              {{row.title}}: {{row.contentSummary}}
             </button>
           </li>
-          <li>Status: {{selector.getAggregatedPropertyOfSelected('status')}}</li>
-          <li>Price: {{selector.getRangeOfPropertyOfSelected('price')}}</li>
-          <li>Components: {{selector.getAggregatedPropertyOfSelected('processorModel')}}, {{selector.getAggregatedPropertyOfSelected('totalHardDriveSize', 'Various', ' GB HardDrive')}}, {{selector.getAggregatedPropertyOfSelected('totalRamSize', 'Various', ' MB RAM')}}</li>
-          <li>Donor: {{selector.getAggregatedPropertyOfSelected('donor') || 'No donor'}}, Owner: {{selector.getAggregatedPropertyOfSelected('donor') || 'No owner'}} , Distributor: {{selector.getAggregatedPropertyOfSelected('distributor') || 'No distributor' }} </li>
         </ul>
-        <div ng-show="showContent['device']" style="position: absolute; top: 0; width: 100%; height: 100%; background-color: white;">
+        <div ng-repeat="row in selectionSummary track by row.title"
+             ng-show="showContent[row.title]"
+             style="position: absolute; top: 0; width: 100%; height: 100%; background-color: white;">
           <button type="button"
                   class="btn"
-                  ng-click="showContent['device'] = false"
+                  ng-click="showContent[row.title] = false"
           >Hide</button>
-          Device content
+          {{row.content}}
         </div>
       </div>
 
