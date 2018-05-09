@@ -8,9 +8,12 @@
 </div>
 
 <h2>Lots ({{ getLots().length }})</h2>
-<div infinite-scroll="getMoreLots()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
+<div infinite-scroll="getMoreLots()"
+     infinite-scroll-distance='0.8'
+     infinite-scroll-use-document-bottom="false"
      infinite-scroll-parent infinite-scroll-disabled="getMoreLotsIsBusy || !morePagesAvailableLots"
      infinite-scroll-listen-for-event="list:filtered"
+     class="children-lots"
 >
   <ul>
     <li
