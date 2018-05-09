@@ -48,34 +48,12 @@ resource-list
     .label
       display: block
 
-  #aside-subResource
-    padding-left: 0
-    border-left: 2px solid $main-nav-bg
-    box-shadow: -5px -3px 10px -7px #999
-    resource-view
-      .fill-height-bar // a subview with a search bar (ex. any resource-list)
-        // - 2 * (everything we had in .fill-height-bar above) but calc does not allow 2 * (parenthesis) so we get it by
-        // breadcrumb is represented by $line-height-computed - $breadcrumb-padding-vertical
-        // applying the distributive property
-        height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight} - 2 * #{$optionsMenuHeight} - #{$tabsMenuHeight} - #{$tabsHeight} - 2 * #{$searchHeight} - #{$subresourceH3Height}) !important
-        overflow-y: auto
-        @media (max-width: $screen-xs-max)
-          height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight} - #{$optionsMenuHeight} - #{$tabsMenuHeight} - 1 * #{$searchHeight} - #{$subresourceH3Height}) !important
-
-      .fill-height // A subview without a search bar nor options buttons (ex. dashboard)
-        // We use fill-height-bar as initial, as only listing have subresources
-        height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight} - #{$tabsHeight} - #{$tabsMenuHeight}  - #{$searchHeight} - #{$subresourceH3Height}) !important
-        overflow-y: auto
-
-        @media (max-width: $screen-xs-max)
-          height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight} - #{$tabsMenuHeight} - 1 * #{$tabsHeight} - #{$subresourceH3Height}) !important
-
-      header
-        background-color: $main-nav-bg
-        h3
-          margin-top: 0
-          margin-bottom: 0
-          padding-top: $line-height-computed / 4
+.selection
+  padding: 30px
+  border-left: 2px solid $main-nav-bg
+  box-shadow: -5px -3px 10px -7px #999
+  ul
+    padding: 0
 
 #device-dashboard-components td:last-child span
   display: block
@@ -93,3 +71,14 @@ resource-list
       color: #333333
   &:not(:first-child)
     margin-left: 15px
+
+.selection-summary
+  li
+    list-style: none
+    button
+      background-color: white
+      color: #333333
+      box-shadow: none
+      border: 1px solid #bfbfbf
+      width: 100%
+      text-align: left

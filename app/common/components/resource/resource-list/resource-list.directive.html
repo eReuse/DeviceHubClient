@@ -130,10 +130,10 @@
       </div>
     </div>
   </div>
-  <!-- SubResource in right-bar -->
-  <aside class="col-xs-10 col-sm-8 col-lg-7" id="aside-subResource">
+  <!-- Selection -->
+  <aside class="selection col-xs-10 col-sm-8 col-lg-7">
     <div ng-if="allSelectedDevices.length === 0">
-      <h4>Select devices to view more details</h4>
+      <h3>Select devices to view more details</h3>
       <!--<h3>{{ parentResource.summary.totalNumberDevices }} devices in lot</h3>-->
       <!--<ul>-->
         <!--<li>Device: {{parentResource.summary.deviceType}}</li>-->
@@ -165,7 +165,7 @@
         </li>
       </ul>
       <div style="position: relative;">
-        <ul>
+        <ul class="selection-summary">
           <!--'serialNumber': 'foo',
           '@type': 'Computer',
           'type': 'Microtower',
