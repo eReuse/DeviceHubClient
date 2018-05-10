@@ -216,6 +216,7 @@ function ResourceListGetterFactory (ResourceSettings) {
                 }).map(l => {
                   // Workaround to set labels of selected lots provisionally. Necessary because API /devices doesn't include the 'label' property for device ancestors
                   // TODO remove as soon as API returns ancestor lots with labels set
+                  // Get ancestors with /lots?where="{ id: [....] }"
                   l.label = l._id
                   return l
                 })
