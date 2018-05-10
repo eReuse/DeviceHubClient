@@ -62,12 +62,17 @@ class ResourceListSelector {
      */
     this.deselectAll = devices => {
       if (!devices || !devices.slice) {
-        return
+        return lots.forEach((lot) => {
+          lot.selectedDevices.forEach((device) => {
+            remove(device.device)
+          })
+        })
+      } else {
+        devices = devices.slice() // given devices might the same array we remove devices from
+        devices.forEach(device => {
+          remove(device)
+        })
       }
-      devices = devices.slice() // given devices might the same array we remove devices from
-      devices.forEach(device => {
-        remove(device)
-      })
       _control()
     }
 
