@@ -132,6 +132,9 @@ class ResourceListSelector {
             device: resource,
             originallySelectedInThisLot: _lot._id === parentLot._id
           })
+          // if (_lot._id === parentLot._id) {
+          //   lot.lot.label = parentLot.label
+          // }
         }
       })
 
@@ -220,9 +223,11 @@ class ResourceListSelector {
       return _.find(lots, {_id: lotID})
     }
 
-    this.markSelectedDevicesInLotAsOriginal = lotID => {
-      let lot = this.getLotByID(lotID)
-      if (!lot) return
+    this.markSelectedDevicesInLotAsOriginal = _lot => {
+      let lot = this.getLotByID(_lot._id)
+      if (!lot) {
+        return
+      }
       lot.selectedDevices.forEach((device) => {
         device.originallySelectedInThisLot = true
       })
@@ -241,6 +246,14 @@ class ResourceListSelector {
           selectedDevices: []
         }
         lots.push(lot)
+      }
+      return lot
+    }
+
+    this.nameLot = (_lot) => {
+      let lot = getOrCreateLot(_lot)
+      if (_lot.label) {
+        lot.lot.label = _lot.label
       }
       return lot
     }

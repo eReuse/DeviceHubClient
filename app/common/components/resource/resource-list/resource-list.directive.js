@@ -197,7 +197,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         // mark all selected devices of current lot as originally selected TODO in the future parentResource will have to be set!
-        $scope.parentResource && selector.markSelectedDevicesInLotAsOriginal($scope.parentResource._id)
+        $scope.parentResource && selector.markSelectedDevicesInLotAsOriginal($scope.parentResource)
+
+        $scope.parentResource && selector.nameLot($scope.parentResource)
 
         function updateSelection () {
           $scope.allSelectedDevices = selector.getAllSelectedDevices()

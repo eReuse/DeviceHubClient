@@ -223,26 +223,17 @@
         </div>
       </div>
 
-      <!--<ul> TODO summary for all selected devices (total)
-        <li>Device: {{selector.total.summary.deviceType}}</li>
-        <li>Status: {{selector.total.summary.status}}</li>
-        <li>Price: {{selector.total.summary.price}}, Range: {{selector.total.summary.range}}</li>
-        <li>Components: {{selector.total.summary.components}}</li>
-        <li>Donors: {{selector.total.summary.donors.join(',')}}, Owner: {{selector.total.summary.owner}}, Distributor:{{selector.total.summary.distributor}}</li>
-        <li>Possessor: {{selector.total.summary.possessor}}, Location: {{selector.total.summary.location}}</li>
-        <li>Events: {{selector.total.summary.events.join('')}}</li>
-      </ul>-->
-    </div>
+      <!-- Buttons -->
+      <div id="buttons" class="row text-center">
+        <resource-label-button></resource-label-button>
+        <manual-events-button></manual-events-button>
+        <!--&lt;!&ndash;<share devices="selector.getAllSelectedDevices()"></share>&ndash;&gt;-->
+        <certificate-button></certificate-button>
+        <group-resource-button success="reload()" resource-type="Device"></group-resource-button>
+        <resource-export resources="selector.getAllSelectedDevices()"></resource-export>
+      </div>
+    </div> <!-- ./ selectDevices > 0 -->
 
-    <!-- Buttons -->
-    <div id="buttons" class="row text-center">
-      <resource-label-button></resource-label-button>
-      <manual-events-button></manual-events-button>
-      <!--&lt;!&ndash;<share devices="selector.getAllSelectedDevices()"></share>&ndash;&gt;-->
-      <certificate-button></certificate-button>
-      <group-resource-button success="reload()" resource-type="Device"></group-resource-button>
-      <resource-export resources="selector.getAllSelectedDevices()"></resource-export>
-    </div>
   </aside>
 </div>
 
