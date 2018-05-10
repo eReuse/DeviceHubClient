@@ -190,7 +190,16 @@ function ResourceListGetterFactory (ResourceSettings) {
         console.log('received', resources.length, this.resourceType + 's')
         // console.log('Resources' + JSON.stringify(resources))
         if (this.resourceType === 'Device') {
-          resources = resources.map(r => {
+          resources = resources
+            // Workaround to exclude devices that are not DIRECT children of current lot
+            // TODO remove as soon as API returns only DIRECT children of current lot
+            .filter(r => {
+              let parentID = this.defaultFilters && this.defaultFilters['dh$insideLot']
+              if (!parentID) {
+                return true
+              }
+              return _.find(r.ancestors, { _id: parentID})
+            }).map(r => {
             _.assign(r, {
               'status': (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
               'title': r.type + ' ' + r.manufacturer + ' ' + r.model,
