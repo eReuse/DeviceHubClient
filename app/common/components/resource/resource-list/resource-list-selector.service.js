@@ -250,6 +250,8 @@ class ResourceListSelector {
       return lot
     }
 
+    // Workaround to set labels of selected lots correctly. Necessary because API /devices doesn't include the 'label' property for device ancestors
+    // TODO remove as soon as API returns ancestor lots with labels set
     this.nameLot = (_lot) => {
       let lot = getOrCreateLot(_lot)
       if (_lot.label) {

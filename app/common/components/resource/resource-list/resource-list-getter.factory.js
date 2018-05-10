@@ -202,7 +202,9 @@ function ResourceListGetterFactory (ResourceSettings) {
                 .filter(r => {
                   return r['@type'] === 'Lot' || r['@type'] === 'Package'
                 }).map(l => {
-                  l.label = l._id // TODO remove this line as soon as API returns ancestor lots with labels set
+                  // Workaround to set labels of selected lots provisionally. Necessary because API /devices doesn't include the 'label' property for device ancestors
+                  // TODO remove as soon as API returns ancestor lots with labels set
+                  l.label = l._id
                   return l
                 })
               // 'processorModel': 'Intel(R) Dual Core(TM) CPU 540 @ 2.35GHz',
