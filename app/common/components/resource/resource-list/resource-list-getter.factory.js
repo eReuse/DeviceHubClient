@@ -193,21 +193,24 @@ function ResourceListGetterFactory (ResourceSettings) {
           resources = resources
             // Workaround to exclude devices that are not DIRECT children of current lot
             // TODO remove as soon as API returns only DIRECT children of current lot
-            .filter(r => {
+            /* .filter(r => {
               let parentID = this.defaultFilters && this.defaultFilters['dh$insideLot']
               if (!parentID) {
                 return true
               }
               return _.find(r.ancestors, { _id: parentID})
-            }).map(r => {
-            _.assign(r, {
-              'status': (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
-              'title': r.type + ' ' + r.manufacturer + ' ' + r.model,
-              // 'price': 150,
-              'donor': 'BCN Ayuntamiento',
-              'owner': 'Solidança',
-              'distributor': 'Donalo',
-              'lots': r.ancestors
+            }) */.map(r => {
+              let lots = []
+              lots = lots.concat(r.ancestors)
+              r.ancestors.forEach((ancestor) => {
+                lots = lots.concat(ancestor.lots.map((lotID) => {
+                  return {
+                    _id: lotID,
+                    '@type': 'Lot'
+                  }
+                }))
+              })
+              lots = lots
                 .filter(r => {
                   return r['@type'] === 'Lot' || r['@type'] === 'Package'
                 }).map(l => {
@@ -216,11 +219,20 @@ function ResourceListGetterFactory (ResourceSettings) {
                   l.label = l._id
                   return l
                 })
-              // 'processorModel': 'Intel(R) Dual Core(TM) CPU 540 @ 2.35GHz',
-              // 'totalRamSize': 1024,
+
+              _.assign(r, {
+                'status': (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
+                'title': r.type + ' ' + r.manufacturer + ' ' + r.model,
+                // 'price': 150,
+                'donor': 'BCN Ayuntamiento',
+                'owner': 'Solidança',
+                'distributor': 'Donalo',
+                'lots': lots
+                // 'processorModel': 'Intel(R) Dual Core(TM) CPU 540 @ 2.35GHz',
+                // 'totalRamSize': 1024,
+              })
+              return r
             })
-            return r
-          })
           console.log('received devices', resources.map((d) => { return d.title }))
           // resources = [
           //   {
