@@ -81,15 +81,6 @@
 
               ng-click="toggleSelect(resource, $event)"
           >
-
-          <!--<td ng-class="{'hidden-xs': subResource.resource}">
-            <input class="resource-list-checkbox"
-                   type="checkbox"
-                   ng-click=""
-                   ng-model="selector.checkboxes[resource['_id']]"
-                   ng-class="{blink: hoverScreener && resource._id === devices[0]._id && inList.length == 0}"
-            >
-          </td>-->
             <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
             <td ng-repeat="td in ::config.table.td"
                 ng-init="value = $root._.get(resource, td.value)"
@@ -137,16 +128,6 @@
   <aside class="selection col-xs-10 col-sm-8 col-lg-7">
     <div ng-if="allSelectedDevices.length === 0">
       <h3>Select devices to view more details</h3>
-      <!--<h3>{{ parentResource.summary.totalNumberDevices }} devices in lot</h3>-->
-      <!--<ul>-->
-        <!--<li>Device: {{parentResource.summary.deviceType}}</li>-->
-        <!--<li>Status: {{parentResource.summary.status}}</li>-->
-        <!--<li>Price: {{parentResource.summary.price}}, Range: {{parentResource.summary.range}}</li>-->
-        <!--<li>Components: {{parentResource.summary.components}}</li>-->
-        <!--<li>Donors: {{parentResource.summary.donors.join(',')}}, Owner: {{parentResource.summary.owner}}, Distributor:{{parentResource.summary.distributor}}</li>-->
-        <!--<li>Possessor: {{parentResource.summary.possessor}}, Location: {{parentResource.summary.location}}</li>-->
-        <!--<li>Events: {{parentResource.summary.events.join('')}}</li>-->
-      <!--</ul>-->
     </div>
 
     <div ng-if="allSelectedDevices.length > 0">
@@ -169,40 +150,6 @@
       </ul>
       <div style="position: relative;">
         <ul class="selection-summary">
-          <!--'serialNumber': 'foo',
-          '@type': 'Computer',
-          'type': 'Microtower',
-          'placeholder': false,
-          'components': ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11'],
-          'processorModel': 'Intel(R) Atom(TM) CPU 330 @ 1.60GHz',
-          'totalRamSize': 2048
-          'totalHardDriveSize': 305245.3359375,
-          'manufacturer': 'barx',
-          'model': 'bar',
-          'condition': {
-            'components': {'ram': 1.54, 'hardDrives': 3.82, 'processors': 3.59},
-            'appearance': {'score': 0.0, 'general': 'B'},
-            'functionality': {'score': -0.5, 'general': 'B'},
-            'general': {'range': 'Low', 'score': 2.09},
-          },
-          'pricing': {
-            'total': {'standard': 57.6},
-            'platform': {'standard': {'percentage': 0.3, 'amount': 17.78}},
-            'retailer': {'standard': {'percentage': 0.18, 'amount': 10.87}},
-            'refurbisher': {'standard': {'percentage': 0.5, 'amount': 28.94}}
-          },
-          'events': [{
-            'label': 'Test',
-            '_updated': '2018-04-20T09:32:16',
-            'secured': false,
-            'incidence': false,
-            '@type': 'devices:Sell',
-            '_id': '5ad9b3a0a0961e1c60fa6c38',
-            'byUser': '5acfa56aa0961e1b7f28c34a',
-            'to': {'email': 'x.bustamante@ereuse.org'}
-            },
-            ...
-          ]-->
           <li ng-repeat="row in selectionSummary track by row.title">
             <button type="button"
                     class="btn"
