@@ -126,26 +126,19 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           // Update selected lots
           $scope.selectedLots = selector.getLots()
           if ($scope.parentResource) { // TODO in the future parentResource will have to be set!
-            $scope.selectedDevicesInThisLot = selector.getSelectedDevicesInLot($scope.parentResource._id)
-            $scope.areAllDevicesOfCurrentLotSelected = $scope.selectedDevicesInThisLot.length === $scope.getDevices().length
+            $scope.areAllDevicesOfCurrentLotSelected = _.difference(
+              $scope.getDevices(),
+              $scope.selector.getAllSelectedDevices(),
+              (a, b) => {
+                return a._id === b._id
+              }
+            ).length === 0
 
             // mark current lot
             let currentLot = _.find($scope.selectedLots, { _id: $scope.parentResource._id })
             if (currentLot) {
               currentLot.current = true
             }
-
-            // show current lot first with special label
-            // $scope.selectedLots = $scope.selectedLots.filter((lot) => {
-            //   return lot._id !== $scope.parentResource._id
-            // })
-            // if ($scope.selectedDevicesInThisLot.length > 0) {
-            //   $scope.selectedLots.unshift({
-            //     _id: $scope.parentResource._id,
-            //     label: 'Current lot',
-            //     selectedDevices: $scope.selectedDevicesInThisLot
-            //   })
-            // }
           }
 
           // Update selection info info
