@@ -157,7 +157,7 @@
           class="pill-deselect-selected-in-lot"
         >
           <div>
-            {{ lot.label }} ({{ lot.selectedDevices.length }})
+            <span ng-show="lot.current">Current: </span>{{ lot.label }} ({{ lot.selectedDevices.length }})
           </div>
           <button type="button"
                   class="btn"

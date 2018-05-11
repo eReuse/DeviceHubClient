@@ -137,6 +137,7 @@ class ResourceListSelector {
             device: resource,
             originallySelectedInThisLot: _lot._id === parentLot._id
           })
+          lot.hasOriginallySelectedDevices = true
           // if (_lot._id === parentLot._id) {
           //   lot.lot.label = parentLot.label
           // }
@@ -202,23 +203,66 @@ class ResourceListSelector {
       })
     }
 
-    this.getLotsWithOriginallySelectedDevicesOnly = () => {
+    let getNonEmptyLots = () => {
       return getLotsAsList()
         .map((lot) => {
           return {
             _id: lot._id,
             label: lot.lot.label,
             selectedDevices: getSelectedDevices(lot)
-              .filter((device) => {
-                return device.originallySelectedInThisLot
-              }).map((device) => {
-                return device.device
-              })
+            /* .filter((device) => {
+              return device.originallySelectedInThisLot
+            }) */.map((device) => {
+              return device.device
+            })
           }
         }).filter((lot) => {
           return lot.selectedDevices.length > 0
         })
     }
+
+    /**
+     * Returns non empty lots. Lots in which devices where selected have lower indexes
+     */
+    this.getLots = () => {
+      return getNonEmptyLots()
+        // show lots w originally selected devices first
+        // .sort((a, b) => {
+        //   if (a.hasOriginallySelectedDevices && !b.hasOriginallySelectedDevices) {
+        //     return -1
+        //   } else if (!a.hasOriginallySelectedDevices && b.hasOriginallySelectedDevices) {
+        //     return 1
+        //   } else {
+        //     return 0
+        //   }
+        // })
+    }
+
+    // this.getLotsWithOriginallySelectedDevicesOnly = () => {
+    //   return getLotsAsList()
+    //     .map((lot) => {
+    //       return {
+    //         _id: lot._id,
+    //         label: lot.lot.label,
+    //         selectedDevices: getSelectedDevices(lot)
+    //           /* .filter((device) => {
+    //             return device.originallySelectedInThisLot
+    //           }) */.map((device) => {
+    //             return device.device
+    //           })
+    //       }
+    //     }).filter((lot) => {
+    //       return lot.selectedDevices.length > 0
+    //     }).sort((a, b) => {
+    //       if (a.hasOriginallySelectedDevices && !b.hasOriginallySelectedDevices) {
+    //         return -1
+    //       } else if (!a.hasOriginallySelectedDevices && b.hasOriginallySelectedDevices) {
+    //         return 1
+    //       } else {
+    //         return 0
+    //       }
+    //     })
+    // }
 
     let getLotsAsList = () => {
       return lots
@@ -236,6 +280,7 @@ class ResourceListSelector {
       lot.selectedDevices.forEach((device) => {
         device.originallySelectedInThisLot = true
       })
+      lot.hasOriginallySelectedDevices = true
     }
 
     let getSelectedDevices = lot => {
@@ -248,7 +293,8 @@ class ResourceListSelector {
         lot = {
           _id: _lot._id,
           lot: _lot,
-          selectedDevices: []
+          selectedDevices: [],
+          hasOriginallySelectedDevices: false
         }
         lots.push(lot)
       }
