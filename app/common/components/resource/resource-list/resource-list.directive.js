@@ -25,104 +25,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
       pre: ($scope, element) => {
         console.log('scope', JSON.stringify($scope.resource), ', parent', JSON.stringify($scope.parentResource))
 
-        // $scope.parentResource = {
-        //   'label': 'Inventory',
-        //   '_updated': '2018-04-11T10:11:49',
-        //   '_links': {
-        //     'self': {
-        //       'href': 'db1/lots/NCZ0iW0mC',
-        //       'title': 'Lot'
-        //     }
-        //   },
-        //   'summary': {
-        //     'totalNumberDevices': 256,
-        //     'deviceType': 'Netbook HP',
-        //     'status': 'Ready',
-        //     'price': '150 - 300',
-        //     'range': 'Very low - High',
-        //     'components': 'Various components',
-        //     'donors': ['BCN Activa', 'BCN Ayto.'],
-        //     'owner': 'Solidança',
-        //     'distributor': null,
-        //     'possessor': 'Solidança',
-        //     'location': 'Cede Solidança',
-        //     'events:': []
-        //   },
-        //   'perms': [],
-        //   'children': {},
-        //   'byUser': '5ac49232a0961e72684082dc',
-        //   '_created': '2018-04-11T10:11:49',
-        //   '@type': 'Lot',
-        //   '_id': 'n98tkSWa',
-        //   'sharedWith': [],
-        //   'ancestors': [],
-        //   totalNumDevices: 12,
-        //   lots: [
-        //     {
-        //       'label': 'BDR',
-        //       '_updated': '2018-04-11T10:11:49',
-        //       '_links': {
-        //         'self': {
-        //           'href': 'db1/lots/NCZ0iW0mC',
-        //           'title': 'Lot'
-        //         }
-        //       },
-        //       'perms': [],
-        //       'children': {},
-        //       'byUser': '5ac49232a0961e72684082dc',
-        //       '_created': '2018-04-11T10:11:49',
-        //       '@type': 'Lot',
-        //       '_id': 'NCZ0iW0mC',
-        //       'sharedWith': [],
-        //       'ancestors': []
-        //     },
-        //     {
-        //       'label': 'lot1',
-        //       '_updated': '2018-04-04T08:52:46',
-        //       '_links': {
-        //         'self': {
-        //           'href': 'db1/lots/PuDTLblX',
-        //           'title': 'Lot'
-        //         }
-        //       },
-        //       'perms': [
-        //         {
-        //           'perm': 'r',
-        //           'account': '5ac4925da0961e72684083e8'
-        //         }
-        //       ],
-        //       'children': {
-        //       },
-        //       'byUser': '5ac49232a0961e72684082dc',
-        //       '_created': '2018-04-04T08:52:34',
-        //       '@type': 'Lot',
-        //       '_id': 'PuDTLblX',
-        //       'sharedWith': [
-        //         '5ac4925da0961e72684083e8'
-        //       ],
-        //       'ancestors': []
-        //     },
-        //     {
-        //       'label': 'Lot from User',
-        //       '_updated': '2018-04-04T08:52:45',
-        //       '_links': {
-        //         'self': {
-        //           'href': 'db1/lots/XOmGHs3i',
-        //           'title': 'Lot'
-        //         }
-        //       },
-        //       'perms': [],
-        //       'children': {},
-        //       'byUser': '5ac49232a0961e72684082dc',
-        //       '_created': '2018-04-04T08:52:45',
-        //       '@type': 'Lot',
-        //       '_id': 'XOmGHs3i',
-        //       'sharedWith': [],
-        //       'ancestors': []
-        //     }
-        //   ]
-        // }
-
         $scope.session = session
         progressBar.start() // getterDevices.getResources will call this too, but doing it here we avoid delay
         const config = _.cloneDeep(resourceListConfig)
@@ -160,6 +62,14 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar, _.cloneDeep(defaultFilters))
         getterLots.updateSort('-label')
+
+        // Workaround: In root, parentResource is not set. This must be after initializing ResourceListGetter
+        // TODO Delete workaround as soon as API returns root with label and _id set
+        $scope.parentResource = $scope.parentResource || {
+          label: 'Inventory root',
+          _id: '0'
+        }
+
         // Search
         // const parentType = _.get($scope, 'parentResource.@type')
         // if (parentType) {
