@@ -200,181 +200,48 @@ function ResourceListGetterFactory (ResourceSettings) {
               }
               return _.find(r.ancestors, { _id: parentID})
             }) */.map(r => {
-              let lots = []
-              lots = lots.concat(r.ancestors)
-              r.ancestors.forEach((ancestor) => {
-                lots = lots.concat(ancestor.lots.map((lotID) => {
-                  return {
-                    _id: lotID,
-                    '@type': 'Lot'
-                  }
-                }))
-              })
-              lots = lots
+              let parentLots = []
+
+              parentLots = parentLots.concat(r.ancestors)
+
+              // calculate ancestors
+              // r.ancestors.forEach((ancestor) => {
+              //   ancestors = ancestors.concat(ancestor.lots.map((lotID) => {
+              //     return {
+              //       _id: lotID,
+              //       '@type': 'Lot'
+              //     }
+              //   }))
+              // })
+
+              // map different group types to 'Lot' and set label
+              parentLots = parentLots
                 .filter(r => {
-                  return r['@type'] === 'Lot' || r['@type'] === 'Package'
+                  // TODO add incoming/outgoing lot?
+                  return r['@type'] === 'Lot' || r['@type'] === 'Package' || r['@type'] === 'Pallet'
                 }).map(l => {
                   // Workaround to set labels of selected lots provisionally. Necessary because API /devices doesn't include the 'label' property for device ancestors
                   // TODO remove as soon as API returns ancestor lots with labels set
                   // Get ancestors with /lots?where="{ id: [....] }"
                   l.label = l._id
+                  l['@type'] = 'Lot'
                   return l
                 })
 
               _.assign(r, {
-                'status': (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
-                'title': r.type + ' ' + r.manufacturer + ' ' + r.model,
-                // 'price': 150,
-                'donor': 'BCN Ayuntamiento',
-                'owner': 'Solidança',
-                'distributor': 'Donalo',
-                'lots': lots
+                status: (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
+                title: r.type + ' ' + r.manufacturer + ' ' + r.model,
+                // 'price: 150,
+                donor: 'BCN Ayuntamiento',
+                owner: 'Solidança',
+                distributor: 'Donalo',
+                parentLots: parentLots
                 // 'processorModel': 'Intel(R) Dual Core(TM) CPU 540 @ 2.35GHz',
                 // 'totalRamSize': 1024,
               })
               return r
             })
           console.log('received devices', resources.map((d) => { return d.title }))
-          // resources = [
-          //   {
-          //     'placeholder': true,
-          //     '_links': {
-          //       'self': {
-          //         'href': 'db1/devices/469',
-          //         'title': 'Device'
-          //       }
-          //     },
-          //     'isUidSecured': true,
-          //     'components': [],
-          //     '_created': '2018-04-11T16:28:24',
-          //     '_id': '469',
-          //     'ancestors': [],
-          //     '_updated': '2018-04-11T16:28:24',
-          //     'events': [
-          //       {
-          //         '_updated': '2018-04-11T16:28:24',
-          //         'byUser': '5ac49232a0961e72684082dc',
-          //         'secured': false,
-          //         'incidence': false,
-          //         '_id': '5ace37a8a0961e0651b59a50',
-          //         '@type': 'devices:Register'
-          //       }
-          //     ],
-          //     'title': 'Netbook HP XS1',
-          //
-          //     'totalHardDriveSize': 255245.3359375,
-          //     'forceCreation': false,
-          //     '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
-          //     'public': false,
-          //     'perms': [],
-          //     lots: [
-          //       {
-          //         '_id': '1234',
-          //         'label': 'Donación BCN Activa'
-          //       },
-          //       {
-          //         '_id': '1234678',
-          //         'label': 'Venta Ayuntamiento'
-          //       }
-          //     ]
-          //   },
-          //   {
-          //     'placeholder': true,
-          //     '_links': {
-          //       'self': {
-          //         'href': 'db1/devices/468',
-          //         'title': 'Device'
-          //       }
-          //     },
-          //     'isUidSecured': true,
-          //     'components': [],
-          //     '_created': '2018-04-11T16:28:24',
-          //     '_id': '468',
-          //     'ancestors': [],
-          //     '_updated': '2018-04-11T16:28:24',
-          //     'events': [
-          //       {
-          //         '_updated': '2018-04-11T16:28:24',
-          //         'byUser': '5ac49232a0961e72684082dc',
-          //         'secured': false,
-          //         'incidence': false,
-          //         '_id': '5ace37a8a0961e0651b59a4f',
-          //         '@type': 'devices:Register'
-          //       }
-          //     ],
-          //     'title': 'Netbook HP XS1',
-          //     'status': 'Ready',
-          //     '@type': 'Device',
-          //     'type': 'Netbook',
-          //     'manufacturer': 'HP',
-          //     'model': 'XS1',
-          //     'price': 150,
-          //     'donor': 'BCN Ayuntamiento',
-          //     'owner': 'Solidança',
-          //     'distributor': 'Donalo',
-          //     'processorModel': 'Intel(R) Dual Core(TM) CPU 540 @ 2.35GHz',
-          //     'totalRamSize': 1024,
-          //     'totalHardDriveSize': 255245.3359375,
-          //     'forceCreation': false,
-          //     '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
-          //     'public': false,
-          //     'perms': [],
-          //     lots: [
-          //       {
-          //         '_id': '1234',
-          //         'label': 'Donación BCN Activa'
-          //       }
-          //     ]
-          //   },
-          //   {
-          //     'placeholder': true,
-          //     '_links': {
-          //       'self': {
-          //         'href': 'db1/devices/467',
-          //         'title': 'Device'
-          //       }
-          //     },
-          //     'isUidSecured': true,
-          //     'components': [],
-          //     '_created': '2018-04-11T16:28:24',
-          //     '_id': '467',
-          //     'ancestors': [],
-          //     '_updated': '2018-04-11T16:28:24',
-          //     'events': [
-          //       {
-          //         '_updated': '2018-04-11T16:28:24',
-          //         'byUser': '5ac49232a0961e72684082dc',
-          //         'secured': false,
-          //         'incidence': false,
-          //         '_id': '5ace37a8a0961e0651b59a4e',
-          //         '@type': 'devices:Register'
-          //       }
-          //     ],
-          //     'title': 'Netbook Dell ASD1',
-          //     'status': 'Registered',
-          //     '@type': 'Device',
-          //     'type': 'Netbook',
-          //     'manufacturer': 'Dell',
-          //     'model': 'ASD1',
-          //     'price': 270,
-          //     'processorModel': 'Intel(R) Atom(TM) CPU 330 @ 1.60GHz',
-          //     'totalRamSize': 2048,
-          //     'totalHardDriveSize': 305245.3359375,
-          //     'donor': 'BCN Activa',
-          //     'owner': 'Alencop',
-          //     'distributor': null,
-          //     'forceCreation': false,
-          //     '_etag': '5be9ecdf01ab5bfcac23153bec0baece7a68bf99',
-          //     'public': false,
-          //     'perms': [],
-          //     lots: [
-          //       {
-          //         '_id': '1234',
-          //         'label': 'Donación BCN Activa'
-          //       }
-          //     ]
-          //   }
-          // ]
         } else {
           console.log('received lots', resources.map((l) => { return l.label }))
         }

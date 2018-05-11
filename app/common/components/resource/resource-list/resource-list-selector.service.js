@@ -124,9 +124,9 @@ class ResourceListSelector {
       if (!parentLot || !parentLot._id) {
         throw new Error('parentLot must be defined and have _id property set')
       }
-      console.log('resource.lots', resource.lots)
+      console.log('resource.parentLots', resource.parentLots)
 
-      resource.lots.forEach(_lot => {
+      resource.parentLots.forEach(_lot => {
         let lot = getOrCreateLot(_lot)
 
         let existingResource = _.find(lot.selectedDevices, {_id: resource._id})
@@ -170,7 +170,7 @@ class ResourceListSelector {
      * @param resource
      */
     let remove = resource => {
-      resource.lots.forEach(lot => {
+      resource.parentLots.forEach(lot => {
         let selectedLot = this.getLotByID(lot._id)
         if (selectedLot) {
           _.remove(selectedLot.selectedDevices, {'_id': resource['_id']})

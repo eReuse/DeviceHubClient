@@ -206,6 +206,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         function updateSelection () {
           $scope.allSelectedDevices = selector.getAllSelectedDevices()
 
+          // TODO
+          // Display all lots, show up to 10 directly, hide others in collapse
+          // Preference
+          // 1. Current lot
+          // 2. Originally selected
+          // 3. Lots that are 'nearest' to current lot
+
           // Update selected lots
           $scope.selectedLots = selector.getLotsWithOriginallySelectedDevicesOnly()
           if ($scope.parentResource) { // TODO in the future parentResource will have to be set!
