@@ -11,8 +11,9 @@
  * @param {Session} session
  */
 function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session) {
-  const PARENT_PATH = require('./../__init__').PATH
+  const PATH = require('./__init__').PATH
   const NoMorePagesAvailableException = require('./no-more-pages-available.exception')
+  const selectionSummaryTemplateFolder = PATH + '/resource-list-selection-summary'
   return {
     template: require('./resource-list.directive.html'),
     restrict: 'E',
@@ -162,7 +163,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             {
               title: 'Components',
               contentSummary: selector.getAggregatedPropertyOfSelected('processorModel') + ' ' + selector.getAggregatedPropertyOfSelected('totalHardDriveSize', 'Various', ' GB HardDrive') + ' ' + selector.getAggregatedPropertyOfSelected('totalRamSize', 'Various', ' MB RAM'),
-              content: 'Components'
+              templateUrl: selectionSummaryTemplateFolder + '/resource-list-selection-summary-components.directive.html'
             },
             {
               title: 'Providers',
