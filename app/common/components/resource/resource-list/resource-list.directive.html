@@ -153,22 +153,27 @@
           <li ng-repeat="row in selectionSummary track by row.title">
             <button type="button"
                     class="btn"
-                    ng-click="showContent[row.title] = true"
+                    ng-click="selectionDetails[row.title] = true"
             >
               {{row.title}}: {{row.contentSummary}}
             </button>
           </li>
         </ul>
         <div ng-repeat="row in selectionSummary track by row.title"
-             ng-show="showContent[row.title]"
-             style="position: absolute; top: 0; width: 100%; height: 100%; background-color: white;">
-          <div ng-if="::row.templateUrl" ng-include="::row.templateUrl">
+             ng-show="selectionDetails[row.title]"
+             class="selection-details-panel"
+        >
+          <div class="selection-details-content-wrapper">
+            <div class="selection-details-content">
+              <div ng-if="::row.templateUrl" ng-include="::row.templateUrl" ng-class="row.cssClass">
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Buttons -->
-      <div id="buttons" class="row text-center">
+      <div id="buttons" class="row">
         <resource-label-button></resource-label-button>
         <manual-events-button></manual-events-button>
         <!--&lt;!&ndash;<share devices="selector.getAllSelectedDevices()"></share>&ndash;&gt;-->

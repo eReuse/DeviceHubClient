@@ -114,6 +114,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // TODO remove as soon as API returns ancestor lots with labels set
         $scope.parentResource && selector.nameLot($scope.parentResource)
 
+        $scope.selectionDetailsShown = false
+        $scope.selectionDetails = {}
         function updateSelection () {
           $scope.allSelectedDevices = selector.getAllSelectedDevices()
 
@@ -146,24 +148,31 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           $scope.showContent = {}
           $scope.selectionSummary = [
             {
-              title: 'Device',
+              title: 'Type and model',
               contentSummary: selector.getAggregatedPropertyOfSelected('@type', 'Various types') + ' ' + selector.getAggregatedPropertyOfSelected('type', 'Various subtypes') + ' ' + selector.getAggregatedPropertyOfSelected('manufacturer', '') + ' ' + selector.getAggregatedPropertyOfSelected('model', ''),
-              content: 'Type: ' + selector.getAggregatedPropertyOfSelected('@type', 'Various types')
+              content: 'Type: ' + selector.getAggregatedPropertyOfSelected('@type', 'Various types'),
+              cssClass: 'type',
+              templateUrl: selectionSummaryTemplateFolder + '/type.html'
             },
             {
               title: 'Status',
               contentSummary: selector.getAggregatedPropertyOfSelected('status'),
-              content: 'Status'
+              content: 'Status',
+              cssClass: 'status',
+              templateUrl: selectionSummaryTemplateFolder + '/status.html'
             },
             {
               title: 'Price',
               contentSummary: selector.getRangeOfPropertyOfSelected('price'),
-              content: 'Price'
+              content: 'Price',
+              cssClass: 'price',
+              templateUrl: selectionSummaryTemplateFolder + '/price.html'
             },
             {
               title: 'Components',
               contentSummary: selector.getAggregatedPropertyOfSelected('processorModel') + ' ' + selector.getAggregatedPropertyOfSelected('totalHardDriveSize', 'Various', ' GB HardDrive') + ' ' + selector.getAggregatedPropertyOfSelected('totalRamSize', 'Various', ' MB RAM'),
-              templateUrl: selectionSummaryTemplateFolder + '/resource-list-selection-summary-components.directive.html'
+              cssClass: 'components',
+              templateUrl: selectionSummaryTemplateFolder + '/components.html'
             },
             {
               title: 'Providers',
