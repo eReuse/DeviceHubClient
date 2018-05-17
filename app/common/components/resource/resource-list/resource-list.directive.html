@@ -7,54 +7,55 @@
   ></resource-search>
 </div>
 
-<h2>Lots ({{ getLots().length }})</h2>
-<div infinite-scroll="getMoreLots()"
-     infinite-scroll-distance='0.8'
-     infinite-scroll-use-document-bottom="false"
-     infinite-scroll-parent infinite-scroll-disabled="getMoreLotsIsBusy || !morePagesAvailableLots"
-     infinite-scroll-listen-for-event="list:filtered"
-     class="children-lots"
->
-  <ul>
-    <li
-            ng-repeat="lot in getLots()"
-    >
-      <a href="#" ng-click="openFull(lot)">
-        <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.label }}
-      </a>
-    </li>
-    <li>
-      <a href="#" ng-click="getMoreLots()">
-        Show more
-      </a>
-    </li>
-  </ul>
-</div>
 
-<h2>Devices</h2>
-<span>{{getTotalNumberOfDevices() }} in total, {{getDevices().length }} shown</span>
-<button type="button"
-        class="btn"
-        ng-class="{'btn-primary': getDevices().length > 0}"
-        ng-show="!areAllDevicesOfCurrentLotSelected"
-        ng-click="selector.selectAll(getDevices(), parentResource)"
->
-  <span><i class="fa fa-select fa-fw"></i>Select all</span>
-</button>
-<button type="button"
-        class="btn"
-        ng-class="{'btn-primary': getDevices().length > 0}"
-        ng-show="areAllDevicesOfCurrentLotSelected"
-        ng-click="selector.deselectAll(getDevices())"
->
-  <span><i class="fa fa-select fa-fw"></i>Deselect all</span>
-</button>
 <!-- Listing -->
 <div class="row">
   <div
-    ng-class="'col-xs-2 col-sm-4 col-lg-5'"
-    class="fill-height-bar"
+    class="fill-height-bar col-lg-6"
   >
+    <h2>Lots ({{ getLots().length }})</h2>
+    <div infinite-scroll="getMoreLots()"
+         infinite-scroll-distance='0.8'
+         infinite-scroll-use-document-bottom="false"
+         infinite-scroll-parent infinite-scroll-disabled="getMoreLotsIsBusy || !morePagesAvailableLots"
+         infinite-scroll-listen-for-event="list:filtered"
+         class="children-lots"
+    >
+      <ul>
+        <li
+                ng-repeat="lot in getLots()"
+        >
+          <a href="#" ng-click="openFull(lot)">
+            <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.label }}
+          </a>
+        </li>
+        <li ng-show="morePagesAvailableLots">
+          <a href="#" ng-click="getMoreLots()">
+            Show more
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <h2>Devices</h2>
+    <span>{{getTotalNumberOfDevices() }} in total, {{getDevices().length }} shown</span>
+    <button type="button"
+            class="btn"
+            ng-class="{'btn-primary': getDevices().length > 0}"
+            ng-show="!areAllDevicesOfCurrentLotSelected"
+            ng-click="selector.selectAll(getDevices(), parentResource)"
+    >
+      <span><i class="fa fa-select fa-fw"></i>Select all</span>
+    </button>
+    <button type="button"
+            class="btn"
+            ng-class="{'btn-primary': getDevices().length > 0}"
+            ng-show="areAllDevicesOfCurrentLotSelected"
+            ng-click="selector.deselectAll(getDevices())"
+    >
+      <span><i class="fa fa-select fa-fw"></i>Deselect all</span>
+    </button>
+
     <div infinite-scroll="getMore()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
          infinite-scroll-parent infinite-scroll-disabled="getMoreIsBusy || !morePagesAvailable"
          infinite-scroll-listen-for-event="list:filtered"
@@ -130,7 +131,7 @@
     </div>
   </div>
   <!-- Selection -->
-  <aside class="selection col-xs-10 col-sm-8 col-lg-7">
+  <aside class="selection col-lg-6">
     <div ng-if="allSelectedDevices.length === 0">
       <h3>Select devices to view more details</h3>
     </div>
