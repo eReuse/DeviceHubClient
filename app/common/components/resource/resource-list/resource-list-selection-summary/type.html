@@ -3,61 +3,26 @@
         ng-click="selectionDetails[row.title] = false"
         style="float: right;"
 >Hide</button>
-<h3>Components</h3>
-<table class="table" id="device-dashboard-components">
-  <thead>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-    <th>Range</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr ng-show="::selector.getAggregatedPropertyOfSelected('processorModel')">
-    <td>
-      <resource-icon resource-type="Device" resource-subtype="Processor"></resource-icon>
-    </td>
-    <td>Processor</td>
-    <td>{{selector.getAggregatedPropertyOfSelected('processorModel')}}</td>
-    <!--<td class="text-right">
-      <device-range score="resource.condition.components.processors"></device-range>
-    </td>-->
-  </tr>
-  <tr ng-show="::selector.getAggregatedPropertyOfSelected('processorModel')">
-    <td>
-      <resource-icon resource-type="Device" resource-subtype="HardDrive"></resource-icon>
-    </td>
-    <td>
-      Hard drive
-    </td>
-    <td>{{::selector.getAggregatedPropertyOfSelected('totalHardDriveSize', 'Various', ' GB')}}</td>
-    <!--<td class="text-right">-->
-      <!--<device-range score="resource.condition.components.hardDrives"></device-range>-->
-    <!--</td>-->
-  </tr>
-  <tr ng-show="::selector.getAggregatedPropertyOfSelected('totalRamSize', 'Various', ' MB RAM')">
-    <td>
-      <resource-icon resource-type="Device" resource-subtype="RamModule"></resource-icon>
-    </td>
-    <td>
-      RAM
-    </td>
-    <td>{{::selector.getAggregatedPropertyOfSelected('totalRamSize', 'Various', ' MB RAM')}}</td>
-    <td class="text-right">
-      <device-range score="resource.condition.components.ram"></device-range>
-    </td>
-  </tr>
-  <!--<tr ng-show="::graphicCard">-->
-    <!--<td>-->
-      <!--<resource-icon resource-type="Device" resource-subtype="GraphicCard"></resource-icon>-->
-    <!--</td>-->
-    <!--<td>-->
-      <!--Graphics-->
-    <!--</td>-->
-    <!--<td>{{::graphicCard.model}} {{::graphicCard.manufacturer}}</td>-->
-    <!--<td>-->
-    <!--</td>-->
-  <!--</tr>-->
-  </tbody>
-</table>
+<h3>Device</h3>
+<div class="row">
+  <div class="col-lg-6">
+    <div class="descriptor">
+      <h5>Type</h5>
+      <h4>{{ selector.getAggregatedPropertyOfSelected('@type', 'Various types')}}</h4>
+    </div>
+    <div class="descriptor">
+      <h5>Sub type</h5>
+      <h4>{{ selector.getAggregatedPropertyOfSelected('type', 'Various types')}}</h4>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="descriptor">
+      <h5>Manufacturer</h5>
+      <h4>{{ selector.getAggregatedPropertyOfSelected('manufacturer', 'Various manufacturers')}}</h4>
+    </div>
+    <div class="descriptor">
+      <h5>Model</h5>
+      <h4>{{ selector.getAggregatedPropertyOfSelected('model', 'Various models')}}</h4>
+    </div>
+  </div>
+</div>
