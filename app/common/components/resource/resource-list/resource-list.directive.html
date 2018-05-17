@@ -20,7 +20,7 @@
             ng-repeat="lot in getLots()"
     >
       <a href="#" ng-click="openFull(lot)">
-        {{ lot.label }}
+        <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.label }}
       </a>
     </li>
   </ul>
@@ -138,8 +138,9 @@
           ng-repeat="lot in selectedLots | limitTo: numSelectedLotsShown track by lot._id"
           class="pill-deselect-selected-in-lot"
         >
+
           <div>
-            <span ng-show="lot.current">Current: </span>{{ lot.label }} ({{ lot.selectedDevices.length }})
+            <i class="fa fa-fw fa-lg fa-folder-o "></i><span ng-show="lot.current">Current: </span>{{ lot.label }} ({{ lot.selectedDevices.length }})
           </div>
           <button type="button"
                   class="btn"
