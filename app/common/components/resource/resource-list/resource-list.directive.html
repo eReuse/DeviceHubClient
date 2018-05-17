@@ -160,7 +160,7 @@
           </button>
         </li>
       </ul>
-      <div style="position: relative;">
+      <div style="position: relative; overflow-x: hidden;">
         <ul class="selection-summary">
           <li ng-repeat="row in selectionSummary track by row.title">
             <button type="button"
@@ -172,8 +172,8 @@
           </li>
         </ul>
         <div ng-repeat="row in selectionSummary track by row.title"
-             ng-show="selectionDetails[row.title]"
              class="selection-details-panel"
+             ng-class="{ active: selectionDetails[row.title] }"
         >
           <div class="selection-details-content-wrapper">
             <div class="selection-details-content">
