@@ -184,75 +184,107 @@ function ResourceListGetterFactory (ResourceSettings) {
         max_results: 5 // TODO move to config $(window).height() < 800 ? 20 : 30
       }
       console.log('get resources of', this.resourceType)
-      return this.server.getList(q).then(resources => {
-        if (showProgressBar) this.progressBar.complete()
-        if (!getNextPage) this.resources.length = 0
-        console.log('received', resources.length, this.resourceType + 's')
-        // console.log('Resources' + JSON.stringify(resources))
-        if (this.resourceType === 'Device') {
-          resources = resources
-            // Workaround to exclude devices that are not DIRECT children of current lot
-            // TODO remove as soon as API returns only DIRECT children of current lot
-            /* .filter(r => {
-              let parentID = this.defaultFilters && this.defaultFilters['dh$insideLot']
-              if (!parentID) {
-                return true
-              }
-              return _.find(r.ancestors, { _id: parentID})
-            }) */.map(r => {
-              let parentLots = []
 
-              parentLots = parentLots.concat(r.ancestors)
+      return this.server.getList(q).then(this._processResources.bind(this, getNextPage, showProgressBar))
+    }
 
-              // calculate ancestors
-              // r.ancestors.forEach((ancestor) => {
-              //   ancestors = ancestors.concat(ancestor.lots.map((lotID) => {
-              //     return {
-              //       _id: lotID,
-              //       '@type': 'Lot'
-              //     }
-              //   }))
-              // })
+    _processResources (getNextPage, showProgressBar, resources) {
+      if (showProgressBar) this.progressBar.complete()
+      if (!getNextPage) this.resources.length = 0
+      console.log('received', resources.length, this.resourceType + 's')
+      // console.log('Resources' + JSON.stringify(resources))
+      if (this.resourceType === 'Device') {
+        resources = resources
+        // Workaround to exclude devices that are not DIRECT children of current lot
+        // TODO remove as soon as API returns only DIRECT children of current lot
+        /* .filter(r => {
+          let parentID = this.defaultFilters && this.defaultFilters['dh$insideLot']
+          if (!parentID) {
+            return true
+          }
+          return _.find(r.ancestors, { _id: parentID})
+        }) */.map(r => {
+          let parentLots = []
 
-              // map different group types to 'Lot' and set label
-              parentLots = parentLots
-                .filter(r => {
-                  // TODO add incoming/outgoing lot?
-                  return r['@type'] === 'Lot' || r['@type'] === 'Package' || r['@type'] === 'Pallet'
-                }).map(l => {
-                  // Workaround to set labels of selected lots provisionally. Necessary because API /devices doesn't include the 'label' property for device ancestors
-                  // TODO remove as soon as API returns ancestor lots with labels set
-                  // Get ancestors with /lots?where="{ id: [....] }"
-                  l.label = l._id
-                  l['@type'] = 'Lot'
-                  return l
-                })
+          parentLots = parentLots.concat(r.ancestors)
 
-              _.assign(r, {
-                status: (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
-                title: r.type + ' ' + r.manufacturer + ' ' + r.model,
-                // 'price: 150,
-                donor: 'BCN Ayuntamiento',
-                owner: 'Solidança',
-                distributor: 'Donalo',
-                parentLots: parentLots
-                // 'processorModel': 'Intel(R) Dual Core(TM) CPU 540 @ 2.35GHz',
-                // 'totalRamSize': 1024,
-              })
-              return r
+          // calculate ancestors
+          // r.ancestors.forEach((ancestor) => {
+          //   ancestors = ancestors.concat(ancestor.lots.map((lotID) => {
+          //     return {
+          //       _id: lotID,
+          //       '@type': 'Lot'
+          //     }
+          //   }))
+          // })
+
+          // map different group types to 'Lot' and set label
+          parentLots = parentLots
+            .filter(r => {
+              // TODO add incoming/outgoing lot?
+              return r['@type'] === 'Lot' || r['@type'] === 'Package' || r['@type'] === 'Pallet'
+            }).map(l => {
+              // Workaround to set labels of selected lots provisionally. Necessary because API /devices doesn't include the 'label' property for device ancestors
+              // TODO remove as soon as API returns ancestor lots with labels set
+              // Get ancestors with /lots?where="{ id: [....] }"
+              l.label = l._id + ' (Deleted)'
+              l['@type'] = 'Lot'
+              return l
             })
-          console.log('received devices', resources.map((d) => { return d.title }))
-        } else {
-          console.log('received lots', resources.map((l) => { return l.label }))
-        }
 
-        _.assign(this.resources, this.resources.concat(resources))
-        this.totalNumberResources = (resources._meta && resources._meta.total) || 0 // TODO sometimes total number is not returned
-        this.pagination.morePagesAvailable = resources._meta && resources._meta.page * resources._meta.max_results < resources._meta.total
-        this.pagination.totalPages = resources._meta && resources._meta.total
-        // broadcast to callbacks
-        _.invokeMap(this._callbacksOnGetting, _.call, null, this.resources, this.lotID, this.resourceType, this.pagination, getNextPage)
-      })
+          _.assign(r, {
+            status: (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
+            title: r.type + ' ' + r.manufacturer + ' ' + r.model,
+            // 'price: 150,
+            donor: 'BCN Ayuntamiento',
+            owner: 'Solidança',
+            distributor: 'Donalo',
+            parentLots: parentLots
+            // 'processorModel': 'Intel(R) Dual Core(TM) CPU 540 @ 2.35GHz',
+            // 'totalRamSize': 1024,
+          })
+          return r
+        })
+
+        console.log('received devices', resources.map((d) => { return d.title }))
+
+        let lots = {}
+        resources.forEach((device) => {
+          device.parentLots.forEach((lot) => {
+            lots[lot._id] = lots[lot._id] || []
+            lots[lot._id].push(lot)
+          })
+        })
+        let lotIDs = Object.keys(lots)
+
+        ResourceSettings('Lot').server.getList({
+          where: {'_id': { '$in': lotIDs }}
+        }).then((lotsWithLabel) => {
+          console.log('received lotsWithLabel', lotsWithLabel)
+
+          // add labels to lots
+          lotsWithLabel.forEach(lot => {
+            lots[lot._id].forEach(origLot => {
+              origLot.label = lot.label
+            })
+          })
+          this._updateResourcesAfterGet(getNextPage, resources)
+        })
+      } else {
+        console.log('received lots', resources.map((l) => { return l.label }))
+        this._updateResourcesAfterGet(getNextPage, resources)
+      }
+
+      return resources
+    }
+
+    _updateResourcesAfterGet (getNextPage, resources) {
+      _.assign(this.resources, this.resources.concat(resources))
+      this.totalNumberResources = (resources._meta && resources._meta.total) || 0 // TODO sometimes total number is not returned
+      this.pagination.morePagesAvailable = resources._meta && resources._meta.page * resources._meta.max_results < resources._meta.total
+      this.pagination.totalPages = resources._meta && resources._meta.total
+      // broadcast to callbacks
+      _.invokeMap(this._callbacksOnGetting, _.call, null, this.resources, this.lotID, this.resourceType, this.pagination, getNextPage)
     }
 
     getTotalNumberResources () {
