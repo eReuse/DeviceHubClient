@@ -181,7 +181,9 @@ function ResourceListGetterFactory (ResourceSettings) {
         where: this._filters,
         page: this.pagination.pageNumber,
         sort: this._sort,
-        max_results: 5 // TODO move to config $(window).height() < 800 ? 20 : 30
+        max_results: this.resourceType === 'Device'
+          ? ($(window).height() < 800 ? 20 : 30)
+          : 15
       }
       console.log('get resources of', this.resourceType)
 
