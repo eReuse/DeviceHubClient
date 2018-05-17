@@ -116,6 +116,14 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         $scope.selectionDetailsShown = false
         $scope.selectionDetails = {}
+        $scope.numSelectedLotsShown = 10 // TODO get from config
+        $scope.showMoreSelectedLots = () => {
+          $scope.numSelectedLotsShown += 5 // TODO get increment from config
+          setShowDisplayMoreSelectedLotsButton()
+        }
+        function setShowDisplayMoreSelectedLotsButton () {
+          $scope.showDisplayMoreSelectedLotsButton = $scope.selectedLots.length > $scope.numSelectedLotsShown
+        }
         function updateSelection () {
           $scope.allSelectedDevices = selector.getAllSelectedDevices()
 
@@ -143,6 +151,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               currentLot.current = true
             }
           }
+
+          setShowDisplayMoreSelectedLotsButton()
 
           // Update selection info info
           $scope.showContent = {}

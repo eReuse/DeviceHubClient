@@ -135,7 +135,7 @@
       <h3>{{allSelectedDevices.length}} devices in {{selectedLots.length}} lots</h3>
       <ul>
         <li
-          ng-repeat="lot in selectedLots track by lot._id"
+          ng-repeat="lot in selectedLots | limitTo: numSelectedLotsShown track by lot._id"
           class="pill-deselect-selected-in-lot"
         >
           <div>
@@ -146,6 +146,17 @@
                   ng-click="selector.deselectAll(lot.selectedDevices)"
           >
             <span><i class="fa fa-close fa-fw"></i></span>
+          </button>
+        </li>
+        <li
+          ng-show="showDisplayMoreSelectedLotsButton"
+          class="pill-deselect-selected-in-lot ng-scope"
+        >
+          <button type="button"
+                  class="btn"
+                  ng-click="showMoreSelectedLots()"
+          >
+            <span>Show more</span>
           </button>
         </li>
       </ul>
