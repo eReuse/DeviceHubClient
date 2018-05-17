@@ -173,7 +173,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             },
             {
               title: 'Price',
-              contentSummary: selector.getRangeOfPropertyOfSelected('price'),
+              contentSummary: selector.getRangeOfPropertyOfSelected('pricing.total.standard'),
               content: 'Price',
               cssClass: 'price',
               templateUrl: selectionSummaryTemplateFolder + '/price.html'

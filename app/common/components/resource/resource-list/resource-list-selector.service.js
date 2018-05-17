@@ -311,21 +311,23 @@ class ResourceListSelector {
       return lot
     }
 
-    this.getAggregatedPropertyOfSelected = (property, valueIfDifferent = 'Various', postfix) => {
+    this.getAggregatedPropertyOfSelected = (pathToProp, valueIfDifferent = 'Various', postfix) => {
       let selectedDevices = this.getAllSelectedDevices()
       if (selectedDevices.length === 0) {
         return null
       }
-      let aggregatedValue = selectedDevices.reduce((accumulate, device) => {
-        let value = accumulate[property]
-        if (_.has(device, property) && value !== device[property]) {
+      let reducedDevice = selectedDevices.reduce((accumulate, device) => {
+        let value = accumulate[pathToProp]
+        if (_.has(device, pathToProp) && value !== _.get(device, pathToProp)) {
           value = valueIfDifferent
           postfix = ''
         }
-        return {
-          [property]: value
-        }
-      })[property]
+        let reducedValue = {}
+        _.set(reducedValue, pathToProp, value)
+        return reducedValue
+      })
+
+      let aggregatedValue = _.get(reducedDevice, pathToProp)
 
       if (postfix) {
         aggregatedValue += postfix
@@ -333,15 +335,15 @@ class ResourceListSelector {
       return aggregatedValue
     }
 
-    this.getRangeOfPropertyOfSelected = (property) => {
+    this.getRangeOfPropertyOfSelected = (pathToProp) => {
       let min = 0
       let max = 0
       this.getAllSelectedDevices().forEach(device => {
-        if (_.has(device, property) && !min || device[property] < min) {
-          min = device[property]
+        if (_.has(device, pathToProp) && !min || _.get(device, pathToProp) < min) {
+          min = _.get(device, pathToProp)
         }
-        if (_.has(device, property) && device[property] > max) {
-          max = device[property]
+        if (_.has(device, pathToProp) && _.get(device, pathToProp) > max) {
+          max = _.get(device, pathToProp)
         }
       })
       if (min === max) {
