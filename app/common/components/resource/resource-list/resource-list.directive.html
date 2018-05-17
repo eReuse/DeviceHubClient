@@ -131,7 +131,8 @@
     </div>
 
     <div ng-if="allSelectedDevices.length > 0">
-      <h4>Current selection: {{allSelectedDevices.length}} devices:</h4>
+      <h4>Current selection</h4>
+      <h3>{{allSelectedDevices.length}} devices in {{selectedLots.length}} lots</h3>
       <ul>
         <li
           ng-repeat="lot in selectedLots track by lot._id"

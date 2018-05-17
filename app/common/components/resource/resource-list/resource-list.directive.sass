@@ -81,7 +81,7 @@ resource-list
   border-radius: 4px
   padding: 5px
   border: 1px solid #666666
-  margin-bottom: 15px
+  margin-bottom: 6px
   background-color: white
   button
     background-color: transparent
@@ -89,7 +89,7 @@ resource-list
     &.btn:hover, &.btn:focus, &.btn.focus
       color: #333333
   &:not(:last-child)
-    margin-right: 15px
+    margin-right: 6px
 
 .selection-summary
   li
@@ -102,6 +102,11 @@ resource-list
       border: 1px solid #bfbfbf
       width: 100%
       text-align: left
+      &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
+        color: #333333
+        box-shadow: none
+        outline: none
+
 
 .selection-details-panel
   position: absolute
@@ -127,3 +132,8 @@ resource-list
       .type
         .descriptor
           margin-bottom: 30px
+      .btn-hide-details
+        float: left
+        padding: 4px 10px
+        margin-right: 5px
+        border-radius: 5px
