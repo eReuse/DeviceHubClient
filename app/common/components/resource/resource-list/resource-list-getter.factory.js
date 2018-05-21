@@ -52,7 +52,7 @@ function ResourceListGetterFactory (ResourceSettings) {
       this.pagination = {
         morePagesAvailable: true,
         pagesAvailable: null,
-        totalPages: null,
+        totalResources: null,
         pageNumber: 1
       }
 
@@ -196,29 +196,10 @@ function ResourceListGetterFactory (ResourceSettings) {
       console.log('received', resources.length, this.resourceType + 's')
       // console.log('Resources' + JSON.stringify(resources))
       if (this.resourceType === 'Device') {
-        resources = resources
-        // Workaround to exclude devices that are not DIRECT children of current lot
-        // TODO remove as soon as API returns only DIRECT children of current lot
-        /* .filter(r => {
-          let parentID = this.defaultFilters && this.defaultFilters['dh$insideLot']
-          if (!parentID) {
-            return true
-          }
-          return _.find(r.ancestors, { _id: parentID})
-        }) */.map(r => {
+        resources.forEach(r => {
           let parentLots = []
 
           parentLots = parentLots.concat(r.ancestors)
-
-          // calculate ancestors
-          // r.ancestors.forEach((ancestor) => {
-          //   ancestors = ancestors.concat(ancestor.lots.map((lotID) => {
-          //     return {
-          //       _id: lotID,
-          //       '@type': 'Lot'
-          //     }
-          //   }))
-          // })
 
           // map different group types to 'Lot' and set label
           parentLots = parentLots
@@ -238,14 +219,11 @@ function ResourceListGetterFactory (ResourceSettings) {
             status: (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
             title: r.type + ' ' + r.manufacturer + ' ' + r.model,
             // 'price: 150,
-            donor: 'BCN Ayuntamiento',
-            owner: 'Solidança',
-            distributor: 'Donalo',
+            donor: 'BCN Ayuntamiento', // TODO get from events
+            owner: 'Solidança', // TODO get from events
+            distributor: 'Donalo', // TODO get from events
             parentLots: parentLots
-            // 'processorModel': 'Intel(R) Dual Core(TM) CPU 540 @ 2.35GHz',
-            // 'totalRamSize': 1024,
           })
-          return r
         })
 
         console.log('received devices', resources.map((d) => { return d.title }))
@@ -284,7 +262,7 @@ function ResourceListGetterFactory (ResourceSettings) {
       _.assign(this.resources, this.resources.concat(resources))
       this.totalNumberResources = (resources._meta && resources._meta.total) || 0 // TODO sometimes total number is not returned
       this.pagination.morePagesAvailable = resources._meta && resources._meta.page * resources._meta.max_results < resources._meta.total
-      this.pagination.totalPages = resources._meta && resources._meta.total
+      this.pagination.totalResources = resources._meta && resources._meta.total
       // broadcast to callbacks
       _.invokeMap(this._callbacksOnGetting, _.call, null, this.resources, this.lotID, this.resourceType, this.pagination, getNextPage)
     }

@@ -11,7 +11,7 @@ function resourceListFooter () {
     // link: $scope => {
     //   $scope.UIB_TOOLTIP_TEMPLATE = require('./__init__').PATH + '/selected-resources.uib-tooltip-template.html'
     //
-    //   ResourceListGetterBig.callbackOnGetting((__, ___, pag) => { $scope.totalResources = pag.totalPages })
+    //   ResourceListGetterBig.callbackOnGetting((__, ___, pag) => { $scope.totalResources = pag.totalResources })
     //
     //   ResourceListSelectorBig.callbackOnSelection((total, inList) => {
     //     $scope.selectedResources = total
