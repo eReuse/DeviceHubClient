@@ -101,10 +101,29 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         // Selecting
         // $scope.toggleSelect = _.bind(selector.toggle, selector, _)
-        $scope.toggleSelect = (resource, $event) => {
-          selector.toggle(resource, $scope.parentResource)
+        $scope.toggleSelect = (resource, $index, $event) => {
           // Avoids the ng-click from the row (<tr>) to trigger
           $event.stopPropagation()
+
+          if ($event.shiftKey) {
+            console.log('shift click')
+            let lastSelectedIndex = $scope.lastSelectedIndex || 0
+            let start = Math.min(lastSelectedIndex, $index)
+            let end = Math.max(lastSelectedIndex, $index)
+            let allSelected = $scope.devices.slice(start, end + 1)
+
+            selector.selectAll(allSelected, $scope.parentResource)
+          } else if ($event.ctrlKey) {
+            selector.toggle(resource, $scope.parentResource)
+          } else {
+            selector.toggleAndDeselectOthers(resource, $scope.parentResource)
+          }
+          $scope.lastSelectedIndex = $index
+        }
+
+        $scope.deselectAll = (devices) => {
+          $scope.selector.deselectAll(devices)
+          $scope.lastSelectedIndex = 0
         }
 
         // mark all selected devices of current lot as originally selected TODO in the future parentResource will have to be set!
@@ -218,7 +237,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
         $scope.reload = () => {
           getterDevices.getResources()
-          selector.deselectAll()
+          $scope.deselectAll()
         }
 
         // Pagination Devices
@@ -308,7 +327,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         */
 
         function hardReload () {
-          selector.deselectAll()
+          $scope.deselectAll()
           $scope.reload()
         }
 

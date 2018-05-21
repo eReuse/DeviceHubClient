@@ -51,7 +51,7 @@
             class="btn"
             ng-class="{'btn-primary': getDevices().length > 0}"
             ng-show="areAllDevicesOfCurrentLotSelected"
-            ng-click="selector.deselectAll(getDevices())"
+            ng-click="deselectAll(getDevices())"
     >
       <span><i class="fa fa-select fa-fw"></i>Deselect all</span>
     </button>
@@ -85,7 +85,7 @@
               popover-placement="{{popoverPlacement}}"
               popover-class="resource-button-popover"
 
-              ng-click="toggleSelect(resource, $event)"
+              ng-click="toggleSelect(resource, $index, $event)"
           >
             <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
             <td ng-repeat="td in ::config.table.td"
@@ -150,7 +150,7 @@
           </div>
           <button type="button"
                   class="btn"
-                  ng-click="selector.deselectAll(lot.selectedDevices)"
+                  ng-click="deselectAll(lot.selectedDevices)"
           >
             <span><i class="fa fa-close fa-fw"></i></span>
           </button>

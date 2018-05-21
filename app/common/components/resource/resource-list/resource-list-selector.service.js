@@ -61,6 +61,11 @@ class ResourceListSelector {
      * Deselects all given devices
      */
     this.deselectAll = devices => {
+      _deselectAll(devices)
+      _control()
+    }
+
+    let _deselectAll = devices => {
       if (!devices || !devices.slice) {
         return lots.forEach((lot) => {
           lot.selectedDevices.forEach((device) => {
@@ -72,6 +77,14 @@ class ResourceListSelector {
         devices.forEach(device => {
           remove(device)
         })
+      }
+    }
+
+    this.toggleAndDeselectOthers = (device, parentLot) => {
+      let isSelected = this.isSelected(device)
+      _deselectAll()
+      if (!isSelected) {
+        add(device, parentLot)
       }
       _control()
     }
