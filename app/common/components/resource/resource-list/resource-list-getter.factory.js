@@ -215,6 +215,14 @@ function ResourceListGetterFactory (ResourceSettings) {
               return l
             })
 
+          if (parentLots.length === 0) {
+            parentLots.push({
+              _id: 'NoParent',
+              '@type': 'Lot',
+              label: 'Without lot'
+            })
+          }
+
           _.assign(r, {
             status: (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
             title: r.type + ' ' + r.manufacturer + ' ' + r.model,
