@@ -67,17 +67,14 @@ class ResourceListSelector {
 
     let _deselectAll = devices => {
       if (!devices || !devices.slice) {
-        return lots.forEach((lot) => {
-          lot.selectedDevices.forEach((device) => {
-            remove(device.device)
-          })
-        })
-      } else {
-        devices = devices.slice() // given devices might the same array we remove devices from
-        devices.forEach(device => {
-          remove(device)
-        })
+        lots.length = 0
+        return
       }
+
+      devices = devices.slice() // given devices might the same array we remove devices from
+      devices.forEach(device => {
+        remove(device)
+      })
     }
 
     this.toggleAndDeselectOthers = (device, parentLot) => {
@@ -188,8 +185,10 @@ class ResourceListSelector {
         let selectedLot = this.getLotByID(lot._id)
         if (selectedLot) {
           _.remove(selectedLot.selectedDevices, {'_id': resource['_id']})
+          if (selectedLot.selectedDevices === 0) {
+            deleteLotByID(lot._id)
+          }
         }
-        // TODO if selectedDevices.length === 0, delete lots[lot._id] ?
       })
     }
 
@@ -283,6 +282,10 @@ class ResourceListSelector {
 
     this.getLotByID = lotID => {
       return _.find(lots, {_id: lotID})
+    }
+
+    let deleteLotByID = lotID => {
+      _.remove(lots, { _id: lotID })
     }
 
     this.markSelectedDevicesInLotAsOriginal = _lot => {

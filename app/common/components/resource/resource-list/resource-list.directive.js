@@ -67,8 +67,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // Workaround: In root, parentResource is not set. This must be after initializing ResourceListGetter
         // TODO Delete workaround as soon as API returns root with label and _id set
         $scope.parentResource = $scope.parentResource || {
-          label: 'Inventory root',
-          _id: '0'
+          _id: 'NoParent',
+          '@type': 'Lot',
+          label: 'Without lot'
         }
 
         // Search
@@ -116,7 +117,18 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           } else if ($event.ctrlKey) {
             selector.toggle(resource, $scope.parentResource)
           } else {
-            selector.toggleAndDeselectOthers(resource, $scope.parentResource)
+            let isSelected = selector.isSelected(resource)
+            if (isSelected) {
+              if ($scope.allSelectedDevices.length === 1) {
+                selector.toggle(resource, $scope.parentResource) // remove
+              } else {
+                selector.deselectAll()
+                selector.toggle(resource, $scope.parentResource) // add
+              }
+            } else {
+              selector.deselectAll()
+              selector.toggle(resource, $scope.parentResource)
+            }
           }
           $scope.lastSelectedIndex = $index
         }
