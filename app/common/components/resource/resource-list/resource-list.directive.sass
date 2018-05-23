@@ -119,23 +119,49 @@
     margin-right: 6px
 
 .selection-summary
+  margin-bottom: 0
   li
     list-style: none
     outline: none !important
+    &:first-child > button
+      border-top-left-radius: 5px
+      border-top-right-radius: 5px
+    &:last-child > button
+      border-bottom-left-radius: 5px
+      border-bottom-right-radius: 5px
+    &:not(:first-child) > button
+      border-top: none
     button
       background-color: white
       color: #333333
       box-shadow: none
       border: 1px solid #bfbfbf
+
       width: 100%
       text-align: left
       &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
-        color: #333333
         box-shadow: none
         outline: none
+        background-color: #449bb4
+        border-color: white
+        color: white
+        .fa
+          display: block
+          color: white
+      .selection-summary-title
+        display: block
+      .selection-summary-content
+        font-size: 18px
+      .fa
+        float: right
+        font-size: 22px
+        display: none
+
 
 
 .selection-details-panel
+  border: 1px solid #bfbfbf
+  border-radius: 5px
   position: absolute
   top: 0
   width: 100%
