@@ -19,7 +19,7 @@ const v = {
   Device: {view: 'resource-list', resourceType: 'Device', name: 'Devices', fa: 'fa-desktop'},
   // Event: {view: 'resource-list', resourceType: 'Event', name: 'Events', resourceIcon: 'Event'},
   // Place: {view: 'resource-list', resourceType: 'Place', name: 'Places', resourceIcon: 'Place'},
-  Lot: {view: 'resource-list', resourceType: 'Lot', name: 'Lots', resourceIcon: 'Lot'}
+  Lot: {view: 'resource-list', resourceType: 'Lot', name: 'Lots', resourceIcon: 'Lot', fa: 'fa-folder-o'}
   // Pallet: {view: 'resource-list', resourceType: 'Pallet', name: 'Pallets', resourceIcon: 'Pallet'},
   // Package: {view: 'resource-list', resourceType: 'Package', name: 'Packages', resourceIcon: 'Package'},
   // Account: {view: 'resource-list', resourceType: 'Account', name: 'Accounts', resourceIcon: 'Account'},

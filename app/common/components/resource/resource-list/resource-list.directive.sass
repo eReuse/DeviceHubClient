@@ -1,6 +1,28 @@
 @import '_resource-list.directive'
 
-resource-list
+.breadcrumb
+  padding: 6px 0
+  font-size: 22px
+  resource-icon
+    font-size: 1em
+    line-height: inherit
+  a
+    color: grey
+    text-decoration: none
+    &:hover
+      text-decoration: none
+
+.resource-list
+  background-color: #f4f4f4
+  padding: 15px
+
+  .current-lot
+    padding: 15px 30px 30px 30px
+
+  .breadcrumb
+    margin-bottom: 0
+    background-color: transparent
+
   #screener
     display: inline-block
     position: relative
@@ -68,6 +90,7 @@ resource-list
       padding: 5px
       border: 1px solid
       margin-bottom: 6px
+      background-color: white
       &:not(:last-child)
         margin-right: 6px
       a
