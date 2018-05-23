@@ -1,19 +1,15 @@
-<!-- Resource Filters -->
-<div class="row">
-  <resource-search class="col-md-10 col-xs-offset-0 col-md-offset-1 show subview-12 subview-offset-0"
-                   settings="config.search.params"
-                   on-params-changed="onSearchParamsChanged(params)"
-                   default-params="config.search.defaultParams"
-  ></resource-search>
-</div>
-
 
 <!-- Listing -->
 <div class="row">
   <div
     class="fill-height-bar col-lg-6"
   >
-    <h2>Lots ({{ getLots().length }})</h2>
+    <!-- Resource Filters -->
+    <resource-search settings="config.search.params"
+                     on-params-changed="onSearchParamsChanged(params)"
+                     default-params="config.search.defaultParams"
+    ></resource-search>
+    <h4>Lots ({{ getLots().length }})</h4>
     <div class="children-lots"
     >
       <ul>
@@ -32,23 +28,24 @@
       </ul>
     </div>
 
-    <h2>Devices</h2>
-    <span>{{getTotalNumberOfDevices() }} in total, {{getDevices().length }} shown</span>
+    <h4 style="display: inline-block; margin-bottom: 20px;">Devices</h4>
     <button type="button"
             class="btn"
-            ng-class="{'btn-primary': getDevices().length > 0}"
+            style="display: inline-block; padding: 5px 10px; margin-left: 10px;"
+            ng-class="{'btn-info': getDevices().length > 0}"
             ng-show="!areAllDevicesOfCurrentLotSelected"
             ng-click="selector.selectAll(getDevices(), parentResource)"
     >
-      <span><i class="fa fa-select fa-fw"></i>Select all</span>
+      <span>Select all</span>
     </button>
     <button type="button"
             class="btn"
-            ng-class="{'btn-primary': getDevices().length > 0}"
+            style="display: inline-block; padding: 5px 10px; margin-left: 10px;"
+            ng-class="{'btn-info': getDevices().length > 0}"
             ng-show="areAllDevicesOfCurrentLotSelected"
             ng-click="deselectAll(getDevices())"
     >
-      <span><i class="fa fa-select fa-fw"></i>Deselect all</span>
+      <span>Deselect all</span>
     </button>
 
     <div infinite-scroll="getMore()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
@@ -126,7 +123,7 @@
     </div>
   </div>
   <!-- Selection -->
-  <aside class="selection col-lg-6">
+  <aside class="selection col-lg-6 fill-height-bar">
     <div ng-if="allSelectedDevices.length === 0">
       <h3>Select devices to view more details</h3>
     </div>
