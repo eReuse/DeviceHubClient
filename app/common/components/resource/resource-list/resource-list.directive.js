@@ -89,6 +89,11 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           return getterDevices.getTotalNumberResources()
         }
 
+        // Total number of devices
+        $scope.getTotalNumberOfLots = () => {
+          return getterLots.getTotalNumberResources()
+        }
+
         // Sorting
         $scope.sort = {}
         $scope.setSort = _.bind(getterDevices.updateSort, getterDevices, _)
@@ -276,10 +281,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // Let's avoid the user pressing multiple times the 'load more'
         $scope.getMoreLotsIsBusy = false
         $scope.morePagesAvailableLots = true
-        let getMoreLotsFirstTime = false
         $scope.getMoreLots = () => {
-          console.log('getMore (lots) called. getMoreLotsFirstTime', getMoreLotsFirstTime)
-          if (!$scope.getMoreLotsIsBusy && getMoreLotsFirstTime) {
+          console.log('getMore (lots) called.')
+          if (!$scope.getMoreLotsIsBusy) {
             $scope.getMoreLotsIsBusy = true
             try {
               getterLots.getResources(true, false).finally(() => {
@@ -291,7 +295,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               $scope.morePagesAvailableLots = false
             }
           }
-          getMoreLotsFirstTime = true
         }
 
         // If we don't want to collision with tables of subResources we
