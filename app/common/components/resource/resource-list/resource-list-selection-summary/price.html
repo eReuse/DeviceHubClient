@@ -4,61 +4,42 @@
         ng-click="selectionDetails[row.title] = false">
   <i class="fa fa-chevron-left fa-fw"></i>
 </button>
-<h3>Components</h3>
-<table class="table" id="device-dashboard-components">
+<h3>Price</h3>
+<div class="text-center">
+  <div class="btn-group btn-group-sm">
+    <h4 class="text-left">Warranty</h4>
+    <label class="btn btn-primary" ng-model="currencyOptions.val" uib-btn-radio="'standard'">
+      Standard
+    </label>
+    <label class="btn btn-primary"
+           ng-disabled="::!selector.getAggregatedPropertyOfSelected('pricing.refurbisher.warranty2')"
+           uib-tooltip="No 2 year warranty option for this device."
+           tooltip-enable="::!selector.getAggregatedPropertyOfSelected('pricing.refurbisher.warranty2')"
+           ng-model="currencyOptions.val"
+           uib-btn-radio="'warranty2'"
+    >
+      2 year warranty
+    </label>
+  </div>
+</div>
+<table class="table">
   <thead>
   <tr>
     <th></th>
-    <th></th>
-    <th></th>
-    <th>Range</th>
+    <th>%</th>
+    <th>Amount</th>
   </tr>
   </thead>
   <tbody>
-  <tr ng-show="::selector.getAggregatedPropertyOfSelected('processorModel')">
-    <td>
-      <resource-icon resource-type="Device" resource-subtype="Processor"></resource-icon>
-    </td>
-    <td>Processor</td>
-    <td>{{selector.getAggregatedPropertyOfSelected('processorModel')}}</td>
-    <!--<td class="text-right">
-      <device-range score="resource.condition.components.processors"></device-range>
-    </td>-->
+  <tr ng-repeat="roleName in currencyOptions.roles">
+    <td>{{::roleName | humanize}}</td>
+    <td>{{selector.getAggregatedPropertyOfSelected('pricing'+'.'+roleName+'.'+currencyOptions.val+'.'+'percentage') | percentage}}</td>
+    <td>{{selector.getAggregatedPropertyOfSelected('pricing'+'.'+roleName+'.'+currencyOptions.val+'.'+'amount') | currency: currencyOptions.currency }}</td>
   </tr>
-  <tr ng-show="::selector.getAggregatedPropertyOfSelected('processorModel')">
-    <td>
-      <resource-icon resource-type="Device" resource-subtype="HardDrive"></resource-icon>
-    </td>
-    <td>
-      Hard drive
-    </td>
-    <td>{{::selector.getAggregatedPropertyOfSelected('totalHardDriveSize', 'Various', ' GB')}}</td>
-    <!--<td class="text-right">-->
-      <!--<device-range score="resource.condition.components.hardDrives"></device-range>-->
-    <!--</td>-->
+  <tr class="active">
+    <td>Total</td>
+    <td></td>
+    <td>{{selector.getAggregatedPropertyOfSelected('pricing.total'+'.'+currencyOptions.val) | currency: currencyOptions.currency}}</td>
   </tr>
-  <tr ng-show="::selector.getAggregatedPropertyOfSelected('totalRamSize', 'Various', ' MB RAM')">
-    <td>
-      <resource-icon resource-type="Device" resource-subtype="RamModule"></resource-icon>
-    </td>
-    <td>
-      RAM
-    </td>
-    <td>{{::selector.getAggregatedPropertyOfSelected('totalRamSize', 'Various', ' MB RAM')}}</td>
-    <td class="text-right">
-      <device-range score="resource.condition.components.ram"></device-range>
-    </td>
-  </tr>
-  <!--<tr ng-show="::graphicCard">-->
-    <!--<td>-->
-      <!--<resource-icon resource-type="Device" resource-subtype="GraphicCard"></resource-icon>-->
-    <!--</td>-->
-    <!--<td>-->
-      <!--Graphics-->
-    <!--</td>-->
-    <!--<td>{{::graphicCard.model}} {{::graphicCard.manufacturer}}</td>-->
-    <!--<td>-->
-    <!--</td>-->
-  <!--</tr>-->
   </tbody>
 </table>

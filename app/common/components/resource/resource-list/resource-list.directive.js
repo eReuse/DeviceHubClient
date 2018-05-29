@@ -10,7 +10,7 @@
  * @param {ResourceBreadcrumb} ResourceBreadcrumb
  * @param {Session} session
  */
-function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session) {
+function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, UNIT_CODES, CONSTANTS) {
   const PATH = require('./__init__').PATH
   const NoMorePagesAvailableException = require('./no-more-pages-available.exception')
   const selectionSummaryTemplateFolder = PATH + '/resource-list-selection-summary'
@@ -215,6 +215,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               templateUrl: selectionSummaryTemplateFolder + '/price.html'
             },
             {
+              title: 'Condition score',
+              contentSummary: selector.getAggregatedPropertyOfSelected('condition.general.range'),
+              content: 'Condition score',
+              cssClass: 'condition-score',
+              templateUrl: selectionSummaryTemplateFolder + '/condition-score.html'
+            },
+            {
               title: 'Components',
               contentSummary: selector.getAggregatedPropertyOfSelected('processorModel') + ' ' + selector.getAggregatedPropertyOfSelected('totalHardDriveSize', 'Various', ' GB HardDrive') + ' ' + selector.getAggregatedPropertyOfSelected('totalRamSize', 'Various', ' MB RAM'),
               cssClass: 'components',
@@ -315,6 +322,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           if (placement !== $scope.popoverPlacement) $scope.$evalAsync(() => { $scope.popoverPlacement = placement })
         })
 
+        // Selection summary
+
         $scope.statusList = [
           {
             name: 'To prepare'
@@ -335,6 +344,33 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             name: 'Disposed'
           }
         ]
+
+        // components, price and condition score
+
+        // const manufacturerSettings = ResourceSettings('Manufacturer')
+        const deviceSettings = ResourceSettings('Device')
+        $scope.currencyOptions = {
+          currency: CONSTANTS.currency,
+          val: 'standard',
+          roles: ['retailer', 'platform', 'refurbisher']
+        }
+        $scope.hasExplicitPerms = session.hasExplicitPerms()
+        $scope.hardDriveSizeUnit = UNIT_CODES[deviceSettings.schema.totalHardDriveSize.unitCode]
+        $scope.ramSizeUnit = UNIT_CODES[deviceSettings.schema.totalRamSize.unitCode]
+        $scope.appearance = deviceSettings.schema.condition.schema.appearance.schema.general.allowed_description
+        $scope.functionality = deviceSettings.schema.condition.schema.functionality.schema.general.allowed_description
+        // const where = {parent: $scope.resource._id, '@type': {'$in': ['GraphicCard', 'Processor']}}
+        // deviceSettings.server.getList({where: where}).then(components => {
+        //   $scope.graphicCard = _.find(components, {'@type': 'GraphicCard'})
+        //   const cpu = _.find(components, {'@type': 'Processor'})
+        //   if (cpu) {
+        //     manufacturerSettings.server.findText(['label'], cpu.manufacturer.split(' ')[0], true, 1).then(manu => {
+        //       if (manu.length) {
+        //         $scope.processorManufacturer = manu[0]
+        //       }
+        //     })
+        //   }
+        // })
 
         $scope.popovers = {enable: false}
         /* TODO DEPRECATED

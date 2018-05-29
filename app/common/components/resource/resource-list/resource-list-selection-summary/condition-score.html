@@ -1,0 +1,52 @@
+<button
+        type="button"
+        class="btn ng-scope btn-hide-details"
+        ng-click="selectionDetails[row.title] = false">
+  <i class="fa fa-chevron-left fa-fw"></i>
+</button>
+<h3>Condition score</h3>
+<table class="table" id="device-dashboard-condition">
+  <thead>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th>Condition</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr ng-show="::selector.getAggregatedPropertyOfSelected('condition.appearance.general')">
+    <td>
+      <i class="fa fa-fw fa-eye"></i>
+    </td>
+    <td>Appearance</td>
+    <td>
+    </td>
+    <td class="text-right"
+        uib-tooltip="{{::appearance[selector.getAggregatedPropertyOfSelected('condition.appearance.general')]}}">
+      <span class="label label-primary">{{::selector.getAggregatedPropertyOfSelected('condition.appearance.general')}}</span>
+    </td>
+  </tr>
+  <tr ng-show="::functionality[selector.getAggregatedPropertyOfSelected('condition.functionality.general')]">
+    <td>
+      <i class="fa fa-fw fa-wrench"></i>
+    </td>
+    <td>Functionality</td>
+    <td>
+    </td>
+    <td class="text-right" uib-tooltip="{{::functionality[selector.getAggregatedPropertyOfSelected('condition.functionality.general')]}}">
+      <span class="label label-primary">{{::selector.getAggregatedPropertyOfSelected('condition.functionality.general')}}</span>
+    </td>
+  </tr>
+  <tr class="active" ng-show="::selector.getAggregatedPropertyOfSelected('condition.general.range')">
+    <td><i class="fa fa-fw fa-line-chart"></i></td>
+    <td>Total condition</td>
+    <td></td>
+    <td class="text-right">
+      <big>
+        <device-range score="selector.getAggregatedPropertyOfSelected('condition.general.score')"></device-range>
+      </big>
+    </td>
+  </tr>
+  </tbody>
+</table>

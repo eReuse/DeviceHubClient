@@ -5,12 +5,20 @@
   <i class="fa fa-chevron-left fa-fw"></i>
 </button>
 <h3>Status</h3>
-<div>
-  <div class="row status-selector">
-    <div class="col-lg-2" ng-repeat="status in statusList">
-      <div class="btn" ng-class="{ 'btn-info': status.active}">
-        <h4>{{ status.name }}</h4>
-      </div>
+<div class="row">
+  <div class="col-lg-6">
+    <div class="descriptor">
+      <h5>Current status</h5>
+      <h4>{{ selector.getAggregatedPropertyOfSelected('status', 'Various status')}}</h4>
     </div>
   </div>
 </div>
+<!--<div>-->
+  <!--<div class="row status-selector">-->
+    <!--<div class="col-lg-2" ng-repeat="status in statusList">-->
+      <!--<div class="btn" ng-class="{ 'btn-info': status.active}">-->
+        <!--<h4>{{ status.name }}</h4>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->

@@ -232,6 +232,22 @@ function ResourceListGetterFactory (ResourceSettings) {
             distributor: 'Donalo', // TODO get from events
             parentLots: parentLots
           })
+          function conversion (newV) {
+            if (newV <= 2) {
+              return 'VeryLow'
+            } else if (newV <= 3) {
+              return 'Low'
+            } else if (newV <= 4) {
+              return 'Medium'
+            } else if (newV > 4) {
+              return 'High'
+            } else {
+              return '?'
+            }
+          }
+          let pathToScoreRange = 'condition.general.range'
+          let pathToScore = 'condition.general.score'
+          _.set(r, pathToScoreRange, conversion(_.get(r, pathToScore)))
         })
 
         console.log('received devices', resources.map((d) => { return d.title }))
