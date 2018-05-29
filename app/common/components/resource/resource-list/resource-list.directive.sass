@@ -181,18 +181,48 @@
     .selection-details-content
       position: absolute
       top: 0
-      width: 100%
+      width: calc(100% - 30px)
       height: 100%
       //overflow-y: scroll
       padding-right: 10px
       //overflow-x: hidden
-      .components > .table
-        max-width: 650px
-      .type
-        .descriptor
-          margin-bottom: 30px
       .btn-hide-details
         float: left
         padding: 4px 10px
         margin-right: 5px
         border-radius: 5px
+        color: #333333
+        &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
+          color: #333333
+      .components > .table
+        max-width: 650px
+      .type
+        .descriptor
+          margin-bottom: 30px
+      .status-selector
+        display: -webkit-box
+        display: -webkit-flex
+        display: -ms-flexbox
+        display: flex
+        flex-wrap: wrap
+        margin-top: 20px
+        .btn
+          height: 100%
+          text-align: center
+          align-items: center
+          display: -webkit-box
+          display: -webkit-flex
+          display: -ms-flexbox
+          display: flex
+          justify-content: center
+          background-color: #ffffff
+          border-radius: 5px
+          border: 1px solid grey
+          h4
+            font-size: 22px
+          &.btn:hover, &.btn:focus, &.btn.focus
+            color: #333333
+
+
+
+

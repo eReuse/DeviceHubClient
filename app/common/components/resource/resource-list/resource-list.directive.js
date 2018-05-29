@@ -315,6 +315,27 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           if (placement !== $scope.popoverPlacement) $scope.$evalAsync(() => { $scope.popoverPlacement = placement })
         })
 
+        $scope.statusList = [
+          {
+            name: 'To prepare'
+          },
+          {
+            name: 'Ready'
+          },
+          {
+            name: 'Reserved'
+          },
+          {
+            name: 'Sold'
+          },
+          {
+            name: 'To dispose'
+          },
+          {
+            name: 'Disposed'
+          }
+        ]
+
         $scope.popovers = {enable: false}
         /* TODO DEPRECATED
         if ($scope.type === 'medium') {
