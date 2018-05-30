@@ -10,7 +10,7 @@
  * @param {ResourceBreadcrumb} ResourceBreadcrumb
  * @param {Session} session
  */
-function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, UNIT_CODES, CONSTANTS) {
+function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, UNIT_CODES, CONSTANTS, SearchService) {
   const PATH = require('./__init__').PATH
   const NoMorePagesAvailableException = require('./no-more-pages-available.exception')
   const selectionSummaryTemplateFolder = PATH + '/resource-list-selection-summary'
@@ -428,6 +428,20 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         //     })
         //   }
         // })
+
+        // Events
+        $scope.showDevicesOfEvent = (event) => {
+          // ResourceBreadcrumb.goToRoot() TODO
+          let searchParam = {
+            key: 'event_id',
+            name: 'Has event',
+            // $$hashKey: 'object:7368',
+            description: 'Match only devices that have a specific event.',
+            placeholder: 'ID of event'
+          }
+          let value = event._id
+          SearchService.addSearchParameter(searchParam, value)
+        }
 
         $scope.popovers = {enable: false}
         /* TODO DEPRECATED

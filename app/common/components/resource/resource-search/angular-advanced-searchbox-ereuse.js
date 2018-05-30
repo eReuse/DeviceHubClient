@@ -12,7 +12,7 @@
 (function () {
 
   angular.module('angular-advanced-searchbox', [])
-  .directive('nitAdvancedSearchbox', function (ResourceSettings) {
+  .directive('nitAdvancedSearchbox', function (ResourceSettings, SearchService) {
     return {
       restrict: 'E',
       scope: {
@@ -89,6 +89,11 @@
             )
             // TODO: hide used suggestion
           }
+
+          function parametersAdded(param, value) {
+            $scope.addSearchParam(param, value)
+          }
+          SearchService.callbackOnSearchUpdate(parametersAdded)
 
           $scope.typeaheadCanRemove = function (e) {
             return e.keyCode == 8 && e.target.value.length == 0
