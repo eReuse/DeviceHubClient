@@ -1,29 +1,39 @@
-<button
-        type="button"
-        class="btn ng-scope btn-hide-details"
-        ng-click="selectionDetails[row.title] = false">
-  <i class="fa fa-chevron-left fa-fw"></i>
-</button>
-<h3>Device</h3>
-<div class="row">
-  <div class="col-lg-6">
-    <div class="descriptor">
+<div class="selection-details-content">
+  <button
+          type="button"
+          class="btn ng-scope btn-hide-details"
+          ng-click="selectionDetails[row.title] = false">
+    <i class="fa fa-chevron-left fa-fw"></i>
+  </button>
+  <h3>Device</h3>
+  <div class="row">
+    <div class="col-lg-6">
       <h5>Type</h5>
       <h4>{{ selector.getAggregatedPropertyOfSelected('@type', 'Various types')}}</h4>
     </div>
-    <div class="descriptor">
+    <div class="col-lg-6">
       <h5>Sub type</h5>
       <h4>{{ selector.getAggregatedPropertyOfSelected('type', 'Various types')}}</h4>
     </div>
   </div>
-  <div class="col-lg-6">
-    <div class="descriptor">
+  <div class="row">
+    <div class="col-lg-6">
       <h5>Manufacturer</h5>
       <h4>{{ selector.getAggregatedPropertyOfSelected('manufacturer', 'Various manufacturers')}}</h4>
     </div>
-    <div class="descriptor">
+    <div class="col-lg-6">
       <h5>Model</h5>
       <h4>{{ selector.getAggregatedPropertyOfSelected('model', 'Various models')}}</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-6">
+      <h5>Serial number</h5>
+      <h4>{{ selector.getAggregatedPropertyOfSelected('serialNumber', 'Various serial numbers')}}</h4>
+    </div>
+    <div class="col-lg-6">
+      <h5>HID</h5>
+      <h4>{{ selector.getAggregatedPropertyOfSelected('hid', 'Various hids')}}</h4>
     </div>
   </div>
 </div>

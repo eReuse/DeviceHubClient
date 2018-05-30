@@ -217,17 +217,13 @@ class ResourceListSelector {
 
     let getNonEmptyLots = () => {
       return getLotsAsList()
-        .map((lot) => {
-          return {
-            _id: lot._id,
-            label: lot.lot.label,
-            selectedDevices: getSelectedDevices(lot)
-            /* .filter((device) => {
-              return device.originallySelectedInThisLot
-            }) */.map((device) => {
-              return device.device
-            })
-          }
+        .map((_lot) => {
+          let selectedDevices = getSelectedDevices(_lot).map((device) => {
+            return device.device
+          })
+          let lot = {}
+          _.assign(lot, _lot.lot, { selectedDevices: selectedDevices })
+          return lot
         }).filter((lot) => {
           return lot.selectedDevices.length > 0
         })
@@ -374,6 +370,16 @@ class ResourceListSelector {
         list = _.get(device, pathToProp, []).concat(list)
       })
       return list
+    }
+
+    this.getAggregatedSetOfSelected = (pathToProp, valueIdProp) => {
+      let set = {}
+      this.getAllSelectedDevices().forEach(device => {
+        _.get(device, pathToProp, []).forEach(value => {
+          set[value[valueIdProp]] = value
+        })
+      })
+      return _.values(set)
     }
 
     /**

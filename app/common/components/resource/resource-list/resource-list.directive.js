@@ -192,6 +192,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
           setShowDisplayMoreSelectedLotsButton()
 
+          $scope.selection = { // TODO move all selectionProps to .selection
+            events: selector.getAggregatedSetOfSelected('events', '_id'),
+            lots: selector.getAggregatedSetOfSelected('parentLots', '_id')
+          }
           // Update selection info
           $scope.showContent = {}
           $scope.selectionSummary = [
@@ -238,14 +242,18 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             // },
             {
               title: 'Events',
-              contentSummary: '10 events',
+              contentSummary: $scope.selection.events.length + ' events',
               cssClass: 'events',
               templateUrl: selectionSummaryTemplateFolder + '/events.html'
+            },
+            {
+              title: 'Lots',
+              contentSummary: $scope.selection.lots.length + ' lots',
+              cssClass: 'lots',
+              templateUrl: selectionSummaryTemplateFolder + '/lots.html'
             }
           ]
-          $scope.selection = { // TODO move all selectionProps to .selection
-            events: selector.getAggregatedListOfSelected('events')
-          }
+
         }
         selector.callbackOnSelection(updateSelection)
         updateSelection()
@@ -395,6 +403,11 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           }
           let value = event._id
           SearchService.addSearchParameter(searchParam, value)
+        }
+
+        // selection summary lots
+        $scope.showLot = (lot) => {
+          ResourceBreadcrumb.go(lot)
         }
 
         $scope.popovers = {enable: false}
