@@ -132,7 +132,7 @@
       <ul>
         <li
           ng-repeat="lot in selectedLots | limitTo: numSelectedLotsShown track by lot._id"
-          class="pill-deselect-selected-in-lot"
+          class="pill-lot pill-lot-flex"
           ng-click="showLot(lot)"
         >
 
@@ -148,7 +148,7 @@
         </li>
         <li
           ng-show="showDisplayMoreSelectedLotsButton"
-          class="pill-deselect-selected-in-lot ng-scope"
+          class="pill-lot pill-lot-flex"
         >
           <button type="button"
                   class="btn"

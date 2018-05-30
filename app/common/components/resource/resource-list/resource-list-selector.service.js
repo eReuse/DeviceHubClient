@@ -376,7 +376,8 @@ class ResourceListSelector {
       let set = {}
       this.getAllSelectedDevices().forEach(device => {
         _.get(device, pathToProp, []).forEach(value => {
-          set[value[valueIdProp]] = value
+          let id = value[valueIdProp]
+          set[id] = value
         })
       })
       return _.values(set)

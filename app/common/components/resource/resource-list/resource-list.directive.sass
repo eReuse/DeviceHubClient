@@ -99,12 +99,9 @@
         color: #333333
         text-decoration: none
 
-#device-dashboard-components td:last-child span
-  display: block
 
-.pill-deselect-selected-in-lot
+.pill-lot
   list-style: none
-  display: inline-flex
   border-radius: 4px
   padding: 5px
   border: 1px solid #666666
@@ -118,6 +115,9 @@
       color: #333333
   &:not(:last-child)
     margin-right: 6px
+
+.pill-lot-flex
+  display: inline-flex
 
 .selection-summary
   margin-bottom: 0
@@ -186,6 +186,48 @@
       height: 100%
       padding: 0
       overflow-x: hidden
+      .components > .table
+        max-width: 650px
+      .condition-score
+        td:last-child span
+          display: block
+      .lots
+        .pill-lot-container
+          list-style: none
+          &:not(:last-child)
+            margin-bottom: 10px
+          .device
+            list-style: none
+            display:
+            padding: 5px
+            &:not(:last-child)
+              margin-right: 6px
+      .type
+        .descriptor
+          margin-bottom: 30px
+      .status-selector
+        display: -webkit-box
+        display: -webkit-flex
+        display: -ms-flexbox
+        display: flex
+        flex-wrap: wrap
+        margin-top: 20px
+        .btn
+          height: 100%
+          text-align: center
+          align-items: center
+          display: -webkit-box
+          display: -webkit-flex
+          display: -ms-flexbox
+          display: flex
+          justify-content: center
+          background-color: #ffffff
+          border-radius: 5px
+          border: 1px solid grey
+          h4
+            font-size: 22px
+          &.btn:hover, &.btn:focus, &.btn.focus
+            color: #333333
       .selection-details-content
         padding: 15px
         .btn-hide-details
@@ -196,37 +238,6 @@
           color: #333333
           &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
             color: #333333
-        .components > .table
-          max-width: 650px
-        .condition-score
-          td:last-child span
-            display: block
-        .type
-          .descriptor
-            margin-bottom: 30px
-        .status-selector
-          display: -webkit-box
-          display: -webkit-flex
-          display: -ms-flexbox
-          display: flex
-          flex-wrap: wrap
-          margin-top: 20px
-          .btn
-            height: 100%
-            text-align: center
-            align-items: center
-            display: -webkit-box
-            display: -webkit-flex
-            display: -ms-flexbox
-            display: flex
-            justify-content: center
-            background-color: #ffffff
-            border-radius: 5px
-            border: 1px solid grey
-            h4
-              font-size: 22px
-            &.btn:hover, &.btn:focus, &.btn.focus
-              color: #333333
 
 
 

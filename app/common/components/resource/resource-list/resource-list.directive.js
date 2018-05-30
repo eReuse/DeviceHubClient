@@ -154,14 +154,17 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         $scope.selectionDetailsShown = false
         $scope.selectionDetails = {}
-        $scope.numSelectedLotsShown = 10 // TODO get from config
+        $scope.numSelectedLotsShown = 3 // TODO get from config
+        $scope.showDisplayMoreSelectedLotsButton = true
         $scope.showMoreSelectedLots = () => {
-          $scope.numSelectedLotsShown += 5 // TODO get increment from config
-          setShowDisplayMoreSelectedLotsButton()
+          // $scope.numSelectedLotsShown += 5 // TODO get increment from config
+          $scope.selectionDetails['Lots'] = true
         }
-        function setShowDisplayMoreSelectedLotsButton () {
-          $scope.showDisplayMoreSelectedLotsButton = $scope.selectedLots.length > $scope.numSelectedLotsShown
-        }
+        // function setShowDisplayMoreSelectedLotsButton () {
+        //   $scope.showDisplayMoreSelectedLotsButton = $scope.selectedLots.length > $scope.numSelectedLotsShown
+        // }
+        // setShowDisplayMoreSelectedLotsButton()
+
         function updateSelection () {
           $scope.allSelectedDevices = selector.getAllSelectedDevices()
 
@@ -190,11 +193,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             }
           }
 
-          setShowDisplayMoreSelectedLotsButton()
-
           $scope.selection = { // TODO move all selectionProps to .selection
             events: selector.getAggregatedSetOfSelected('events', '_id'),
-            lots: selector.getAggregatedSetOfSelected('parentLots', '_id')
+            lots: $scope.selectedLots
           }
           // Update selection info
           $scope.showContent = {}
@@ -253,7 +254,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               templateUrl: selectionSummaryTemplateFolder + '/lots.html'
             }
           ]
-
         }
         selector.callbackOnSelection(updateSelection)
         updateSelection()

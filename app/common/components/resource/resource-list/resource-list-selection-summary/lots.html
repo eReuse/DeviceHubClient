@@ -5,17 +5,34 @@
           ng-click="selectionDetails[row.title] = false">
     <i class="fa fa-chevron-left fa-fw"></i>
   </button>
-  <h3>Lots</h3>
+  <h3>Selected lots and devices</h3>
   <ul>
     <li
             ng-repeat="lot in selection.lots track by lot._id"
-            class="pill-deselect-selected-in-lot"
             ng-click="showLot(lot)"
+            class="pill-lot-container"
     >
 
-      <div>
-        <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.label }}
+      <div class="pill-lot pill-lot-flex">
+        <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.label }} ({{lot.selectedDevices.length}})
+        <button type="button"
+                class="btn"
+                ng-click="deselectAll(lot.selectedDevices)"
+        >
+          <span><i class="fa fa-close fa-fw"></i></span>
+        </button>
       </div>
+      <ul>
+        <li
+          ng-repeat="device in lot.selectedDevices track by device._id"
+          class="device"
+        >
+          <span>
+            <i class="fa fa-fw fa-lg fa-desktop"></i>
+            {{ device.model }}
+          </span>
+        </li>
+      </ul>
     </li>
   </ul>
 </div>
