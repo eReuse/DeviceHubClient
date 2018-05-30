@@ -51,10 +51,10 @@
     outline-offset: -2px
 
   .fill-height-bar
-    height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight} - #{$tabsHeight} - #{$optionsMenuHeight} - #{$searchHeight})
-    @media (max-width: $screen-xs-max)
-      height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight} - #{$tabsHeight})
+    height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$optionsMenuHeight})
     overflow-y: auto
+    @media (max-width: $screen-xs-max)
+      height: calc(100vh - #{$navbar-height} - #{$footerHeight})
 
   #resource-list-table tr
     *
@@ -110,6 +110,7 @@
   border: 1px solid #666666
   margin-bottom: 6px
   background-color: white
+  cursor: pointer
   button
     background-color: transparent
     padding: 0
