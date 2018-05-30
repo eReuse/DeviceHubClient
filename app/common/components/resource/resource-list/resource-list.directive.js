@@ -229,13 +229,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               cssClass: 'components',
               templateUrl: selectionSummaryTemplateFolder + '/components.html'
             },
-            {
-              title: 'Providers',
-              contentSummary: 'Donor:' + selector.getAggregatedPropertyOfSelected('donor') || 'No donor' +
-              'Owner:' + selector.getAggregatedPropertyOfSelected('donor') || 'No owner' +
-              'Distributor:' + selector.getAggregatedPropertyOfSelected('distributor') || 'No distributor',
-              content: 'Providers'
-            },
+            // {
+            //   title: 'Providers',
+            //   contentSummary: 'Donor:' + selector.getAggregatedPropertyOfSelected('donor') || 'No donor' +
+            //   'Owner:' + selector.getAggregatedPropertyOfSelected('donor') || 'No owner' +
+            //   'Distributor:' + selector.getAggregatedPropertyOfSelected('distributor') || 'No distributor',
+            //   content: 'Providers'
+            // },
             {
               title: 'Events',
               contentSummary: '10 events',
@@ -243,54 +243,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               templateUrl: selectionSummaryTemplateFolder + '/events.html'
             }
           ]
-          $scope.selection = { // TODO move all props to .selection
-            events: [
-              {
-                '_id': '5acfa596a0961e1b7f28c695',
-                'incidence': false,
-                '@type': 'devices:Sell',
-                'geo': {
-                  'coordinates': [
-                    7.171249574141257,
-                    48.75202380183188
-                  ],
-                  'type': 'Point',
-                  'accuracy': 100
-                },
-                '_updated': '2018-04-12T18:29:42',
-                'byUser': '5acfa56aa0961e1b7f28c34a',
-                'secured': false
-              },
-              {
-                '_id': '5acfa56ea0961e1b7f28c358',
-                'incidence': false,
-                '@type': 'devices:Reserve',
-                'comment': '',
-                'label': '28',
-                'snapshotSoftware': 'Workbench',
-                '_updated': '2018-04-12T18:29:02',
-                'byUser': '5acfa56aa0961e1b7f28c34a',
-                'secured': false
-              },
-              {
-                '_id': '5acfa56ea0961e1b7f28c357',
-                'incidence': false,
-                '@type': 'devices:TestHardDrive',
-                'error': false,
-                '_updated': '2018-04-12T18:29:02',
-                'type': 'Short offline',
-                'byUser': '5acfa56aa0961e1b7f28c34a',
-                'secured': false
-              },
-              {
-                '_id': '5acfa56ea0961e1b7f28c356',
-                'incidence': false,
-                '@type': 'devices:Register',
-                '_updated': '2018-04-12T18:29:02',
-                'byUser': '5acfa56aa0961e1b7f28c34a',
-                'secured': false
-              }
-            ] // selector.getAggregatedPropertyOfSelected('events')
+          $scope.selection = { // TODO move all selectionProps to .selection
+            events: selector.getAggregatedListOfSelected('events')
           }
         }
         selector.callbackOnSelection(updateSelection)

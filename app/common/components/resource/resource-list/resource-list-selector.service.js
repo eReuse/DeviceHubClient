@@ -368,6 +368,14 @@ class ResourceListSelector {
       return min + ' - ' + max
     }
 
+    this.getAggregatedListOfSelected = (pathToProp) => {
+      let list = []
+      this.getAllSelectedDevices().forEach(device => {
+        list = _.get(device, pathToProp, []).concat(list)
+      })
+      return list
+    }
+
     /**
      * Performs common tasks after adding/removing resources on both lists.
      * @private

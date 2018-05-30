@@ -176,7 +176,10 @@
         >
           <div class="selection-details-content-wrapper">
             <div class="selection-details-content-container">
-              <div ng-if="::row.templateUrl" ng-include="::row.templateUrl" ng-class="row.cssClass">
+              <div ng-if="::row.templateUrl"
+                   ng-include="::row.templateUrl"
+                   ng-class="row.cssClass"
+                   style="position: relative">
               </div>
             </div>
           </div>
