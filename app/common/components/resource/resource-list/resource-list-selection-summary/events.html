@@ -1,0 +1,42 @@
+<button
+        type="button"
+        class="btn btn-hide-details"
+        ng-click="selectionDetails[row.title] = false">
+  <i class="fa fa-chevron-left fa-fw"></i>
+</button>
+<div ng-repeat="event in selection.events track by event._id"
+     class="selection-details-panel"
+     ng-class="{ active: selectionDetails[event._id] }"
+>
+  <div class="selection-details-content-wrapper">
+    <div class="selection-details-content">
+      <button
+              type="button"
+              class="btn btn-hide-details"
+              ng-click="selectionDetails[event._id] = false">
+        <i class="fa fa-chevron-left fa-fw"></i>
+      </button>
+      <div ng-switch="event['@type']">
+        <reserve-view resource="event" ng-switch-when="devices:Reserve"></reserve-view>
+        <sell-view resource="event" ng-switch-when="devices:Sell"></sell-view>
+        <div ng-switch-default>
+          <h3>{{ utils.getResourceTitle(event) }}</h3>
+          <button
+                  type="button"
+                  class="btn"
+                  ng-click="showDevicesOfEvent(event)">
+            View devices
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<li ng-repeat="event in selection.events track by event._id">
+  <button
+          type="button"
+          class="btn"
+          ng-click="selectionDetails[event._id] = true">
+    <h4>{{ utils.getResourceTitle(event) }}</h4>
+  </button>
+</li>

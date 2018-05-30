@@ -26,6 +26,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
       pre: ($scope, element) => {
         console.log('scope', JSON.stringify($scope.resource), ', parent', JSON.stringify($scope.parentResource))
 
+        $scope.utils = require('./../../utils.js')
+
         $scope.session = session
         progressBar.start() // getterDevices.getResources will call this too, but doing it here we avoid delay
         const config = _.cloneDeep(resourceListConfig)
@@ -190,7 +192,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
           setShowDisplayMoreSelectedLotsButton()
 
-          // Update selection info info
+          // Update selection info
           $scope.showContent = {}
           $scope.selectionSummary = [
             {
@@ -233,8 +235,63 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               'Owner:' + selector.getAggregatedPropertyOfSelected('donor') || 'No owner' +
               'Distributor:' + selector.getAggregatedPropertyOfSelected('distributor') || 'No distributor',
               content: 'Providers'
+            },
+            {
+              title: 'Events',
+              contentSummary: '10 events',
+              cssClass: 'events',
+              templateUrl: selectionSummaryTemplateFolder + '/events.html'
             }
           ]
+          $scope.selection = { // TODO move all props to .selection
+            events: [
+              {
+                '_id': '5acfa596a0961e1b7f28c695',
+                'incidence': false,
+                '@type': 'devices:Sell',
+                'geo': {
+                  'coordinates': [
+                    7.171249574141257,
+                    48.75202380183188
+                  ],
+                  'type': 'Point',
+                  'accuracy': 100
+                },
+                '_updated': '2018-04-12T18:29:42',
+                'byUser': '5acfa56aa0961e1b7f28c34a',
+                'secured': false
+              },
+              {
+                '_id': '5acfa56ea0961e1b7f28c358',
+                'incidence': false,
+                '@type': 'devices:Reserve',
+                'comment': '',
+                'label': '28',
+                'snapshotSoftware': 'Workbench',
+                '_updated': '2018-04-12T18:29:02',
+                'byUser': '5acfa56aa0961e1b7f28c34a',
+                'secured': false
+              },
+              {
+                '_id': '5acfa56ea0961e1b7f28c357',
+                'incidence': false,
+                '@type': 'devices:TestHardDrive',
+                'error': false,
+                '_updated': '2018-04-12T18:29:02',
+                'type': 'Short offline',
+                'byUser': '5acfa56aa0961e1b7f28c34a',
+                'secured': false
+              },
+              {
+                '_id': '5acfa56ea0961e1b7f28c356',
+                'incidence': false,
+                '@type': 'devices:Register',
+                '_updated': '2018-04-12T18:29:02',
+                'byUser': '5acfa56aa0961e1b7f28c34a',
+                'secured': false
+              }
+            ] // selector.getAggregatedPropertyOfSelected('events')
+          }
         }
         selector.callbackOnSelection(updateSelection)
         updateSelection()
