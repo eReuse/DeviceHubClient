@@ -13,15 +13,19 @@ function groupResourceButton () {
       resourceType: '@',
       success: '&',
       getResources: '&',
-      registerToResourcesUpdate: '&'
+      registerToResourcesUpdate: '&',
+      resource: '='
     },
     link: $scope => {
       function setView () {
         $scope.resources = $scope.getResources()
       }
-      setView()
-      $scope.registerToResourcesUpdate({ callback: setView })
-
+      if ($scope.resource) {
+        $scope.resources = [ $scope.resource ]
+      } else {
+        setView()
+        $scope.registerToResourcesUpdate({ callback: setView })
+      }
       $scope.menu = [
         // {title: 'Lot', group: 'Lot', resourceTypes: ['Package', 'Device', 'Lot', 'Pallet']},
         {
