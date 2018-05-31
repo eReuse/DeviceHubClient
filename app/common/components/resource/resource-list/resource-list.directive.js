@@ -64,7 +64,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         getterDevices.callbackOnGetting(_.bind(selector.reAddToLot, selector, _))
 
         const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar, _.cloneDeep(defaultFilters))
-        getterLots.updateSort('-label')
+        getterLots.updateSort('label')
 
         // Workaround: In root, parentResource is not set. This must be after initializing ResourceListGetter
         // TODO Delete workaround as soon as API returns root with label and _id set
