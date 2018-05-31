@@ -166,7 +166,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // setShowDisplayMoreSelectedLotsButton()
 
         function updateSelection () {
-          $scope.allSelectedDevices = selector.getAllSelectedDevices()
+          $scope.allSelectedDevices = selector.getAllSelectedDevices().slice()
 
           // TODO
           // Display all lots, show up to 10 directly, hide others in collapse
@@ -180,7 +180,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           if ($scope.parentResource) { // TODO in the future parentResource will have to be set!
             $scope.areAllDevicesOfCurrentLotSelected = _.difference(
               $scope.getDevices(),
-              $scope.selector.getAllSelectedDevices(),
+              $scope.allSelectedDevices,
               (a, b) => {
                 return a._id === b._id
               }
@@ -194,51 +194,52 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           }
 
           $scope.selection = { // TODO move all selectionProps to .selection
-            events: selector.getAggregatedSetOfSelected('events', '_id'),
+            events: selector.getAggregatedSetOfSelected($scope.allSelectedDevices, 'events', '_id'),
             lots: $scope.selectedLots
           }
+
           // Update selection info
           $scope.showContent = {}
           $scope.selectionSummary = [
             {
               title: 'Type and model',
-              contentSummary: selector.getAggregatedPropertyOfSelected('@type', 'Various types') + ' ' + selector.getAggregatedPropertyOfSelected('type', 'Various subtypes') + ' ' + selector.getAggregatedPropertyOfSelected('manufacturer', '') + ' ' + selector.getAggregatedPropertyOfSelected('model', ''),
-              content: 'Type: ' + selector.getAggregatedPropertyOfSelected('@type', 'Various types'),
+              contentSummary: selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, '@type', 'Various types') + ' ' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'type', 'Various subtypes') + ' ' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'manufacturer', '') + ' ' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'model', ''),
+              content: 'Type: ' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, '@type', 'Various types'),
               cssClass: 'type',
               templateUrl: selectionSummaryTemplateFolder + '/type.html'
             },
             {
               title: 'Status',
-              contentSummary: selector.getAggregatedPropertyOfSelected('status'),
+              contentSummary: selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'status'),
               content: 'Status',
               cssClass: 'status',
               templateUrl: selectionSummaryTemplateFolder + '/status.html'
             },
             {
               title: 'Price',
-              contentSummary: selector.getRangeOfPropertyOfSelected('pricing.total.standard'),
+              contentSummary: selector.getRangeOfPropertyOfSelected($scope.allSelectedDevices, 'pricing.total.standard'),
               content: 'Price',
               cssClass: 'price',
               templateUrl: selectionSummaryTemplateFolder + '/price.html'
             },
             {
               title: 'Condition score',
-              contentSummary: selector.getAggregatedPropertyOfSelected('condition.general.range'),
+              contentSummary: selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'condition.general.range'),
               content: 'Condition score',
               cssClass: 'condition-score',
               templateUrl: selectionSummaryTemplateFolder + '/condition-score.html'
             },
             {
               title: 'Components',
-              contentSummary: selector.getAggregatedPropertyOfSelected('processorModel') + ' ' + selector.getAggregatedPropertyOfSelected('totalHardDriveSize', 'Various', ' GB HardDrive') + ' ' + selector.getAggregatedPropertyOfSelected('totalRamSize', 'Various', ' MB RAM'),
+              contentSummary: selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'processorModel') + ' ' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'totalHardDriveSize', 'Various', ' GB HardDrive') + ' ' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'totalRamSize', 'Various', ' MB RAM'),
               cssClass: 'components',
               templateUrl: selectionSummaryTemplateFolder + '/components.html'
             },
             // {
             //   title: 'Providers',
-            //   contentSummary: 'Donor:' + selector.getAggregatedPropertyOfSelected('donor') || 'No donor' +
-            //   'Owner:' + selector.getAggregatedPropertyOfSelected('donor') || 'No owner' +
-            //   'Distributor:' + selector.getAggregatedPropertyOfSelected('distributor') || 'No distributor',
+            //   contentSummary: 'Donor:' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'donor') || 'No donor' +
+            //   'Owner:' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'donor') || 'No owner' +
+            //   'Distributor:' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'distributor') || 'No distributor',
             //   content: 'Providers'
             // },
             {

@@ -9,31 +9,31 @@
   <div class="row">
     <div class="col-lg-6">
       <h5>Type</h5>
-      <h4>{{ selector.getAggregatedPropertyOfSelected('@type', 'Various types')}}</h4>
+      <h4>{{ selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, '@type', 'Various types')}}</h4>
     </div>
     <div class="col-lg-6">
       <h5>Sub type</h5>
-      <h4>{{ selector.getAggregatedPropertyOfSelected('type', 'Various types')}}</h4>
+      <h4>{{ selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'type', 'Various types')}}</h4>
     </div>
   </div>
   <div class="row">
     <div class="col-lg-6">
       <h5>Manufacturer</h5>
-      <h4>{{ selector.getAggregatedPropertyOfSelected('manufacturer', 'Various manufacturers')}}</h4>
+      <h4>{{ selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'manufacturer', 'Various manufacturers')}}</h4>
     </div>
     <div class="col-lg-6">
       <h5>Model</h5>
-      <h4>{{ selector.getAggregatedPropertyOfSelected('model', 'Various models')}}</h4>
+      <h4>{{ selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'model', 'Various models')}}</h4>
     </div>
   </div>
   <div class="row">
     <div class="col-lg-6">
       <h5>Serial number</h5>
-      <h4>{{ selector.getAggregatedPropertyOfSelected('serialNumber', 'Various serial numbers')}}</h4>
+      <h4>{{ selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'serialNumber', 'Various serial numbers')}}</h4>
     </div>
     <div class="col-lg-6">
       <h5>HID</h5>
-      <h4>{{ selector.getAggregatedPropertyOfSelected('hid', 'Various hids')}}</h4>
+      <h4>{{ selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'hid', 'Various hids')}}</h4>
     </div>
   </div>
 </div>

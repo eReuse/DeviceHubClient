@@ -1,4 +1,4 @@
-function groupResourceButton (ResourceListSelector) {
+function groupResourceButton () {
   /**
    * @ngdoc directive
    * @name groupResourceButton
@@ -7,20 +7,21 @@ function groupResourceButton (ResourceListSelector) {
    * @param {expression} success - Callback executed when an action has been executed successfully.
    */
   return {
-    templateUrl: require('./__init__').PATH + '/group-resource-button.directive.html',
+    template: require('./group-resource-button.directive.html'),
     restrict: 'E',
     scope: {
       resourceType: '@',
-      success: '&'
+      success: '&',
+      getResources: '&',
+      registerToResourcesUpdate: '&'
     },
     link: $scope => {
       function setView () {
-        $scope.resources = ResourceListSelector.getAllSelectedDevices()
+        $scope.resources = $scope.getResources()
       }
       setView()
-      ResourceListSelector.callbackOnSelection(setView)
+      $scope.registerToResourcesUpdate({ callback: setView })
 
-      $scope.selector = ResourceListSelector
       $scope.menu = [
         // {title: 'Lot', group: 'Lot', resourceTypes: ['Package', 'Device', 'Lot', 'Pallet']},
         {

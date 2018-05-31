@@ -193,7 +193,12 @@
         <manual-events-button></manual-events-button>
         <!--&lt;!&ndash;<share devices="selector.getAllSelectedDevices()"></share>&ndash;&gt;-->
         <certificate-button></certificate-button>
-        <group-resource-button success="reload()" resource-type="Device"></group-resource-button>
+        <group-resource-button
+                success="reload()"
+                resource-type="Device"
+                get-resources="selector.getAllSelectedDevices()"
+                register-to-resources-update="selector.callbackOnSelection(callback)">
+        </group-resource-button>
         <resource-export resources="selector.getAllSelectedDevices()"></resource-export>
       </div>
     </div> <!-- ./ selectDevices > 0 -->

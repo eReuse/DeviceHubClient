@@ -16,36 +16,36 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-show="::selector.getAggregatedPropertyOfSelected('processorModel')">
+    <tr ng-show="::selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'processorModel')">
       <td>
         <resource-icon resource-type="Device" resource-subtype="Processor"></resource-icon>
       </td>
       <td>Processor</td>
-      <td>{{selector.getAggregatedPropertyOfSelected('processorModel')}}</td>
+      <td>{{selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'processorModel')}}</td>
       <!--<td class="text-right">
         <device-range score="resource.condition.components.processors"></device-range>
       </td>-->
     </tr>
-    <tr ng-show="::selector.getAggregatedPropertyOfSelected('processorModel')">
+    <tr ng-show="::selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'processorModel')">
       <td>
         <resource-icon resource-type="Device" resource-subtype="HardDrive"></resource-icon>
       </td>
       <td>
         Hard drive
       </td>
-      <td>{{::selector.getAggregatedPropertyOfSelected('totalHardDriveSize', 'Various', ' GB')}}</td>
+      <td>{{::selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'totalHardDriveSize', 'Various', ' GB')}}</td>
       <!--<td class="text-right">-->
       <!--<device-range score="resource.condition.components.hardDrives"></device-range>-->
       <!--</td>-->
     </tr>
-    <tr ng-show="::selector.getAggregatedPropertyOfSelected('totalRamSize', 'Various', ' MB RAM')">
+    <tr ng-show="::selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'totalRamSize', 'Various', ' MB RAM')">
       <td>
         <resource-icon resource-type="Device" resource-subtype="RamModule"></resource-icon>
       </td>
       <td>
         RAM
       </td>
-      <td>{{::selector.getAggregatedPropertyOfSelected('totalRamSize', 'Various', ' MB RAM')}}</td>
+      <td>{{::selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'totalRamSize', 'Various', ' MB RAM')}}</td>
       <td class="text-right">
         <device-range score="resource.condition.components.ram"></device-range>
       </td>
