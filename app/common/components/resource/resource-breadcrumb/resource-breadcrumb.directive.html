@@ -2,7 +2,10 @@
   <li ng-repeat="resource in log" ng-class="{active: $last}">
     <strong ng-if="resource._id && $last">
       <resource-icon resource-type="{{::resource['@type']}}" resourceSubtype="{{::resource.type}}"></resource-icon>
-      {{resource | resourceTitle}}
+
+      <resource-field-edit resource="resource" field="{ key: 'label', value: resource.label, editable: true }">
+        {{resource | resourceTitle}}
+      </resource-field-edit>
     </strong>
     <strong ng-if="!resource._id && $last">
       My inventory
