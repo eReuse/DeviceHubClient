@@ -13,9 +13,9 @@
         Standard
       </label>
       <label class="btn btn-primary"
-             ng-disabled="::!selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'pricing.refurbisher.warranty2')"
+             ng-disabled="::!selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing.refurbisher.warranty2')"
              uib-tooltip="No 2 year warranty option for this device."
-             tooltip-enable="::!selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'pricing.refurbisher.warranty2')"
+             tooltip-enable="::!selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing.refurbisher.warranty2')"
              ng-model="currencyOptions.val"
              uib-btn-radio="'warranty2'"
       >
@@ -34,17 +34,17 @@
     <tbody>
     <tr ng-repeat="roleName in currencyOptions.roles">
       <td>{{::roleName | humanize}}</td>
-      <td>{{selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'pricing'+'.'+roleName+'.'+currencyOptions.val+'.'+'percentage') |
+      <td>{{selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing'+'.'+roleName+'.'+currencyOptions.val+'.'+'percentage') |
         percentage}}
       </td>
-      <td>{{selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'pricing'+'.'+roleName+'.'+currencyOptions.val+'.'+'amount') |
+      <td>{{selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing'+'.'+roleName+'.'+currencyOptions.val+'.'+'amount') |
         currency: currencyOptions.currency }}
       </td>
     </tr>
     <tr class="active">
       <td>Total</td>
       <td></td>
-      <td>{{selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'pricing.total'+'.'+currencyOptions.val) | currency:
+      <td>{{selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing.total'+'.'+currencyOptions.val) | currency:
         currencyOptions.currency}}
       </td>
     </tr>

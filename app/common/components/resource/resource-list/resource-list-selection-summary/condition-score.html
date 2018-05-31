@@ -16,7 +16,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-show="::selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'condition.appearance.general')">
+    <tr ng-show="::selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'condition.appearance.general')">
       <td>
         <i class="fa fa-fw fa-eye"></i>
       </td>
@@ -24,11 +24,11 @@
       <td>
       </td>
       <td class="text-right"
-          uib-tooltip="{{::appearance[selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'condition.appearance.general')]}}">
-        <span class="label label-primary">{{::selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'condition.appearance.general')}}</span>
+          uib-tooltip="{{::appearance[selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'condition.appearance.general')]}}">
+        <span class="label label-primary">{{::selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'condition.appearance.general')}}</span>
       </td>
     </tr>
-    <tr ng-show="::functionality[selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'condition.functionality.general')]">
+    <tr ng-show="::functionality[selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'condition.functionality.general')]">
       <td>
         <i class="fa fa-fw fa-wrench"></i>
       </td>
@@ -36,17 +36,17 @@
       <td>
       </td>
       <td class="text-right"
-          uib-tooltip="{{::functionality[selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'condition.functionality.general')]}}">
-        <span class="label label-primary">{{::selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'condition.functionality.general')}}</span>
+          uib-tooltip="{{::functionality[selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'condition.functionality.general')]}}">
+        <span class="label label-primary">{{::selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'condition.functionality.general')}}</span>
       </td>
     </tr>
-    <tr class="active" ng-show="::selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'condition.general.range')">
+    <tr class="active" ng-show="::selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'condition.general.range')">
       <td><i class="fa fa-fw fa-line-chart"></i></td>
       <td>Total condition</td>
       <td></td>
       <td class="text-right">
         <big>
-          <device-range score="selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'condition.general.score')"></device-range>
+          <device-range score="selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'condition.general.score')"></device-range>
         </big>
       </td>
     </tr>

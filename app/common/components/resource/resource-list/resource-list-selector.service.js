@@ -324,7 +324,7 @@ class ResourceListSelector {
     }
 
     // TODO move to resource-list.directive
-    this.getAggregatedPropertyOfSelected = (selectedDevices, pathToProp, valueIfDifferent = 'Various', postfix) => {
+    this.getAggregatedPropertyOfSelected = (selectedDevices = [], pathToProp, valueIfDifferent = 'Various', postfix) => {
       if (selectedDevices.length === 0) {
         return null
       }
@@ -348,7 +348,7 @@ class ResourceListSelector {
     }
 
     // TODO move to resource-list.directive
-    this.getRangeOfPropertyOfSelected = (selectedDevices, pathToProp) => {
+    this.getRangeOfPropertyOfSelected = (selectedDevices = [], pathToProp) => {
       let min = 0
       let max = 0
       selectedDevices.forEach(device => {
@@ -366,7 +366,7 @@ class ResourceListSelector {
     }
 
     // TODO move to resource-list.directive
-    this.getAggregatedListOfSelected = (selectedDevices, pathToProp) => {
+    this.getAggregatedListOfSelected = (selectedDevices = [], pathToProp) => {
       let list = []
       selectedDevices.forEach(device => {
         list = _.get(device, pathToProp, []).concat(list)
@@ -375,7 +375,7 @@ class ResourceListSelector {
     }
 
     // TODO move to resource-list.directive
-    this.getAggregatedSetOfSelected = (selectedDevices, pathToProp, valueIdProp) => {
+    this.getAggregatedSetOfSelected = (selectedDevices = [], pathToProp, valueIdProp) => {
       let set = {}
       selectedDevices.forEach(device => {
         _.get(device, pathToProp, []).forEach(value => {
