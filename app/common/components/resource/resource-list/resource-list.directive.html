@@ -12,9 +12,9 @@
     >
       <ul>
         <li
-                ng-repeat="lot in getLots()"
+                ng-repeat="lot in lots"
         >
-          <a href="#" ng-click="openFull(lot)">
+          <a href="#" ng-click="goTo(lot)">
             <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.label }}
           </a>
         </li>
@@ -28,20 +28,18 @@
 
     <h4 style="display: inline-block; margin-bottom: 20px;">Devices ({{ getTotalNumberOfDevices() }}) </h4>
     <button type="button"
-            class="btn"
+            class="btn btn-info"
             style="display: inline-block; padding: 5px 10px; margin-left: 10px;"
-            ng-class="{'btn-info': getDevices().length > 0}"
-            ng-show="!areAllDevicesOfCurrentLotSelected"
-            ng-click="selector.selectAll(getDevices(), parentResource)"
+            ng-show="!selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
+            ng-click="selector.selectAll(devices, parentResource)"
     >
       <span>Select all</span>
     </button>
     <button type="button"
-            class="btn"
+            class="btn btn-info"
             style="display: inline-block; padding: 5px 10px; margin-left: 10px;"
-            ng-class="{'btn-info': getDevices().length > 0}"
-            ng-show="areAllDevicesOfCurrentLotSelected"
-            ng-click="deselectAll(getDevices())"
+            ng-show="selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
+            ng-click="deselectAll(devices)"
     >
       <span>Deselect all</span>
     </button>
@@ -63,18 +61,6 @@
         <tbody>
           <tr ng-repeat="resource in devices track by resource._id"
               ng-class="{info: selector.isSelected(resource)}"
-
-              ng-init="popover = popovers[resource._id]"
-
-              uib-popover-template="::popovers.templateUrl"
-              popover-enable="popovers.enable"
-              popover-title="{{::popover.title}}"
-              popover-is-open="popover.isOpen"
-              popover-trigger="click"
-              popover-append-to-body="true"
-              popover-placement="{{popoverPlacement}}"
-              popover-class="resource-button-popover"
-
               ng-click="toggleSelect(resource, $index, $event)"
           >
             <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
@@ -122,18 +108,18 @@
   </div>
   <!-- Selection -->
   <aside class="selection col-lg-6 fill-height-bar">
-    <div ng-if="allSelectedDevices.length === 0">
+    <div ng-if="selection.devices.length === 0">
       <h3>Select devices to view more details</h3>
     </div>
 
-    <div ng-if="allSelectedDevices.length > 0">
+    <div ng-if="selection.devices.length > 0">
       <h4>Current selection</h4>
-      <h3>{{allSelectedDevices.length}} devices in {{selectedLots.length}} lots</h3>
+      <h3>{{selection.devices.length}} devices in {{selection.lots.length}} lots</h3>
       <ul>
         <li
-          ng-repeat="lot in selectedLots | limitTo: numSelectedLotsShown track by lot._id"
+          ng-repeat="lot in selection.lots | limitTo: selection.numSelectedLotsShown track by lot._id"
           class="pill-lot pill-lot-flex"
-          ng-click="showLot(lot)"
+          ng-click="goTo(lot)"
         >
 
           <div>
@@ -147,12 +133,12 @@
           </button>
         </li>
         <li
-          ng-show="showDisplayMoreSelectedLotsButton"
+          ng-show="selection.showDisplayMoreSelectedLotsButton"
           class="pill-lot pill-lot-flex"
         >
           <button type="button"
                   class="btn"
-                  ng-click="showMoreSelectedLots()"
+                  ng-click="selection.showMoreSelectedLots()"
           >
             <span>Show more</span>
           </button>
@@ -160,10 +146,10 @@
       </ul>
       <div style="position: relative; overflow-x: hidden;">
         <ul class="selection-summary">
-          <li ng-repeat="row in selectionSummary track by row.title">
+          <li ng-repeat="row in selection.summary track by row.title">
             <button type="button"
                     class="btn"
-                    ng-click="selectionDetails[row.title] = true"
+                    ng-click="selection.details[row.title] = true"
             >
               <span class="selection-summary-title">{{row.title}}</span>
               <span class="selection-summary-content">{{row.contentSummary}}</span>
@@ -171,9 +157,9 @@
             </button>
           </li>
         </ul>
-        <div ng-repeat="row in selectionSummary track by row.title"
+        <div ng-repeat="row in selection.summary track by row.title"
              class="selection-details-panel"
-             ng-class="{ active: selectionDetails[row.title] }"
+             ng-class="{ active: selection.details[row.title] }"
         >
           <div class="selection-details-content-wrapper">
             <div class="selection-details-content-container">
