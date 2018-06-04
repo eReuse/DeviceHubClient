@@ -91,15 +91,14 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             let lastSelectedIndex = $scope.lastSelectedIndex || 0
             let start = Math.min(lastSelectedIndex, $index)
             let end = Math.max(lastSelectedIndex, $index)
-            let allSelected = $scope.devices.slice(start, end + 1)
-
-            selector.selectAll(allSelected, $scope.parentResource)
+            let devicesToSelect = $scope.devices.slice(start, end + 1)
+            selector.selectAll(devicesToSelect, $scope.parentResource)
           } else if ($event.ctrlKey) {
             selector.toggle(resource, $scope.parentResource)
           } else {
             let isSelected = selector.isSelected(resource)
             if (isSelected) {
-              if ($scope.allSelectedDevices.length === 1) {
+              if ($scope.selectedDevices.length === 1) {
                 selector.toggle(resource, $scope.parentResource) // remove
               } else {
                 selector.deselectAll()
