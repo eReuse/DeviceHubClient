@@ -98,7 +98,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           } else {
             let isSelected = selector.isSelected(resource)
             if (isSelected) {
-              if ($scope.selectedDevices.length === 1) {
+              if ($scope.selection.devices.length === 1) {
                 selector.toggle(resource, $scope.parentResource) // remove
               } else {
                 selector.deselectAll()
@@ -317,7 +317,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         $scope.morePagesAvailable = true
         let getMoreFirstTime = false
         $scope.getMore = () => {
-          console.log('getMore (devices) called. getMoreFirstTime', getMoreFirstTime)
           if (!$scope.getMoreIsBusy && getMoreFirstTime) {
             $scope.getMoreIsBusy = true
             try {
@@ -336,7 +335,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         $scope.getMoreLotsIsBusy = false
         $scope.morePagesAvailableLots = true
         $scope.getMoreLots = () => {
-          console.log('getMore (lots) called.')
           if (!$scope.getMoreLotsIsBusy) {
             $scope.getMoreLotsIsBusy = true
             try {
