@@ -118,10 +118,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           $scope.lastSelectedIndex = 0
         }
 
-        // mark all selected devices of current lot as originally selected
-        // TODO in the future parentResource will have to be set!
-        $scope.parentResource && selector.markSelectedDevicesInLotAsOriginal($scope.parentResource)
-
         // Workaround to set labels of selected lots correctly. Necessary because API /devices doesn't include the 'label' property for device ancestors
         // TODO remove as soon as API returns ancestor lots with labels set
         $scope.parentResource && selector.nameLot($scope.parentResource)

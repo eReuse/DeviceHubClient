@@ -19,13 +19,6 @@ class ResourceListSelector {
   constructor () {
     let callbacksForSelections = []
     let lots = []
-    /*
-     * {
-     *  selectedDevices: [
-     *
-     *  ]
-     * }
-     */
 
     /**
      * Toggles the selected state of given resource, selecting (or deselecting) the device(s)
@@ -77,15 +70,6 @@ class ResourceListSelector {
       })
     }
 
-    this.toggleAndDeselectOthers = (device, parentLot) => {
-      let isSelected = this.isSelected(device)
-      _deselectAll()
-      if (!isSelected) {
-        add(device, parentLot)
-      }
-      _control()
-    }
-
     /**
      * Re-populate the actual list of resources with the passed-in resources.
      *
@@ -99,11 +83,6 @@ class ResourceListSelector {
       // We re-populate inList from the actual resources that are in total
       this.getLotByID(lotID) && (this.getLotByID(lotID).length = 0)
       _control()
-
-      // TODO refactor for lots: only add resources that are already selected in a lot
-      // _.forEach(resources, resource => {
-      //   add(resource) // 2nd parameter -> We add it only to inList
-      // })
     }
 
     /**
@@ -144,36 +123,10 @@ class ResourceListSelector {
         if (!existingResource) {
           lot.selectedDevices.push({
             _id: resource._id,
-            device: resource,
-            originallySelectedInThisLot: _lot._id === parentLot._id
+            device: resource
           })
-          lot.hasOriginallySelectedDevices = true
-          // if (_lot._id === parentLot._id) {
-          //   lot.lot.label = parentLot.label
-          // }
         }
       })
-
-      // let lot = getOrCreateLot(parentLot)
-      //
-      //
-      // let existingResource = _.find(getSelectedDevices(lot), {_id: resource._id})
-      // console.log('existingResource', existingResource)
-      // if (!existingResource) {
-      //   getSelectedDevices(lot).push(resource)
-      // }
-
-      // Lot selection
-      // let isLot = resource['@type'] === 'Lot'
-      // if (isLot) {
-      //   this.lots[resource._id] = {
-      //     _id: resource._id,
-      //     numSelectedDevices: resource.numDevicesTotal,
-      //     allDevicesSelected: true,
-      //     searchQuery: 'query', //query at time of selection or at time of event?
-      //     filters: { price: { from: 0, to: 170 }} //filters at time of selection or at time of event?
-      //   }
-      // }
     }
 
     /**
@@ -206,15 +159,6 @@ class ResourceListSelector {
       return _.values(devices)
     }
 
-    this.getSelectedDevicesInLot = (lotID) => {
-      console.log('get selected devices in lot', lotID)
-      let lot = this.getLotByID(lotID)
-      if (!lot) return []
-      return getSelectedDevices(lot).map((d) => {
-        return d.device
-      })
-    }
-
     let getNonEmptyLots = () => {
       return getLotsAsList()
         .map((_lot) => {
@@ -234,43 +178,7 @@ class ResourceListSelector {
      */
     this.getLots = () => {
       return getNonEmptyLots()
-        // show lots w originally selected devices first
-        // .sort((a, b) => {
-        //   if (a.hasOriginallySelectedDevices && !b.hasOriginallySelectedDevices) {
-        //     return -1
-        //   } else if (!a.hasOriginallySelectedDevices && b.hasOriginallySelectedDevices) {
-        //     return 1
-        //   } else {
-        //     return 0
-        //   }
-        // })
     }
-
-    // this.getLotsWithOriginallySelectedDevicesOnly = () => {
-    //   return getLotsAsList()
-    //     .map((lot) => {
-    //       return {
-    //         _id: lot._id,
-    //         label: lot.lot.label,
-    //         selectedDevices: getSelectedDevices(lot)
-    //           /* .filter((device) => {
-    //             return device.originallySelectedInThisLot
-    //           }) */.map((device) => {
-    //             return device.device
-    //           })
-    //       }
-    //     }).filter((lot) => {
-    //       return lot.selectedDevices.length > 0
-    //     }).sort((a, b) => {
-    //       if (a.hasOriginallySelectedDevices && !b.hasOriginallySelectedDevices) {
-    //         return -1
-    //       } else if (!a.hasOriginallySelectedDevices && b.hasOriginallySelectedDevices) {
-    //         return 1
-    //       } else {
-    //         return 0
-    //       }
-    //     })
-    // }
 
     let getLotsAsList = () => {
       return lots
@@ -282,17 +190,6 @@ class ResourceListSelector {
 
     let deleteLotByID = lotID => {
       _.remove(lots, { _id: lotID })
-    }
-
-    this.markSelectedDevicesInLotAsOriginal = _lot => {
-      let lot = this.getLotByID(_lot._id)
-      if (!lot) {
-        return
-      }
-      lot.selectedDevices.forEach((device) => {
-        device.originallySelectedInThisLot = true
-      })
-      lot.hasOriginallySelectedDevices = true
     }
 
     let getSelectedDevices = lot => {
@@ -366,15 +263,6 @@ class ResourceListSelector {
         return filter(min)
       }
       return filter(min) + ' - ' + filter(max)
-    }
-
-    // TODO move to resource-list.directive
-    this.getAggregatedListOfSelected = (selectedDevices = [], pathToProp) => {
-      let list = []
-      selectedDevices.forEach(device => {
-        list = _.get(device, pathToProp, []).concat(list)
-      })
-      return list
     }
 
     // TODO move to resource-list.directive
