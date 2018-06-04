@@ -7,7 +7,6 @@ function schema (CONSTANTS, Restangular, $q, RestangularFactory) {
   // in both cases: when the user has logged in (resolve) or is anonymous (reject)
   this._getSchema = function () {
     Restangular.oneUrl('schema', CONSTANTS.url + '/schema').get().then(function (data) {
-      console.log('received schema', data)
       self.schema = data
       deferred.resolve(self.schema)
     }).catch(function (data) {

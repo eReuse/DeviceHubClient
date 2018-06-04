@@ -13,6 +13,7 @@ function ResourceListGetterFactory (ResourceSettings) {
      * updated by reference, so do not re-assign it.
      * @param {object} filterSettings - Configuration object for the filters.
      * @param {progressBar} progressBar - An instance of ngProgress.
+     * @param {defaultFilters} defaultFilters - Filters that will be applied to any request
      */
     constructor (resourceType, resources, filterSettings, progressBar, defaultFilters) {
       this.resourceType = resourceType
@@ -67,7 +68,6 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @param {object} newFilters - Key/value of parameters
      */
     updateFilters (source, newFilters) {
-      console.log('updating filters for resourcetype', this.resourceType, 'to', newFilters, 'this._sort', this._sort)
       this._filtersBySource[source] = newFilters
       // Let's merge the different filters in a single one
       this._filters = {}
@@ -88,7 +88,6 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @param {object} newFilters
      */
     updateFiltersFromSearch (newFilters) {
-      console.log('updatefiltersfrom search of', this.resourceType, 'to', newFilters)
       let _filters = {}
       let callbacks = []
       let findSettings = _.bind(_.find, null, this.filterSettings.search.params, _)
@@ -156,7 +155,6 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @param newSorts
      */
     updateSort (newSorts) {
-      console.log('update sort to', newSorts)
       let oldSort = _.clone(this._sort)
       this._sort = newSorts
       // If there is no sort defined this._filters will equal with oldsort
@@ -185,7 +183,6 @@ function ResourceListGetterFactory (ResourceSettings) {
           ? ($(window).height() < 800 ? 20 : 30)
           : 15
       }
-      console.log('get resources of', this.resourceType)
 
       return this.server.getList(q).then(this._processResources.bind(this, getNextPage, showProgressBar))
     }
@@ -193,8 +190,6 @@ function ResourceListGetterFactory (ResourceSettings) {
     _processResources (getNextPage, showProgressBar, resources) {
       if (showProgressBar) this.progressBar.complete()
       if (!getNextPage) this.resources.length = 0
-      console.log('received', resources.length, this.resourceType + 's')
-      // console.log('Resources' + JSON.stringify(resources))
       if (this.resourceType === 'Device') {
         resources.forEach(r => {
           let parentLots = []
@@ -257,8 +252,6 @@ function ResourceListGetterFactory (ResourceSettings) {
           _.set(r, pathToScoreRange, conversion(_.get(r, pathToScore)))
         })
 
-        console.log('received devices', resources.map((d) => { return d.title }))
-
         let lots = {}
         resources.forEach((device) => {
           device.parentLots.forEach((lot) => {
@@ -271,8 +264,6 @@ function ResourceListGetterFactory (ResourceSettings) {
         ResourceSettings('Lot').server.getList({
           where: {'_id': { '$in': lotIDs }}
         }).then((lotsWithLabel) => {
-          console.log('received lotsWithLabel', lotsWithLabel)
-
           // add labels to lots
           lotsWithLabel.forEach(lot => {
             lots[lot._id].forEach(origLot => {
@@ -282,7 +273,6 @@ function ResourceListGetterFactory (ResourceSettings) {
           this._updateResourcesAfterGet(getNextPage, resources)
         })
       } else {
-        console.log('received lots', resources.map((l) => { return l.label }))
         this._updateResourcesAfterGet(getNextPage, resources)
       }
 

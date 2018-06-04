@@ -103,7 +103,6 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
      * @return {*} The value of the setting
      */
     getSetting (path) {
-      console.log('get setting for path', path)
       return utils.getSetting(RESOURCE_CONFIG.resources, this, path)
     }
 

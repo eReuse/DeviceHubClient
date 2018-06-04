@@ -30,7 +30,6 @@ class ResourceListSelector {
       if (this.isSelected(resource)) { // Remove
         remove(resource)
       } else { // Add
-        console.log('Adding resource', resource)
         add(resource, parentLot)
       }
       _control()
@@ -79,7 +78,6 @@ class ResourceListSelector {
      * TODO refactor to use lots
      */
     this.reAddToLot = (resources, lotID) => {
-      console.log('repopulating lot', lotID, 'with', resources.length, 'resources')
       // We re-populate inList from the actual resources that are in total
       this.getLotByID(lotID) && (this.getLotByID(lotID).length = 0)
       _control()
@@ -113,13 +111,11 @@ class ResourceListSelector {
       if (!parentLot || !parentLot._id) {
         throw new Error('parentLot must be defined and have _id property set')
       }
-      console.log('resource.parentLots', resource.parentLots)
 
       resource.parentLots.forEach(_lot => {
         let lot = getOrCreateLot(_lot)
 
         let existingResource = _.find(lot.selectedDevices, {_id: resource._id})
-        console.log('existingResource', existingResource)
         if (!existingResource) {
           lot.selectedDevices.push({
             _id: resource._id,
@@ -282,11 +278,6 @@ class ResourceListSelector {
      * @private
      */
     let _control = () => {
-      console.log('control',
-        this.getAllSelectedDevices().length,
-        'devices in',
-        getLotsAsList().length,
-        'lots have been selected')
       _.invokeMap(callbacksForSelections, _.call, null, lots)
     }
   }
