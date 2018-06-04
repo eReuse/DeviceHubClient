@@ -351,7 +351,7 @@ class ResourceListSelector {
     }
 
     // TODO move to resource-list.directive
-    this.getRangeOfPropertyOfSelected = (selectedDevices = [], pathToProp) => {
+    this.getRangeOfPropertyOfSelected = (selectedDevices = [], pathToProp, filter = (a) => a) => {
       let min = 0
       let max = 0
       selectedDevices.forEach(device => {
@@ -363,9 +363,9 @@ class ResourceListSelector {
         }
       })
       if (min === max) {
-        return min
+        return filter(min)
       }
-      return min + ' - ' + max
+      return filter(min) + ' - ' + filter(max)
     }
 
     // TODO move to resource-list.directive

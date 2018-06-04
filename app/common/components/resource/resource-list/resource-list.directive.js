@@ -10,7 +10,7 @@
  * @param {ResourceBreadcrumb} ResourceBreadcrumb
  * @param {Session} session
  */
-function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, UNIT_CODES, CONSTANTS, SearchService) {
+function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, UNIT_CODES, CONSTANTS, SearchService, $filter) {
   const PATH = require('./__init__').PATH
   const NoMorePagesAvailableException = require('./no-more-pages-available.exception')
   const selectionSummaryTemplateFolder = PATH + '/resource-list-selection-summary'
@@ -171,7 +171,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         $scope.currencyOptions = {
           currency: CONSTANTS.currency,
           val: 'standard',
-          roles: ['retailer', 'platform', 'refurbisher']
+          roles: ['retailer', 'platform', 'refurbisher'],
+          filter: (amount) => {
+            return $filter('currency')(amount, CONSTANTS.currency)
+          }
         }
         $scope.hasExplicitPerms = session.hasExplicitPerms()
         $scope.hardDriveSizeUnit = UNIT_CODES[deviceSettings.schema.totalHardDriveSize.unitCode]
@@ -250,15 +253,19 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             let path = 'pricing.' + roleName + '.' + $scope.currencyOptions.val
             _.set(props,
               path + '.percentage',
-              selector.getAggregatedPropertyOfSelected(allSelectedDevices, path + '.percentage'))
+              selector.getRangeOfPropertyOfSelected(allSelectedDevices, path + '.percentage', (percentage) => {
+                return $filter('percentage')(percentage)
+              })
+            )
             _.set(props,
               path + '.amount',
-              selector.getAggregatedPropertyOfSelected(allSelectedDevices, path + '.amount'))
+              selector.getRangeOfPropertyOfSelected(allSelectedDevices, path + '.amount', $scope.currencyOptions.filter)
+            )
           })
           let path = 'pricing.total.' + $scope.currencyOptions.val
           _.set(props,
             path,
-            selector.getAggregatedPropertyOfSelected(allSelectedDevices, path)
+            selector.getRangeOfPropertyOfSelected(allSelectedDevices, path, $scope.currencyOptions.filter)
           )
           $scope.selection = { // TODO move all selectionProps to .selection
             props: props
@@ -295,7 +302,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             },
             {
               title: 'Price',
-              contentSummary: props.pricing.total.standard,
+              contentSummary: props.pricing.total[$scope.currencyOptions.val],
               cssClass: 'price',
               templateUrl: selectionSummaryTemplateFolder + '/price.html'
             },
