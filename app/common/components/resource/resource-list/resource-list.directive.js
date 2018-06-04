@@ -165,8 +165,34 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // }
         // setShowDisplayMoreSelectedLotsButton()
 
+        // components, price and condition score (Must be above updateSelection)
+        // const manufacturerSettings = ResourceSettings('Manufacturer')
+        const deviceSettings = ResourceSettings('Device')
+        $scope.currencyOptions = {
+          currency: CONSTANTS.currency,
+          val: 'standard',
+          roles: ['retailer', 'platform', 'refurbisher']
+        }
+        $scope.hasExplicitPerms = session.hasExplicitPerms()
+        $scope.hardDriveSizeUnit = UNIT_CODES[deviceSettings.schema.totalHardDriveSize.unitCode]
+        $scope.ramSizeUnit = UNIT_CODES[deviceSettings.schema.totalRamSize.unitCode]
+        $scope.appearance = deviceSettings.schema.condition.schema.appearance.schema.general.allowed_description
+        $scope.functionality = deviceSettings.schema.condition.schema.functionality.schema.general.allowed_description
+        // const where = {parent: $scope.resource._id, '@type': {'$in': ['GraphicCard', 'Processor']}}
+        // deviceSettings.server.getList({where: where}).then(components => {
+        //   $scope.graphicCard = _.find(components, {'@type': 'GraphicCard'})
+        //   const cpu = _.find(components, {'@type': 'Processor'})
+        //   if (cpu) {
+        //     manufacturerSettings.server.findText(['label'], cpu.manufacturer.split(' ')[0], true, 1).then(manu => {
+        //       if (manu.length) {
+        //         $scope.processorManufacturer = manu[0]
+        //       }
+        //     })
+        //   }
+        // })
+
         function updateSelection () {
-          $scope.allSelectedDevices = selector.getAllSelectedDevices().slice()
+          let allSelectedDevices = $scope.allSelectedDevices = selector.getAllSelectedDevices().slice()
 
           // TODO
           // Display all lots, show up to 10 directly, hide others in collapse
@@ -180,7 +206,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           if ($scope.parentResource) { // TODO in the future parentResource will have to be set!
             $scope.areAllDevicesOfCurrentLotSelected = _.difference(
               $scope.getDevices(),
-              $scope.allSelectedDevices,
+              allSelectedDevices,
               (a, b) => {
                 return a._id === b._id
               }
@@ -193,64 +219,114 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             }
           }
 
-          $scope.selection = { // TODO move all selectionProps to .selection
-            events: selector.getAggregatedSetOfSelected($scope.allSelectedDevices, 'events', '_id'),
+          let props = {
+            type: selector.getAggregatedPropertyOfSelected(allSelectedDevices, '@type'),
+            subType: selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'type'),
+            manufacturer: selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'manufacturer'),
+            model: selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'model'),
+            serialNumber: selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'serialNumber', 'Various serial numbers'),
+            hid: selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'hid', 'Various hids'),
+            status: selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'status'),
+            condition: {
+              appearance: {
+                general: selector.getRangeOfPropertyOfSelected(allSelectedDevices, 'condition.appearance.general')
+              },
+              functionality: {
+                general: selector.getRangeOfPropertyOfSelected(allSelectedDevices, 'condition.functionality.general')
+              },
+              general: {
+                range: selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'condition.general.range')
+              }
+            },
+            components: {
+              processorModel: selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'processorModel'),
+              totalHardDriveSize: selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'totalHardDriveSize', 'Various', ' GB HardDrive'),
+              totalRamSize: selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'totalRamSize', 'Various', ' MB RAM')
+            },
+            events: selector.getAggregatedSetOfSelected(allSelectedDevices, 'events', '_id'),
             lots: $scope.selectedLots
+          }
+          $scope.currencyOptions.roles.forEach((roleName) => {
+            let path = 'pricing.' + roleName + '.' + $scope.currencyOptions.val
+            _.set(props,
+              path + '.percentage',
+              selector.getAggregatedPropertyOfSelected(allSelectedDevices, path + '.percentage'))
+            _.set(props,
+              path + '.amount',
+              selector.getAggregatedPropertyOfSelected(allSelectedDevices, path + '.amount'))
+          })
+          let path = 'pricing.total.' + $scope.currencyOptions.val
+          _.set(props,
+            path,
+            selector.getAggregatedPropertyOfSelected(allSelectedDevices, path)
+          )
+          $scope.selection = { // TODO move all selectionProps to .selection
+            props: props
           }
 
           // Update selection info
           $scope.showContent = {}
+          let typeContentSummary
+          if (props.type === selector.VARIOUS) {
+            typeContentSummary = 'Various types'
+          } else if (props.type === 'Device') {
+            typeContentSummary = 'Placeholder'
+          } else if (props.subType === selector.VARIOUS) {
+            typeContentSummary = props.type + ' Various subtypes'
+          } else if (props.manufacturer === selector.VARIOUS) {
+            typeContentSummary = props.subType + ' Various manufacturers'
+          } else if (props.model === selector.VARIOUS) {
+            typeContentSummary = props.subType + ' ' + props.manufacturer + ' Various models'
+          } else {
+            typeContentSummary = props.subType + ' ' + props.manufacturer + ' ' + props.model
+          }
           $scope.selectionSummary = [
             {
-              title: 'Type and model',
-              contentSummary: selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, '@type', 'Various types') + ' ' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'type', 'Various subtypes') + ' ' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'manufacturer', '') + ' ' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'model', ''),
-              content: 'Type: ' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, '@type', 'Various types'),
+              title: 'Type, manufacturer & model',
+              contentSummary: typeContentSummary,
               cssClass: 'type',
               templateUrl: selectionSummaryTemplateFolder + '/type.html'
             },
             {
               title: 'Status',
-              contentSummary: selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'status'),
-              content: 'Status',
+              contentSummary: props.status,
               cssClass: 'status',
               templateUrl: selectionSummaryTemplateFolder + '/status.html'
             },
             {
               title: 'Price',
-              contentSummary: selector.getRangeOfPropertyOfSelected($scope.allSelectedDevices, 'pricing.total.standard'),
-              content: 'Price',
+              contentSummary: props.pricing.total.standard,
               cssClass: 'price',
               templateUrl: selectionSummaryTemplateFolder + '/price.html'
             },
             {
               title: 'Condition score',
-              contentSummary: selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'condition.general.range'),
-              content: 'Condition score',
+              contentSummary: props.condition.general.range,
               cssClass: 'condition-score',
               templateUrl: selectionSummaryTemplateFolder + '/condition-score.html'
             },
             {
               title: 'Components',
-              contentSummary: selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'processorModel') + ' ' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'totalHardDriveSize', 'Various', ' GB HardDrive') + ' ' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'totalRamSize', 'Various', ' MB RAM'),
+              contentSummary: _.values(props.components).join(' '),
               cssClass: 'components',
               templateUrl: selectionSummaryTemplateFolder + '/components.html'
             },
             // {
             //   title: 'Providers',
-            //   contentSummary: 'Donor:' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'donor') || 'No donor' +
-            //   'Owner:' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'donor') || 'No owner' +
-            //   'Distributor:' + selector.getAggregatedPropertyOfSelected($scope.allSelectedDevices, 'distributor') || 'No distributor',
+            //   contentSummary: 'Donor:' + selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'donor') || 'No donor' +
+            //   'Owner:' + selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'donor') || 'No owner' +
+            //   'Distributor:' + selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'distributor') || 'No distributor',
             //   content: 'Providers'
             // },
             {
               title: 'Events',
-              contentSummary: $scope.selection.events.length + ' events',
+              contentSummary: props.events.length + ' events',
               cssClass: 'events',
               templateUrl: selectionSummaryTemplateFolder + '/events.html'
             },
             {
               title: 'Lots',
-              contentSummary: $scope.selection.lots.length + ' lots',
+              contentSummary: props.lots.length + ' lots',
               cssClass: 'lots',
               templateUrl: selectionSummaryTemplateFolder + '/lots.html'
             }
@@ -364,33 +440,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             name: 'Disposed'
           }
         ]
-
-        // components, price and condition score
-
-        // const manufacturerSettings = ResourceSettings('Manufacturer')
-        const deviceSettings = ResourceSettings('Device')
-        $scope.currencyOptions = {
-          currency: CONSTANTS.currency,
-          val: 'standard',
-          roles: ['retailer', 'platform', 'refurbisher']
-        }
-        $scope.hasExplicitPerms = session.hasExplicitPerms()
-        $scope.hardDriveSizeUnit = UNIT_CODES[deviceSettings.schema.totalHardDriveSize.unitCode]
-        $scope.ramSizeUnit = UNIT_CODES[deviceSettings.schema.totalRamSize.unitCode]
-        $scope.appearance = deviceSettings.schema.condition.schema.appearance.schema.general.allowed_description
-        $scope.functionality = deviceSettings.schema.condition.schema.functionality.schema.general.allowed_description
-        // const where = {parent: $scope.resource._id, '@type': {'$in': ['GraphicCard', 'Processor']}}
-        // deviceSettings.server.getList({where: where}).then(components => {
-        //   $scope.graphicCard = _.find(components, {'@type': 'GraphicCard'})
-        //   const cpu = _.find(components, {'@type': 'Processor'})
-        //   if (cpu) {
-        //     manufacturerSettings.server.findText(['label'], cpu.manufacturer.split(' ')[0], true, 1).then(manu => {
-        //       if (manu.length) {
-        //         $scope.processorManufacturer = manu[0]
-        //       }
-        //     })
-        //   }
-        // })
 
         // Events
         $scope.showDevicesOfEvent = (event) => {

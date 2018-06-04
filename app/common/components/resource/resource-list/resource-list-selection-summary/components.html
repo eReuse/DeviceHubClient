@@ -16,36 +16,36 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-show="::selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'processorModel')">
+    <tr ng-show="::selection.props.components.processorModel">
       <td>
         <resource-icon resource-type="Device" resource-subtype="Processor"></resource-icon>
       </td>
       <td>Processor</td>
-      <td>{{selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'processorModel')}}</td>
+      <td>{{selection.props.components.processorModel}}</td>
       <!--<td class="text-right">
         <device-range score="resource.condition.components.processors"></device-range>
       </td>-->
     </tr>
-    <tr ng-show="::selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'processorModel')">
+    <tr ng-show="::selection.props.components.totalHardDriveSize">
       <td>
         <resource-icon resource-type="Device" resource-subtype="HardDrive"></resource-icon>
       </td>
       <td>
         Hard drive
       </td>
-      <td>{{::selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'totalHardDriveSize', 'Various', ' GB')}}</td>
+      <td>{{::selection.props.components.totalHardDriveSize}}</td>
       <!--<td class="text-right">-->
       <!--<device-range score="resource.condition.components.hardDrives"></device-range>-->
       <!--</td>-->
     </tr>
-    <tr ng-show="::selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'totalRamSize', 'Various', ' MB RAM')">
+    <tr ng-show="::selection.props.components.totalRamSize">
       <td>
         <resource-icon resource-type="Device" resource-subtype="RamModule"></resource-icon>
       </td>
       <td>
         RAM
       </td>
-      <td>{{::selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'totalRamSize', 'Various', ' MB RAM')}}</td>
+      <td>{{::selection.props.components.totalRamSize}}</td>
       <td class="text-right">
         <device-range score="resource.condition.components.ram"></device-range>
       </td>

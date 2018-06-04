@@ -9,31 +9,31 @@
   <div class="row">
     <div class="col-lg-6">
       <h5>Type</h5>
-      <h4>{{ selector.getAggregatedPropertyOfSelected(allSelectedDevices, '@type', 'Various types')}}</h4>
+      <h4>{{ selection.props.type }}</h4>
     </div>
     <div class="col-lg-6">
       <h5>Sub type</h5>
-      <h4>{{ selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'type', 'Various types')}}</h4>
+      <h4>{{ selection.props.subType }}</h4>
     </div>
   </div>
   <div class="row">
     <div class="col-lg-6">
       <h5>Manufacturer</h5>
-      <h4>{{ selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'manufacturer', 'Various manufacturers')}}</h4>
+      <h4>{{ selection.props.manufacturer }}</h4>
     </div>
     <div class="col-lg-6">
       <h5>Model</h5>
-      <h4>{{ selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'model', 'Various models')}}</h4>
+      <h4>{{ selection.props.model }}</h4>
     </div>
   </div>
   <div class="row">
     <div class="col-lg-6">
       <h5>Serial number</h5>
-      <h4>{{ selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'serialNumber', 'Various serial numbers')}}</h4>
+      <h4>{{ selection.props.serialNumber }}</h4>
     </div>
     <div class="col-lg-6">
       <h5>HID</h5>
-      <h4>{{ selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'hid', 'Various hids')}}</h4>
+      <h4>{{ selection.props.hid }}</h4>
     </div>
   </div>
 </div>

@@ -324,7 +324,10 @@ class ResourceListSelector {
     }
 
     // TODO move to resource-list.directive
-    this.getAggregatedPropertyOfSelected = (selectedDevices = [], pathToProp, valueIfDifferent = 'Various', postfix) => {
+    this.VARIOUS = 'Various'
+
+    // TODO move to resource-list.directive
+    this.getAggregatedPropertyOfSelected = (selectedDevices = [], pathToProp, valueIfDifferent = this.VARIOUS, postfix) => {
       if (selectedDevices.length === 0) {
         return null
       }

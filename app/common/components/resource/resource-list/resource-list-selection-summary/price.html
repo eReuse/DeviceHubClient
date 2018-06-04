@@ -12,15 +12,15 @@
       <label class="btn btn-primary" ng-model="currencyOptions.val" uib-btn-radio="'standard'">
         Standard
       </label>
-      <label class="btn btn-primary"
-             ng-disabled="::!selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing.refurbisher.warranty2')"
-             uib-tooltip="No 2 year warranty option for this device."
-             tooltip-enable="::!selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing.refurbisher.warranty2')"
-             ng-model="currencyOptions.val"
-             uib-btn-radio="'warranty2'"
-      >
-        2 year warranty
-      </label>
+      <!--<label class="btn btn-primary"-->
+             <!--ng-disabled="::!selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing.refurbisher.warranty2')"-->
+             <!--uib-tooltip="No 2 year warranty option for this device."-->
+             <!--tooltip-enable="::!selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing.refurbisher.warranty2')"-->
+             <!--ng-model="currencyOptions.val"-->
+             <!--uib-btn-radio="'warranty2'"-->
+      <!--&gt;-->
+        <!--2 year warranty-->
+      <!--</label>-->
     </div>
   </div>
   <table class="table">
@@ -34,18 +34,13 @@
     <tbody>
     <tr ng-repeat="roleName in currencyOptions.roles">
       <td>{{::roleName | humanize}}</td>
-      <td>{{selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing'+'.'+roleName+'.'+currencyOptions.val+'.'+'percentage') |
-        percentage}}
-      </td>
-      <td>{{selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing'+'.'+roleName+'.'+currencyOptions.val+'.'+'amount') |
-        currency: currencyOptions.currency }}
-      </td>
+      <td>{{ selection.props.pricing[roleName].standard.percentage | percentage }}</td>
+      <td>{{ selection.props.pricing[roleName].standard.amount | currency: currencyOptions.currency }}</td>
     </tr>
     <tr class="active">
       <td>Total</td>
       <td></td>
-      <td>{{selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing.total'+'.'+currencyOptions.val) | currency:
-        currencyOptions.currency}}
+      <td>{{selection.props.pricing.total.standard | currency: currencyOptions.currency}}
       </td>
     </tr>
     </tbody>

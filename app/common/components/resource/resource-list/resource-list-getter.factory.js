@@ -223,9 +223,16 @@ function ResourceListGetterFactory (ResourceSettings) {
             })
           }
 
+          let title
+          if (r['@type'] === 'Device') {
+            title = 'Placeholder'
+          } else {
+            title = r.type + ' ' + r.manufacturer + ' ' + r.model
+          }
+
           _.assign(r, {
             status: (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
-            title: r.type + ' ' + r.manufacturer + ' ' + r.model,
+            title: title,
             // 'price: 150,
             donor: 'BCN Ayuntamiento', // TODO get from events
             owner: 'Solidança', // TODO get from events

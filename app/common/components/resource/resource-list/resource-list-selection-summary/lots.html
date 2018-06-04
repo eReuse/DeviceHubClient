@@ -8,7 +8,7 @@
   <h3>Selected lots and devices</h3>
   <ul>
     <li
-            ng-repeat="lot in selection.lots track by lot._id"
+            ng-repeat="lot in selection.props.lots track by lot._id"
             ng-click="showLot(lot)"
             class="pill-lot-container"
     >

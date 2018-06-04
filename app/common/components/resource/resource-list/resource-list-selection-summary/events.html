@@ -1,4 +1,4 @@
-<div ng-repeat="event in selection.events track by event._id"
+<div ng-repeat="event in selection.props.events track by event._id"
      class="selection-details-panel"
      ng-class="{ active: selectionDetails[event._id] }"
 >
@@ -47,7 +47,7 @@
     </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="event in selection.events" ng-click="selectionDetails[event._id] = true">
+      <tr ng-repeat="event in selection.props.events" ng-click="selectionDetails[event._id] = true">
         <td>
           {{ event['@type'].substr('devices:'.length) }}
         </td>
