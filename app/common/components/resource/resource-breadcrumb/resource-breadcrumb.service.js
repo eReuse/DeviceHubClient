@@ -71,6 +71,12 @@ class ResourceBreadcrumb {
     this.$state.go(this.STATE, {folderPath: path})
   }
 
+  goToRoot () {
+    this.log.length = 0
+    this.log.push({})
+    return this.$state.go('index.inventory', { reload: false })
+  }
+
   /**
    * Converts a path (string) to a log (array).
    * @param {string} path

@@ -362,16 +362,17 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         // Sets filter to show devices of given event
         $scope.showDevicesOfEvent = (event) => {
-          // ResourceBreadcrumb.goToRoot() TODO
-          let searchParam = {
-            key: 'event_id',
-            name: 'Has event',
-            // $$hashKey: 'object:7368',
-            description: 'Match only devices that have a specific event.',
-            placeholder: 'ID of event'
-          }
-          let value = event._id
-          SearchService.addSearchParameter(searchParam, value)
+          ResourceBreadcrumb.goToRoot().then(() => {
+            let searchParam = {
+              key: 'event_id',
+              name: 'Has event',
+              // $$hashKey: 'object:7368',
+              description: 'Match only devices that have a specific event.',
+              placeholder: 'ID of event'
+            }
+            let value = event._id
+            SearchService.addSearchParameter(searchParam, value)
+          })
         }
 
         // TODO what does next line?
