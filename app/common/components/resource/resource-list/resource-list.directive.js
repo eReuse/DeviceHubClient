@@ -154,6 +154,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           $scope.selection = $scope.selection || {}
 
           let selectedDevices = $scope.selection.devices = selector.getAllSelectedDevices().slice()
+          $scope.selection.multiSelection = $scope.selection.devices.length > 1
           $scope.selection.lots = selector.getLots().slice()
 
           // mark current lot
@@ -164,7 +165,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
           // selected lots pills
           $scope.selection.numSelectedLotsShown = 3 // TODO get from config
-          $scope.selection.showDisplayMoreSelectedLotsButton = true
+          $scope.selection.showDisplayMoreSelectedLotsButton =
+            $scope.selection.devices.length > $scope.selection.numSelectedLotsShown
           $scope.selection.showMoreSelectedLots = () => {
             $scope.selection.details.Lots = true
           }

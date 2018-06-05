@@ -114,23 +114,15 @@
 
     <div ng-if="selection.devices.length > 0">
       <h4>Current selection</h4>
-      <h3>{{selection.devices.length}} devices in {{selection.lots.length}} lots</h3>
+      <h3>{{selection.devices.length}} devices</h3>
       <ul>
         <li
-          ng-repeat="lot in selection.lots | limitTo: selection.numSelectedLotsShown track by lot._id"
-          class="pill-lot pill-lot-flex"
-          ng-click="goTo(lot)"
+          ng-repeat="device in selection.devices | limitTo: selection.numSelectedLotsShown track by device._id"
+          class="pill-device pill-device-flex"
         >
-
           <div>
-            <i class="fa fa-fw fa-lg fa-folder-o "></i><span ng-show="lot.current">Current: </span>{{ lot.label }} ({{ lot.selectedDevices.length }})
+            <i class="fa fa-fw fa-lg fa-desktop"></i>{{ device.title }}
           </div>
-          <button type="button"
-                  class="btn"
-                  ng-click="deselectAll(lot.selectedDevices)"
-          >
-            <span><i class="fa fa-close fa-fw"></i></span>
-          </button>
         </li>
         <li
           ng-show="selection.showDisplayMoreSelectedLotsButton"

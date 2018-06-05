@@ -6,26 +6,28 @@
     <i class="fa fa-chevron-left fa-fw"></i>
   </button>
   <h3>Selected lots and devices</h3>
-  <ul>
+  <ul class="selected-lots-list" ng-class="{ 'multi-selection': selection.multiSelection }">
     <li
             ng-repeat="lot in selection.props.lots track by lot._id"
-            ng-click="goTo(lot)"
             class="pill-lot-container"
     >
-
-      <div class="pill-lot pill-lot-flex">
-        <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.label }} ({{lot.selectedDevices.length}})
+      <div class="selected-lot"
+           ng-class="{ 'pill-lot': !selection.multiSelection, 'pill-lot-flex': !selection.multiSelection }">
+        <a ng-click="goTo(lot)">
+          <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.label }} ({{lot.selectedDevices.length}})
+        </a>
         <button type="button"
                 class="btn"
+                ng-show="selection.multiSelection"
                 ng-click="deselectAll(lot.selectedDevices)"
         >
-          <span><i class="fa fa-close fa-fw"></i></span>
+          <span>Deselect</span>
         </button>
       </div>
-      <ul>
+      <ul class="selected-devices-in-lot row" ng-show="selection.multiSelection">
         <li
           ng-repeat="device in lot.selectedDevices track by device._id"
-          class="device"
+          class="device col-lg-5"
         >
           <span>
             <i class="fa fa-fw fa-lg fa-desktop"></i>
