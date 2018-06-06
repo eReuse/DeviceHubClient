@@ -14,6 +14,7 @@
  */
 function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
   const utils = require('./../utils')
+
   /**
    * Similar to DeviceHub's ResourceSettings, it stores several information about a resource. It can do:
    * - Stores settings and schema
@@ -58,13 +59,13 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
         this.isALeaf = this.subResourcesNames.length === 0 || this.type === 'devices:EraseBasic' // todo so works redo
         // Get which is our root ancestor
         // TODO do we need root ancestor / sub resource?
-        // if (this.settings._root) { // We avoid infinite recursive calls by not calling isSubResource if we are root
-        this.rootAncestor = this
-        // } else {
-        //   const picked = _.pickBy(RESOURCE_CONFIG.resources, r => r._root) // Can't chain findKey after pickBy
-        //   const rootAncestorType = _.findKey(picked, (_, resourceType) => this.isSubResource(resourceType))
-        //   this.rootAncestor = _ResourceSettingsFactory(rootAncestorType)
-        // }
+        if (this.settings._root) { // We avoid infinite recursive calls by not calling isSubResource if we are root
+          this.rootAncestor = this
+        } else {
+          const picked = _.pickBy(RESOURCE_CONFIG.resources, r => r._root) // Can't chain findKey after pickBy
+          const rootAncestorType = _.findKey(picked, (_, resourceType) => this.isSubResource(resourceType))
+          this.rootAncestor = _ResourceSettingsFactory(rootAncestorType)
+        }
       }
     }
 

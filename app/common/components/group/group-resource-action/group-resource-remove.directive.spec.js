@@ -23,7 +23,7 @@ describe('Test resourceRemove', () => {
                            success="_success()"
     ></group-resource-remove>`)
 
-  it('enables to remove only groups with presence in at least one device', () => {
+  it('displays only groups of given resources', () => {
     const params = {
       resources: [
         {
