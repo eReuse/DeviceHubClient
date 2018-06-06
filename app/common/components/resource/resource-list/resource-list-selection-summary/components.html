@@ -1,0 +1,66 @@
+<div class="selection-details-content">
+  <button
+          type="button"
+          class="btn ng-scope btn-hide-details"
+          ng-click="selection.details[row.title] = false">
+    <i class="fa fa-chevron-left fa-fw"></i>
+  </button>
+  <h3>Components</h3>
+  <table class="table" id="device-dashboard-components">
+    <thead>
+    <tr>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th>Range</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-show="::selection.props.components.processorModel">
+      <td>
+        <resource-icon resource-type="Device" resource-subtype="Processor"></resource-icon>
+      </td>
+      <td>Processor</td>
+      <td>{{selection.props.components.processorModel}}</td>
+      <!--<td class="text-right">
+        <device-range score="resource.condition.components.processors"></device-range>
+      </td>-->
+    </tr>
+    <tr ng-show="::selection.props.components.totalHardDriveSize">
+      <td>
+        <resource-icon resource-type="Device" resource-subtype="HardDrive"></resource-icon>
+      </td>
+      <td>
+        Hard drive
+      </td>
+      <td>{{::selection.props.components.totalHardDriveSize}}</td>
+      <!--<td class="text-right">-->
+      <!--<device-range score="resource.condition.components.hardDrives"></device-range>-->
+      <!--</td>-->
+    </tr>
+    <tr ng-show="::selection.props.components.totalRamSize">
+      <td>
+        <resource-icon resource-type="Device" resource-subtype="RamModule"></resource-icon>
+      </td>
+      <td>
+        RAM
+      </td>
+      <td>{{::selection.props.components.totalRamSize}}</td>
+      <td class="text-right">
+        <device-range score="resource.condition.components.ram"></device-range>
+      </td>
+    </tr>
+    <!--<tr ng-show="::graphicCard">-->
+    <!--<td>-->
+    <!--<resource-icon resource-type="Device" resource-subtype="GraphicCard"></resource-icon>-->
+    <!--</td>-->
+    <!--<td>-->
+    <!--Graphics-->
+    <!--</td>-->
+    <!--<td>{{::graphicCard.model}} {{::graphicCard.manufacturer}}</td>-->
+    <!--<td>-->
+    <!--</td>-->
+    <!--</tr>-->
+    </tbody>
+  </table>
+</div>

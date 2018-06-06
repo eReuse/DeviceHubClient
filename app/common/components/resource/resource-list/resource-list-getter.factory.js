@@ -8,18 +8,20 @@ function ResourceListGetterFactory (ResourceSettings) {
      * Creates a resourceListGetter for a specific resourceType.
      *
      * Note: A limitation of resourceListGetter is that needs a default sort.
-     * @param {string} resourceType - The resource type where to get new resources.
+     * @param {string} resourceType - The resource type where to get new resources. //TODO Deprecated
      * @param {array} resources - An array of resource objects to update when new resources are got. This array is
      * updated by reference, so do not re-assign it.
      * @param {object} filterSettings - Configuration object for the filters.
      * @param {progressBar} progressBar - An instance of ngProgress.
+     * @param {defaultFilters} defaultFilters - Filters that will be applied to any request
      */
-    constructor (resourceType, resources, filterSettings, progressBar) {
+    constructor (resourceType, resources, filterSettings, progressBar, defaultFilters) {
       this.resourceType = resourceType
       this.resources = resources
       this.filterSettings = filterSettings
       this.server = ResourceSettings(resourceType).server
       this.progressBar = progressBar
+      this.defaultFilters = defaultFilters
       /**
        * A key/value object of filters, where every key represents a different source.
        * Clients can update their filter, and all of them are merged into
@@ -51,9 +53,11 @@ function ResourceListGetterFactory (ResourceSettings) {
       this.pagination = {
         morePagesAvailable: true,
         pagesAvailable: null,
-        totalPages: null,
+        totalResources: null,
         pageNumber: 1
       }
+
+      this.totalNumberResources = 0
 
       this._callbacksOnGetting = []
     }
@@ -67,9 +71,11 @@ function ResourceListGetterFactory (ResourceSettings) {
       this._filtersBySource[source] = newFilters
       // Let's merge the different filters in a single one
       this._filters = {}
-      _.merge.call(_, this._filters, ..._.values(this._filtersBySource))
+      _.merge(this._filters, ..._.values(this._filtersBySource))
       // The 'search' filters have preference over others
       _.merge(this._filters, this._filtersBySource[SEARCH])
+      // The default filters have preference over others
+      _.merge(this._filters, this.defaultFilters)
       // todo if this is called multiple times for the same parameters use isEqual and firstTime combo
       if (!_.isNull(this._filters) && !_.isNull(this._sort)) this.getResources()
     }
@@ -173,17 +179,117 @@ function ResourceListGetterFactory (ResourceSettings) {
         where: this._filters,
         page: this.pagination.pageNumber,
         sort: this._sort,
-        max_results: $(window).height() < 800 ? 20 : 30
+        max_results: this.resourceType === 'Device'
+          ? ($(window).height() < 800 ? 20 : 30)
+          : 15
       }
-      return this.server.getList(q).then(resources => {
-        if (showProgressBar) this.progressBar.complete()
-        if (!getNextPage) this.resources.length = 0
-        _.assign(this.resources, this.resources.concat(resources))
-        this.pagination.morePagesAvailable = resources._meta.page * resources._meta.max_results < resources._meta.total
-        this.pagination.totalPages = resources._meta.total
-        // broadcast to callbacks
-        _.invokeMap(this._callbacksOnGetting, _.call, null, this.resources, this.resourceType, this.pagination, getNextPage)
-      })
+
+      return this.server.getList(q).then(this._processResources.bind(this, getNextPage, showProgressBar))
+    }
+
+    _processResources (getNextPage, showProgressBar, resources) {
+      if (showProgressBar) this.progressBar.complete()
+      if (!getNextPage) this.resources.length = 0
+      if (this.resourceType === 'Device') {
+        resources.forEach(r => {
+          let parentLots = []
+
+          parentLots = parentLots.concat(r.ancestors)
+
+          // map different group types to 'Lot' and set label
+          parentLots = parentLots
+            .filter(r => {
+              // TODO add incoming/outgoing lot?
+              return r['@type'] === 'Lot' || r['@type'] === 'Package' || r['@type'] === 'Pallet'
+            }).map(l => {
+              // Workaround to set labels of selected lots provisionally. Necessary because API /devices doesn't include the 'label' property for device ancestors
+              // TODO remove as soon as API returns ancestor lots with labels set
+              // Get ancestors with /lots?where="{ id: [....] }"
+              l.label = l._id + ' (Deleted)'
+              l['@type'] = 'Lot'
+              return l
+            })
+
+          if (parentLots.length === 0) {
+            parentLots.push({
+              _id: 'NoParent',
+              '@type': 'Lot',
+              label: 'Without lot'
+            })
+          }
+
+          let title
+          if (r['@type'] === 'Device') {
+            title = 'Placeholder'
+          } else {
+            title = r.type + ' ' + r.manufacturer + ' ' + r.model
+          }
+
+          _.assign(r, {
+            status: (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
+            title: title,
+            // 'price: 150,
+            donor: 'BCN Ayuntamiento', // TODO get from events
+            owner: 'Solidança', // TODO get from events
+            distributor: 'Donalo', // TODO get from events
+            parentLots: parentLots
+          })
+          function conversion (newV) {
+            if (newV <= 2) {
+              return 'VeryLow'
+            } else if (newV <= 3) {
+              return 'Low'
+            } else if (newV <= 4) {
+              return 'Medium'
+            } else if (newV > 4) {
+              return 'High'
+            } else {
+              return '?'
+            }
+          }
+          let pathToScoreRange = 'condition.general.range'
+          let pathToScore = 'condition.general.score'
+          _.set(r, pathToScoreRange, conversion(_.get(r, pathToScore)))
+        })
+
+        let lots = {}
+        resources.forEach((device) => {
+          device.parentLots.forEach((lot) => {
+            lots[lot._id] = lots[lot._id] || []
+            lots[lot._id].push(lot)
+          })
+        })
+        let lotIDs = Object.keys(lots)
+
+        ResourceSettings('Lot').server.getList({
+          where: {'_id': { '$in': lotIDs }}
+        }).then((lotsWithLabel) => {
+          // add labels to lots
+          lotsWithLabel.forEach(lot => {
+            lots[lot._id].forEach(origLot => {
+              origLot.label = lot.label
+            })
+          })
+          this._updateResourcesAfterGet(getNextPage, resources)
+        })
+      } else {
+        this._updateResourcesAfterGet(getNextPage, resources)
+      }
+
+      return resources
+    }
+
+    _updateResourcesAfterGet (getNextPage, resources) {
+      _.assign(this.resources, this.resources.concat(resources))
+      this.totalNumberResources = (resources._meta && resources._meta.total) || 0 // TODO sometimes total number is not returned
+      this.pagination.morePagesAvailable = resources._meta && resources._meta.page * resources._meta.max_results < resources._meta.total
+      this.pagination.totalResources = resources._meta && resources._meta.total
+      // broadcast to callbacks
+      _.invokeMap(this._callbacksOnGetting, _.call, null, this.resources, this.lotID, this.resourceType, this.pagination, getNextPage)
+    }
+
+    getTotalNumberResources () {
+      return this.totalNumberResources || 0
     }
 
     /**

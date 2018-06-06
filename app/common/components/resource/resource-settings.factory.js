@@ -57,13 +57,14 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
         this.subResourcesNames = _.without(this.types, this.type)
         this.isALeaf = this.subResourcesNames.length === 0 || this.type === 'devices:EraseBasic' // todo so works redo
         // Get which is our root ancestor
-        if (this.settings._root) { // We avoid infinite recursive calls by not calling isSubResource if we are root
-          this.rootAncestor = this
-        } else {
-          const picked = _.pickBy(RESOURCE_CONFIG.resources, r => r._root) // Can't chain findKey after pickBy
-          const rootAncestorType = _.findKey(picked, (_, resourceType) => this.isSubResource(resourceType))
-          this.rootAncestor = _ResourceSettingsFactory(rootAncestorType)
-        }
+        // TODO do we need root ancestor / sub resource?
+        // if (this.settings._root) { // We avoid infinite recursive calls by not calling isSubResource if we are root
+        this.rootAncestor = this
+        // } else {
+        //   const picked = _.pickBy(RESOURCE_CONFIG.resources, r => r._root) // Can't chain findKey after pickBy
+        //   const rootAncestorType = _.findKey(picked, (_, resourceType) => this.isSubResource(resourceType))
+        //   this.rootAncestor = _ResourceSettingsFactory(rootAncestorType)
+        // }
       }
     }
 
@@ -117,6 +118,9 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
    * @private
    */
   function _ResourceSettingsFactory (type) {
+    if (type === undefined) {
+      throw new Error('cannot get resource settings for given type. type is undefined')
+    }
     if (!(type in resourceTypes)) resourceTypes[type] = new ResourceSettings(type)
     return resourceTypes[type]
   }

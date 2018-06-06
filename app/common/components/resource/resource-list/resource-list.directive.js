@@ -10,131 +10,310 @@
  * @param {ResourceBreadcrumb} ResourceBreadcrumb
  * @param {Session} session
  */
-function resourceList (resourceListConfig, ResourceListGetter, ResourceListGetterBig, ResourceListSelector,
-                       ResourceListSelectorBig, ResourceSettings, progressBar, ResourceBreadcrumb, session) {
-  const utils = require('./../../utils.js')
-  const PARENT_PATH = require('./../__init__').PATH
+function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, UNIT_CODES, CONSTANTS, SearchService, $filter) {
+  const PATH = require('./__init__').PATH
   const NoMorePagesAvailableException = require('./no-more-pages-available.exception')
+  const selectionSummaryTemplateFolder = PATH + '/resource-list-selection-summary'
   return {
     template: require('./resource-list.directive.html'),
     restrict: 'E',
     scope: {
       // The parent resource. If it does not have @type, then we are the list of the main inventory view.
-      parentResource: '=?',
-      resourceType: '@', // The type of resource this list is representing.
-      type: '@' // Type of resource-view this list is in: big, medium, small
+      parentResource: '=?'
     },
     link: {
       // Note that we load on 'pre' to initialize before our child (or inner) directives so they get real config values
       pre: ($scope, element) => {
+        $scope.utils = require('./../../utils.js')
         $scope.session = session
-        const resourceType = $scope.resourceType
-        $scope.resourceName = utils.Naming.resource(resourceType)
-        if (!resourceType) throw TypeError('resourceList needs a "resourceType" set, not ' + resourceType)
-        if (!$scope.type) throw TypeError('resourceLists needs a "type" to be "big"|"medium"|"small", not ' + $scope.type)
-        progressBar.start() // resourceListGetter.getResources will call this too, but doing it here we avoid delay
-        const config = _.cloneDeep(resourceListConfig.views[resourceType])
-        if (_.isUndefined(config)) throw ReferenceError(resourceType + ' has no config.')
-        $scope.resources = [] // Do never directly assign (r=[]) to 'resources' as modules depend of its reference
+        progressBar.start() // getterDevices.getResources will call this too, but doing it here we avoid delay
+        const config = _.cloneDeep(resourceListConfig)
+        $scope.devices = [] // Do never directly assign (r=[]) to 'devices' as modules depend of its reference
+        $scope.lots = []
+
         /**
-         * Object to handle accessing sub resources.
-         * @prop {object} resource - The resource
+         * Gets into the resource; traverse one step into the resource hierarchy by opening the resource in the
+         * main window.
+         * @param {Object} lot - Minimum properties are @type and _id
          */
-        const subResource = $scope.subResource = {
-          resource: null, // The opened subResource
-          isOpened: resourceId => {
-            return resourceId === _.get(subResource.resource, '_id')
-          },
-          /**
-           * Open / close the right window.
-           * @param {Object} resource
-           */
-          toggle: resource => {
-            subResource.resource = subResource.isOpened(resource['_id']) ? null : resource
-            triggerCollapse()
-          },
-          /**
-           * Closes a resource if it was the opened one
-           * @param {string} resourceId
-           */
-          close: resourceId => {
-            if (_.get(subResource.resource, '_id') === resourceId) {
-              subResource.resource = null
-              triggerCollapse()
-            }
-          },
-          /**
-           * Gets into the resource; traverse one step into the resource hierarchy by opening the resource in the
-           * main window.
-           * @param {Object} resource - Minimum properties are @type and _id
-           */
-          openFull: resource => {
-            ResourceBreadcrumb.go(resource)
-          }
+        $scope.goTo = lot => {
+          ResourceBreadcrumb.go(lot)
         }
 
+        // TODO need this?
         // Makes the table collapsible when window resizes
         // Note this method is executed too in $scope.toggleDeviceView
         const triggerCollapse = require('./collapse-table.js')($scope)
         $(window).resize(triggerCollapse)
 
-        // Note that some values of $scope are sate inside the constructors of ResourceListGetter and ResourceListSelector
-        let resourceListGetter
-        let resourceListSelector
-        $scope.resources.length = 0
-        $scope.selector = { // resourceListSelector needs the following vars
-          checked: false, // ng-model for the 'selectAll' checkbox
-          checkboxes: {}, // ng-model for the checkboxes in the list. Only for representational purposes.
-          // The selected resources of the actual list. Although resourceListSelector uses its own
-          // list, it can optionally populate this one if passed for use to use in the template
-          inList: [],
-          // The same as inList but for the total of resources through all lists
-          total: []
-        }
-        if ($scope.type === 'big') {
-          resourceListGetter = new ResourceListGetterBig(resourceType, $scope.resources, config, progressBar)
-          resourceListSelector = new ResourceListSelectorBig($scope.selector, $scope.resources, resourceListGetter)
-        } else {
-          resourceListGetter = new ResourceListGetter(resourceType, $scope.resources, config, progressBar)
-          resourceListSelector = new ResourceListSelector($scope.selector, $scope.resources, resourceListGetter)
+        // Set up getters and selectors for devices
+        const defaultFilters = ($scope.parentResource && $scope.parentResource._id)
+          ? { 'dh$insideLot': $scope.parentResource._id } // TODO dh$insideLot returns devices that are in specified lot OR any sublot of specified lot
+          : null
+        const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar, _.cloneDeep(defaultFilters))
+        const selector = $scope.selector = ResourceListSelector
+        getterDevices.callbackOnGetting(_.bind(selector.reAddToLot, selector, _))
+        $scope.getTotalNumberOfDevices = () => {
+          return getterDevices.getTotalNumberResources()
         }
 
-        // Search
-        const parentType = _.get($scope, 'parentResource.@type')
-        if (parentType) {
-          // If we are the subresource of a parent, we can only show the resources that are tied somehow with
-          // the parent, not all resources. We do this by setting a default parameter in search
-          // no need to _.clone this setting as we do not modify it
-          const path = 'search.subResource.' + resourceType
-          const defaultParam = utils.getSetting(resourceListConfig.views, ResourceSettings(parentType), path)
-          if (!defaultParam) throw TypeError(`${parentType} does not have default param for subResource ${resourceType}`)
-          config.search.defaultParams[defaultParam.key] = $scope.parentResource[defaultParam.field]
+        // Set up getters for lots
+        const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar, _.cloneDeep(defaultFilters))
+        getterLots.updateSort('label')
+        // Total number of devices
+        $scope.getTotalNumberOfLots = () => {
+          return getterLots.getTotalNumberResources()
+        }
+
+        // Workaround: In root, parentResource is not set. This must be after initializing ResourceListGetter
+        // TODO Delete workaround as soon as API returns root with label and _id set
+        $scope.parentResource = $scope.parentResource || {
+          _id: 'NoParent',
+          '@type': 'Lot',
+          label: 'Without lot'
         }
 
         // Sorting
         $scope.sort = {}
-        $scope.setSort = _.bind(resourceListGetter.updateSort, resourceListGetter, _)
+        $scope.setSort = _.bind(getterDevices.updateSort, getterDevices, _)
 
         // Filtering
-        $scope.onSearchParamsChanged = _.bind(resourceListGetter.updateFiltersFromSearch, resourceListGetter, _)
+        $scope.onSearchParamsChanged = newFilters => {
+          getterDevices.updateFiltersFromSearch(newFilters)
+          getterLots.updateFiltersFromSearch(newFilters) // TODO update lots on filter update?
+        }
 
         // Selecting
-        $scope.toggleSelectAll = _.bind(resourceListSelector.toggleSelectAll, resourceListSelector, _)
-        $scope.toggleSelect = _.bind(resourceListSelector.toggle, resourceListSelector, _)
-        $scope.toggleSelect = (resource, $event, $index) => {
-          resourceListSelector.toggle(resource, $event, $index)
-          // Avoids the ng-click from the row (<tr>) to trigger
-          $event.stopPropagation()
+        $scope.toggleSelect = (resource, $index, $event) => {
+          $event.stopPropagation() // Avoids the ng-click from the row (<tr>) to trigger
+
+          if ($event.shiftKey) {
+            let lastSelectedIndex = $scope.lastSelectedIndex || 0
+            let start = Math.min(lastSelectedIndex, $index)
+            let end = Math.max(lastSelectedIndex, $index)
+            let devicesToSelect = $scope.devices.slice(start, end + 1)
+            selector.selectAll(devicesToSelect, $scope.parentResource)
+          } else if ($event.ctrlKey) {
+            selector.toggle(resource, $scope.parentResource)
+          } else {
+            let isSelected = selector.isSelected(resource)
+            if (isSelected) {
+              if ($scope.selection.devices.length === 1) {
+                selector.toggle(resource, $scope.parentResource) // remove
+              } else {
+                selector.deselectAll()
+                selector.toggle(resource, $scope.parentResource) // add
+              }
+            } else {
+              selector.deselectAll()
+              selector.toggle(resource, $scope.parentResource)
+            }
+          }
+          $scope.lastSelectedIndex = $index
         }
+
+        $scope.deselectAll = (devices) => {
+          $scope.selector.deselectAll(devices)
+          $scope.lastSelectedIndex = 0
+        }
+
+        // Workaround to set labels of selected lots correctly. Necessary because API /devices doesn't include the 'label' property for device ancestors
+        // TODO remove as soon as API returns ancestor lots with labels set
+        $scope.parentResource && selector.nameLot($scope.parentResource)
+
+        // components, price and condition score (Must be above updateSelection)
+        // const manufacturerSettings = ResourceSettings('Manufacturer')
+        const deviceSettings = ResourceSettings('Device')
+        $scope.currencyOptions = {
+          currency: CONSTANTS.currency,
+          val: 'standard',
+          roles: ['retailer', 'platform', 'refurbisher'],
+          filter: (amount) => {
+            return $filter('currency')(amount, CONSTANTS.currency)
+          }
+        }
+        $scope.hasExplicitPerms = session.hasExplicitPerms()
+        $scope.hardDriveSizeUnit = UNIT_CODES[deviceSettings.schema.totalHardDriveSize.unitCode]
+        $scope.ramSizeUnit = UNIT_CODES[deviceSettings.schema.totalRamSize.unitCode]
+        $scope.appearance = deviceSettings.schema.condition.schema.appearance.schema.general.allowed_description
+        $scope.functionality = deviceSettings.schema.condition.schema.functionality.schema.general.allowed_description
+        // const where = {parent: $scope.resource._id, '@type': {'$in': ['GraphicCard', 'Processor']}}
+        // deviceSettings.server.getList({where: where}).then(components => {
+        //   $scope.graphicCard = _.find(components, {'@type': 'GraphicCard'})
+        //   const cpu = _.find(components, {'@type': 'Processor'})
+        //   if (cpu) {
+        //     manufacturerSettings.server.findText(['label'], cpu.manufacturer.split(' ')[0], true, 1).then(manu => {
+        //       if (manu.length) {
+        //         $scope.processorManufacturer = manu[0]
+        //       }
+        //     })
+        //   }
+        // })
+
+        function updateSelection () {
+          $scope.selection = $scope.selection || {}
+
+          let selectedDevices = $scope.selection.devices = selector.getAllSelectedDevices().slice()
+          $scope.selection.multiSelection = $scope.selection.devices.length > 1
+          $scope.selection.lots = selector.getLots().slice()
+
+          // mark current lot
+          let currentLot = _.find($scope.selection.lots, { _id: $scope.parentResource._id })
+          if (currentLot) {
+            currentLot.current = true
+          }
+
+          // selected lots pills
+          $scope.selection.numSelectedLotsShown = 3 // TODO get from config
+          $scope.selection.showDisplayMoreSelectedLotsButton =
+            $scope.selection.devices.length > $scope.selection.numSelectedLotsShown
+          $scope.selection.showMoreSelectedLots = () => {
+            $scope.selection.details.Lots = true
+          }
+
+          // select/deselect button
+          $scope.selection.areAllDevicesOfCurrentLotSelected = _.difference(
+            $scope.devices,
+            selectedDevices,
+            (a, b) => {
+              return a._id === b._id
+            }
+          ).length === 0
+
+          // aggregated properties of selected devices
+          let props = {
+            type: selector.getAggregatedPropertyOfSelected(selectedDevices, '@type'),
+            subType: selector.getAggregatedPropertyOfSelected(selectedDevices, 'type'),
+            manufacturer: selector.getAggregatedPropertyOfSelected(selectedDevices, 'manufacturer'),
+            model: selector.getAggregatedPropertyOfSelected(selectedDevices, 'model'),
+            serialNumber: selector.getAggregatedPropertyOfSelected(selectedDevices, 'serialNumber', 'Various serial numbers'),
+            hid: selector.getAggregatedPropertyOfSelected(selectedDevices, 'hid', 'Various hids'),
+            status: selector.getAggregatedPropertyOfSelected(selectedDevices, 'status'),
+            condition: {
+              appearance: {
+                general: selector.getRangeOfPropertyOfSelected(selectedDevices, 'condition.appearance.general')
+              },
+              functionality: {
+                general: selector.getRangeOfPropertyOfSelected(selectedDevices, 'condition.functionality.general')
+              },
+              general: {
+                range: selector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.general.range')
+              }
+            },
+            components: {
+              processorModel: selector.getAggregatedPropertyOfSelected(selectedDevices, 'processorModel'),
+              totalHardDriveSize: selector.getAggregatedPropertyOfSelected(selectedDevices, 'totalHardDriveSize', 'Various', ' GB HardDrive'),
+              totalRamSize: selector.getAggregatedPropertyOfSelected(selectedDevices, 'totalRamSize', 'Various', ' MB RAM')
+            },
+            events: selector.getAggregatedSetOfSelected(selectedDevices, 'events', '_id'),
+            lots: $scope.selection.lots
+          }
+          $scope.currencyOptions.roles.forEach((roleName) => {
+            let path = 'pricing.' + roleName + '.' + $scope.currencyOptions.val
+            _.set(props,
+              path + '.percentage',
+              selector.getRangeOfPropertyOfSelected(selectedDevices, path + '.percentage', (percentage) => {
+                return $filter('percentage')(percentage)
+              })
+            )
+            _.set(props,
+              path + '.amount',
+              selector.getRangeOfPropertyOfSelected(selectedDevices, path + '.amount', $scope.currencyOptions.filter)
+            )
+          })
+          let path = 'pricing.total.' + $scope.currencyOptions.val
+          _.set(props,
+            path,
+            selector.getRangeOfPropertyOfSelected(selectedDevices, path, $scope.currencyOptions.filter)
+          )
+          $scope.selection.props = props
+
+          // Used to determine which details pane (e.g. type, components, events, ...) to show
+          $scope.selection.details = {}
+
+          // Summary for selection
+          let typeContentSummary
+          if (props.type === selector.VARIOUS) {
+            typeContentSummary = 'Various types'
+          } else if (props.type === 'Device') {
+            typeContentSummary = 'Placeholder'
+          } else if (props.subType === selector.VARIOUS) {
+            typeContentSummary = props.type + ' Various subtypes'
+          } else if (props.manufacturer === selector.VARIOUS) {
+            typeContentSummary = props.subType + ' Various manufacturers'
+          } else if (props.model === selector.VARIOUS) {
+            typeContentSummary = props.subType + ' ' + props.manufacturer + ' Various models'
+          } else {
+            typeContentSummary = props.subType + ' ' + props.manufacturer + ' ' + props.model
+          }
+          $scope.selection.summary = [
+            {
+              title: 'Type, manufacturer & model',
+              contentSummary: typeContentSummary,
+              cssClass: 'type',
+              templateUrl: selectionSummaryTemplateFolder + '/type.html'
+            },
+            {
+              title: 'Status',
+              contentSummary: props.status,
+              cssClass: 'status',
+              templateUrl: selectionSummaryTemplateFolder + '/status.html'
+            },
+            {
+              title: 'Price',
+              contentSummary: props.pricing.total[$scope.currencyOptions.val],
+              cssClass: 'price',
+              templateUrl: selectionSummaryTemplateFolder + '/price.html'
+            },
+            {
+              title: 'Condition score',
+              contentSummary: props.condition.general.range,
+              cssClass: 'condition-score',
+              templateUrl: selectionSummaryTemplateFolder + '/condition-score.html'
+            },
+            {
+              title: 'Components',
+              contentSummary: _.values(props.components).join(' '),
+              cssClass: 'components',
+              templateUrl: selectionSummaryTemplateFolder + '/components.html'
+            },
+            // {
+            //   title: 'Providers',
+            //   contentSummary: 'Donor:' + selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'donor') || 'No donor' +
+            //   'Owner:' + selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'donor') || 'No owner' +
+            //   'Distributor:' + selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'distributor') || 'No distributor',
+            //   content: 'Providers'
+            // },
+            {
+              title: 'Events',
+              contentSummary: props.events.length + ' events',
+              cssClass: 'events',
+              templateUrl: selectionSummaryTemplateFolder + '/events.html'
+            },
+            {
+              title: 'Lots',
+              contentSummary: props.lots.length + ' lots',
+              cssClass: 'lots',
+              templateUrl: selectionSummaryTemplateFolder + '/lots.html'
+            }
+          ]
+        }
+        selector.callbackOnSelection(updateSelection)
+        updateSelection()
 
         // Reloading
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
         $scope.reload = () => {
-          resourceListGetter.getResources()
-          resourceListSelector.deselectAll()
+          getterDevices.getResources()
+          $scope.deselectAll()
+        }
+        // TODO need this?
+        function hardReload () {
+          $scope.deselectAll()
+          $scope.reload()
         }
 
-        // Pagination
+        // Pagination Devices
         // Let's avoid the user pressing multiple times the 'load more'
         $scope.getMoreIsBusy = false
         $scope.morePagesAvailable = true
@@ -143,7 +322,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           if (!$scope.getMoreIsBusy && getMoreFirstTime) {
             $scope.getMoreIsBusy = true
             try {
-              resourceListGetter.getResources(true, false).finally(() => { $scope.getMoreIsBusy = false })
+              getterDevices.getResources(true, false).finally(() => { $scope.getMoreIsBusy = false })
             } catch (err) {
               $scope.getMoreIsBusy = false
               if (!(err instanceof NoMorePagesAvailableException)) throw err
@@ -152,61 +331,60 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListGette
           }
           getMoreFirstTime = true
         }
+
+        // Pagination lots
+        // Let's avoid the user pressing multiple times the 'load more'
+        $scope.getMoreLotsIsBusy = false
+        $scope.morePagesAvailableLots = true
+        $scope.getMoreLots = () => {
+          if (!$scope.getMoreLotsIsBusy) {
+            $scope.getMoreLotsIsBusy = true
+            try {
+              getterLots.getResources(true, false).finally(() => {
+                $scope.getMoreLotsIsBusy = false
+              })
+            } catch (err) {
+              $scope.getMoreLotsIsBusy = false
+              if (!(err instanceof NoMorePagesAvailableException)) throw err
+              $scope.morePagesAvailableLots = false
+            }
+          }
+        }
+
         // If we don't want to collision with tables of subResources we
         // need to do this when declaring the directive
+        // TODO need this?
         const $table = element.find('.fill-height-bar')
-        resourceListGetter.callbackOnGetting((_, __, ___, getNextPage) => {
+        getterDevices.callbackOnGetting((_, __, ___, getNextPage) => {
           if (!getNextPage) {
             $table.scrollTop(0) // Scroll up to the table when loading from page 0 again
             $scope.morePagesAvailable = true // Reset
           }
         })
 
-        // Popover is set on the left or bottom depending screen size (xs)
-        const computePlacement = () => $(window).width() <= 768 ? 'bottom-left' : 'auto left'
-        $scope.popoverPlacement = computePlacement()
-        $(window).resize(() => {
-          const placement = computePlacement()
-          if (placement !== $scope.popoverPlacement) $scope.$evalAsync(() => { $scope.popoverPlacement = placement })
-        })
-
-        $scope.popovers = {enable: false}
-        if ($scope.type === 'medium') {
-          resourceListGetter.callbackOnGetting(resources => {
-            $scope.popovers.enable = true
-            $scope.popovers.templateUrl = PARENT_PATH + '/resource-button/resource-button.popover.directive.html'
-            _.forEach(resources, resource => {
-              $scope.popovers[resource._id] = {
-                isOpen: false,
-                title: utils.getResourceTitle(resource)
-              }
-              // Extra costly todo find better way
-              $scope.$watch(() => $scope.popovers[resource._id].isOpen, isOpen => {
-                if (isOpen === false) {
-                  $scope.subResource.close(resource._id)
-                } else if (isOpen === true) { // Let's close other popovers
-                  _.forEach(resources, _resource => {
-                    if (_resource._id !== resource._id) $scope.popovers[_resource._id].isOpen = false
-                  })
-                }
-              })
-            })
+        // Sets filter to show devices of given event
+        $scope.showDevicesOfEvent = (event) => {
+          ResourceBreadcrumb.goToRoot().then(() => {
+            let searchParam = {
+              key: 'event_id',
+              name: 'Has event',
+              // $$hashKey: 'object:7368',
+              description: 'Match only devices that have a specific event.',
+              placeholder: 'ID of event'
+            }
+            let value = event._id
+            SearchService.addSearchParameter(searchParam, value)
           })
         }
 
-        function hardReload () {
-          $scope.checked = false
-          resourceListSelector.deselectAll()
-          $scope.reload()
-        }
+        // TODO what does next line?
+        ResourceSettings('Device').types.forEach(type => { $scope.$on('submitted@' + type, hardReload) })
 
-        if ($scope.type === 'big') {
-          ResourceSettings(resourceType).types.forEach(type => { $scope.$on('submitted@' + type, hardReload) })
-          // We register ourselves for any event type, excluding Snapshot if the list is not about devices
-          let eventTypes = ResourceSettings('Event').subResourcesNames
-          if (resourceType !== 'Device') eventTypes = _.without(eventTypes, 'devices:Snapshot', 'devices:Register')
-          _.forEach(eventTypes, eventType => { $scope.$on('submitted@' + eventType, hardReload) })
-        }
+        // We register ourselves for any event type, excluding Snapshot if the list is not about devices
+        let eventTypes = ResourceSettings('Event').subResourcesNames
+        // TODO do we need next line? resourceType is always 'Device' for now
+        // if (resourceType !== 'Device') eventTypes = _.without(eventTypes, 'devices:Snapshot', 'devices:Register')
+        _.forEach(eventTypes, eventType => { $scope.$on('submitted@' + eventType, hardReload) })
 
         // As we touch config in the init, we add it to $scope at the end to avoid $watch triggering multiple times
         $scope.config = config

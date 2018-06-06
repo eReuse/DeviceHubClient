@@ -8,14 +8,12 @@
  * @param {ResourceSettings} ResourceSettings
  * @param {SubmitForm} SubmitForm
  */
-function resourceExport (session, CONSTANTS, $http, ResourceSettings, SubmitForm) {
+function resourceExport (session, CONSTANTS, $http, ResourceSettings, SubmitForm, ResourceListSelector) {
   return {
     template: require('./resource-export.directive.html'),
     restrict: 'E',
-    scope: {
-      resources: '='
-    },
     link: $scope => {
+      $scope.selector = ResourceListSelector
       // Export popover
       $scope.isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)
       $scope.popover = {
@@ -69,17 +67,18 @@ function resourceExport (session, CONSTANTS, $http, ResourceSettings, SubmitForm
         ],
         model: {type: 'brief', format: 'ods'},
         submit: model => {
+          let resources = ResourceListSelector.getAllSelectedDevices()
           if (submitForm.isValid()) {
             submitForm.prepare()
             const saveAs = require('file-saver').saveAs
             const mimeType = MIME_TYPES[model.format]
-            const rSettings = ResourceSettings($scope.resources[0]['@type'])
+            const rSettings = ResourceSettings(resources[0]['@type'])
             const resource = rSettings.resourceName
             const promise = $http({
               method: 'GET',
               url: CONSTANTS.url + '/' + session.db + '/export/' + resource,
               params: {
-                ids: _.map($scope.resources, '_id'),
+                ids: _.map(resources, '_id'),
                 type: model.type
               },
               headers: {Accept: mimeType, Authorization: 'Basic ' + session.account.token},

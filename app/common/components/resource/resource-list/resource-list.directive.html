@@ -1,50 +1,56 @@
-<!-- Resource Search -->
-<div class="row" ng-class="{'hidden-xs': subResource.resource}">
-  <resource-search class="col-md-10 col-xs-offset-0 col-md-offset-1 show subview-12 subview-offset-0"
-                   settings="config.search.params"
-                   on-params-changed="onSearchParamsChanged(params)"
-                   default-params="config.search.defaultParams"
-  ></resource-search>
-</div>
-
-<!-- Butttons -->
-<div id="buttons" class="row text-center" ng-class="{'hidden-xs': subResource.resource}">
-  <span style="margin-right: 10px; font-weight: bold;">{{selector.total.length}} items selected: </span>
-  <div id="screener"
-       uib-tooltip="Select some {{resourceName}} first."
-       tooltip-enable="selector.inList.length == 0"
-       ng-mouseenter="hoverScreener = true"
-       ng-mouseleave="hoverScreener = false"
-  >
-    <div ng-show="selector.inList.length == 0"></div>
-
-    <div ng-include="config.buttons.templateUrl + (session.hasExplicitPerms()? '' : '-shared') + '.html'"></div>
-  </div>
-</div>
-
 <!-- Listing -->
 <div class="row">
-  <div
-    ng-class="{
-      'col-xs-12': type !== 'big' || !subResource.resource,
-      'col-xs-2 col-sm-4 col-lg-5': type === 'big' && subResource.resource
-    }"
-    class="fill-height-bar"
-  >
+  <div class="current-lot fill-height-bar col-lg-6">
+    <resource-breadcrumb></resource-breadcrumb>
+    <!-- Resource Filters -->
+    <resource-search settings="config.search.params"
+                     on-params-changed="onSearchParamsChanged(params)"
+                     default-params="config.search.defaultParams"
+    ></resource-search>
+    <h4>Lots ({{ getTotalNumberOfLots() }})</h4>
+    <div class="children-lots"
+    >
+      <ul>
+        <li
+                ng-repeat="lot in lots"
+        >
+          <a href="#" ng-click="goTo(lot)">
+            <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.label }}
+          </a>
+        </li>
+        <li ng-show="morePagesAvailableLots">
+          <a href="#" ng-click="getMoreLots()">
+            Show more
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <h4 style="display: inline-block; margin-bottom: 20px;">Devices ({{ getTotalNumberOfDevices() }}) </h4>
+    <button type="button"
+            class="btn btn-info"
+            style="display: inline-block; padding: 5px 10px; margin-left: 10px;"
+            ng-show="!selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
+            ng-click="selector.selectAll(devices, parentResource)"
+    >
+      <span>Select all</span>
+    </button>
+    <button type="button"
+            class="btn btn-info"
+            style="display: inline-block; padding: 5px 10px; margin-left: 10px;"
+            ng-show="selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
+            ng-click="deselectAll(devices)"
+    >
+      <span>Deselect all</span>
+    </button>
+
     <div infinite-scroll="getMore()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
          infinite-scroll-parent infinite-scroll-disabled="getMoreIsBusy || !morePagesAvailable"
          infinite-scroll-listen-for-event="list:filtered"
     >
-      <table id="resource-list-table" class="table table-striped table-hover">
+      <table id="resource-list-table" class="resource-list-table table table-striped table-hover">
         <thead>
           <tr>
-            <th ng-class="{'hidden-xs': subResource.resource}">
-              <input type="checkbox"
-                     class="resource-list-checkbox"
-                     ng-click="toggleSelectAll(selector.checked)"
-                     ng-model="selector.checked">
-
-            </th>
             <th ng-repeat="th in config.table.th"
                 field-sort sort="setSort(sort)" key="{{::th.key}}" name="{{::th.name}}" group="sort"
                 sort-by-default="th.default"
@@ -53,31 +59,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="resource in resources track by resource._id"
-              ng-class="{info: subResource.isOpened(resource._id)}"
-
-              ng-init="popover = popovers[resource._id]"
-
-              uib-popover-template="::popovers.templateUrl"
-              popover-enable="popovers.enable"
-              popover-title="{{::popover.title}}"
-              popover-is-open="popover.isOpen"
-              popover-trigger="click"
-              popover-append-to-body="true"
-              popover-placement="{{popoverPlacement}}"
-              popover-class="resource-button-popover"
-
-              ng-click="$evalAsync(subResource.toggle(resource))"
-              ng-dblclick="subResource.openFull(resource)"
+          <tr ng-repeat="resource in devices track by resource._id"
+              ng-class="{info: selector.isSelected(resource)}"
+              ng-click="toggleSelect(resource, $index, $event)"
           >
-            <td ng-class="{'hidden-xs': subResource.resource}">
-              <input class="resource-list-checkbox"
-                     type="checkbox"
-                     ng-click="toggleSelect(resource, $event, $index)"
-                     ng-model="selector.checkboxes[resource['_id']]"
-                     ng-class="{blink: hoverScreener && resource._id === resources[0]._id && inList.length == 0}"
-              >
-            </td>
             <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
             <td ng-repeat="td in ::config.table.td"
                 ng-init="value = $root._.get(resource, td.value)"
@@ -107,15 +92,6 @@
               </div>
               <div ng-if="::value && $root._.isDate(value)">{{value | timeAgo}}</div>
             </td>
-            <td ng-click="$evalAsync(subResource.toggle(resource))"
-                ng-dblclick="subResource.openFull(resource)"
-                class="text-center"
-            >
-              <resource-icon resource-type="{{::resource['@type']}}"
-                             resource-subtype="{{::resource.type}}"
-              >
-              </resource-icon>
-            </td>
           </tr>
         </tbody>
       </table>
@@ -130,9 +106,81 @@
       </div>
     </div>
   </div>
-  <!-- SubResource in right-bar -->
-  <aside ng-if="type === 'big' && subResource.resource" class="col-xs-10 col-sm-8 col-lg-7" id="aside-subResource">
-    <resource-view resource="subResource.resource" type="medium"></resource-view>
+  <!-- Selection -->
+  <aside class="selection col-lg-6 fill-height-bar">
+    <div ng-if="selection.devices.length === 0">
+      <h3>Select devices to view more details</h3>
+    </div>
+
+    <div ng-if="selection.devices.length > 0">
+      <h4>Current selection</h4>
+      <h3>{{selection.devices.length}} devices</h3>
+      <ul>
+        <li
+          ng-repeat="device in selection.devices | limitTo: selection.numSelectedLotsShown track by device._id"
+          class="pill-device pill-device-flex"
+        >
+          <div>
+            <i class="fa fa-fw fa-lg fa-desktop"></i>{{ device.title }}
+          </div>
+        </li>
+        <li
+          ng-show="selection.showDisplayMoreSelectedLotsButton"
+          class="pill-lot pill-lot-flex"
+        >
+          <button type="button"
+                  class="btn"
+                  ng-click="selection.showMoreSelectedLots()"
+          >
+            <span>Show more</span>
+          </button>
+        </li>
+      </ul>
+      <div style="position: relative; overflow-x: hidden;">
+        <ul class="selection-summary">
+          <li ng-repeat="row in selection.summary track by row.title">
+            <button type="button"
+                    class="btn"
+                    ng-click="selection.details[row.title] = true"
+            >
+              <span class="selection-summary-title">{{row.title}}</span>
+              <span class="selection-summary-content">{{row.contentSummary}}</span>
+              <i class="fa fa-chevron-right fa-fw"></i>
+            </button>
+          </li>
+        </ul>
+        <div ng-repeat="row in selection.summary track by row.title"
+             class="selection-details-panel"
+             ng-class="{ active: selection.details[row.title] }"
+        >
+          <div class="selection-details-content-wrapper">
+            <div class="selection-details-content-container">
+              <div ng-if="::row.templateUrl"
+                   ng-include="::row.templateUrl"
+                   ng-class="row.cssClass"
+                   style="position: relative">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div id="buttons" class="row">
+        <resource-label-button></resource-label-button>
+        <manual-events-button></manual-events-button>
+        <!--&lt;!&ndash;<share devices="selector.getAllSelectedDevices()"></share>&ndash;&gt;-->
+        <certificate-button></certificate-button>
+        <group-resource-button
+                success="reload()"
+                resource-type="Device"
+                get-resources="selector.getAllSelectedDevices()"
+                register-to-resources-update="selector.callbackOnSelection(callback)">
+        </group-resource-button>
+        <resource-export resources="selector.getAllSelectedDevices()"></resource-export>
+      </div>
+    </div> <!-- ./ selectDevices > 0 -->
+
   </aside>
 </div>
 

@@ -1,0 +1,17 @@
+<div class="selection-details-content">
+  <button
+          type="button"
+          class="btn ng-scope btn-hide-details"
+          ng-click="selection.details[row.title] = false">
+    <i class="fa fa-chevron-left fa-fw"></i>
+  </button>
+  <h3>Status</h3>
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="descriptor">
+        <h5>Current status</h5>
+        <h4>{{ selection.props.status }}</h4>
+      </div>
+    </div>
+  </div>
+</div>

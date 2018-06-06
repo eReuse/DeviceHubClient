@@ -1,0 +1,39 @@
+<div class="selection-details-content">
+  <button
+          type="button"
+          class="btn ng-scope btn-hide-details"
+          ng-click="selection.details[row.title] = false">
+    <i class="fa fa-chevron-left fa-fw"></i>
+  </button>
+  <h3>Device</h3>
+  <div class="row">
+    <div class="col-lg-6">
+      <h5>Type</h5>
+      <h4>{{ selection.props.type }}</h4>
+    </div>
+    <div class="col-lg-6">
+      <h5>Sub type</h5>
+      <h4>{{ selection.props.subType }}</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-6">
+      <h5>Manufacturer</h5>
+      <h4>{{ selection.props.manufacturer }}</h4>
+    </div>
+    <div class="col-lg-6">
+      <h5>Model</h5>
+      <h4>{{ selection.props.model }}</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-6">
+      <h5>Serial number</h5>
+      <h4>{{ selection.props.serialNumber }}</h4>
+    </div>
+    <div class="col-lg-6">
+      <h5>HID</h5>
+      <h4>{{ selection.props.hid }}</h4>
+    </div>
+  </div>
+</div>

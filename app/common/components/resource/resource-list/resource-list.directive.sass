@@ -1,6 +1,45 @@
 @import '_resource-list.directive'
 
-resource-list
+.breadcrumb
+  padding: 6px 0
+  font-size: 22px
+  margin-bottom: 0
+  background-color: transparent
+  group-resource-button
+    float: right
+    margin-left: 10px
+    .btn-primary
+      color: #767676
+      background-color: #ffffff
+      border-color: #a8a8a8
+      padding: 6px
+      border-radius: 3px
+
+  resource-field-edit
+    form
+      display: inline-block
+      width: inherit
+    .buttons
+      margin-left: 10px
+      margin-right: 10px
+  li + li:before
+    padding: 0 5px 0 15px
+  resource-icon
+    font-size: 1em
+    line-height: inherit
+  a
+    color: grey
+    text-decoration: none
+    &:hover
+      text-decoration: none
+
+.resource-list
+  background-color: #f4f4f4
+  padding: 15px
+
+  .current-lot
+    padding: 15px 30px 30px 30px
+
   #screener
     display: inline-block
     position: relative
@@ -15,6 +54,8 @@ resource-list
     max-width: 2em
 
   #buttons
+    margin-top: 30px
+    text-align: right
     .btn
       padding-top: 0.25em
       padding-bottom: 0.25em
@@ -25,57 +66,243 @@ resource-list
     outline-offset: -2px
 
   .fill-height-bar
-    height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight} - #{$tabsHeight} - #{$optionsMenuHeight} - #{$searchHeight})
-    @media (max-width: $screen-xs-max)
-      height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight} - #{$tabsHeight})
+    height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$optionsMenuHeight})
     overflow-y: auto
+    @media (max-width: $screen-xs-max)
+      height: calc(100vh - #{$navbar-height} - #{$footerHeight})
 
-  #resource-list-table tr
-    *
-      &:first-child
-        white-space: nowrap
+  .resource-list-table
+    &.table-hover
+      tbody
+        tr
+          &:hover
+            background-color: #85bfcf
+            color: white
+    tr
+      *
+        &:first-child
+          white-space: nowrap
 
-      .resource-list-checkbox
-        zoom: 1.5
-        -moz-transform: scale(1.5)
+        .resource-list-checkbox
+          zoom: 1.5
+          -moz-transform: scale(1.5)
 
-    td
-      user-select: none
-      cursor: pointer
+      td
+        user-select: none
+        cursor: pointer
 
-    th
-      padding-top: 0 !important
-    .label
-      display: block
+      th
+        padding-top: 0 !important
+      .label
+        display: block
 
-  #aside-subResource
-    padding-left: 0
-    border-left: 2px solid $main-nav-bg
-    box-shadow: -5px -3px 10px -7px #999
-    resource-view
-      .fill-height-bar // a subview with a search bar (ex. any resource-list)
-        // - 2 * (everything we had in .fill-height-bar above) but calc does not allow 2 * (parenthesis) so we get it by
-        // breadcrumb is represented by $line-height-computed - $breadcrumb-padding-vertical
-        // applying the distributive property
-        height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight} - 2 * #{$optionsMenuHeight} - #{$tabsMenuHeight} - #{$tabsHeight} - 2 * #{$searchHeight} - #{$subresourceH3Height}) !important
-        overflow-y: auto
-        @media (max-width: $screen-xs-max)
-          height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight} - #{$optionsMenuHeight} - #{$tabsMenuHeight} - 1 * #{$searchHeight} - #{$subresourceH3Height}) !important
+.selection
+  padding: 30px
+  border-left: 2px solid $main-nav-bg
+  box-shadow: -5px -3px 10px -7px #999
+  background-color: #ffffff
+  ul
+    padding: 0
 
-      .fill-height // A subview without a search bar nor options buttons (ex. dashboard)
-        // We use fill-height-bar as initial, as only listing have subresources
-        height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight} - #{$tabsHeight} - #{$tabsMenuHeight}  - #{$searchHeight} - #{$subresourceH3Height}) !important
-        overflow-y: auto
+.children-lots
+  ul
+    padding: 0
+    li
+      list-style: none
+      display: inline-flex
+      border-radius: 4px
+      padding: 5px
+      border: 1px solid
+      margin-bottom: 6px
+      background-color: white
+      &:not(:last-child)
+        margin-right: 6px
+      a
+        color: #333333
+        text-decoration: none
 
-        @media (max-width: $screen-xs-max)
-          height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$footerHeight} - #{$tabsMenuHeight} - 1 * #{$tabsHeight} - #{$subresourceH3Height}) !important
 
-      header
-        background-color: $main-nav-bg
-        h3
-          margin-top: 0
-          margin-bottom: 0
-          padding-top: $line-height-computed / 4
+.pill-lot
+  list-style: none
+  border-radius: 4px
+  padding: 5px
+  border: 1px solid #666666
+  margin-bottom: 6px
+  background-color: white
+  cursor: pointer
+  button
+    background-color: transparent
+    padding: 0
+    &.btn:hover, &.btn:focus, &.btn.focus
+      color: #333333
+  &:not(:last-child)
+    margin-right: 6px
 
-#device-dashboard-components td:last-child span
-  display: block
+.pill-device-flex
+  display: inline-flex
+
+.pill-device
+  list-style: none
+  padding: 5px
+  margin-bottom: 6px
+  background-color: white
+  cursor: pointer
+  button
+    background-color: transparent
+    padding: 0
+    &.btn:hover, &.btn:focus, &.btn.focus
+      color: #333333
+  &:not(:last-child)
+    margin-right: 6px
+
+.pill-lot-flex
+  display: inline-flex
+
+.selection-summary
+  margin-bottom: 0
+  li
+    list-style: none
+    outline: none !important
+    &:first-child > button
+      border-top-left-radius: 5px
+      border-top-right-radius: 5px
+    &:last-child > button
+      border-bottom-left-radius: 5px
+      border-bottom-right-radius: 5px
+    &:not(:first-child) > button
+      border-top: none
+    button
+      background-color: white
+      color: #333333
+      box-shadow: none
+      border: 1px solid #bfbfbf
+
+      width: 100%
+      text-align: left
+      &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
+        box-shadow: none
+        outline: none
+        background-color: #449bb4
+        border-color: white
+        color: white
+        .fa
+          display: block
+          color: white
+      .selection-summary-title
+        display: block
+      .selection-summary-content
+        font-size: 18px
+      .fa
+        float: right
+        font-size: 22px
+        display: none
+
+
+
+.selection-details-panel
+  border: 1px solid #bfbfbf
+  border-radius: 5px
+  position: absolute
+  top: 0
+  width: 100%
+  height: 100%
+  background-color: white
+  left: 100%
+  transition: all 700ms
+  //overflow-x: hidden
+  //overflow-y: scroll
+  &.active
+    left: 0
+  .selection-details-content-wrapper
+    position: relative
+    padding: 0
+    width: 100%
+    height: 100%
+    .selection-details-content-container
+      position: absolute
+      top: 0
+      width: 100%
+      height: 100%
+      padding: 0
+      overflow-x: hidden
+      .components > .table
+        max-width: 650px
+      .condition-score
+        td:last-child span
+          display: block
+      .lots
+        .selected-lots-list
+          padding-top: 20px
+          &.multi-selection
+            .pill-lot-container
+              background-color: #e8e8e8
+              border-radius: 7px
+              &:not(:last-child)
+                margin-bottom: 20px
+              .selected-lot
+                width: 75%
+                padding-bottom: 10px
+                margin-bottom: 12px
+                border-bottom: 1px #a6a6a6 solid
+          .pill-lot-container
+            list-style: none
+            padding: 8px
+            .selected-lot
+              a
+                color: #333333
+                &:hover
+                  color: #333333
+              button
+                background-color: white
+                margin-left: 10px
+                border-color: grey
+                padding: 7px
+                &:hover
+                  color: #333333
+            .selected-devices-in-lot
+              .device
+                list-style: none
+                display:
+                padding: 5px
+                &:not(:last-child)
+                  margin-right: 6px
+      .type
+        .descriptor
+          margin-bottom: 30px
+      .status-selector
+        display: -webkit-box
+        display: -webkit-flex
+        display: -ms-flexbox
+        display: flex
+        flex-wrap: wrap
+        margin-top: 20px
+        .btn
+          height: 100%
+          text-align: center
+          align-items: center
+          display: -webkit-box
+          display: -webkit-flex
+          display: -ms-flexbox
+          display: flex
+          justify-content: center
+          background-color: #ffffff
+          border-radius: 5px
+          border: 1px solid grey
+          h4
+            font-size: 22px
+          &.btn:hover, &.btn:focus, &.btn.focus
+            color: #333333
+      .selection-details-content
+        padding: 15px
+        .btn-hide-details
+          float: left
+          padding: 4px 10px
+          margin-right: 5px
+          border-radius: 5px
+          color: #333333
+          &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
+            color: #333333
+
+
+
+
