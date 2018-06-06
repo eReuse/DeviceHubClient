@@ -116,14 +116,13 @@ const RESOURCE_CONFIG = {
       // subviewSmall: v.Detail,
       _root: true
     },
-    // Group: {
-    //   label: {
-    //     fields: ['_id', 'label'],
-    //     defaultFields: ['_id', 'label']
-    //   },
-    //   subviewSmall: v.Detail,
-    //   _root: true
-    // },
+    Group: {
+      label: {
+        fields: ['_id', 'label'],
+        defaultFields: ['_id', 'label']
+      },
+      _root: true
+    },
     Place: {
       dataRelation: {
         label: 'Name of the place',

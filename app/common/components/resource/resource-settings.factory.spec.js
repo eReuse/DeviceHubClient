@@ -1,4 +1,3 @@
-const test = require('./../../../../tests/unit')
 const mock = require('./../../../../tests/unit/mock')()
 
 describe('Test ResourceSettings', function () {
@@ -46,7 +45,7 @@ describe('Test ResourceSettings', function () {
     // This setting is defined in devices:Snapshot
     expect(rSettings.getSetting('doNotUse')).toContain('debug')
     // This setting is defined in Event
-    expect(rSettings.getSetting('subviews')).toEqual(test.RESOURCE_CONFIG.resources.Event.subviews)
+    // expect(rSettings.getSetting('subviews')).toEqual(test.RESOURCE_CONFIG.resources.Event.subviews)
     // This property doesn't exist
     expect(() => {
       rSettings.getSetting('foo-bar-setting')

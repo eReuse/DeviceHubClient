@@ -15,8 +15,6 @@ describe('Test label edit', () => {
   labelEdit.fields = []
 
   testLabelEdit(getJSONFixture('full-device.json'))
-  testLabelEdit(getJSONFixture('full-package.json'))
-  testLabelEdit(getJSONFixture('full-lot.json'))
   testLabelEdit(getJSONFixture('full-computer-monitor.json'))
   testLabelEdit(getJSONFixture('full-placeholder.json'))
 
