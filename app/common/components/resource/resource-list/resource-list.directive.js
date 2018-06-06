@@ -231,6 +231,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           // Used to determine which details pane (e.g. type, components, events, ...) to show
           $scope.selection.details = {}
 
+          $scope.selection.summary = []
+          const manufacturer = props.manufacturer ? (' ' + props.manufacturer) : ''
+          const model = props.model ? (' ' + props.model) : ''
           // Summary for selection
           let typeContentSummary
           if (props.type === selector.VARIOUS) {
@@ -242,11 +245,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           } else if (props.manufacturer === selector.VARIOUS) {
             typeContentSummary = props.subType + ' Various manufacturers'
           } else if (props.model === selector.VARIOUS) {
-            typeContentSummary = props.subType + ' ' + props.manufacturer + ' Various models'
+            typeContentSummary = props.subType + manufacturer + ' Various models'
           } else {
-            typeContentSummary = props.subType + ' ' + props.manufacturer + ' ' + props.model
+            typeContentSummary = props.subType + manufacturer + model
           }
-          $scope.selection.summary = [
+          const componentsContentSummary = _.values(props.components).filter(c => !!c).join(' ')
+          $scope.selection.summary = $scope.selection.summary.concat([
             {
               title: 'Type, manufacturer & model',
               contentSummary: typeContentSummary,
@@ -270,20 +274,17 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               contentSummary: props.condition.general.range,
               cssClass: 'condition-score',
               templateUrl: selectionSummaryTemplateFolder + '/condition-score.html'
-            },
-            {
+            }
+          ])
+          if (componentsContentSummary) {
+            $scope.selection.summary.push({
               title: 'Components',
-              contentSummary: _.values(props.components).join(' '),
+              contentSummary: componentsContentSummary,
               cssClass: 'components',
               templateUrl: selectionSummaryTemplateFolder + '/components.html'
-            },
-            // {
-            //   title: 'Providers',
-            //   contentSummary: 'Donor:' + selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'donor') || 'No donor' +
-            //   'Owner:' + selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'donor') || 'No owner' +
-            //   'Distributor:' + selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'distributor') || 'No distributor',
-            //   content: 'Providers'
-            // },
+            })
+          }
+          $scope.selection.summary = $scope.selection.summary.concat([
             {
               title: 'Events',
               contentSummary: props.events.length + ' events',
@@ -296,7 +297,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               cssClass: 'lots',
               templateUrl: selectionSummaryTemplateFolder + '/lots.html'
             }
-          ]
+          ])
         }
         selector.callbackOnSelection(updateSelection)
         updateSelection()

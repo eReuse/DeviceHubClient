@@ -188,10 +188,27 @@ function ResourceListGetterFactory (ResourceSettings) {
     }
 
     _processResources (getNextPage, showProgressBar, resources) {
+      function convertScoreToScoreRange (newV) {
+        if (newV <= 2) {
+          return 'VeryLow'
+        } else if (newV <= 3) {
+          return 'Low'
+        } else if (newV <= 4) {
+          return 'Medium'
+        } else if (newV > 4) {
+          return 'High'
+        } else {
+          return '?'
+        }
+      }
       if (showProgressBar) this.progressBar.complete()
       if (!getNextPage) this.resources.length = 0
       if (this.resourceType === 'Device') {
         resources.forEach(r => {
+          const components = [ 'Motherboard', 'RamModule', 'SoundCard', 'GraphicCard', 'OpticalDrive', 'HardDrive', 'Processor', 'NetworkAdapter' ]
+          const isComponent = components.indexOf(r['@type']) !== -1
+          const isPlaceholder = r['@type'] === 'Device'
+
           let parentLots = []
 
           parentLots = parentLots.concat(r.ancestors)
@@ -219,37 +236,32 @@ function ResourceListGetterFactory (ResourceSettings) {
           }
 
           let title
-          if (r['@type'] === 'Device') {
+          if (isPlaceholder) {
             title = 'Placeholder'
           } else {
-            title = r.type + ' ' + r.manufacturer + ' ' + r.model
+            if (isComponent) {
+              _.assign(r, {
+                '@type': 'Component',
+                type: r['@type']
+              })
+            }
+            const manufacturer = r.manufacturer ? (' ' + r.manufacturer) : ''
+            const model = r.model ? (' ' + r.model) : ''
+            title = r.type + manufacturer + model
           }
 
           _.assign(r, {
             status: (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
             title: title,
-            // 'price: 150,
             donor: 'BCN Ayuntamiento', // TODO get from events
             owner: 'Solidança', // TODO get from events
             distributor: 'Donalo', // TODO get from events
             parentLots: parentLots
           })
-          function conversion (newV) {
-            if (newV <= 2) {
-              return 'VeryLow'
-            } else if (newV <= 3) {
-              return 'Low'
-            } else if (newV <= 4) {
-              return 'Medium'
-            } else if (newV > 4) {
-              return 'High'
-            } else {
-              return '?'
-            }
-          }
+
           let pathToScoreRange = 'condition.general.range'
           let pathToScore = 'condition.general.score'
-          _.set(r, pathToScoreRange, conversion(_.get(r, pathToScore)))
+          _.set(r, pathToScoreRange, convertScoreToScoreRange(_.get(r, pathToScore)))
         })
 
         let lots = {}

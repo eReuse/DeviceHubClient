@@ -237,7 +237,7 @@ class ResourceListSelector {
 
       let aggregatedValue = _.get(reducedDevice, pathToProp)
 
-      if (postfix) {
+      if (aggregatedValue && postfix) {
         aggregatedValue += postfix
       }
       return aggregatedValue
