@@ -35,10 +35,14 @@
 
 .resource-list
   background-color: #f4f4f4
-  padding: 15px
+  padding: 0
+  @media (min-width: $screen-sm-min)
+    padding: 15px
 
   .current-lot
-    padding: 15px 30px 30px 30px
+    padding: 10px
+    @media (min-width: $screen-sm-min)
+      padding: 15px 30px 30px 30px
 
   #screener
     display: inline-block
@@ -96,13 +100,26 @@
       .label
         display: block
 
+.selection-button
+  position: fixed
+  bottom: 0
+  padding: 5px 0 15px 0
+  width: 100%
+  background-color: #e5e5e5
+  button
+    margin-left: 40%
+
 .selection
-  padding: 30px
-  border-left: 2px solid $main-nav-bg
-  box-shadow: -5px -3px 10px -7px #999
+  position: absolute
+  top: 0
   background-color: #ffffff
-  ul
-    padding: 0
+  @media (min-width: $screen-sm-min)
+    position: inherit
+    padding: 30px
+    border-left: 2px solid $main-nav-bg
+    box-shadow: -5px -3px 10px -7px #999
+    ul
+      padding: 0
 
 .children-lots
   ul

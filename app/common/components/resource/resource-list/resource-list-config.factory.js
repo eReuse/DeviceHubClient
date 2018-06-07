@@ -45,10 +45,13 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
       th: {key: 'events._updated', name: 'Last event'},
       td: {templateUrl: configFolder + '/resource-button-device.html'}
     },
-    created: {th: {key: '_created', name: 'Created'}, td: {value: '_created'}},
+    created: {
+      th: {key: '_created', name: 'Created', cssClasses: 'hidden-xs'},
+      td: {value: '_created', cssClasses: 'hidden-xs'}
+    },
     range: {
-      th: {key: 'condition.general.score', name: 'Range'},
-      td: {templateUrl: configFolder + '/device-range.html'}
+      th: {key: 'condition.general.score', name: 'Range', cssClasses: 'hidden-xs'},
+      td: {templateUrl: configFolder + '/device-range.html', cssClasses: 'hidden-xs'}
     },
     model: {th: {key: 'model', name: 'Model'}, td: {value: 'model'}},
     state: {
