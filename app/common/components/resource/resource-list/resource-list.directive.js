@@ -31,6 +31,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         $scope.devices = [] // Do never directly assign (r=[]) to 'devices' as modules depend of its reference
         $scope.lots = []
 
+        $scope.selectionPanelHiddenXS = true
+
         /**
          * Gets into the resource; traverse one step into the resource hierarchy by opening the resource in the
          * main window.
@@ -39,12 +41,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         $scope.goTo = lot => {
           ResourceBreadcrumb.go(lot)
         }
-
-        // TODO need this?
-        // Makes the table collapsible when window resizes
-        // Note this method is executed too in $scope.toggleDeviceView
-        const triggerCollapse = require('./collapse-table.js')($scope)
-        $(window).resize(triggerCollapse)
 
         // Set up getters and selectors for devices
         const defaultFilters = ($scope.parentResource && $scope.parentResource._id)

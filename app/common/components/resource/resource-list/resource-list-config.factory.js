@@ -45,10 +45,13 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
       th: {key: 'events._updated', name: 'Last event'},
       td: {templateUrl: configFolder + '/resource-button-device.html'}
     },
-    created: {th: {key: '_created', name: 'Created'}, td: {value: '_created'}},
+    created: {
+      th: {key: '_created', name: 'Created', cssClasses: 'hidden-xs'},
+      td: {value: '_created', cssClasses: 'hidden-xs'}
+    },
     range: {
-      th: {key: 'condition.general.score', name: 'Range'},
-      td: {templateUrl: configFolder + '/device-range.html'}
+      th: {key: 'condition.general.score', name: 'Range', cssClasses: 'hidden-xs'},
+      td: {templateUrl: configFolder + '/device-range.html', cssClasses: 'hidden-xs'}
     },
     model: {th: {key: 'model', name: 'Model'}, td: {value: 'model'}},
     state: {
@@ -453,6 +456,34 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
     },
     table: {
       th: [f.id.th, f.title.th, f.price.th, f.range.th, f.status.thDef, f.created.th],
+      td: [f.id.td, f.title.td, f.price.td, f.range.td, f.status.td, f.created.td]
+    },
+    tableEvents: {
+      th: [
+        {
+          key: 'Event',
+          name: 'Event'
+        },
+        {
+          key: 'Id',
+          name: 'Id',
+          cssClasses: 'hidden-xs'
+        },
+        {
+          key: 'Label',
+          name: 'Label',
+          cssClasses: 'hidden-xs'
+        },
+        {
+          key: 'State',
+          name: 'State',
+          cssClasses: 'hidden-xs'
+        },
+        {
+          key: 'Updated',
+          name: 'Updated'
+        }
+      ],
       td: [f.id.td, f.title.td, f.price.td, f.range.td, f.status.td, f.created.td]
     }
 //     Lot:{

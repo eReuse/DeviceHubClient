@@ -39,10 +39,10 @@
   <table class="resource-list-table table table-striped table-hover">
     <thead>
     <tr>
-      <th ng-repeat="header in [ 'Event', 'Id', 'Label', 'State', 'Updated']">
-          <!--field-sort sort="setSort(sort)" key="{{::th.key}}" name="{{::th.name}}" group="sort"-->
-          <!--sort-by-default="th.default"-->
-      <strong>{{header}}</strong>
+      <th ng-repeat="th in config.tableEvents.th"
+          class="{{::th.cssClasses}}"
+      >
+        <strong>{{th.name}}</strong>
       </th>
     </tr>
     </thead>
@@ -51,7 +51,7 @@
         <td>
           {{ event['@type'].substr('devices:'.length) }}
         </td>
-        <td ng-repeat="prop in [ '_id', 'label', 'state' ]">
+        <td ng-repeat="prop in [ '_id', 'label', 'state' ]" class="hidden-xs">
           {{ event[prop]}}
         </td>
         <td>

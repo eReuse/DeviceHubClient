@@ -1,6 +1,6 @@
 <!-- Listing -->
 <div class="row">
-  <div class="current-lot fill-height-bar col-lg-6">
+  <div class="current-lot fill-height-bar col-sm-6 col-xs-12">
     <resource-breadcrumb></resource-breadcrumb>
     <!-- Resource Filters -->
     <resource-search settings="config.search.params"
@@ -52,6 +52,7 @@
         <thead>
           <tr>
             <th ng-repeat="th in config.table.th"
+                class="{{::th.cssClasses}}"
                 field-sort sort="setSort(sort)" key="{{::th.key}}" name="{{::th.name}}" group="sort"
                 sort-by-default="th.default"
             ></th>
@@ -65,6 +66,7 @@
           >
             <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
             <td ng-repeat="td in ::config.table.td"
+                class="{{::td.cssClasses}}"
                 ng-init="value = $root._.get(resource, td.value)"
             >
               <div ng-if="::td.templateUrl" ng-include="td.templateUrl"></div>
@@ -106,8 +108,16 @@
       </div>
     </div>
   </div>
+  <!-- Selection button-->
+  <div class="selection-button"
+       ng-click="selectionPanelHiddenXS = !selectionPanelHiddenXS"
+       ng-class="{ 'hidden': selection.devices.length === 0, 'visible-xs-block': selection.devices.length > 0 }">
+    <button ng-show="selectionPanelHiddenXS" class="btn-info btn-view-selected">View selected devices ({{selection.devices.length}})</button>
+    <button ng-show="!selectionPanelHiddenXS" class="btn-info btn-view-list">View device list</button>
+  </div>
   <!-- Selection -->
-  <aside class="selection col-lg-6 fill-height-bar">
+  <aside class="selection col-sm-6 fill-height-bar col-xs-12"
+         ng-class="{ 'hidden-xs': selectionPanelHiddenXS }">
     <div ng-if="selection.devices.length === 0">
       <h3>Select devices to view more details</h3>
     </div>
