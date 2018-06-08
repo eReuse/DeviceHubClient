@@ -1,6 +1,6 @@
 <!-- Listing -->
 <div class="row">
-  <div class="current-lot fill-height-bar col-lg-6">
+  <div class="current-lot fill-height-bar col-sm-6 col-xs-12">
     <resource-breadcrumb></resource-breadcrumb>
     <!-- Resource Filters -->
     <resource-search settings="config.search.params"
@@ -110,12 +110,13 @@
   </div>
   <!-- Selection button-->
   <div class="selection-button"
-       ng-click="selectionPanelHiddenXS = false"
+       ng-click="selectionPanelHiddenXS = !selectionPanelHiddenXS"
        ng-class="{ 'hidden': selection.devices.length === 0, 'visible-xs-block': selection.devices.length > 0 }">
-    <button class="btn-info">View selection</button>
+    <button ng-show="selectionPanelHiddenXS" class="btn-info btn-view-selected">View selected devices ({{selection.devices.length}})</button>
+    <button ng-show="!selectionPanelHiddenXS" class="btn-info btn-view-list">View device list</button>
   </div>
   <!-- Selection -->
-  <aside class="selection col-lg-6 fill-height-bar"
+  <aside class="selection col-sm-6 fill-height-bar col-xs-12"
          ng-class="{ 'hidden-xs': selectionPanelHiddenXS }">
     <div ng-if="selection.devices.length === 0">
       <h3>Select devices to view more details</h3>

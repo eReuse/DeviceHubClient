@@ -457,6 +457,34 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
     table: {
       th: [f.id.th, f.title.th, f.price.th, f.range.th, f.status.thDef, f.created.th],
       td: [f.id.td, f.title.td, f.price.td, f.range.td, f.status.td, f.created.td]
+    },
+    tableEvents: {
+      th: [
+        {
+          key: 'Event',
+          name: 'Event'
+        },
+        {
+          key: 'Id',
+          name: 'Id',
+          cssClasses: 'hidden-xs'
+        },
+        {
+          key: 'Label',
+          name: 'Label',
+          cssClasses: 'hidden-xs'
+        },
+        {
+          key: 'State',
+          name: 'State',
+          cssClasses: 'hidden-xs'
+        },
+        {
+          key: 'Updated',
+          name: 'Updated'
+        }
+      ],
+      td: [f.id.td, f.title.td, f.price.td, f.range.td, f.status.td, f.created.td]
     }
 //     Lot:{
 //     search: {
