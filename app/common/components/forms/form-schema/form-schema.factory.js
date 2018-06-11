@@ -1,4 +1,4 @@
-function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notification, cerberusToFormly, Restangular) {
+function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notification) {
   const utils = require('./../../utils.js')
   const CannotSubmit = require('./cannot-submit.exception')
   const OPERATION = {
@@ -45,8 +45,17 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
       })
       try {
         parserOptions.doNotUse = _.concat(parserOptions.doNotUse || [], this.rSettings.getSetting('doNotUse'))
-      } catch (err) {}  // doNotUse not in getSetting
-      this.fields = this.form.fields = cerberusToFormly.parse(model, parserOptions)
+      } catch (err) {
+      }  // doNotUse not in getSetting
+
+      this.fields = this.form.fields = this._getFields(model['@type'])
+
+      // this.fields = this.form.fields = cerberusToFormly.parse(model, parserOptions)
+      // console.log('type:' + model['@type'])
+      // console.log('----------------------')
+      // console.log(JSON.stringify(this.fields))
+      // console.log('----------------------------------------------------')
+
       this._uploadsFile = _.find(this.fields, {type: 'upload'})
       this.submitForm = new SubmitForm(form, status)
     }
@@ -110,6 +119,804 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
 
     _final (promise) {
       this.submitForm.after(promise)
+    }
+
+    _getFields (event) {
+      switch (event) {
+        case 'devices:ToPrepare':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'devices',
+            'name': 'devices',
+            'type': 'resources',
+            'templateOptions': {'key': '_id', 'label': 'Devices', 'disabled': false, 'placeholder': []}
+          }, {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
+        case 'devices:ToRepair':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'devices',
+            'name': 'devices',
+            'type': 'resources',
+            'templateOptions': {'key': '_id', 'label': 'Devices', 'disabled': false, 'placeholder': []}
+          }, {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
+        case 'devices:Repair':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'devices',
+            'name': 'devices',
+            'type': 'resources',
+            'templateOptions': {'key': '_id', 'label': 'Devices', 'disabled': false, 'placeholder': []}
+          }, {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
+        case 'devices:Ready':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'devices',
+            'name': 'devices',
+            'type': 'resources',
+            'templateOptions': {'key': '_id', 'label': 'Devices', 'disabled': false, 'placeholder': []}
+          }, {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
+        case 'devices:Locate':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'devices',
+            'name': 'devices',
+            'type': 'resources',
+            'templateOptions': {'key': '_id', 'label': 'Devices', 'disabled': false, 'placeholder': []}
+          }, {
+            'key': 'place',
+            'name': 'place',
+            'type': 'typeahead',
+            'templateOptions': {
+              'resourceName': 'places',
+              'keyFieldName': '_id',
+              'label': 'Place',
+              'labelFieldName': 'label',
+              'filterFieldNames': ['label', '_id'],
+              'description': 'Where did it happened',
+              'disabled': false
+            }
+          }, {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
+        case 'devices:Allocate':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'to',
+            'name': 'to',
+            'type': 'getFromDataRelationOrCreate',
+            'templateOptions': {
+              'resourceName': 'accounts',
+              'keyFieldName': '_id',
+              'label': 'To',
+              'labelFieldName': 'email',
+              'filterFieldNames': ['email'],
+              'schema': {
+                'fieldGroup': [{'template': '<h4>To</h4>'}, {
+                  'key': 'email',
+                  'name': 'to.to.email',
+                  'type': 'input',
+                  'templateOptions': {'type': 'email', 'required': true, 'label': 'Email', 'disabled': false}
+                }, {
+                  'key': 'name',
+                  'name': 'to.to.name',
+                  'type': 'input',
+                  'templateOptions': {
+                    'description': 'The name of an account, if it is a person or an organization.',
+                    'label': 'Name',
+                    'disabled': false
+                  }
+                }, {
+                  'key': 'isOrganization',
+                  'name': 'to.to.isOrganization',
+                  'type': 'checkbox',
+                  'templateOptions': {'label': 'Is organization', 'disabled': false}
+                }, {
+                  'key': 'organization',
+                  'name': 'to.to.organization',
+                  'type': 'input',
+                  'templateOptions': {
+                    'description': 'The name of the organization the account is in. Organizations can be inside others.',
+                    'label': 'Organization',
+                    'disabled': false
+                  }
+                }],
+                'key': 'to',
+                'sink': 2
+              },
+              'getFromDataRelationOrCreate': 'email',
+              'required': true,
+              'disabled': false
+            }
+          }, {
+            'key': 'devices',
+            'name': 'devices',
+            'type': 'resources',
+            'templateOptions': {'key': '_id', 'label': 'Devices', 'disabled': false, 'placeholder': []}
+          }, {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
+        case 'devices:Reserve':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'for',
+            'name': 'for',
+            'type': 'getFromDataRelationOrCreate',
+            'templateOptions': {
+              'resourceName': 'accounts',
+              'keyFieldName': '_id',
+              'label': 'For',
+              'labelFieldName': 'email',
+              'filterFieldNames': ['email'],
+              'schema': {
+                'fieldGroup': [{'template': '<h4>For</h4>'}, {
+                  'key': 'email',
+                  'name': 'for.for.email',
+                  'type': 'input',
+                  'templateOptions': {'type': 'email', 'required': true, 'label': 'Email', 'disabled': false}
+                }, {
+                  'key': 'name',
+                  'name': 'for.for.name',
+                  'type': 'input',
+                  'templateOptions': {
+                    'description': 'The name of an account, if it is a person or an organization.',
+                    'label': 'Name',
+                    'disabled': false
+                  }
+                }, {
+                  'key': 'isOrganization',
+                  'name': 'for.for.isOrganization',
+                  'type': 'checkbox',
+                  'templateOptions': {'label': 'Is organization', 'disabled': false}
+                }, {
+                  'key': 'organization',
+                  'name': 'for.for.organization',
+                  'type': 'input',
+                  'templateOptions': {
+                    'description': 'The name of the organization the account is in. Organizations can be inside others.',
+                    'label': 'Organization',
+                    'disabled': false
+                  }
+                }],
+                'key': 'for',
+                'sink': 2
+              },
+              'getFromDataRelationOrCreate': 'email',
+              'description': 'Who are you reserving for? If you leave it blank, you will reserve it for yourself.',
+              'disabled': false
+            }
+          }, {
+            'key': 'deadline',
+            'name': 'deadline',
+            'type': 'datepicker',
+            'templateOptions': {'label': 'Deadline', 'disabled': false}
+          }, {
+            'key': 'devices',
+            'name': 'devices',
+            'type': 'resources',
+            'templateOptions': {'key': '_id', 'label': 'Devices', 'disabled': false, 'placeholder': []}
+          }, {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
+        case 'devices:Sell':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'to',
+            'name': 'to',
+            'type': 'getFromDataRelationOrCreate',
+            'templateOptions': {
+              'resourceName': 'accounts',
+              'keyFieldName': '_id',
+              'label': 'To',
+              'labelFieldName': 'email',
+              'filterFieldNames': ['email'],
+              'schema': {
+                'fieldGroup': [{'template': '<h4>To</h4>'}, {
+                  'key': 'email',
+                  'name': 'to.to.email',
+                  'type': 'input',
+                  'templateOptions': {'type': 'email', 'required': true, 'label': 'Email', 'disabled': false}
+                }, {
+                  'key': 'name',
+                  'name': 'to.to.name',
+                  'type': 'input',
+                  'templateOptions': {
+                    'description': 'The name of an account, if it is a person or an organization.',
+                    'label': 'Name',
+                    'disabled': false
+                  }
+                }, {
+                  'key': 'isOrganization',
+                  'name': 'to.to.isOrganization',
+                  'type': 'checkbox',
+                  'templateOptions': {'label': 'Is organization', 'disabled': false}
+                }, {
+                  'key': 'organization',
+                  'name': 'to.to.organization',
+                  'type': 'input',
+                  'templateOptions': {
+                    'description': 'The name of the organization the account is in. Organizations can be inside others.',
+                    'label': 'Organization',
+                    'disabled': false
+                  }
+                }],
+                'key': 'to',
+                'sink': 2
+              },
+              'getFromDataRelationOrCreate': 'email',
+              'description': 'The user buying. If you leave it empty and you reference below a reference, we will set it to the user of the reference.',
+              'disabled': false
+            }
+          }, {
+            'key': 'shippingDate',
+            'name': 'shippingDate',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When are the devices going to be ready for shipping?',
+              'label': 'Shipping date',
+              'disabled': false
+            }
+          }, {
+            'key': 'reserve',
+            'name': 'reserve',
+            'type': 'typeahead',
+            'templateOptions': {
+              'resourceName': 'events',
+              'keyFieldName': '_id',
+              'label': 'Reserve',
+              'labelFieldName': '_id',
+              'filterFieldNames': ['_id'],
+              'description': 'The reserve this sell confirms.',
+              'disabled': false
+            }
+          }, {
+            'key': 'devices',
+            'name': 'devices',
+            'type': 'resources',
+            'templateOptions': {'key': '_id', 'label': 'Devices', 'disabled': false, 'placeholder': []}
+          }, {
+            'key': 'invoiceNumber',
+            'name': 'invoiceNumber',
+            'type': 'input',
+            'templateOptions': {
+              'description': 'The id of your invoice so they can be linked.',
+              'label': 'Invoice number',
+              'disabled': false
+            }
+          }, {
+            'key': 'invoices',
+            'name': 'invoices',
+            'type': 'upload',
+            'templateOptions': {
+              'accept': 'application/pdf',
+              'multiple': true,
+              'description': 'Upload invoices in PDF. You can select multiple by pressing Ctrl or Cmd.You won\'t be able to modify them later and we will save them with the name they have.',
+              'label': 'Invoices',
+              'disabled': false
+            }
+          }, {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
+        case 'devices:Deallocate':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'from',
+            'name': 'from',
+            'type': 'typeahead',
+            'templateOptions': {
+              'resourceName': 'accounts',
+              'keyFieldName': '_id',
+              'label': 'From',
+              'labelFieldName': 'email',
+              'filterFieldNames': ['email'],
+              'disabled': false
+            }
+          }, {
+            'key': 'devices',
+            'name': 'devices',
+            'type': 'resources',
+            'templateOptions': {'key': '_id', 'label': 'Devices', 'disabled': false, 'placeholder': []}
+          }, {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
+        case 'devices:Receive':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'receiver',
+            'name': 'receiver',
+            'type': 'getFromDataRelationOrCreate',
+            'templateOptions': {
+              'resourceName': 'accounts',
+              'keyFieldName': '_id',
+              'label': 'Receiver',
+              'labelFieldName': 'email',
+              'filterFieldNames': ['email'],
+              'schema': {
+                'fieldGroup': [{'template': '<h4>Receiver</h4>'}, {
+                  'key': 'email',
+                  'name': 'receiver.receiver.email',
+                  'type': 'input',
+                  'templateOptions': {'type': 'email', 'required': true, 'label': 'Email', 'disabled': false}
+                }, {
+                  'key': 'name',
+                  'name': 'receiver.receiver.name',
+                  'type': 'input',
+                  'templateOptions': {
+                    'description': 'The name of an account, if it is a person or an organization.',
+                    'label': 'Name',
+                    'disabled': false
+                  }
+                }, {
+                  'key': 'isOrganization',
+                  'name': 'receiver.receiver.isOrganization',
+                  'type': 'checkbox',
+                  'templateOptions': {'label': 'Is organization', 'disabled': false}
+                }, {
+                  'key': 'organization',
+                  'name': 'receiver.receiver.organization',
+                  'type': 'input',
+                  'templateOptions': {
+                    'description': 'The name of the organization the account is in. Organizations can be inside others.',
+                    'label': 'Organization',
+                    'disabled': false
+                  }
+                }],
+                'key': 'receiver',
+                'sink': 2
+              },
+              'getFromDataRelationOrCreate': 'email',
+              'required': true,
+              'disabled': false
+            }
+          }, {
+            'key': 'acceptedConditions',
+            'name': 'acceptedConditions',
+            'type': 'checkbox',
+            'templateOptions': {'required': true, 'label': 'Accepted conditions', 'disabled': false}
+          }, {
+            'key': 'automaticallyAllocate',
+            'name': 'automaticallyAllocate',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Allocates to the user',
+              'label': 'Automatically allocate',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'devices',
+            'name': 'devices',
+            'type': 'resources',
+            'templateOptions': {'key': '_id', 'label': 'Devices', 'disabled': false, 'placeholder': []}
+          }, {
+            'key': 'type',
+            'name': 'type',
+            'type': 'radio',
+            'templateOptions': {
+              'options': [{
+                'name': 'Collection point',
+                'value': 'CollectionPoint'
+              }, {'name': 'Final user', 'value': 'FinalUser'}, {'name': 'Recycling point', 'value': 'RecyclingPoint'}],
+              'required': true,
+              'label': 'Type',
+              'disabled': false
+            }
+          }, {
+            'key': 'place',
+            'name': 'place',
+            'type': 'typeahead',
+            'templateOptions': {
+              'resourceName': 'places',
+              'keyFieldName': '_id',
+              'label': 'Place',
+              'labelFieldName': 'label',
+              'filterFieldNames': ['label', '_id'],
+              'description': 'Where did it happened',
+              'disabled': false
+            }
+          }, {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
+        case 'devices:ToDispose':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'devices',
+            'name': 'devices',
+            'type': 'resources',
+            'templateOptions': {'key': '_id', 'label': 'Devices', 'disabled': false, 'placeholder': []}
+          }, {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
+        case 'devices:Dispose':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'devices',
+            'name': 'devices',
+            'type': 'resources',
+            'templateOptions': {'key': '_id', 'label': 'Devices', 'disabled': false, 'placeholder': []}
+          }, {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
+      }
     }
 
   }
