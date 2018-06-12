@@ -79,6 +79,28 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           getterLots.updateFiltersFromSearch(newFilters) // TODO update lots on filter update?
         }
 
+        const keyTypes = 'types-to-show'
+        const nonComponents = [
+          'Desktop', 'Laptop', 'All-in-one', 'Monitor', 'Peripherals'
+        ]
+        let filtersModel = {
+          [keyTypes]: [ 'Placeholders' ].concat(nonComponents)
+        }
+        function onFiltersChanged () {
+          $scope.filterPanels && $scope.filterPanels.forEach((panel) => {
+            panel.shown = false
+          })
+          $scope.showFilterPanels = false
+          $scope.activeFilters = _.keys(filtersModel).map((filterKey) => {
+            let value = filtersModel[filterKey]
+            if (filterKey === keyTypes && _.difference(nonComponents, value).length === 0) {
+              value = _.difference(value, nonComponents)
+              value.push('Non-Components')
+            }
+            return value.join(', ')
+          })
+        }
+        onFiltersChanged()
         let filterPanelsNested = [
           {
             childName: 'Root',
@@ -91,15 +113,55 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                     title: 'Item type',
                     content: {
                       type: 'multi-select',
-                      options: [
-                        'Placeholders',
-                        'Components',
-                        'Non-components',
-                        'Desktop',
-                        'Laptop',
-                        'All-in-one',
-                        'Monitor',
-                        'Peripherals'
+                      model: filtersModel,
+                      options: {},
+                      onSubmit: onFiltersChanged,
+                      form: {},
+                      fields: [
+                        {
+                          key: keyTypes,
+                          type: 'multiCheckbox',
+                          className: 'multi-check',
+                          templateOptions: {
+                            options: [
+                              {
+                                'name': 'Placeholders',
+                                'value': 'Placeholders'
+                              },
+                              {
+                                'name': 'Components',
+                                'value': 'Components'
+                              },
+                              /* TODO make category non-components
+                              {
+                                'name': 'Non-components',
+                                'value': 'Non-components'
+                              },
+                              */
+                              {
+                                'name': 'Desktop',
+                                'value': 'Desktop'
+                              },
+                              {
+                                'name': 'Laptop',
+                                'value': 'Laptop'
+                              },
+                              {
+                                'name': 'All-in-one',
+                                'value': 'All-in-one'
+                              },
+                              {
+                                'name': 'Monitor',
+                                'value': 'Monitor'
+                              },
+                              {
+                                'name': 'Peripherals',
+                                'value': 'Peripherals'
+                              }
+                            ],
+                            required: false
+                          }
+                        }
                       ]
                     }
                   }
@@ -139,7 +201,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                             multiSelect: [
                               'Placeholders',
                               'Components',
-                              'Non-components',
                               'Desktop',
                               'Laptop',
                               'All-in-one',

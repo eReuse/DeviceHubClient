@@ -68,6 +68,21 @@
     // from @extend input[type="checkbox"]:focus
     outline: 4px auto -webkit-focus-ring-color
     outline-offset: -2px
+  .active-filters-container
+    .active-filters
+      padding: 0
+      .active-filter
+        list-style: none
+        display: inline-flex
+        border-radius: 4px
+        padding: 5px
+        border: 1px solid
+        margin-bottom: 6px
+        background-color: white
+        &:not(:last-child)
+          margin-right: 6px
+        .fa-close
+          line-height: 1.5em
   .btn-add-filter-panels
     padding: 5px 10px
   .add-filter-panels-container

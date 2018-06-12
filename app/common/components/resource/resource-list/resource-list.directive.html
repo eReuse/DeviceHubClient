@@ -7,19 +7,23 @@
                      on-params-changed="onSearchParamsChanged(params)"
                      default-params="config.search.defaultParams"
     ></resource-search>
-    <div class="filters-container">
-      <ul class="filters">
-        <li ng-repeat="filter in filters">
-          {{ filter.name }}
+    <div class="active-filters-container">
+      <ul class="active-filters">
+        <li class="active-filter" ng-repeat="filter in activeFilters">
+          <span>{{ filter }}</span>
+          <i class="fa fa-fw fa-close"></i>
         </li>
       </ul>
     </div>
     <div class="add-filter-panels-container">
       <div class="add-filter-panels-wrapper">
         <div ng-class="{ active: showFilterPanels }" class="add-filter-panels">
-          <div ng-class="{ active: panel.shown, isRoot: panel === filterPanelsRoot }"
-               class="filter-panel"
-               ng-repeat="panel in filterPanels">
+          <form ng-submit="panel.content.onSubmit()"
+                name="panel.content.form"
+                novalidate
+                ng-class="{ active: panel.shown, isRoot: panel === filterPanelsRoot }"
+                class="filter-panel"
+                ng-repeat="panel in filterPanels">
             <button class="btn btn-hide-filter-panel" ng-click="panel.shown = false"><i class="fa fa-chevron-left fa-fw"></i></button><h3 ng-show="panel.title">{{ panel.title }}</h3>
             <ul class="filter-panel-links" ng-show="panel.children.length > 0">
               <li ng-repeat="child in panel.children">
@@ -29,11 +33,13 @@
             <div class="filter-panel-content" ng-show="panel.content">
               <div ng-switch="panel.content.type">
                 <div ng-switch-when="multi-select">
-                  <ul>
-                    <li ng-repeat="option in panel.content.options">
-                      {{ option }}
-                    </li>
-                  </ul>
+                    <formly-form model="panel.content.model" fields="panel.content.fields" options="panel.content.options">
+                    </formly-form>
+                  <!--<ul>-->
+                    <!--<li ng-repeat="option in panel.content.options">-->
+                      <!--{{ option }}-->
+                    <!--</li>-->
+                  <!--</ul>-->
                 </div>
                 <div ng-switch-when="single-select">
                   <ul>
@@ -46,14 +52,19 @@
                   <h4>{{ panel.content.unit }}</h4>
                 </div>
               </div>
+              <div style="text-align: right;">
+                <!--<button type="submit" class="btn btn-primary submit-button" ng-disabled="panel.content.form.$invalid">Submit</button>
+                <button type="button" class="btn btn-default" ng-click="panel.content.options.resetModel()">Reset</button>-->
+                <button type="button"
+                        class="btn btn-info btn-add-filter-panels"
+                        ng-click="showFilterPanels = !showFilterPanels">Cancel</button>
+                <button type="submit"
+                        class="btn btn-info btn-add-filter-panels"
+                        ng-disabled="panel.content.form.$invalid"
+                        style="margin-left: 10px;">Add filter</button>
+              </div>
             </div>
-            <div style="text-align: right;">
-              <button class="btn btn-info btn-add-filter-panels" ng-click="showFilterPanels = !showFilterPanels">Cancel</button>
-              <button class="btn btn-info btn-add-filter-panels"
-                      ng-click="showFilterPanels = !showFilterPanels"
-                      style="margin-left: 10px;">Add filter</button>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
