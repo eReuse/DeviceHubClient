@@ -7,6 +7,40 @@
                      on-params-changed="onSearchParamsChanged(params)"
                      default-params="config.search.defaultParams"
     ></resource-search>
+    <div class="filters-container">
+      <ul class="filters">
+        <li ng-repeat="filter in filters">
+          {{ filter.name }}
+        </li>
+      </ul>
+    </div>
+    <div class="add-filter-panels-container">
+      <div class="add-filter-panels-wrapper">
+        <div ng-class="{ active: showFilterPanels }" class="add-filter-panels">
+          <div ng-class="{ active: panel.shown, isRoot: panel === filterPanelsRoot }"
+               class="filter-panel"
+               ng-repeat="panel in filterPanels">
+            <button class="btn btn-hide-filter-panel" ng-click="panel.shown = false"><i class="fa fa-chevron-left fa-fw"></i></button><h3 ng-show="panel.title">{{ panel.title }}</h3>
+            <ul class="filter-panel-links" ng-show="panel.children.length > 0">
+              <li ng-repeat="child in panel.children">
+                <button class="btn-info" ng-click="child.panel.shown = true">{{ child.childName }}</button>
+              </li>
+            </ul>
+            <div class="filter-panel-content" ng-show="panel.content">
+              {{ JSON.stringify(panel.content) }}
+            </div>
+            <div style="text-align: right;">
+              <button class="btn btn-info btn-add-filter-panels" ng-click="showFilterPanels = !showFilterPanels">Cancel</button>
+              <button class="btn btn-info btn-add-filter-panels"
+                      ng-click="showFilterPanels = !showFilterPanels"
+                      style="margin-left: 10px;">Add filter</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-info btn-add-filter-panels" ng-click="showFilterPanels = !showFilterPanels">Add filter</button>
+
     <h4>Lots ({{ getTotalNumberOfLots() }})</h4>
     <div class="children-lots"
     >
