@@ -79,6 +79,113 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           getterLots.updateFiltersFromSearch(newFilters) // TODO update lots on filter update?
         }
 
+        let filterPanelsNested = [
+          {
+            childName: 'Root',
+            panel: {
+              title: 'Select a filter',
+              children: [
+                {
+                  childName: 'Item type',
+                  panel: {
+                    title: 'Item type',
+                    content: {
+                      multiSelect: [
+                        'Placeholders',
+                        'Components',
+                        'Non-components',
+                        'Desktop',
+                        'Laptop',
+                        'All-in-one',
+                        'Monitor',
+                        'Peripherals'
+                      ]
+                    }
+                  }
+                },
+                {
+                  childName: 'Brand and model',
+                  panel: {}
+                },
+                {
+                  childName: 'Status',
+                  panel: {}
+                },
+                {
+                  childName: 'Price and range',
+                  panel: {}
+                },
+                {
+                  childName: 'Components',
+                  panel: {
+                    title: 'Components',
+                    children: [
+                      {
+                        childName: 'Memory ram',
+                        panel: {
+                          title: 'Memory RAM',
+                          content: {
+                            range: {
+                              unit: 'GB'
+                            }
+                          }
+                        }
+                      },
+                      {
+                        childName: 'Grafic card',
+                        panel: {
+                          title: 'Grafic card',
+                          content: {
+                            multiSelect: [
+                              'Placeholders',
+                              'Components',
+                              'Non-components',
+                              'Desktop',
+                              'Laptop',
+                              'All-in-one',
+                              'Monitor',
+                              'Peripherals'
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  childName: 'Service providers',
+                  panel: {}
+                },
+                {
+                  childName: 'User and location',
+                  panel: {}
+                },
+                {
+                  childName: 'History and events',
+                  panel: {}
+                },
+                {
+                  childName: 'Licenses and restrictions',
+                  panel: {}
+                }
+              ]
+            }
+          }
+        ]
+        function getPanelsRecursive (nested, flat) {
+          nested.forEach((fp) => {
+            flat.push(fp.panel)
+            if (fp.panel.children && fp.panel.children.length > 0) {
+              getPanelsRecursive(fp.panel.children, flat)
+            }
+          })
+        }
+        let filterPanelsFlat = []
+        getPanelsRecursive(filterPanelsNested, filterPanelsFlat)
+        $scope.filterPanelsRoot = filterPanelsNested[0].panel
+        $scope.filterPanels = filterPanelsFlat
+        $scope.showFilterPanels = false
+
         // Selecting
         $scope.toggleSelect = (resource, $index, $event) => {
           $event.stopPropagation() // Avoids the ng-click from the row (<tr>) to trigger
