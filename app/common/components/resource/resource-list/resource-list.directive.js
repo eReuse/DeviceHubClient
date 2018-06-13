@@ -91,16 +91,43 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             panel.shown = false
           })
           $scope.showFilterPanels = false
-          $scope.activeFilters = _.keys(filtersModel).map((filterKey) => {
-            let value = filtersModel[filterKey]
-            if (filterKey === keyTypes && _.difference(nonComponents, value).length === 0) {
-              value = _.difference(value, nonComponents)
-              value.push('Non-Components')
-            }
-            return value.join(', ')
-          })
+
+          $scope.activeFilters = []
+          function setActiveFilters (obj) {
+            _.toPairs(obj).map(pair => {
+              let filterKey = pair[0]
+              let value = pair[1]
+
+              let filterText = _.get(value, '_meta.prefix', '')
+              if (_.isArray(value)) {
+                if (filterKey === keyTypes && _.difference(nonComponents, value).length === 0) {
+                  value = _.difference(value, nonComponents)
+                  value.push('Non-Components')
+                }
+                filterText += value.join(', ')
+                $scope.activeFilters.push(filterText)
+              } else if (value.min || value.max) {
+                if (value.min) filterText += 'from ' + value.min + ' '
+                if (value.max) filterText += 'to ' + value.max + ' '
+                if (_.get(value, '_meta.unit')) filterText += value._meta.unit
+                $scope.activeFilters.push(filterText)
+              } else { // nested filter object
+                setActiveFilters(value)
+              }
+            })
+          }
+          setActiveFilters(filtersModel)
         }
         onFiltersChanged()
+        function createOnSubmitRange (path) {
+          return function () {
+            _.set(filtersModel, path + '._meta.unit', this.unit)
+            _.set(filtersModel, path + '._meta.prefix', this.prefix)
+            _.set(filtersModel, path + '.min', this.model.min)
+            _.set(filtersModel, path + '.max', this.model.max)
+            onFiltersChanged()
+          }
+        }
         let filterPanelsNested = [
           {
             childName: 'Root',
@@ -189,7 +216,15 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                           title: 'Memory RAM',
                           content: {
                             type: 'range',
-                            unit: 'GB'
+                            unit: 'GB',
+                            prefix: 'RAM: ',
+                            model: {
+                              min: 0,
+                              max: 9999
+                            },
+                            options: {},
+                            onSubmit: createOnSubmitRange('components.ram'),
+                            form: {}
                           }
                         }
                       },

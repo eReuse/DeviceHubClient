@@ -49,7 +49,14 @@
                   </ul>
                 </div>
                 <div ng-switch-when="range">
-                  <h4>{{ panel.content.unit }}</h4>
+                  <div class="row">
+                    <div class="col-lg-2">Min:</div>
+                    <div class="col-lg-10"><input type="number" ng-model="panel.content.model.min">{{ panel.content.unit }}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-2">Max:</div>
+                    <div class="col-lg-10"><input type="number" ng-model="panel.content.model.max">{{ panel.content.unit }}</div>
+                  </div>
                 </div>
               </div>
               <div style="text-align: right;">
