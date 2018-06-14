@@ -114,7 +114,15 @@
 
     <div ng-if="selection.devices.length > 0">
       <h4>Current selection</h4>
-      <h3>{{selection.devices.length}} devices</h3>
+      <div class="selection-header">
+        <h3>{{selection.devices.length}} devices </h3>
+        <button type="button"
+                class="btn"
+                ng-click="deselectAll()"
+        >
+          <span>Deselect all</span>
+        </button>
+      </div>
       <ul>
         <li
           ng-repeat="device in selection.devices | limitTo: selection.numSelectedLotsShown track by device._id"
