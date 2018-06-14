@@ -9,9 +9,9 @@
     ></resource-search>
     <div class="active-filters-container">
       <ul class="active-filters">
-        <li class="active-filter" ng-repeat="filter in activeFilters">
-          <span>{{ filter }}</span>
-          <i class="fa fa-fw fa-close"></i>
+        <li class="active-filter" ng-repeat="filter in activeFilters" ng-click="openFilter(filter.propPath)">
+          <span>{{ filter.text }}</span>
+          <i class="fa fa-fw fa-close" ng-click="removeFilter(filter.propPath)"></i>
         </li>
       </ul>
     </div>

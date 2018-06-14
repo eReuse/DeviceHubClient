@@ -79,6 +79,17 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           getterLots.updateFiltersFromSearch(newFilters) // TODO update lots on filter update?
         }
 
+        $scope.removeFilter = propPath => {
+          _.unset(filtersModel, propPath)
+          onFiltersChanged()
+        }
+
+        $scope.openFilter = propPath => {
+          const filterPanel = _.find(filterPanelsFlat, { content: { propPathModel: propPath } })
+          $scope.showFilterPanels = true
+          filterPanel.shown = true
+        }
+
         const keyTypes = 'types-to-show'
         const nonComponents = [
           'Desktop', 'Laptop', 'All-in-one', 'Monitor', 'Peripherals'
@@ -93,40 +104,46 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           $scope.showFilterPanels = false
 
           $scope.activeFilters = []
-          function setActiveFilters (obj) {
+          function setActiveFilters (parentPath, obj) {
+            parentPath = parentPath ? parentPath + '.' : ''
             _.toPairs(obj).map(pair => {
-              let filterKey = pair[0]
+              const filterKey = pair[0]
+              const fullPath = parentPath + filterKey
               let value = pair[1]
+              const isSelect = _.isArray(value)
+              const isRange = value.min || value.max
 
-              let filterText = _.get(value, '_meta.prefix', '')
-              if (_.isArray(value)) {
-                if (filterKey === keyTypes && _.difference(nonComponents, value).length === 0) {
-                  value = _.difference(value, nonComponents)
-                  value.push('Non-Components')
+              if (isSelect || isRange) {
+                let filterText = _.get(value, '_meta.prefix', '')
+                if (isSelect) {
+                  if (filterKey === keyTypes && _.difference(nonComponents, value).length === 0) {
+                    value = _.difference(value, nonComponents)
+                    value.push('Non-Components')
+                  }
+                  filterText += value.join(', ')
+                } else if (isRange) {
+                  if (value.min) filterText += 'from ' + value.min + ' '
+                  if (value.max) filterText += 'to ' + value.max + ' '
+                  if (_.get(value, '_meta.unit')) filterText += value._meta.unit
                 }
-                filterText += value.join(', ')
-                $scope.activeFilters.push(filterText)
-              } else if (value.min || value.max) {
-                if (value.min) filterText += 'from ' + value.min + ' '
-                if (value.max) filterText += 'to ' + value.max + ' '
-                if (_.get(value, '_meta.unit')) filterText += value._meta.unit
-                $scope.activeFilters.push(filterText)
+                $scope.activeFilters.push({
+                  propPath: fullPath,
+                  text: filterText
+                })
               } else { // nested filter object
-                setActiveFilters(value)
+                setActiveFilters(fullPath, value)
               }
             })
           }
-          setActiveFilters(filtersModel)
+          setActiveFilters('', filtersModel)
         }
         onFiltersChanged()
-        function createOnSubmitRange (path) {
-          return function () {
-            _.set(filtersModel, path + '._meta.unit', this.unit)
-            _.set(filtersModel, path + '._meta.prefix', this.prefix)
-            _.set(filtersModel, path + '.min', this.model.min)
-            _.set(filtersModel, path + '.max', this.model.max)
-            onFiltersChanged()
-          }
+        function onSubmitRange () {
+          _.set(filtersModel, this.propPathModel + '._meta.unit', this.unit)
+          _.set(filtersModel, this.propPathModel + '._meta.prefix', this.prefix)
+          _.set(filtersModel, this.propPathModel + '.min', this.model.min)
+          _.set(filtersModel, this.propPathModel + '.max', this.model.max)
+          onFiltersChanged()
         }
         let filterPanelsNested = [
           {
@@ -141,6 +158,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                     content: {
                       type: 'multi-select',
                       model: filtersModel,
+                      propPathModel: keyTypes,
                       options: {},
                       onSubmit: onFiltersChanged,
                       form: {},
@@ -215,6 +233,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                         panel: {
                           title: 'Memory RAM',
                           content: {
+                            propPathModel: 'components.ram',
                             type: 'range',
                             unit: 'GB',
                             prefix: 'RAM: ',
@@ -223,8 +242,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                               max: 9999
                             },
                             options: {},
-                            onSubmit: createOnSubmitRange('components.ram'),
-                            form: {}
+                            onSubmit: onSubmitRange
                           }
                         }
                       },
