@@ -352,7 +352,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // need to do this when declaring the directive
         // TODO need this?
         const $table = element.find('.fill-height-bar')
-        getterDevices.callbackOnGetting((_, __, ___, getNextPage) => {
+        getterDevices.callbackOnGetting((_, __, ___, ____, getNextPage) => {
           if (!getNextPage) {
             $table.scrollTop(0) // Scroll up to the table when loading from page 0 again
             $scope.morePagesAvailable = true // Reset
