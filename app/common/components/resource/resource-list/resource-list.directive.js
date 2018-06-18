@@ -12,7 +12,6 @@
  */
 function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, UNIT_CODES, CONSTANTS, SearchService, $filter) {
   const PATH = require('./__init__').PATH
-  const NoMorePagesAvailableException = require('./no-more-pages-available.exception')
   const selectionSummaryTemplateFolder = PATH + '/resource-list-selection-summary'
   return {
     template: require('./resource-list.directive.html'),
@@ -48,18 +47,19 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           : null
         const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar, _.cloneDeep(defaultFilters))
         const selector = $scope.selector = ResourceListSelector
-        getterDevices.callbackOnGetting(_.bind(selector.reAddToLot, selector, _))
-        $scope.getTotalNumberOfDevices = () => {
-          return getterDevices.getTotalNumberResources()
-        }
+        getterDevices.callbackOnGetting((resources, lotID) => {
+          selector.reAddToLot(resources, lotID)
+          $scope.totalNumberOfDevices = getterDevices.getTotalNumberResources()
+          $scope.moreDevicesAvailable = $scope.totalNumberOfDevices > $scope.devices.length
+        })
 
         // Set up getters for lots
         const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar, _.cloneDeep(defaultFilters))
         getterLots.updateSort('label')
-        // Total number of devices
-        $scope.getTotalNumberOfLots = () => {
-          return getterLots.getTotalNumberResources()
-        }
+        getterLots.callbackOnGetting(() => {
+          $scope.totalNumberOfLots = getterLots.getTotalNumberResources()
+          $scope.moreLotsAvailable = $scope.totalNumberOfLots > $scope.lots.length
+        })
 
         // Workaround: In root, parentResource is not set. This must be after initializing ResourceListGetter
         // TODO Delete workaround as soon as API returns root with label and _id set
@@ -313,18 +313,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // Pagination Devices
         // Let's avoid the user pressing multiple times the 'load more'
         $scope.getMoreIsBusy = false
-        $scope.morePagesAvailable = true
         let getMoreFirstTime = false
         $scope.getMore = () => {
           if (!$scope.getMoreIsBusy && getMoreFirstTime) {
             $scope.getMoreIsBusy = true
-            try {
-              getterDevices.getResources(true, false).finally(() => { $scope.getMoreIsBusy = false })
-            } catch (err) {
+            getterDevices.getResources(true, false).finally(() => {
               $scope.getMoreIsBusy = false
-              if (!(err instanceof NoMorePagesAvailableException)) throw err
-              $scope.morePagesAvailable = false
-            }
+            })
           }
           getMoreFirstTime = true
         }
@@ -332,19 +327,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // Pagination lots
         // Let's avoid the user pressing multiple times the 'load more'
         $scope.getMoreLotsIsBusy = false
-        $scope.morePagesAvailableLots = true
         $scope.getMoreLots = () => {
           if (!$scope.getMoreLotsIsBusy) {
             $scope.getMoreLotsIsBusy = true
-            try {
-              getterLots.getResources(true, false).finally(() => {
-                $scope.getMoreLotsIsBusy = false
-              })
-            } catch (err) {
+            getterLots.getResources(true, false).finally(() => {
               $scope.getMoreLotsIsBusy = false
-              if (!(err instanceof NoMorePagesAvailableException)) throw err
-              $scope.morePagesAvailableLots = false
-            }
+            })
           }
         }
 

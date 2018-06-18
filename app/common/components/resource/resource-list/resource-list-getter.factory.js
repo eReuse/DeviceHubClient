@@ -1,7 +1,6 @@
 function ResourceListGetterFactory (ResourceSettings) {
   const SEARCH = 'search'
   const utils = require('./../../utils.js')
-  const NoMorePagesAvailableException = require('./no-more-pages-available.exception')
 
   class ResourceListGetter {
     /**
@@ -171,7 +170,9 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @return {promise} The Restangular promise.
      */
     getResources (getNextPage = false, showProgressBar = true) {
-      if (getNextPage && !this.pagination.morePagesAvailable) throw new NoMorePagesAvailableException()
+      if (getNextPage && !this.pagination.morePagesAvailable) {
+        throw new Error('Tried to get more resources but there are no more pages available')
+      }
       if (showProgressBar) this.progressBar.start()
       // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 1
       this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 1

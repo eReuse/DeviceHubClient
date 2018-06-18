@@ -7,7 +7,7 @@
                      on-params-changed="onSearchParamsChanged(params)"
                      default-params="config.search.defaultParams"
     ></resource-search>
-    <h4>Lots ({{ getTotalNumberOfLots() }})</h4>
+    <h4>Lots ({{ totalNumberOfLots }})</h4>
     <div class="children-lots"
     >
       <ul>
@@ -18,7 +18,7 @@
             <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.label }}
           </a>
         </li>
-        <li ng-show="morePagesAvailableLots">
+        <li ng-show="moreLotsAvailable">
           <a href="#" ng-click="getMoreLots()">
             Show more
           </a>
@@ -26,7 +26,7 @@
       </ul>
     </div>
 
-    <h4 style="display: inline-block; margin-bottom: 20px;">Devices ({{ getTotalNumberOfDevices() }}) </h4>
+    <h4 style="display: inline-block; margin-bottom: 20px;">Devices ({{ totalNumberOfDevices }}) </h4>
     <button type="button"
             class="btn btn-info"
             style="display: inline-block; padding: 5px 10px; margin-left: 10px;"
@@ -45,7 +45,7 @@
     </button>
 
     <div infinite-scroll="getMore()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
-         infinite-scroll-parent infinite-scroll-disabled="getMoreIsBusy || !morePagesAvailable"
+         infinite-scroll-parent infinite-scroll-disabled="getMoreIsBusy || !moreDevicesAvailable"
          infinite-scroll-listen-for-event="list:filtered"
     >
       <table id="resource-list-table" class="resource-list-table table table-striped table-hover">
@@ -100,8 +100,8 @@
       <div class="text-center">
         <i
           ng-class="{
-                      'fa fa-circle-o-notch fa-spin fa-lg': getMoreIsBusy && morePagesAvailable,
-                      'fa fa-ellipsis-h fa-lg': !morePagesAvailable
+                      'fa fa-circle-o-notch fa-spin fa-lg': getMoreIsBusy && moreDevicesAvailable,
+                      'fa fa-ellipsis-h fa-lg': !moreDevicesAvailable
                     }
                    "
         ></i>
