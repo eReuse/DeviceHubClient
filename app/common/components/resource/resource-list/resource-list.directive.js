@@ -76,7 +76,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // Filtering
         $scope.onSearchParamsChanged = newFilters => {
           getterDevices.updateFiltersFromSearch(newFilters)
-          getterLots.updateFiltersFromSearch(newFilters) // TODO update lots on filter update?
+          getterLots.updateFiltersFromSearch({}) // TODO update lots on filter update?
         }
 
         // Selecting
