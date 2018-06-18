@@ -2,11 +2,6 @@
 <div class="row">
   <div class="current-lot fill-height-bar col-sm-6 col-xs-12">
     <resource-breadcrumb></resource-breadcrumb>
-    <!-- Resource Filters -->
-    <resource-search settings="config.search.params"
-                     on-params-changed="onSearchParamsChanged(params)"
-                     default-params="config.search.defaultParams"
-    ></resource-search>
     <h4>Lots ({{ totalNumberOfLots }})</h4>
     <div class="children-lots"
     >
@@ -14,9 +9,9 @@
         <li
                 ng-repeat="lot in lots"
         >
-          <a href="#" ng-click="goTo(lot)">
+          <button ng-click="goTo(lot)">
             <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.label }}
-          </a>
+          </button>
         </li>
         <li ng-show="moreLotsAvailable">
           <a href="#" ng-click="getMoreLots()">
@@ -43,6 +38,11 @@
     >
       <span>Deselect all</span>
     </button>
+    <!-- Resource Filters -->
+    <resource-search settings="config.search.params"
+                     on-params-changed="onSearchParamsChanged(params)"
+                     default-params="config.search.defaultParams"
+    ></resource-search>
 
     <div infinite-scroll="getMore()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
          infinite-scroll-parent infinite-scroll-disabled="getMoreIsBusy || !moreDevicesAvailable"
