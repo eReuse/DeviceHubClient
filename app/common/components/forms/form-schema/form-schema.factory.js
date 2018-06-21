@@ -924,6 +924,21 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
               'disabled': false
             }
           }]
+        case 'devices:Snapshot':
+          return [{
+            'key': 'place',
+            'name': 'place',
+            'type': 'typeahead',
+            'templateOptions': {
+              'resourceName': 'places',
+              'keyFieldName': '_id',
+              'label': 'Place where the devices are saved',
+              'labelFieldName': 'label',
+              'filterFieldNames': ['label', '_id'],
+              'description': 'Place the devices to an existing location.',
+              'disabled': false
+            }
+          }]
         case 'devices:Dispose':
           return [{
             'key': 'label',
