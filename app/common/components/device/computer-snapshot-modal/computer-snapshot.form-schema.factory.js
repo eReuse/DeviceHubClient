@@ -22,7 +22,7 @@ function ComputerSnapshotFormSchemaFactory (SnapshotFormSchema, $rootScope, $q) 
      * @param {object} model - The resource to upload.
      * @param {object} form - A reference to formly's form
      * @param {object} status - The status object. See it in FormSchema. **We do not use status.succeeded**
-     * @param {object} parserOptions - Options for cerberusToFormly. See it there.
+     * @param {object} parserOptions - Options for cerberusToFormly. See it there. TODO cerberusToFormly obsolete, remove this?
      */
     constructor (model, form, status, parserOptions = {}) {
       status.uploaded = status.unsolved = 0
@@ -129,7 +129,7 @@ function ComputerSnapshotFormSchemaFactory (SnapshotFormSchema, $rootScope, $q) 
       return _.identity
     }
 
-    _final (promise) {}
+    _final () {}
   }
   return ComputerSnapshotFormSchema
 }

@@ -20,6 +20,5 @@ module.exports = angular.module('common.components.forms',
 .config(require('./types/get-from-data-relation-or-create/get-from-data-relation-or-create.formly-type.config'))
 .directive('formSchema', require('./form-schema/form-schema.directive'))
 .factory('FormSchema', require('./form-schema/form-schema.factory'))
-.service('cerberusToFormly', require('./cerberus-to-formly.service'))
 .config(require('./form-modal/form-modal.config'))
 .controller('formModalCtrl', require('./form-modal/form-modal.controller'))
