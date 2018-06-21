@@ -17,7 +17,6 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
      * @param {object} form - A form object containing a reference to formly's form.
      * @param {object} form.form - A formly form. It is ok if this is not set yet when creating
      * FormSchema, but it will need to be set when submitting. This is usual workflow when leading
-     * @param {object[]} form.fields - formly form's fields, usually from *cerberusToFormly* service.
      * with formly forms, as until the formly form is instantiated this value won't be populated.
      * @param {object} status - Flags of the submission.
      * @param {boolean} status.errorFromLocal - An error has been detected through validation in the browser prior
@@ -26,7 +25,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
      * @param {boolean} status.errorListFromServer - An error has been detected from the server.
      * @param {boolean} status.done - If the execution has done. Prior first execution is false too.
      * @param {boolean} status.succeeded - Flag set true when the execution is done successfully (HTTP 2XX).
-     * @param {object} [parserOptions] - Options for cerberusToFormly. See it there.
+     * @param {object} [parserOptions] - Options for cerberusToFormly. See it there. TODO cerberusFormly obsolete, remove this?
      * @property {object|undefined} _uploadsFile - Does this form upload a file? If yes, the schema of such field or
      * undefined.
      * API.
@@ -652,6 +651,56 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
               'disabled': false
             }
           }]
+        case 'devices:CancelReservation':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'reserve',
+            'name': 'reserve',
+            'type': 'typeahead',
+            'templateOptions': {
+              'resourceName': 'events',
+              'keyFieldName': '_id',
+              'label': 'Reserve',
+              'labelFieldName': '_id',
+              'filterFieldNames': ['_id'],
+              'required': true,
+              'description': 'The reserve to cancel.',
+              'disabled': false
+            }
+          }, {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
         case 'devices:Deallocate':
           return [{
             'key': 'label',
@@ -916,6 +965,8 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
               'disabled': false
             }
           }]
+        default:
+          return new Error('event ' + event + ' does not have fields specified')
       }
     }
 
