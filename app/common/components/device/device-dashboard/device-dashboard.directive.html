@@ -68,14 +68,14 @@
     </article>
 
     <article ng-class="{'col-lg-8': resource.pricing.refurbisher.standard && type !== 'small'}">
-      <h3>Condition score</h3>
-      <table class="table" id="device-dashboard-condition">
+      <h3>Components</h3>
+      <table class="table" id="device-dashboard-components">
         <thead>
           <tr>
             <th></th>
             <th></th>
             <th></th>
-            <th>Condition</th>
+            <th>Range</th>
           </tr>
         </thead>
         <tbody>
@@ -124,6 +124,20 @@
             <td>
             </td>
           </tr>
+        </tbody>
+      </table>
+
+      <h3>Condition score</h3>
+      <table class="table" id="device-dashboard-condition">
+        <thead>
+        <tr>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th>Condition</th>
+        </tr>
+        </thead>
+        <tbody>
           <tr ng-show="::resource.condition.appearance.general">
             <td>
               <i class="fa fa-fw fa-eye"></i>

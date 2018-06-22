@@ -56,7 +56,7 @@ const RESOURCE_CONFIG = {
       doNotUse: ['debug', 'version', 'events', 'owners', 'components', 'version', 'snapshotSoftware', 'automatic',
         'offline', '_uuid', 'geo', 'elapsed', 'osInstallation', 'tests', 'inventory', 'date',
         'autoUploaded', 'condition.general', 'condition.scoringSoftware', 'condition.created',
-        'group'].concat(DO_NOT_USE)
+        'group', 'color', 'orientation', 'picture_info', 'pictures', 'benchmarks'].concat(DO_NOT_USE)
     },
     Device: {
       dataRelation: {
