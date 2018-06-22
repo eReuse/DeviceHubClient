@@ -78,9 +78,12 @@
                 <span ng-if="::td.number">
                   {{::$root._.get(resource, td.value) | number}}
                 </span>
+                <span ng-if="::td.currency">
+                  {{::$root._.get(resource, td.value) | currency:'€ ' }}
+                </span>
                 <!-- For now only label can be changed from a resource without refreshing the list, and label field
                 falls in here -->
-                <span ng-if="::!td.humanize && !td.number">
+                <span ng-if="::!td.humanize && !td.number && !td.currency">
                   <!-- Let's show more characters if we have a lg screen -->
                   <span class="hidden-lg">
                     {{$root._.get(resource, td.value) | limitTo: (td.limitTo || 15)}}

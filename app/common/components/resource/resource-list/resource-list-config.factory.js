@@ -60,7 +60,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
     },
     price: {
       th: {key: 'pricing.total.standard', name: `Price ${CONSTANTS.currency}`},
-      td: {value: 'pricing.total.standard', number: true}
+      td: {value: 'pricing.total.standard', currency: true}
     }
   }
   f.lastEvent.thDef = _.assign({default: true}, f.lastEvent.th)
