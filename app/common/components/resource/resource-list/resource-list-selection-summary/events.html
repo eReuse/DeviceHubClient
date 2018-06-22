@@ -55,7 +55,7 @@
           {{ event[prop]}}
         </td>
         <td>
-          {{ event['_updated'] }}
+          {{ event['_updated'] | date:'mediumDate' }}
         </td>
       </tr>
     </tbody>
