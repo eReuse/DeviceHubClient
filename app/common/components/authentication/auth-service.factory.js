@@ -5,6 +5,24 @@
  */
 function authServiceFactory (Restangular, session, $state) {
   const authService = {}
+  const userLoginURL = 'users/login'
+  const defaultAccount = {
+    'role': 'a',
+    'active': true,
+    // 'email': 'a@a.a',
+    // 'token': 'Tk9GQVRETk5VQjo=',
+    '@type': 'Account',
+    'databases': {'db2': 'ad', 'db1': 'ad', 'reutilitza-upc': 'ad'},
+    'shared': [],
+    // '_id': '5acfa56aa0961e1b7f28c34a',
+    'defaultDatabase': 'db1',
+    'route': 'login',
+    'reqParams': null,
+    'restangularized': true,
+    'fromServer': true,
+    '_links.parent.href': null,
+    'restangularCollection': false
+  }
 
   /**
    * Performs login and, upon success, generates a valid session (saving it in the browser if set) and
@@ -16,7 +34,8 @@ function authServiceFactory (Restangular, session, $state) {
    * @returns {Object} Account object.
    */
   authService.login = function (credentials, saveInBrowser) {
-    return Restangular.all('login').post(credentials).then(function (account) {
+    return Restangular.all(userLoginURL).post(credentials).then(function (account) {
+      account = _.defaults(account, defaultAccount)
       session.save(account, saveInBrowser)
       return account
     })
