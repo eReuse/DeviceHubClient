@@ -1,18 +1,19 @@
 function schema (CONSTANTS, Restangular, $q, RestangularFactory) {
-  var self = this
   this.schema = null
   var deferred = $q.defer()
   this.loaded = deferred.promise
   // RestangularFactory gets the promise from session. We get the schema
   // in both cases: when the user has logged in (resolve) or is anonymous (reject)
   this._getSchema = function () {
-    Restangular.oneUrl('schema', CONSTANTS.url + '/schema').get().then(function (data) {
-      self.schema = data
-      deferred.resolve(self.schema)
-    }).catch(function (data) {
-      deferred.reject()
-      throw data
-    })
+    // throw new Error('schema does not exist')
+    // Restangular.oneUrl('schema', CONSTANTS.url + '/schema').get().then(function (data) {
+    //   self.schema = data
+    //   deferred.resolve(self.schema)
+    // }).catch(function (data) {
+    //   deferred.reject()
+    //   throw data
+    // })
+    deferred.resolve()
   }
   RestangularFactory.isLoaded().then(this._getSchema, this._getSchema)
 
