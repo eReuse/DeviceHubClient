@@ -15,6 +15,15 @@
 function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
   const utils = require('./../utils')
 
+  const schemas = require('./../../config/schema_reduced')
+  // const schemas = []
+
+  function _getSchema (resourceName) {
+    return schemas[resourceName]
+  }
+
+
+
   /**
    * Similar to DeviceHub's ResourceSettings, it stores several information about a resource. It can do:
    * - Stores settings and schema
@@ -41,7 +50,8 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
      * @throw {TypeError} When type is not in Type convention.
      * @throw {TypeError} When type is the reserved keyword *_settings*
      */
-    constructor (type) {
+    constructor (type, previousType) {
+      // console.log('creating ResourceSettings for type ', type, 'previousType', previousType)
       if (!_.isString(type)) throw TypeError('Type is expected to be string, but it is ' + typeof type)
       if (utils.Naming.type(type) !== type) throw TypeError(type + ' should be of Type convention.')
       if (type === '_settings') throw TypeError('\'_settings\' is not a valid resource.')
@@ -49,9 +59,8 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
       this.resourceName = utils.Naming.resource(type)
       this.humanName = utils.Naming.humanize(type)
       this.settings = {}
-      this.authorized = this.resourceName in schema.schema // The server only sends the schemas that we have access to
-      if (this.authorized) {
-        this.schema = schema.schema[this.resourceName]
+      this.schema = _getSchema(this.resourceName)
+      if (this.schema) {
         this.settings = _.assign(this._getInnerSettings(), this.schema._settings)
         this.server = ResourceServer(this.settings)
         this.types = this.schema['@type'].allowed
@@ -64,7 +73,8 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
         } else {
           const picked = _.pickBy(RESOURCE_CONFIG.resources, r => r._root) // Can't chain findKey after pickBy
           const rootAncestorType = _.findKey(picked, (_, resourceType) => this.isSubResource(resourceType))
-          this.rootAncestor = _ResourceSettingsFactory(rootAncestorType)
+          // console.log('## creating ResourceSettings for root ancestor', rootAncestorType)
+          this.rootAncestor = _ResourceSettingsFactory(rootAncestorType, previousType + '/' + type)
         }
       }
     }
@@ -118,11 +128,12 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
    * @returns {ResourceSettings}
    * @private
    */
-  function _ResourceSettingsFactory (type) {
+  function _ResourceSettingsFactory (type, previousType) {
+    // console.log('creating resource settings for type', type, ', previousType: ', previousType)
     if (type === undefined) {
       throw new Error('cannot get resource settings for given type. type is undefined')
     }
-    if (!(type in resourceTypes)) resourceTypes[type] = new ResourceSettings(type)
+    if (!(type in resourceTypes)) resourceTypes[type] = new ResourceSettings(type, previousType)
     return resourceTypes[type]
   }
 
