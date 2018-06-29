@@ -1,4 +1,4 @@
-function eventExplanation (cerberusToView, RecursionHelper) {
+function eventExplanation () {
   return {
     templateUrl: window.COMPONENTS + '/event/event-explanation/event-explanation.directive.html',
     restrict: 'E',
