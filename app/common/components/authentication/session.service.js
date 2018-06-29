@@ -170,13 +170,15 @@ class Session {
   }
 
   updateAccount () {
-    const headers = {'Authorization': 'Basic ' + this.account.token}
-    this.Restangular.one('accounts', this.account.email).get({}, headers).then(account => {
-      _.assignIn(this._account, account)
-    }).catch(error => {
-      if (error.status === 401) this.logout()
-      throw error
-    })
+    // TODO implement
+    // const headers = {'Authorization': 'Basic ' + this.account.token}
+    // this.Restangular.one('accounts', this.account.email).get({}, headers).then(account => {
+    //   _.assignIn(this._account, account)
+    // }).catch(error => {
+    //   console.error('failed fetching account', this.account.email, error)
+    //   if (error.status === 401) this.logout()
+    //   throw error
+    // })
   }
 
 }
