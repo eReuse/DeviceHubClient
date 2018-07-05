@@ -295,8 +295,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               templateUrl: selectionSummaryTemplateFolder + '/lots.html'
             } */
           ])
-
-          $scope.selection.valideEvents = ResourceSettings('devices:DeviceEvent').getSubResources()
         }
         selector.callbackOnSelection(updateSelection)
         updateSelection()
