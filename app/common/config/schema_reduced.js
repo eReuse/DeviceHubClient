@@ -5508,7 +5508,7 @@ module.exports = {
       'icon': 'devices/icons/',
       'useDefaultDatabase': false,
       'parent': 'IndividualProduct',
-      'url': 'devices',
+      'url': 'inventories/', // devices URL
       'itemMethods': [
         'GET',
         'PATCH',
