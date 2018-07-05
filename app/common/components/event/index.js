@@ -4,7 +4,6 @@ require('angular-recursion')
 module.exports = angular.module('common.components.event',
   [
     require('app/common/config').name,
-    require('./../view').name,
     'ui.bootstrap',
     'RecursionHelper'
   ])

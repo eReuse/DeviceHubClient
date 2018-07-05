@@ -26,7 +26,6 @@ module.exports = angular.module('common.components.resource',
     require('./../utilities').name,
     'Focus.Service',
     require('ng-infinite-scroll'),
-    require('./../view').name,
     require('./../report').name,
     'monospaced.qrcode',
     'checklist-model',
@@ -39,7 +38,6 @@ module.exports = angular.module('common.components.resource',
   .directive('resourceView', require('./resource-view/resource-view.directive'))
   .factory('ResourceViewGenerator', require('./resource-view/resource-view-generator.factory'))
   .directive('resourceButton', require('./resource-button/resource-button.directive'))
-  .directive('deleteButton', require('./delete-button/delete-button.directive'))
   .directive('resource', require('./resource/resource.directive'))
   .filter('palletSizeLocale', require('./pallet-size-locale.filter'))
   // Resource-list
