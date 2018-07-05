@@ -7,8 +7,8 @@ function restangularConfig (RestangularProvider, CONSTANTS) {
     // .. to look for getList operations
     switch (operation) {
       case 'getList':
-        _.forEach(data._items, buildLink)
-        extractedData = data._items
+        _.forEach(data.devices, buildLink)
+        extractedData = data.devices
         extractedData._meta = data._meta
         break
       case 'get':

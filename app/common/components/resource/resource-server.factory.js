@@ -1,3 +1,5 @@
+// TODO what's the difference to config/restangular.config.js ? Merge the two config files?
+
 const utils = require('./../utils.js')
 
 /**
@@ -21,20 +23,16 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
   function _ResourceServer (settings) {
     const url = settings.url.split('/')
 
-    // We use the settings for default database or custom one
-    const CustomRestangular = settings.useDefaultDatabase
-      ? RestangularConfigurerResource
-      : RestangularConfigurerCustomDB
     let restangularConfig
     switch (url.length) {
       case 2:
-        restangularConfig = CustomRestangular.all(url[0])
+        restangularConfig = RestangularConfigurerResource.all(url[0])
         break
       case 3:
-        restangularConfig = CustomRestangular.one(url[0], url[1])
+        restangularConfig = RestangularConfigurerResource.one(url[0], url[1])
         break
     }
-    const service = CustomRestangular.service(url[url.length - 1], restangularConfig)
+    const service = RestangularConfigurerResource.service(url[url.length - 1], restangularConfig)
     /**
      * Finds the given text in field. Text can be a partial word.
      * @param {string[]} names The name of the field
@@ -99,11 +97,16 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
      * Parses resources received from the server.
      */
     RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response) {
-      if (resourceName in schema.schema) {
-        if (operation === 'getList') {
-          for (let i = 0; i < data.length; i++) parse(data[i], schema.schema[resourceName])
-        } else if (response.status !== 204) parse(data, schema.schema[resourceName])
-      }
+      // TODO update this and move code form resource-list-getter here
+      // if (resourceName && resourceName in schema.schema) {
+      //   if (operation === 'getList') {
+      //     for (let i = 0; i < data.length; i++) {
+      //       parse(data[i], schema.schema[resourceName])
+      //     }
+      //   } else if (response.status !== 204) {
+      //     parse(data, schema.schema[resourceName])
+      //   }
+      // }
       return data
     })
 
@@ -126,18 +129,18 @@ function ResourceServer (schema, Restangular, CONSTANTS, session) {
     })
   })
 
-  /**
-   * A special configuration for Restangular that has the database preppended in the base url, used for
-   * some resources.
-   */
-  const RestangularConfigurerCustomDB = RestangularConfigurerResource.withConfig(_.noop) // We can configure it outside
-
-  function setDatabaseInUrl (db) {
-    RestangularConfigurerCustomDB.setBaseUrl(CONSTANTS.url + '/' + db)
-  }
-
-  session.loaded.then(() => setDatabaseInUrl(session.db)) // Session may load before us
-  session.callWhenDbChanges(setDatabaseInUrl) // For next changes
+  // /**
+  //  * A special configuration for Restangular that has the database preppended in the base url, used for
+  //  * some resources.
+  //  */
+  // const RestangularConfigurerCustomDB = RestangularConfigurerResource.withConfig(_.noop) // We can configure it outside
+  //
+  // function setDatabaseInUrl (db) {
+  //   RestangularConfigurerCustomDB.setBaseUrl(CONSTANTS.url + '/' + db)
+  // }
+  //
+  // session.loaded.then(() => setDatabaseInUrl(session.db)) // Session may load before us
+  // session.callWhenDbChanges(setDatabaseInUrl) // For next changes
 
   return _ResourceServer
 }

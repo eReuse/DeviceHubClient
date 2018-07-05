@@ -3,6 +3,85 @@ function ResourceListGetterFactory (ResourceSettings) {
   const utils = require('./../../utils.js')
   const NoMorePagesAvailableException = require('./no-more-pages-available.exception')
 
+  // Missing properties in device, added here to stub those properties
+  // TODO Provide missing properties by service and finally remove this stub
+  const devicePropertiesStub = {
+    // '@type': 'Computer',
+    'processorModel': 'Intel(R) Atom(TM) CPU 330 @ 1.60GHz',
+    'totalRamSize': 2048,
+    'totalHardDriveSize': 305245.3359375,
+    'pricing': {
+      'refurbisher': {
+        'standard': {
+          'amount': 21.0,
+          'percentage': 0.5
+        }
+      },
+      'retailer': {
+        'standard': {
+          'amount': 7.88,
+          'percentage': 0.18
+        }
+      },
+      'platform': {
+        'standard': {
+          'amount': 12.9,
+          'percentage': 0.3
+        }
+      },
+      'total': {
+        'standard': 41.8
+      }
+    },
+    'ancestors': [
+      {
+        'lots': [
+          'gqGHPm6VAb',
+          'qqLH_MwRpR'
+        ],
+        '@type': 'Lot',
+        '_id': 'NqGv3adWT6'
+      }
+    ],
+    'events': [
+      {
+        'secured': false,
+        '_updated': '2018-06-06T10:20:05',
+        'incidence': false,
+        '@type': 'devices:Ready',
+        'byUser': '5acfa56aa0961e1b7f28c34a',
+        '_id': '5b17b555a0961e0aeab57d2b',
+        'label': 'Ready test 2'
+      }
+    ],
+    'condition': {
+      'scoringSoftware': {
+        'version': '1.0',
+        'label': 'ereuse.org'
+      },
+      'appearance': {
+        'score': 0.0,
+        'general': 'B'
+      },
+      'functionality': {
+        'score': -0.5,
+        'general': 'B'
+      },
+      'components': {
+        'hardDrives': 3.82,
+        'ram': 1.54,
+        'processors': 3.59
+      },
+      'general': {
+        'score': 2.09,
+        'range': 'Low'
+      }
+    },
+    donor: 'BCN Ayuntamiento',
+    owner: 'Solidança',
+    distributor: 'Donalo'
+  }
+
   class ResourceListGetter {
     /**
      * Creates a resourceListGetter for a specific resourceType.
@@ -175,14 +254,15 @@ function ResourceListGetterFactory (ResourceSettings) {
       if (showProgressBar) this.progressBar.start()
       // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 1
       this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 1
-      const q = {
-        where: this._filters,
-        page: this.pagination.pageNumber,
-        sort: this._sort,
-        max_results: this.resourceType === 'Device'
-          ? ($(window).height() < 800 ? 20 : 30)
-          : 15
-      }
+      // const q = {
+      //   where: this._filters,
+      //   page: this.pagination.pageNumber,
+      //   sort: this._sort,
+      //   max_results: this.resourceType === 'Device'
+      //     ? ($(window).height() < 800 ? 20 : 30)
+      //     : 15
+      // }
+      const q = {} // TODO SERVER LIMITS: FIX THIS
 
       return this.server.getList(q).then(this._processResources.bind(this, getNextPage, showProgressBar))
     }
@@ -205,14 +285,17 @@ function ResourceListGetterFactory (ResourceSettings) {
       if (!getNextPage) this.resources.length = 0
       if (this.resourceType === 'Device') {
         resources.forEach(r => {
-          const components = [ 'Motherboard', 'RamModule', 'SoundCard', 'GraphicCard', 'OpticalDrive', 'HardDrive', 'Processor', 'NetworkAdapter' ]
-          const isComponent = components.indexOf(r['@type']) !== -1
+          const components = ['Motherboard', 'RamModule', 'SoundCard', 'GraphicCard', 'OpticalDrive', 'HardDrive', 'Processor', 'NetworkAdapter']
+          const isComponent = components.indexOf(r['type']) !== -1
+          const computers = ['Desktop', 'Laptop']
+          const isComputer = computers.indexOf(r['type']) !== -1
           const isPlaceholder = r['@type'] === 'Device'
 
           let parentLots = []
 
-          parentLots = parentLots.concat(r.ancestors)
+          r.ancestors = r.ancestors || []
 
+          parentLots = parentLots.concat(r.ancestors)
           // map different group types to 'Lot' and set label
           parentLots = parentLots
             .filter(r => {
@@ -226,7 +309,6 @@ function ResourceListGetterFactory (ResourceSettings) {
               l['@type'] = 'Lot'
               return l
             })
-
           if (parentLots.length === 0) {
             parentLots.push({
               _id: 'NoParent',
@@ -241,8 +323,15 @@ function ResourceListGetterFactory (ResourceSettings) {
           } else {
             if (isComponent) {
               _.assign(r, {
-                '@type': 'Component',
-                type: r['@type']
+                '@type': 'Component'
+              })
+            } else if (isComputer) {
+              _.assign(r, {
+                '@type': 'Computer'
+              })
+            } else {
+              _.assign(r, {
+                '@type': 'Peripheral'
               })
             }
             const manufacturer = r.manufacturer ? (' ' + r.manufacturer) : ''
@@ -250,12 +339,12 @@ function ResourceListGetterFactory (ResourceSettings) {
             title = r.type + manufacturer + model
           }
 
+          _.defaults(r, devicePropertiesStub)
           _.assign(r, {
+            _id: r.id,
+            _created: r.created,
             status: (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
             title: title,
-            donor: 'BCN Ayuntamiento', // TODO get from events
-            owner: 'Solidança', // TODO get from events
-            distributor: 'Donalo', // TODO get from events
             parentLots: parentLots
           })
 
@@ -267,23 +356,29 @@ function ResourceListGetterFactory (ResourceSettings) {
         let lots = {}
         resources.forEach((device) => {
           device.parentLots.forEach((lot) => {
-            lots[lot._id] = lots[lot._id] || []
-            lots[lot._id].push(lot)
+            if (lot._id !== 'NoParent') {
+              lots[lot._id] = lots[lot._id] || []
+              lots[lot._id].push(lot)
+            }
           })
         })
         let lotIDs = Object.keys(lots)
 
-        ResourceSettings('Lot').server.getList({
-          where: {'_id': { '$in': lotIDs }}
-        }).then((lotsWithLabel) => {
-          // add labels to lots
-          lotsWithLabel.forEach(lot => {
-            lots[lot._id].forEach(origLot => {
-              origLot.label = lot.label
+        if (lotIDs.length > 0) {
+          ResourceSettings('Lot').server.getList({
+            where: {'_id': {'$in': lotIDs}}
+          }).then((lotsWithLabel) => {
+            // add labels to lots
+            lotsWithLabel.forEach(lot => {
+              lots[lot._id].forEach(origLot => {
+                origLot.label = lot.label
+              })
             })
+            this._updateResourcesAfterGet(getNextPage, resources)
           })
+        } else {
           this._updateResourcesAfterGet(getNextPage, resources)
-        })
+        }
       } else {
         this._updateResourcesAfterGet(getNextPage, resources)
       }
