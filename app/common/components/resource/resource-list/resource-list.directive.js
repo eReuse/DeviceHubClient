@@ -287,13 +287,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               contentSummary: props.events.length + ' events',
               cssClass: 'events',
               templateUrl: selectionSummaryTemplateFolder + '/events.html'
-            },
+            } /*,
             {
               title: 'Lots',
               contentSummary: props.lots.length + ' lots',
               cssClass: 'lots',
               templateUrl: selectionSummaryTemplateFolder + '/lots.html'
-            }
+            } */
           ])
 
           $scope.selection.valideEvents = ResourceSettings('devices:DeviceEvent').getSubResources()
