@@ -8,7 +8,7 @@ function reserveButton (ResourceSettings, dhModal) {
     link: $scope => {
       $scope.ReserveSettings = ResourceSettings('devices:Reserve')
 
-      $scope.openModal = require('./../open-event-modal')(ResourceSettings, dhModal)
+      $scope.openModal = require('./../open-event-modal')(dhModal)
     }
   }
 }

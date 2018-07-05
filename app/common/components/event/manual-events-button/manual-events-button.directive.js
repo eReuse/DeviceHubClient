@@ -23,7 +23,7 @@ function manualEventsButton (ResourceSettings, dhModal, ResourceListSelector) {
 
       $scope.openModal = (eventType) => {
         let resources = ResourceListSelector.getAllSelectedDevices()
-        require('./../open-event-modal')(ResourceSettings, dhModal)(eventType, resources)
+        require('./../open-event-modal')(dhModal)(eventType, resources)
       }
     }
   }
