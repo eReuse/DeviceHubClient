@@ -1,4 +1,4 @@
-const Naming = require('./../utils').Naming
+// const Naming = require('./../utils').Naming
 
 /**
  * Util method for manual-events-button and reserve-button that opens the event in a modal.
@@ -17,19 +17,24 @@ function openModalFactory (ResourceSettings, dhModal) {
    * @param {Object} options - Opotional. Options to pass to FormSchema.
    */
   return (type, resources = null, model = {}, options = {}) => {
-    const isGroup = resources && ResourceSettings(resources[0]['@type']).isSubResource('Group')
-    // We make it: groups.lots = [objLot1, objLot2...]
-    if (isGroup) {
-      resources = _(resources).groupBy('@type').mapKeys((_, type) => Naming.resource(type)).value()
-      resources['lots'] = resources['lots'] || []
-      _.arrayExtend(resources['lots'], _.pop(resources, 'incoming-lot', []))
-      _.arrayExtend(resources['lots'], _.pop(resources, 'outgoing-lot', []))
-    }
-    if (resources) model[isGroup ? 'groups' : 'devices'] = resources
+    // TODO enable modals for groups
+    // const isGroup = resources && ResourceSettings(resources[0]['@type']).isSubResource('Group')
+    // // We make it: groups.lots = [objLot1, objLot2...]
+    // if (isGroup) {
+    //   resources = _(resources).groupBy('@type').mapKeys((_, type) => Naming.resource(type)).value()
+    //   resources['lots'] = resources['lots'] || []
+    //   _.arrayExtend(resources['lots'], _.pop(resources, 'incoming-lot', []))
+    //   _.arrayExtend(resources['lots'], _.pop(resources, 'outgoing-lot', []))
+    // }
+    // if (resources) model[isGroup ? 'groups' : 'devices'] = resources
+
+    model['devices'] = resources
     model['@type'] = type
     const opt = {
       model: () => model,
-      parserOptions: () => ({doNotUse: resources ? (isGroup ? ['devices'] : ['groups']) : ['devices', 'groups']}),
+      // TODO enable modals for groups
+      // parserOptions: () => ({doNotUse: resources ? (isGroup ? ['devices'] : ['groups']) : ['devices', 'groups']}),
+      parserOptions: () => ({doNotUse: resources ? (['groups']) : ['devices', 'groups']}),
       options: () => options
     }
     dhModal.open('form', opt)
