@@ -9,8 +9,7 @@
   </button>
   <ul uib-dropdown-menu role="menu" aria-labelledby="event-button">
     <li role="menuitem"
-        ng-repeat="eventSettings in events | orderBy:'settings.sink':true" ng-if="::eventSettings.settings.manual"
-        uib-tooltip-html="eventSettings.settings.shortDescription"
+        ng-repeat="eventSettings in events"
         tooltip-placement="right"
         tooltip-append-to-body="true"
     >
