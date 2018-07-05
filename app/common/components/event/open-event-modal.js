@@ -4,10 +4,9 @@
  * Util method for manual-events-button and reserve-button that opens the event in a modal.
  *
  * @param {Object} dhModal
- * @param {ResourceSettings} ResourceSettings
  * @returns {function(string, Array)}
  */
-function openModalFactory (ResourceSettings, dhModal) {
+function openModalFactory (dhModal) {
   /**
    * Opens the modal.
    * @param {string} type - The @type of the event to perform.
