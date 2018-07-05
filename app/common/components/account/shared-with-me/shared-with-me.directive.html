@@ -10,7 +10,7 @@
     </li>
     <li role="menuitem" ng-repeat="resource in session.account.shared">
       <a ng-click="sharedWithMe.go(resource)">
-        <resource-icon resource-type="{{::resource['@type']}}"></resource-icon>
+        <resource-icon resource-type="Lot"></resource-icon>
         {{::resource | resourceTitle}}
         &nbsp;—&nbsp;
         {{::resource.db}}
