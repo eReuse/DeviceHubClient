@@ -1,4 +1,4 @@
-function manualEventsButton (ResourceSettings, dhModal, ResourceListSelector) {
+function manualEventsButton (dhModal, ResourceListSelector) {
   return {
     template: require('./manual-events-button.directive.html'),
     restrict: 'E',
