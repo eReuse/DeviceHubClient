@@ -1,4 +1,4 @@
-function reserveView (ResourceSettings, dhModal, ReserveFormSchema, session) {
+function reserveView (dhModal, ReserveFormSchema, session) {
   return {
     template: require('./reserve-view.directive.html'),
     restrict: 'E',
