@@ -26,7 +26,6 @@ module.exports = angular.module('common.components.resource',
     require('./../utilities').name,
     'Focus.Service',
     require('ng-infinite-scroll'),
-    require('./../report').name,
     'monospaced.qrcode',
     'checklist-model',
     require('./../group').name // the button in resource-list
