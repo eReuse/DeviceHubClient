@@ -159,6 +159,11 @@ function ResourceListGetterFactory (ResourceSettings) {
       if (!_.isNull(this._filters) && !_.isNull(this._sort)) this.getResources()
     }
 
+    updateSearchQuery (newQuery) {
+      this._query = newQuery
+      this.getResources()
+    }
+
     /**
      * updateFilters for source: search
      *
@@ -227,7 +232,8 @@ function ResourceListGetterFactory (ResourceSettings) {
       // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 1
       this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 1
       const q = {
-        filter: this._filters
+        filter: this._filters,
+        search: this._query
       }
       //
       // const q = {

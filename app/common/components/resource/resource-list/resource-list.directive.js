@@ -73,6 +73,11 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         $scope.sort = {}
         $scope.setSort = _.bind(getterDevices.updateSort, getterDevices, _)
 
+        // Search
+        $scope.onSearchChanged = (query) => {
+          getterDevices.updateSearchQuery(query)
+        }
+
         // Filtering
         $scope.onSearchParamsChanged = newFilters => {
           getterDevices.updateFiltersFromSearch(newFilters)
