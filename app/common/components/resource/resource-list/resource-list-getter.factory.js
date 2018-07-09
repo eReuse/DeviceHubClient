@@ -1,6 +1,6 @@
 function ResourceListGetterFactory (ResourceSettings) {
   const SEARCH = 'search'
-  const utils = require('./../../utils.js')
+  // const utils = require('./../../utils.js')
   const NoMorePagesAvailableException = require('./no-more-pages-available.exception')
 
   // Missing properties in device, added here to stub those properties
@@ -167,66 +167,38 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @param {object} newFilters
      */
     updateFiltersFromSearch (newFilters) {
-      let _filters = {}
-      let callbacks = []
-      let findSettings = _.bind(_.find, null, this.filterSettings.search.params, _)
-      _.forOwn(_.cloneDeep(newFilters), (value, key) => {
-        let settings = findSettings({key: key})
-        if (!settings) {
-          throw TypeError(`The filter with Key ${key} has no configuration parameter`)
-        }
-        if ('callback' in settings) {
-          // Save the callbacks to execute them at the end, passing the resulting filters array and the value
-          callbacks.push(_.bind(settings.callback, null, _filters, value, ResourceSettings))
-        } else {
-          if ('date' in settings) value = utils.parseDate(value)
-          if ('number' in settings) value = Number.parseFloat(value)
-          if ('boolean' in settings) value = value === 'Yes' || value === 'Succeed'
-          if ('comparison' in settings) {
-            if (_.isFunction(settings.comparison)) { // function comparisons are easier callbacks
-              value = settings.comparison(value, ResourceSettings)
-            } else {
-              switch (settings.comparison) { // Case '=' is itself so no need to do anything
-                case '!=':
-                  value = {$ne: value}
-                  break
-                case '<=':
-                  value = {$lte: value}
-                  break
-                case '>=':
-                  value = {$gte: value}
-                  break
-                case 'in':
-                  value = {$in: _.isArray(value) ? value : [value]}
-                  break
-                case 'nin':
-                  value = {$nin: _.isArray(value) ? value : [value]}
-              }
-            }
-          } else {
-            // We perform equality, and we could make it faster by using ^ at the beggining of the word
-            value = {$regex: value, $options: 'ix'}
-          }
-          _filters[key] = value
-        }
-      })
-      // Values from filters with a different 'key' than the filter sent to the server are moved
-      // or merged with the 'real key'. This needs to be done after modifying the array above.
-      _.forOwn(_filters, function (value, key) {
-        let settings = findSettings({key: key})
-        if ('realKey' in settings) {
-          if (!_filters[settings['realKey']]) {
-            _filters[settings['realKey']] = value
-          } else {
-            _.merge(_filters[settings['realKey']], value)
-          }
-          delete _filters[key]
-        }
-      })
+      newFilters = _.cloneDeep(newFilters)
+      let mappedFilters = {}
 
-      _.invokeMap(callbacks, _.call)
+      function mapFilterToServer (filters, parentKey) {
+        // map filter prop names to server prop names
+        _.forOwn(filters, function (value, key) {
+          let fullPath = parentKey ? parentKey + '.' + key : key
+          if (value.isNested) {
+            delete value.isNested
+            return mapFilterToServer(value, fullPath)
+          }
 
-      this.updateFilters(SEARCH, _filters)
+          // general mappings
+          delete value._meta
+          if (value.range) {
+            value = value.range
+          }
+
+          // field specific mappings
+          switch (fullPath) {
+            case 'brand':
+              mappedFilters.manufacturer = value
+              break
+            default:
+              _.set(mappedFilters, fullPath, value)
+          }
+        })
+      }
+
+      mapFilterToServer(newFilters)
+
+      this.updateFilters(SEARCH, mappedFilters)
     }
 
     /**
@@ -254,6 +226,10 @@ function ResourceListGetterFactory (ResourceSettings) {
       if (showProgressBar) this.progressBar.start()
       // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 1
       this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 1
+      const q = {
+        filter: this._filters
+      }
+      //
       // const q = {
       //   where: this._filters,
       //   page: this.pagination.pageNumber,
@@ -262,7 +238,6 @@ function ResourceListGetterFactory (ResourceSettings) {
       //     ? ($(window).height() < 800 ? 20 : 30)
       //     : 15
       // }
-      const q = {} // TODO SERVER LIMITS: FIX THIS
 
       return this.server.getList(q).then(this._processResources.bind(this, getNextPage, showProgressBar))
     }

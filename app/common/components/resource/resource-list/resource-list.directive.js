@@ -95,6 +95,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         const nonComponents = [
           'Desktop', 'Laptop', 'All-in-one', 'Monitor', 'Peripherals'
         ]
+        // set initial filters
         let filtersModel = {
           [keyTypes]: [ 'Placeholders' ].concat(nonComponents)
         }
@@ -112,38 +113,47 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               const fullPath = parentPath + filterKey
               let value = pair[1]
               const isSelect = _.isArray(value)
-              const isRange = value.min || value.max
+              const isRange = value.range
+              const isText = typeof value === 'string'
 
-              if (isSelect || isRange) {
-                let filterText = _.get(value, '_meta.prefix', '')
-                if (isSelect) {
-                  if (filterKey === keyTypes && _.difference(nonComponents, value).length === 0) {
-                    value = _.difference(value, nonComponents)
-                    value.push('Non-Components')
-                  }
-                  filterText += value.join(', ')
-                } else if (isRange) {
-                  if (value.min) filterText += 'from ' + value.min + ' '
-                  if (value.max) filterText += 'to ' + value.max + ' '
-                  if (_.get(value, '_meta.unit')) filterText += value._meta.unit
-                }
-                $scope.activeFilters.push({
-                  propPath: fullPath,
-                  text: filterText
-                })
-              } else { // nested filter object
-                setActiveFilters(fullPath, value)
+              if (!(isSelect || isRange || isText)) {
+                value.isNested = true
+                return setActiveFilters(fullPath, value)
               }
+
+              let filterText = _.get(value, '_meta.prefix', '')
+              if (isSelect) {
+                if (filterKey === keyTypes && _.difference(nonComponents, value).length === 0) {
+                  value = _.difference(value, nonComponents)
+                  value.push('Non-Components')
+                }
+                filterText += value.join(', ')
+              } else if (isRange) {
+                filterText += 'from ' + value.range[0] + ' '
+                filterText += 'to ' + value.range[1]
+
+                if (_.get(value, '_meta.unit')) filterText += value._meta.unit
+              } else if (isText) {
+                filterText += filterKey + ': ' + value
+              }
+              $scope.activeFilters.push({
+                propPath: fullPath,
+                text: filterText
+              })
             })
           }
           setActiveFilters('', filtersModel)
+          getterDevices.updateFiltersFromSearch(filtersModel)
         }
         onFiltersChanged()
         function onSubmitRange () {
+          _.set(filtersModel, this.propPathModel + '.range', [ this.model.min, this.model.max ])
+
+          // set meta for active filter text
+          // TODO maybe this should not go to model but to a different meta object
           _.set(filtersModel, this.propPathModel + '._meta.unit', this.unit)
           _.set(filtersModel, this.propPathModel + '._meta.prefix', this.prefix)
-          _.set(filtersModel, this.propPathModel + '.min', this.model.min)
-          _.set(filtersModel, this.propPathModel + '.max', this.model.max)
+
           onFiltersChanged()
         }
         let filterPanelsNested = [
@@ -169,6 +179,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                           type: 'multiCheckbox',
                           className: 'multi-check',
                           templateOptions: {
+                            required: false,
                             options: [
                               {
                                 'name': 'Placeholders',
@@ -204,8 +215,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                                 'name': 'Peripherals',
                                 'value': 'Peripherals'
                               }
-                            ],
-                            required: false
+                            ]
                           }
                         }
                       ]
@@ -214,15 +224,79 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                 },
                 {
                   childName: 'Brand and model',
-                  panel: {}
+                  panel: {
+                    title: 'Brand and model',
+                    content: {
+                      type: 'multi-select',
+                      model: filtersModel,
+                      propPathModel: 'brand',
+                      options: {},
+                      onSubmit: onFiltersChanged,
+                      form: {},
+                      fields: [
+                        {
+                          key: 'brand',
+                          type: 'input',
+                          templateOptions: {
+                            label: 'Brand',
+                            placeholder: 'Enter a brand'
+                          }
+                        },
+                        {
+                          key: 'model',
+                          type: 'input',
+                          templateOptions: {
+                            label: 'Model',
+                            placeholder: 'Enter a model'
+                          }
+                        }
+                      ]
+                    }
+                  }
                 },
                 {
                   childName: 'Status',
                   panel: {}
                 },
                 {
-                  childName: 'Price and range',
-                  panel: {}
+                  childName: 'Price and rating',
+                  panel: {
+                    children: [
+                      {
+                        childName: 'Price',
+                        panel: {
+                          title: 'Price',
+                          content: {
+                            propPathModel: 'price',
+                            type: 'range',
+                            unit: '€',
+                            prefix: 'Price: ',
+                            model: {
+                              min: 0,
+                              max: 2000
+                            },
+                            onSubmit: onSubmitRange
+                          }
+                        }
+                      },
+                      {
+                        childName: 'Rating',
+                        panel: {
+                          title: 'Rating',
+                          content: {
+                            propPathModel: 'rating.rating',
+                            type: 'range',
+                            prefix: 'Rating: ',
+                            model: {
+                              min: 0,
+                              max: 5
+                            },
+                            onSubmit: onSubmitRange
+                          }
+                        }
+                      }
+                    ]
+                  }
                 },
                 {
                   childName: 'Components',
@@ -240,7 +314,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                             prefix: 'RAM: ',
                             model: {
                               min: 0,
-                              max: 9999
+                              max: 64
                             },
                             options: {},
                             onSubmit: onSubmitRange

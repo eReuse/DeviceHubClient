@@ -3,10 +3,6 @@
   <div class="current-lot fill-height-bar col-sm-6 col-xs-12">
     <resource-breadcrumb></resource-breadcrumb>
     <!-- Resource Filters -->
-    <resource-search settings="config.search.params"
-                     on-params-changed="onSearchParamsChanged(params)"
-                     default-params="config.search.defaultParams">
-    </resource-search>
     <div class="active-filters-container">
       <ul class="active-filters">
         <li class="active-filter" ng-repeat="filter in activeFilters" ng-click="openFilter(filter.propPath)">
