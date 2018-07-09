@@ -80,6 +80,227 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           // getterLots.updateFiltersFromSearch(newFilters) // TODO update lots on filter update?
         }
 
+        $scope.removeFilter = propPath => {
+          _.unset(filtersModel, propPath)
+          onFiltersChanged()
+        }
+
+        $scope.openFilter = propPath => {
+          const filterPanel = _.find(filterPanelsFlat, { content: { propPathModel: propPath } })
+          $scope.showFilterPanels = true
+          filterPanel.shown = true
+        }
+
+        const keyTypes = 'types-to-show'
+        const nonComponents = [
+          'Desktop', 'Laptop', 'All-in-one', 'Monitor', 'Peripherals'
+        ]
+        let filtersModel = {
+          [keyTypes]: [ 'Placeholders' ].concat(nonComponents)
+        }
+        function onFiltersChanged () {
+          $scope.filterPanels && $scope.filterPanels.forEach((panel) => {
+            panel.shown = false
+          })
+          $scope.showFilterPanels = false
+
+          $scope.activeFilters = []
+          function setActiveFilters (parentPath, obj) {
+            parentPath = parentPath ? parentPath + '.' : ''
+            _.toPairs(obj).map(pair => {
+              const filterKey = pair[0]
+              const fullPath = parentPath + filterKey
+              let value = pair[1]
+              const isSelect = _.isArray(value)
+              const isRange = value.min || value.max
+
+              if (isSelect || isRange) {
+                let filterText = _.get(value, '_meta.prefix', '')
+                if (isSelect) {
+                  if (filterKey === keyTypes && _.difference(nonComponents, value).length === 0) {
+                    value = _.difference(value, nonComponents)
+                    value.push('Non-Components')
+                  }
+                  filterText += value.join(', ')
+                } else if (isRange) {
+                  if (value.min) filterText += 'from ' + value.min + ' '
+                  if (value.max) filterText += 'to ' + value.max + ' '
+                  if (_.get(value, '_meta.unit')) filterText += value._meta.unit
+                }
+                $scope.activeFilters.push({
+                  propPath: fullPath,
+                  text: filterText
+                })
+              } else { // nested filter object
+                setActiveFilters(fullPath, value)
+              }
+            })
+          }
+          setActiveFilters('', filtersModel)
+        }
+        onFiltersChanged()
+        function onSubmitRange () {
+          _.set(filtersModel, this.propPathModel + '._meta.unit', this.unit)
+          _.set(filtersModel, this.propPathModel + '._meta.prefix', this.prefix)
+          _.set(filtersModel, this.propPathModel + '.min', this.model.min)
+          _.set(filtersModel, this.propPathModel + '.max', this.model.max)
+          onFiltersChanged()
+        }
+        let filterPanelsNested = [
+          {
+            childName: 'Root',
+            panel: {
+              title: 'Select a filter',
+              children: [
+                {
+                  childName: 'Item type',
+                  panel: {
+                    title: 'Item type',
+                    content: {
+                      type: 'multi-select',
+                      model: filtersModel,
+                      propPathModel: keyTypes,
+                      options: {},
+                      onSubmit: onFiltersChanged,
+                      form: {},
+                      fields: [
+                        {
+                          key: keyTypes,
+                          type: 'multiCheckbox',
+                          className: 'multi-check',
+                          templateOptions: {
+                            options: [
+                              {
+                                'name': 'Placeholders',
+                                'value': 'Placeholders'
+                              },
+                              {
+                                'name': 'Components',
+                                'value': 'Components'
+                              },
+                              /* TODO make category non-components
+                              {
+                                'name': 'Non-components',
+                                'value': 'Non-components'
+                              },
+                              */
+                              {
+                                'name': 'Desktop',
+                                'value': 'Desktop'
+                              },
+                              {
+                                'name': 'Laptop',
+                                'value': 'Laptop'
+                              },
+                              {
+                                'name': 'All-in-one',
+                                'value': 'All-in-one'
+                              },
+                              {
+                                'name': 'Monitor',
+                                'value': 'Monitor'
+                              },
+                              {
+                                'name': 'Peripherals',
+                                'value': 'Peripherals'
+                              }
+                            ],
+                            required: false
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  childName: 'Brand and model',
+                  panel: {}
+                },
+                {
+                  childName: 'Status',
+                  panel: {}
+                },
+                {
+                  childName: 'Price and range',
+                  panel: {}
+                },
+                {
+                  childName: 'Components',
+                  panel: {
+                    title: 'Components',
+                    children: [
+                      {
+                        childName: 'Memory ram',
+                        panel: {
+                          title: 'Memory RAM',
+                          content: {
+                            propPathModel: 'components.ram',
+                            type: 'range',
+                            unit: 'GB',
+                            prefix: 'RAM: ',
+                            model: {
+                              min: 0,
+                              max: 9999
+                            },
+                            options: {},
+                            onSubmit: onSubmitRange
+                          }
+                        }
+                      },
+                      {
+                        childName: 'Grafic card',
+                        panel: {
+                          title: 'Grafic card',
+                          content: {
+                            multiSelect: [
+                              'Placeholders',
+                              'Components',
+                              'Desktop',
+                              'Laptop',
+                              'All-in-one',
+                              'Monitor',
+                              'Peripherals'
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  childName: 'Service providers',
+                  panel: {}
+                },
+                {
+                  childName: 'User and location',
+                  panel: {}
+                },
+                {
+                  childName: 'History and events',
+                  panel: {}
+                },
+                {
+                  childName: 'Licenses and restrictions',
+                  panel: {}
+                }
+              ]
+            }
+          }
+        ]
+        function getPanelsRecursive (nested, flat) {
+          nested.forEach((fp) => {
+            flat.push(fp.panel)
+            if (fp.panel.children && fp.panel.children.length > 0) {
+              getPanelsRecursive(fp.panel.children, flat)
+            }
+          })
+        }
+        let filterPanelsFlat = []
+        getPanelsRecursive(filterPanelsNested, filterPanelsFlat)
+        $scope.filterPanelsRoot = filterPanelsNested[0].panel
+        $scope.filterPanels = filterPanelsFlat
+        $scope.showFilterPanels = false
+
         // Selecting
         $scope.toggleSelect = (resource, $index, $event) => {
           $event.stopPropagation() // Avoids the ng-click from the row (<tr>) to trigger

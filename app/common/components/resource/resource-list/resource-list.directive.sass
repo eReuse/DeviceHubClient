@@ -68,6 +68,93 @@
     // from @extend input[type="checkbox"]:focus
     outline: 4px auto -webkit-focus-ring-color
     outline-offset: -2px
+  .active-filters-container
+    .active-filters
+      padding: 0
+      .active-filter
+        list-style: none
+        display: inline-flex
+        border-radius: 4px
+        padding: 5px
+        border: 1px solid
+        margin-bottom: 6px
+        background-color: white
+        &:not(:last-child)
+          margin-right: 6px
+        .fa-close
+          line-height: 1.5em
+  .btn-add-filter-panels
+    padding: 5px 10px
+  .add-filter-panels-container
+    position: relative
+    top: 33px // button height
+    .add-filter-panels-wrapper
+      position: absolute
+      top: 0
+      box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.349019607843137)
+      background-color: white
+      .add-filter-panels
+        position: relative
+        width: 300px
+        height: 0
+        overflow-x: hidden
+        transition: height 500ms
+        &.active
+          height: 400px
+        .filter-panel
+          h3
+            margin-top: 0
+          background-color: white
+          width: 100%
+          min-height: 100%
+          position: absolute
+          padding: 10px 15px
+          top: 0
+          left: 100%
+          transition: left 500ms
+          &.isRoot
+            left: 0
+            .btn-hide-filter-panel
+              display: none
+          &.active
+            left: 0
+          .btn-hide-filter-panel
+            float: left
+            padding: 4px 10px
+            margin-right: 5px
+            border-radius: 5px
+            color: #333333
+            &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
+              color: #333333
+          .filter-panel-links
+            padding: 0
+            li
+              list-style: none
+              outline: none !important
+              &:first-child > button
+                border-top-left-radius: 5px
+                border-top-right-radius: 5px
+              &:last-child > button
+                border-bottom-left-radius: 5px
+                border-bottom-right-radius: 5px
+              &:not(:first-child) > button
+                border-top: none
+              button
+                font-size: 16px
+                line-height: 1.8
+                background-color: white
+                color: #333333
+                box-shadow: none
+                border: 1px solid #bfbfbf
+
+                width: 100%
+                text-align: left
+                &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
+                  box-shadow: none
+                  outline: none
+                  background-color: #449bb4
+                  border-color: white
+                  color: white
 
   .fill-height-bar
     height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$optionsMenuHeight})
