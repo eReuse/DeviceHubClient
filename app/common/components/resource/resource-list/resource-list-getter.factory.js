@@ -186,18 +186,35 @@ function ResourceListGetterFactory (ResourceSettings) {
 
           // general mappings
           delete value._meta
-          if (value.range) {
-            value = value.range
+
+          // range mapping
+          if (value.min || value.max) {
+            value = [ value.min, value.max ]
           }
 
           // field specific mappings
           switch (fullPath) {
             case 'brand':
-              mappedFilters.manufacturer = value
+              fullPath = 'manufacturer'
               break
-            default:
-              _.set(mappedFilters, fullPath, value)
+            case 'rating.rating':
+              value = value.map((v) => {
+                switch (v) {
+                  case 'Very low':
+                    return 1
+                  case 'Low':
+                    return 2
+                  case 'Medium':
+                    return 3
+                  case 'High':
+                    return 4
+                  case 'Very high':
+                    return 5
+                }
+              })
+              break
           }
+          _.set(mappedFilters, fullPath, value)
         })
       }
 

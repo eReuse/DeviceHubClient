@@ -91,9 +91,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         $scope.openFilter = propPath => {
-          const filterPanel = _.find(filterPanelsFlat, { content: { propPathModel: propPath } })
-          $scope.showFilterPanels = true
-          filterPanel.shown = true
+          // const filterPanel = _.find(filterPanelsFlat, { content: { propPathModel: propPath } })
+          // $scope.showFilterPanels = true
+          // filterPanel.shown = true
         }
 
         const keyTypes = 'types-to-show'
@@ -101,7 +101,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           'Desktop', 'Laptop', 'All-in-one', 'Monitor', 'Peripherals'
         ]
         // set initial filters
-        let filtersModel = {
+        let filtersModel = $scope.filtersModel = {
           [keyTypes]: [ 'Placeholders' ].concat(nonComponents)
         }
         function onFiltersChanged () {
@@ -118,7 +118,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               const fullPath = parentPath + filterKey
               let value = pair[1]
               const isSelect = _.isArray(value)
-              const isRange = value.range
+              const isRange = value.min || value.max
               const isText = typeof value === 'string'
 
               if (!(isSelect || isRange || isText)) {
@@ -134,8 +134,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                 }
                 filterText += value.join(', ')
               } else if (isRange) {
-                filterText += 'from ' + value.range[0] + ' '
-                filterText += 'to ' + value.range[1]
+                if (!_.isNil(value.min)) filterText += 'from ' + value.min + ' '
+                if (!_.isNil(value.max)) filterText += 'to ' + value.max
 
                 if (_.get(value, '_meta.unit')) filterText += value._meta.unit
               } else if (isText) {
@@ -151,16 +151,29 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           getterDevices.updateFiltersFromSearch(filtersModel)
         }
         onFiltersChanged()
-        function onSubmitRange () {
-          _.set(filtersModel, this.propPathModel + '.range', [ this.model.min, this.model.max ])
 
-          // set meta for active filter text
-          // TODO maybe this should not go to model but to a different meta object
-          _.set(filtersModel, this.propPathModel + '._meta.unit', this.unit)
-          _.set(filtersModel, this.propPathModel + '._meta.prefix', this.prefix)
-
+        function onSubmitPanel () {
+          if (!this.propPath) {
+            throw new Error('propPath not defined: ' + this.propPath)
+          }
+          if (this.unit) {
+            _.set(filtersModel, this.propPath + '._meta.unit', ' ' + this.unit)
+          }
+          if (this.prefix) {
+            _.set(filtersModel, this.propPath + '._meta.prefix', this.prefix)
+          }
           onFiltersChanged()
         }
+        // function onSubmitRange () {
+        //   _.set(filtersModel, this.propPathModel + '.range', [ this.model.min, this.model.max ])
+        //
+        //   // set meta for active filter text
+        //   // TODO maybe this should not go to model but to a different meta object
+        //   _.set(filtersModel, this.propPathModel + '._meta.unit', this.unit)
+        //   _.set(filtersModel, this.propPathModel + '._meta.prefix', this.prefix)
+        //
+        //   onFiltersChanged()
+        // }
         let filterPanelsNested = [
           {
             childName: 'Root',
@@ -171,92 +184,80 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                   childName: 'Item type',
                   panel: {
                     title: 'Item type',
-                    content: {
-                      type: 'multi-select',
-                      model: filtersModel,
-                      propPathModel: keyTypes,
-                      options: {},
-                      onSubmit: onFiltersChanged,
-                      form: {},
-                      fields: [
-                        {
-                          key: keyTypes,
-                          type: 'multiCheckbox',
-                          className: 'multi-check',
-                          templateOptions: {
-                            required: false,
-                            options: [
-                              {
-                                'name': 'Placeholders',
-                                'value': 'Placeholders'
-                              },
-                              {
-                                'name': 'Components',
-                                'value': 'Components'
-                              },
-                              /* TODO make category non-components
-                              {
-                                'name': 'Non-components',
-                                'value': 'Non-components'
-                              },
-                              */
-                              {
-                                'name': 'Desktop',
-                                'value': 'Desktop'
-                              },
-                              {
-                                'name': 'Laptop',
-                                'value': 'Laptop'
-                              },
-                              {
-                                'name': 'All-in-one',
-                                'value': 'All-in-one'
-                              },
-                              {
-                                'name': 'Monitor',
-                                'value': 'Monitor'
-                              },
-                              {
-                                'name': 'Peripherals',
-                                'value': 'Peripherals'
-                              }
-                            ]
-                          }
+                    onSubmit: onSubmitPanel,
+                    propPath: keyTypes,
+                    fields: [
+                      {
+                        key: keyTypes,
+                        type: 'multiCheckbox',
+                        className: 'multi-check',
+                        templateOptions: {
+                          required: false,
+                          options: [
+                            {
+                              'name': 'Placeholders',
+                              'value': 'Placeholders'
+                            },
+                            {
+                              'name': 'Components',
+                              'value': 'Components'
+                            },
+                            /* TODO make category non-components
+                            {
+                              'name': 'Non-components',
+                              'value': 'Non-components'
+                            },
+                            */
+                            {
+                              'name': 'Desktop',
+                              'value': 'Desktop'
+                            },
+                            {
+                              'name': 'Laptop',
+                              'value': 'Laptop'
+                            },
+                            {
+                              'name': 'All-in-one',
+                              'value': 'All-in-one'
+                            },
+                            {
+                              'name': 'Monitor',
+                              'value': 'Monitor'
+                            },
+                            {
+                              'name': 'Peripherals',
+                              'value': 'Peripherals'
+                            }
+                          ]
                         }
-                      ]
-                    }
+                      }
+                    ]
                   }
                 },
                 {
                   childName: 'Brand and model',
                   panel: {
                     title: 'Brand and model',
-                    content: {
-                      type: 'multi-select',
-                      model: filtersModel,
-                      propPathModel: 'brand',
-                      options: {},
-                      onSubmit: onFiltersChanged,
-                      form: {},
-                      fields: [
-                        {
-                          key: 'brand',
-                          type: 'input',
-                          templateOptions: {
-                            label: 'Brand',
-                            placeholder: 'Enter a brand'
-                          }
-                        },
-                        {
-                          key: 'model',
-                          type: 'input',
-                          templateOptions: {
-                            label: 'Model',
-                            placeholder: 'Enter a model'
-                          }
+                    onSubmit: onSubmitPanel,
+                    propPath: 'brand',
+                    fields: [
+                      {
+                        key: 'brand',
+                        type: 'input',
+                        templateOptions: {
+                          label: 'Brand',
+                          placeholder: 'Enter a brand'
                         }
-                      ]
-                    }
+                      },
+                      {
+                        key: 'model',
+                        type: 'input',
+                        templateOptions: {
+                          label: 'Model',
+                          placeholder: 'Enter a model'
+                        }
+                      }
+                    ]
                   }
                 },
                 {
@@ -271,33 +272,71 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                         childName: 'Price',
                         panel: {
                           title: 'Price',
-                          content: {
-                            propPathModel: 'price',
-                            type: 'range',
-                            unit: '€',
-                            prefix: 'Price: ',
-                            model: {
-                              min: 0,
-                              max: 2000
+                          onSubmit: onSubmitPanel,
+                          propPath: 'price',
+                          prefix: 'Price: ',
+                          unit: '€',
+                          fields: [
+                            {
+                              key: 'price.min',
+                              type: 'input',
+                              defaultValue: 0,
+                              templateOptions: {
+                                type: 'number',
+                                min: 0,
+                                label: 'Min'
+                              }
                             },
-                            onSubmit: onSubmitRange
-                          }
+                            {
+                              key: 'price.max',
+                              type: 'input',
+                              defaultValue: 999,
+                              templateOptions: {
+                                type: 'number',
+                                min: 0,
+                                label: 'Max'
+                              }
+                            }
+                          ]
                         }
                       },
                       {
                         childName: 'Rating',
                         panel: {
                           title: 'Rating',
-                          content: {
-                            propPathModel: 'rating.rating',
-                            type: 'range',
-                            prefix: 'Rating: ',
-                            model: {
-                              min: 0,
-                              max: 5
+                          onSubmit: onSubmitPanel,
+                          propPath: 'rating.rating',
+                          prefix: 'Rating: ',
+                          fields: [
+                            {
+                              key: 'rating.rating.min',
+                              type: 'select',
+                              templateOptions: {
+                                label: 'Min',
+                                options: [
+                                  {name: 'Very low', value: 'Very low'},
+                                  {name: 'Low', value: 'Low'},
+                                  {name: 'Medium', value: 'Medium'},
+                                  {name: 'High', value: 'High'},
+                                  {name: 'Very high', value: 'Very high'}
+                                ]
+                              }
                             },
-                            onSubmit: onSubmitRange
-                          }
+                            {
+                              key: 'rating.rating.max',
+                              type: 'select',
+                              templateOptions: {
+                                label: 'Max',
+                                options: [
+                                  {name: 'Very low', value: 'Very low'},
+                                  {name: 'Low', value: 'Low'},
+                                  {name: 'Medium', value: 'Medium'},
+                                  {name: 'High', value: 'High'},
+                                  {name: 'Very high', value: 'Very high'}
+                                ]
+                              }
+                            }
+                          ]
                         }
                       }
                     ]
@@ -312,35 +351,38 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                         childName: 'Memory ram',
                         panel: {
                           title: 'Memory RAM',
-                          content: {
-                            propPathModel: 'components.ram',
-                            type: 'range',
-                            unit: 'GB',
-                            prefix: 'RAM: ',
-                            model: {
-                              min: 0,
-                              max: 64
+                          onSubmit: onSubmitPanel,
+                          unit: 'GB',
+                          prefix: 'RAM: ',
+                          fields: [
+                            {
+                              key: 'components.ram.min',
+                              type: 'input'
                             },
-                            options: {},
-                            onSubmit: onSubmitRange
-                          }
+                            {
+                              key: 'components.ram.max',
+                              type: 'input'
+                            }
+                          ]
                         }
                       },
                       {
                         childName: 'Grafic card',
                         panel: {
                           title: 'Grafic card',
-                          content: {
-                            multiSelect: [
-                              'Placeholders',
-                              'Components',
-                              'Desktop',
-                              'Laptop',
-                              'All-in-one',
-                              'Monitor',
-                              'Peripherals'
-                            ]
-                          }
+                          content: [
+                            {
+                              multiSelect: [
+                                'Placeholders',
+                                'Components',
+                                'Desktop',
+                                'Laptop',
+                                'All-in-one',
+                                'Monitor',
+                                'Peripherals'
+                              ]
+                            }
+                          ]
                         }
                       }
                     ]
