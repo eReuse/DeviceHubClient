@@ -68,9 +68,15 @@
     // from @extend input[type="checkbox"]:focus
     outline: 4px auto -webkit-focus-ring-color
     outline-offset: -2px
+
+  resource-search
+    input
+      margin-bottom: 10px
   .active-filters-container
     .active-filters
+      display: inline-flex
       padding: 0
+      margin-bottom: 5px
       .active-filter
         list-style: none
         display: inline-flex
@@ -85,9 +91,11 @@
           line-height: 1.5em
   .btn-add-filter-panels
     padding: 5px 10px
+    display: inline-flex
   .add-filter-panels-container
     position: relative
-    top: 33px // button height
+    top: 16px // button height
+    display: inline-flex
     .add-filter-panels-wrapper
       position: absolute
       top: 0
@@ -155,6 +163,11 @@
                   background-color: #449bb4
                   border-color: white
                   color: white
+
+  .btn-select-deselect
+    display: inline-block
+    padding: 5px 10px
+    margin-bottom: 10px
 
   .fill-height-bar
     height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$optionsMenuHeight})
