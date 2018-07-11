@@ -101,21 +101,21 @@ const RESOURCE_CONFIG = {
       },
       _root: true
     },
-    Account: {
-      dataRelation: {
-        label: 'Account\'s e-mail',
-        labelFieldName: 'email',
-        filterFieldNames: ['email'],
-        fieldType: 'typeahead',
-        keyFieldName: '_id',
-        resourceType: 'Account'
-      },
-      // view: {title: [{key: 'label'}], subtitle: [{key: 'e-mail'}]},
-      doNotUse: DO_NOT_USE,
-      // subviews: [v.Detail, v.Lot, v.Package, v.Device],
-      // subviewSmall: v.Detail,
-      _root: true
-    },
+    // Account: {
+    //   dataRelation: {
+    //     label: 'Account\'s e-mail',
+    //     labelFieldName: 'email',
+    //     filterFieldNames: ['email'],
+    //     fieldType: 'typeahead',
+    //     keyFieldName: '_id',
+    //     resourceType: 'Account'
+    //   },
+    //   // view: {title: [{key: 'label'}], subtitle: [{key: 'e-mail'}]},
+    //   doNotUse: DO_NOT_USE,
+    //   // subviews: [v.Detail, v.Lot, v.Package, v.Device],
+    //   // subviewSmall: v.Detail,
+    //   _root: true
+    // },
     Group: {
       label: {
         fields: ['_id', 'label'],
