@@ -5,7 +5,7 @@ function manualEventsButton (dhModal, ResourceListSelector) {
     scope: {},
     link: $scope => {
       $scope.selector = ResourceListSelector
-      $scope.events = [
+      $scope.events = [ // TODO move to config
         {'type': 'devices:Ready', 'humanName': 'Ready'},
         {'type': 'devices:ToPrepare', 'humanName': 'To prepare'},
         {'type': 'devices:Dispose', 'humanName': 'Dispose'},
@@ -17,9 +17,9 @@ function manualEventsButton (dhModal, ResourceListSelector) {
         {'type': 'devices:Deallocate', 'humanName': 'Deallocate'},
         {'type': 'devices:Receive', 'humanName': 'Receive'},
         {'type': 'devices:Allocate', 'humanName': 'Allocate'},
-        {'type': 'devices:ToRepair', 'humanName': 'To repair'}
+        {'type': 'devices:ToRepair', 'humanName': 'To repair'},
+        {'type': 'devices:TransferAssetLicense', 'humanName': 'Transfer asset license'}
       ]
-      // If the passed-in resources are groups, we won't use the 'devices' field of the event, and otherwise
 
       $scope.openModal = (eventType) => {
         let resources = ResourceListSelector.getAllSelectedDevices()

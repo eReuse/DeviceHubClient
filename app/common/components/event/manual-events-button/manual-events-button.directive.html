@@ -9,13 +9,13 @@
   </button>
   <ul uib-dropdown-menu role="menu" aria-labelledby="event-button">
     <li role="menuitem"
-        ng-repeat="eventSettings in events"
+        ng-repeat="event in events"
         tooltip-placement="right"
         tooltip-append-to-body="true"
     >
-      <a ng-click="openModal(eventSettings.type)">
-        <resource-icon resource-type="{{::eventSettings.type}}" fill-to="true"></resource-icon>
-        {{::eventSettings.humanName}}
+      <a ng-click="openModal(event.type)">
+        <resource-icon resource-type="{{::event.type}}" fill-to="true"></resource-icon>
+        {{::event.humanName}}
       </a>
     </li>
   </ul>

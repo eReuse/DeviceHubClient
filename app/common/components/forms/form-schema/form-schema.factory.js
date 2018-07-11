@@ -31,7 +31,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
      * API.
      */
     constructor (model, form, status, parserOptions = {}) {
-      this.rSettings = ResourceSettings(model['@type'])
+      this.rSettings = ResourceSettings(model['@type']) // need resource settings for server mainly
       this.form = form
       this.status = status
       // Assign parserOptions
@@ -120,6 +120,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
       this.submitForm.after(promise)
     }
 
+    // TODO move fields definition to schema definition and get resource-settings from there
     _getFields (event) {
       switch (event) {
         case 'devices:ToPrepare':
@@ -980,8 +981,105 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
               'disabled': false
             }
           }]
+        case 'devices:TransferAssetLicense':
+          return [
+            {
+              'key': 'transferTitle',
+              'name': 'transferTitle',
+              'type': 'input',
+              'templateOptions': {
+                'description': 'A short, descriptive title',
+                'label': 'Transfer title'
+              }
+            },
+            {
+              'key': 'transferDate',
+              'name': 'transferDate',
+              'type': 'datepicker',
+              'templateOptions': {
+                'description': 'Date of transfer as stated in transfer document',
+                'label': 'Transfer date'
+              }
+            },
+            {
+              'key': 'supplierID',
+              'name': 'supplierID',
+              'type': 'input',
+              'templateOptions': {
+                'label': 'Supplier CIF'
+              }
+            },
+            {
+              'key': 'supplierName',
+              'name': 'supplierName',
+              'type': 'input',
+              'templateOptions': {
+                'label': 'Supplier name'
+              }
+            },
+            {
+              'key': 'devicereuseManagerID',
+              'name': 'devicereuseManagerID',
+              'type': 'input',
+              'templateOptions': {
+                'label': 'Device reuse manager CIF'
+              }
+            },
+            {
+              'key': 'devicereuseManagerName',
+              'name': 'devicereuseManagerName',
+              'type': 'input',
+              'templateOptions': {
+                'label': 'Device reuse manager name'
+              }
+            },
+            {
+              'key': 'agreementTitle',
+              'name': 'agreementTitle',
+              'type': 'input',
+              'templateOptions': {
+                'description': 'A short, descriptive title',
+                'label': 'Agreement title'
+              }
+            },
+            {
+              'key': 'agreementDate',
+              'name': 'agreementDate',
+              'type': 'datepicker',
+              'templateOptions': {
+                'description': 'Issue date of agreement as stated in agreement document',
+                'label': 'Agreement date'
+              }
+            },
+            {
+              'key': 'agreementType',
+              'name': 'agreementType',
+              'type': 'select',
+              'templateOptions': {
+                'label': 'Type of agreement',
+                'options': [
+                  { name: 'eReuse Catalunya Circuit', value: 'ereuseCAT' },
+                  { name: 'eReuse General', value: 'ereuseGeneral' },
+                  { name: 'Private', value: 'Private' }
+                ]
+              }
+            },
+            {
+              'key': 'conditionsOwnership',
+              'name': 'conditionsOwnership',
+              'type': 'select',
+              'templateOptions': {
+                'label': 'Ownership',
+                'options': [
+                  { name: 'Ownership remains with the supplier', value: 'supplier' },
+                  { name: 'Ownership is transferred to device reuse manager', value: 'deviceReuseManager' },
+                  { name: 'Ownership is temporarily transferred to device reuse manager and subsequently to user', value: 'user' }
+                ]
+              }
+            }
+          ]
         default:
-          return new Error('event ' + event + ' does not have fields specified')
+          throw new Error('event ' + event + ' does not have fields specified')
       }
     }
 
