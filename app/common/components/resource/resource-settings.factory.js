@@ -20,9 +20,9 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
 
   function _getSchema (resourceName) {
     schema = schemas[resourceName]
-    if (!schema) {
-      throw new Error('No schema found for resource ' + resourceName)
-    }
+    // if (!schema) {
+    //   throw new Error('No schema found for resource ' + resourceName)
+    // }
     return schema
   }
   /**
