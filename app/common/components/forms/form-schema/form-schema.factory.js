@@ -984,98 +984,408 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
         case 'devices:TransferAssetLicense':
           return [
             {
-              'key': 'transferTitle',
-              'name': 'transferTitle',
-              'type': 'input',
-              'templateOptions': {
-                'description': 'A short, descriptive title',
-                'label': 'Transfer title'
-              }
+              'key': 'transfer',
+              'fieldGroup': [
+                {'template': '<h4>Transfer</h4>'},
+                {
+                  'key': 'title',
+                  'type': 'input',
+                  'templateOptions': {
+                    'description': 'A short, descriptive title',
+                    'label': 'Title'
+                  }
+                },
+                {
+                  'key': 'date',
+                  'name': 'transferDate',
+                  'type': 'datepicker',
+                  'templateOptions': {
+                    'description': 'Date of transfer as stated in transfer document',
+                    'label': 'Date'
+                  }
+                }
+              ]
             },
             {
-              'key': 'transferDate',
-              'name': 'transferDate',
-              'type': 'datepicker',
-              'templateOptions': {
-                'description': 'Date of transfer as stated in transfer document',
-                'label': 'Transfer date'
-              }
+              'key': 'supplier',
+              'fieldGroup': [
+                {'template': '<h4>Supplier</h4>'},
+                {
+                  'key': 'id',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'CIF'
+                  }
+                },
+                {
+                  'key': 'name',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Name'
+                  }
+                }
+              ]
             },
             {
-              'key': 'supplierID',
-              'name': 'supplierID',
-              'type': 'input',
-              'templateOptions': {
-                'label': 'Supplier CIF'
-              }
+              'key': 'deviceReuseManager',
+              'fieldGroup': [
+                {'template': '<h4>Device reuse manager</h4>'},
+                {
+                  'key': 'id',
+                  'name': 'id',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'CIF'
+                  }
+                },
+                {
+                  'key': 'name',
+                  'name': 'name',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Name'
+                  }
+                }
+              ]
             },
             {
-              'key': 'supplierName',
-              'name': 'supplierName',
-              'type': 'input',
-              'templateOptions': {
-                'label': 'Supplier name'
-              }
+              'key': 'agreement',
+              'fieldGroup': [
+                {'template': '<h4>Agreement</h4>'},
+                {
+                  'key': 'title',
+                  'type': 'input',
+                  'templateOptions': {
+                    'description': 'A short, descriptive title',
+                    'label': 'Agreement title'
+                  }
+                },
+                {
+                  'key': 'date',
+                  'type': 'datepicker',
+                  'templateOptions': {
+                    'description': 'Issue date of agreement as stated in agreement document',
+                    'label': 'Agreement date'
+                  }
+                },
+                {
+                  'key': 'type',
+                  'type': 'select',
+                  'templateOptions': {
+                    'label': 'Type of agreement',
+                    'options': [
+                      {name: 'eReuse Catalunya Circuit', value: 'ereuseCAT'},
+                      {name: 'eReuse General', value: 'ereuseGeneral'},
+                      {name: 'Private', value: 'Private'}
+                    ]
+                  }
+                }
+              ]
             },
             {
-              'key': 'devicereuseManagerID',
-              'name': 'devicereuseManagerID',
-              'type': 'input',
-              'templateOptions': {
-                'label': 'Device reuse manager CIF'
-              }
-            },
-            {
-              'key': 'devicereuseManagerName',
-              'name': 'devicereuseManagerName',
-              'type': 'input',
-              'templateOptions': {
-                'label': 'Device reuse manager name'
-              }
-            },
-            {
-              'key': 'agreementTitle',
-              'name': 'agreementTitle',
-              'type': 'input',
-              'templateOptions': {
-                'description': 'A short, descriptive title',
-                'label': 'Agreement title'
-              }
-            },
-            {
-              'key': 'agreementDate',
-              'name': 'agreementDate',
-              'type': 'datepicker',
-              'templateOptions': {
-                'description': 'Issue date of agreement as stated in agreement document',
-                'label': 'Agreement date'
-              }
-            },
-            {
-              'key': 'agreementType',
-              'name': 'agreementType',
-              'type': 'select',
-              'templateOptions': {
-                'label': 'Type of agreement',
-                'options': [
-                  { name: 'eReuse Catalunya Circuit', value: 'ereuseCAT' },
-                  { name: 'eReuse General', value: 'ereuseGeneral' },
-                  { name: 'Private', value: 'Private' }
-                ]
-              }
-            },
-            {
-              'key': 'conditionsOwnership',
-              'name': 'conditionsOwnership',
-              'type': 'select',
-              'templateOptions': {
-                'label': 'Ownership',
-                'options': [
-                  { name: 'Ownership remains with the supplier', value: 'supplier' },
-                  { name: 'Ownership is transferred to device reuse manager', value: 'deviceReuseManager' },
-                  { name: 'Ownership is temporarily transferred to device reuse manager and subsequently to user', value: 'user' }
-                ]
-              }
+              'key': 'conditions',
+              'fieldGroup': [
+                { 'template': '<h4>Conditions</h4>' },
+                {
+                  'key': 'ownership',
+                  'type': 'select',
+                  'templateOptions': {
+                    'label': 'Ownership',
+                    'options': [
+                      {name: 'Ownership remains with the supplier', value: 'supplier'},
+                      {name: 'Ownership is transferred to device reuse manager', value: 'deviceReuseManager'},
+                      {
+                        name: 'Ownership is temporarily transferred to device reuse manager and subsequently to user',
+                        value: 'user'
+                      }
+                    ]
+                  }
+                },
+                {
+                  'key': 'usufructTime',
+                  'type': 'select',
+                  'templateOptions': {
+                    'label': 'Usage time',
+                    'options': [
+                      {name: 'Usage time is limited', value: 'limited'},
+                      {name: 'Usage time is unlimited', value: 'unlimited'}
+                    ]
+                  }
+                },
+                {
+                  'key': 'dataErasure',
+                  'type': 'select',
+                  'templateOptions': {
+                    'label': 'Data erasure',
+                    'options': [
+                      {
+                        name: 'Device data is erasure prior to transfer and no additional erasure is necessary',
+                        value: 'noErasure'
+                      },
+                      {
+                        name: 'Device data needs to be erased and erasure certified needs to be emitted',
+                        value: 'erasureNecessary'
+                      }
+                    ]
+                  }
+                },
+                {
+                  'key': 'monetaryTransfer',
+                  'type': 'select',
+                  'templateOptions': {
+                    'label': 'Compensations',
+                    'options': [
+                      {name: 'Devices can be sold', value: 'sell'},
+                      {
+                        name: 'Devices can not be sold, but services necessary for usage can be charged',
+                        value: 'services'
+                      },
+                      {name: 'Devices can be donated for a monetary compensation', value: 'compensation'},
+                      {name: 'Devices must be donated without any monetary compensation', value: 'free'}
+                    ]
+                  }
+                },
+                {
+                  'key': 'priceUpperLimit',
+                  'type': 'select',
+                  'templateOptions': {
+                    'label': 'Price upper limit',
+                    'options': [
+                      {name: 'Devices can be sold for any price', value: 'sell'},
+                      {
+                        name: 'Devices can be sold for any price except for some typologies of users which receive a discount',
+                        value: 'services'
+                      },
+                      {
+                        name: 'Devices can be sold for any price except for some typologies of users which pay the cost of services',
+                        value: 'compensation'
+                      },
+                      {name: 'Devices must always be sold at the cost of services', value: 'free'}
+                    ]
+                  }
+                },
+                {
+                  'key': 'certificates',
+                  'fieldGroup': [
+                    {'template': '<h5>Certificates of delivery</h5>'},
+                    {
+                      'key': 'deviceReuseManager',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Certificate of delivery to device reuse manager'
+                      }
+                    },
+                    {
+                      'key': 'provider',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Certificate of delivery to service provider'
+                      }
+                    },
+                    {
+                      'key': 'receiver',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Certificate of delivery to receiver'
+                      }
+                    },
+                    {
+                      'key': 'recycler',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Certificate of delivery to recycler'
+                      }
+                    }
+                  ]
+                },
+                {
+                  'key': 'reporting',
+                  'fieldGroup': [
+                    { 'template': '<h5>Reporting</h5><br>The device reuse manager must report:' },
+                    {
+                      'key': 'socialImpact',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Social impact'
+                      }
+                    },
+                    {
+                      'key': 'economicalImpact',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Economical impact'
+                      }
+                    },
+                    {
+                      'key': 'environmentalImpact',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Environmental impact'
+                      }
+                    },
+                    {
+                      'key': 'useValueAtRecycling',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Use value at recycling'
+                      }
+                    },
+                    {
+                      'key': 'percentagesProcessedByProviders',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Quotas of devices processed by providers'
+                      }
+                    },
+                    {
+                      'key': 'economicalImpact',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Donations and services charged'
+                      }
+                    }
+                  ]
+                },
+                {
+                  'key': 'serviceProviderFixedQuotes',
+                  'fieldGroup': [
+                    { 'template': '<h5>Fixed quotes for service providers</h5>' },
+                    {
+                      'key': 'definedBy',
+                      'type': 'select',
+                      'templateOptions': {
+                        'label': 'Fixed quotes for service providers',
+                        'options': [
+                          {
+                            name: 'The device reuse manager defines the quotes',
+                            value: 'devicereusemanager'
+                          },
+                          {
+                            name: 'The giver defines the quotes (up to 30%)',
+                            value: 'giver'
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      'key': 'quotes',
+                      'type': 'input',
+                      'templateOptions': {
+                        'label': 'Quotes for service providers'
+                      }
+                    }
+                  ]
+                },
+                {
+                  'key': 'serviceProviderPerformanceQuotes',
+                  'fieldGroup': [
+                    {'template': '<h5>Performance dependent quotes for service providers</h5>'},
+                    {
+                      'key': 'returned',
+                      'type': 'input',
+                      'templateOptions': {
+                        'label': 'Percentage of returned devices'
+                      }
+                    },
+                    {
+                      'key': 'returned',
+                      'type': 'input',
+                      'templateOptions': {
+                        'label': 'Percentage of refurbished devices'
+                      }
+                    }
+                  ]
+                },
+                {
+                  'key': 'typologiesProviders',
+                  'fieldGroup': [
+                    { 'template': '<h5>Typologies service providers</h5>' },
+                    {
+                      'key': 'nonprofit',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Non-profit'
+                      }
+                    },
+                    {
+                      'key': 'ess',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Social and solitary economy (ESS)'
+                      }
+                    },
+                    {
+                      'key': 'jobplacement',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Job placement'
+                      }
+                    },
+                    {
+                      'key': 'cooperative',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Cooperatives'
+                      }
+                    },
+                    {
+                      'key': 'company',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Private companies'
+                      }
+                    }
+                  ]
+                },
+                {
+                  'key': 'typologiesReceivers',
+                  'fieldGroup': [
+                    { 'template': '<h5>Typologies receivers</h5>' },
+                    {
+                      'key': 'nonprofit',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Non-profit'
+                      }
+                    },
+                    {
+                      'key': 'ess',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Social and solitary economy (ESS)'
+                      }
+                    },
+                    {
+                      'key': 'jobplacement',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Job placement'
+                      }
+                    },
+                    {
+                      'key': 'school',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Schhols'
+                      }
+                    },
+                    {
+                      'key': 'cooperative',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Cooperatives'
+                      }
+                    },
+                    {
+                      'key': 'company',
+                      'type': 'checkbox',
+                      'templateOptions': {
+                        'label': 'Private companies'
+                      }
+                    }
+                  ]
+                }
+              ] // conditions field-group
             }
           ]
         default:
