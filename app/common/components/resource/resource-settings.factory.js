@@ -19,11 +19,12 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
   // const schemas = []
 
   function _getSchema (resourceName) {
-    return schemas[resourceName]
+    schema = schemas[resourceName]
+    if (!schema) {
+      throw new Error('No schema found for resource ' + resourceName)
+    }
+    return schema
   }
-
-
-
   /**
    * Similar to DeviceHub's ResourceSettings, it stores several information about a resource. It can do:
    * - Stores settings and schema
