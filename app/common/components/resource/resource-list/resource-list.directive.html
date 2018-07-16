@@ -44,7 +44,7 @@
                   novalidate
                   ng-class="{ active: panel.shown, isRoot: panel === filterPanelsRoot }"
                   class="filter-panel">
-              <button class="btn btn-hide-filter-panel" ng-click="panel.shown = false">
+              <button class="btn btn-hide-filter-panel" ng-click="hideFilterPanel($event, panel)">
                 <i class="fa fa-chevron-left fa-fw"></i>
               </button>
               <h3 ng-show="panel.title">{{ panel.title }}</h3>
@@ -80,7 +80,7 @@
                   <button type="button" class="btn btn-default" ng-click="content.options.resetModel()">Reset</button>-->
                   <button type="button"
                           class="btn btn-info btn-add-filter-panels"
-                          ng-click="showFilterPanels = !showFilterPanels">Cancel</button>
+                          ng-click="hideAllFilterPanels()">Cancel</button>
                   <button type="submit"
                           class="btn btn-info btn-add-filter-panels"
                           ng-disabled="content.form.$invalid"
@@ -91,7 +91,7 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-info btn-add-filter-panels" ng-click="showFilterPanels = !showFilterPanels">Add filter</button>
+      <button class="btn btn-info btn-add-filter-panels" ng-click="toggleDisplayFilterPanels()">Add filter</button>
     </div>
 
     <button type="button"

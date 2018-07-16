@@ -96,6 +96,28 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           // filterPanel.shown = true
         }
 
+        $scope.hideFilterPanel = ($event, panel) => {
+          $event && $event.preventDefault() // Prevents submitting the containing form
+          panel.shown = false
+        }
+
+        $scope.hideAllFilterPanels = $event => {
+          $event && $event.preventDefault()
+          $scope.filterPanels && $scope.filterPanels.forEach((panel) => {
+            $scope.hideFilterPanel(null, panel)
+          })
+          $scope.showFilterPanels = false
+        }
+
+        $scope.toggleDisplayFilterPanels = $event => {
+          $event && $event.preventDefault()
+          if ($scope.showFilterPanels) {
+            $scope.hideAllFilterPanels()
+          } else {
+            $scope.showFilterPanels = true
+          }
+        }
+
         const keyTypes = 'types-to-show'
         const nonComponents = [
           'Desktop', 'Laptop', 'All-in-one', 'Monitor', 'Peripherals'
@@ -105,10 +127,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           [keyTypes]: [ 'Placeholders' ].concat(nonComponents)
         }
         function onFiltersChanged () {
-          $scope.filterPanels && $scope.filterPanels.forEach((panel) => {
-            panel.shown = false
-          })
-          $scope.showFilterPanels = false
+          $scope.hideAllFilterPanels()
 
           $scope.activeFilters = []
           function setActiveFilters (parentPath, obj) {
