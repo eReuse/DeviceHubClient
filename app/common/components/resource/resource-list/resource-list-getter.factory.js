@@ -337,11 +337,21 @@ function ResourceListGetterFactory (ResourceSettings) {
             title = r.type + manufacturer + model
           }
 
+          r.events && r.events.forEach((e) => {
+            _.defaults(e, {
+              '@type': 'devices:' + e.type,
+              '_updated': e.created,
+              'byUser': e.author,
+              'label': e.name || e.description,
+              '_id': e.id
+            })
+          })
+
           _.defaults(r, devicePropertiesStub)
           _.assign(r, {
             _id: r.id,
             _created: r.created,
-            status: (r.events && r.events.length > 0 && r.events[0]['@type'].substring('devices:'.length)) || 'Registered',
+            status: (r.events && r.events.length > 0 && r.events[0].type) || 'Registered',
             title: title,
             parentLots: parentLots
           })
