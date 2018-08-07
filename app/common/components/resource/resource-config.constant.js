@@ -25,6 +25,7 @@ const v = {
   Account: {view: 'resource-list', resourceType: 'Account', name: 'Accounts', resourceIcon: 'Account'},
   Reserve: {view: 'reserve-view', name: 'Reserve', 'class': 'fill-height show', resourceIcon: 'devices:Reserve'},
   Sell: {view: 'sell-view', name: 'Sell', 'class': 'fill-height show', resourceIcon: 'devices:Sell'},
+  Update: {view: 'update-view', resourceType: 'Update', name: 'Updates', resourceIcon: 'Update'},
   DeviceDashboard: {view: 'device-dashboard', name: 'Dashboard', 'class': 'fill-height show', fa: 'fa-dashboard'}
 }
 const RESOURCE_CONFIG = {
@@ -42,6 +43,7 @@ const RESOURCE_CONFIG = {
     'devices:ProveUsage': {manual: true},
     'devices:ToDispose': {manual: true},
     'devices:Dispose': {manual: true},
+    'devices:Update': {manual: true},
     'devices:Reserve': {
       manual: true,
       subviews: [v.Reserve, v.Device, v.Detail],
