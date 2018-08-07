@@ -13,7 +13,6 @@ const runSequence = require('run-sequence')
 const gulpif = require('gulp-if')
 const buffer = require('vinyl-buffer')
 const sourcemaps = require('gulp-sourcemaps')
-const notify = require('gulp-notify')
 const templateCache = require('gulp-angular-templatecache')
 const del = require('del')
 // Note that we only use harmony for our code (bundle.js) not vendor.js, where we use normal minify
@@ -158,7 +157,6 @@ gulp.task('bundle-dev', function () {
   bundle.bundler.on('error', handleError)
   bundle.bundler.on('time', function (time) {
     const text = 'Bundle finished in ' + time / 1000 + ' s'
-    notifyTask(text)
     console.log(text)
   })
   return rebundle()
@@ -277,13 +275,6 @@ gulp.task('copyFonts', function () {
     .pipe(gulp.dest(filePath.copyFonts.dest))
 })
 
-function notifyTask (text) {
-  text = typeof text === 'string' ? text : 'Done!'
-  return gulp.src(filePath.copyIndex.src)
-    .pipe(notify(text))
-}
-gulp.task('notify', notifyTask)
-
 // =======================================================================
 // Sequential Build Rendering
 // =======================================================================
@@ -295,7 +286,7 @@ gulp.task('build-dev', function (callback) {
     ['templates'],
     ['bundle-dev', '_sass'],
     ['copyIndex'],
-    ['notify', 'afterClean', 'watch'],
+    ['afterClean', 'watch'],
     callback
   )
 })
@@ -307,7 +298,7 @@ gulp.task('build', function (callback) {
     ['templates'],
     ['bundle-dev', 'vendorJS', 'vendorCSS', '_sass', 'images', 'copyFavicon', 'copyFonts'],
     ['copyIndex'],
-    ['afterClean', 'notify'],
+    ['afterClean'],
     callback
   )
 })
@@ -319,7 +310,7 @@ gulp.task('build-prod', function (callback) {
     ['templates'],
     ['bundle-prod', 'vendorJS', 'vendorCSS', '_sass', 'images', 'copyFavicon', 'copyFonts'],
     ['copyIndex'],
-    ['notify', 'afterClean'],
+    ['afterClean'],
     callback
   )
 })
