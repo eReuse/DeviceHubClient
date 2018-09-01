@@ -60,7 +60,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
     },
     price: {
       th: {key: 'pricing.total.standard', name: `Price ${CONSTANTS.currency}`},
-      td: {value: 'pricing.total.standard', number: true}
+      td: {value: 'pricing.total.standard', currency: true}
     }
   }
   f.lastEvent.thDef = _.assign({default: true}, f.lastEvent.th)
@@ -202,7 +202,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
   return {
     search: {
       params: RESOURCE_SEARCH.params.concat([
-        {key: 'label', name: 'Label', placeholder: 'Label...', realKey: 'labelId'},
+        // {key: 'label', name: 'Label', placeholder: 'Label...', realKey: 'labelId'},
         {
           key: '@type',
           name: 'Type of device',
@@ -245,14 +245,14 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
         // { key: 'byUser', name: 'Author', placeholder: 'email or name of the author...'}, // todo
         // { key: '_created', name: 'Registered in', placeholder: 'YYYY-MM-DD' },
         // { key: '_updated', name: 'Last updated in', placeholder: 'YYYY-MM-DD'},
-        {
-          key: 'public',
-          name: 'Is public',
-          select: ['Yes', 'No'],
-          boolean: true,
-          comparison: '=',
-          description: 'Match devices that have a public link.'
-        },
+        // {
+        //   key: 'public',
+        //   name: 'Is public',
+        //   select: ['Yes', 'No'],
+        //   boolean: true,
+        //   comparison: '=',
+        //   description: 'Match devices that have a public link.'
+        // },
         {
           key: 'event',
           name: 'Has event of type',
@@ -270,14 +270,14 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
           description: 'Match only devices that have a specific event.'
         },
         LAST_EVENT,
-        {
-          key: 'eventIncidence',
-          name: 'Has an incidence',
-          realKey: 'events.incidence',
-          select: ['Yes', 'No'],
-          boolean: true,
-          comparison: '='
-        },
+        // {
+        //   key: 'eventIncidence',
+        //   name: 'Has an incidence',
+        //   realKey: 'events.incidence',
+        //   select: ['Yes', 'No'],
+        //   boolean: true,
+        //   comparison: '='
+        // },
         {
           key: 'eventUpdatedBefore',
           name: 'Event performed before or eq',
@@ -348,29 +348,29 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
         //   placeholder: 'Type an e-mail',
         //   description: 'Match devices that are actually not assigned to a specific user.'
         // },
-        INSIDE_LOT,
-        OUTSIDE_LOT,
+        // INSIDE_LOT,
+        // OUTSIDE_LOT,
         // INSIDE_PACKAGE,
         // INSIDE_PLACE,
         // INSIDE_PALLET,
-        GROUP_INCLUSION,
-        OUTSIDE_GROUP,
-        {
-          key: 'snapshot-software',
-          name: 'Has a Snapshot made with',
-          realKey: 'events.snapshotSoftware',
-          select: SNAPSHOT_SOFTWARE_ALLOWED,
-          comparison: '=',
-          description: 'The device has a Snapshot made with a specific software.'
-        },
-        {
-          key: 'not-snapshot-software',
-          name: 'Has not a Snapshot made with',
-          realKey: 'events.snapshotSoftware',
-          select: SNAPSHOT_SOFTWARE_ALLOWED,
-          comparison: '!=',
-          description: 'The device has not a Snapshot made with a specific software.'
-        },
+        // GROUP_INCLUSION,
+        // OUTSIDE_GROUP,
+        // {
+        //   key: 'snapshot-software',
+        //   name: 'Has a Snapshot made with',
+        //   realKey: 'events.snapshotSoftware',
+        //   select: SNAPSHOT_SOFTWARE_ALLOWED,
+        //   comparison: '=',
+        //   description: 'The device has a Snapshot made with a specific software.'
+        // },
+        // {
+        //   key: 'not-snapshot-software',
+        //   name: 'Has not a Snapshot made with',
+        //   realKey: 'events.snapshotSoftware',
+        //   select: SNAPSHOT_SOFTWARE_ALLOWED,
+        //   comparison: '!=',
+        //   description: 'The device has not a Snapshot made with a specific software.'
+        // },
         {
           key: 'event-label',
           realKey: 'events.label',
@@ -420,14 +420,14 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
           comparison: value => ({$nin: _.takeWhile(conditionRange, v => v !== value), $ne: null}),
           description: 'Match devices that are of range or above.'
         },
-        {
-          key: 'rangeIs',
-          name: 'Range is',
-          realKey: 'condition.general.range',
-          select: conditionRange,
-          comparison: '=',
-          description: 'Match devices that are of range.'
-        },
+        // {
+        //   key: 'rangeIs',
+        //   name: 'Range is',
+        //   realKey: 'condition.general.range',
+        //   select: conditionRange,
+        //   comparison: '=',
+        //   description: 'Match devices that are of range.'
+        // },
         {
           key: 'rangeIsAtMost',
           name: 'Range is at most',

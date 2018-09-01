@@ -4,20 +4,20 @@
     <resource-breadcrumb></resource-breadcrumb>
 
     <!-- TODO comment in for lots to work
-    <h4>Lots ({{ getTotalNumberOfLots() }})</h4>
+    <h4>Lots ({{ totalNumberOfLots }})</h4>
     <div class="children-lots">
       <ul>
         <li
                 ng-repeat="lot in lots"
         >
-          <a href="#" ng-click="goTo(lot)">
+          <button ng-click="goTo(lot)">
             <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.label }}
-          </a>
+          </button>
         </li>
-        <li ng-show="morePagesAvailableLots">
-          <a href="#" ng-click="getMoreLots()">
+        <li ng-show="moreLotsAvailable">
+          <button ng-click="getMoreLots()">
             Show more
-          </a>
+          </button>
         </li>
       </ul>
     </div>
@@ -94,6 +94,9 @@
       <button class="btn btn-info btn-add-filter-panels" ng-click="toggleDisplayFilterPanels()">Add filter</button>
     </div>
 
+    <!-- TODO show when there are lots
+    <h4 style="display: inline-block; margin-bottom: 20px;">Devices ({{ totalNumberOfDevices }}) </h4>
+    -->
     <button type="button"
             class="btn btn-info btn-select-deselect"
             ng-show="!selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
@@ -108,9 +111,14 @@
     >
       <span>Deselect all</span>
     </button>
+    <!-- Resource Filters -->
+    <resource-search settings="config.search.params"
+                     on-params-changed="onSearchParamsChanged(params)"
+                     default-params="config.search.defaultParams"
+    ></resource-search>
 
     <div infinite-scroll="getMore()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
-         infinite-scroll-parent infinite-scroll-disabled="getMoreIsBusy || !morePagesAvailable"
+         infinite-scroll-parent infinite-scroll-disabled="getMoreIsBusy || !moreDevicesAvailable"
          infinite-scroll-listen-for-event="list:filtered"
     >
       <table id="resource-list-table" class="resource-list-table table table-striped table-hover">
@@ -143,9 +151,12 @@
                 <span ng-if="::td.number">
                   {{::$root._.get(resource, td.value) | number}}
                 </span>
+                <span ng-if="::td.currency">
+                  {{::$root._.get(resource, td.value) | currency:'€ ' }}
+                </span>
                 <!-- For now only label can be changed from a resource without refreshing the list, and label field
                 falls in here -->
-                <span ng-if="::!td.humanize && !td.number">
+                <span ng-if="::!td.humanize && !td.number && !td.currency">
                   <!-- Let's show more characters if we have a lg screen -->
                   <span class="hidden-lg">
                     {{$root._.get(resource, td.value) | limitTo: (td.limitTo || 15)}}
@@ -165,8 +176,8 @@
       <div class="text-center">
         <i
           ng-class="{
-                      'fa fa-circle-o-notch fa-spin fa-lg': getMoreIsBusy && morePagesAvailable,
-                      'fa fa-ellipsis-h fa-lg': !morePagesAvailable
+                      'fa fa-circle-o-notch fa-spin fa-lg': getMoreIsBusy && moreDevicesAvailable,
+                      'fa fa-ellipsis-h fa-lg': !moreDevicesAvailable
                     }
                    "
         ></i>
@@ -178,7 +189,7 @@
        ng-click="selectionPanelHiddenXS = !selectionPanelHiddenXS"
        ng-class="{ 'hidden': selection.devices.length === 0, 'visible-xs-block': selection.devices.length > 0 }">
     <button ng-show="selectionPanelHiddenXS" class="btn-info btn-view-selected">View selected devices ({{selection.devices.length}})</button>
-    <button ng-show="!selectionPanelHiddenXS" class="btn-info btn-view-list">View device list</button>
+    <button ng-show="!selectionPanelHiddenXS" class="btn-info btn-view-list">Back to device list</button>
   </div>
   <!-- Selection -->
   <aside class="selection col-sm-6 fill-height-bar col-xs-12"
@@ -189,7 +200,15 @@
 
     <div ng-if="selection.devices.length > 0">
       <h4>Current selection</h4>
-      <h3>{{selection.devices.length}} devices</h3>
+      <div class="selection-header">
+        <h3>{{selection.devices.length}} devices </h3>
+        <button type="button"
+                class="btn"
+                ng-click="deselectAll()"
+        >
+          <span>Deselect all</span>
+        </button>
+      </div>
       <ul>
         <li
           ng-repeat="device in selection.devices | limitTo: selection.numSelectedLotsShown track by device._id"

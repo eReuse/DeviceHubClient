@@ -170,10 +170,10 @@
     margin-bottom: 10px
 
   .fill-height-bar
-    height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$optionsMenuHeight})
     overflow-y: auto
-    @media (max-width: $screen-xs-max)
-      height: calc(100vh - #{$navbar-height} - #{$footerHeight})
+    height: calc(100vh - #{$navbar-height})
+    @media (min-width: $screen-sm-min)
+      height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$optionsMenuHeight})
 
   .resource-list-table
     &.table-hover
@@ -224,7 +224,18 @@
     padding: 30px
     border-left: 2px solid $main-nav-bg
     box-shadow: -5px -3px 10px -7px #999
-
+  .selection-header
+    margin-bottom: 10px
+    h3
+      display: inline-block
+    button
+      background-color: white
+      border: 1px solid #cbcbcb
+      border-radius: 7px
+      padding: 7px
+      margin-left: 10px
+      margin-bottom: 5px
+      color: #333333
 
 .children-lots
   ul
@@ -239,9 +250,9 @@
       background-color: white
       &:not(:last-child)
         margin-right: 6px
-      a
-        color: #333333
-        text-decoration: none
+      button
+        background: none
+        border: none
 
 
 .pill-lot
@@ -417,6 +428,8 @@
             color: #333333
       .selection-details-content
         padding: 15px
+        *
+          word-wrap: break-word
         .btn-hide-details
           float: left
           padding: 4px 10px
