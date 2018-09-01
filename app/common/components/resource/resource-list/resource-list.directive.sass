@@ -70,10 +70,10 @@
     outline-offset: -2px
 
   .fill-height-bar
-    height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$optionsMenuHeight})
     overflow-y: auto
-    @media (max-width: $screen-xs-max)
-      height: calc(100vh - #{$navbar-height} - #{$footerHeight})
+    height: calc(100vh - #{$navbar-height})
+    @media (min-width: $screen-sm-min)
+      height: calc(100vh - #{$navbar-height} - #{$footerHeight} - #{$optionsMenuHeight})
 
   .resource-list-table
     &.table-hover
