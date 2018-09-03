@@ -90,11 +90,11 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           onFiltersChanged()
         }
 
-        $scope.openFilter = propPath => {
-          // const filterPanel = _.find(filterPanelsFlat, { content: { propPathModel: propPath } })
-          // $scope.showFilterPanels = true
-          // filterPanel.shown = true
-        }
+        // $scope.openFilter = propPath => {
+        //   // const filterPanel = _.find(filterPanelsFlat, { content: { propPathModel: propPath } })
+        //   // $scope.showFilterPanels = true
+        //   // filterPanel.shown = true
+        // }
 
         $scope.hideFilterPanel = ($event, panel) => {
           $event && $event.preventDefault() // Prevents submitting the containing form
@@ -130,7 +130,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           $scope.hideAllFilterPanels()
 
           $scope.activeFilters = []
-          function setActiveFilters (parentPath, obj) {
+          function addToActiveFilters (parentPath, obj) {
             parentPath = parentPath ? parentPath + '.' : ''
             _.toPairs(obj).map(pair => {
               const filterKey = pair[0]
@@ -142,7 +142,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
               if (!(isSelect || isRange || isText)) {
                 value.isNested = true
-                return setActiveFilters(fullPath, value)
+                return addToActiveFilters(fullPath, value)
               }
 
               let filterText = _.get(value, '_meta.prefix', '')
@@ -166,7 +166,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               })
             })
           }
-          setActiveFilters('', filtersModel)
+          addToActiveFilters('', filtersModel)
           getterDevices.updateFiltersFromSearch(filtersModel)
         }
         onFiltersChanged()
@@ -299,7 +299,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                             {
                               key: 'price.min',
                               type: 'input',
-                              defaultValue: 0,
+                              // TODO need placeholder instead of defaultValue. defaultValue will be set in formly model as well, we don't want this to happen, since formly model properties will be displayed and sent to server. tried also initialValue, which doesn't work. formly placeholder does not exist
+                              // defaultValue: 0,
                               templateOptions: {
                                 type: 'number',
                                 min: 0,
@@ -309,7 +310,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                             {
                               key: 'price.max',
                               type: 'input',
-                              defaultValue: 999,
+                              // TODO see above
+                              // defaultValue: 999,
                               templateOptions: {
                                 type: 'number',
                                 min: 0,
