@@ -184,8 +184,10 @@
     &.table-hover
       tbody
         tr
-          &:hover
-            background-color: #85bfcf
+          &.active > td
+            background-color: #b7d9e3ff
+          &:hover > td
+            background-color: #53A6BE
             color: white
     tr
       *

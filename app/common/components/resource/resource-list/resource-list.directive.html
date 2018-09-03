@@ -131,30 +131,30 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="resource in devices track by resource._id"
-              ng-class="{info: selector.isSelected(resource)}"
-              ng-click="toggleSelect(resource, $index, $event)"
+        <tr ng-repeat="resource in devices track by resource._id"
+            ng-class="{active: selector.isSelected(resource)}"
+            ng-click="toggleSelect(resource, $index, $event)"
+        >
+          <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
+          <td ng-repeat="td in ::config.table.td"
+              class="{{::td.cssClasses}}"
+              ng-init="value = $root._.get(resource, td.value)"
           >
-            <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
-            <td ng-repeat="td in ::config.table.td"
-                class="{{::td.cssClasses}}"
-                ng-init="value = $root._.get(resource, td.value)"
-            >
-              <div ng-if="::td.templateUrl" ng-include="td.templateUrl"></div>
-              <div ng-if="::value && !$root._.isDate(value)">
-                <!-- We cannot use the value from ng-init if we want it to be updateable -->
-                <span ng-if="::td.humanize">
+            <div ng-if="::td.templateUrl" ng-include="td.templateUrl"></div>
+            <div ng-if="::value && !$root._.isDate(value)">
+              <!-- We cannot use the value from ng-init if we want it to be updateable -->
+              <span ng-if="::td.humanize">
                   {{::$root._.get(resource, td.value) | humanize}}
                 </span>
-                <span ng-if="::td.number">
+              <span ng-if="::td.number">
                   {{::$root._.get(resource, td.value) | number}}
                 </span>
-                <span ng-if="::td.currency">
+              <span ng-if="::td.currency">
                   {{::$root._.get(resource, td.value) | currency:'€ ' }}
                 </span>
-                <!-- For now only label can be changed from a resource without refreshing the list, and label field
-                falls in here -->
-                <span ng-if="::!td.humanize && !td.number && !td.currency">
+              <!-- For now only label can be changed from a resource without refreshing the list, and label field
+              falls in here -->
+              <span ng-if="::!td.humanize && !td.number && !td.currency">
                   <!-- Let's show more characters if we have a lg screen -->
                   <span class="hidden-lg">
                     {{$root._.get(resource, td.value) | limitTo: (td.limitTo || 15)}}
@@ -165,10 +165,10 @@
                     <small ng-show="$root._.get(resource, td.value).length > (td.limitTo || 15) + 7">&hellip;</small>
                   </span>
                 </span>
-              </div>
-              <div ng-if="::value && $root._.isDate(value)">{{value | timeAgo}}</div>
-            </td>
-          </tr>
+            </div>
+            <div ng-if="::value && $root._.isDate(value)">{{value | timeAgo}}</div>
+          </td>
+        </tr>
         </tbody>
       </table>
       <div class="text-center">
