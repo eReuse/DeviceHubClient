@@ -74,7 +74,7 @@
       margin-bottom: 10px
   .active-filters-container
     .active-filters
-      display: inline-flex
+      display: inline-block
       padding: 0
       margin-bottom: 5px
       .active-filter
@@ -91,11 +91,16 @@
           line-height: 1.5em
   .btn-add-filter-panels
     padding: 5px 10px
-    display: inline-flex
+    display: block
+    @media (min-width: $screen-sm-min)
+      display: inline-flex
   .add-filter-panels-container
     position: relative
-    top: 16px // button height
     display: inline-flex
+    top: -13px
+    @media (min-width: $screen-sm-min)
+      top: 16px // button height
+      left: -82px // button width
     .add-filter-panels-wrapper
       position: absolute
       top: 0

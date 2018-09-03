@@ -29,12 +29,15 @@
 
     <!-- Resource Filters -->
     <div class="active-filters-container">
+      <!-- Active filters -->
       <ul class="active-filters">
         <li class="active-filter" ng-repeat="filter in activeFilters" ng-click="openFilter(filter.propPath)">
           <span>{{ filter.text }}</span>
           <i class="fa fa-fw fa-close" ng-click="removeFilter(filter.propPath)"></i>
         </li>
       </ul>
+      <!-- Add button and panel -->
+      <button class="btn btn-info btn-add-filter-panels" ng-click="toggleDisplayFilterPanels()">Add filter</button>
       <div class="add-filter-panels-container">
         <div class="add-filter-panels-wrapper">
           <div ng-class="{ active: showFilterPanels }" class="add-filter-panels">
@@ -91,7 +94,6 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-info btn-add-filter-panels" ng-click="toggleDisplayFilterPanels()">Add filter</button>
     </div>
 
     <!-- TODO show when there are lots
