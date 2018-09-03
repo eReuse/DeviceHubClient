@@ -475,6 +475,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         $scope.deselectAll = (devices) => {
           $scope.selector.deselectAll(devices)
           $scope.lastSelectedIndex = 0
+          $scope.selectionPanelHiddenXS = true
         }
 
         // Workaround to set labels of selected lots correctly. Necessary because API /devices doesn't include the 'label' property for device ancestors
