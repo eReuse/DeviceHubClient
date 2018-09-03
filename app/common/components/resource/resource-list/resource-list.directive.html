@@ -112,11 +112,6 @@
       <span>Deselect all</span>
     </button>
     <!-- Resource Filters -->
-    <resource-search settings="config.search.params"
-                     on-params-changed="onSearchParamsChanged(params)"
-                     default-params="config.search.defaultParams"
-    ></resource-search>
-
     <div infinite-scroll="getMore()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
          infinite-scroll-parent infinite-scroll-disabled="getMoreIsBusy || !moreDevicesAvailable"
          infinite-scroll-listen-for-event="list:filtered"
