@@ -62,6 +62,21 @@
     .btn
       padding-top: 0.25em
       padding-bottom: 0.25em
+    button
+      width: calc(50% - 2px)
+    .btn-group
+      width: calc(50% - 2px)
+      button
+        width: 100%
+    @media (min-width: $screen-md-min)
+      button
+        width: auto
+      .btn-group
+        width: auto
+        button
+          width: auto
+
+
 
   .blink
     // from @extend input[type="checkbox"]:focus
