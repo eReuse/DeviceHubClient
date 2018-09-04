@@ -1,16 +1,7 @@
 function deviceRange () {
   return {
     template: `
-        <span class="label resource-range" ng-class="{
-                                        'label-danger': range == 'VeryLow',
-                                        'label-warning': range == 'Low',
-                                        'label-info': range == 'Medium',
-                                        'label-success': range == 'High',
-                                        'label-default': range == '?'
-                                      }"
-        >
-          {{range}}
-        </span>
+        <span class="resource-range">{{range}}</span>
     `,
     restrict: 'E',
     replace: true,
