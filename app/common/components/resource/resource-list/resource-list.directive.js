@@ -471,6 +471,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           }
           $scope.lastSelectedIndex = $index
         }
+        $scope.multiSelect = (resource, $index, $event) => {
+          // TODO
+          // if not on mobile return
+          // change to multi-select (new clicks add to selection)
+          // if not selected, add to selection
+          // console.log('long press on resource', resource)
+        }
 
         $scope.deselectAll = (devices) => {
           $scope.selector.deselectAll(devices)
