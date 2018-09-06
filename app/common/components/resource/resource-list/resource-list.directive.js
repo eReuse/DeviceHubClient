@@ -592,10 +592,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           // Used to determine which details pane (e.g. type, components, events, ...) to show
           $scope.selection.details = {}
 
+          // Set summary for selection
           $scope.selection.summary = []
           const manufacturer = props.manufacturer ? (' ' + props.manufacturer) : ''
           const model = props.model ? (' ' + props.model) : ''
-          // Summary for selection
           let typeContentSummary
           if (props.type === selector.VARIOUS) {
             typeContentSummary = 'Various types'
@@ -610,7 +610,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           } else {
             typeContentSummary = props.subType + manufacturer + model
           }
-          const componentsContentSummary = _.values(props.components).filter(c => !!c).join(' ')
+          // TODO if components values need to be formatted, due it here
+          const componentsContentSummary = _.values(props.components).filter(c => !!c).join(', ')
           $scope.selection.summary = $scope.selection.summary.concat([
             {
               title: 'Type, manufacturer & model',
