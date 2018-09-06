@@ -7,9 +7,9 @@ function ResourceListGetterFactory (ResourceSettings) {
   // TODO Provide missing properties by service and finally remove this stub
   const devicePropertiesStub = {
     // '@type': 'Computer',
-    'processorModel': 'Intel(R) Atom(TM) CPU 330 @ 1.60GHz',
-    'totalRamSize': 2048,
-    'totalHardDriveSize': 305245.3359375,
+    // 'processorModel': 'Intel(R) Atom(TM) CPU 330 @ 1.60GHz',
+    // 'totalRamSize': 2048,
+    // 'totalHardDriveSize': 305245.3359375,
     'pricing': {
       'refurbisher': {
         'standard': {
@@ -348,6 +348,17 @@ function ResourceListGetterFactory (ResourceSettings) {
               '_id': e.id
             })
           })
+
+          // map components
+          if (_.find(r.components, { type: 'Processor' })) {
+            r.processorModel = _.find(r.components, { type: 'Processor' }).model
+          }
+          if (_.find(r.components, { type: 'RamModule' })) {
+            r.totalRamSize = _.filter(r.components, { type: 'RamModule' }).reduce((a, b) => a + b.size, 0)
+          }
+          if (_.find(r.components, { type: 'HardDrive' })) {
+            r.totalHardDriveSize = _.filter(r.components, { type: 'HardDrive' }).reduce((a, b) => a + b.size, 0)
+          }
 
           _.defaults(r, devicePropertiesStub)
           _.assign(r, {
