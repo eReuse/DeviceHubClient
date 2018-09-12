@@ -10,7 +10,7 @@
  * @param {ResourceBreadcrumb} ResourceBreadcrumb
  * @param {Session} session
  */
-function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, UNIT_CODES, CONSTANTS, SearchService, $filter) {
+function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, UNIT_CODES, CONSTANTS, SearchService, $filter, $rootScope) {
   const PATH = require('./__init__').PATH
   const selectionSummaryTemplateFolder = PATH + '/resource-list-selection-summary'
   return {
@@ -588,6 +588,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             selector.getRangeOfPropertyOfSelected(selectedDevices, path, $scope.currencyOptions.filter)
           )
           $scope.selection.props = props
+
+          $rootScope.$on('newID', (event) => {
+            console.log('event', event, 'has been broadcasted')
+          })
 
           // Used to determine which details pane (e.g. type, components, events, ...) to show
           $scope.selection.details = {}
