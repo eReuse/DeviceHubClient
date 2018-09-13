@@ -1,7 +1,6 @@
 const CONSTANTS = {
   appName: 'DeviceHub',
-  url: 'http://localhost:5000',
-  // url: 'http://devicehub.ereuse.net',
+  url: 'http://devicehub-teal.ereuse.net',
   deviceInventoryUrl: 'https://github.com/eReuse/device-inventory/releases/latest',
   androidAppUrl: 'https://play.google.com/store/apps/details?id=org.ereuse.scanner',
   siteLogo: 'common/assets/devicehub-logo.svg',
