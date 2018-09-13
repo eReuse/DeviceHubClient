@@ -455,7 +455,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             selector.selectAll(devicesToSelect, $scope.parentResource)
           } else if ($event.ctrlKey) {
             selector.toggle(resource, $scope.parentResource)
-          } else {
+          } else if ($scope.selectingMultiple) {
+            selector.toggle(resource, $scope.parentResource)
+            if ($scope.selection.devices.length === 0) {
+              $scope.selectingMultiple = false
+            }
+          } else { // normal click
             let isSelected = selector.isSelected(resource)
             if (isSelected) {
               if ($scope.selection.devices.length === 1) {
@@ -471,12 +476,24 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           }
           $scope.lastSelectedIndex = $index
         }
-        $scope.multiSelect = (resource, $index, $event) => {
-          // TODO
-          // if not on mobile return
-          // change to multi-select (new clicks add to selection)
-          // if not selected, add to selection
-          // console.log('long press on resource', resource)
+        $scope.multiSelect = (resource) => {
+          // detect touch screen
+          // https://stackoverflow.com/questions/29747004/find-if-device-is-touch-screen-then-apply-touch-event-instead-of-click-event
+          // https://hacks.mozilla.org/2013/04/detecting-touch-its-the-why-not-the-how/
+          // links above do not work on Windows 10 due to: https://bugs.chromium.org/p/chromium/issues/detail?id=676808
+          // TODO needs testing on different devices + OS
+          let supportsTouch = (!!window.ontouchstart) || navigator.msMaxTouchPoints
+          if (supportsTouch) {
+            return
+          }
+
+          $scope.selectingMultiple = true
+
+          // change to multi-select (changes normal click/touch behaviour)
+          let isSelected = selector.isSelected(resource)
+          if (!isSelected) {
+            selector.toggle(resource, $scope.parentResource)
+          }
         }
 
         $scope.deselectAll = (devices) => {
