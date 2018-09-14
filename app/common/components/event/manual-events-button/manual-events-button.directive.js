@@ -18,7 +18,8 @@ function manualEventsButton (dhModal, ResourceListSelector) {
         {'type': 'devices:Receive', 'humanName': 'Receive'},
         {'type': 'devices:Allocate', 'humanName': 'Allocate'},
         {'type': 'devices:ToRepair', 'humanName': 'To repair'},
-        {'type': 'devices:TransferAssetLicense', 'humanName': 'Transfer asset license'}
+        {'type': 'devices:TransferAssetLicense', 'humanName': 'Transfer asset license'},
+        {'type': 'devices:AddTag', 'humanName': 'Add tag'}
       ]
 
       $scope.openModal = (eventType) => {

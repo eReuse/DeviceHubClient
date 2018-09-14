@@ -1388,6 +1388,26 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
               ] // conditions field-group
             }
           ]
+        case 'devices:AddTag':
+          return [
+            {
+              key: 'device._id',
+              type: 'input',
+              id: '_id',
+              templateOptions: {
+                label: 'System ID',
+                description: 'The Identifier printed in the tag or label.',
+                addonRight: (id) => {
+                  return window.AndroidApp ? {
+                    onClick: () => {
+                      window.AndroidApp.scanBarcode(id, 'newID')
+                    },
+                    class: 'fa fa-camera'
+                  } : null
+                }
+              }
+            }
+          ]
         default:
           throw new Error('event ' + event + ' does not have fields specified')
       }
