@@ -74,6 +74,9 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
         } else {
           const picked = _.pickBy(RESOURCE_CONFIG.resources, r => r._root) // Can't chain findKey after pickBy
           const rootAncestorType = _.findKey(picked, (_, resourceType) => this.isSubResource(resourceType))
+          if (!rootAncestorType) {
+            throw new Error('resource ' + this.resourceName + ' is neither root nor is sub resource of any other type')
+          }
           // console.log('## creating ResourceSettings for root ancestor', rootAncestorType)
           this.rootAncestor = _ResourceSettingsFactory(rootAncestorType, previousType + '/' + type)
         }
