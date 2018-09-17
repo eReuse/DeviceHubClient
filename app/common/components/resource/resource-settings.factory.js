@@ -19,6 +19,9 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
   // const schemas = []
 
   function _getSchema (resourceName) {
+    if (resourceName.indexOf('devices_') === 0) {
+      resourceName = 'events' // all events get 'events' schema
+    }
     schema = schemas[resourceName]
     // if (!schema) {
     //   throw new Error('No schema found for resource ' + resourceName)
