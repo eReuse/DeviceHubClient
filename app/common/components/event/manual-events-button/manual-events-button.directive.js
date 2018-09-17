@@ -4,7 +4,13 @@ function manualEventsButton (dhModal, ResourceListSelector) {
     restrict: 'E',
     scope: {},
     link: $scope => {
-      $scope.selector = ResourceListSelector
+      function setView () {
+        $scope.resources = ResourceListSelector.getAllSelectedDevices()
+        $scope.singleSelection = $scope.resources.length === 1
+      }
+      setView()
+      ResourceListSelector.callbackOnSelection(setView)
+
       $scope.events = [ // TODO move to config
         {'type': 'devices:Ready', 'humanName': 'Ready'},
         {'type': 'devices:ToPrepare', 'humanName': 'To prepare'},
@@ -19,11 +25,11 @@ function manualEventsButton (dhModal, ResourceListSelector) {
         {'type': 'devices:Allocate', 'humanName': 'Allocate'},
         {'type': 'devices:ToRepair', 'humanName': 'To repair'},
         {'type': 'devices:TransferAssetLicense', 'humanName': 'Transfer asset license'},
-        {'type': 'devices:AddTag', 'humanName': 'Add tag'}
+        {'type': 'devices:Snapshot', 'humanName': 'Add tag', 'singleSelectionOnly': true}
       ]
 
       $scope.openModal = (eventType) => {
-        let resources = ResourceListSelector.getAllSelectedDevices()
+        let resources = $scope.resources
         require('./../open-event-modal')(dhModal)(eventType, resources)
       }
     }

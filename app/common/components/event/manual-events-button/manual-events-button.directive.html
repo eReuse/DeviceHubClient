@@ -1,8 +1,7 @@
 <div class="btn-group" uib-dropdown is-open="status.isopen">
   <button id="event-button"
           type="button"
-          class="btn"
-          ng-class="{'btn-info': selector.getAllSelectedDevices().length > 0}"
+          class="btn btn-info"
           uib-dropdown-toggle
   >
     <i class="fa fa-plus fa-fw"></i>New event<span class="caret"></span>
@@ -10,10 +9,11 @@
   <ul uib-dropdown-menu role="menu" aria-labelledby="event-button">
     <li role="menuitem"
         ng-repeat="event in events"
+        ng-class="{ disabled: event.singleSelectionOnly && !singleSelection }"
         tooltip-placement="right"
         tooltip-append-to-body="true"
     >
-      <a ng-click="openModal(event.type)">
+      <a ng-click="(event.singleSelectionOnly ? singleSelection : true) && openModal(event.type)">
         <resource-icon resource-type="{{::event.type}}" fill-to="true"></resource-icon>
         {{::event.humanName}}
       </a>
