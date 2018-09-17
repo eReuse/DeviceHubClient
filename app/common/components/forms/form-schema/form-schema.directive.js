@@ -32,6 +32,20 @@ function formSchema (FormSchema) {
         $scope.submit = model => formSchema.submit(model)
         $scope.options.canDelete = 'remove' in $scope.model
         $scope.options.delete = model => formSchema.delete(model)
+
+        if (form.model['@type'] === 'devices:Snapshot') {
+          // TODO enable NFC on start
+          // ...
+
+          // set value to
+          // TODO listen to NFC events only or both NFC+QR events?
+          $scope.$on('tagScanDone', (_, tagID) => {
+            let model = $scope.model
+            model.device._id = tagID
+            $scope.$apply()
+          })
+        }
+
         $scope.form = form
       }
     }
