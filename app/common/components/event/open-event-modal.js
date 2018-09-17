@@ -27,7 +27,12 @@ function openModalFactory (dhModal) {
     // }
     // if (resources) model[isGroup ? 'groups' : 'devices'] = resources
 
-    model['devices'] = resources
+    if (type === 'devices:Snapshot') {
+      model['device'] = resources[0]
+    } else {
+      model['devices'] = resources
+    }
+
     model['@type'] = type
     const opt = {
       model: () => model,
