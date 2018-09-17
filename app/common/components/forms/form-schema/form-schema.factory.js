@@ -1,4 +1,4 @@
-function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notification) {
+function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notification, $rootScope) {
   const utils = require('./../../utils.js')
   const CannotSubmit = require('./cannot-submit.exception')
   const OPERATION = {
@@ -925,21 +925,21 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
               'disabled': false
             }
           }]
-        case 'devices:Snapshot':
-          return [{
-            'key': 'place',
-            'name': 'place',
-            'type': 'typeahead',
-            'templateOptions': {
-              'resourceName': 'places',
-              'keyFieldName': '_id',
-              'label': 'Place where the devices are saved',
-              'labelFieldName': 'label',
-              'filterFieldNames': ['label', '_id'],
-              'description': 'Place the devices to an existing location.',
-              'disabled': false
-            }
-          }]
+        // case 'devices:Snapshot':
+        //   return [{
+        //     'key': 'place',
+        //     'name': 'place',
+        //     'type': 'typeahead',
+        //     'templateOptions': {
+        //       'resourceName': 'places',
+        //       'keyFieldName': '_id',
+        //       'label': 'Place where the devices are saved',
+        //       'labelFieldName': 'label',
+        //       'filterFieldNames': ['label', '_id'],
+        //       'description': 'Place the devices to an existing location.',
+        //       'disabled': false
+        //     }
+        //   }]
         case 'devices:Dispose':
           return [{
             'key': 'label',
@@ -1388,7 +1388,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
               ] // conditions field-group
             }
           ]
-        case 'devices:AddTag':
+        case 'devices:Snapshot':
           return [
             {
               key: 'device._id',
@@ -1397,13 +1397,23 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
               templateOptions: {
                 label: 'System ID',
                 description: 'The Identifier printed in the tag or label.',
-                addonRight: (id) => {
-                  return window.AndroidApp ? {
-                    onClick: () => {
-                      window.AndroidApp.scanBarcode(id, 'newID')
-                    },
-                    class: 'fa fa-camera'
-                  } : null
+                addonRight: window.AndroidApp ? {
+                  onClick: () => {
+                    // TODO listen to event here or in form-schema.directive ?
+                    // $scope.$on('newID', (_, tagID) => {
+                    //   $scope.$parent.model.device._id = tagID
+                    //   Notification.success('$scope: event newID has been broadcasted')
+                    //   console.log('event', event, 'has been broadcasted')
+                    // })
+                    window.AndroidApp.scanBarcode('tagScanDone')
+                  },
+                  class: 'fa fa-camera'
+                } : {
+                  onClick: () => {
+                    Notification.success('click on web')
+                    $rootScope.$broadcast('tagScanDone', 'test id')
+                  },
+                  class: 'fa fa-camera'
                 }
               }
             }
