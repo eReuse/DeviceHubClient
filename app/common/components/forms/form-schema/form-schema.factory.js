@@ -1453,7 +1453,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
                 } : {
                   onClick: () => {
                     Notification.success('click on web')
-                    $rootScope.$broadcast('tagScanDone', 'test id')
+                    $rootScope.$broadcast('tagScanDone', 'http://t.devicetag.io/DT-9KKD9')
                   },
                   class: 'fa fa-camera'
                 }
