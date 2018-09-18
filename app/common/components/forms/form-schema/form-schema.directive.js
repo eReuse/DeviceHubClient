@@ -40,8 +40,8 @@ function formSchema (FormSchema) {
           // set value to
           // TODO listen to NFC events only or both NFC+QR events?
           $scope.$on('tagScanDone', (_, tagID) => {
-            let model = $scope.model
-            model.device._id = tagID
+            let device = $scope.model.device
+            device.newTagID = tagID
             $scope.$apply()
           })
         }
