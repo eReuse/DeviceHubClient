@@ -1,4 +1,4 @@
-function formSchema (FormSchema) {
+function formSchema (FormSchema, Notification) {
   /**
    * @name formSchema
    * @description Generates a form for a resource parsing the information form the schema from the server.
@@ -34,14 +34,24 @@ function formSchema (FormSchema) {
         $scope.options.delete = model => formSchema.delete(model)
 
         if (form.model['@type'] === 'devices:Snapshot') {
-          // TODO enable NFC on start
-          // ...
+          if (window.AndroidApp) {
+            Notification.success('NFC active')
+            window.AndroidApp.startNFC('tagScanDone')
+            $scope.$on('$destroy', () => {
+              window.AndroidApp.stopNFC()
+            })
+          }
 
           // set value to
           // TODO listen to NFC events only or both NFC+QR events?
-          $scope.$on('tagScanDone', (_, tagID) => {
+          $scope.$on('tagScanDone', (_, tag) => {
+            const tagURLPrefix = 'http://t.devicetag.io/' // TODO move to config
             let device = $scope.model.device
-            device.newTagID = tagID
+
+            if (tag.indexOf(tagURLPrefix) === 0) { // is ID encompassed in URL ?
+              tag = tag.substring(tagURLPrefix.length, tag.length)
+            }
+            device.newTagID = tag
             $scope.$apply()
           })
         }
