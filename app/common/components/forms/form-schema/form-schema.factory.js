@@ -1,4 +1,4 @@
-function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notification, $rootScope) {
+function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notification) {
   const utils = require('./../../utils.js')
   const CannotSubmit = require('./cannot-submit.exception')
   const OPERATION = {
@@ -32,6 +32,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
      */
     constructor (model, form, status, parserOptions = {}) {
       this.rSettings = ResourceSettings(model['@type']) // need resource settings for server mainly
+      this.resourceType = model['@type']
       this.form = form
       this.status = status
       // Assign parserOptions
@@ -47,7 +48,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
       } catch (err) {
       }  // doNotUse not in getSetting
 
-      this.fields = this.form.fields = this._getFields(model['@type'])
+      this.fields = this.form.fields = this._getFields(this.resourceType)
 
       // this.fields = this.form.fields = cerberusToFormly.parse(model, parserOptions)
       // console.log('type:' + model['@type'])
@@ -90,6 +91,10 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
       } else if (this._uploadsFile) {
         const field = this._uploadsFile
         promise = this.rSettings.server.postWithFiles(model, field.key, field.templateOptions.files)
+      } else if (this.resourceType === 'devices:Snapshot') { // TODO this case should probably be generalized and settings moved to config
+        const device = model.device
+        const newTagID = device.newTagID
+        promise = this.rSettings.server.one(newTagID).one('device', device._id).put()
       } else {
         promise = this.rSettings.server.post(model)
       }
@@ -119,6 +124,43 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
     _final (promise) {
       this.submitForm.after(promise)
     }
+
+    // _getURL (event) {
+    //   switch (event) {
+    //     case 'devices:ToPrepare':
+    //       return []
+    //     case 'devices:ToRepair':
+    //       return []
+    //     case 'devices:Repair':
+    //       return []
+    //     case 'devices:Ready':
+    //       return []
+    //     case 'devices:Locate':
+    //       return []
+    //     case 'devices:Allocate':
+    //       return []
+    //     case 'devices:Reserve':
+    //       return []
+    //     case 'devices:Sell':
+    //       return []
+    //     case 'devices:CancelReservation':
+    //       return []
+    //     case 'devices:Deallocate':
+    //       return []
+    //     case 'devices:Receive':
+    //       return []
+    //     case 'devices:ToDispose':
+    //       return []
+    //     case 'devices:Dispose':
+    //       return []
+    //     case 'devices:TransferAssetLicense':
+    //       return []
+    //     case 'devices:Snapshot':
+    //       return []
+    //     default:
+    //       throw new Error('event ' + event + ' does not have fields specified')
+    //   }
+    // }
 
     // TODO move fields definition to schema definition and get resource-settings from there
     _getFields (event) {
@@ -1391,9 +1433,9 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
         case 'devices:Snapshot':
           return [
             {
-              key: 'device._id',
+              key: 'device.newTagID',
               type: 'input',
-              id: '_id',
+              id: '_newTagID',
               templateOptions: {
                 label: 'System ID',
                 description: 'The Identifier printed in the tag or label.',
