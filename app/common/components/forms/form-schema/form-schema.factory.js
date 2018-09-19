@@ -1437,26 +1437,25 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
               type: 'input',
               id: '_newTagID',
               templateOptions: {
-                label: 'System ID',
-                description: 'The Identifier printed in the tag or label.',
+                label: 'Tag',
+                description: window.AndroidApp
+                  ? 'Hold your phone closely over the NFC-enabled tag or press the camera to scan the QR code'
+                  : 'Identifier printed on tag or label',
                 addonRight: window.AndroidApp ? {
                   onClick: () => {
-                    // TODO listen to event here or in form-schema.directive ?
-                    // $scope.$on('newID', (_, tagID) => {
-                    //   $scope.$parent.model.device._id = tagID
-                    //   Notification.success('$scope: event newID has been broadcasted')
-                    //   console.log('event', event, 'has been broadcasted')
-                    // })
                     window.AndroidApp.scanBarcode('tagScanDone')
                   },
                   class: 'fa fa-camera'
-                } : {
+                } : null
+                /*
+                : {
                   onClick: () => {
                     Notification.success('click on web')
                     $rootScope.$broadcast('tagScanDone', 'http://t.devicetag.io/DT-9KKD9')
                   },
                   class: 'fa fa-camera'
                 }
+                */
               }
             }
           ]
