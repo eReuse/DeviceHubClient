@@ -144,6 +144,9 @@
             <div ng-if="::td.templateUrl" ng-include="td.templateUrl"></div>
             <div ng-if="::value && !$root._.isDate(value)">
               <!-- We cannot use the value from ng-init if we want it to be updateable -->
+              <span ng-if="::td.array">
+                  {{::$root._.get(resource, td.value).join(', ')}}
+              </span>
               <span ng-if="::td.humanize">
                   {{::$root._.get(resource, td.value) | humanize}}
                 </span>
@@ -152,10 +155,10 @@
                 </span>
               <span ng-if="::td.currency">
                   {{::$root._.get(resource, td.value) | currency:'€ ' }}
-                </span>
+              </span>
               <!-- For now only label can be changed from a resource without refreshing the list, and label field
               falls in here -->
-              <span ng-if="::!td.humanize && !td.number && !td.currency">
+              <span ng-if="::!td.humanize && !td.number && !td.currency && !td.array">
                   <!-- Let's show more characters if we have a lg screen -->
                   <span class="hidden-lg">
                     {{$root._.get(resource, td.value) | limitTo: (td.limitTo || 15)}}

@@ -27,6 +27,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
   const configFolder = require('./__init__').PATH + '/resource-list-config'
   const f = {
     id: {th: {key: '_id', name: 'Id'}, td: {value: '_id'}},
+    tags: {th: {key: 'tags', name: 'Tags'}, td: {value: 'tags', array: true}},
     label: {th: {key: 'label', name: 'Label'}, td: {value: 'label', limitTo: 30}},
     title: {th: {key: 'title', name: 'Title'}, td: {value: 'title', humanize: false}},
     '@type': {th: {key: '@type', name: 'Type'}, td: {value: '@type', humanize: true}},
@@ -455,8 +456,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
       }
     },
     table: {
-      th: [f.id.th, f.title.th, f.price.th, f.range.th, f.status.thDef, f.created.th],
-      td: [f.id.td, f.title.td, f.price.td, f.range.td, f.status.td, f.created.td]
+      th: [f.tags.th, f.title.th, f.price.th, f.range.th, f.status.thDef, f.created.th],
+      td: [f.tags.td, f.title.td, f.price.td, f.range.td, f.status.td, f.created.td]
     },
     tableEvents: {
       th: [
