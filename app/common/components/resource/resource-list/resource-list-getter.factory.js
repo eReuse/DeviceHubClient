@@ -404,7 +404,15 @@ function ResourceListGetterFactory (ResourceSettings) {
         } else {
           this._updateResourcesAfterGet(getNextPage, resources)
         }
-      } else {
+      } else if (this.resourceType === 'Lot') {
+        resources.forEach(r => {
+          _.assign(r, {
+            _id: r.id,
+            _created: r.created,
+            label: r.name,
+            '@type': 'Lot'
+          })
+        })
         this._updateResourcesAfterGet(getNextPage, resources)
       }
 
