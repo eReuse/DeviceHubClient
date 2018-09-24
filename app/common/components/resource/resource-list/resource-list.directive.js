@@ -53,13 +53,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           $scope.moreDevicesAvailable = $scope.totalNumberOfDevices > $scope.devices.length
         })
 
-        // Set up getters for lots TODO comment in for lots to work
-        // const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar, _.cloneDeep(defaultFilters))
-        // getterLots.updateSort('label')
-        // getterLots.callbackOnGetting(() => {
-        //   $scope.totalNumberOfLots = getterLots.getTotalNumberResources()
-        //   $scope.moreLotsAvailable = $scope.totalNumberOfLots > $scope.lots.length
-        // })
+        // Set up getters for lots
+        const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar, _.cloneDeep(defaultFilters))
+        getterLots.updateSort('label')
+        getterLots.callbackOnGetting(() => {
+          $scope.totalNumberOfLots = getterLots.getTotalNumberResources()
+          $scope.moreLotsAvailable = $scope.totalNumberOfLots > $scope.lots.length
+        })
 
         // Workaround: In root, parentResource is not set. This must be after initializing ResourceListGetter
         // TODO Delete workaround as soon as API returns root with label and _id set
@@ -82,7 +82,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         $scope.onSearchParamsChanged = newFilters => {
           getterDevices.updateFiltersFromSearch(newFilters)
           // TODO comment in for lots to work
-          // getterLots.updateFiltersFromSearch(newFilters) // TODO update lots on filter update?
+          getterLots.updateFiltersFromSearch(newFilters) // TODO update lots on filter update?
         }
 
         $scope.removeFilter = propPath => {
@@ -707,6 +707,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
         $scope.reload = () => {
           getterDevices.getResources()
+          getterLots.getResources()
           $scope.deselectAll()
         }
         // TODO need this?
@@ -749,15 +750,15 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         //   }
         // }
         // OR more like this?
-        // $scope.getMoreLotsIsBusy = false
-        // $scope.getMoreLots = () => {
-        //   if (!$scope.getMoreLotsIsBusy) {
-        //     $scope.getMoreLotsIsBusy = true
-        //     getterLots.getResources(true, false).finally(() => {
-        //       $scope.getMoreLotsIsBusy = false
-        //     })
-        //   }
-        // }
+        $scope.getMoreLotsIsBusy = false
+        $scope.getMoreLots = () => {
+          if (!$scope.getMoreLotsIsBusy) {
+            $scope.getMoreLotsIsBusy = true
+            getterLots.getResources(true, false).finally(() => {
+              $scope.getMoreLotsIsBusy = false
+            })
+          }
+        }
 
         // If we don't want to collision with tables of subResources we
         // need to do this when declaring the directive

@@ -13296,6 +13296,7 @@ module.exports = {
       'useDefaultDatabase': false,
       'parent': 'IndividualProduct',
       'url': 'inventories/', // devices URL
+      'pathToDataInResponse': 'devices',
       'itemMethods': [
         'GET',
         'PATCH',
@@ -18484,7 +18485,8 @@ module.exports = {
     '_settings': {
       'useDefaultDatabase': false,
       'parent': 'Abstract',
-      'url': 'lots',
+      'url': 'inventories/',
+      'pathToDataInResponse': 'lots',
       'itemMethods': [
         'GET',
         'PATCH',

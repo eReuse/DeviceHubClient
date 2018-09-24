@@ -3,7 +3,6 @@
   <div class="current-lot fill-height-bar col-sm-6 col-xs-12">
     <resource-breadcrumb></resource-breadcrumb>
 
-    <!-- TODO comment in for lots to work
     <h4>Lots ({{ totalNumberOfLots }})</h4>
     <div class="children-lots">
       <ul>
@@ -11,7 +10,7 @@
                 ng-repeat="lot in lots"
         >
           <button ng-click="goTo(lot)">
-            <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.label }}
+            <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.name }}
           </button>
         </li>
         <li ng-show="moreLotsAvailable">
@@ -21,9 +20,8 @@
         </li>
       </ul>
     </div>
-    -->
 
-    <!--<h4 style="display: inline-block; margin-bottom: 20px;">Devices ({{ getTotalNumberOfDevices() }}) </h4>-->
+    <h4 style="display: inline-block; margin-bottom: 20px;">Devices ({{ getTotalNumberOfDevices() }}) </h4>
 
     <resource-search on-search-changed="onSearchChanged(query)"></resource-search>
 
