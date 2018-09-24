@@ -102,7 +102,9 @@ class ResourceBreadcrumb {
    */
   _logToPath (log) {
     log.shift()
-    return _.map(log, r => utils.Naming.resource(r['@type']) + this.NAME + r._id).join(this.FOLDER)
+    return _.map(log, (r) => {
+      return utils.Naming.resource(r['@type']) + this.NAME + r._id
+    }).join(this.FOLDER)
   }
 
   /**
