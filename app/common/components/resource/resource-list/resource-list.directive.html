@@ -145,7 +145,7 @@
             <div ng-if="::value && !$root._.isDate(value)">
               <!-- We cannot use the value from ng-init if we want it to be updateable -->
               <span ng-if="::td.array">
-                  {{::$root._.get(resource, td.value).join(', ')}}
+                  {{::$root._.get(resource, td.value).map(td.map).join(td.join)}}
               </span>
               <span ng-if="::td.humanize">
                   {{::$root._.get(resource, td.value) | humanize}}
