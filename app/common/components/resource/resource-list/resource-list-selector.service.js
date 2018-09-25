@@ -26,11 +26,11 @@ class ResourceListSelector {
      *
      * @param {object} resource - The resource to select/deselect
      */
-    this.toggle = (resource, parentLot) => {
+    this.toggle = (resource) => {
       if (this.isSelected(resource)) { // Remove
         remove(resource)
       } else { // Add
-        add(resource, parentLot)
+        add(resource)
       }
       _control()
     }
@@ -39,12 +39,9 @@ class ResourceListSelector {
      * Selects all given resources
      * @param resources
      */
-    this.selectAll = (resources, parentLot) => {
-      if (!parentLot) {
-        throw new Error('parentLot must be set')
-      }
+    this.selectAll = (resources) => {
       _.forEach(resources, resource => {
-        add(resource, parentLot)
+        add(resource)
       })
       _control()
     }
@@ -102,14 +99,10 @@ class ResourceListSelector {
     /**
      * Adds given resource to all parent lots of the resource, if it was not there before.
      * @param {object} resource - The resource to add
-     * @param {object} parentLot - Parent lot of given resource
      */
-    let add = (resource, parentLot) => {
+    let add = (resource) => {
       if (resource['@type'] === 'Lot') {
         throw new Error('tried to add lot to selection')
-      }
-      if (!parentLot || !parentLot._id) {
-        throw new Error('parentLot must be defined and have _id property set')
       }
 
       resource.parentLots.forEach(_lot => {

@@ -446,17 +446,17 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // Selecting
         $scope.toggleSelect = (resource, $index, $event) => {
           $event.stopPropagation() // Avoids the ng-click from the row (<tr>) to trigger
-
+          
           if ($event.shiftKey) {
             let lastSelectedIndex = $scope.lastSelectedIndex || 0
             let start = Math.min(lastSelectedIndex, $index)
             let end = Math.max(lastSelectedIndex, $index)
             let devicesToSelect = $scope.devices.slice(start, end + 1)
-            selector.selectAll(devicesToSelect, $scope.parentResource)
+            selector.selectAll(devicesToSelect)
           } else if ($event.ctrlKey) {
-            selector.toggle(resource, $scope.parentResource)
+            selector.toggle(resource)
           } else if ($scope.selectingMultiple) {
-            selector.toggle(resource, $scope.parentResource)
+            selector.toggle(resource)
             if ($scope.selection.devices.length === 0) {
               $scope.selectingMultiple = false
             }
@@ -464,14 +464,14 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             let isSelected = selector.isSelected(resource)
             if (isSelected) {
               if ($scope.selection.devices.length === 1) {
-                selector.toggle(resource, $scope.parentResource) // remove
+                selector.toggle(resource) // remove
               } else {
                 selector.deselectAll()
-                selector.toggle(resource, $scope.parentResource) // add
+                selector.toggle(resource) // add
               }
             } else {
               selector.deselectAll()
-              selector.toggle(resource, $scope.parentResource)
+              selector.toggle(resource)
             }
           }
           $scope.lastSelectedIndex = $index
@@ -492,7 +492,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           // change to multi-select (changes normal click/touch behaviour)
           let isSelected = selector.isSelected(resource)
           if (!isSelected) {
-            selector.toggle(resource, $scope.parentResource)
+            selector.toggle(resource)
           }
         }
 
@@ -542,6 +542,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           $scope.selection.multiSelection = $scope.selection.devices.length > 1
           $scope.selection.lots = selector.getLots().slice()
 
+          // TODO Remove?
           // mark current lot
           let currentLot = _.find($scope.selection.lots, { _id: $scope.parentResource._id })
           if (currentLot) {
@@ -567,6 +568,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
           // aggregated properties of selected devices
           let props = {
+            _id: selector.getAggregatedPropertyOfSelected(selectedDevices, '_id'),
             type: selector.getAggregatedPropertyOfSelected(selectedDevices, '@type'),
             subType: selector.getAggregatedPropertyOfSelected(selectedDevices, 'type'),
             manufacturer: selector.getAggregatedPropertyOfSelected(selectedDevices, 'manufacturer'),
@@ -676,13 +678,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               contentSummary: props.events.length + ' events',
               cssClass: 'events',
               templateUrl: selectionSummaryTemplateFolder + '/events.html'
-            } /*,
+            },
             {
               title: 'Lots',
               contentSummary: props.lots.length + ' lots',
               cssClass: 'lots',
               templateUrl: selectionSummaryTemplateFolder + '/lots.html'
-            } */
+            }
           ])
         }
         selector.callbackOnSelection(updateSelection)
