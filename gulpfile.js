@@ -69,7 +69,8 @@ const filePath = {
       './node_modules/jsonformatter/dist/json-formatter.min.css',
       './node_modules/angular-ui-notification/dist/angular-ui-notification.css',
       './node_modules/angular-chart.js/dist/angular-chart.css',
-      './bower_components/ngprogress/ngProgress.css'
+      './bower_components/ngprogress/ngProgress.css',
+      './node_modules/angular-ui-tree/dist/angular-ui-tree.min.css'
     ]
   },
   vendorJS: {

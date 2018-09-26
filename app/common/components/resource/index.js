@@ -11,6 +11,7 @@ require('angular-google-maps')
 require('meanie-angular-focus')
 require('checklist-model')
 require('angular-long-press')
+require('angular-ui-tree')
 
 module.exports = angular.module('common.components.resource',
   [
@@ -30,6 +31,7 @@ module.exports = angular.module('common.components.resource',
     'monospaced.qrcode',
     'checklist-model',
     'pr.longpress',
+    'ui.tree',
     require('./../group').name // the button in resource-list
   ])
   .constant('RESOURCE_CONFIG', require('./resource-config.constant'))

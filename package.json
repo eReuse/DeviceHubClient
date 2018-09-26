@@ -33,6 +33,7 @@
     "angular-ui-bootstrap": "~2.2.0",
     "angular-ui-notification": "~0.2.0",
     "angular-ui-router": "~0.4.2",
+    "angular-ui-tree": "^2.22.6",
     "api-check": "~7.5.5",
     "bootstrap": "~3.3.6",
     "bootstrap-sass": "~3.3.7",
