@@ -3,7 +3,39 @@
   <div class="current-lot fill-height-bar col-sm-6 col-xs-12">
     <resource-breadcrumb></resource-breadcrumb>
 
-    <h4>Lots ({{ totalNumberOfLots }})</h4>
+    <div class="search-wrapper input-group">
+      <resource-search on-search-changed="onSearchChanged(query)"></resource-search>
+      <div class="input-group-btn btn-group" ng-show="isAndroid" uib-dropdown is-open="status.isopen">
+        <button id="event-button"
+                type="button"
+                class="btn btn-info"
+                uib-dropdown-toggle
+        >
+          Scan device<span class="caret"></span>
+        </button>
+        <ul uib-dropdown-menu role="menu" aria-labelledby="event-button">
+          <li role="menuitem"
+              tooltip-placement="right"
+              tooltip-append-to-body="true"
+          >
+            <a ng-click="scanQR()">
+              Scan QR
+            </a>
+          </li>
+          <li role="menuitem"
+              tooltip-placement="right"
+              tooltip-append-to-body="true"
+          >
+            <a ng-click="scanQR()">
+              Scan NFC
+            </a>
+          </li>
+        </ul>
+      </div><!-- /btn-group -->
+    </div><!-- /input-group -->
+
+
+    <h4>Lots</h4>
     <div class="children-lots">
       <ul>
         <li
@@ -21,9 +53,7 @@
       </ul>
     </div>
 
-    <h4 style="display: inline-block; margin-bottom: 20px;">Devices ({{ getTotalNumberOfDevices() }}) </h4>
-
-    <resource-search on-search-changed="onSearchChanged(query)"></resource-search>
+    <h4 style="display: inline-block; margin-bottom: 20px;">Devices</h4>
 
     <!-- Resource Filters -->
     <div class="active-filters-container">
@@ -97,19 +127,20 @@
     <!-- TODO show when there are lots
     <h4 style="display: inline-block; margin-bottom: 20px;">Devices ({{ totalNumberOfDevices }}) </h4>
     -->
+    <span>Found 15 devices</span>
     <button type="button"
             class="btn btn-info btn-select-deselect"
             ng-show="!selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
             ng-click="selector.selectAll(devices, parentResource)"
     >
-      <span>Select all</span>
+      <span>Add devices to selection</span>
     </button>
     <button type="button"
             class="btn btn-info btn-select-deselect"
             ng-show="selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
             ng-click="deselectAll(devices)"
     >
-      <span>Deselect all</span>
+      <span>Remove devices from selection</span>
     </button>
 
     <!-- Devices table -->

@@ -3,13 +3,18 @@ function resourceSearch () {
     templateUrl: window.COMPONENTS + '/resource/resource-search/resource-search.directive.html',
     restrict: 'E',
     scope: {
-      onSearchChanged: '&'
+      onSearchChanged: '&',
+      setSearchQuery: '&'
     },
     link: {
       pre: ($scope, element) => {
         let timeout
+        $scope.$on('updateSearchQuery', (_, query) => {
+          $scope.searchQuery = query
+          $scope.onSearchChanged({ query: query })
+        })
         element.bind('keydown keypress', function () {
-          let query = element.find('input').val()
+          let query = $scope.searchQuery
           clearTimeout(timeout)
           timeout = setTimeout(() => {
             $scope.onSearchChanged({ query: query })

@@ -10,7 +10,7 @@
  * @param {ResourceBreadcrumb} ResourceBreadcrumb
  * @param {Session} session
  */
-function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, UNIT_CODES, CONSTANTS, SearchService, $filter) {
+function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, UNIT_CODES, CONSTANTS, SearchService, $filter, $rootScope, Notification) {
   const PATH = require('./__init__').PATH
   const selectionSummaryTemplateFolder = PATH + '/resource-list-selection-summary'
   return {
@@ -31,6 +31,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         $scope.lots = []
 
         $scope.selectionPanelHiddenXS = true
+        $scope.isAndroid = !!window.AndroidApp
 
         /**
          * Gets into the resource; traverse one step into the resource hierarchy by opening the resource in the
@@ -446,7 +447,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // Selecting
         $scope.toggleSelect = (resource, $index, $event) => {
           $event.stopPropagation() // Avoids the ng-click from the row (<tr>) to trigger
-          
           if ($event.shiftKey) {
             let lastSelectedIndex = $scope.lastSelectedIndex || 0
             let start = Math.min(lastSelectedIndex, $index)
@@ -482,7 +482,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           // https://hacks.mozilla.org/2013/04/detecting-touch-its-the-why-not-the-how/
           // links above do not work on Windows 10 due to: https://bugs.chromium.org/p/chromium/issues/detail?id=676808
           // TODO needs testing on different devices + OS
-          let supportsTouch = (!!window.ontouchstart) || navigator.msMaxTouchPoints
+          let supportsTouch = $scope.supportsTouch = (!!window.ontouchstart) || navigator.msMaxTouchPoints
           if (supportsTouch) {
             return
           }
@@ -771,6 +771,30 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             let value = event._id
             SearchService.addSearchParameter(searchParam, value)
           })
+        }
+
+        $scope.$on('tagScanDoneSearch', (_, tag) => {
+          const tagURLPrefix = 'http://t.devicetag.io/' // TODO move to config
+
+          if (tag.indexOf(tagURLPrefix) === 0) { // is ID encompassed in URL ?
+            tag = tag.substring(tagURLPrefix.length, tag.length)
+          }
+          $rootScope.$broadcast('updateSearchQuery', tag)
+
+          $scope.$apply()
+        })
+
+        // QR and NFC
+        $scope.scanQR = () => {
+          window.AndroidApp.scanBarcode('tagScanDoneSearch')
+        }
+
+        $scope.scanNFC = () => {
+          window.AndroidApp.startNFC('tagScanDoneSearch')
+          $scope.$on('$destroy', () => {
+            window.AndroidApp.stopNFC()
+          })
+          Notification.success('NFC activated')
         }
 
         // TODO what does next line?
