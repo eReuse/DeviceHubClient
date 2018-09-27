@@ -1,16 +1,5 @@
 <div ui-tree>
-  <ol ui-tree-nodes="" ng-model="list">
-    <li ng-repeat="item in data" ui-tree-node>
-      <div ui-tree-handle>
-        {{item.title}}
-      </div>
-      <ol ui-tree-nodes="" ng-model="item.items">
-        <li ng-repeat="subItem in item.items" ui-tree-node>
-          <div ui-tree-handle>
-            {{subItem.title}}
-          </div>
-        </li>
-      </ol>
-    </li>
+  <ol ui-tree-nodes="" ng-model="data" id="tree-root">
+    <li ng-repeat="node in data" ui-tree-node ng-include="treeTemplateURL"></li>
   </ol>
 </div>

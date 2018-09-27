@@ -1,10 +1,19 @@
-function resourceSearch () {
+function lotsTreeNavigation () {
+  const PATH = require('./__init__').PATH
+  // const PATH = 'common/components/resource/resource-list/lots-tree-navigation'
   return {
     template: require('./lots-tree-navigation.directive.html'),
     restrict: 'E',
     scope: {},
     link: {
       pre: ($scope) => {
+        $scope.treeTemplateURL = PATH + '/lots-tree.html'
+        $scope.openLot = (lotID) => {
+          alert('open ' + lotID)
+        }
+        $scope.toggle = function (scope) {
+          scope.toggle()
+        }
         $scope.data = [
           {
             'id': 1,
@@ -17,7 +26,24 @@ function resourceSearch () {
                   {
                     'id': 111,
                     'title': 'node1.1.1',
-                    'nodes': []
+                    'nodes': [
+                      {
+                        'id': 1111,
+                        'title': 'node1.1',
+                        'nodes': [
+                          {
+                            'id': 111,
+                            'title': 'node1.1.1',
+                            'nodes': []
+                          }
+                        ]
+                      },
+                      {
+                        'id': 1112,
+                        'title': 'node1.2',
+                        'nodes': []
+                      }
+                    ]
                   }
                 ]
               },
@@ -60,4 +86,4 @@ function resourceSearch () {
   }
 }
 
-module.exports = resourceSearch
+module.exports = lotsTreeNavigation
