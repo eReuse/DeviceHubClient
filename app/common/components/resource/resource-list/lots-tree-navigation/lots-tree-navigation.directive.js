@@ -4,12 +4,16 @@ function lotsTreeNavigation () {
   return {
     template: require('./lots-tree-navigation.directive.html'),
     restrict: 'E',
-    scope: {},
+    scope: {
+      onLotSelectionChanged: '&'
+    },
     link: {
       pre: ($scope) => {
+        let selectedLots = []
         $scope.treeTemplateURL = PATH + '/lots-tree.html'
         $scope.openLot = (lot) => {
-          alert('open ' + lot.id)
+          selectedLots = [lot]
+          $scope.onLotSelectionChanged({ selectedLots: selectedLots })
         }
         $scope.toggle = function (scope) {
           scope.toggle()

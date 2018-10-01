@@ -70,6 +70,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           label: 'Without lot'
         }
 
+        // Selected lots
+        $scope.onLotSelectionChanged = (lots) => {
+          // update gettter filter/query
+          alert('filter to ' + lots.map(l => l.id).join())
+        }
+
         // Sorting
         $scope.sort = {}
         $scope.setSort = _.bind(getterDevices.updateSort, getterDevices, _)
