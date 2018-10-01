@@ -11,6 +11,7 @@ function lotsTreeNavigation () {
       pre: ($scope) => {
         $scope.selectedNodes = {}
         $scope.treeTemplateURL = PATH + '/lots-tree.html'
+        $scope.searchQuery
         $scope.toggleLot = (lot, $event) => {
           /*
           TODO implement shift select
