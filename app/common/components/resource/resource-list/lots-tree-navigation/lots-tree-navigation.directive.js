@@ -40,77 +40,43 @@ function lotsTreeNavigation () {
         $scope.data = [
           {
             'id': 1,
-            'name': 'lot1',
+            'name': 'Donación BCN Activa',
             'nodes': [
               {
                 'id': 11,
-                'name': 'lot1.1',
+                'name': '2017',
                 'nodes': [
                   {
                     'id': 111,
-                    'name': 'lot1.1.1',
-                    'nodes': [
-                      {
-                        'id': 1111,
-                        'name': 'lot1.1',
-                        'nodes': [
-                          {
-                            'id': 111,
-                            'name': 'lot1.1.1',
-                            'nodes': []
-                          }
-                        ]
-                      },
-                      {
-                        'id': 1112,
-                        'name': 'lot1.2',
-                        'nodes': []
-                      }
-                    ]
+                    'name': 'Febrero',
+                    'nodes': []
+                  },
+                  {
+                    'id': 112,
+                    'name': 'Marzo',
+                    'nodes': []
                   }
                 ]
               },
               {
                 'id': 12,
-                'name': 'lot1.2',
+                'name': '2018',
                 'nodes': []
               }
             ]
           },
           {
             'id': 2,
-            'name': 'lot2',
-            'nodes': [
-              {
-                'id': 21,
-                'name': 'lot2.1',
-                'nodes': []
-              },
-              {
-                'id': 22,
-                'name': 'lot2.2',
-                'nodes': []
-              }
-            ]
+            'name': 'Banc de Recurs',
+            'nodes': []
           },
           {
             'id': 3,
-            'name': 'lot3',
+            'name': 'Salidas',
             'nodes': [
               {
-                'id': 31,
-                'name': 'lot3.1',
-                'nodes': []
-              }
-            ]
-          },
-          {
-            'id': 1111,
-            'name': 'lot1.1',
-            'nodes': [
-              {
-                'id': 111,
-                'name': 'lot1.1.1',
+                'id': 2,
+                'name': 'Banc de Recurs',
                 'nodes': []
               }
             ]
