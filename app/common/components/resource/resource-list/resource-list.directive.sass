@@ -2,8 +2,15 @@
 
 lots-tree-navigation
   .tree-node.tree-node-content
-    &.selected
-      background-color: #449bb4
+    span
+      font-size: 14px
+    &.selected span
+      font-weight: bold
+
+.btn-normal
+  color: #333333
+  &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
+    color: #333333
 
 .breadcrumb
   padding: 6px 0
@@ -62,7 +69,7 @@ lots-tree-navigation
   resource-icon img
     max-width: 2em
 
-  #buttons
+  .buttons
     margin-bottom: 20px
     .btn
       padding-top: 0.25em
@@ -193,7 +200,7 @@ lots-tree-navigation
   .btn-select-deselect
     display: inline-block
     padding: 5px 10px
-    margin-bottom: 10px
+    margin-left: 20px
 
   .fill-height-bar
     overflow-y: auto
@@ -242,6 +249,8 @@ lots-tree-navigation
   top: 0
   background-color: #ffffff
   padding: 5px 10px
+  &.selected
+    background-color: #DCE1E1
   ul
     padding: 0
   @media (min-width: $screen-sm-min)
