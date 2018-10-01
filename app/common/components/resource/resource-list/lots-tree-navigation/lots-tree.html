@@ -1,12 +1,12 @@
-<div class="tree-node tree-node-content">
-  <a class="btn btn-success btn-xs" ng-if="node.nodes && node.nodes.length > 0" data-nodrag ng-click="toggle(this)"><span
+<div class="tree-node tree-node-content" ng-class="{selected: !!selectedNodes[node.id]}">
+  <a class="btn btn-success btn-xs" ng-if="node.nodes && node.nodes.length > 0" data-nodrag ng-click="toggleExpand(this)"><span
           class="glyphicon"
           ng-class="{
           'glyphicon-chevron-right': collapsed,
           'glyphicon-chevron-down': !collapsed
         }"></span></a>
-  <a class="btn btn-success btn-xs" data-nodrag ng-click="openLot(node)">
-    <span class="glyphicon">{{node.title}}</span>
+  <a class="btn btn-success btn-xs" data-nodrag ng-click="toggleLot(node, $event)">
+    <span class="glyphicon">{{node.name}}</span>
   </a>
   <!-- TODO comment in to enable drag&drop to move
   <div class="pull-right tree-handle angular-ui-tree-handle" ui-tree-handle>

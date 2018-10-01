@@ -71,9 +71,14 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         // Selected lots
-        $scope.onLotSelectionChanged = (lots) => {
+        $scope.onLotSelectionChanged = (selectedLots) => {
           // update gettter filter/query
-          alert('filter to ' + lots.map(l => l.id).join())
+          alert('filter to ' + selectedLots.map(l => l.id).join())
+          if (selectedLots.length > 0) {
+            $scope.selectedLotsText = selectedLots.map((l) => l.name).join(', ')
+          } else {
+            $scope.selectedLotsText = 'All devices'
+          }
         }
 
         // Sorting

@@ -9,42 +9,61 @@ function lotsTreeNavigation () {
     },
     link: {
       pre: ($scope) => {
-        let selectedLots = []
+        $scope.selectedNodes = {}
         $scope.treeTemplateURL = PATH + '/lots-tree.html'
-        $scope.openLot = (lot) => {
-          selectedLots = [lot]
-          $scope.onLotSelectionChanged({ selectedLots: selectedLots })
+        $scope.toggleLot = (lot, $event) => {
+          /*
+          TODO implement shift select
+          if ($event.shiftKey) {
+            let lastSelectedIndex = $scope.lastSelectedIndex || 0
+            let start = Math.min(lastSelectedIndex, $index)
+            let end = Math.max(lastSelectedIndex, $index)
+            let devicesToSelect = $scope.lots.slice(start, end + 1)
+            selector.selectAll(devicesToSelect)
+          } else
+          */
+          if ($event.ctrlKey) {
+            $scope.selectedNodes[lot.id] = lot
+          } else { // normal click
+            let isSelected = !!$scope.selectedNodes[lot.id]
+            $scope.selectedNodes = {}
+            if (!isSelected) {
+              $scope.selectedNodes[lot.id] = lot
+            }
+          }
+          $scope.onLotSelectionChanged({ selectedLots: Object.values($scope.selectedNodes) })
         }
-        $scope.toggle = function (scope) {
+
+        $scope.toggleExpand = function (scope) {
           scope.toggle()
         }
         $scope.data = [
           {
             'id': 1,
-            'title': 'node1',
+            'name': 'lot1',
             'nodes': [
               {
                 'id': 11,
-                'title': 'node1.1',
+                'name': 'lot1.1',
                 'nodes': [
                   {
                     'id': 111,
-                    'title': 'node1.1.1',
+                    'name': 'lot1.1.1',
                     'nodes': [
                       {
                         'id': 1111,
-                        'title': 'node1.1',
+                        'name': 'lot1.1',
                         'nodes': [
                           {
                             'id': 111,
-                            'title': 'node1.1.1',
+                            'name': 'lot1.1.1',
                             'nodes': []
                           }
                         ]
                       },
                       {
                         'id': 1112,
-                        'title': 'node1.2',
+                        'name': 'lot1.2',
                         'nodes': []
                       }
                     ]
@@ -53,45 +72,45 @@ function lotsTreeNavigation () {
               },
               {
                 'id': 12,
-                'title': 'node1.2',
+                'name': 'lot1.2',
                 'nodes': []
               }
             ]
           },
           {
             'id': 2,
-            'title': 'node2',
+            'name': 'lot2',
             'nodes': [
               {
                 'id': 21,
-                'title': 'node2.1',
+                'name': 'lot2.1',
                 'nodes': []
               },
               {
                 'id': 22,
-                'title': 'node2.2',
+                'name': 'lot2.2',
                 'nodes': []
               }
             ]
           },
           {
             'id': 3,
-            'title': 'node3',
+            'name': 'lot3',
             'nodes': [
               {
                 'id': 31,
-                'title': 'node3.1',
+                'name': 'lot3.1',
                 'nodes': []
               }
             ]
           },
           {
             'id': 1111,
-            'title': 'node1.1',
+            'name': 'lot1.1',
             'nodes': [
               {
                 'id': 111,
-                'title': 'node1.1.1',
+                'name': 'lot1.1.1',
                 'nodes': []
               }
             ]
@@ -99,12 +118,12 @@ function lotsTreeNavigation () {
         ]
         // $scope.data = [
         //   {
-        //     'nodes': [
+        //     'lots': [
         //       {
-        //         'nodes': []
+        //         'lots': []
         //       },
         //       {
-        //         'nodes': []
+        //         'lots': []
         //       }
         //     ]
         //   }
