@@ -1,10 +1,85 @@
 <!-- Listing -->
 <div class="row">
-  <div class="col-sm-4 col-md-2 col-lg-1">
+  <div class="col-sm-4 col-md-2 col-lg-1 fill-height-bar" style="background-color: #E8E8DC; padding: 0px 5px;">
+     <h4 style="
+        display: inline-block;
+        font-weight: bold;">Lots</h4>
+     <h4 style="
+        display: inline;
+        margin-left: 10px;">Events</h4>
     <lots-tree-navigation on-lot-selection-changed="onLotSelectionChanged(selectedLots)"></lots-tree-navigation>
   </div>
-  <div class="current-lot fill-height-bar col-xs-12 col-sm-6 col-lg-5">
-    <h2>{{ selectedLotsText }}</h2>
+  <div class="current-lot col-xs-12 col-sm-6 col-lg-5">
+    <h2 style="margin-top: 0">{{ selectedLotsText }}</h2>
+    <!-- Resource Filters -->
+    <div class="active-filters-container">
+      <!-- Active filters -->
+      <ul class="active-filters">
+        <li class="active-filter" ng-repeat="filter in activeFilters" ng-click="openFilter(filter.propPath)">
+          <span>{{ filter.text }}</span>
+          <i class="fa fa-fw fa-close" ng-click="removeFilter(filter.propPath)"></i>
+        </li>
+      </ul>
+      <!-- Add button and panel -->
+      <button class="btn btn-info btn-add-filter-panels" ng-click="toggleDisplayFilterPanels()">Add filter</button>
+      <div class="add-filter-panels-container">
+        <div class="add-filter-panels-wrapper">
+          <div ng-class="{ active: showFilterPanels }" class="add-filter-panels">
+            <form ng-repeat="panel in filterPanels"
+                  ng-submit="panel.onSubmit()"
+                  name="panel.content.form"
+                  novalidate
+                  ng-class="{ active: panel.shown, isRoot: panel === filterPanelsRoot }"
+                  class="filter-panel">
+              <button class="btn btn-hide-filter-panel" ng-click="hideFilterPanel($event, panel)">
+                <i class="fa fa-chevron-left fa-fw"></i>
+              </button>
+              <h3 ng-show="panel.title">{{ panel.title }}</h3>
+              <ul class="filter-panel-links" ng-show="panel.children.length > 0">
+                <li ng-repeat="child in panel.children">
+                  <button class="btn-info" ng-click="child.panel.shown = true">{{ child.childName }}</button>
+                </li>
+              </ul>
+              <div ng-show="!panel.children || panel.children.length === 0">
+                <formly-form model="filtersModel" fields="panel.fields" options="panel.options">
+                </formly-form>
+                <!--<div class="filter-panel-content" ng-repeat="content in panel.contents">-->
+                <!--<div ng-switch-when="multi-select">-->
+                <!--<ul>-->
+                <!--<li ng-repeat="option in content.options">-->
+                <!--{{ option }}-->
+                <!--</li>-->
+                <!--</ul>-->
+                <!--</div>-->
+                <!--<div ng-switch-when="range">-->
+                <!--<div class="row">-->
+                <!--<div class="col-lg-2">Min:</div>-->
+                <!--<div class="col-lg-10"><input type="number" ng-model="content.model.min">{{ content.unit }}</div>-->
+                <!--</div>-->
+                <!--<div class="row">-->
+                <!--<div class="col-lg-2">Max:</div>-->
+                <!--<div class="col-lg-10"><input type="number" ng-model="content.model.max">{{ content.unit }}</div>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</div>-->
+                <div style="text-align: right;">
+                  <!--<button type="submit" class="btn btn-primary submit-button" ng-disabled="content.form.$invalid">Submit</button>
+                  <button type="button" class="btn btn-default" ng-click="content.options.resetModel()">Reset</button>-->
+                  <button type="button"
+                          class="btn btn-info btn-add-filter-panels"
+                          ng-click="hideAllFilterPanels()">Cancel</button>
+                  <button type="submit"
+                          class="btn btn-info btn-add-filter-panels"
+                          ng-disabled="content.form.$invalid"
+                          style="margin-left: 10px;">Add filter</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="search-wrapper input-group">
       <resource-search on-search-changed="onSearchChanged(query)"></resource-search>
       <div class="input-group-btn btn-group" ng-show="isAndroid" uib-dropdown is-open="status.isopen">
@@ -55,155 +130,84 @@
       <!--</ul>-->
     <!--</div>-->
 
-    <h4 style="display: inline-block; margin-bottom: 20px;">Devices</h4>
+    <div class="devices">
+      <h4 style="display: inline-block; margin-top: 20px; margin-bottom: 20px;">Devices (15)</h4>
 
-    <!-- Resource Filters -->
-    <div class="active-filters-container">
-      <!-- Active filters -->
-      <ul class="active-filters">
-        <li class="active-filter" ng-repeat="filter in activeFilters" ng-click="openFilter(filter.propPath)">
-          <span>{{ filter.text }}</span>
-          <i class="fa fa-fw fa-close" ng-click="removeFilter(filter.propPath)"></i>
-        </li>
-      </ul>
-      <!-- Add button and panel -->
-      <button class="btn btn-info btn-add-filter-panels" ng-click="toggleDisplayFilterPanels()">Add filter</button>
-      <div class="add-filter-panels-container">
-        <div class="add-filter-panels-wrapper">
-          <div ng-class="{ active: showFilterPanels }" class="add-filter-panels">
-            <form ng-repeat="panel in filterPanels"
-                  ng-submit="panel.onSubmit()"
-                  name="panel.content.form"
-                  novalidate
-                  ng-class="{ active: panel.shown, isRoot: panel === filterPanelsRoot }"
-                  class="filter-panel">
-              <button class="btn btn-hide-filter-panel" ng-click="hideFilterPanel($event, panel)">
-                <i class="fa fa-chevron-left fa-fw"></i>
-              </button>
-              <h3 ng-show="panel.title">{{ panel.title }}</h3>
-              <ul class="filter-panel-links" ng-show="panel.children.length > 0">
-                <li ng-repeat="child in panel.children">
-                  <button class="btn-info" ng-click="child.panel.shown = true">{{ child.childName }}</button>
-                </li>
-              </ul>
-              <div ng-show="!panel.children || panel.children.length === 0">
-                <formly-form model="filtersModel" fields="panel.fields" options="panel.options">
-                </formly-form>
-                <!--<div class="filter-panel-content" ng-repeat="content in panel.contents">-->
-                    <!--<div ng-switch-when="multi-select">-->
-                    <!--<ul>-->
-                        <!--<li ng-repeat="option in content.options">-->
-                          <!--{{ option }}-->
-                        <!--</li>-->
-                      <!--</ul>-->
-                    <!--</div>-->
-                    <!--<div ng-switch-when="range">-->
-                      <!--<div class="row">-->
-                        <!--<div class="col-lg-2">Min:</div>-->
-                        <!--<div class="col-lg-10"><input type="number" ng-model="content.model.min">{{ content.unit }}</div>-->
-                      <!--</div>-->
-                      <!--<div class="row">-->
-                        <!--<div class="col-lg-2">Max:</div>-->
-                        <!--<div class="col-lg-10"><input type="number" ng-model="content.model.max">{{ content.unit }}</div>-->
-                      <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <div style="text-align: right;">
-                  <!--<button type="submit" class="btn btn-primary submit-button" ng-disabled="content.form.$invalid">Submit</button>
-                  <button type="button" class="btn btn-default" ng-click="content.options.resetModel()">Reset</button>-->
-                  <button type="button"
-                          class="btn btn-info btn-add-filter-panels"
-                          ng-click="hideAllFilterPanels()">Cancel</button>
-                  <button type="submit"
-                          class="btn btn-info btn-add-filter-panels"
-                          ng-disabled="content.form.$invalid"
-                          style="margin-left: 10px;">Add filter</button>
-                </div>
+      <button type="button"
+              class="btn btn-info btn-select-deselect"
+              ng-show="!selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
+              ng-click="selector.selectAll(devices, parentResource)"
+      >
+        <span>Select all(15)</span>
+      </button>
+      <button type="button"
+              class="btn btn-info btn-select-deselect"
+              ng-show="selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
+              ng-click="deselectAll(devices)"
+      >
+        <span>Deselect</span>
+      </button>
+
+      <!-- Devices table -->
+      <div infinite-scroll="getMore()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
+           infinite-scroll-parent infinite-scroll-disabled="getMoreIsBusy || !moreDevicesAvailable"
+           infinite-scroll-listen-for-event="list:filtered"
+           class="fill-height-bar"
+      >
+        <table id="resource-list-table" class="resource-list-table table table-striped table-hover">
+          <thead>
+            <tr>
+              <th ng-repeat="th in config.table.th"
+                  class="{{::th.cssClasses}}"
+                  field-sort sort="setSort(sort)" key="{{::th.key}}" name="{{::th.name}}" group="sort"
+                  sort-by-default="th.default"
+              ></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="resource in devices track by resource._id"
+                ng-class="{active: selector.isSelected(resource)}"
+                ng-click="toggleSelect(resource, $index, $event)"
+                on-long-press="multiSelect(resource, $index, $event)"
+            >
+            <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
+            <td ng-repeat="td in ::config.table.td"
+                class="{{::td.cssClasses}}"
+                ng-init="value = $root._.get(resource, td.value)"
+            >
+              <div ng-if="::td.templateUrl" ng-include="td.templateUrl"></div>
+              <div ng-if="::value && !$root._.isDate(value)">
+                <!-- We cannot use the value from ng-init if we want it to be updateable -->
+                <span ng-if="::td.array">
+                    {{::$root._.get(resource, td.value).map(td.map).join(td.join)}}
+                </span>
+                <span ng-if="::td.humanize">
+                    {{::$root._.get(resource, td.value) | humanize}}
+                  </span>
+                <span ng-if="::td.number">
+                    {{::$root._.get(resource, td.value) | number}}
+                  </span>
+                <span ng-if="::td.currency">
+                    {{::$root._.get(resource, td.value) | currency:'€ ' }}
+                </span>
+                <!-- For now only label can be changed from a resource without refreshing the list, and label field
+                falls in here -->
+                <span ng-if="::!td.humanize && !td.number && !td.currency && !td.array">
+                    <!-- Let's show more characters if we have a lg screen -->
+                    <span class="hidden-lg">
+                      {{$root._.get(resource, td.value) | limitTo: (td.limitTo || 15)}}
+                      <small ng-show="$root._.get(resource, td.value).length > (td.limitTo || 15)">&hellip;</small>
+                    </span>
+                    <span class="hidden-xs hidden-sm hidden-md">
+                      {{$root._.get(resource, td.value) | limitTo: (td.limitTo || 15) + 7}}
+                      <small ng-show="$root._.get(resource, td.value).length > (td.limitTo || 15) + 7">&hellip;</small>
+                    </span>
+                  </span>
               </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TODO show when there are lots
-    <h4 style="display: inline-block; margin-bottom: 20px;">Devices ({{ totalNumberOfDevices }}) </h4>
-    -->
-    <span>Found 15 devices</span>
-    <button type="button"
-            class="btn btn-info btn-select-deselect"
-            ng-show="!selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
-            ng-click="selector.selectAll(devices, parentResource)"
-    >
-      <span>Add devices to selection</span>
-    </button>
-    <button type="button"
-            class="btn btn-info btn-select-deselect"
-            ng-show="selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
-            ng-click="deselectAll(devices)"
-    >
-      <span>Remove devices from selection</span>
-    </button>
-
-    <!-- Devices table -->
-    <div infinite-scroll="getMore()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
-         infinite-scroll-parent infinite-scroll-disabled="getMoreIsBusy || !moreDevicesAvailable"
-         infinite-scroll-listen-for-event="list:filtered"
-    >
-      <table id="resource-list-table" class="resource-list-table table table-striped table-hover">
-        <thead>
-          <tr>
-            <th ng-repeat="th in config.table.th"
-                class="{{::th.cssClasses}}"
-                field-sort sort="setSort(sort)" key="{{::th.key}}" name="{{::th.name}}" group="sort"
-                sort-by-default="th.default"
-            ></th>
-            <th></th>
+              <div ng-if="::value && $root._.isDate(value)">{{value | timeAgo}}</div>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="resource in devices track by resource._id"
-            ng-class="{active: selector.isSelected(resource)}"
-            ng-click="toggleSelect(resource, $index, $event)"
-            on-long-press="multiSelect(resource, $index, $event)"
-        >
-          <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
-          <td ng-repeat="td in ::config.table.td"
-              class="{{::td.cssClasses}}"
-              ng-init="value = $root._.get(resource, td.value)"
-          >
-            <div ng-if="::td.templateUrl" ng-include="td.templateUrl"></div>
-            <div ng-if="::value && !$root._.isDate(value)">
-              <!-- We cannot use the value from ng-init if we want it to be updateable -->
-              <span ng-if="::td.array">
-                  {{::$root._.get(resource, td.value).map(td.map).join(td.join)}}
-              </span>
-              <span ng-if="::td.humanize">
-                  {{::$root._.get(resource, td.value) | humanize}}
-                </span>
-              <span ng-if="::td.number">
-                  {{::$root._.get(resource, td.value) | number}}
-                </span>
-              <span ng-if="::td.currency">
-                  {{::$root._.get(resource, td.value) | currency:'€ ' }}
-              </span>
-              <!-- For now only label can be changed from a resource without refreshing the list, and label field
-              falls in here -->
-              <span ng-if="::!td.humanize && !td.number && !td.currency && !td.array">
-                  <!-- Let's show more characters if we have a lg screen -->
-                  <span class="hidden-lg">
-                    {{$root._.get(resource, td.value) | limitTo: (td.limitTo || 15)}}
-                    <small ng-show="$root._.get(resource, td.value).length > (td.limitTo || 15)">&hellip;</small>
-                  </span>
-                  <span class="hidden-xs hidden-sm hidden-md">
-                    {{$root._.get(resource, td.value) | limitTo: (td.limitTo || 15) + 7}}
-                    <small ng-show="$root._.get(resource, td.value).length > (td.limitTo || 15) + 7">&hellip;</small>
-                  </span>
-                </span>
-            </div>
-            <div ng-if="::value && $root._.isDate(value)">{{value | timeAgo}}</div>
-          </td>
-        </tr>
         </tbody>
       </table>
       <div class="text-center">
@@ -215,8 +219,9 @@
                    "
         ></i>
       </div>
-    </div>
-  </div>
+      </div>
+    </div><!-- ./devices -->
+  </div> <!-- ./col-sm-6 -->
   <!-- Selection button-->
   <div class="selection-button"
        ng-click="selectionPanelHiddenXS = !selectionPanelHiddenXS"
@@ -225,58 +230,50 @@
     <button ng-show="!selectionPanelHiddenXS" class="btn btn-info btn-view-list">Back to device list</button>
   </div>
   <!-- Selection -->
-  <aside class="selection col-sm-6 fill-height-bar col-xs-12"
-         ng-class="{ 'hidden-xs': selectionPanelHiddenXS }">
+  <aside class="selection col-xs-12 col-sm-6 col-lg-6 fill-height-bar "
+         ng-class="{ 'hidden-xs': selectionPanelHiddenXS, selected: selection.devices.length > 0 }">
     <div ng-if="selection.devices.length === 0">
-      <h3>Select devices to view more details</h3>
+      <div>
+        <h4>Lots summary ({{selectedLots.length}})</h4>
+        <div class="buttons">
+          <group-resource-button
+                  success="reload()"
+                  resource-type="Device"
+                  get-resources="selector.getAllSelectedDevices()"
+                  register-to-resources-update="selector.callbackOnSelection(callback)">
+          </group-resource-button>
+          <manual-events-button></manual-events-button>
+          <certificate-button></certificate-button>
+        </div>
+      </div>
     </div>
 
-    <div ng-if="selection.devices.length > 0">
-      <h4>Current selection</h4>
-      <div class="selection-header">
-        <h3>{{selection.devices.length}} devices </h3>
+    <div>
+      <div ng-if="selection.devices.length === 0">
+        <h4>Devices summary (15)</h4>
+      </div>
+      <div ng-if="selection.devices.length > 0">
+        <h4 style="display: inline-block;margin-bottom: 20px;">Selected devices ({{selection.devices.length}})</h4>
         <button type="button"
-                class="btn btn-info"
+                class="btn btn-info btn-sm"
                 ng-click="deselectAll()"
-        >
+                style="display: inline-block;">
           <span>Deselect all</span>
         </button>
       </div>
-      <!-- Buttons -->
-      <div id="buttons" class="row">
-        <resource-label-button></resource-label-button>
-        <manual-events-button></manual-events-button>
-        <certificate-button></certificate-button>
+      <div class="row buttons">
         <group-resource-button
                 success="reload()"
                 resource-type="Device"
                 get-resources="selector.getAllSelectedDevices()"
                 register-to-resources-update="selector.callbackOnSelection(callback)">
         </group-resource-button>
-        <resource-export resources="selector.getAllSelectedDevices()"></resource-export>
+        <manual-events-button></manual-events-button>
+        <certificate-button></certificate-button>
       </div>
-      <!-- TODO remove this
-      <ul>
-        <li
-          ng-repeat="device in selection.devices | limitTo: selection.numSelectedLotsShown track by device._id"
-          class="pill-device pill-device-flex"
-        >
-          <div>
-            <i class="fa fa-fw fa-lg fa-desktop"></i>{{ device.title }}
-          </div>
-        </li>
-        <li
-          ng-show="selection.showDisplayMoreSelectedLotsButton"
-          class="pill-lot pill-lot-flex"
-        >
-          <button type="button"
-                  class="btn"
-                  ng-click="selection.showMoreSelectedLots()"
-          >
-            <span>Show more</span>
-          </button>
-        </li>
-      </ul>-->
+    </div>
+
+    <div ng-if="selection.devices.length > 0">
       <div style="position: relative; overflow-x: hidden;">
         <ul class="selection-summary">
           <li ng-repeat="row in selection.summary track by row.title">
