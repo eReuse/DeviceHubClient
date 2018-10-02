@@ -1,15 +1,15 @@
 <!-- Listing -->
 <div class="row">
-  <div class="col-sm-4 col-md-2 col-lg-1 fill-height-bar" style="background-color: #E8E8DC; padding: 0px 5px;">
-     <h4 style="
+  <div class="tabs-lots-events col-sm-4 col-md-2 col-lg-2 fill-height-bar">
+    <h4 style="
         display: inline-block;
         font-weight: bold;">Lots</h4>
-     <h4 style="
+    <h4 style="
         display: inline;
         margin-left: 10px;">Events</h4>
     <lots-tree-navigation on-lot-selection-changed="onLotSelectionChanged(selectedLots)"></lots-tree-navigation>
   </div>
-  <div class="current-lot col-xs-12 col-sm-6 col-lg-5">
+  <div class="current-lot col-xs-12 col-sm-6 col-lg-6">
     <h2 style="margin-top: 0">{{ selectedLotsText }}</h2>
     <!-- Resource Filters -->
     <div class="active-filters-container">
@@ -230,29 +230,35 @@
     <button ng-show="!selectionPanelHiddenXS" class="btn btn-info btn-view-list">Back to device list</button>
   </div>
   <!-- Selection -->
-  <aside class="selection col-xs-12 col-sm-6 col-lg-6 fill-height-bar "
+  <aside class="selection col-xs-12 col-sm-6 col-lg-4 fill-height-bar "
          ng-class="{ 'hidden-xs': selectionPanelHiddenXS, selected: selection.devices.length > 0 }">
-    <div ng-if="selection.devices.length === 0">
-      <div>
-        <h4>Lots summary ({{selectedLots.length}})</h4>
-        <div class="buttons">
-          <group-resource-button
-                  success="reload()"
-                  resource-type="Device"
-                  get-resources="selector.getAllSelectedDevices()"
-                  register-to-resources-update="selector.callbackOnSelection(callback)">
-          </group-resource-button>
-          <manual-events-button></manual-events-button>
-          <certificate-button></certificate-button>
-        </div>
+    <div ng-if="selectedLots.length === 0 && selection.devices.length === 0">
+      <h4>Select any lots, events or devices to view details</h4>
+      <p>Hold Ctrl or Shift to select multiple</p>
+    </div>
+
+    <div ng-if="selectedLots.length > 0 && selection.devices.length === 0">
+      <h4 style="display: inline-block;">Lots summary ({{selectedLots.length}})</h4>
+      <button type="button"
+              class="btn btn-info btn-sm"
+              ng-click="deselectAll()"
+              style="display: inline-block;">
+        <span>Deselect all</span>
+      </button>
+      <div class="buttons">
+        <group-resource-button
+                success="reload()"
+                resource-type="Device"
+                get-resources="selector.getAllSelectedDevices()"
+                register-to-resources-update="selector.callbackOnSelection(callback)">
+        </group-resource-button>
+        <manual-events-button></manual-events-button>
+        <certificate-button></certificate-button>
       </div>
     </div>
 
-    <div>
-      <div ng-if="selection.devices.length === 0">
-        <h4>Devices summary (15)</h4>
-      </div>
-      <div ng-if="selection.devices.length > 0">
+    <div ng-if="selection.devices.length > 0">
+      <div>
         <h4 style="display: inline-block;margin-bottom: 20px;">Selected devices ({{selection.devices.length}})</h4>
         <button type="button"
                 class="btn btn-info btn-sm"
@@ -271,10 +277,7 @@
         <manual-events-button></manual-events-button>
         <certificate-button></certificate-button>
       </div>
-    </div>
-
-    <div ng-if="selection.devices.length > 0">
-      <div style="position: relative; overflow-x: hidden;">
+      <div class="selection-summary-wrapper" style="position: relative; overflow-x: hidden;">
         <ul class="selection-summary">
           <li ng-repeat="row in selection.summary track by row.title">
             <button type="button"
@@ -302,10 +305,7 @@
           </div>
         </div>
       </div>
-
-
-    </div> <!-- ./ selectDevices > 0 -->
-
+    </div><!-- ./ selectDevices > 0 -->
   </aside>
 </div>
 
