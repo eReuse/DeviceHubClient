@@ -28,7 +28,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         progressBar.start() // getterDevices.getResources will call this too, but doing it here we avoid delay
         const config = _.cloneDeep(resourceListConfig)
         $scope.devices = [] // Do never directly assign (r=[]) to 'devices' as modules depend of its reference
-        $scope.lots = []
 
         $scope.selectionPanelHiddenXS = true
         $scope.isAndroid = !!window.AndroidApp
@@ -52,14 +51,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           selector.reAddToLot(resources, lotID)
           $scope.totalNumberOfDevices = getterDevices.getTotalNumberResources()
           $scope.moreDevicesAvailable = $scope.totalNumberOfDevices > $scope.devices.length
-        })
-
-        // Set up getters for lots
-        const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar, _.cloneDeep(defaultFilters))
-        getterLots.updateSort('label')
-        getterLots.callbackOnGetting(() => {
-          $scope.totalNumberOfLots = getterLots.getTotalNumberResources()
-          $scope.moreLotsAvailable = $scope.totalNumberOfLots > $scope.lots.length
         })
 
         // Workaround: In root, parentResource is not set. This must be after initializing ResourceListGetter
@@ -94,8 +85,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // Filtering
         $scope.onSearchParamsChanged = newFilters => {
           getterDevices.updateFiltersFromSearch(newFilters)
-          // TODO comment in for lots to work
-          getterLots.updateFiltersFromSearch(newFilters) // TODO update lots on filter update?
         }
 
         $scope.removeFilter = propPath => {
@@ -706,7 +695,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
         $scope.reload = () => {
           getterDevices.getResources()
-          getterLots.getResources()
           $scope.deselectAll()
         }
         // TODO need this?
@@ -729,37 +717,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           getMoreFirstTime = true
         }
 
-        // Pagination lots
-        // Let's avoid the user pressing multiple times the 'load more'
-        // TODO comment in for lots to work
-        // $scope.getMoreLotsIsBusy = false
-        // $scope.morePagesAvailableLots = true
-        // $scope.getMoreLots = () => {
-        //   if (!$scope.getMoreLotsIsBusy) {
-        //     $scope.getMoreLotsIsBusy = true
-        //     try {
-        //       getterLots.getResources(true, false).finally(() => {
-        //         $scope.getMoreLotsIsBusy = false
-        //       })
-        //     } catch (err) {
-        //       $scope.getMoreLotsIsBusy = false
-        //       if (!(err instanceof NoMorePagesAvailableException)) throw err
-        //       $scope.morePagesAvailableLots = false
-        //     }
-        //   }
-        // }
-        // OR more like this?
-        $scope.getMoreLotsIsBusy = false
-        $scope.getMoreLots = () => {
-          if (!$scope.getMoreLotsIsBusy) {
-            $scope.getMoreLotsIsBusy = true
-            getterLots.getResources(true, false).finally(() => {
-              $scope.getMoreLotsIsBusy = false
-            })
-          }
-        }
-
-        // If we don't want to collision with tables of subResources we
+         // If we don't want to collision with tables of subResources we
         // need to do this when declaring the directive
         // TODO need this?
         const $table = element.find('.fill-height-bar')

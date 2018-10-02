@@ -1,4 +1,4 @@
-function lotsTreeNavigation () {
+function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar) {
   const PATH = require('./__init__').PATH
   // const PATH = 'common/components/resource/resource-list/lots-tree-navigation'
   return {
@@ -9,9 +9,20 @@ function lotsTreeNavigation () {
     },
     link: {
       pre: ($scope) => {
+        const config = _.cloneDeep(resourceListConfig)
         $scope.selectedNodes = {}
         $scope.treeTemplateURL = PATH + '/lots-tree.html'
-        $scope.searchQuery
+        $scope.searchQuery = 'Search'
+
+        // Set up getters for lots
+        const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar, null)
+        getterLots.updateSort('label')
+        getterLots.callbackOnGetting(() => {
+          $scope.totalNumberOfLots = getterLots.getTotalNumberResources()
+          $scope.moreLotsAvailable = $scope.totalNumberOfLots > $scope.lots.length
+          // TODO set lots to $scope.data
+        })
+
         $scope.toggleLot = (lot, $event) => {
           /*
           TODO implement shift select
