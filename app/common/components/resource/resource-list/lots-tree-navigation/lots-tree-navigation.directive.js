@@ -12,7 +12,7 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
         const config = _.cloneDeep(resourceListConfig)
         $scope.selectedNodes = {}
         $scope.treeTemplateURL = PATH + '/lots-tree.html'
-        $scope.searchQuery = 'Search'
+        $scope.lots = [] // TODO rename to data
 
         // Set up getters for lots
         const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar, null)
@@ -21,7 +21,27 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
           $scope.totalNumberOfLots = getterLots.getTotalNumberResources()
           $scope.moreLotsAvailable = $scope.totalNumberOfLots > $scope.lots.length
           // TODO set lots to $scope.data
+          $scope.findNodes()
         })
+
+        $scope.findNodes = function (filter) {
+          function markAsVisible (node) {
+            let oneChildVisible = false
+            node.nodes && node.nodes.forEach((child) => {
+              let childIsVisible = markAsVisible(child)
+              if (childIsVisible) {
+                oneChildVisible = true
+              }
+            })
+            node.isVisible = !filter ||
+                            filter.length === 0 ||
+                            node.name.indexOf(filter) !== -1 ||
+                            oneChildVisible
+            return node.isVisible
+          }
+
+          $scope.data.forEach((node) => markAsVisible(node))
+        }
 
         $scope.toggleLot = (lot, $event) => {
           /*
@@ -49,6 +69,7 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
         $scope.toggleExpand = function (scope) {
           scope.toggle()
         }
+
         $scope.data = [
           {
             'id': 1,
@@ -94,18 +115,6 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
             ]
           }
         ]
-        // $scope.data = [
-        //   {
-        //     'lots': [
-        //       {
-        //         'lots': []
-        //       },
-        //       {
-        //         'lots': []
-        //       }
-        //     ]
-        //   }
-        // ]
       }
     }
   }

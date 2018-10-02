@@ -1,6 +1,6 @@
+<input ng-model="filter" ng-change="findNodes(filter)">
 <div ui-tree>
-  <input type="text" class="form-control" placeholder="Search" ng-model="searchQuery">
   <ol ui-tree-nodes="" ng-model="data" id="tree-root">
-    <li ng-repeat="node in data" ui-tree-node ng-include="treeTemplateURL"></li>
+    <li ng-repeat="node in data" ui-tree-node ng-include="treeTemplateURL" ng-show="node.isVisible"></li>
   </ol>
 </div>

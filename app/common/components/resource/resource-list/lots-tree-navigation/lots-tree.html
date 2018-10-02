@@ -21,6 +21,6 @@
           <!--class="glyphicon glyphicon-plus"></span></a>-->
 </div>
 <ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
-  <li ng-repeat="node in node.nodes" ui-tree-node ng-include="treeTemplateURL">
+  <li ng-show="node.isVisible" ng-repeat="node in node.nodes" ui-tree-node ng-include="treeTemplateURL">
   </li>
 </ol>
