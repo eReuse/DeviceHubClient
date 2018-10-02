@@ -13295,7 +13295,7 @@ module.exports = {
       'icon': 'devices/icons/',
       'useDefaultDatabase': false,
       'parent': 'IndividualProduct',
-      'url': 'inventories/', // devices URL
+      'url': 'devices/', // devices URL
       'pathToDataInResponse': 'devices',
       'itemMethods': [
         'GET',
