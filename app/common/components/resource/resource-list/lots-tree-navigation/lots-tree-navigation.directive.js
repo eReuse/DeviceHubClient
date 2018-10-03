@@ -5,24 +5,15 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
     template: require('./lots-tree-navigation.directive.html'),
     restrict: 'E',
     scope: {
-      onLotSelectionChanged: '&'
+      onSelectionChanged: '&',
+      resourceType: '@'
     },
     link: {
       pre: ($scope) => {
         const config = _.cloneDeep(resourceListConfig)
         $scope.selectedNodes = {}
         $scope.treeTemplateURL = PATH + '/lots-tree.html'
-        $scope.lots = [] // TODO rename to data
-
-        // Set up getters for lots
-        const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar, null)
-        getterLots.updateSort('label')
-        getterLots.callbackOnGetting(() => {
-          $scope.totalNumberOfLots = getterLots.getTotalNumberResources()
-          $scope.moreLotsAvailable = $scope.totalNumberOfLots > $scope.lots.length
-          // TODO set lots to $scope.data
-          $scope.findNodes()
-        })
+        $scope.data = []
 
         $scope.findNodes = function (filter) {
           function markAsVisible (node) {
@@ -63,58 +54,119 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
               $scope.selectedNodes[lot.id] = lot
             }
           }
-          $scope.onLotSelectionChanged({ selectedLots: Object.values($scope.selectedNodes) })
+          $scope.onSelectionChanged({ selected: Object.values($scope.selectedNodes) })
         }
 
         $scope.toggleExpand = function (scope) {
           scope.toggle()
         }
 
-        $scope.data = [
-          {
-            'id': 1,
-            'name': 'Donación BCN Activa',
-            'nodes': [
-              {
-                'id': 11,
-                'name': '2017',
-                'nodes': [
-                  {
-                    'id': 111,
-                    'name': 'Febrero',
-                    'nodes': []
-                  },
-                  {
-                    'id': 112,
-                    'name': 'Marzo',
-                    'nodes': []
-                  }
-                ]
-              },
-              {
-                'id': 12,
-                'name': '2018',
-                'nodes': []
-              }
-            ]
-          },
-          {
-            'id': 2,
-            'name': 'Banc de Recurs',
-            'nodes': []
-          },
-          {
-            'id': 3,
-            'name': 'Salidas',
-            'nodes': [
-              {
-                'id': 2,
-                'name': 'Banc de Recurs',
-                'nodes': []
-              }
-            ]
-          }
-        ]
+        // get data
+        // TODO encapsulate in separate service
+        if ($scope.resourceType === 'Lot') {
+          $scope.lots = [] // TODO rename to data
+          // Set up getters for lots
+          const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar, null)
+          getterLots.updateSort('label')
+          getterLots.callbackOnGetting(() => {
+            $scope.totalNumberOfLots = getterLots.getTotalNumberResources()
+            $scope.moreLotsAvailable = $scope.totalNumberOfLots > $scope.lots.length
+            // TODO set lots to $scope.data
+            $scope.findNodes()
+          })
+          _.assign($scope.data, [
+            {
+              'id': 1,
+              'name': 'Donación BCN Activa',
+              'nodes': [
+                {
+                  'id': 11,
+                  'name': '2017',
+                  'nodes': [
+                    {
+                      'id': 111,
+                      'name': 'Febrero',
+                      'nodes': []
+                    },
+                    {
+                      'id': 112,
+                      'name': 'Marzo',
+                      'nodes': []
+                    }
+                  ]
+                },
+                {
+                  'id': 12,
+                  'name': '2018',
+                  'nodes': []
+                }
+              ]
+            },
+            {
+              'id': 2,
+              'name': 'Banc de Recurs',
+              'nodes': []
+            },
+            {
+              'id': 3,
+              'name': 'Salidas',
+              'nodes': [
+                {
+                  'id': 2,
+                  'name': 'Banc de Recurs',
+                  'nodes': []
+                }
+              ]
+            }
+          ])
+        } else if ($scope.resourceType === 'Event') {
+          _.assign($scope.data, [
+            {
+              'id': 1,
+              'name': 'Register',
+              'nodes': [
+                {
+                  'id': 11,
+                  'name': '2017',
+                  'nodes': [
+                    {
+                      'id': 111,
+                      'name': 'Febrero',
+                      'nodes': []
+                    },
+                    {
+                      'id': 112,
+                      'name': 'Marzo',
+                      'nodes': []
+                    }
+                  ]
+                },
+                {
+                  'id': 12,
+                  'name': '2018',
+                  'nodes': []
+                }
+              ]
+            },
+            {
+              'id': 2,
+              'name': 'Sell',
+              'nodes': []
+            },
+            {
+              'id': 3,
+              'name': 'Receive',
+              'nodes': [
+                {
+                  'id': 2,
+                  'name': 'Solidança',
+                  'nodes': []
+                }
+              ]
+            }
+          ])
+          $scope.findNodes()
+        }
       }
     }
   }

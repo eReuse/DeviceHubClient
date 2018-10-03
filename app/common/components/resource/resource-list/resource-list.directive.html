@@ -1,13 +1,14 @@
 <!-- Listing -->
 <div class="row">
   <div class="tabs-lots-events col-sm-4 col-md-2 col-lg-2 fill-height-bar">
-    <h4 style="
-        display: inline-block;
-        font-weight: bold;">Lots</h4>
-    <h4 style="
-        display: inline;
-        margin-left: 10px;">Events</h4>
-    <lots-tree-navigation on-lot-selection-changed="onLotSelectionChanged(selectedLots)"></lots-tree-navigation>
+    <uib-tabset active="active">
+      <uib-tab index="0" heading="Lots">
+        <lots-tree-navigation resource-type="Lot" on-selection-changed="onEventsSelectionChanged(selected)"></lots-tree-navigation>
+      </uib-tab>
+      <uib-tab index="1" heading="Events">
+        <lots-tree-navigation resource-type="Event" on-selection-changed="onEventsSelectionChanged(selected)"></lots-tree-navigation>
+      </uib-tab>
+    </uib-tabset>
   </div>
   <div class="current-lot col-xs-12 col-sm-6 col-lg-6">
     <h2 style="margin-top: 0">{{ selectedLotsText }}</h2>
