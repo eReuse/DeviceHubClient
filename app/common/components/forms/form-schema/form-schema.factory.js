@@ -48,7 +48,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
       } catch (err) {
       }  // doNotUse not in getSetting
 
-      this.fields = this.form.fields = this._getFields(this.resourceType)
+      this.fields = this.form.fields = this._getFields(this.resourceType, model.device && model.device.type)
 
       // this.fields = this.form.fields = cerberusToFormly.parse(model, parserOptions)
       // console.log('type:' + model['@type'])
@@ -163,7 +163,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
     // }
 
     // TODO move fields definition to schema definition and get resource-settings from there
-    _getFields (event) {
+    _getFields (event, type) {
       switch (event) {
         case 'devices:ToPrepare':
           return [{
@@ -968,19 +968,41 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
             }
           }]
         case 'devices:Snapshot':
-          return [{
-            'key': 'place',
-            'name': 'place',
-            'type': 'input',
-            'templateOptions': {
-              'keyFieldName': '_id',
-              'label': 'Place where the devices are saved',
-              'labelFieldName': 'label',
-              'filterFieldNames': ['label', '_id'],
-              'description': 'Place the devices to an existing location.',
-              'disabled': false
-            }
-          }]
+          switch (type) {
+            case 'ComputerMonitor':
+              return [
+                {
+                  'key': 'place',
+                  'name': 'place',
+                  'type': 'input',
+                  'templateOptions': {
+                    'keyFieldName': '_id',
+                    'label': 'Place where the devices are saved',
+                    'labelFieldName': 'label',
+                    'filterFieldNames': ['label', '_id'],
+                    'description': 'Place the devices to an existing location.',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'resolutionWidth',
+                  'name': 'resolutionWidth',
+                  'type': 'input',
+                  'templateOptions': {
+                    'keyFieldName': '_resolutionWidth',
+                    'label': 'Resolution width',
+                    'labelFieldName': 'label',
+                    'filterFieldNames': ['label', '_resolutionWidth'],
+                    'description': 'Indicate width of monitor',
+                    'disabled': false
+                  }
+                }
+              ]
+            case 'blabla':
+              return []
+            default:
+              throw new Error('Fields for event' + event + ' and type' + type + 'not found')
+          }
         case 'devices:Dispose':
           return [{
             'key': 'label',
