@@ -14,8 +14,8 @@ function SnapshotFormSchemaFactory (FormSchema, ResourceSettings) {
       // let deviceSchema = _.cloneDeep(deviceRSettings.schema)
       model.device = {'type': deviceType}
       model.type = 'Snapshot' // Just in case is not there (ex: ComputerSnapshot)
-      model.automatic = false
-      model.snapshotSoftware = 'Web'
+      model.software = 'Web'
+      model.version = '1.0'
       // delete deviceSchema.description
       // delete deviceSchema.place
       // deviceSchema.manufacturer.data_relation = {

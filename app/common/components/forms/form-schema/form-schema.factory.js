@@ -972,34 +972,66 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
             case 'ComputerMonitor':
               return [
                 {
-                  'key': 'place',
-                  'name': 'place',
+                  'key': 'device.width',
                   'type': 'input',
                   'templateOptions': {
-                    'keyFieldName': '_id',
-                    'label': 'Place where the devices are saved',
-                    'labelFieldName': 'label',
-                    'filterFieldNames': ['label', '_id'],
-                    'description': 'Place the devices to an existing location.',
+                    'label': 'Width',
+                    'description': 'Indicate width',
                     'disabled': false
                   }
                 },
                 {
-                  'key': 'resolutionWidth',
-                  'name': 'resolutionWidth',
+                  'key': 'device.height',
                   'type': 'input',
                   'templateOptions': {
-                    'keyFieldName': '_resolutionWidth',
+                    'label': 'Height',
+                    'description': 'Indicate height',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.resolutionWidth',
+                  'type': 'input',
+                  'templateOptions': {
                     'label': 'Resolution width',
-                    'labelFieldName': 'label',
-                    'filterFieldNames': ['label', '_resolutionWidth'],
-                    'description': 'Indicate width of monitor',
+                    'description': 'Indicate resolution width',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.resolutionHeight',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Resolution height',
+                    'description': 'Indicate resolution height',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.serialNumber',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Serial number',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.model',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Model',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.manufacturer',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Manufacturer',
                     'disabled': false
                   }
                 }
               ]
-            case 'blabla':
-              return []
             default:
               throw new Error('Fields for event' + event + ' and type' + type + 'not found')
           }

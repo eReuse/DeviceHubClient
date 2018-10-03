@@ -9,7 +9,7 @@ const utils = require('./../utils.js')
  *
  * This is an extension of {@link https:// github.com/mgonto/restangular#how-to-create-a-restangular-service-with-a-different-configuration-from-the-global-one Restangular's different configuration manual}.
  */
-function ResourceServer (schema, Restangular, CONSTANTS) {
+function ResourceServer (schema, Restangular) {
   /**
    * Obtains the server proxy for a ResourceSettings.
    *
@@ -22,37 +22,50 @@ function ResourceServer (schema, Restangular, CONSTANTS) {
    */
   function _ResourceServer (settings) {
     let service
+    let restangularConfig
     let url = settings.url
 
-    if (url === 'inventories/') {
-      service = Restangular.withConfig(function (RestangularProvider) {
-        RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response) {
-          // TODO update this and move code form resource-list-getter here
-          // if (resourceName && resourceName in schema.schema) {
-          //   if (operation === 'getList') {
-          //     for (let i = 0; i < data.length; i++) {
-          //       parse(data[i], schema.schema[resourceName])
-          //     }
-          //   } else if (response.status !== 204) {
-          //     parse(data, schema.schema[resourceName])
-          //   }
-          // }
-          return _.get(response.data, settings.pathToDataInResponse)
-        })
-      }).service(url)
-    } else {
-      url = url.split('/')
-      let restangularConfig
-      switch (url.length) {
-        case 2:
-          restangularConfig = RestangularConfigurerResource.all(url[0])
-          break
-        case 3:
-          restangularConfig = RestangularConfigurerResource.one(url[0], url[1])
-          break
-      }
-      service = RestangularConfigurerResource.service(url[url.length - 1], restangularConfig)
+    switch (url) {
+      case 'inventories/':
+        service = Restangular.withConfig(function (RestangularProvider) {
+          RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response) {
+            // TODO update this and move code form resource-list-getter here
+            // if (resourceName && resourceName in schema.schema) {
+            //   if (operation === 'getList') {
+            //     for (let i = 0; i < data.length; i++) {
+            //       parse(data[i], schema.schema[resourceName])
+            //     }
+            //   } else if (response.status !== 204) {
+            //     parse(data, schema.schema[resourceName])
+            //   }
+            // }
+            return _.get(response.data, settings.pathToDataInResponse)
+          })
+        }).service(url)
+        break
+      case 'snapshots/':
+        service = Restangular.withConfig(function (RestangularProvider) {
+          RestangularProvider.addRequestInterceptor(function (element) {
+            element = utils.copy(element)
+            delete element['@type']
+            return element
+          })
+        }).service(url)
+        break
+      default:
+        url = url.split('/')
+        switch (url.length) {
+          case 2:
+            restangularConfig = RestangularConfigurerResource.all(url[0])
+            break
+          case 3:
+            restangularConfig = RestangularConfigurerResource.one(url[0], url[1])
+            break
+        }
+        service = RestangularConfigurerResource.service(url[url.length - 1], restangularConfig)
+        break
     }
+
     /**
      * Finds the given text in field. Text can be a partial word.
      * @param {string[]} names The name of the field

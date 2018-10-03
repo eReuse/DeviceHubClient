@@ -7501,7 +7501,7 @@ module.exports = {
     '_settings': {
       'useDefaultDatabase': false,
       'parent': 'devices:EventWithOneDevice',
-      'url': 'snapshot',
+      'url': 'snapshots/',
       'itemMethods': [
         'GET',
         'DELETE'
