@@ -53,7 +53,8 @@ const RESOURCE_CONFIG = {
       subviewSmall: v.Sell
     },
     'devices:NewTag': {
-      manual: true
+      manual: true,
+      _root: true
     },
     'devices:Snapshot': {
       doNotUse: ['debug', 'version', 'events', 'owners', 'components', 'version', 'snapshotSoftware', 'automatic',
