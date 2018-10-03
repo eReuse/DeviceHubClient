@@ -3,7 +3,7 @@
   <div class="tabs-lots-events col-sm-4 col-md-2 col-lg-2 fill-height-bar">
     <uib-tabset active="active">
       <uib-tab index="0" heading="Lots">
-        <lots-tree-navigation resource-type="Lot" on-selection-changed="onEventsSelectionChanged(selected)"></lots-tree-navigation>
+        <lots-tree-navigation resource-type="Lot" on-selection-changed="onLotsSelectionChanged(selected)"></lots-tree-navigation>
       </uib-tab>
       <uib-tab index="1" heading="Events">
         <lots-tree-navigation resource-type="Event" on-selection-changed="onEventsSelectionChanged(selected)"></lots-tree-navigation>
@@ -242,7 +242,7 @@
       <h4 style="display: inline-block;">Lots summary ({{selectedLots.length}})</h4>
       <button type="button"
               class="btn btn-info btn-sm"
-              ng-click="deselectAll()"
+              ng-click="deselectLots()"
               style="display: inline-block;">
         <span>Deselect all</span>
       </button>

@@ -62,16 +62,15 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         // Selected lots
-        $scope.onLotSelectionChanged = (selectedLots) => {
-          // update gettter filter/query
+        $scope.onLotsSelectionChanged = (selectedLots) => {
           $scope.selectedLots = selectedLots
-          if (selectedLots.length > 0) {
-            $scope.selectedLotsText = selectedLots.map((l) => l.name).join(', ')
+          if ($scope.selectedLots.length > 0) {
+            $scope.selectedLotsText = $scope.selectedLots.map((l) => l.name).join(', ')
           } else {
             $scope.selectedLotsText = 'All devices'
           }
         }
-        $scope.onLotSelectionChanged([])
+        $scope.onLotsSelectionChanged([])
 
         // Selected events
         // TODO
@@ -514,6 +513,11 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           $scope.selector.deselectAll(devices)
           $scope.lastSelectedIndex = 0
           $scope.selectionPanelHiddenXS = true
+        }
+
+        $scope.deselectLots = () => {
+          $scope.selectedLots = []
+          $rootScope.$broadcast('deselectLots')
         }
 
         // Workaround to set labels of selected lots correctly. Necessary because API /devices doesn't include the 'label' property for device ancestors

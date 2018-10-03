@@ -1,4 +1,4 @@
-function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar) {
+function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar, $rootScope) {
   const PATH = require('./__init__').PATH
   // const PATH = 'common/components/resource/resource-list/lots-tree-navigation'
   return {
@@ -60,6 +60,10 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
         $scope.toggleExpand = function (scope) {
           scope.toggle()
         }
+
+        $rootScope.$on('deselectLots', () => {
+          $scope.selectedNodes = {}
+        })
 
         // get data
         // TODO encapsulate in separate service
