@@ -7501,6 +7501,1857 @@ module.exports = {
     '_settings': {
       'useDefaultDatabase': false,
       'parent': 'devices:EventWithOneDevice',
+      'url': 'snapshot',
+      'itemMethods': [
+        'GET',
+        'DELETE'
+      ],
+      'resourceMethods': [
+        'POST'
+      ],
+      'fa': 'fa-camera',
+      'shortDescription': 'A fast picture of the state and key information of the computer and it\'s devices.'
+    },
+    'osInstallation': {
+      'type': 'dict',
+      'schema': {
+        'label': {
+          'type': 'string'
+        },
+        'success': {
+          'type': 'boolean'
+        },
+        'elapsed': {
+          'type': 'time'
+        }
+      }
+    },
+    'autoUploaded': {
+      'type': 'boolean',
+      'default': false
+    },
+    'created': {
+      'dh_allowed_write_role': 'su',
+      'type': 'datetime',
+      'writeonly': true,
+      'doc': 'Sets the _created and _updated, thought to be used in imports.'
+    },
+    'description': {
+      'maxlength': 500,
+      'type': 'string',
+      'description': 'Full long description.',
+      'sink': -4
+    },
+    'group': {
+      'type': 'dict',
+      'schema': {
+        '_id': {
+          'type': 'string',
+          'required': true
+        },
+        '@type': {
+          'type': 'string',
+          'required': true,
+          'allowed': [
+            'Pallet',
+            'Group',
+            'IncomingLot',
+            'OutgoingLot',
+            'Place',
+            'Physical',
+            'Abstract',
+            'Lot',
+            'Package'
+          ]
+        }
+      },
+      'doc': 'After performing the snapshot, adds the device to the group if it was not there already.',
+      'description': 'Automatically add the device to the group, if any.'
+    },
+    'pricing': {
+      'type': 'dict',
+      'schema': {
+        'total': {
+          'type': 'dict',
+          'schema': {
+            'standard': {
+              'type': 'number',
+              'min': 0,
+              'max': 10000
+            },
+            'warranty2': {
+              'type': 'number',
+              'min': 0,
+              'max': 10000
+            }
+          }
+        },
+        'platform': {
+          'type': 'dict',
+          'schema': {
+            'standard': {
+              'type': 'dict',
+              'schema': {
+                'percentage': {
+                  'type': 'number',
+                  'min': 0,
+                  'max': 1
+                },
+                'amount': {
+                  'type': 'number',
+                  'min': 0,
+                  'max': 10000
+                }
+              }
+            },
+            'warranty2': {
+              'type': 'dict',
+              'schema': {
+                'percentage': {
+                  'type': 'number',
+                  'min': 0,
+                  'max': 1
+                },
+                'amount': {
+                  'type': 'number',
+                  'min': 0,
+                  'max': 10000
+                }
+              }
+            }
+          }
+        },
+        'retailer': {
+          'type': 'dict',
+          'schema': {
+            'standard': {
+              'type': 'dict',
+              'schema': {
+                'percentage': {
+                  'type': 'number',
+                  'min': 0,
+                  'max': 1
+                },
+                'amount': {
+                  'type': 'number',
+                  'min': 0,
+                  'max': 10000
+                }
+              }
+            },
+            'warranty2': {
+              'type': 'dict',
+              'schema': {
+                'percentage': {
+                  'type': 'number',
+                  'min': 0,
+                  'max': 1
+                },
+                'amount': {
+                  'type': 'number',
+                  'min': 0,
+                  'max': 10000
+                }
+              }
+            }
+          }
+        },
+        'refurbisher': {
+          'type': 'dict',
+          'schema': {
+            'standard': {
+              'type': 'dict',
+              'schema': {
+                'percentage': {
+                  'type': 'number',
+                  'min': 0,
+                  'max': 1
+                },
+                'amount': {
+                  'type': 'number',
+                  'min': 0,
+                  'max': 10000
+                }
+              }
+            },
+            'warranty2': {
+              'type': 'dict',
+              'schema': {
+                'percentage': {
+                  'type': 'number',
+                  'min': 0,
+                  'max': 1
+                },
+                'amount': {
+                  'type': 'number',
+                  'min': 0,
+                  'max': 10000
+                }
+              }
+            }
+          }
+        }
+      },
+      'teaser': true,
+      'sink': 1
+    },
+    '_id': {
+      'type': 'objectid'
+    },
+    'offline': {
+      'type': 'boolean'
+    },
+    'comment': {
+      'type': 'string',
+      'description': 'Short comment for fast and easy reading',
+      'doc': 'This field is deprecated (it does not show in clients); use description instead.',
+      'sink': -4
+    },
+    '_uuid': {
+      'type': 'uuid',
+      'teaser': false,
+      'modifiable': false,
+      'unique': true
+    },
+    'components': {
+      'type': 'list',
+      'schema': {
+        'type': 'dict',
+        'schema': {
+          'address': {
+            'type': 'integer',
+            'unitCode': 'A99',
+            'allowed': [
+              32,
+              256,
+              64,
+              128,
+              8,
+              16
+            ],
+            'sink': -1
+          },
+          'weight': {
+            'type': 'float',
+            'unitCode': 'KGM',
+            'teaser': false,
+            'sink': -1
+          },
+          'type': {
+            'type': 'string',
+            'teaser': true,
+            'required': false,
+            'allowed': [
+              'HDD',
+              'SSD'
+            ],
+            'sink': 2
+          },
+          'serialNumber': {
+            'type': 'string',
+            'short': 'S/N',
+            'sink': 4
+          },
+          'pid': {
+            'sink': 5,
+            'externalSynthetic': true,
+            'short': 'PID',
+            'type': 'string',
+            'uid': true,
+            'description': 'The PID identifies a device under a circuit or platform.',
+            'unique': true
+          },
+          'events': {
+            'schema': {
+              'type': 'dict'
+            },
+            'materialized': true,
+            'doc': 'Few values of events are kept, avoiding big documents. See device/hooks/MaterializeEvents.fields.',
+            'type': 'list',
+            'default': [],
+            'description': 'A list of events where the first one is the most recent.'
+          },
+          'isUidSecured': {
+            'type': 'boolean',
+            'default': true,
+            'teaser': false
+          },
+          'label': {
+            'type': 'string',
+            'description': 'A short, descriptive title',
+            'sink': 5
+          },
+          'benchmarks': {
+            'type': 'list',
+            'schema': {
+              'type': 'dict',
+              'schema': {
+                'label': {
+                  'type': 'string',
+                  'description': 'A short, descriptive title',
+                  'sink': 5
+                },
+                '@type': {
+                  'type': 'string',
+                  'required': true,
+                  'allowed': [
+                    'BenchmarkProcessorSysbench',
+                    'BenchmarkProcessor'
+                  ],
+                  'teaser': false
+                },
+                'created': {
+                  'dh_allowed_write_role': 'su',
+                  'type': 'datetime',
+                  'writeonly': true,
+                  'doc': 'Sets the _created and _updated, thought to be used in imports.'
+                },
+                'score': {
+                  'type': 'float'
+                }
+              }
+            }
+          },
+          'maxAcceptedMemory': {
+            'type': 'integer',
+            'teaser': false
+          },
+          'parent': {
+            'type': 'string',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'devices'
+            }
+          },
+          'numberOfCores': {
+            'type': 'integer',
+            'min': 1,
+            'sink': 1
+          },
+          'manufacturer': {
+            'type': 'string',
+            'short': 'Man.',
+            'sink': 4
+          },
+          'speed': {
+            'type': 'number',
+            'unitCode': 'MHZ',
+            'min': 0.1,
+            'sink': -1
+          },
+          'blockSize': {
+            'type': 'integer',
+            'teaser': false,
+            'sink': -1
+          },
+          'condition': {
+            'sink': 1,
+            'schema': {
+              'components': {
+                'type': 'dict',
+                'schema': {
+                  'ram': {
+                    'type': 'number',
+                    'min': 0,
+                    'max': 10
+                  },
+                  'hardDrives': {
+                    'type': 'number',
+                    'min': 0,
+                    'max': 10
+                  },
+                  'processors': {
+                    'type': 'number',
+                    'min': 0,
+                    'max': 10
+                  }
+                }
+              },
+              'appearance': {
+                'type': 'dict',
+                'schema': {
+                  'score': {
+                    'type': 'number',
+                    'min': -3,
+                    'max': 10
+                  },
+                  'general': {
+                    'type': 'string',
+                    'description': 'Grades the imperfections that aesthetically affect the device, but not its usage.',
+                    'allowed': [
+                      '0',
+                      'A',
+                      'B',
+                      'C',
+                      'D',
+                      'E'
+                    ],
+                    'allowed_description': {
+                      '0': '0. The device is new',
+                      'D': 'D. Is acceptable (visual damage in visible parts, not on screens)',
+                      'C': 'C. Is in good condition (small visual damage in parts that are easy to spot, not on screens)',
+                      'B': 'B. Is in really good condition (small visual damage in difficult places to spot)',
+                      'A': 'A. Is like new (without visual damage)',
+                      'E': 'E. Is unacceptable (considerable visual damage that can affect usage)'
+                    }
+                  }
+                }
+              },
+              'labelling': {
+                'type': 'boolean',
+                'description': 'Sets if there are labels stuck that should be removed.'
+              },
+              'functionality': {
+                'type': 'dict',
+                'schema': {
+                  'score': {
+                    'type': 'number',
+                    'min': -3,
+                    'max': 10
+                  },
+                  'general': {
+                    'type': 'string',
+                    'description': 'Grades the defects of a device that affect its usage.',
+                    'allowed': [
+                      'A',
+                      'B',
+                      'C',
+                      'D'
+                    ],
+                    'allowed_description': {
+                      'D': 'D. Multiple buttons don\'t work; screen has visual damage resulting in uncomfortable usage',
+                      'C': 'C. A non-important button (or similar) doesn\'t work; screen has multiple scratches in edges',
+                      'B': 'B. There is a button difficult to press or a small scratch in an edge of a screen',
+                      'A': 'A. Everything works perfectly (buttons, and in case of screens there are no scratches)'
+                    }
+                  }
+                }
+              },
+              '_created': {
+                'type': 'datetime',
+                'readonly': true
+              },
+              'scoringSoftware': {
+                'type': 'dict',
+                'schema': {
+                  'label': {
+                    'type': 'string'
+                  },
+                  'version': {
+                    'type': 'version'
+                  }
+                }
+              },
+              'bios': {
+                'type': 'dict',
+                'schema': {
+                  'general': {
+                    'type': 'string',
+                    'description': 'How difficult it has been to set the bios to boot from the network.',
+                    'allowed': [
+                      'A',
+                      'B',
+                      'C',
+                      'D',
+                      'E'
+                    ],
+                    'allowed_description': {
+                      'D': 'D. Like B or C, but you had to unlock the BIOS (i.e. by removing the battery)',
+                      'C': 'C. Like B, but with more than 5 steps',
+                      'E': 'E. The device could not be booted through the network.',
+                      'B': 'B. You had to get into the BIOS, and in less than 5 steps you could set the network boot',
+                      'A': 'A. If by pressing a key you could access a boot menu with the network boot'
+                    }
+                  }
+                }
+              },
+              'general': {
+                'type': 'dict',
+                'schema': {
+                  'score': {
+                    'type': 'number',
+                    'min': 0,
+                    'max': 10
+                  },
+                  'range': {
+                    'type': 'string',
+                    'doc': 'allowed is ordered by range ascending.',
+                    'allowed': [
+                      'VeryLow',
+                      'Low',
+                      'Medium',
+                      'High'
+                    ],
+                    'description': 'An easier way to see the grade.'
+                  }
+                }
+              }
+            },
+            'materialized': true,
+            'doc': 'Materialized condition from the last snapshot.',
+            'type': 'dict',
+            'teaser': true
+          },
+          'labelId': {
+            'type': 'string',
+            'short': 'Label',
+            'sink': 5
+          },
+          'connectors': {
+            'type': 'dict',
+            'schema': {
+              'usb': {
+                'type': 'natural'
+              },
+              'firewire': {
+                'type': 'natural'
+              },
+              'pcmcia': {
+                'type': 'natural'
+              },
+              'serial': {
+                'type': 'natural'
+              }
+            }
+          },
+          'erasure': {
+            'type': 'dict',
+            'schema': {
+              'date': {
+                'type': 'datetime',
+                'description': 'When this happened. Leave blank if it is happening now.',
+                'sink': -2
+              },
+              'device': {
+                'type': 'string',
+                'data_relation': {
+                  'embeddable': true,
+                  'field': '_id',
+                  'resource': 'devices'
+                },
+                'required': false
+              },
+              'byOrganization': {
+                'type': 'string',
+                'readonly': true
+              },
+              'created': {
+                'dh_allowed_write_role': 'su',
+                'type': 'datetime',
+                'writeonly': true,
+                'doc': 'Sets the _created and _updated, thought to be used in imports.'
+              },
+              'description': {
+                'maxlength': 500,
+                'type': 'string',
+                'description': 'Full long description.',
+                'sink': -4
+              },
+              'success': {
+                'type': 'boolean'
+              },
+              'startingTime': {
+                'type': 'datetime'
+              },
+              'cleanWithZeros': {
+                'type': 'boolean'
+              },
+              'parent': {
+                'type': 'string',
+                'data_relation': {
+                  'embeddable': true,
+                  'field': '_id',
+                  'resource': 'devices'
+                },
+                'materialized': true,
+                'description': 'The event triggered in this computer.'
+              },
+              'byUser': {
+                'type': 'objectid',
+                'data_relation': {
+                  'embeddable': true,
+                  'field': '_id',
+                  'resource': 'accounts'
+                },
+                'coerce_with_context': '<callable>',
+                'sink': 2
+              },
+              'label': {
+                'type': 'string',
+                'description': 'A short, descriptive title',
+                'sink': 5
+              },
+              'endingTime': {
+                'type': 'datetime'
+              },
+              'steps': {
+                'type': 'list',
+                'schema': {
+                  'type': 'dict',
+                  'schema': {
+                    'success': {
+                      'type': 'boolean',
+                      'required': true
+                    },
+                    '@type': {
+                      'type': 'string',
+                      'required': true,
+                      'allowed': [
+                        'Zeros',
+                        'Random'
+                      ]
+                    },
+                    'secureRandomSteps': {
+                      'type': 'boolean'
+                    },
+                    'cleanWithZeros': {
+                      'type': 'boolean'
+                    },
+                    'startingTime': {
+                      'type': 'datetime'
+                    },
+                    'endingTime': {
+                      'type': 'datetime'
+                    }
+                  }
+                }
+              },
+              '@type': {
+                'type': 'string',
+                'required': true,
+                'allowed': [
+                  'devices:EraseBasic',
+                  'devices:EraseSectors'
+                ],
+                'teaser': false
+              },
+              'secureRandomSteps': {
+                'type': 'natural',
+                'required': true
+              },
+              'secured': {
+                'type': 'boolean',
+                'sink': -3
+              },
+              'incidence': {
+                'type': 'boolean',
+                'description': 'Check if something went wrong, you can add details in a comment',
+                'sink': -3
+              },
+              'comment': {
+                'type': 'string',
+                'description': 'Short comment for fast and easy reading',
+                'doc': 'This field is deprecated (it does not show in clients); use description instead.',
+                'sink': -4
+              },
+              'geo': {
+                'type': 'point',
+                'description': 'Where did it happened',
+                'sink': -5
+              },
+              'perms': {
+                'type': 'list',
+                'schema': {
+                  'type': 'dict',
+                  'schema': {
+                    'perm': {
+                      'type': 'string',
+                      'required': true,
+                      'allowed': [
+                        'ad',
+                        're',
+                        'e',
+                        'r'
+                      ]
+                    },
+                    'account': {
+                      'type': 'objectid',
+                      'data_relation': {
+                        'embeddable': true,
+                        'field': '_id',
+                        'resource': 'accounts'
+                      },
+                      'required': true
+                    }
+                  }
+                },
+                'doc': 'These permissions are set on groups, and their children inherit them.Apart from this, accounts can have access to resources if they have access to the entire database, too.That access is stored in the Account *databases* field.',
+                'materialized': true,
+                'description': 'The permissions accounts have on the resource.'
+              },
+              'sameAs': {
+                'type': 'list',
+                'unique': true,
+                'teaser': false
+              },
+              'url': {
+                'type': 'url',
+                'move': 'sameAs',
+                'doc': 'The url of the resource. If passed in, the value it is moved to sameAs.',
+                'teaser': false
+              }
+            },
+            'writeonly': true
+          },
+          'totalSlots': {
+            'type': 'integer',
+            'teaser': false
+          },
+          'tests': {
+            'type': 'list',
+            'schema': {
+              'type': 'objectid',
+              'data_relation': {
+                'embeddable': true,
+                'field': '_id',
+                'resource': 'events'
+              }
+            },
+            'readonly': true
+          },
+          'productId': {
+            'type': 'string',
+            'teaser': false,
+            'sink': 3
+          },
+          'sectors': {
+            'type': 'integer',
+            'teaser': false,
+            'sink': -1
+          },
+          'usedSlots': {
+            'type': 'integer',
+            'teaser': false
+          },
+          'model': {
+            'type': 'string',
+            'short': 'Mod.',
+            'sink': 4
+          },
+          'memory': {
+            'type': 'float',
+            'unitCode': '4L',
+            'min': 1,
+            'sink': 3
+          },
+          'height': {
+            'type': 'float',
+            'unitCode': 'MTR',
+            'teaser': false,
+            'sink': -1
+          },
+          'erasures': {
+            'type': 'list',
+            'schema': {
+              'type': 'objectid',
+              'data_relation': {
+                'embeddable': true,
+                'field': '_id',
+                'resource': 'events'
+              }
+            },
+            'readonly': true
+          },
+          'placeholder': {
+            'type': 'boolean',
+            'default': false,
+            'doc': 'Invalid for components.'
+          },
+          'created': {
+            'dh_allowed_write_role': 'su',
+            'type': 'datetime',
+            'writeonly': true,
+            'doc': 'Sets the _created and _updated, thought to be used in imports.'
+          },
+          'description': {
+            'maxlength': 500,
+            'type': 'string',
+            'description': 'Full long description.',
+            'sink': -4
+          },
+          'benchmark': {
+            'type': 'dict',
+            'schema': {
+              '@type': {
+                'type': 'string',
+                'required': true,
+                'allowed': [
+                  'BenchmarkHardDrive',
+                  'BenchmarkProcessor'
+                ],
+                'teaser': false
+              },
+              'readingSpeed': {
+                'type': 'float',
+                'unitCode': '4L'
+              },
+              'label': {
+                'type': 'string',
+                'description': 'A short, descriptive title',
+                'sink': 5
+              },
+              'score': {
+                'type': 'float'
+              },
+              'created': {
+                'dh_allowed_write_role': 'su',
+                'type': 'datetime',
+                'writeonly': true,
+                'doc': 'Sets the _created and _updated, thought to be used in imports.'
+              },
+              'writingSpeed': {
+                'type': 'float',
+                'unitCode': '4L'
+              }
+            },
+            'writeonly': true
+          },
+          'public': {
+            'type': 'boolean',
+            'default': false
+          },
+          'interface': {
+            'type': 'string',
+            'teaser': false,
+            'sink': -1
+          },
+          'width': {
+            'type': 'float',
+            'unitCode': 'MTR',
+            'teaser': false,
+            'sink': -1
+          },
+          '_id': {
+            'sink': 4,
+            'short': 'ID',
+            'device_id': true,
+            'type': 'string',
+            'uid': true,
+            'description': 'The System ID, or simply ID, is an easy-to-read internal id.',
+            'unique': true
+          },
+          'size': {
+            'type': 'number',
+            'unitCode': '4L',
+            'min': 1,
+            'sink': 1
+          },
+          'components': {
+            'type': 'list',
+            'schema': {
+              'type': 'string',
+              'data_relation': {
+                'embeddable': true,
+                'field': '_id',
+                'resource': 'devices'
+              }
+            },
+            'default': [],
+            'sink': 1
+          },
+          'hid': {
+            'sink': 5,
+            'doc': 'The unique constrained is evaluated manually as this field needs to be computed',
+            'short': 'HID',
+            'type': 'hid',
+            'uid': true,
+            'description': 'The Hardware ID is the unique ID traceability systems use to ID a device globally.',
+            'teaser': false
+          },
+          '@type': {
+            'type': 'string',
+            'required': true,
+            'allowed': [
+              'NetworkAdapter',
+              'Processor',
+              'SoundCard',
+              'Motherboard',
+              'GraphicCard',
+              'OpticalDrive',
+              'RamModule',
+              'Component',
+              'HardDrive'
+            ],
+            'teaser': false
+          },
+          'sameAs': {
+            'type': 'list',
+            'unique': true,
+            'teaser': false
+          },
+          'ancestors': {
+            'type': 'list',
+            'schema': {
+              'type': 'dict',
+              'schema': {
+                'places': {
+                  'type': 'string',
+                  'data_relation': {
+                    'embeddable': true,
+                    'field': '_id',
+                    'resource': 'places'
+                  }
+                },
+                '@type': {
+                  'type': 'string',
+                  'allowed': [
+                    'IncomingLot',
+                    'OutgoingLot',
+                    'Lot',
+                    'Place',
+                    'Package'
+                  ]
+                },
+                'lots': {
+                  'type': 'list',
+                  'schema': {
+                    'type': 'string',
+                    'data_relation': {
+                      'embeddable': true,
+                      'field': '_id',
+                      'resource': 'lots'
+                    }
+                  },
+                  'unique_values': true
+                },
+                'packages': {
+                  'type': 'list',
+                  'schema': {
+                    'type': 'string',
+                    'data_relation': {
+                      'embeddable': true,
+                      'field': '_id',
+                      'resource': 'packages'
+                    }
+                  },
+                  'unique_values': true
+                },
+                'pallets': {
+                  'type': 'list',
+                  'schema': {
+                    'type': 'string',
+                    'data_relation': {
+                      'embeddable': true,
+                      'field': '_id',
+                      'resource': 'pallets'
+                    }
+                  },
+                  'unique_values': true
+                },
+                '_id': {
+                  'type': 'string',
+                  'doc': 'Although this is a data relation, we cannot specify it to eve as datasourcesare different. This is an ordered set of values where the first is the parent.'
+                }
+              }
+            },
+            'default': [],
+            'materialized': true,
+            'doc': 'The schema.schema of ancestors is populated with all subgroups. For example, Lot adds: ancestors.places and ancestors.lots. Which reads as follows:I inherit the following descendants form ancestor._id of type ancestor.@type:ancestor.places = [p1,p2...], ancestor.lots = [l1, l2...]'
+          },
+          'rid': {
+            'externalSynthetic': true,
+            'short': 'RID',
+            'type': 'string',
+            'unique': true,
+            'description': 'The Receiver ID is the internal identifier a Refurbisher uses.',
+            'uid': true
+          },
+          'firmwareRevision': {
+            'type': 'string',
+            'sink': -1,
+            'teaser': false
+          },
+          'perms': {
+            'schema': {
+              'type': 'dict',
+              'schema': {
+                'perm': {
+                  'type': 'string',
+                  'required': true,
+                  'allowed': [
+                    'ad',
+                    're',
+                    'e',
+                    'r'
+                  ]
+                },
+                'account': {
+                  'type': 'objectid',
+                  'data_relation': {
+                    'embeddable': true,
+                    'field': '_id',
+                    'resource': 'accounts'
+                  },
+                  'required': true
+                }
+              }
+            },
+            'materialized': true,
+            'doc': 'These permissions are set on groups, and their children inherit them.Apart from this, accounts can have access to resources if they have access to the entire database, too.That access is stored in the Account *databases* field.',
+            'type': 'list',
+            'default': [],
+            'description': 'The permissions accounts have on the resource.'
+          },
+          'owners': {
+            'type': 'list',
+            'schema': {
+              'type': 'objectid',
+              'data_relation': {
+                'embeddable': true,
+                'field': '_id',
+                'resource': 'accounts'
+              }
+            },
+            'materialized': true,
+            'sink': 2
+          },
+          'url': {
+            'type': 'url',
+            'move': 'sameAs',
+            'doc': 'The url of the resource. If passed in, the value it is moved to sameAs.',
+            'teaser': false
+          },
+          'gid': {
+            'externalSynthetic': true,
+            'unique': true,
+            'short': 'GID',
+            'type': 'string',
+            'uid': true,
+            'description': 'The Giver ID links the device to the giver\'s (donor, seller) internal inventory.',
+            'teaser': true
+          },
+          'pricing': {
+            'type': 'dict',
+            'schema': {
+              'total': {
+                'type': 'dict',
+                'schema': {
+                  'standard': {
+                    'type': 'number',
+                    'min': 0,
+                    'max': 10000
+                  },
+                  'warranty2': {
+                    'type': 'number',
+                    'min': 0,
+                    'max': 10000
+                  }
+                }
+              },
+              'platform': {
+                'type': 'dict',
+                'schema': {
+                  'standard': {
+                    'type': 'dict',
+                    'schema': {
+                      'percentage': {
+                        'type': 'number',
+                        'min': 0,
+                        'max': 1
+                      },
+                      'amount': {
+                        'type': 'number',
+                        'min': 0,
+                        'max': 10000
+                      }
+                    }
+                  },
+                  'warranty2': {
+                    'type': 'dict',
+                    'schema': {
+                      'percentage': {
+                        'type': 'number',
+                        'min': 0,
+                        'max': 1
+                      },
+                      'amount': {
+                        'type': 'number',
+                        'min': 0,
+                        'max': 10000
+                      }
+                    }
+                  }
+                }
+              },
+              'retailer': {
+                'type': 'dict',
+                'schema': {
+                  'standard': {
+                    'type': 'dict',
+                    'schema': {
+                      'percentage': {
+                        'type': 'number',
+                        'min': 0,
+                        'max': 1
+                      },
+                      'amount': {
+                        'type': 'number',
+                        'min': 0,
+                        'max': 10000
+                      }
+                    }
+                  },
+                  'warranty2': {
+                    'type': 'dict',
+                    'schema': {
+                      'percentage': {
+                        'type': 'number',
+                        'min': 0,
+                        'max': 1
+                      },
+                      'amount': {
+                        'type': 'number',
+                        'min': 0,
+                        'max': 10000
+                      }
+                    }
+                  }
+                }
+              },
+              'refurbisher': {
+                'type': 'dict',
+                'schema': {
+                  'standard': {
+                    'type': 'dict',
+                    'schema': {
+                      'percentage': {
+                        'type': 'number',
+                        'min': 0,
+                        'max': 1
+                      },
+                      'amount': {
+                        'type': 'number',
+                        'min': 0,
+                        'max': 10000
+                      }
+                    }
+                  },
+                  'warranty2': {
+                    'type': 'dict',
+                    'schema': {
+                      'percentage': {
+                        'type': 'number',
+                        'min': 0,
+                        'max': 1
+                      },
+                      'amount': {
+                        'type': 'number',
+                        'min': 0,
+                        'max': 10000
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            'teaser': true,
+            'materialized': true,
+            'sink': 1
+          },
+          '_blacklist': {
+            'type': 'set'
+          },
+          'test': {
+            'type': 'dict',
+            'schema': {
+              'snapshot': {
+                'type': 'objectid',
+                'data_relation': {
+                  'embeddable': true,
+                  'field': '_id',
+                  'resource': 'events'
+                }
+              },
+              'date': {
+                'type': 'datetime',
+                'description': 'When this happened. Leave blank if it is happening now.',
+                'sink': -2
+              },
+              'lifetime': {
+                'type': 'integer'
+              },
+              'device': {
+                'type': 'string',
+                'data_relation': {
+                  'embeddable': true,
+                  'field': '_id',
+                  'resource': 'devices'
+                },
+                'required': false
+              },
+              'type': {
+                'type': 'string'
+              },
+              'created': {
+                'dh_allowed_write_role': 'su',
+                'type': 'datetime',
+                'writeonly': true,
+                'doc': 'Sets the _created and _updated, thought to be used in imports.'
+              },
+              'reportedUncorrectableErrors': {
+                'type': 'integer'
+              },
+              'assessment': {
+                'type': 'boolean'
+              },
+              'error': {
+                'type': 'boolean',
+                'required': true
+              },
+              'firstError': {
+                'nullable': true,
+                'type': 'integer'
+              },
+              '@type': {
+                'type': 'string',
+                'required': true,
+                'allowed': [
+                  'devices:TestHardDrive'
+                ],
+                'teaser': false
+              },
+              'status': {
+                'type': 'string',
+                'required': true
+              },
+              'description': {
+                'maxlength': 500,
+                'type': 'string',
+                'description': 'Full long description.',
+                'sink': -4
+              },
+              'label': {
+                'type': 'string',
+                'description': 'A short, descriptive title',
+                'sink': 5
+              },
+              'RemainingLifetimePercentage': {
+                'type': 'integer'
+              },
+              'byUser': {
+                'type': 'objectid',
+                'data_relation': {
+                  'embeddable': true,
+                  'field': '_id',
+                  'resource': 'accounts'
+                },
+                'coerce_with_context': '<callable>',
+                'sink': 2
+              },
+              'OfflineUncorrectable': {
+                'type': 'integer'
+              },
+              'powerCycleCount': {
+                'type': 'integer'
+              },
+              'CommandTimeout': {
+                'type': 'integer'
+              },
+              'parent': {
+                'type': 'string',
+                'data_relation': {
+                  'embeddable': true,
+                  'field': '_id',
+                  'resource': 'devices'
+                },
+                'materialized': true,
+                'description': 'The event triggered in this computer.'
+              },
+              'secured': {
+                'type': 'boolean',
+                'sink': -3
+              },
+              'incidence': {
+                'type': 'boolean',
+                'description': 'Check if something went wrong, you can add details in a comment',
+                'sink': -3
+              },
+              'reallocatedSectorCount': {
+                'type': 'integer'
+              },
+              'comment': {
+                'type': 'string',
+                'description': 'Short comment for fast and easy reading',
+                'doc': 'This field is deprecated (it does not show in clients); use description instead.',
+                'sink': -4
+              },
+              'geo': {
+                'type': 'point',
+                'description': 'Where did it happened',
+                'sink': -5
+              },
+              'url': {
+                'type': 'url',
+                'move': 'sameAs',
+                'doc': 'The url of the resource. If passed in, the value it is moved to sameAs.',
+                'teaser': false
+              },
+              'perms': {
+                'type': 'list',
+                'schema': {
+                  'type': 'dict',
+                  'schema': {
+                    'perm': {
+                      'type': 'string',
+                      'required': true,
+                      'allowed': [
+                        'ad',
+                        're',
+                        'e',
+                        'r'
+                      ]
+                    },
+                    'account': {
+                      'type': 'objectid',
+                      'data_relation': {
+                        'embeddable': true,
+                        'field': '_id',
+                        'resource': 'accounts'
+                      },
+                      'required': true
+                    }
+                  }
+                },
+                'doc': 'These permissions are set on groups, and their children inherit them.Apart from this, accounts can have access to resources if they have access to the entire database, too.That access is stored in the Account *databases* field.',
+                'materialized': true,
+                'description': 'The permissions accounts have on the resource.'
+              },
+              'sameAs': {
+                'type': 'list',
+                'unique': true,
+                'teaser': false
+              },
+              'byOrganization': {
+                'type': 'string',
+                'readonly': true
+              },
+              'passedLifetime': {
+                'type': 'integer'
+              },
+              'CurrentPendingSectorCount': {
+                'type': 'integer'
+              }
+            }
+          }
+        },
+        'data_relation': {
+          'embeddable': true,
+          'field': '_id',
+          'resource': 'devices'
+        }
+      },
+      'default': [],
+      'teaser': false
+    },
+    '@type': {
+      'type': 'string',
+      'required': true,
+      'allowed': [
+        'devices:Snapshot'
+      ],
+      'teaser': false
+    },
+    'request': {
+      'type': 'string',
+      'readonly': true,
+      'doc': 'The whole Snapshot saved in case for debugging'
+    },
+    'pictures': {
+      'type': 'list',
+      'schema': {
+        'type': 'media',
+        'accept': 'image/jpeg'
+      },
+      'description': 'Pictures of the device.'
+    },
+    'unsecured': {
+      'type': 'list',
+      'schema': {
+        'type': 'dict',
+        'schema': {
+          '_id': {
+            'type': 'string',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'devices'
+            }
+          },
+          'type': {
+            'type': 'string',
+            'allowed': [
+              'model',
+              'pid'
+            ]
+          },
+          '@type': {
+            'type': 'string'
+          }
+        }
+      },
+      'default': [],
+      'readonly': true,
+      'description': 'Information about existing non-HID device.'
+    },
+    'perms': {
+      'type': 'list',
+      'schema': {
+        'type': 'dict',
+        'schema': {
+          'perm': {
+            'type': 'string',
+            'required': true,
+            'allowed': [
+              'ad',
+              're',
+              'e',
+              'r'
+            ]
+          },
+          'account': {
+            'type': 'objectid',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'accounts'
+            },
+            'required': true
+          }
+        }
+      },
+      'doc': 'These permissions are set on groups, and their children inherit them.Apart from this, accounts can have access to resources if they have access to the entire database, too.That access is stored in the Account *databases* field.',
+      'materialized': true,
+      'description': 'The permissions accounts have on the resource.'
+    },
+    'sameAs': {
+      'type': 'list',
+      'unique': true,
+      'teaser': false
+    },
+    'url': {
+      'type': 'url',
+      'move': 'sameAs',
+      'doc': 'The url of the resource. If passed in, the value it is moved to sameAs.',
+      'teaser': false
+    },
+    'orientation': {
+      'type': 'string',
+      'allowed': [
+        'Vertical',
+        'Horizontal'
+      ]
+    },
+    'from': {
+      'sink': 2,
+      'schema': {
+        'email': {
+          'type': 'email',
+          'required': true,
+          'sink': 5,
+          'unique': true
+        },
+        'isOrganization': {
+          'type': 'boolean',
+          'sink': 2
+        },
+        'organization': {
+          'type': 'string',
+          'description': 'The name of the organization the account is in. Organizations can be inside others.',
+          'sink': 1
+        },
+        'name': {
+          'type': 'string',
+          'description': 'The name of an account, if it is a person or an organization.',
+          'sink': 3
+        }
+      },
+      'get_from_data_relation_or_create': 'email',
+      'doc': 'Disabled for now as incoming lot provides this functionality, want to see if it is really needed.',
+      'label': 'E-mail of the giver',
+      'type': [
+        'objectid',
+        'dict',
+        'string'
+      ],
+      'data_relation': {
+        'embeddable': true,
+        'field': '_id',
+        'resource': 'accounts'
+      },
+      'readonly': true,
+      'description': 'The e-mail of the person or organization that gave the devices. You cannot change this later.'
+    },
+    'elapsed': {
+      'type': 'time'
+    },
+    'picture_info': {
+      'type': 'dict',
+      'schema': {
+        'version': {
+          'type': 'version',
+          'description': 'The version of the software.'
+        },
+        'software': {
+          'type': 'string',
+          'description': 'The software used to take the picture.',
+          'allowed': [
+            'Pbx'
+          ],
+          'allowed_description': {
+            'Pbx': 'Photobox'
+          }
+        }
+      },
+      'description': 'Information about the pictures of the device.'
+    }
+  },
+  'devices_new-tag': {
+    'date': {
+      'type': 'datetime'
+    },
+    'debug': {
+      'type': 'dict',
+      'teaser': false
+    },
+    'byOrganization': {
+      'type': 'string',
+      'readonly': true
+    },
+    'color': {
+      'type': 'string',
+      'allowed_description': {
+        '#00FF00': 'lime',
+        '#808000': 'olive',
+        '#FFFFFF': 'white',
+        '#C0C0C0': 'silver',
+        '#0000FF': 'blue',
+        '#800000': 'maroon',
+        '#008080': 'teal',
+        '#800080': 'purple',
+        '#008000': 'green',
+        '#808080': 'gray',
+        '#000080': 'navy',
+        '#FF00FF': 'fuchsia',
+        '#FF0000': 'red',
+        '#FFFF00': 'yellow',
+        '#000000': 'black',
+        '#00FFFF': 'aqua'
+      },
+      'description': 'The primary color of the device.'
+    },
+    'version': {
+      'type': 'version',
+      'teaser': false
+    },
+    'events': {
+      'type': 'list',
+      'schema': {
+        'type': 'objectid',
+        'data_relation': {
+          'embeddable': true,
+          'field': '_id',
+          'resource': 'events'
+        }
+      },
+      'readonly': true,
+      'description': 'The events triggered by the Snapshot.'
+    },
+    'label': {
+      'type': 'string',
+      'description': 'A short, descriptive title',
+      'sink': 5
+    },
+    'inventory': {
+      'type': 'dict',
+      'schema': {
+        'elapsed': {
+          'type': 'time'
+        }
+      }
+    },
+    'place': {
+      'label': 'Place where the devices are saved',
+      'type': 'string',
+      'data_relation': {
+        'resource': 'places',
+        'field': '_id',
+        'embeddable': true
+      },
+      'description': 'Place the devices to an existing location.',
+      'sink': 0
+    },
+    'benchmarks': {
+      'type': 'list',
+      'schema': {
+        'type': 'dict',
+        'schema': {
+          'label': {
+            'type': 'string',
+            'description': 'A short, descriptive title',
+            'sink': 5
+          },
+          '@type': {
+            'type': 'string',
+            'required': true,
+            'allowed': [
+              'BenchmarkRamSysbench'
+            ],
+            'teaser': false
+          },
+          'created': {
+            'dh_allowed_write_role': 'su',
+            'type': 'datetime',
+            'writeonly': true,
+            'doc': 'Sets the _created and _updated, thought to be used in imports.'
+          },
+          'score': {
+            'type': 'float'
+          }
+        }
+      }
+    },
+    'byUser': {
+      'type': 'objectid',
+      'data_relation': {
+        'embeddable': true,
+        'field': '_id',
+        'resource': 'accounts'
+      },
+      'coerce_with_context': '<callable>',
+      'sink': 2
+    },
+    'snapshotSoftware': {
+      'type': 'string',
+      'default': 'Workbench',
+      'allowed': [
+        'AndroidApp',
+        'WorkbenchAuto',
+        'Photobox',
+        'Web',
+        'DesktopApp',
+        'Workbench'
+      ]
+    },
+    'parent': {
+      'type': 'string',
+      'data_relation': {
+        'embeddable': true,
+        'field': '_id',
+        'resource': 'devices'
+      },
+      'doc': 'This is not the same as the materialized "parent" field. This field can be set when snapshotting a component, for example through Scan, that should be included in a device.'
+    },
+    'secured': {
+      'type': 'boolean',
+      'default': false,
+      'sink': -3
+    },
+    'incidence': {
+      'type': 'boolean',
+      'default': false,
+      'description': 'Check if something went wrong, you can add details in a comment',
+      'sink': -3
+    },
+    'device': {
+      'type': 'dict',
+      'data_relation': {
+        'embeddable': true,
+        'field': '_id',
+        'resource': 'devices'
+      },
+      'required': true,
+      'sink': 4
+    },
+    'automatic': {
+      'type': 'boolean'
+    },
+    'software': {
+      'type': 'dict',
+      'schema': {
+        'productKey': {
+          'type': 'string'
+        }
+      },
+      'sink': -1
+    },
+    'geo': {
+      'type': 'point',
+      'description': 'Where did it happened',
+      'sink': -5
+    },
+    'condition': {
+      'type': 'dict',
+      'schema': {
+        'components': {
+          'type': 'dict',
+          'schema': {
+            'ram': {
+              'type': 'number',
+              'min': 0,
+              'max': 10
+            },
+            'hardDrives': {
+              'type': 'number',
+              'min': 0,
+              'max': 10
+            },
+            'processors': {
+              'type': 'number',
+              'min': 0,
+              'max': 10
+            }
+          }
+        },
+        'appearance': {
+          'type': 'dict',
+          'schema': {
+            'score': {
+              'type': 'number',
+              'min': -3,
+              'max': 10
+            },
+            'general': {
+              'type': 'string',
+              'description': 'Grades the imperfections that aesthetically affect the device, but not its usage.',
+              'allowed': [
+                '0',
+                'A',
+                'B',
+                'C',
+                'D',
+                'E'
+              ],
+              'allowed_description': {
+                '0': '0. The device is new',
+                'D': 'D. Is acceptable (visual damage in visible parts, not on screens)',
+                'C': 'C. Is in good condition (small visual damage in parts that are easy to spot, not on screens)',
+                'B': 'B. Is in really good condition (small visual damage in difficult places to spot)',
+                'A': 'A. Is like new (without visual damage)',
+                'E': 'E. Is unacceptable (considerable visual damage that can affect usage)'
+              }
+            }
+          }
+        },
+        'labelling': {
+          'type': 'boolean',
+          'description': 'Sets if there are labels stuck that should be removed.'
+        },
+        'functionality': {
+          'type': 'dict',
+          'schema': {
+            'score': {
+              'type': 'number',
+              'min': -3,
+              'max': 10
+            },
+            'general': {
+              'type': 'string',
+              'description': 'Grades the defects of a device that affect its usage.',
+              'allowed': [
+                'A',
+                'B',
+                'C',
+                'D'
+              ],
+              'allowed_description': {
+                'D': 'D. Multiple buttons don\'t work; screen has visual damage resulting in uncomfortable usage',
+                'C': 'C. A non-important button (or similar) doesn\'t work; screen has multiple scratches in edges',
+                'B': 'B. There is a button difficult to press or a small scratch in an edge of a screen',
+                'A': 'A. Everything works perfectly (buttons, and in case of screens there are no scratches)'
+              }
+            }
+          }
+        },
+        '_created': {
+          'type': 'datetime',
+          'readonly': true
+        },
+        'scoringSoftware': {
+          'type': 'dict',
+          'schema': {
+            'label': {
+              'type': 'string'
+            },
+            'version': {
+              'type': 'version'
+            }
+          }
+        },
+        'bios': {
+          'type': 'dict',
+          'schema': {
+            'general': {
+              'type': 'string',
+              'description': 'How difficult it has been to set the bios to boot from the network.',
+              'allowed': [
+                'A',
+                'B',
+                'C',
+                'D',
+                'E'
+              ],
+              'allowed_description': {
+                'D': 'D. Like B or C, but you had to unlock the BIOS (i.e. by removing the battery)',
+                'C': 'C. Like B, but with more than 5 steps',
+                'E': 'E. The device could not be booted through the network.',
+                'B': 'B. You had to get into the BIOS, and in less than 5 steps you could set the network boot',
+                'A': 'A. If by pressing a key you could access a boot menu with the network boot'
+              }
+            }
+          }
+        },
+        'general': {
+          'type': 'dict',
+          'schema': {
+            'score': {
+              'type': 'number',
+              'min': 0,
+              'max': 10
+            },
+            'range': {
+              'type': 'string',
+              'doc': 'allowed is ordered by range ascending.',
+              'allowed': [
+                'VeryLow',
+                'Low',
+                'Medium',
+                'High'
+              ],
+              'description': 'An easier way to see the grade.'
+            }
+          }
+        }
+      },
+      'teaser': true,
+      'sink': 1
+    },
+    'licenseKey': {
+      'type': 'string'
+    },
+    'tests': {
+      'type': 'list',
+      'schema': {
+        'type': 'dict',
+        'schema': {
+          'success': {
+            'type': 'boolean'
+          },
+          '@type': {
+            'type': 'string',
+            'allowed': [
+              'StressTest'
+            ]
+          },
+          'elapsed': {
+            'type': 'time'
+          }
+        }
+      }
+    },
+    '_settings': {
+      'useDefaultDatabase': false,
+      'parent': 'devices:EventWithOneDevice',
       'url': 'tags',
       'itemMethods': [
         'GET',
