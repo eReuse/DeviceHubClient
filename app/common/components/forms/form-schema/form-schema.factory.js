@@ -91,7 +91,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
       } else if (this._uploadsFile) {
         const field = this._uploadsFile
         promise = this.rSettings.server.postWithFiles(model, field.key, field.templateOptions.files)
-      } else if (this.resourceType === 'devices:Snapshot') { // TODO this case should probably be generalized and settings moved to config
+      } else if (this.resourceType === 'devices:NewTag') { // TODO this case should probably be generalized and settings moved to config
         const device = model.device
         const newTagID = device.newTagID
         promise = this.rSettings.server.one(newTagID).one('device', device._id).put()
@@ -967,21 +967,20 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
               'disabled': false
             }
           }]
-        // case 'devices:Snapshot':
-        //   return [{
-        //     'key': 'place',
-        //     'name': 'place',
-        //     'type': 'typeahead',
-        //     'templateOptions': {
-        //       'resourceName': 'places',
-        //       'keyFieldName': '_id',
-        //       'label': 'Place where the devices are saved',
-        //       'labelFieldName': 'label',
-        //       'filterFieldNames': ['label', '_id'],
-        //       'description': 'Place the devices to an existing location.',
-        //       'disabled': false
-        //     }
-        //   }]
+        case 'devices:Snapshot':
+          return [{
+            'key': 'place',
+            'name': 'place',
+            'type': 'input',
+            'templateOptions': {
+              'keyFieldName': '_id',
+              'label': 'Place where the devices are saved',
+              'labelFieldName': 'label',
+              'filterFieldNames': ['label', '_id'],
+              'description': 'Place the devices to an existing location.',
+              'disabled': false
+            }
+          }]
         case 'devices:Dispose':
           return [{
             'key': 'label',
@@ -1430,7 +1429,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
               ] // conditions field-group
             }
           ]
-        case 'devices:Snapshot':
+        case 'devices:NewTag':
           return [
             {
               key: 'device.newTagID',

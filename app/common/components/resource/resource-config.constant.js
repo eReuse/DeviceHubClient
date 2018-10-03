@@ -52,6 +52,9 @@ const RESOURCE_CONFIG = {
       subviews: [v.Sell, v.Device, v.Detail],
       subviewSmall: v.Sell
     },
+    'devices:NewTag': {
+      manual: true
+    },
     'devices:Snapshot': {
       doNotUse: ['debug', 'version', 'events', 'owners', 'components', 'version', 'snapshotSoftware', 'automatic',
         'offline', '_uuid', 'geo', 'elapsed', 'osInstallation', 'tests', 'inventory', 'date',
