@@ -15147,7 +15147,7 @@ module.exports = {
       'useDefaultDatabase': false,
       'parent': 'IndividualProduct',
       'url': 'devices/', // devices URL
-      'pathToDataInResponse': 'devices',
+      'pathToDataInResponse': 'items',
       'itemMethods': [
         'GET',
         'PATCH',

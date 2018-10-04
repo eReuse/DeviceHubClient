@@ -43,6 +43,23 @@ function ResourceServer (schema, Restangular) {
           })
         }).service(url)
         break
+      case 'devices/':
+        service = Restangular.withConfig(function (RestangularProvider) {
+          RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response) {
+            // TODO update this and move code form resource-list-getter here
+            // if (resourceName && resourceName in schema.schema) {
+            //   if (operation === 'getList') {
+            //     for (let i = 0; i < data.length; i++) {
+            //       parse(data[i], schema.schema[resourceName])
+            //     }
+            //   } else if (response.status !== 204) {
+            //     parse(data, schema.schema[resourceName])
+            //   }
+            // }
+            return _.get(response.data, settings.pathToDataInResponse)
+          })
+        }).service(url)
+        break
       case 'snapshots/':
         service = Restangular.withConfig(function (RestangularProvider) {
           RestangularProvider.addRequestInterceptor(function (element) {
