@@ -133,12 +133,16 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         const keyTypes = 'types-to-show'
+        const keyEvents = 'events'
+        // TODO get events from config
+        const allEvents = [ 'Ready', 'Repair', 'Allocate', 'Dispose', 'ToDispose', 'Sell', 'Receive', 'Register' ]
         const nonComponents = [
           'Desktop', 'Laptop', 'All-in-one', 'Monitor', 'Peripherals'
         ]
         // set initial filters
         let filtersModel = $scope.filtersModel = {
-          [keyTypes]: [ 'Placeholders' ].concat(nonComponents)
+          [keyTypes]: [ 'Placeholders' ].concat(nonComponents),
+          [keyEvents]: allEvents
         }
         function onFiltersChanged () {
           $scope.hideAllFilterPanels()
@@ -165,7 +169,14 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                   value = _.difference(value, nonComponents)
                   value.push('Non-Components')
                 }
-                filterText += value.join(', ')
+                if (filterKey === keyEvents) {
+                  filterText += 'Events: '
+                  if (value.length === allEvents.length) {
+                    filterText += 'All'
+                  }
+                } else {
+                  filterText += value.join(', ')
+                }
               } else if (isRange) {
                 if (!_.isNil(value.min)) filterText += 'from ' + value.min + ' '
                 if (!_.isNil(value.max)) filterText += 'to ' + value.max
