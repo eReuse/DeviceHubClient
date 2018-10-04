@@ -1030,6 +1030,21 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
                     'label': 'Manufacturer',
                     'disabled': false
                   }
+                },
+                {
+                  'key': 'device.technology',
+                  'type': 'select',
+                  'templateOptions': {
+                    'label': 'Technology',
+                    'options': [
+                      {name: 'CRT', value: 'CRT'},
+                      {name: 'TFT', value: 'TFT'},
+                      {name: 'PDP', value: 'PDP'},
+                      {name: 'LCD', value: 'LCD'},
+                      {name: 'OLED', value: 'OLED'},
+                      {name: 'AMOLED', value: 'AMOLED'}
+                    ]
+                  }
                 }
               ]
             default:
