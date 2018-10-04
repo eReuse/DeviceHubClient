@@ -114,7 +114,9 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
 
     _succeedSubmissionFactory (operationName, model) {
       return response => {
-        const resource = _.isUndefined(response) ? model : response // DELETE operations do not answer with the result
+        // TODO this is probably outdated with teal
+        // const resource = _.isUndefined(response) ? model : response // DELETE operations do not answer with the result
+        const resource = model
         Notification.success(utils.getResourceTitle(resource) + ' successfully ' + operationName + '.')
         $rootScope.$broadcast('submitted@' + resource['@type'])
         return response
