@@ -992,6 +992,24 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
                   }
                 },
                 {
+                  'key': 'device.size',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Size',
+                    'description': 'Indicate size',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.weight',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Weight',
+                    'description': 'Indicate weight',
+                    'disabled': false
+                  }
+                },
+                {
                   'key': 'device.resolutionWidth',
                   'type': 'input',
                   'templateOptions': {
@@ -1046,6 +1064,69 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
                       {name: 'OLED', value: 'OLED'},
                       {name: 'AMOLED', value: 'AMOLED'}
                     ]
+                  }
+                }
+              ]
+            case 'Smartphone':
+              return [
+                {
+                  'key': 'device.width',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Width',
+                    'description': 'Indicate width',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.height',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Height',
+                    'description': 'Indicate height',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.weight',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Weight',
+                    'description': 'Indicate weight',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.serialNumber',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Serial number',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.model',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Model',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.manufacturer',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Manufacturer',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.imei',
+                  'type': 'input',
+                  'templateOptions': {
+                    'type': 'number',
+                    'label': 'IMEI',
+                    'disabled': false
                   }
                 }
               ]

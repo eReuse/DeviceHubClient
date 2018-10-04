@@ -2611,7 +2611,7 @@ module.exports = {
       'type': 'set'
     }
   },
-  'mobile': {
+  'smartphone': {
     'height': {
       'type': 'float',
       'unitCode': 'MTR',
@@ -2758,7 +2758,7 @@ module.exports = {
       'type': 'string',
       'required': true,
       'allowed': [
-        'Mobile'
+        'Smartphone'
       ],
       'teaser': false
     },
@@ -15918,7 +15918,7 @@ module.exports = {
       'required': true,
       'allowed': [
         'TelevisionSet',
-        'Mobile',
+        'Smartphone',
         'NetworkAdapter',
         'Processor',
         'HardDrive',
