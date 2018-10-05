@@ -4,7 +4,7 @@
     <h2>Lots</h2>
     <lots-tree-navigation resource-type="Lot" on-selection-changed="onLotsSelectionChanged(selected)"></lots-tree-navigation>
   </div>
-  <div class="current-lot col-xs-12 col-sm-6 col-lg-6">
+  <div class="current-lot col-xs-12 col-sm-6 col-lg-6 fill-height-bar">
     <h2 style="margin-top: 0">{{ selectedLotsText }}</h2>
     <!-- Resource Filters -->
     <div class="active-filters-container">
@@ -147,7 +147,6 @@
       <div infinite-scroll="getMore()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
            infinite-scroll-parent infinite-scroll-disabled="getMoreIsBusy || !moreDevicesAvailable"
            infinite-scroll-listen-for-event="list:filtered"
-           class="fill-height-bar"
       >
         <table id="resource-list-table" class="resource-list-table table table-striped table-hover">
           <thead>
