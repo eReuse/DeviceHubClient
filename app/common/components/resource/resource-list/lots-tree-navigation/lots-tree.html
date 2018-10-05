@@ -1,4 +1,4 @@
-<div class="tree-node tree-node-content" ng-class="{selected: !!selectedNodes[node.id]}">
+<div class="tree-node tree-node-content" ng-class="{selected: selector.isSelected(node) }">
   <!--
   <a class="btn btn-normal btn-xs" ng-if="node.nodes && node.nodes.length > 0" data-nodrag ng-click="toggleExpand(this)"><span
           class="glyphicon"

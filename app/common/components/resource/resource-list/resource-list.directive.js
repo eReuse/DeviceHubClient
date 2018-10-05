@@ -10,7 +10,7 @@
  * @param {ResourceBreadcrumb} ResourceBreadcrumb
  * @param {Session} session
  */
-function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, UNIT_CODES, CONSTANTS, SearchService, $filter, $rootScope, Notification) {
+function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, UNIT_CODES, CONSTANTS, SearchService, $filter, $rootScope, Notification, LotsSelector) {
   const PATH = require('./__init__').PATH
   const selectionSummaryTemplateFolder = PATH + '/resource-list-selection-summary'
   return {
@@ -62,15 +62,16 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         // Selected lots
-        $scope.onLotsSelectionChanged = (selectedLots) => {
-          $scope.selectedLots = selectedLots
+        function updateLotSelection (selectedLotsSet) {
+          $scope.selectedLots = Object.values(selectedLotsSet)
           if ($scope.selectedLots.length > 0) {
             $scope.selectedLotsText = $scope.selectedLots.map((l) => l.name).join(', ')
           } else {
             $scope.selectedLotsText = 'All devices'
           }
         }
-        $scope.onLotsSelectionChanged([])
+        updateLotSelection({})
+        LotsSelector.callbackOnSelection(updateLotSelection)
 
         // Selected events
         // TODO
@@ -527,8 +528,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         $scope.deselectLots = () => {
-          $scope.selectedLots = []
-          $rootScope.$broadcast('deselectLots')
+          LotsSelector.deselectAll()
         }
 
         // Workaround to set labels of selected lots correctly. Necessary because API /devices doesn't include the 'label' property for device ancestors
@@ -564,7 +564,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         //   }
         // })
 
-        function updateSelection () {
+        function updateDeviceSelection () {
           $scope.selection = $scope.selection || {}
 
           let selectedDevices = $scope.selection.devices = selector.getAllSelectedDevices().slice()
@@ -716,8 +716,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             }
           ])
         }
-        selector.callbackOnSelection(updateSelection)
-        updateSelection()
+        selector.callbackOnSelection(updateDeviceSelection)
+        updateDeviceSelection()
 
         // Reloading
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates

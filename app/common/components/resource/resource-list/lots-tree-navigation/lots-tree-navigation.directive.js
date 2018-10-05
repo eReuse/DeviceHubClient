@@ -1,19 +1,18 @@
-function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar, $rootScope) {
+function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar, $rootScope, LotsSelector) {
   const PATH = require('./__init__').PATH
   // const PATH = 'common/components/resource/resource-list/lots-tree-navigation'
   return {
     template: require('./lots-tree-navigation.directive.html'),
     restrict: 'E',
     scope: {
-      onSelectionChanged: '&',
       resourceType: '@'
     },
     link: {
       pre: ($scope) => {
         const config = _.cloneDeep(resourceListConfig)
-        $scope.selectedNodes = {}
         $scope.treeTemplateURL = PATH + '/lots-tree.html'
         $scope.data = []
+        $scope.selector = LotsSelector
 
         $scope.findNodes = function (filter) {
           function markAsVisible (node) {
@@ -46,24 +45,15 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
           } else
           */
           if ($event.ctrlKey) {
-            $scope.selectedNodes[lot.id] = lot
+            $scope.selector.toggleMultipleSelection(lot)
           } else { // normal click
-            let isSelected = !!$scope.selectedNodes[lot.id]
-            $scope.selectedNodes = {}
-            if (!isSelected) {
-              $scope.selectedNodes[lot.id] = lot
-            }
+            $scope.selector.toggle(lot)
           }
-          $scope.onSelectionChanged({ selected: Object.values($scope.selectedNodes) })
         }
 
         $scope.toggleExpand = function (scope) {
           scope.toggle()
         }
-
-        $rootScope.$on('deselectLots', () => {
-          $scope.selectedNodes = {}
-        })
 
         // get data
         $scope.lots = [] // TODO rename to data
