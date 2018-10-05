@@ -244,8 +244,8 @@
         <group-resource-button
                 success="reload()"
                 resource-type="Lot"
-                get-resources="getSelectedLots()"
-                register-to-resources-update="selector.callbackOnSelection(callback)">
+                get-resources="lotsSelector.getAllSelected()"
+                register-to-resources-update="lotsSelector.callbackOnSelection(callback)">
         </group-resource-button>
         <manual-events-button></manual-events-button>
         <certificate-button></certificate-button>

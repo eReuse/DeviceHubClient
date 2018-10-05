@@ -31,6 +31,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         $scope.selectionPanelHiddenXS = true
         $scope.isAndroid = !!window.AndroidApp
+        const lotsSelector = $scope.lotsSelector = LotsSelector
 
         /**
          * Gets into the resource; traverse one step into the resource hierarchy by opening the resource in the
@@ -62,16 +63,16 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         // Selected lots
-        function updateLotSelection (selectedLotsSet) {
-          $scope.selectedLots = Object.values(selectedLotsSet)
+        function updateLotSelection (selectedLots) {
+          $scope.selectedLots = selectedLots
           if ($scope.selectedLots.length > 0) {
             $scope.selectedLotsText = $scope.selectedLots.map((l) => l.name).join(', ')
           } else {
             $scope.selectedLotsText = 'All devices'
           }
         }
-        updateLotSelection({})
-        LotsSelector.callbackOnSelection(updateLotSelection)
+        updateLotSelection([])
+        lotsSelector.callbackOnSelection(updateLotSelection)
 
         // Selected events
         // TODO

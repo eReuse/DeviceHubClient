@@ -36,12 +36,16 @@ class LotsSelectorService {
       callbacksForSelections.push(callback)
     }
 
+    this.getAllSelected = () => {
+      return Object.values(selectedNodes)
+    }
+
     /**
      * Performs common tasks after adding/removing resources on both lists.
      * @private
      */
     let _control = () => {
-      _.invokeMap(callbacksForSelections, _.call, null, selectedNodes)
+      _.invokeMap(callbacksForSelections, _.call, null, this.getAllSelected())
     }
   }
 }
