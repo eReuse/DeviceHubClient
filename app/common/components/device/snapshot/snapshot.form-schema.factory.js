@@ -12,7 +12,8 @@ function SnapshotFormSchemaFactory (FormSchema, ResourceSettings) {
     constructor (model, form, status, parserOptions = {}, deviceType) {
       let deviceRSettings = ResourceSettings(deviceType)
       // let deviceSchema = _.cloneDeep(deviceRSettings.schema)
-      model.device = {'type': deviceType}
+      model.device = model.device || {}
+      model.device.type = deviceType
       model.type = 'Snapshot' // Just in case is not there (ex: ComputerSnapshot)
       model.software = 'Web'
       model.version = '1.0'

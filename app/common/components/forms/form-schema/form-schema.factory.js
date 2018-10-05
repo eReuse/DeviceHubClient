@@ -1065,6 +1065,28 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
                       {name: 'AMOLED', value: 'AMOLED'}
                     ]
                   }
+                },
+                {
+                  'key': 'device.events[0].appearanceRange',
+                  'type': 'select',
+                  'templateOptions': {
+                    'label': 'Appearance rating',
+                    'options': [
+                      {name: 'A', value: 'B'},
+                      {name: 'B', value: 'B'}
+                    ]
+                  }
+                },
+                {
+                  'key': 'device.events[0].functionalityRange',
+                  'type': 'select',
+                  'templateOptions': {
+                    'label': 'Functionaliy rating',
+                    'options': [
+                      {name: 'A', value: 'B'},
+                      {name: 'B', value: 'B'}
+                    ]
+                  }
                 }
               ]
             case 'Smartphone':
