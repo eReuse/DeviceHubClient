@@ -13,7 +13,7 @@ function resourceSearch () {
           $scope.searchQuery = query
           $scope.onSearchChanged({ query: query })
         })
-        element.bind('keydown keypress', function () {
+        element.bind('keyup keypress', function () {
           let query = $scope.searchQuery
           clearTimeout(timeout)
           timeout = setTimeout(() => {
