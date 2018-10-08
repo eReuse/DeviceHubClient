@@ -9,7 +9,7 @@ class LotsSelectorService {
 
     this.toggle = (lot) => {
       let isSelected = selectedNodes[lot.id]
-      this.deselectAll()
+      this.deselectAll(true)
       if (!isSelected) {
         selectedNodes[lot.id] = lot
       }
@@ -27,8 +27,11 @@ class LotsSelectorService {
       _control()
     }
 
-    this.deselectAll = () => {
+    this.deselectAll = (skipControl) => {
       selectedNodes = {}
+      if (skipControl) {
+        return
+      }
       _control()
     }
 
