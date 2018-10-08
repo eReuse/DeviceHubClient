@@ -1,6 +1,7 @@
 // TODO what's the difference to config/restangular.config.js ? Merge the two config files?
 
 const utils = require('./../utils.js')
+const schemas = require('./../../config/schema_reduced')
 
 /**
  * Provides a suitable connexion to DeviceHub, personalised for the resource.
@@ -27,38 +28,10 @@ function ResourceServer (schema, Restangular) {
 
     switch (url) {
       case 'lots/':
-        service = Restangular.withConfig(function (RestangularProvider) {
-          RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response) {
-            // TODO update this and move code form resource-list-getter here
-            // if (resourceName && resourceName in schema.schema) {
-            //   if (operation === 'getList') {
-            //     for (let i = 0; i < data.length; i++) {
-            //       parse(data[i], schema.schema[resourceName])
-            //     }
-            //   } else if (response.status !== 204) {
-            //     parse(data, schema.schema[resourceName])
-            //   }
-            // }
-            return _.get(response.data, settings.pathToDataInResponse)
-          })
-        }).service(url)
+        service = RestangularConfigurerResource.service(url)
         break
       case 'devices/':
-        service = Restangular.withConfig(function (RestangularProvider) {
-          RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response) {
-            // TODO update this and move code form resource-list-getter here
-            // if (resourceName && resourceName in schema.schema) {
-            //   if (operation === 'getList') {
-            //     for (let i = 0; i < data.length; i++) {
-            //       parse(data[i], schema.schema[resourceName])
-            //     }
-            //   } else if (response.status !== 204) {
-            //     parse(data, schema.schema[resourceName])
-            //   }
-            // }
-            return _.get(response.data, settings.pathToDataInResponse)
-          })
-        }).service(url)
+        service = RestangularConfigurerResource.service(url)
         break
       case 'snapshots/':
         service = Restangular.withConfig(function (RestangularProvider) {
@@ -148,15 +121,14 @@ function ResourceServer (schema, Restangular) {
      */
     RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response) {
       // TODO update this and move code form resource-list-getter here
-      // if (resourceName && resourceName in schema.schema) {
-      //   if (operation === 'getList') {
-      //     for (let i = 0; i < data.length; i++) {
-      //       parse(data[i], schema.schema[resourceName])
-      //     }
-      //   } else if (response.status !== 204) {
-      //     parse(data, schema.schema[resourceName])
-      //   }
-      // }
+      if (operation === 'getList') {
+        data = data.items
+        for (let i = 0; i < data.length; i++) {
+          parse(data[i], schemas[resourceName])
+        }
+      } else if (response.status !== 204) {
+        parse(data, schemas[resourceName])
+      }
       return data
     })
 
@@ -203,6 +175,12 @@ function ResourceServer (schema, Restangular) {
  * @param schema
  */
 function parse (item, schema) {
+  _.assign(item, {
+    _id: item.id,
+    _updated: item.updated,
+    _created: item.created
+  })
+
   // todo this first for should be nested
   for (const fieldName in schema) {
     switch (schema[fieldName].type) {
