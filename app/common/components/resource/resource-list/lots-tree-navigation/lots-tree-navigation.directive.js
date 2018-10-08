@@ -58,7 +58,7 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
         // get data
         $scope.data = []
         // Set up getters for lots
-        const getterLots = new ResourceListGetter('Lot', $scope.data, config, progressBar, null)
+        const getterLots = new ResourceListGetter('Lot', $scope.data, config, progressBar, null, 'ui-tree')
         getterLots.updateSort('name')
         getterLots.callbackOnGetting(() => {
           $scope.totalNumberOfLots = getterLots.getTotalNumberResources()

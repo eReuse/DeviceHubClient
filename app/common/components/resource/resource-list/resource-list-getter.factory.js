@@ -94,13 +94,14 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @param {progressBar} progressBar - An instance of ngProgress.
      * @param {defaultFilters} defaultFilters - Filters that will be applied to any request
      */
-    constructor (resourceType, resources, filterSettings, progressBar, defaultFilters) {
+    constructor (resourceType, resources, filterSettings, progressBar, defaultFilters, format) {
       this.resourceType = resourceType
       this.resources = resources
       this.filterSettings = filterSettings
       this.server = ResourceSettings(resourceType).server
       this.progressBar = progressBar
       this.defaultFilters = defaultFilters
+      this._format = format
       /**
        * A key/value object of filters, where every key represents a different source.
        * Clients can update their filter, and all of them are merged into
@@ -257,6 +258,9 @@ function ResourceListGetterFactory (ResourceSettings) {
       const q = {
         filters: this._filters,
         search: this._query
+      }
+      if (this._format) {
+        q.format = this._format
       }
       //
       // const q = {
