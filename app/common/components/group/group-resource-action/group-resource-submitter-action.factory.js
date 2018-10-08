@@ -17,6 +17,7 @@ function groupResourceSubmitterFactory (SubmitForm, ResourceSettings) {
     constructor (resources, resourceType, groupType, form, lContainer, success, addingResources = true) {
       this.resources = resources
       this.rSettings = ResourceSettings(resourceType)
+      this.resourceType = resourceType
       this.gSettings = ResourceSettings(groupType)
       this.groupServer = this.gSettings.server
       this.submitForm = new SubmitForm(form, lContainer)
@@ -32,20 +33,34 @@ function groupResourceSubmitterFactory (SubmitForm, ResourceSettings) {
      */
     submit (groupId) {
       if (this.submitForm.isValid()) {
-        this.groupServer.one(groupId).get().then(group => {
-          const rName = this.rSettings.resourceName
-          this.submitForm.prepare()
-          group.children[rName] = this.addingResources
-            ? _(group.children[rName]).union(this.children).value()
-            : _(group.children[rName]).difference(this.children).value()
-          const promise = group.patch({'@type': group['@type'], 'children': group.children}).then(this.success)
-          const humanName = this.gSettings.humanName
-          this.submitForm.after(promise,
-            `The items have been ${this.addingResources ? 'added or moved' : 'removed'} to ${humanName}.`,
-            `We couldn't ${this.addingResources ? 'add or move to' : 'remove from'} ${humanName}.
-             Ensure you have permissions on all devices.`
-          )
-        })
+        this.submitForm.prepare()
+        let method
+        if (this.addingResources) {
+          method = 'post'
+        } else {
+          method = 'delete'
+        }
+        let resourceURL // TODO get URL from config
+        switch (this.resourceType) {
+          case 'Lot':
+            resourceURL = 'children'
+            break
+          case 'Device':
+            resourceURL = 'devices'
+            break
+          default:
+            throw new Error('Entities of resource ' + this.resourceType + ' can not be grouped')
+        }
+        const query = {
+          id: this.children
+        }
+        const promise = this.groupServer.one(groupId).all(resourceURL)[method](null, query).then(this.success)
+        const humanName = this.gSettings.humanName
+        this.submitForm.after(promise,
+          `The items have been ${this.addingResources ? 'added or moved' : 'removed'} to ${humanName}.`,
+          `We couldn't ${this.addingResources ? 'add or move to' : 'remove from'} ${humanName}.
+           Ensure you have permissions on all devices.`
+        )
       }
     }
   }
