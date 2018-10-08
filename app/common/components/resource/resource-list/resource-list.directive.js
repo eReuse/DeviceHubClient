@@ -43,10 +43,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         // Set up getters and selectors for devices
-        const defaultFilters = ($scope.parentResource && $scope.parentResource._id)
-          ? { 'dh$insideLot': $scope.parentResource._id } // TODO dh$insideLot returns devices that are in specified lot OR any sublot of specified lot
-          : null
-        const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar, _.cloneDeep(defaultFilters))
+        const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar, null)
         const selector = $scope.selector = ResourceListSelector
         getterDevices.callbackOnGetting((resources, lotID) => {
           selector.reAddToLot(resources, lotID)
@@ -70,6 +67,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           } else {
             $scope.selectedLotsText = 'All devices'
           }
+          getterDevices.updateFiltersFromSearch({
+            lots: selectedLots.map(l => l.id)
+          })
         }
         updateLotSelection([])
         lotsSelector.callbackOnSelection(updateLotSelection)
