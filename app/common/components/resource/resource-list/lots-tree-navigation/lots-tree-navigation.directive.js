@@ -65,6 +65,10 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
           $scope.moreLotsAvailable = $scope.totalNumberOfLots > $scope.data.length
           $scope.findNodes()
         })
+
+        $scope.$on('lots:reload', () => {
+          getterLots.getResources()
+        })
         // // TODO delete as soon as getter works
         // _.assign($scope.data, [
         //   {
