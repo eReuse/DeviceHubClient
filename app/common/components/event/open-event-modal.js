@@ -27,7 +27,7 @@ function openModalFactory (dhModal) {
     // }
     // if (resources) model[isGroup ? 'groups' : 'devices'] = resources
 
-    if (type === 'devices:Snapshot') {
+    if (type === 'devices:Snapshot' || type === 'devices:NewTag') {
       model['device'] = resources[0]
     } else {
       model['devices'] = resources

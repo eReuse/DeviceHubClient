@@ -1,86 +1,119 @@
-function lotsTreeNavigation () {
+function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar, $rootScope, LotsSelector) {
   const PATH = require('./__init__').PATH
   // const PATH = 'common/components/resource/resource-list/lots-tree-navigation'
   return {
     template: require('./lots-tree-navigation.directive.html'),
     restrict: 'E',
-    scope: {},
+    scope: {
+      resourceType: '@'
+    },
     link: {
       pre: ($scope) => {
+        const config = _.cloneDeep(resourceListConfig)
         $scope.treeTemplateURL = PATH + '/lots-tree.html'
-        $scope.openLot = (lotID) => {
-          alert('open ' + lotID)
+        $scope.data = []
+        $scope.selector = LotsSelector
+
+        $scope.findNodes = function (filter) {
+          function markAsVisible (node) {
+            let oneChildVisible = false
+            node.nodes && node.nodes.forEach((child) => {
+              let childIsVisible = markAsVisible(child)
+              if (childIsVisible) {
+                oneChildVisible = true
+              }
+            })
+            node.isVisible = !filter ||
+                            filter.length === 0 ||
+                            node.name.indexOf(filter) !== -1 ||
+                            oneChildVisible
+            return node.isVisible
+          }
+
+          $scope.data.forEach((node) => markAsVisible(node))
         }
-        $scope.toggle = function (scope) {
+
+        $scope.toggleLot = (lot, $event) => {
+          /*
+          TODO implement shift select
+          if ($event.shiftKey) {
+            let lastSelectedIndex = $scope.lastSelectedIndex || 0
+            let start = Math.min(lastSelectedIndex, $index)
+            let end = Math.max(lastSelectedIndex, $index)
+            let devicesToSelect = $scope.lots.slice(start, end + 1)
+            selector.selectAll(devicesToSelect)
+          } else
+          */
+          if ($event.ctrlKey) {
+            $scope.selector.toggleMultipleSelection(lot)
+          } else { // normal click
+            $scope.selector.toggle(lot)
+          }
+        }
+
+        $scope.toggleExpand = function (scope) {
           scope.toggle()
         }
-        $scope.data = [
+
+        // get data
+        $scope.lots = [] // TODO rename to data
+        // Set up getters for lots
+        const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar, null)
+        getterLots.updateSort('label')
+        getterLots.callbackOnGetting(() => {
+          $scope.totalNumberOfLots = getterLots.getTotalNumberResources()
+          $scope.moreLotsAvailable = $scope.totalNumberOfLots > $scope.lots.length
+          // TODO set lots to $scope.data
+
+          $scope.findNodes()
+        })
+        // TODO delete as soon as getter works
+        _.assign($scope.data, [
           {
             'id': 1,
-            'title': 'node1',
+            'name': 'Donación BCN Activa',
             'nodes': [
               {
                 'id': 11,
-                'title': 'node1.1',
+                'name': '2017',
                 'nodes': [
                   {
                     'id': 111,
-                    'title': 'node1.1.1',
-                    'nodes': [
-                      {
-                        'id': 1111,
-                        'title': 'node1.1',
-                        'nodes': [
-                          {
-                            'id': 111,
-                            'title': 'node1.1.1',
-                            'nodes': []
-                          }
-                        ]
-                      },
-                      {
-                        'id': 1112,
-                        'title': 'node1.2',
-                        'nodes': []
-                      }
-                    ]
+                    'name': 'Febrero',
+                    'nodes': []
+                  },
+                  {
+                    'id': 112,
+                    'name': 'Marzo',
+                    'nodes': []
                   }
                 ]
               },
               {
                 'id': 12,
-                'title': 'node1.2',
+                'name': '2018',
                 'nodes': []
               }
             ]
-          }, {
+          },
+          {
             'id': 2,
-            'title': 'node2',
-            'nodrop': true, // An arbitrary property to check in custom template for nodrop-enabled
-            'nodes': [
-              {
-                'id': 21,
-                'title': 'node2.1',
-                'nodes': []
-              },
-              {
-                'id': 22,
-                'title': 'node2.2',
-                'nodes': []
-              }
-            ]
-          }, {
+            'name': 'Banc de Recurs',
+            'nodes': []
+          },
+          {
             'id': 3,
-            'title': 'node3',
+            'name': 'Salidas',
             'nodes': [
               {
-                'id': 31,
-                'title': 'node3.1',
+                'id': 2,
+                'name': 'Banc de Recurs',
                 'nodes': []
               }
             ]
           }
-        ]
+        ])
+        $scope.findNodes()
       }
     }
   }

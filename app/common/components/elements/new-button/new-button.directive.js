@@ -11,13 +11,18 @@ function registerButton (SnapshotFormSchema, ResourceSettings, dhModal, FormSche
         $scope.open = {
           computerSnapshot: _.bind(dhModal.open, null, 'computerSnapshot', {type: () => 'Computer'}),
           snapshot: type => {
-            const model = () => ({'@type': 'devices:Snapshot'})
+            const model = () => ({
+              '@type': 'devices:Snapshot',
+              'device': {
+                'events': [{ type: 'AppRate' }]
+              }
+            })
             const options = () => ({
               FormSchema: SnapshotFormSchema,
               deviceType: type,
               title: ResourceSettings(type).humanName
             })
-            return dhModal.open('form', {model: model, options: options, parserOptions: () => {}})
+            return dhModal.open('form', { model: model, options: options, parserOptions: () => {} })
           },
           group: type => {
             const model = () => ({'@type': type})

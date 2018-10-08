@@ -1,5 +1,4 @@
 function restangularConfig (RestangularProvider, CONSTANTS) {
-  const utils = require('./../components/utils')
   RestangularProvider.setBaseUrl(CONSTANTS.url)
   RestangularProvider.addResponseInterceptor(function (data, operation, what, url, response, deferred) {
     if (what === 'schema') return data
@@ -7,8 +6,8 @@ function restangularConfig (RestangularProvider, CONSTANTS) {
     // .. to look for getList operations
     switch (operation) {
       case 'getList':
-        _.forEach(data.devices, buildLink)
-        extractedData = data.devices
+        _.forEach(data, buildLink)
+        extractedData = data
         extractedData._meta = data._meta
         break
       case 'get':

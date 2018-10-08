@@ -33,7 +33,7 @@ function formSchema (FormSchema, Notification) {
         $scope.options.canDelete = 'remove' in $scope.model
         $scope.options.delete = model => formSchema.delete(model)
 
-        if (form.model['@type'] === 'devices:Snapshot') {
+        if (form.model['@type'] === 'devices:NewTag') {
           if (window.AndroidApp) {
             Notification.success('NFC active')
             window.AndroidApp.startNFC('tagScanDone')

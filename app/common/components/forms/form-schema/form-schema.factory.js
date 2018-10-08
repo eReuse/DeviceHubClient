@@ -48,7 +48,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
       } catch (err) {
       }  // doNotUse not in getSetting
 
-      this.fields = this.form.fields = this._getFields(this.resourceType)
+      this.fields = this.form.fields = this._getFields(this.resourceType, model.device && model.device.type)
 
       // this.fields = this.form.fields = cerberusToFormly.parse(model, parserOptions)
       // console.log('type:' + model['@type'])
@@ -91,7 +91,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
       } else if (this._uploadsFile) {
         const field = this._uploadsFile
         promise = this.rSettings.server.postWithFiles(model, field.key, field.templateOptions.files)
-      } else if (this.resourceType === 'devices:Snapshot') { // TODO this case should probably be generalized and settings moved to config
+      } else if (this.resourceType === 'devices:NewTag') { // TODO this case should probably be generalized and settings moved to config
         const device = model.device
         const newTagID = device.newTagID
         promise = this.rSettings.server.one(newTagID).one('device', device._id).put()
@@ -114,7 +114,9 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
 
     _succeedSubmissionFactory (operationName, model) {
       return response => {
-        const resource = _.isUndefined(response) ? model : response // DELETE operations do not answer with the result
+        // TODO this is probably outdated with teal
+        // const resource = _.isUndefined(response) ? model : response // DELETE operations do not answer with the result
+        const resource = model
         Notification.success(utils.getResourceTitle(resource) + ' successfully ' + operationName + '.')
         $rootScope.$broadcast('submitted@' + resource['@type'])
         return response
@@ -163,7 +165,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
     // }
 
     // TODO move fields definition to schema definition and get resource-settings from there
-    _getFields (event) {
+    _getFields (event, type) {
       switch (event) {
         case 'devices:ToPrepare':
           return [{
@@ -967,21 +969,192 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
               'disabled': false
             }
           }]
-        // case 'devices:Snapshot':
-        //   return [{
-        //     'key': 'place',
-        //     'name': 'place',
-        //     'type': 'typeahead',
-        //     'templateOptions': {
-        //       'resourceName': 'places',
-        //       'keyFieldName': '_id',
-        //       'label': 'Place where the devices are saved',
-        //       'labelFieldName': 'label',
-        //       'filterFieldNames': ['label', '_id'],
-        //       'description': 'Place the devices to an existing location.',
-        //       'disabled': false
-        //     }
-        //   }]
+        case 'devices:Snapshot':
+          switch (type) {
+            case 'ComputerMonitor':
+              return [
+                {
+                  'key': 'device.width',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Width',
+                    'description': 'Indicate width',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.height',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Height',
+                    'description': 'Indicate height',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.size',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Size',
+                    'description': 'Indicate size',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.weight',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Weight',
+                    'description': 'Indicate weight',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.resolutionWidth',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Resolution width',
+                    'description': 'Indicate resolution width',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.resolutionHeight',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Resolution height',
+                    'description': 'Indicate resolution height',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.serialNumber',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Serial number',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.model',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Model',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.manufacturer',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Manufacturer',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.technology',
+                  'type': 'select',
+                  'templateOptions': {
+                    'label': 'Technology',
+                    'options': [
+                      {name: 'CRT', value: 'CRT'},
+                      {name: 'TFT', value: 'TFT'},
+                      {name: 'PDP', value: 'PDP'},
+                      {name: 'LCD', value: 'LCD'},
+                      {name: 'OLED', value: 'OLED'},
+                      {name: 'AMOLED', value: 'AMOLED'}
+                    ]
+                  }
+                },
+                {
+                  'key': 'device.events[0].appearanceRange',
+                  'type': 'select',
+                  'templateOptions': {
+                    'label': 'Appearance rating',
+                    'options': [
+                      {name: 'A', value: 'B'},
+                      {name: 'B', value: 'B'}
+                    ]
+                  }
+                },
+                {
+                  'key': 'device.events[0].functionalityRange',
+                  'type': 'select',
+                  'templateOptions': {
+                    'label': 'Functionaliy rating',
+                    'options': [
+                      {name: 'A', value: 'B'},
+                      {name: 'B', value: 'B'}
+                    ]
+                  }
+                }
+              ]
+            case 'Smartphone':
+              return [
+                {
+                  'key': 'device.width',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Width',
+                    'description': 'Indicate width',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.height',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Height',
+                    'description': 'Indicate height',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.weight',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Weight',
+                    'description': 'Indicate weight',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.serialNumber',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Serial number',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.model',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Model',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.manufacturer',
+                  'type': 'input',
+                  'templateOptions': {
+                    'label': 'Manufacturer',
+                    'disabled': false
+                  }
+                },
+                {
+                  'key': 'device.imei',
+                  'type': 'input',
+                  'templateOptions': {
+                    'type': 'number',
+                    'label': 'IMEI',
+                    'disabled': false
+                  }
+                }
+              ]
+            default:
+              throw new Error('Fields for event' + event + ' and type' + type + 'not found')
+          }
         case 'devices:Dispose':
           return [{
             'key': 'label',
@@ -1430,7 +1603,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
               ] // conditions field-group
             }
           ]
-        case 'devices:Snapshot':
+        case 'devices:NewTag':
           return [
             {
               key: 'device.newTagID',
