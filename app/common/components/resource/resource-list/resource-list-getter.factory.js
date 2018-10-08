@@ -396,7 +396,7 @@ function ResourceListGetterFactory (ResourceSettings) {
             // add labels to lots
             lotsWithLabel.forEach(lot => {
               lots[lot._id].forEach(origLot => {
-                origLot.label = lot.label
+                origLot.name = lot.name
               })
             })
             this._updateResourcesAfterGet(getNextPage, resources)
@@ -409,7 +409,6 @@ function ResourceListGetterFactory (ResourceSettings) {
           _.assign(r, {
             _id: r.id,
             _created: r.created,
-            label: r.title || r.name,
             '@type': 'Lot'
           })
         })

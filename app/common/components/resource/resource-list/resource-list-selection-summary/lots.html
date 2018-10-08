@@ -14,7 +14,7 @@
       <div class="selected-lot"
            ng-class="{ 'pill-lot': !selection.multiSelection, 'pill-lot-flex': !selection.multiSelection }">
         <a ng-click="goTo(lot)">
-          <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.label }} ({{lot.selectedDevices.length}})
+          <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.name }} ({{lot.selectedDevices.length}})
         </a>
         <button type="button"
                 class="btn"
