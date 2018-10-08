@@ -67,18 +67,12 @@ function ResourceServer (schema, Restangular) {
      * @return {$q} The same promise as service.getList()
      */
     service.findText = (names, text, valueMatchesBeginning = false, maxResults = 6) => {
-      const fromBeginning = valueMatchesBeginning ? '^' : ''
       // We look for words starting by filterValue (so we use indexs), case-insensible (options: -i)
-      const hasId = _.includes(names, '_id')
-      names = _.without(names, '_id')  // We do not want to modify the original names array
-      const searchParams = {
-        where: {
-          $or: _.map(names, name => ({[name]: {$regex: fromBeginning + text, $options: '-ix'}}))
-        }
+      const query = {
+        search: text
       }
-      if (hasId) searchParams.where.$or.push({_id: {$regex: '^' + text, $options: '-ix'}})
-      if (_.isInteger(maxResults)) searchParams.max_results = maxResults
-      return service.getList(searchParams)
+      if (_.isInteger(maxResults)) query.max_results = maxResults
+      return service.getList(query)
     }
 
     /**
