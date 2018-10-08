@@ -66,7 +66,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         function updateLotSelection (selectedLots) {
           $scope.selectedLots = selectedLots
           if ($scope.selectedLots.length > 0) {
-            $scope.selectedLotsText = $scope.selectedLots.map((l) => l.name).join(', ')
+            $scope.selectedLotsText = $scope.selectedLots.map((l) => l.title).join(', ')
           } else {
             $scope.selectedLotsText = 'All devices'
           }

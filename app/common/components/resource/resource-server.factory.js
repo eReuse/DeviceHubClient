@@ -26,7 +26,7 @@ function ResourceServer (schema, Restangular) {
     let url = settings.url
 
     switch (url) {
-      case 'inventories/':
+      case 'lots/':
         service = Restangular.withConfig(function (RestangularProvider) {
           RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response) {
             // TODO update this and move code form resource-list-getter here

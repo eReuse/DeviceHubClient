@@ -20336,8 +20336,8 @@ module.exports = {
     '_settings': {
       'useDefaultDatabase': false,
       'parent': 'Abstract',
-      'url': 'inventories/',
-      'pathToDataInResponse': 'lots',
+      'url': 'lots/',
+      'pathToDataInResponse': 'items',
       'itemMethods': [
         'GET',
         'PATCH',
