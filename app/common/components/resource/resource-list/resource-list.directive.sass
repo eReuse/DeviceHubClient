@@ -50,6 +50,11 @@ lots-tree-navigation
   .tabs-lots-events
     background-color: #E8E8DC
     padding: 10px 15px
+    position: absolute
+    top: 0
+    z-index: 10
+    @media (min-width: $screen-sm-min)
+      position: inherit
   .current-lot
     background-color: #F2F2F2
     padding: 10px
@@ -241,7 +246,7 @@ lots-tree-navigation
         display: block
 
 .selection-button
-  z-index: 99
+  z-index: 9
   position: fixed
   bottom: 0
   padding: 10px 0 10px 0
@@ -254,6 +259,7 @@ lots-tree-navigation
   top: 0
   background-color: #F2F2F2
   padding: 5px 10px
+  z-index: 5
   &.selected
     background-color: #DCE1E1
   ul

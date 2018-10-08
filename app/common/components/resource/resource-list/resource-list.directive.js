@@ -29,6 +29,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         const config = _.cloneDeep(resourceListConfig)
         $scope.devices = [] // Do never directly assign (r=[]) to 'devices' as modules depend of its reference
 
+        $scope.lotsSelectionHiddenXS = true
         $scope.selectionPanelHiddenXS = true
         $scope.isAndroid = !!window.AndroidApp
         const lotsSelector = $scope.lotsSelector = LotsSelector

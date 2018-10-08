@@ -1,11 +1,22 @@
 <!-- Listing -->
 <div class="row">
-  <div class="tabs-lots-events col-sm-4 col-md-2 col-lg-2 fill-height-bar">
-    <h2>Lots</h2>
+  <div class="tabs-lots-events col-xs-12 col-sm-4 col-md-2 col-lg-2 fill-height-bar"
+       ng-class="{ 'hidden-xs': lotsSelectionHiddenXS }">
+    <div>
+      <h2 style="display: inline-block">Lots</h2>
+      <a class="visible-xs" style="float: right" ng-click="lotsSelectionHiddenXS = !lotsSelectionHiddenXS">
+        <h2><i class="fa fa-close fa-fw"></i></h2>
+      </a>
+    </div>
     <lots-tree-navigation resource-type="Lot" on-selection-changed="onLotsSelectionChanged(selected)"></lots-tree-navigation>
   </div>
   <div class="current-lot col-xs-12 col-sm-6 col-lg-6 fill-height-bar">
-    <h2 style="margin-top: 0">{{ selectedLotsText }}</h2>
+    <div>
+      <h2 class="hidden-xs" style="margin-top: 0">{{ selectedLotsText }}</h2>
+      <a class="visible-xs" ng-click="lotsSelectionHiddenXS = !lotsSelectionHiddenXS">
+        <h2 style="margin-top: 0">{{ selectedLotsText }} <i class="fa fa-edit fa-fw"></i></h2>
+      </a>
+    </div>
     <!-- Resource Filters -->
     <div class="active-filters-container">
       <!-- Active filters -->
