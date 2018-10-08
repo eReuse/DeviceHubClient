@@ -17,6 +17,38 @@
         <h2 style="margin-top: 0">{{ selectedLotsText }} <i class="fa fa-edit fa-fw"></i></h2>
       </a>
     </div>
+
+    <div class="search-wrapper input-group">
+      <resource-search on-search-changed="onSearchChanged(query)"></resource-search>
+      <div class="input-group-btn btn-group" ng-show="isAndroid" uib-dropdown is-open="status.isopen">
+        <button id="event-button"
+                type="button"
+                class="btn btn-info"
+                uib-dropdown-toggle
+        >
+          Scan device<span class="caret"></span>
+        </button>
+        <ul uib-dropdown-menu role="menu" aria-labelledby="event-button">
+          <li role="menuitem"
+              tooltip-placement="right"
+              tooltip-append-to-body="true"
+          >
+            <a ng-click="scanQR()">
+              Scan QR
+            </a>
+          </li>
+          <li role="menuitem"
+              tooltip-placement="right"
+              tooltip-append-to-body="true"
+          >
+            <a ng-click="scanQR()">
+              Scan NFC
+            </a>
+          </li>
+        </ul>
+      </div><!-- /btn-group -->
+    </div><!-- /input-group -->
+
     <!-- Resource Filters -->
     <div class="active-filters-container">
       <!-- Active filters -->
@@ -85,37 +117,6 @@
         </div>
       </div>
     </div>
-
-    <div class="search-wrapper input-group">
-      <resource-search on-search-changed="onSearchChanged(query)"></resource-search>
-      <div class="input-group-btn btn-group" ng-show="isAndroid" uib-dropdown is-open="status.isopen">
-        <button id="event-button"
-                type="button"
-                class="btn btn-info"
-                uib-dropdown-toggle
-        >
-          Scan device<span class="caret"></span>
-        </button>
-        <ul uib-dropdown-menu role="menu" aria-labelledby="event-button">
-          <li role="menuitem"
-              tooltip-placement="right"
-              tooltip-append-to-body="true"
-          >
-            <a ng-click="scanQR()">
-              Scan QR
-            </a>
-          </li>
-          <li role="menuitem"
-              tooltip-placement="right"
-              tooltip-append-to-body="true"
-          >
-            <a ng-click="scanQR()">
-              Scan NFC
-            </a>
-          </li>
-        </ul>
-      </div><!-- /btn-group -->
-    </div><!-- /input-group -->
 
 
     <!--<h4>Lots</h4>-->
