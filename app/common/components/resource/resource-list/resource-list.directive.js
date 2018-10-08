@@ -68,11 +68,15 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             $scope.selectedLotsText = 'All devices'
           }
           getterDevices.updateFiltersFromSearch({
-            lots: selectedLots.map(l => l.id)
+            lots: selectedLots.map(l => l._id)
           })
         }
         updateLotSelection([])
         lotsSelector.callbackOnSelection(updateLotSelection)
+
+        $scope.reloadLots = () => {
+          $rootScope.$broadcast('lots:reload')
+        }
 
         // Selected events
         // TODO
