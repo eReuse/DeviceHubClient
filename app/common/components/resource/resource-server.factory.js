@@ -193,20 +193,23 @@ function parse (item, schema) {
   }
 
   // We do only one nested level, as python-eve cannot go more deeper neither (of object and array)
-  _.forOwn(item, function (val) {
-    if (_.isArray(val)) {
-      _.forEach(val, parseDate)
-    } else if (_.isObject(val)) parseDate(val)
+  _.forOwn(item, function (prop) {
+    if (_.isArray(prop)) {
+      _.forEach(prop, parse)
+    }
   })
   parseDate(item)
 
-  function parseDate (val) {
-    _parseDate(val, '_updated')
-    _parseDate(val, '_created')
+  function parseDate (item) {
+    _parseDate(item, '_updated')
+    _parseDate(item, '_created')
 
-    function _parseDate (value, propertyName) {
-      const a = new Date(value[propertyName] + 'Z') // z stands for 'utc'
-      if (!_.isNaN(a.getTime())) value[propertyName] = a
+    function _parseDate (item, propertyName) {
+      if (!item[propertyName]) {
+        return
+      }
+      const a = new Date(item[propertyName] + 'Z') // z stands for 'utc'
+      if (!_.isNaN(a.getTime())) item[propertyName] = a
     }
   }
 }
