@@ -726,14 +726,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         // Reloading
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
-        $scope.reload = () => {
-          getterDevices.getResources()
-          $scope.deselectAll()
-        }
+        $scope.reload = reloadDevices()
+
         // TODO need this?
-        function hardReload () {
-          $scope.deselectAll()
-          $scope.reload()
+        function reloadDevices () {
+          getterDevices.getResources()
+          updateDeviceSelection()
         }
 
         // Pagination Devices
@@ -801,13 +799,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         // TODO what does next line?
-        ResourceSettings('Device').types.forEach(type => { $scope.$on('submitted@' + type, hardReload) })
+        ResourceSettings('Device').types.forEach(type => { $scope.$on('submitted@' + type, reloadDevices) })
 
         // We register ourselves for any event type, excluding Snapshot if the list is not about devices
         let eventTypes = ResourceSettings('Event').subResourcesNames
         // TODO do we need next line? resourceType is always 'Device' for now
         // if (resourceType !== 'Device') eventTypes = _.without(eventTypes, 'devices:Snapshot', 'devices:Register')
-        _.forEach(eventTypes, eventType => { $scope.$on('submitted@' + eventType, hardReload) })
+        _.forEach(eventTypes, eventType => { $scope.$on('submitted@' + eventType, reloadDevices) })
 
         // As we touch config in the init, we add it to $scope at the end to avoid $watch triggering multiple times
         $scope.config = config
