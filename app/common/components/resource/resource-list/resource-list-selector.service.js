@@ -114,6 +114,14 @@ class ResourceListSelector {
       return Object.values(lots)
     }
 
+    this.reselect = (devices) => {
+      let selectedList = devices.filter((device) => {
+        return selected[device._id]
+      })
+      selected = _.keyBy(selectedList, '_id')
+      _control()
+    }
+
     // TODO move to resource-list.directive
     this.VARIOUS = 'Various'
 
