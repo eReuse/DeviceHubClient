@@ -47,7 +47,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar, null)
         const selector = $scope.selector = ResourceListSelector
         getterDevices.callbackOnGetting((resources, lotID) => {
-          selector.reAddToLot(resources, lotID)
+          // selector.reAddToLot(resources, lotID) TODO need this ?
           $scope.totalNumberOfDevices = getterDevices.getTotalNumberResources()
           $scope.moreDevicesAvailable = $scope.totalNumberOfDevices > $scope.devices.length
         })
@@ -537,10 +537,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           LotsSelector.deselectAll()
         }
 
-        // Workaround to set labels of selected lots correctly. Necessary because API /devices doesn't include the 'label' property for device ancestors
-        // TODO remove as soon as API returns ancestor lots with labels set
-        $scope.parentResource && selector.nameLot($scope.parentResource)
-
         // components, price and condition score (Must be above updateSelection)
         // const manufacturerSettings = ResourceSettings('Manufacturer')
         const deviceSettings = ResourceSettings('Device')
@@ -575,7 +571,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
           let selectedDevices = $scope.selection.devices = selector.getAllSelectedDevices().slice()
           $scope.selection.multiSelection = $scope.selection.devices.length > 1
-          $scope.selection.lots = selector.getLots().slice()
+          $scope.selection.lots = selector.getLots()
 
           // TODO Remove?
           // mark current lot
@@ -727,11 +723,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         // Reloading
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
-        $scope.reload = reloadDevices()
+        $scope.reload = reloadDevices
 
         // TODO need this?
         function reloadDevices () {
           getterDevices.getResources()
+
           updateDeviceSelection()
         }
 

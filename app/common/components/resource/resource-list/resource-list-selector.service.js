@@ -18,7 +18,7 @@ class ResourceListSelector {
    */
   constructor () {
     let callbacksForSelections = []
-    let lots = []
+    let selected = {}
 
     /**
      * Toggles the selected state of given resource, selecting (or deselecting) the device(s)
@@ -56,28 +56,14 @@ class ResourceListSelector {
 
     let _deselectAll = devices => {
       if (!devices || !devices.slice) {
-        lots.length = 0
+        selected = {}
         return
       }
 
-      devices = devices.slice() // given devices might the same array we remove devices from
+      devices = devices.slice() // given devices might be the same array we remove devices from
       devices.forEach(device => {
         remove(device)
       })
-    }
-
-    /**
-     * Re-populate the actual list of resources with the passed-in resources.
-     *
-     * This method is used after getting new resources, as some resources may have been
-     * selected in other lists (they are in the total list).
-     * @param resources
-     * TODO refactor to use lots
-     */
-    this.reAddToLot = (resources, lotID) => {
-      // We re-populate inList from the actual resources that are in total
-      this.getLotByID(lotID) && (this.getLotByID(lotID).length = 0)
-      _control()
     }
 
     /**
@@ -86,52 +72,22 @@ class ResourceListSelector {
      * @returns {boolean}
      */
     this.isSelected = resource => {
-      let lotsList = getLotsAsList()
-      for (let i = 0; i < lotsList.length; i++) {
-        let existingResource = _.find(getSelectedDevices(lotsList[i]), {_id: resource._id})
-        if (existingResource) {
-          return true
-        }
-      }
-      return false
+      return selected[resource._id]
     }
 
     /**
-     * Adds given resource to all parent lots of the resource, if it was not there before.
      * @param {object} resource - The resource to add
      */
     let add = (resource) => {
-      if (resource['@type'] === 'Lot') {
-        throw new Error('tried to add lot to selection')
-      }
-
-      resource.parentLots.forEach(_lot => {
-        let lot = getOrCreateLot(_lot)
-
-        let existingResource = _.find(lot.selectedDevices, {_id: resource._id})
-        if (!existingResource) {
-          lot.selectedDevices.push({
-            _id: resource._id,
-            device: resource
-          })
-        }
-      })
+      selected[resource._id] = resource
     }
 
     /**
-     * Removes a resources from the actual and total lists, if it was there.
      * @param resource
      */
     let remove = resource => {
-      resource.parentLots.forEach(lot => {
-        let selectedLot = this.getLotByID(lot._id)
-        if (selectedLot) {
-          _.remove(selectedLot.selectedDevices, {'_id': resource['_id']})
-          if (selectedLot.selectedDevices === 0) {
-            deleteLotByID(lot._id)
-          }
-        }
-      })
+      selected[resource._id] = null
+      delete selected[resource._id]
     }
 
     this.callbackOnSelection = callback => {
@@ -139,74 +95,23 @@ class ResourceListSelector {
     }
 
     this.getAllSelectedDevices = () => {
-      let devices = {}
-      getLotsAsList().forEach(lot => {
-        getSelectedDevices(lot).forEach(device => {
-          devices[device._id] = device.device
-        })
-      })
-      return _.values(devices)
-    }
-
-    let getNonEmptyLots = () => {
-      return getLotsAsList()
-        .map((_lot) => {
-          let selectedDevices = getSelectedDevices(_lot).map((device) => {
-            return device.device
-          })
-          let lot = {}
-          _.assign(lot, _lot.lot, { selectedDevices: selectedDevices })
-          return lot
-        }).filter((lot) => {
-          return lot.selectedDevices.length > 0
-        })
+      return Object.values(selected)
     }
 
     /**
      * Returns non empty lots. Lots in which devices where selected have lower indexes
      */
     this.getLots = () => {
-      return getNonEmptyLots()
-    }
-
-    let getLotsAsList = () => {
-      return lots
-    }
-
-    this.getLotByID = lotID => {
-      return _.find(lots, {_id: lotID})
-    }
-
-    let deleteLotByID = lotID => {
-      _.remove(lots, { _id: lotID })
-    }
-
-    let getSelectedDevices = lot => {
-      return lot.selectedDevices
-    }
-
-    let getOrCreateLot = (_lot) => {
-      let lot = this.getLotByID(_lot._id)
-      if (!lot) {
-        lot = {
-          _id: _lot._id,
-          lot: _lot,
-          selectedDevices: [],
-          hasOriginallySelectedDevices: false
-        }
-        lots.push(lot)
-      }
-      return lot
-    }
-
-    // Workaround to set labels of selected lots correctly. Necessary because API /devices doesn't include the 'label' property for device ancestors
-    // TODO remove as soon as API returns ancestor lots with labels set
-    this.nameLot = (_lot) => {
-      let lot = getOrCreateLot(_lot)
-      if (_lot.label) {
-        lot.lot.label = _lot.label
-      }
-      return lot
+      let lots = {}
+      this.getAllSelectedDevices().forEach((device) => {
+        device.parentLots.forEach((lot) => {
+          if (!lots[lot._id]) {
+            lots[lot._id] = _.defaults({}, lot, { selectedDevices: [] })
+          }
+          lots[lot._id].selectedDevices.push(device)
+        })
+      })
+      return Object.values(lots)
     }
 
     // TODO move to resource-list.directive
@@ -271,7 +176,7 @@ class ResourceListSelector {
      * @private
      */
     let _control = () => {
-      _.invokeMap(callbacksForSelections, _.call, null, lots)
+      _.invokeMap(callbacksForSelections, _.call, null, this.getAllSelectedDevices())
     }
   }
 }
