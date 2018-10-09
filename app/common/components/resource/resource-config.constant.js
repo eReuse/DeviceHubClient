@@ -178,13 +178,13 @@ const RESOURCE_CONFIG = {
     Lot: {
       dataRelation: {
         label: 'Name of the lot',
-        labelFieldName: 'label',
-        filterFieldNames: ['label', '_id'],
+        labelFieldName: 'name',
+        filterFieldNames: ['name', '_id'],
         fieldType: 'typeahead',
         keyFieldName: '_id',
         resourceType: 'Lot'
       },
-      view: {title: [{key: 'label'}], subtitle: [{key: '@type', humanize: true}]},
+      view: {title: [{key: 'name'}], subtitle: [{key: '@type', humanize: true}]},
       subviews: [v.Lot, v.Device],
       doNotUse: GROUP_DO_NOT_USE.concat(['geo'])
     },

@@ -4,31 +4,38 @@ class LotsSelectorService {
     let selectedNodes = {} // TODO should not be exposed
 
     this.isSelected = (lot) => {
-      return !!selectedNodes[lot.id]
+      return !!selectedNodes[lot._id]
     }
 
     this.toggle = (lot) => {
-      let isSelected = selectedNodes[lot.id]
-      this.deselectAll()
+      if (!lot._id) {
+        console.error('lot does not have id set', lot)
+        throw new Error('lot does not have id set')
+      }
+      let isSelected = selectedNodes[lot._id]
+      this.deselectAll(true)
       if (!isSelected) {
-        selectedNodes[lot.id] = lot
+        selectedNodes[lot._id] = lot
       }
       _control()
     }
 
     this.toggleMultipleSelection = (lot) => {
-      let isSelected = selectedNodes[lot.id]
+      let isSelected = selectedNodes[lot._id]
       if (!isSelected) {
-        selectedNodes[lot.id] = lot
+        selectedNodes[lot._id] = lot
       } else {
-        selectedNodes[lot.id] = null
-        delete selectedNodes[lot.id]
+        selectedNodes[lot._id] = null
+        delete selectedNodes[lot._id]
       }
       _control()
     }
 
-    this.deselectAll = () => {
+    this.deselectAll = (skipControl) => {
       selectedNodes = {}
+      if (skipControl) {
+        return
+      }
       _control()
     }
 

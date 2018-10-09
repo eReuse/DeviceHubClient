@@ -94,13 +94,14 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @param {progressBar} progressBar - An instance of ngProgress.
      * @param {defaultFilters} defaultFilters - Filters that will be applied to any request
      */
-    constructor (resourceType, resources, filterSettings, progressBar, defaultFilters) {
+    constructor (resourceType, resources, filterSettings, progressBar, defaultFilters, format) {
       this.resourceType = resourceType
       this.resources = resources
       this.filterSettings = filterSettings
       this.server = ResourceSettings(resourceType).server
       this.progressBar = progressBar
       this.defaultFilters = defaultFilters
+      this._format = format
       /**
        * A key/value object of filters, where every key represents a different source.
        * Clients can update their filter, and all of them are merged into
@@ -255,8 +256,11 @@ function ResourceListGetterFactory (ResourceSettings) {
       // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 1
       this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 1
       const q = {
-        filter: this._filters,
+        filters: this._filters,
         search: this._query
+      }
+      if (this._format) {
+        q.format = this._format
       }
       //
       // const q = {
@@ -396,7 +400,7 @@ function ResourceListGetterFactory (ResourceSettings) {
             // add labels to lots
             lotsWithLabel.forEach(lot => {
               lots[lot._id].forEach(origLot => {
-                origLot.label = lot.label
+                origLot.name = lot.name
               })
             })
             this._updateResourcesAfterGet(getNextPage, resources)
@@ -409,7 +413,6 @@ function ResourceListGetterFactory (ResourceSettings) {
           _.assign(r, {
             _id: r.id,
             _created: r.created,
-            label: r.name,
             '@type': 'Lot'
           })
         })

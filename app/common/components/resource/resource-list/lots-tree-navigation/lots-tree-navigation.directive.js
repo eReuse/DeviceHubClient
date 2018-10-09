@@ -25,7 +25,7 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
             })
             node.isVisible = !filter ||
                             filter.length === 0 ||
-                            node.name.indexOf(filter) !== -1 ||
+                            node.title.indexOf(filter) !== -1 ||
                             oneChildVisible
             return node.isVisible
           }
@@ -56,64 +56,66 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
         }
 
         // get data
-        $scope.lots = [] // TODO rename to data
+        $scope.data = []
         // Set up getters for lots
-        const getterLots = new ResourceListGetter('Lot', $scope.lots, config, progressBar, null)
-        getterLots.updateSort('label')
+        const getterLots = new ResourceListGetter('Lot', $scope.data, config, progressBar, null, 'UiTree')
+        getterLots.updateSort('name')
         getterLots.callbackOnGetting(() => {
           $scope.totalNumberOfLots = getterLots.getTotalNumberResources()
-          $scope.moreLotsAvailable = $scope.totalNumberOfLots > $scope.lots.length
-          // TODO set lots to $scope.data
-
+          $scope.moreLotsAvailable = $scope.totalNumberOfLots > $scope.data.length
           $scope.findNodes()
         })
-        // TODO delete as soon as getter works
-        _.assign($scope.data, [
-          {
-            'id': 1,
-            'name': 'Donación BCN Activa',
-            'nodes': [
-              {
-                'id': 11,
-                'name': '2017',
-                'nodes': [
-                  {
-                    'id': 111,
-                    'name': 'Febrero',
-                    'nodes': []
-                  },
-                  {
-                    'id': 112,
-                    'name': 'Marzo',
-                    'nodes': []
-                  }
-                ]
-              },
-              {
-                'id': 12,
-                'name': '2018',
-                'nodes': []
-              }
-            ]
-          },
-          {
-            'id': 2,
-            'name': 'Banc de Recurs',
-            'nodes': []
-          },
-          {
-            'id': 3,
-            'name': 'Salidas',
-            'nodes': [
-              {
-                'id': 2,
-                'name': 'Banc de Recurs',
-                'nodes': []
-              }
-            ]
-          }
-        ])
-        $scope.findNodes()
+
+        $scope.$on('lots:reload', () => {
+          getterLots.getResources()
+        })
+        // // TODO delete as soon as getter works
+        // _.assign($scope.data, [
+        //   {
+        //     'id': 1,
+        //     'name': 'Donación BCN Activa',
+        //     'nodes': [
+        //       {
+        //         'id': 11,
+        //         'name': '2017',
+        //         'nodes': [
+        //           {
+        //             'id': 111,
+        //             'name': 'Febrero',
+        //             'nodes': []
+        //           },
+        //           {
+        //             'id': 112,
+        //             'name': 'Marzo',
+        //             'nodes': []
+        //           }
+        //         ]
+        //       },
+        //       {
+        //         'id': 12,
+        //         'name': '2018',
+        //         'nodes': []
+        //       }
+        //     ]
+        //   },
+        //   {
+        //     'id': 2,
+        //     'name': 'Banc de Recurs',
+        //     'nodes': []
+        //   },
+        //   {
+        //     'id': 3,
+        //     'name': 'Salidas',
+        //     'nodes': [
+        //       {
+        //         'id': 2,
+        //         'name': 'Banc de Recurs',
+        //         'nodes': []
+        //       }
+        //     ]
+        //   }
+        // ])
+        // $scope.findNodes()
       }
     }
   }

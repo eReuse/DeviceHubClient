@@ -29,6 +29,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         const config = _.cloneDeep(resourceListConfig)
         $scope.devices = [] // Do never directly assign (r=[]) to 'devices' as modules depend of its reference
 
+        $scope.lotsSelectionHiddenXS = true
         $scope.selectionPanelHiddenXS = true
         $scope.isAndroid = !!window.AndroidApp
         const lotsSelector = $scope.lotsSelector = LotsSelector
@@ -43,10 +44,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         // Set up getters and selectors for devices
-        const defaultFilters = ($scope.parentResource && $scope.parentResource._id)
-          ? { 'dh$insideLot': $scope.parentResource._id } // TODO dh$insideLot returns devices that are in specified lot OR any sublot of specified lot
-          : null
-        const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar, _.cloneDeep(defaultFilters))
+        const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar, null)
         const selector = $scope.selector = ResourceListSelector
         getterDevices.callbackOnGetting((resources, lotID) => {
           selector.reAddToLot(resources, lotID)
@@ -70,9 +68,16 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           } else {
             $scope.selectedLotsText = 'All devices'
           }
+          getterDevices.updateFiltersFromSearch({
+            lots: selectedLots.map(l => l._id)
+          })
         }
         updateLotSelection([])
         lotsSelector.callbackOnSelection(updateLotSelection)
+
+        $scope.reloadLots = () => {
+          $rootScope.$broadcast('lots:reload')
+        }
 
         // Selected events
         // TODO
@@ -722,14 +727,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         // Reloading
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
-        $scope.reload = () => {
-          getterDevices.getResources()
-          $scope.deselectAll()
-        }
+        $scope.reload = reloadDevices()
+
         // TODO need this?
-        function hardReload () {
-          $scope.deselectAll()
-          $scope.reload()
+        function reloadDevices () {
+          getterDevices.getResources()
+          updateDeviceSelection()
         }
 
         // Pagination Devices
@@ -797,13 +800,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         // TODO what does next line?
-        ResourceSettings('Device').types.forEach(type => { $scope.$on('submitted@' + type, hardReload) })
+        ResourceSettings('Device').types.forEach(type => { $scope.$on('submitted@' + type, reloadDevices) })
 
         // We register ourselves for any event type, excluding Snapshot if the list is not about devices
         let eventTypes = ResourceSettings('Event').subResourcesNames
         // TODO do we need next line? resourceType is always 'Device' for now
         // if (resourceType !== 'Device') eventTypes = _.without(eventTypes, 'devices:Snapshot', 'devices:Register')
-        _.forEach(eventTypes, eventType => { $scope.$on('submitted@' + eventType, hardReload) })
+        _.forEach(eventTypes, eventType => { $scope.$on('submitted@' + eventType, reloadDevices) })
 
         // As we touch config in the init, we add it to $scope at the end to avoid $watch triggering multiple times
         $scope.config = config

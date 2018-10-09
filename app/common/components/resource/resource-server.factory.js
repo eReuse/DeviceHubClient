@@ -1,6 +1,7 @@
 // TODO what's the difference to config/restangular.config.js ? Merge the two config files?
 
 const utils = require('./../utils.js')
+const schemas = require('./../../config/schema_reduced')
 
 /**
  * Provides a suitable connexion to DeviceHub, personalised for the resource.
@@ -26,39 +27,11 @@ function ResourceServer (schema, Restangular) {
     let url = settings.url
 
     switch (url) {
-      case 'inventories/':
-        service = Restangular.withConfig(function (RestangularProvider) {
-          RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response) {
-            // TODO update this and move code form resource-list-getter here
-            // if (resourceName && resourceName in schema.schema) {
-            //   if (operation === 'getList') {
-            //     for (let i = 0; i < data.length; i++) {
-            //       parse(data[i], schema.schema[resourceName])
-            //     }
-            //   } else if (response.status !== 204) {
-            //     parse(data, schema.schema[resourceName])
-            //   }
-            // }
-            return _.get(response.data, settings.pathToDataInResponse)
-          })
-        }).service(url)
+      case 'lots/':
+        service = RestangularConfigurerResource.service(url)
         break
       case 'devices/':
-        service = Restangular.withConfig(function (RestangularProvider) {
-          RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response) {
-            // TODO update this and move code form resource-list-getter here
-            // if (resourceName && resourceName in schema.schema) {
-            //   if (operation === 'getList') {
-            //     for (let i = 0; i < data.length; i++) {
-            //       parse(data[i], schema.schema[resourceName])
-            //     }
-            //   } else if (response.status !== 204) {
-            //     parse(data, schema.schema[resourceName])
-            //   }
-            // }
-            return _.get(response.data, settings.pathToDataInResponse)
-          })
-        }).service(url)
+        service = RestangularConfigurerResource.service(url)
         break
       case 'snapshots/':
         service = Restangular.withConfig(function (RestangularProvider) {
@@ -94,18 +67,12 @@ function ResourceServer (schema, Restangular) {
      * @return {$q} The same promise as service.getList()
      */
     service.findText = (names, text, valueMatchesBeginning = false, maxResults = 6) => {
-      const fromBeginning = valueMatchesBeginning ? '^' : ''
       // We look for words starting by filterValue (so we use indexs), case-insensible (options: -i)
-      const hasId = _.includes(names, '_id')
-      names = _.without(names, '_id')  // We do not want to modify the original names array
-      const searchParams = {
-        where: {
-          $or: _.map(names, name => ({[name]: {$regex: fromBeginning + text, $options: '-ix'}}))
-        }
+      const query = {
+        search: text
       }
-      if (hasId) searchParams.where.$or.push({_id: {$regex: '^' + text, $options: '-ix'}})
-      if (_.isInteger(maxResults)) searchParams.max_results = maxResults
-      return service.getList(searchParams)
+      if (_.isInteger(maxResults)) query.max_results = maxResults
+      return service.getList(query)
     }
 
     /**
@@ -148,15 +115,14 @@ function ResourceServer (schema, Restangular) {
      */
     RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response) {
       // TODO update this and move code form resource-list-getter here
-      // if (resourceName && resourceName in schema.schema) {
-      //   if (operation === 'getList') {
-      //     for (let i = 0; i < data.length; i++) {
-      //       parse(data[i], schema.schema[resourceName])
-      //     }
-      //   } else if (response.status !== 204) {
-      //     parse(data, schema.schema[resourceName])
-      //   }
-      // }
+      if (operation === 'getList') {
+        data = data.items
+        for (let i = 0; i < data.length; i++) {
+          parse(data[i], schemas[resourceName])
+        }
+      } else if (response.status !== 204) {
+        parse(data, schemas[resourceName])
+      }
       return data
     })
 
@@ -203,6 +169,12 @@ function ResourceServer (schema, Restangular) {
  * @param schema
  */
 function parse (item, schema) {
+  _.assign(item, {
+    _id: item.id,
+    _updated: item.updated,
+    _created: item.created
+  })
+
   // todo this first for should be nested
   for (const fieldName in schema) {
     switch (schema[fieldName].type) {
@@ -215,20 +187,23 @@ function parse (item, schema) {
   }
 
   // We do only one nested level, as python-eve cannot go more deeper neither (of object and array)
-  _.forOwn(item, function (val) {
-    if (_.isArray(val)) {
-      _.forEach(val, parseDate)
-    } else if (_.isObject(val)) parseDate(val)
+  _.forOwn(item, function (prop) {
+    if (_.isArray(prop)) {
+      _.forEach(prop, parse)
+    }
   })
   parseDate(item)
 
-  function parseDate (val) {
-    _parseDate(val, '_updated')
-    _parseDate(val, '_created')
+  function parseDate (item) {
+    _parseDate(item, '_updated')
+    _parseDate(item, '_created')
 
-    function _parseDate (value, propertyName) {
-      const a = new Date(value[propertyName] + 'Z') // z stands for 'utc'
-      if (!_.isNaN(a.getTime())) value[propertyName] = a
+    function _parseDate (item, propertyName) {
+      if (!item[propertyName]) {
+        return
+      }
+      const a = new Date(item[propertyName] + 'Z') // z stands for 'utc'
+      if (!_.isNaN(a.getTime())) item[propertyName] = a
     }
   }
 }
