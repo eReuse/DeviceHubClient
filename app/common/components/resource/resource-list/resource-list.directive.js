@@ -109,6 +109,15 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         $scope.removeFilter = propPath => {
           _.unset(filtersModel, propPath)
+          // TODO Unset all empty
+          // function omitByRec (obj, fn) {
+          //   obj = _.omitBy(obj, fn)
+          //   _.forOwn(obj, (prop, key) => {
+          //     obj[key] = omitByRec(prop, fn)
+          //   })
+          //   return obj
+          // }
+          // filtersModel = omitByRec(filtersModel, _.isEmpty)
           onFiltersChanged()
         }
 
@@ -217,6 +226,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                 text: filterText
               })
             })
+            if (!_.get(filtersModel, keyEvents) || _.isEmpty(_.get(filtersModel, keyEvents))) {
+              $scope.activeFilters.push({
+                propPath: keyEvents,
+                text: 'Events: All'
+              })
+            }
           }
           addToActiveFilters('', filtersModel)
           getterDevices.updateFiltersFromSearch(filtersModel)
@@ -465,63 +480,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                 },
                 {
                   childName: 'Service providers',
-                  panel: {
-                    title: 'Events',
-                    children: [
-                      {
-                        childName: 'Register',
-                        panel: {
-                          title: 'Register',
-                          onSubmit: onSubmitPanel,
-                          propPath: 'events.register',
-                          prefix: 'Register: ',
-                          fields: [
-                            {
-                              key: 'events.register.from',
-                              type: 'datepicker',
-                              templateOptions: {
-                                label: 'From'
-                              }
-                            },
-                            {
-                              key: 'events.register.to',
-                              type: 'datepicker',
-                              templateOptions: {
-                                label: 'To'
-                              }
-                            },
-                            {
-                              key: 'events.register.name',
-                              type: 'input',
-                              templateOptions: {
-                                label: 'Name'
-                              }
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        childName: 'To repair',
-                        panel: {}
-                      },
-                      {
-                        childName: 'Ready to sell',
-                        panel: {}
-                      },
-                      {
-                        childName: 'Sell',
-                        panel: {}
-                      },
-                      {
-                        childName: 'Receive',
-                        panel: {}
-                      },
-                      {
-                        childName: 'Recycle',
-                        panel: {}
-                      }
-                    ]
-                  }
+                  panel: {}
                 },
                 {
                   childName: 'User and location',
@@ -529,7 +488,95 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                 },
                 {
                   childName: 'History and events',
-                  panel: {}
+                  panel: {
+                    title: 'Events',
+                    children: [
+                      {
+                        childName: 'Filter by event type',
+                        panel: {
+                          title: 'Filter by event type',
+                          onSubmit: onSubmitPanel,
+                          propPath: keyEvents + '.types',
+                          fields: [
+                            {
+                              key: keyEvents + '.types',
+                              type: 'multiCheckbox',
+                              className: 'multi-check',
+                              templateOptions: {
+                                required: false,
+                                options: allEvents.map((e) => {
+                                  return {
+                                    name: e,
+                                    value: e
+                                  }
+                                })
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        childName: 'Filter by single event details',
+                        panel: {
+                          title: 'Select event type',
+                          children: [
+                            {
+                              childName: 'Register',
+                              panel: {
+                                title: 'Register',
+                                onSubmit: onSubmitPanel,
+                                propPath: keyEvents + '.single.register',
+                                prefix: 'Register: ',
+                                fields: [
+                                  {
+                                    key: keyEvents + '.single.register' + '.from',
+                                    type: 'datepicker',
+                                    templateOptions: {
+                                      label: 'From'
+                                    }
+                                  },
+                                  {
+                                    key: keyEvents + '.single.register' + '.to',
+                                    type: 'datepicker',
+                                    templateOptions: {
+                                      label: 'To'
+                                    }
+                                  },
+                                  {
+                                    key: keyEvents + '.single.register' + '.name',
+                                    type: 'input',
+                                    templateOptions: {
+                                      label: 'Name'
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              childName: 'To repair',
+                              panel: {}
+                            },
+                            {
+                              childName: 'Ready to sell',
+                              panel: {}
+                            },
+                            {
+                              childName: 'Sell',
+                              panel: {}
+                            },
+                            {
+                              childName: 'Receive',
+                              panel: {}
+                            },
+                            {
+                              childName: 'Recycle',
+                              panel: {}
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
                 },
                 {
                   childName: 'Licenses and restrictions',
