@@ -299,29 +299,13 @@ function ResourceListGetterFactory (ResourceSettings) {
           const isComputer = computers.indexOf(r['type']) !== -1
           const isPlaceholder = r['@type'] === 'Device'
 
-          let parentLots = []
+          let parentLots = r.lots
 
-          r.ancestors = r.ancestors || []
-
-          parentLots = parentLots.concat(r.ancestors)
-          // map different group types to 'Lot' and set label
-          parentLots = parentLots
-            .filter(r => {
-              // TODO add incoming/outgoing lot?
-              return r['@type'] === 'Lot' || r['@type'] === 'Package' || r['@type'] === 'Pallet'
-            }).map(l => {
-              // Workaround to set labels of selected lots provisionally. Necessary because API /devices doesn't include the 'label' property for device ancestors
-              // TODO remove as soon as API returns ancestor lots with labels set
-              // Get ancestors with /lots?where="{ id: [....] }"
-              l.label = l._id + ' (Deleted)'
-              l['@type'] = 'Lot'
-              return l
-            })
           if (parentLots.length === 0) {
             parentLots.push({
               _id: 'NoParent',
               '@type': 'Lot',
-              label: 'Without lot'
+              name: 'Without lot'
             })
           }
 
@@ -382,32 +366,7 @@ function ResourceListGetterFactory (ResourceSettings) {
           _.set(r, pathToScoreRange, convertScoreToScoreRange(_.get(r, pathToScore)))
         })
 
-        let lots = {}
-        resources.forEach((device) => {
-          device.parentLots.forEach((lot) => {
-            if (lot._id !== 'NoParent') {
-              lots[lot._id] = lots[lot._id] || []
-              lots[lot._id].push(lot)
-            }
-          })
-        })
-        let lotIDs = Object.keys(lots)
-
-        if (lotIDs.length > 0) {
-          ResourceSettings('Lot').server.getList({
-            where: {'_id': {'$in': lotIDs}}
-          }).then((lotsWithLabel) => {
-            // add labels to lots
-            lotsWithLabel.forEach(lot => {
-              lots[lot._id].forEach(origLot => {
-                origLot.name = lot.name
-              })
-            })
-            this._updateResourcesAfterGet(getNextPage, resources)
-          })
-        } else {
-          this._updateResourcesAfterGet(getNextPage, resources)
-        }
+        this._updateResourcesAfterGet(getNextPage, resources)
       } else if (this.resourceType === 'Lot') {
         resources.forEach(r => {
           _.assign(r, {
