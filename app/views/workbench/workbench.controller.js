@@ -7,12 +7,6 @@ function workbenchCtl ($scope, progressBar, workbenchPoller) {
   $scope.$on('$destroy', () => {
     workbenchPoller.stop()
   })
-
-  // Filter names selector
-  $scope.selectedNames = []
-  workbenchPoller.callback(response => {
-    $scope.names = _.map(response.data.names, 'name')
-  })
 }
 
 module.exports = workbenchCtl

@@ -4,24 +4,18 @@
  * protocol and ports, in case it is taken from constants, or only the domain or IP, if using the AndroidApp.
  */
 class workbenchServer {
-
   constructor (CONSTANTS) {
-    this._host = 'AndroidApp' in window ? window.AndroidApp.workbenchServerAddress() : CONSTANTS.workbench
-    this.port = CONSTANTS.workbench.split(':')[2]
+    this.host = 'AndroidApp' in window ? '192.168.2.2' : CONSTANTS.workbench
+    this.port = '8091'
   }
 
   /**
    * Gets the workbench URL.
    * @returns {string}
    */
-  get host () {
-    return 'AndroidApp' in window ? `https://${this._host}:${this.port}` : this._host
+  get authority () {
+    return `http://${this.host}:${this.port}`
   }
-
-  set host (host) {
-    this._host = host
-  }
-
 }
 
 module.exports = workbenchServer

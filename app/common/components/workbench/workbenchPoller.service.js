@@ -18,7 +18,7 @@ class WorkbenchPoller {
   }
 
   start () {
-    this.p = this.poller.get(this.server.host + '/info', {
+    this.p = this.poller.get(this.server.authority + '/info', {
       delay: this.delay,
       argumentsArray: this.argumentsArray
     })
@@ -32,8 +32,8 @@ class WorkbenchPoller {
     this.p.promise.then(null, null, callback)
   }
 
-  change (host) {
-    this.p.target = host + '/info'
+  change () {
+    this.p.target = this.server.authority + '/info'
   }
 
 }

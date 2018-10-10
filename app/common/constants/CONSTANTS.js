@@ -18,7 +18,7 @@ const CONSTANTS = {
   debug: true,
   currency: '€',
   workbenchPollingDelay: 2650,
-  workbench: 'http://localhost:8091'
+  workbench: 'localhost'
 }
 
 module.exports = CONSTANTS

@@ -1,5 +1,5 @@
-function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitForm, workbenchPoller,
-                          workbenchServer) {
+function workbenchConfig($scope, $uibModalInstance, $http, CONSTANTS, SubmitForm, workbenchPoller,
+                         workbenchServer) {
   $scope.cancel = () => $uibModalInstance.dismiss('cancel')
   const CUSTOM = 'CUSTOM'
   const HMG_IS_5 = 'HMG_IS_5'
@@ -7,6 +7,7 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
   const erasureHideExpression = `model._erase !== '${CUSTOM}'`
   $scope.form = {
     fields: [
+      /* todo re-add this when this functionality is refined
       {
         key: 'link',
         type: 'radio',
@@ -30,11 +31,11 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
             }
           ]
         }
-      },
+      },*/
       {
         key: 'stress',
         type: 'input',
-        defaultValue: 0,
+        defaultValue: 1,
         templateOptions: {
           label: 'Stress the computer for an amount of time',
           description: `Execute a stress test for the amount of minutes. Set to 0 to skip it.`,
@@ -48,7 +49,7 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
       {
         key: 'smart',
         type: 'radio',
-        defaultValue: null,
+        defaultValue: 'short',
         templateOptions: {
           label: 'Test the hard-drives',
           description: 'Perform SMART test on hard-drives.',
@@ -59,7 +60,7 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
             },
             {
               name: 'Short test: Checks one part of the hard-drive to guess the overall health. ' +
-              'ETA: ~ 2 minutes.',
+                'ETA: ~ 2 minutes.',
               value: 'short'
             },
             {
@@ -76,7 +77,7 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
         templateOptions: {
           label: 'Erase the hard-drives',
           description: 'Shall we erase the hard-drives? ',
-          onChange: function setErasureOptions () {
+          onChange: function setErasureOptions() {
             const model = $scope.form.model
             switch (model._erase) {
               case HMG_IS_5:
@@ -111,8 +112,8 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
         templateOptions: {
           label: 'Erasure type',
           description: 'Type of erasure.' +
-          ' Both types can generate a certificate, however only the Secure uses an official ' +
-          'certified erasure process, as it guarantees all data has been erased.',
+            ' Both types can generate a certificate, however only the Secure uses an official ' +
+            'certified erasure process, as it guarantees all data has been erased.',
           options: [
             {
               name: 'Normal: faster but without final verification.',
@@ -168,7 +169,7 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
         templateOptions: {
           label: 'Install an Operative System',
           description: 'Write the name of the FSA image to install, without the ".fsa",' +
-          'or leave it blank to avoid installation.',
+            'or leave it blank to avoid installation.',
           addonRight: {text: '.fsa'}
         }
       }
@@ -179,7 +180,7 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
         submitForm.prepare()
         const promise = $http({
           method: 'POST',
-          url: workbenchServer.host + '/config',
+          url: workbenchServer.authority + '/config',
           data: model
         }).then($scope.cancel)
         submitForm.after(promise, 'Configuration updated.',
@@ -200,7 +201,7 @@ function workbenchConfig ($scope, $uibModalInstance, $http, CONSTANTS, SubmitFor
   const submitForm = new SubmitForm($scope.form, $scope)
   $http({
     method: 'GET',
-    url: workbenchServer.host + '/config'
+    url: workbenchServer.authority + '/config'
   }).success(data => {
     $scope.form.model = data
   })
