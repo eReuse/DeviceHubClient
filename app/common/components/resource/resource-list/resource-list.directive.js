@@ -107,7 +107,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         $scope.removeFilter = propPath => {
-          _.unset(filtersModel, propPath)
+          _.unset($scope.filtersModel, propPath)
           function omitByRec (obj, fn) {
             obj = _.omitBy(obj, fn)
             _.forOwn(obj, (prop, key) => {
@@ -118,7 +118,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             })
             return obj
           }
-          filtersModel = omitByRec(filtersModel, _.isEmpty)
+          $scope.filtersModel = omitByRec($scope.filtersModel, _.isEmpty)
           onFiltersChanged()
         }
 
@@ -150,20 +150,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           }
         }
 
-        const keyTypes = 'types-to-show'
-        const keyEvents = 'events'
         // TODO get events from config
         const allEvents = [ 'Ready', 'Repair', 'Allocate', 'Dispose', 'ToDispose', 'Sell', 'Receive', 'Register' ]
-        const nonComponents = [
-          'Desktop', 'Laptop', 'All-in-one', 'Monitor', 'Peripherals'
-        ]
-        // set initial filters
-        let filtersModel = $scope.filtersModel = {
-          [keyTypes]: {
-            _meta: { endpoint: true },
-            types: [ 'Placeholders' ].concat(nonComponents)
-          }
-        }
+
+        const keyDevices = 'resources'
+        const keyEvents = 'events'
+        $scope.filtersModel = { }
         function onFiltersChanged () {
           $scope.hideAllFilterPanels()
 
@@ -190,30 +182,22 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                 if (key === '_meta') {
                   return
                 }
-                const isSelect = _.isArray(prop)
+                const isBoolean = typeof prop === 'boolean'
                 const isNumber = typeof prop === 'number'
                 const isText = typeof prop === 'string'
                 const isDate = prop instanceof Date
-                filterText += key + ': '
-                if (isSelect) {
-                  if (filterKey === keyTypes && _.difference(nonComponents, prop).length === 0) {
-                    prop = _.difference(prop, nonComponents)
-                    prop.push('Non-Components')
+
+                if (isBoolean) {
+                  filterText += key
+                } else {
+                  filterText += key + ': '
+                  if (isNumber) {
+                    filterText += prop
+                  } else if (isText) {
+                    filterText += prop
+                  } else if (isDate) {
+                    filterText += prop.toDateString()
                   }
-                  // if (filterKey === keyEvents) {
-                  //   filterText += 'Events: '
-                  //   if (prop.length === allEvents.length) {
-                  //     filterText += 'All'
-                  //   }
-                  // } else {
-                  filterText += prop.join(', ')
-                  // }
-                } else if (isNumber) {
-                  filterText += prop
-                } else if (isText) {
-                  filterText += prop
-                } else if (isDate) {
-                  filterText += prop.toDateString()
                 }
                 filterText += ' '
               })
@@ -224,17 +208,23 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               })
             })
           }
-          addToActiveFiltersRecursive('', filtersModel)
+          addToActiveFiltersRecursive('', $scope.filtersModel)
           // Display 'Show all' events filter in case no events filter is set
-          if (!_.get(filtersModel, keyEvents) || _.isEmpty(_.get(filtersModel, keyEvents))) {
+          if (!_.get($scope.filtersModel, keyEvents) || _.isEmpty(_.get($scope.filtersModel, keyEvents))) {
             $scope.activeFilters.push({
               propPath: keyEvents,
               text: 'Events: All'
             })
           }
+          if (!_.get($scope.filtersModel, keyDevices) || _.isEmpty(_.get($scope.filtersModel, keyDevices))) {
+            $scope.activeFilters.push({
+              propPath: keyEvents,
+              text: 'Devices: All non-components'
+            })
+          }
 
           // update search
-          getterDevices.updateFiltersFromSearch(filtersModel)
+          getterDevices.updateFiltersFromSearch($scope.filtersModel)
         }
         onFiltersChanged()
 
@@ -242,27 +232,19 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           if (!this.propPath) {
             throw new Error('propPath not defined: ' + this.propPath)
           }
-          _.set(filtersModel, this.propPath + '._meta.endpoint', true)
+          _.set($scope.filtersModel, this.propPath + '._meta.endpoint', true)
 
           // TODO unit and prefix could be objects with keys describing individual fields in case of multiple
           if (this.unit) {
-            _.set(filtersModel, this.propPath + '._meta.unit', ' ' + this.unit)
+            _.set($scope.filtersModel, this.propPath + '._meta.unit', ' ' + this.unit)
           }
           if (this.prefix) {
-            _.set(filtersModel, this.propPath + '._meta.prefix', this.prefix)
+            _.set($scope.filtersModel, this.propPath + '._meta.prefix', this.prefix)
           }
           onFiltersChanged()
         }
-        // function onSubmitRange () {
-        //   _.set(filtersModel, this.propPathModel + '.range', [ this.model.min, this.model.max ])
-        //
-        //   // set meta for active filter text
-        //   // TODO maybe this should not go to model but to a different meta object
-        //   _.set(filtersModel, this.propPathModel + '._meta.unit', this.unit)
-        //   _.set(filtersModel, this.propPathModel + '._meta.prefix', this.prefix)
-        //
-        //   onFiltersChanged()
-        // }
+
+        // Default value can not be used, since they are not displayed
         let filterPanelsNested = [
           {
             childName: 'Root',
@@ -274,50 +256,35 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                   panel: {
                     title: 'Item type',
                     onSubmit: onSubmitPanel,
-                    propPath: keyTypes,
+                    propPath: keyDevices,
+                    prefix: 'Devices: ',
                     fields: [
                       {
-                        key: keyTypes,
-                        type: 'multiCheckbox',
-                        className: 'multi-check',
+                        key: keyDevices + '.components',
+                        type: 'checkbox',
                         templateOptions: {
-                          required: false,
-                          options: [
-                            {
-                              'name': 'Placeholders',
-                              'value': 'Placeholders'
-                            },
-                            {
-                              'name': 'Components',
-                              'value': 'Components'
-                            },
-                            /* TODO make category non-components
-                            {
-                              'name': 'Non-components',
-                              'value': 'Non-components'
-                            },
-                            */
-                            {
-                              'name': 'Desktop',
-                              'value': 'Desktop'
-                            },
-                            {
-                              'name': 'Laptop',
-                              'value': 'Laptop'
-                            },
-                            {
-                              'name': 'All-in-one',
-                              'value': 'All-in-one'
-                            },
-                            {
-                              'name': 'Monitor',
-                              'value': 'Monitor'
-                            },
-                            {
-                              'name': 'Peripherals',
-                              'value': 'Peripherals'
-                            }
-                          ]
+                          label: 'Components'
+                        }
+                      },
+                      {
+                        key: keyDevices + '.desktop',
+                        type: 'checkbox',
+                        templateOptions: {
+                          label: 'Desktop'
+                        }
+                      },
+                      {
+                        key: keyDevices + '.monitor',
+                        type: 'checkbox',
+                        templateOptions: {
+                          label: 'Monitor'
+                        }
+                      },
+                      {
+                        key: keyDevices + '.peripherals',
+                        type: 'checkbox',
+                        templateOptions: {
+                          label: 'Peripherals'
                         }
                       }
                     ]
@@ -497,22 +464,16 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                           title: 'Filter by event type',
                           onSubmit: onSubmitPanel,
                           propPath: keyEvents + '.types',
-                          fields: [
-                            {
-                              key: keyEvents + '.types',
-                              type: 'multiCheckbox',
-                              className: 'multi-check',
+                          prefix: 'Events: ',
+                          fields: allEvents.map((eventName) => {
+                            return {
+                              key: keyEvents + '.types.' + eventName,
+                              type: 'checkbox',
                               templateOptions: {
-                                required: false,
-                                options: allEvents.map((e) => {
-                                  return {
-                                    name: e,
-                                    value: e
-                                  }
-                                })
+                                label: eventName
                               }
                             }
-                          ]
+                          })
                         }
                       },
                       {
