@@ -45,9 +45,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         // Set up getters and selectors for devices
         const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar, null)
-        const selector = $scope.selector = ResourceListSelector
+        const deviceSelector = $scope.selector = ResourceListSelector
         getterDevices.callbackOnGetting((resources, lotID) => {
-          selector.reAddToLot(resources, lotID)
+          // selector.reAddToLot(resources, lotID) TODO need this ?
+          deviceSelector.reselect($scope.devices)
           $scope.totalNumberOfDevices = getterDevices.getTotalNumberResources()
           $scope.moreDevicesAvailable = $scope.totalNumberOfDevices > $scope.devices.length
         })
@@ -108,6 +109,15 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         $scope.removeFilter = propPath => {
           _.unset(filtersModel, propPath)
+          // TODO Unset all empty
+          // function omitByRec (obj, fn) {
+          //   obj = _.omitBy(obj, fn)
+          //   _.forOwn(obj, (prop, key) => {
+          //     obj[key] = omitByRec(prop, fn)
+          //   })
+          //   return obj
+          // }
+          // filtersModel = omitByRec(filtersModel, _.isEmpty)
           onFiltersChanged()
         }
 
@@ -148,55 +158,80 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         ]
         // set initial filters
         let filtersModel = $scope.filtersModel = {
-          [keyTypes]: [ 'Placeholders' ].concat(nonComponents),
-          [keyEvents]: allEvents
+          [keyTypes]: {
+            _meta: { endpoint: true },
+            types: [ 'Placeholders' ].concat(nonComponents)
+          }
         }
         function onFiltersChanged () {
           $scope.hideAllFilterPanels()
 
           $scope.activeFilters = []
-          function addToActiveFilters (parentPath, obj) {
+          function addToActiveFilters (parentPath, obj, parentPrefix) {
             parentPath = parentPath ? parentPath + '.' : ''
+            parentPrefix = parentPrefix ? parentPrefix + ':' : ''
             _.toPairs(obj).map(pair => {
               const filterKey = pair[0]
               const fullPath = parentPath + filterKey
               let value = pair[1]
-              const isSelect = _.isArray(value)
-              const isRange = value.min || value.max
-              const isText = typeof value === 'string'
+              const fullPrefix = parentPrefix + _.get(value, '_meta.prefix', '')
 
-              if (!(isSelect || isRange || isText)) {
-                value.isNested = true
-                return addToActiveFilters(fullPath, value)
+              const endPoint = value._meta && value._meta.endpoint
+
+              if (!endPoint) {
+                console.log('fullPath', fullPath, 'is an endpoint')
+                return addToActiveFilters(fullPath, value, fullPrefix)
               }
 
+              // value of multiple field
+              // from: Mon Oct 01 2018 00:00:00 GMT+0200 (Central European Summer Time) {}
+              // name: "Hello"
+              // to: Tue Oct 16 2018 00:00:00 GMT+0200 (Central European Summer Time) {}
+              // _meta: {endpoint: true, prefix: "Register: "}
               let filterText = _.get(value, '_meta.prefix', '')
-              if (isSelect) {
-                if (filterKey === keyTypes && _.difference(nonComponents, value).length === 0) {
-                  value = _.difference(value, nonComponents)
-                  value.push('Non-Components')
+              _.forOwn(value, (prop, key) => {
+                if (key === '_meta') {
+                  return
                 }
-                if (filterKey === keyEvents) {
-                  filterText += 'Events: '
-                  if (value.length === allEvents.length) {
-                    filterText += 'All'
+                const isSelect = _.isArray(prop)
+                const isNumber = typeof prop === 'number'
+                const isText = typeof prop === 'string'
+                const isDate = prop instanceof Date
+                filterText += key + ': '
+                if (isSelect) {
+                  if (filterKey === keyTypes && _.difference(nonComponents, prop).length === 0) {
+                    prop = _.difference(prop, nonComponents)
+                    prop.push('Non-Components')
                   }
-                } else {
-                  filterText += value.join(', ')
+                  // if (filterKey === keyEvents) {
+                  //   filterText += 'Events: '
+                  //   if (prop.length === allEvents.length) {
+                  //     filterText += 'All'
+                  //   }
+                  // } else {
+                  filterText += prop.join(', ')
+                  // }
+                } else if (isNumber) {
+                  filterText += prop
+                } else if (isText) {
+                  filterText += prop
+                } else if (isDate) {
+                  filterText += prop.toDateString()
                 }
-              } else if (isRange) {
-                if (!_.isNil(value.min)) filterText += 'from ' + value.min + ' '
-                if (!_.isNil(value.max)) filterText += 'to ' + value.max
+                filterText += ' '
+              })
 
-                if (_.get(value, '_meta.unit')) filterText += value._meta.unit
-              } else if (isText) {
-                filterText += filterKey + ': ' + value
-              }
               $scope.activeFilters.push({
                 propPath: fullPath,
                 text: filterText
               })
             })
+            if (!_.get(filtersModel, keyEvents) || _.isEmpty(_.get(filtersModel, keyEvents))) {
+              $scope.activeFilters.push({
+                propPath: keyEvents,
+                text: 'Events: All'
+              })
+            }
           }
           addToActiveFilters('', filtersModel)
           getterDevices.updateFiltersFromSearch(filtersModel)
@@ -207,6 +242,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           if (!this.propPath) {
             throw new Error('propPath not defined: ' + this.propPath)
           }
+          _.set(filtersModel, this.propPath + '._meta.endpoint', true)
+
+          // TODO unit and prefix could be objects with keys describing individual fields in case of multiple
           if (this.unit) {
             _.set(filtersModel, this.propPath + '._meta.unit', ' ' + this.unit)
           }
@@ -325,8 +363,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                           title: 'Price',
                           onSubmit: onSubmitPanel,
                           propPath: 'price',
-                          prefix: 'Price: ',
-                          unit: '€',
+                          prefix: 'Price (€): ',
                           fields: [
                             {
                               key: 'price.min',
@@ -451,7 +488,95 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                 },
                 {
                   childName: 'History and events',
-                  panel: {}
+                  panel: {
+                    title: 'Events',
+                    children: [
+                      {
+                        childName: 'Filter by event type',
+                        panel: {
+                          title: 'Filter by event type',
+                          onSubmit: onSubmitPanel,
+                          propPath: keyEvents + '.types',
+                          fields: [
+                            {
+                              key: keyEvents + '.types',
+                              type: 'multiCheckbox',
+                              className: 'multi-check',
+                              templateOptions: {
+                                required: false,
+                                options: allEvents.map((e) => {
+                                  return {
+                                    name: e,
+                                    value: e
+                                  }
+                                })
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        childName: 'Filter by single event details',
+                        panel: {
+                          title: 'Select event type',
+                          children: [
+                            {
+                              childName: 'Register',
+                              panel: {
+                                title: 'Register',
+                                onSubmit: onSubmitPanel,
+                                propPath: keyEvents + '.single.register',
+                                prefix: 'Register: ',
+                                fields: [
+                                  {
+                                    key: keyEvents + '.single.register' + '.from',
+                                    type: 'datepicker',
+                                    templateOptions: {
+                                      label: 'From'
+                                    }
+                                  },
+                                  {
+                                    key: keyEvents + '.single.register' + '.to',
+                                    type: 'datepicker',
+                                    templateOptions: {
+                                      label: 'To'
+                                    }
+                                  },
+                                  {
+                                    key: keyEvents + '.single.register' + '.name',
+                                    type: 'input',
+                                    templateOptions: {
+                                      label: 'Name'
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              childName: 'To repair',
+                              panel: {}
+                            },
+                            {
+                              childName: 'Ready to sell',
+                              panel: {}
+                            },
+                            {
+                              childName: 'Sell',
+                              panel: {}
+                            },
+                            {
+                              childName: 'Receive',
+                              panel: {}
+                            },
+                            {
+                              childName: 'Recycle',
+                              panel: {}
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
                 },
                 {
                   childName: 'Licenses and restrictions',
@@ -483,26 +608,26 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             let start = Math.min(lastSelectedIndex, $index)
             let end = Math.max(lastSelectedIndex, $index)
             let devicesToSelect = $scope.devices.slice(start, end + 1)
-            selector.selectAll(devicesToSelect)
+            deviceSelector.selectAll(devicesToSelect)
           } else if ($event.ctrlKey) {
-            selector.toggle(resource)
+            deviceSelector.toggle(resource)
           } else if ($scope.selectingMultiple) {
-            selector.toggle(resource)
+            deviceSelector.toggle(resource)
             if ($scope.selection.devices.length === 0) {
               $scope.selectingMultiple = false
             }
           } else { // normal click
-            let isSelected = selector.isSelected(resource)
+            let isSelected = deviceSelector.isSelected(resource)
             if (isSelected) {
               if ($scope.selection.devices.length === 1) {
-                selector.toggle(resource) // remove
+                deviceSelector.toggle(resource) // remove
               } else {
-                selector.deselectAll()
-                selector.toggle(resource) // add
+                deviceSelector.deselectAll()
+                deviceSelector.toggle(resource) // add
               }
             } else {
-              selector.deselectAll()
-              selector.toggle(resource)
+              deviceSelector.deselectAll()
+              deviceSelector.toggle(resource)
             }
           }
           $scope.lastSelectedIndex = $index
@@ -521,9 +646,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           $scope.selectingMultiple = true
 
           // change to multi-select (changes normal click/touch behaviour)
-          let isSelected = selector.isSelected(resource)
+          let isSelected = deviceSelector.isSelected(resource)
           if (!isSelected) {
-            selector.toggle(resource)
+            deviceSelector.toggle(resource)
           }
         }
 
@@ -536,10 +661,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         $scope.deselectLots = () => {
           LotsSelector.deselectAll()
         }
-
-        // Workaround to set labels of selected lots correctly. Necessary because API /devices doesn't include the 'label' property for device ancestors
-        // TODO remove as soon as API returns ancestor lots with labels set
-        $scope.parentResource && selector.nameLot($scope.parentResource)
 
         // components, price and condition score (Must be above updateSelection)
         // const manufacturerSettings = ResourceSettings('Manufacturer')
@@ -573,9 +694,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         function updateDeviceSelection () {
           $scope.selection = $scope.selection || {}
 
-          let selectedDevices = $scope.selection.devices = selector.getAllSelectedDevices().slice()
+          let selectedDevices = $scope.selection.devices = deviceSelector.getAllSelectedDevices().slice()
           $scope.selection.multiSelection = $scope.selection.devices.length > 1
-          $scope.selection.lots = selector.getLots().slice()
+          $scope.selection.lots = deviceSelector.getLots()
 
           // TODO Remove?
           // mark current lot
@@ -603,50 +724,50 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
           // aggregated properties of selected devices
           let props = {
-            _id: selector.getAggregatedPropertyOfSelected(selectedDevices, '_id'),
-            type: selector.getAggregatedPropertyOfSelected(selectedDevices, '@type'),
-            subType: selector.getAggregatedPropertyOfSelected(selectedDevices, 'type'),
-            manufacturer: selector.getAggregatedPropertyOfSelected(selectedDevices, 'manufacturer'),
-            model: selector.getAggregatedPropertyOfSelected(selectedDevices, 'model'),
-            serialNumber: selector.getAggregatedPropertyOfSelected(selectedDevices, 'serialNumber', 'Various serial numbers'),
-            hid: selector.getAggregatedPropertyOfSelected(selectedDevices, 'hid', 'Various hids'),
-            status: selector.getAggregatedPropertyOfSelected(selectedDevices, 'status'),
+            _id: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, '_id'),
+            type: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, '@type'),
+            subType: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'type'),
+            manufacturer: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'manufacturer'),
+            model: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'model'),
+            serialNumber: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'serialNumber', 'Various serial numbers'),
+            hid: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'hid', 'Various hids'),
+            status: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'status'),
             condition: {
               appearance: {
-                general: selector.getRangeOfPropertyOfSelected(selectedDevices, 'condition.appearance.general')
+                general: deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, 'condition.appearance.general')
               },
               functionality: {
-                general: selector.getRangeOfPropertyOfSelected(selectedDevices, 'condition.functionality.general')
+                general: deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, 'condition.functionality.general')
               },
               general: {
-                range: selector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.general.range')
+                range: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.general.range')
               }
             },
             components: {
-              processorModel: selector.getAggregatedPropertyOfSelected(selectedDevices, 'processorModel'),
-              totalHardDriveSize: selector.getAggregatedPropertyOfSelected(selectedDevices, 'totalHardDriveSize', 'Various', ' GB HardDrive'),
-              totalRamSize: selector.getAggregatedPropertyOfSelected(selectedDevices, 'totalRamSize', 'Various', ' MB RAM')
+              processorModel: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'processorModel'),
+              totalHardDriveSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalHardDriveSize', 'Various', ' GB HardDrive'),
+              totalRamSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalRamSize', 'Various', ' MB RAM')
             },
-            events: selector.getAggregatedSetOfSelected(selectedDevices, 'events', '_id'),
+            events: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'events', '_id'),
             lots: $scope.selection.lots
           }
           $scope.currencyOptions.roles.forEach((roleName) => {
             let path = 'pricing.' + roleName + '.' + $scope.currencyOptions.val
             _.set(props,
               path + '.percentage',
-              selector.getRangeOfPropertyOfSelected(selectedDevices, path + '.percentage', (percentage) => {
+              deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, path + '.percentage', (percentage) => {
                 return $filter('percentage')(percentage)
               })
             )
             _.set(props,
               path + '.amount',
-              selector.getRangeOfPropertyOfSelected(selectedDevices, path + '.amount', $scope.currencyOptions.filter)
+              deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, path + '.amount', $scope.currencyOptions.filter)
             )
           })
           let path = 'pricing.total.' + $scope.currencyOptions.val
           _.set(props,
             path,
-            selector.getRangeOfPropertyOfSelected(selectedDevices, path, $scope.currencyOptions.filter)
+            deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, path, $scope.currencyOptions.filter)
           )
           $scope.selection.props = props
 
@@ -658,15 +779,15 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           const manufacturer = props.manufacturer ? (' ' + props.manufacturer) : ''
           const model = props.model ? (' ' + props.model) : ''
           let typeContentSummary
-          if (props.type === selector.VARIOUS) {
+          if (props.type === deviceSelector.VARIOUS) {
             typeContentSummary = 'Various types'
           } else if (props.type === 'Device') {
             typeContentSummary = 'Placeholder'
-          } else if (props.subType === selector.VARIOUS) {
+          } else if (props.subType === deviceSelector.VARIOUS) {
             typeContentSummary = props.type + ' Various subtypes'
-          } else if (props.manufacturer === selector.VARIOUS) {
+          } else if (props.manufacturer === deviceSelector.VARIOUS) {
             typeContentSummary = props.subType + ' Various manufacturers'
-          } else if (props.model === selector.VARIOUS) {
+          } else if (props.model === deviceSelector.VARIOUS) {
             typeContentSummary = props.subType + manufacturer + ' Various models'
           } else {
             typeContentSummary = props.subType + manufacturer + model
@@ -722,17 +843,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             }
           ])
         }
-        selector.callbackOnSelection(updateDeviceSelection)
+        deviceSelector.callbackOnSelection(updateDeviceSelection)
         updateDeviceSelection()
 
         // Reloading
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
-        $scope.reload = reloadDevices()
-
-        // TODO need this?
-        function reloadDevices () {
+        $scope.reloadDevices = () => {
           getterDevices.getResources()
-          updateDeviceSelection()
         }
 
         // Pagination Devices
@@ -802,13 +919,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         // TODO what does next line?
-        ResourceSettings('Device').types.forEach(type => { $scope.$on('submitted@' + type, reloadDevices) })
+        ResourceSettings('Device').types.forEach(type => { $scope.$on('submitted@' + type, $scope.reloadDevices) })
 
         // We register ourselves for any event type, excluding Snapshot if the list is not about devices
         let eventTypes = ResourceSettings('Event').subResourcesNames
         // TODO do we need next line? resourceType is always 'Device' for now
         // if (resourceType !== 'Device') eventTypes = _.without(eventTypes, 'devices:Snapshot', 'devices:Register')
-        _.forEach(eventTypes, eventType => { $scope.$on('submitted@' + eventType, reloadDevices) })
+        _.forEach(eventTypes, eventType => { $scope.$on('submitted@' + eventType, $scope.reloadDevices) })
 
         // As we touch config in the init, we add it to $scope at the end to avoid $watch triggering multiple times
         $scope.config = config
