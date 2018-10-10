@@ -46,8 +46,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // Set up getters and selectors for devices
         const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar, null)
         const deviceSelector = $scope.selector = ResourceListSelector
-        getterDevices.callbackOnGetting((resources, lotID) => {
-          // selector.reAddToLot(resources, lotID) TODO need this ?
+        getterDevices.callbackOnGetting(() => {
           deviceSelector.reselect($scope.devices)
           $scope.totalNumberOfDevices = getterDevices.getTotalNumberResources()
           $scope.moreDevicesAvailable = $scope.totalNumberOfDevices > $scope.devices.length
@@ -109,15 +108,17 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         $scope.removeFilter = propPath => {
           _.unset(filtersModel, propPath)
-          // TODO Unset all empty
-          // function omitByRec (obj, fn) {
-          //   obj = _.omitBy(obj, fn)
-          //   _.forOwn(obj, (prop, key) => {
-          //     obj[key] = omitByRec(prop, fn)
-          //   })
-          //   return obj
-          // }
-          // filtersModel = omitByRec(filtersModel, _.isEmpty)
+          function omitByRec (obj, fn) {
+            obj = _.omitBy(obj, fn)
+            _.forOwn(obj, (prop, key) => {
+              if (key === '_meta' || typeof prop !== 'object' || _.isArray(prop)) {
+                return
+              }
+              obj[key] = omitByRec(prop, fn)
+            })
+            return obj
+          }
+          filtersModel = omitByRec(filtersModel, _.isEmpty)
           onFiltersChanged()
         }
 
@@ -166,8 +167,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         function onFiltersChanged () {
           $scope.hideAllFilterPanels()
 
+          // create active filters list so they can be displayed
           $scope.activeFilters = []
-          function addToActiveFilters (parentPath, obj, parentPrefix) {
+          function addToActiveFiltersRecursive (parentPath, obj, parentPrefix) {
             parentPath = parentPath ? parentPath + '.' : ''
             parentPrefix = parentPrefix ? parentPrefix + ':' : ''
             _.toPairs(obj).map(pair => {
@@ -180,14 +182,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
               if (!endPoint) {
                 console.log('fullPath', fullPath, 'is an endpoint')
-                return addToActiveFilters(fullPath, value, fullPrefix)
+                return addToActiveFiltersRecursive(fullPath, value, fullPrefix)
               }
 
-              // value of multiple field
-              // from: Mon Oct 01 2018 00:00:00 GMT+0200 (Central European Summer Time) {}
-              // name: "Hello"
-              // to: Tue Oct 16 2018 00:00:00 GMT+0200 (Central European Summer Time) {}
-              // _meta: {endpoint: true, prefix: "Register: "}
               let filterText = _.get(value, '_meta.prefix', '')
               _.forOwn(value, (prop, key) => {
                 if (key === '_meta') {
@@ -226,14 +223,17 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                 text: filterText
               })
             })
-            if (!_.get(filtersModel, keyEvents) || _.isEmpty(_.get(filtersModel, keyEvents))) {
-              $scope.activeFilters.push({
-                propPath: keyEvents,
-                text: 'Events: All'
-              })
-            }
           }
-          addToActiveFilters('', filtersModel)
+          addToActiveFiltersRecursive('', filtersModel)
+          // Display 'Show all' events filter in case no events filter is set
+          if (!_.get(filtersModel, keyEvents) || _.isEmpty(_.get(filtersModel, keyEvents))) {
+            $scope.activeFilters.push({
+              propPath: keyEvents,
+              text: 'Events: All'
+            })
+          }
+
+          // update search
           getterDevices.updateFiltersFromSearch(filtersModel)
         }
         onFiltersChanged()
