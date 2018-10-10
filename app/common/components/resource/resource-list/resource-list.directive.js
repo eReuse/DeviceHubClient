@@ -106,8 +106,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           getterDevices.updateFiltersFromSearch(newFilters)
         }
 
-        $scope.removeFilter = propPath => {
-          _.unset($scope.filtersModel, propPath)
+        function removeEmptyFilterProperties () {
           function omitByRec (obj, fn) {
             obj = _.omitBy(obj, fn)
             _.forOwn(obj, (prop, key) => {
@@ -119,6 +118,11 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             return obj
           }
           $scope.filtersModel = omitByRec($scope.filtersModel, _.isEmpty)
+        }
+
+        $scope.removeFilter = propPath => {
+          _.unset($scope.filtersModel, propPath)
+          removeEmptyFilterProperties()
           onFiltersChanged()
         }
 
@@ -232,12 +236,11 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           if (!this.propPath) {
             throw new Error('propPath not defined: ' + this.propPath)
           }
+          // TODO better determination of endpoint: search in filterPanels for occurence of propPath
           _.set($scope.filtersModel, this.propPath + '._meta.endpoint', true)
 
-          // TODO unit and prefix could be objects with keys describing individual fields in case of multiple
-          if (this.unit) {
-            _.set($scope.filtersModel, this.propPath + '._meta.unit', ' ' + this.unit)
-          }
+          // TODO prefix could be object with keys describing individual fields in case of multiple
+          // e.g. prefix : { min : 'Minimum (GB): ', max : 'Maximum(GB): ' }
           if (this.prefix) {
             _.set($scope.filtersModel, this.propPath + '._meta.prefix', this.prefix)
           }
@@ -295,10 +298,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                   panel: {
                     title: 'Brand and model',
                     onSubmit: onSubmitPanel,
-                    propPath: 'brand',
+                    propPath: 'brandmodel',
                     fields: [
                       {
-                        key: 'brand',
+                        key: 'brandmodel.brand',
                         type: 'input',
                         templateOptions: {
                           label: 'Brand',
@@ -306,7 +309,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                         }
                       },
                       {
-                        key: 'model',
+                        key: 'brandmodel.model',
                         type: 'input',
                         templateOptions: {
                           label: 'Model',
@@ -327,7 +330,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                       {
                         childName: 'Price',
                         panel: {
-                          title: 'Price',
+                          title: 'Price (€)',
                           onSubmit: onSubmitPanel,
                           propPath: 'price',
                           prefix: 'Price (€): ',
@@ -407,37 +410,30 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                       {
                         childName: 'Memory ram',
                         panel: {
-                          title: 'Memory RAM',
+                          title: 'Memory RAM (GB)',
                           onSubmit: onSubmitPanel,
-                          unit: 'GB',
-                          prefix: 'RAM: ',
+                          prefix: 'RAM (GB): ',
+                          propPath: 'components.ram',
                           fields: [
                             {
                               key: 'components.ram.min',
-                              type: 'input'
+                              type: 'input',
+                              templateOptions: {
+                                type: 'number',
+                                min: 0,
+                                label: 'Min'
+                              }
                             },
                             {
                               key: 'components.ram.max',
-                              type: 'input'
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        childName: 'Grafic card',
-                        panel: {
-                          title: 'Grafic card',
-                          content: [
-                            {
-                              multiSelect: [
-                                'Placeholders',
-                                'Components',
-                                'Desktop',
-                                'Laptop',
-                                'All-in-one',
-                                'Monitor',
-                                'Peripherals'
-                              ]
+                              type: 'input',
+                              // TODO see above
+                              // defaultValue: 999,
+                              templateOptions: {
+                                type: 'number',
+                                min: 0,
+                                label: 'Max'
+                              }
                             }
                           ]
                         }
