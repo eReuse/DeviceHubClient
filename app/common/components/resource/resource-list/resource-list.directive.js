@@ -68,12 +68,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           } else {
             $scope.selectedLotsText = 'All devices'
           }
-          getterDevices.updateFiltersFromSearch({
+          getterDevices.updateFilters('LOTS', {
             lot: {
-              id: selectedLots.map(l => l._id),
-              _meta: {
-                endpoint: true
-              }
+              id: selectedLots.map(l => l._id)
             }
           })
         }
@@ -232,21 +229,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             })
           }
           addToActiveFiltersRecursive('', $scope.filtersModel)
-          // Display 'Show all' events filter in case no events filter is set
-          // if (!_.get($scope.filtersModel, keyEvents) || _.isEmpty(_.get($scope.filtersModel, keyEvents))) {
-          //   $scope.activeFilters.push({
-          //     propPath: keyEvents,
-          //     text: 'Events: All'
-          //   })
-          // }
-          // if (!_.get($scope.filtersModel, keyDevices) || _.isEmpty(_.get($scope.filtersModel, keyDevices))) {
-          //   $scope.activeFilters.push({
-          //     propPath: keyEvents,
-          //     text: 'Devices: All non-components'
-          //   })
-          // }
 
-          // update search
+          // update filters
           getterDevices.updateFiltersFromSearch($scope.filtersModel)
         }
         onFiltersChanged()
