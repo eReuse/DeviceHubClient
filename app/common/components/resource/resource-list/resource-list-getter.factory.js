@@ -180,13 +180,11 @@ function ResourceListGetterFactory (ResourceSettings) {
         // map filter prop names to server prop names
         _.forOwn(filters, function (value, key) {
           let fullPath = parentKey ? parentKey + '.' + key : key
-          if (value.isNested) {
-            delete value.isNested
+          if (!_.get(value, '_meta.endpoint')) {
             return mapFilterToServer(value, fullPath)
           }
 
-          // general mappings
-          delete value._meta
+          value = _.omit(value, '_meta')
 
           // range mapping
           if (value.min || value.max) {
@@ -195,6 +193,10 @@ function ResourceListGetterFactory (ResourceSettings) {
 
           // field specific mappings
           switch (fullPath) {
+            case 'resources':
+              fullPath = 'type'
+              value = Object.keys(_.pickBy(value, x => x))
+              break
             case 'brand':
               fullPath = 'manufacturer'
               break
