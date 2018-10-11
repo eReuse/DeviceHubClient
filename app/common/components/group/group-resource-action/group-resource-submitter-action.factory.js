@@ -38,7 +38,7 @@ function groupResourceSubmitterFactory (SubmitForm, ResourceSettings) {
         if (this.addingResources) {
           method = 'post'
         } else {
-          method = 'delete'
+          method = 'remove'
         }
         let resourceURL // TODO get URL from config
         switch (this.resourceType) {

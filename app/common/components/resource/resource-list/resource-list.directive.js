@@ -46,8 +46,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // Set up getters and selectors for devices
         const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar, null)
         const deviceSelector = $scope.selector = ResourceListSelector
-        getterDevices.callbackOnGetting((resources, lotID) => {
-          // selector.reAddToLot(resources, lotID) TODO need this ?
+        getterDevices.callbackOnGetting(() => {
           deviceSelector.reselect($scope.devices)
           $scope.totalNumberOfDevices = getterDevices.getTotalNumberResources()
           $scope.moreDevicesAvailable = $scope.totalNumberOfDevices > $scope.devices.length
@@ -107,17 +106,23 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           getterDevices.updateFiltersFromSearch(newFilters)
         }
 
+        function removeEmptyFilterProperties () {
+          function omitByRec (obj, fn) {
+            obj = _.omitBy(obj, fn)
+            _.forOwn(obj, (prop, key) => {
+              if (key === '_meta' || typeof prop !== 'object' || _.isArray(prop)) {
+                return
+              }
+              obj[key] = omitByRec(prop, fn)
+            })
+            return obj
+          }
+          $scope.filtersModel = omitByRec($scope.filtersModel, _.isEmpty)
+        }
+
         $scope.removeFilter = propPath => {
-          _.unset(filtersModel, propPath)
-          // TODO Unset all empty
-          // function omitByRec (obj, fn) {
-          //   obj = _.omitBy(obj, fn)
-          //   _.forOwn(obj, (prop, key) => {
-          //     obj[key] = omitByRec(prop, fn)
-          //   })
-          //   return obj
-          // }
-          // filtersModel = omitByRec(filtersModel, _.isEmpty)
+          _.unset($scope.filtersModel, propPath)
+          removeEmptyFilterProperties()
           onFiltersChanged()
         }
 
@@ -149,25 +154,18 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           }
         }
 
-        const keyTypes = 'types-to-show'
-        const keyEvents = 'events'
         // TODO get events from config
         const allEvents = [ 'Ready', 'Repair', 'Allocate', 'Dispose', 'ToDispose', 'Sell', 'Receive', 'Register' ]
-        const nonComponents = [
-          'Desktop', 'Laptop', 'All-in-one', 'Monitor', 'Peripherals'
-        ]
-        // set initial filters
-        let filtersModel = $scope.filtersModel = {
-          [keyTypes]: {
-            _meta: { endpoint: true },
-            types: [ 'Placeholders' ].concat(nonComponents)
-          }
-        }
+
+        const keyDevices = 'resources'
+        const keyEvents = 'events'
+        $scope.filtersModel = { }
         function onFiltersChanged () {
           $scope.hideAllFilterPanels()
 
+          // create active filters list so they can be displayed
           $scope.activeFilters = []
-          function addToActiveFilters (parentPath, obj, parentPrefix) {
+          function addToActiveFiltersRecursive (parentPath, obj, parentPrefix) {
             parentPath = parentPath ? parentPath + '.' : ''
             parentPrefix = parentPrefix ? parentPrefix + ':' : ''
             _.toPairs(obj).map(pair => {
@@ -180,43 +178,30 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
               if (!endPoint) {
                 console.log('fullPath', fullPath, 'is an endpoint')
-                return addToActiveFilters(fullPath, value, fullPrefix)
+                return addToActiveFiltersRecursive(fullPath, value, fullPrefix)
               }
 
-              // value of multiple field
-              // from: Mon Oct 01 2018 00:00:00 GMT+0200 (Central European Summer Time) {}
-              // name: "Hello"
-              // to: Tue Oct 16 2018 00:00:00 GMT+0200 (Central European Summer Time) {}
-              // _meta: {endpoint: true, prefix: "Register: "}
               let filterText = _.get(value, '_meta.prefix', '')
               _.forOwn(value, (prop, key) => {
                 if (key === '_meta') {
                   return
                 }
-                const isSelect = _.isArray(prop)
+                const isBoolean = typeof prop === 'boolean'
                 const isNumber = typeof prop === 'number'
                 const isText = typeof prop === 'string'
                 const isDate = prop instanceof Date
-                filterText += key + ': '
-                if (isSelect) {
-                  if (filterKey === keyTypes && _.difference(nonComponents, prop).length === 0) {
-                    prop = _.difference(prop, nonComponents)
-                    prop.push('Non-Components')
+
+                if (isBoolean) {
+                  filterText += key
+                } else {
+                  filterText += key + ': '
+                  if (isNumber) {
+                    filterText += prop
+                  } else if (isText) {
+                    filterText += prop
+                  } else if (isDate) {
+                    filterText += prop.toDateString()
                   }
-                  // if (filterKey === keyEvents) {
-                  //   filterText += 'Events: '
-                  //   if (prop.length === allEvents.length) {
-                  //     filterText += 'All'
-                  //   }
-                  // } else {
-                  filterText += prop.join(', ')
-                  // }
-                } else if (isNumber) {
-                  filterText += prop
-                } else if (isText) {
-                  filterText += prop
-                } else if (isDate) {
-                  filterText += prop.toDateString()
                 }
                 filterText += ' '
               })
@@ -226,15 +211,24 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                 text: filterText
               })
             })
-            if (!_.get(filtersModel, keyEvents) || _.isEmpty(_.get(filtersModel, keyEvents))) {
-              $scope.activeFilters.push({
-                propPath: keyEvents,
-                text: 'Events: All'
-              })
-            }
           }
-          addToActiveFilters('', filtersModel)
-          getterDevices.updateFiltersFromSearch(filtersModel)
+          addToActiveFiltersRecursive('', $scope.filtersModel)
+          // Display 'Show all' events filter in case no events filter is set
+          if (!_.get($scope.filtersModel, keyEvents) || _.isEmpty(_.get($scope.filtersModel, keyEvents))) {
+            $scope.activeFilters.push({
+              propPath: keyEvents,
+              text: 'Events: All'
+            })
+          }
+          if (!_.get($scope.filtersModel, keyDevices) || _.isEmpty(_.get($scope.filtersModel, keyDevices))) {
+            $scope.activeFilters.push({
+              propPath: keyEvents,
+              text: 'Devices: All non-components'
+            })
+          }
+
+          // update search
+          getterDevices.updateFiltersFromSearch($scope.filtersModel)
         }
         onFiltersChanged()
 
@@ -242,27 +236,18 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           if (!this.propPath) {
             throw new Error('propPath not defined: ' + this.propPath)
           }
-          _.set(filtersModel, this.propPath + '._meta.endpoint', true)
+          // TODO better determination of endpoint: search in filterPanels for occurence of propPath
+          _.set($scope.filtersModel, this.propPath + '._meta.endpoint', true)
 
-          // TODO unit and prefix could be objects with keys describing individual fields in case of multiple
-          if (this.unit) {
-            _.set(filtersModel, this.propPath + '._meta.unit', ' ' + this.unit)
-          }
+          // TODO prefix could be object with keys describing individual fields in case of multiple
+          // e.g. prefix : { min : 'Minimum (GB): ', max : 'Maximum(GB): ' }
           if (this.prefix) {
-            _.set(filtersModel, this.propPath + '._meta.prefix', this.prefix)
+            _.set($scope.filtersModel, this.propPath + '._meta.prefix', this.prefix)
           }
           onFiltersChanged()
         }
-        // function onSubmitRange () {
-        //   _.set(filtersModel, this.propPathModel + '.range', [ this.model.min, this.model.max ])
-        //
-        //   // set meta for active filter text
-        //   // TODO maybe this should not go to model but to a different meta object
-        //   _.set(filtersModel, this.propPathModel + '._meta.unit', this.unit)
-        //   _.set(filtersModel, this.propPathModel + '._meta.prefix', this.prefix)
-        //
-        //   onFiltersChanged()
-        // }
+
+        // Default value can not be used, since they are not displayed
         let filterPanelsNested = [
           {
             childName: 'Root',
@@ -274,50 +259,35 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                   panel: {
                     title: 'Item type',
                     onSubmit: onSubmitPanel,
-                    propPath: keyTypes,
+                    propPath: keyDevices,
+                    prefix: 'Devices: ',
                     fields: [
                       {
-                        key: keyTypes,
-                        type: 'multiCheckbox',
-                        className: 'multi-check',
+                        key: keyDevices + '.components',
+                        type: 'checkbox',
                         templateOptions: {
-                          required: false,
-                          options: [
-                            {
-                              'name': 'Placeholders',
-                              'value': 'Placeholders'
-                            },
-                            {
-                              'name': 'Components',
-                              'value': 'Components'
-                            },
-                            /* TODO make category non-components
-                            {
-                              'name': 'Non-components',
-                              'value': 'Non-components'
-                            },
-                            */
-                            {
-                              'name': 'Desktop',
-                              'value': 'Desktop'
-                            },
-                            {
-                              'name': 'Laptop',
-                              'value': 'Laptop'
-                            },
-                            {
-                              'name': 'All-in-one',
-                              'value': 'All-in-one'
-                            },
-                            {
-                              'name': 'Monitor',
-                              'value': 'Monitor'
-                            },
-                            {
-                              'name': 'Peripherals',
-                              'value': 'Peripherals'
-                            }
-                          ]
+                          label: 'Components'
+                        }
+                      },
+                      {
+                        key: keyDevices + '.desktop',
+                        type: 'checkbox',
+                        templateOptions: {
+                          label: 'Desktop'
+                        }
+                      },
+                      {
+                        key: keyDevices + '.monitor',
+                        type: 'checkbox',
+                        templateOptions: {
+                          label: 'Monitor'
+                        }
+                      },
+                      {
+                        key: keyDevices + '.peripherals',
+                        type: 'checkbox',
+                        templateOptions: {
+                          label: 'Peripherals'
                         }
                       }
                     ]
@@ -328,10 +298,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                   panel: {
                     title: 'Brand and model',
                     onSubmit: onSubmitPanel,
-                    propPath: 'brand',
+                    propPath: 'brandmodel',
                     fields: [
                       {
-                        key: 'brand',
+                        key: 'brandmodel.brand',
                         type: 'input',
                         templateOptions: {
                           label: 'Brand',
@@ -339,7 +309,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                         }
                       },
                       {
-                        key: 'model',
+                        key: 'brandmodel.model',
                         type: 'input',
                         templateOptions: {
                           label: 'Model',
@@ -360,7 +330,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                       {
                         childName: 'Price',
                         panel: {
-                          title: 'Price',
+                          title: 'Price (€)',
                           onSubmit: onSubmitPanel,
                           propPath: 'price',
                           prefix: 'Price (€): ',
@@ -440,37 +410,30 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                       {
                         childName: 'Memory ram',
                         panel: {
-                          title: 'Memory RAM',
+                          title: 'Memory RAM (GB)',
                           onSubmit: onSubmitPanel,
-                          unit: 'GB',
-                          prefix: 'RAM: ',
+                          prefix: 'RAM (GB): ',
+                          propPath: 'components.ram',
                           fields: [
                             {
                               key: 'components.ram.min',
-                              type: 'input'
+                              type: 'input',
+                              templateOptions: {
+                                type: 'number',
+                                min: 0,
+                                label: 'Min'
+                              }
                             },
                             {
                               key: 'components.ram.max',
-                              type: 'input'
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        childName: 'Grafic card',
-                        panel: {
-                          title: 'Grafic card',
-                          content: [
-                            {
-                              multiSelect: [
-                                'Placeholders',
-                                'Components',
-                                'Desktop',
-                                'Laptop',
-                                'All-in-one',
-                                'Monitor',
-                                'Peripherals'
-                              ]
+                              type: 'input',
+                              // TODO see above
+                              // defaultValue: 999,
+                              templateOptions: {
+                                type: 'number',
+                                min: 0,
+                                label: 'Max'
+                              }
                             }
                           ]
                         }
@@ -497,22 +460,16 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                           title: 'Filter by event type',
                           onSubmit: onSubmitPanel,
                           propPath: keyEvents + '.types',
-                          fields: [
-                            {
-                              key: keyEvents + '.types',
-                              type: 'multiCheckbox',
-                              className: 'multi-check',
+                          prefix: 'Events: ',
+                          fields: allEvents.map((eventName) => {
+                            return {
+                              key: keyEvents + '.types.' + eventName,
+                              type: 'checkbox',
                               templateOptions: {
-                                required: false,
-                                options: allEvents.map((e) => {
-                                  return {
-                                    name: e,
-                                    value: e
-                                  }
-                                })
+                                label: eventName
                               }
                             }
-                          ]
+                          })
                         }
                       },
                       {
