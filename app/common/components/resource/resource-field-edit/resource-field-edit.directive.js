@@ -21,7 +21,9 @@ function resourceFieldEdit (SubmitForm, $focus, $timeout, Notification) {
             }],
             model: {},
             status: {},
-            submit: () => {
+            submit: ($event) => {
+              $event && $event.preventDefault() // Prevents submitting the containing form
+              $event && $event.stopPropagation()
               if (submitForm.isValid()) {
                 if (form.model.value !== $scope.resource[$scope.field.key]) {
                   submitForm.prepare()
@@ -44,14 +46,27 @@ function resourceFieldEdit (SubmitForm, $focus, $timeout, Notification) {
           $scope.edit = {
             editing: false,
             status: {},
-            edit: () => {
+            edit: ($event) => {
+              $event && $event.preventDefault() // Prevents submitting the containing form
+              $event && $event.stopPropagation()
               if ($scope.editing) $scope.editing({editing: true})
               form.model.value = $scope.field.value
               $scope.edit.editing = true
               // It takes some time for the input to appear
-              $timeout(() => $focus($element.find('input'), true), 250)
+              $timeout(() => {
+                $focus($element.find('input'), true)
+                // prevent containers from receiving focus and click events
+                $element.find('input').focus(($event) => {
+                  $event && $event.stopPropagation()
+                })
+                $element.find('input').click(($event) => {
+                  $event && $event.stopPropagation()
+                })
+              }, 250)
             },
-            stopEdit: () => {
+            stopEdit: ($event) => {
+              $event && $event.preventDefault() // Prevents submitting the containing form
+              $event && $event.stopPropagation()
               if ($scope.editing) $scope.editing({editing: false})
               $scope.edit.editing = false
             }
