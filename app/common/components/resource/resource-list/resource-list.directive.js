@@ -69,7 +69,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             $scope.selectedLotsText = 'All devices'
           }
           getterDevices.updateFiltersFromSearch({
-            lots: selectedLots.map(l => l._id)
+            lot: {
+              id: selectedLots.map(l => l._id)
+            }
           })
         }
         updateLotSelection([])

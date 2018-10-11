@@ -256,7 +256,7 @@ function ResourceListGetterFactory (ResourceSettings) {
       // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 1
       this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 1
       const q = {
-        filters: this._filters,
+        filter: this._filters,
         search: this._query
       }
       if (this._format) {
