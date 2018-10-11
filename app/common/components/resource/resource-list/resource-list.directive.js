@@ -194,7 +194,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                 const isDate = prop instanceof Date
 
                 if (isBoolean) {
-                  filterText += key
+                  if (prop) {
+                    filterText += key
+                  }
                 } else {
                   filterText += key + ': '
                   if (isNumber) {
@@ -272,14 +274,14 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                         }
                       },
                       {
-                        key: keyDevices + '.desktop',
+                        key: keyDevices + '.Computer',
                         type: 'checkbox',
                         templateOptions: {
                           label: 'Desktop'
                         }
                       },
                       {
-                        key: keyDevices + '.monitor',
+                        key: keyDevices + '.Monitor',
                         type: 'checkbox',
                         templateOptions: {
                           label: 'Monitor'
