@@ -108,23 +108,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           getterDevices.updateFiltersFromSearch(newFilters)
         }
 
-        function removeEmptyFilterProperties () {
-          function omitByRec (obj, fn) {
-            obj = _.omitBy(obj, fn)
-            _.forOwn(obj, (prop, key) => {
-              if (key === '_meta' || typeof prop !== 'object' || _.isArray(prop)) {
-                return
-              }
-              obj[key] = omitByRec(prop, fn)
-            })
-            return obj
-          }
-          $scope.filtersModel = omitByRec($scope.filtersModel, _.isEmpty)
-        }
-
         $scope.removeFilter = propPath => {
           _.unset($scope.filtersModel, propPath)
-          removeEmptyFilterProperties()
           onFiltersChanged()
         }
 
@@ -161,7 +146,24 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         const keyDevices = 'resources'
         const keyEvents = 'events'
-        $scope.filtersModel = { }
+        $scope.filtersModel = {
+          [keyDevices]: {
+            Computer: true,
+            Monitor: true,
+            _meta: {
+              endpoint: true,
+              prefix: 'Devices: '
+            }
+          },
+          [keyEvents]: {
+            types: _.assign({
+              _meta: {
+                endpoint: true,
+                prefix: 'Events: '
+              }
+            }, _.mapValues(_.keyBy(allEvents), () => true))
+          }
+        }
         function onFiltersChanged () {
           $scope.hideAllFilterPanels()
 
@@ -183,32 +185,42 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                 return addToActiveFiltersRecursive(fullPath, value, fullPrefix)
               }
 
-              let filterText = _.get(value, '_meta.prefix', '')
-              _.forOwn(value, (prop, key) => {
-                if (key === '_meta') {
-                  return
+              const meta = value._meta
+              let filterText = meta ? meta.prefix : ''
+              let skipProcessingProps
+              if (fullPath === (keyEvents + '.types')) {
+                if (_.values(_.pickBy(value, (v) => { return v === true })).length === allEvents.length) {
+                  filterText += 'All'
+                  skipProcessingProps = true
                 }
-                const isBoolean = typeof prop === 'boolean'
-                const isNumber = typeof prop === 'number'
-                const isText = typeof prop === 'string'
-                const isDate = prop instanceof Date
+              }
+              if (!skipProcessingProps) {
+                _.forOwn(value, (prop, key) => {
+                  if (key === '_meta') {
+                    return
+                  }
+                  const isBoolean = typeof prop === 'boolean'
+                  const isNumber = typeof prop === 'number'
+                  const isText = typeof prop === 'string'
+                  const isDate = prop instanceof Date
 
-                if (isBoolean) {
-                  if (prop) {
-                    filterText += key
+                  if (isBoolean) {
+                    if (prop) {
+                      filterText += key
+                    }
+                  } else {
+                    filterText += key + ': '
+                    if (isNumber) {
+                      filterText += prop
+                    } else if (isText) {
+                      filterText += prop
+                    } else if (isDate) {
+                      filterText += prop.toDateString()
+                    }
                   }
-                } else {
-                  filterText += key + ': '
-                  if (isNumber) {
-                    filterText += prop
-                  } else if (isText) {
-                    filterText += prop
-                  } else if (isDate) {
-                    filterText += prop.toDateString()
-                  }
-                }
-                filterText += ' '
-              })
+                  filterText += ' '
+                })
+              }
 
               $scope.activeFilters.push({
                 propPath: fullPath,
@@ -218,18 +230,18 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           }
           addToActiveFiltersRecursive('', $scope.filtersModel)
           // Display 'Show all' events filter in case no events filter is set
-          if (!_.get($scope.filtersModel, keyEvents) || _.isEmpty(_.get($scope.filtersModel, keyEvents))) {
-            $scope.activeFilters.push({
-              propPath: keyEvents,
-              text: 'Events: All'
-            })
-          }
-          if (!_.get($scope.filtersModel, keyDevices) || _.isEmpty(_.get($scope.filtersModel, keyDevices))) {
-            $scope.activeFilters.push({
-              propPath: keyEvents,
-              text: 'Devices: All non-components'
-            })
-          }
+          // if (!_.get($scope.filtersModel, keyEvents) || _.isEmpty(_.get($scope.filtersModel, keyEvents))) {
+          //   $scope.activeFilters.push({
+          //     propPath: keyEvents,
+          //     text: 'Events: All'
+          //   })
+          // }
+          // if (!_.get($scope.filtersModel, keyDevices) || _.isEmpty(_.get($scope.filtersModel, keyDevices))) {
+          //   $scope.activeFilters.push({
+          //     propPath: keyEvents,
+          //     text: 'Devices: All non-components'
+          //   })
+          // }
 
           // update search
           getterDevices.updateFiltersFromSearch($scope.filtersModel)
@@ -277,7 +289,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                         key: keyDevices + '.Computer',
                         type: 'checkbox',
                         templateOptions: {
-                          label: 'Desktop'
+                          label: 'Computer'
                         }
                       },
                       {
