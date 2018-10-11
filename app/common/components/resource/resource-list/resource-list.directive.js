@@ -70,7 +70,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           }
           getterDevices.updateFiltersFromSearch({
             lot: {
-              id: selectedLots.map(l => l._id)
+              id: selectedLots.map(l => l._id),
+              _meta: {
+                endpoint: true
+              }
             }
           })
         }
