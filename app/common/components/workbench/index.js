@@ -23,6 +23,3 @@ module.exports = angular.module('common.components.workbench',
   .controller('workbenchLinkCtl', require('./workbench-link/workbench-link.controller'))
   .service('workbenchServer', require('./workbenchServer.service'))
   .config(require('./workbench-link/workbench-link.modal.config'))
-  .directive('workbenchNameButton', require('./workbench-name/workbench-name-button.directive'))
-  .controller('workbenchNameCtl', require('./workbench-name/workbench-name.controller'))
-  .config(require('./workbench-name/workbench-name.modal.config'))

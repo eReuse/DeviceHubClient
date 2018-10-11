@@ -850,12 +850,14 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         $scope.$on('tagScanDoneSearch', (_, tag) => {
-          const tagURLPrefix = 'http://t.devicetag.io/' // TODO move to config
-
-          if (tag.indexOf(tagURLPrefix) === 0) { // is ID encompassed in URL ?
-            tag = tag.substring(tagURLPrefix.length, tag.length)
+          let id
+          try {
+            const url = new URL(tag)
+            id = url.pathname.substring(1) // Remove initial slash
+          } catch (e) {
+            id = tag
           }
-          $rootScope.$broadcast('updateSearchQuery', tag)
+          $rootScope.$broadcast('updateSearchQuery', id)
 
           $scope.$apply()
         })

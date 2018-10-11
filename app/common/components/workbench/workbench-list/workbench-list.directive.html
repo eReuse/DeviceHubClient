@@ -26,8 +26,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>System ID</th>
-          <th>GID</th>
+          <th>Tag</th>
           <th>Model</th>
           <th ng-hide="::isAndroid">Manufacturer</th>
           <th ng-hide="::isAndroid">S/N</th>
@@ -35,23 +34,21 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="snapshot in snapshots | orderBy:'date':true track by snapshot._uuid"
+        <tr ng-repeat="snapshot in snapshots | orderBy:'date':true track by snapshot.uuid"
             ng-class="
           {
-            'info': snapshot._phases === snapshot._totalPhases && !snapshot._linked && !snapshot._saved,
+            'info': snapshot._actualPhase === 'Link',
             'success': snapshot._uploaded,
-            'warning': snapshot._error && !snapshot._uploaded
+            'warning': snapshot._error
           }
           ">
-          <td>{{snapshot.device._id}}</td>
-          <td>{{snapshot.device.gid}}</td>
+          <td>{{snapshot.device.tags[0]['id']}}</td>
           <td>{{::snapshot.device.model}}</td>
           <td ng-if="::isNotAndroid">{{::snapshot.device.manufacturer}}</td>
           <td ng-if="::isNotAndroid">{{::snapshot.device.serialNumber}}</td>
           <td>
             <div class="center-block">
-              {{snapshot._phases}} /
-              <small>{{::snapshot._totalPhases}}</small>
+              {{snapshot._actualPhase}}
               <a ng-show="isNotAndroid && snapshot._saved"
                  ng-href="{{workbenchServer.host}}/snapshots/{{::snapshot._uuid}}"
                  target="_blank"
@@ -76,8 +73,12 @@
       <h2>Looking for a Workbench Server in the IP:</h2>
       <big>
         <div class="form-group">
-          <input type="text" class="form-control" ng-model="workbenchServerAddress"
-                 ng-change="setWorkbenchServerAddress(workbenchServerAddress)">
+          <span class="input-group-addon" id="scheme">http://</span>
+          <input type="text"
+                 class="form-control"
+                 ng-model="WSHost"
+                 ng-change="setWSHost(WSHost)"
+                 aria-describedby="scheme">
         </div>
       </big>
     </div>

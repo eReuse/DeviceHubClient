@@ -1,16 +1,10 @@
 <div ui-view id="workbench">
   <nav class="breadcrumb navbar">
-    <div class="text-center" ng-if="::isAndroid">
-      <select ng-model="selectedNames" multiple>
-        <option ng-repeat="name in names" value="{{::name}}">{{::name}}</option>
-      </select>
-    </div>
     <ul class="nav navbar-nav navbar-left">
       <workbench-link-button></workbench-link-button>
     </ul>
     <ul class="nav navbar-nav navbar-right" ng-if="::isNotAndroid">
       <workbench-config-button></workbench-config-button>
-      <workbench-name-button></workbench-name-button>
     </ul>
   </nav>
   <workbench-list></workbench-list>
