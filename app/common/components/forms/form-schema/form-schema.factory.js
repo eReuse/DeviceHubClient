@@ -974,6 +974,23 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
             case 'ComputerMonitor':
               return [
                 {
+                  key: 'device.tags[0]',
+                  type: 'input',
+                  id: '_newTagID',
+                  templateOptions: {
+                    label: 'Tag',
+                    description: window.AndroidApp
+                      ? 'Hold your phone closely over the NFC-enabled tag or press the camera to scan the QR code'
+                      : 'Identifier printed on tag or label',
+                    addonRight: window.AndroidApp ? {
+                      onClick: () => {
+                        window.AndroidApp.scanBarcode('tagScanDone')
+                      },
+                      class: 'fa fa-camera'
+                    } : null
+                  }
+                },
+                {
                   'key': 'device.width',
                   'type': 'input',
                   'templateOptions': {
