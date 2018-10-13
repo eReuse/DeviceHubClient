@@ -20,7 +20,25 @@ function typeahead (formlyConfigProvider) {
     },
     templateUrl: window.COMPONENTS + '/forms/types/typeahead/typeahead.formly-type.config.html',
     controller: function ($scope, ResourceSettings) {
-      $scope.getResources = ResourceSettings(utils.Naming.type($scope.to.resourceName)).server.findText
+      $scope.getResources = (names, text) => {
+        const server = ResourceSettings(utils.Naming.type($scope.to.resourceName)).server
+        const promise = server.findText(names, text)
+        promise.then((resources) => {
+          $scope.resources = resources
+        })
+        return promise
+      }
+      // TODO this works currently only for lots
+      $scope.formatLabel = (model) => {
+        if (!$scope.resources) {
+          return model
+        }
+        for (let i = 0; i < $scope.resources.length; i++) {
+          if (model === $scope.resources[i]._id) {
+            return $scope.resources[i].name
+          }
+        }
+      }
     },
     apiCheck: function (check) {
       return {
