@@ -26,7 +26,8 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Tag</th>
+          <th>Tag 1</th>
+          <th>Tag 2</th>
           <th>Model</th>
           <th ng-hide="::isAndroid">Manufacturer</th>
           <th ng-hide="::isAndroid">S/N</th>
@@ -43,6 +44,7 @@
           }
           ">
           <td>{{snapshot.device.tags[0]['id']}}</td>
+          <td>{{snapshot.device.tags[1]['id']}}</td>
           <td>{{::snapshot.device.model}}</td>
           <td ng-if="::isNotAndroid">{{::snapshot.device.manufacturer}}</td>
           <td ng-if="::isNotAndroid">{{::snapshot.device.serialNumber}}</td>
@@ -50,7 +52,7 @@
             <div class="center-block">
               {{snapshot._actualPhase}}
               <a ng-show="isNotAndroid && snapshot._saved"
-                 ng-href="{{workbenchServer.host}}/snapshots/{{::snapshot._uuid}}"
+                 ng-href="{{workbenchServer.authority}}/snapshots/{{snapshot.uuid}}"
                  target="_blank"
               >
                 <i class="fa fa-lg fa-file fa-fw"></i>
