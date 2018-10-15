@@ -306,22 +306,23 @@ function ResourceListGetterFactory (ResourceSettings) {
           }
 
           // map components
-          if (_.find(r.components, { type: 'Processor' })) {
-            r.processorModel = _.find(r.components, { type: 'Processor' }).model
-          }
-          if (_.find(r.components, { type: 'RamModule' })) {
-            r.totalRamSize = _.filter(r.components, { type: 'RamModule' }).reduce((a, b) => a + b.size, 0)
-          }
-          if (_.find(r.components, { type: 'HardDrive' })) {
-            r.totalHardDriveSize = _.filter(r.components, { type: 'HardDrive' }).reduce((a, b) => a + b.size, 0)
+          r.totalRamSize = r.ramSize
+          r.totalHardDriveSize = r.dataStorageSize
+
+          // map status
+          let status = 'Registered'
+          if (r.physical && r.trading) {
+            status = r.trading + ' / ' + r.physical
+          } else if (r.physical || r.trading) {
+            status = r.trading || r.physical
           }
 
           _.defaults(r, devicePropertiesStub)
           _.assign(r, {
             _id: r.id,
             _created: r.created,
-            status: (r.events && r.events.length > 0 && r.events[0].type) || 'Registered',
             title: title,
+            status: status,
             parentLots: parentLots
           })
         })
