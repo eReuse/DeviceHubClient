@@ -61,18 +61,19 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         // Selected lots
-        function updateLotSelection (selectedLots) {
+        function updateLotSelection (selectedLots = []) {
           $scope.selectedLots = selectedLots
           if ($scope.selectedLots.length > 0) {
             $scope.selectedLotsText = $scope.selectedLots.map((l) => l.name).join(', ')
           } else {
             $scope.selectedLotsText = 'All devices'
           }
-          getterDevices.updateFilters('LOTS', {
+          const filter = selectedLots.length > 0 ? {
             lot: {
               id: selectedLots.map(l => l._id)
             }
-          })
+          } : null
+          getterDevices.updateFilters('LOTS', filter)
         }
         updateLotSelection([])
         lotsSelector.callbackOnSelection(updateLotSelection)

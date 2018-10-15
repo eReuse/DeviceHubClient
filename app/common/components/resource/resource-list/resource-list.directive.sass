@@ -2,15 +2,23 @@
 
 lots-tree-navigation
   .tree-node.tree-node-content
+    a.btn
+      width: 100%
+      text-align: left
     span
-      font-size: 14px
+      font-size: 16px
     &.selected span
       font-weight: bold
 
     resource-field-edit .edit-button
       display: none
-    &:hover resource-field-edit .edit-button
+    &:hover resource-field-edit .edit-button, &.selected resource-field-edit .edit-button
       display: block
+    .add-lot-button
+      display: none
+    &:hover .add-lot-button, &.selected .add-lot-button
+      display: block
+
 
 .btn-normal
   color: #333333

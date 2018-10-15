@@ -8,7 +8,9 @@
         }"></span></a>
         -->
   <a class="btn btn-normal btn-xs" data-nodrag ng-click="toggleLot(node, $event)">
-    <resource-field-edit resource="node" field="{ key: 'name', value: node.name, editable: true }">
+    <resource-field-edit resource="node"
+                         field="{ key: 'name', value: node.name, editable: true }"
+                         new-child-lot="newChildLot(parentLot)">
       {{node.name}}
     </resource-field-edit>
   </a>

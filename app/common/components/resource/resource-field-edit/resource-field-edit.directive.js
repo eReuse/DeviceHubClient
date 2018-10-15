@@ -8,7 +8,8 @@ function resourceFieldEdit (SubmitForm, $focus, $timeout, Notification) {
     scope: {
       field: '=',
       resource: '=?',
-      editing: '&?'
+      editing: '&?',
+      newChildLot: '&'
     },
     link: {
       pre: ($scope, $element) => {
@@ -43,6 +44,13 @@ function resourceFieldEdit (SubmitForm, $focus, $timeout, Notification) {
             }
           }
           submitForm = new SubmitForm(form, form.status)
+
+          $scope.newLot = ($event, resource) => {
+            $event && $event.preventDefault()
+            $event && $event.stopPropagation()
+            $scope.newChildLot({ parentLot: resource })
+          }
+
           $scope.edit = {
             editing: false,
             status: {},
