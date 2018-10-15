@@ -28,7 +28,7 @@ function workbenchLink($scope, workbenchPoller, uuid, ResourceSettings, $uibModa
   $scope.form = {
     fields: [
       {
-        key: 'tags[0].id',
+        key: 'device.tags[0].id',
         type: 'input',
         id: 'tag0id',
         templateOptions: {
@@ -38,7 +38,7 @@ function workbenchLink($scope, workbenchPoller, uuid, ResourceSettings, $uibModa
         }
       },
       {
-        key: 'tags[1].id',
+        key: 'device.tags[1].id',
         type: 'input',
         id: 'tag1id',
         templateOptions: {
@@ -48,7 +48,7 @@ function workbenchLink($scope, workbenchPoller, uuid, ResourceSettings, $uibModa
         }
       },
       {
-        key: 'rate.appearance',
+        key: 'device.events[0].appearanceRange',
         type: 'radio',
         templateOptions: {
           label: 'Appearance',
@@ -68,7 +68,7 @@ function workbenchLink($scope, workbenchPoller, uuid, ResourceSettings, $uibModa
         }
       },
       {
-        key: 'rate.functionality',
+        key: 'device.events[0].functionalityRange',
         type: 'radio',
         templateOptions: {
           label: 'Functionality',
@@ -92,7 +92,7 @@ function workbenchLink($scope, workbenchPoller, uuid, ResourceSettings, $uibModa
         }
       },
       {
-        key: 'rate.bios',
+        key: 'device.events[0].biosRange',
         type: 'radio',
         templateOptions: {
           label: 'Bios',
@@ -119,21 +119,25 @@ function workbenchLink($scope, workbenchPoller, uuid, ResourceSettings, $uibModa
       }
     ],
     model: {
-      tags: [],
-      rate: {
-        type: 'WorkbenchRate'
+      device: {
+        tags: [],
+        events: [
+          {
+            type: 'WorkbenchRate'
+          }
+        ]
       }
     },
     submit: model => {
       if (submitForm.isValid()) {
         submitForm.prepare()
+        model.device.tags.forEach(tag => (tag.type = 'Tag'))
         const promise = $http({
           method: 'PATCH',
-          url: `${workbenchServer.host}/snapshots/${uuid}`,
+          url: `${workbenchServer.authority}/snapshots/${uuid}`,
           data: model
         }).then($scope.cancel)
-        submitForm.after(promise, 'Device linked.',
-          'We couldn\'t link the device. Ensure you are still connected to WorkbenchServer.')
+        submitForm.after(promise, 'Device linked.', 'We couldn\'t link the device. Are you still connected?')
       }
     }
   }
