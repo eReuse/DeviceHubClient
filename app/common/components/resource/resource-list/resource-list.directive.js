@@ -39,8 +39,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
          * main window.
          * @param {Object} lot - Minimum properties are @type and _id
          */
-        $scope.goTo = lot => {
-          ResourceBreadcrumb.go(lot)
+        $scope.selectLot = lot => {
+          lotsSelector.selectOnly(lot)
         }
 
         // Set up getters and selectors for devices
