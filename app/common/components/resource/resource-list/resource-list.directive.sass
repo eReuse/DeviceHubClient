@@ -1,6 +1,8 @@
 @import '_resource-list.directive'
 
 lots-tree-navigation
+  .create-new-lot-btn
+    margin-top: 10px
   .tree-node.tree-node-content
     a.btn
       width: 100%
@@ -22,6 +24,12 @@ lots-tree-navigation
 
 .btn-normal
   color: #333333
+  &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
+    color: #333333
+.btn-default-inverted
+  color: #333333
+  background-color: white
+  border-color: grey
   &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
     color: #333333
 
@@ -447,10 +455,7 @@ lots-tree-navigation
                 &:hover
                   color: #333333
               button
-                background-color: white
                 margin-left: 10px
-                border-color: grey
-                padding: 7px
                 &:hover
                   color: #333333
             .selected-devices-in-lot
