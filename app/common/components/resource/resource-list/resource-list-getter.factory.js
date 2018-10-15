@@ -282,7 +282,7 @@ function ResourceListGetterFactory (ResourceSettings) {
               },
               'appearance': {
                 'score': rate.appearance,
-                'general': rate.appearanceRange // TODO
+                'general': rate.appearanceRange
               },
               'functionality': {
                 'score': rate.functionality,
