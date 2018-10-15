@@ -974,7 +974,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
             case 'ComputerMonitor':
               return [
                 {
-                  key: 'device.tags[0]',
+                  key: 'device.tags[0].id',
                   type: 'input',
                   id: '_newTagID',
                   templateOptions: {
