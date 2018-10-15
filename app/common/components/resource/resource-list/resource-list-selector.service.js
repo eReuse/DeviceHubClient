@@ -130,6 +130,27 @@ class ResourceListSelector {
       if (selectedDevices.length === 0) {
         return null
       }
+      selectedDevices = _.filter(selectedDevices, (d) => { return !_.isNil(_.get(d, pathToProp)) })
+      if (selectedDevices.length > 1) {
+        const counts = _(selectedDevices).mapValues((d) => { return _.get(d, pathToProp) }).countBy().value()
+        if (_.keys(counts).length <= 5) {
+          let text = ''
+          _.toPairs(counts).forEach(pair => {
+            const key = pair[0]
+            const count = pair[1]
+            if (_.isNil(key)) {
+
+            }
+            text += key
+            if (postfix) {
+              text += ' ' + postfix
+            }
+            text += ' (' + count + ') '
+          })
+          return text
+        }
+      }
+
       let reducedDevice = selectedDevices.reduce((accumulate, device) => {
         let value = accumulate[pathToProp]
         if (_.has(device, pathToProp) && value !== _.get(device, pathToProp)) {

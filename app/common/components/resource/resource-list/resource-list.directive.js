@@ -690,8 +690,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             subType: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'type'),
             manufacturer: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'manufacturer'),
             model: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'model'),
-            serialNumber: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'serialNumber', 'Various serial numbers'),
-            hid: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'hid', 'Various hids'),
+            serialNumber: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'serialNumber'),
+            hid: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'hid'),
             status: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'status'),
             condition: {
               appearance: {
