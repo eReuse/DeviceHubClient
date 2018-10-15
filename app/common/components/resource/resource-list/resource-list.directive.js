@@ -155,7 +155,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               endpoint: true,
               prefix: 'Devices: '
             }
-          },
+          }
           // [keyEvents]: {
           //   types: _.assign({
           //     _meta: {
