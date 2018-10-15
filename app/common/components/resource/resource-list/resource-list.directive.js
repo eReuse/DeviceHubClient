@@ -156,14 +156,14 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               prefix: 'Devices: '
             }
           },
-          [keyEvents]: {
-            types: _.assign({
-              _meta: {
-                endpoint: true,
-                prefix: 'Events: '
-              }
-            }, _.mapValues(_.keyBy(allEvents), () => true))
-          }
+          // [keyEvents]: {
+          //   types: _.assign({
+          //     _meta: {
+          //       endpoint: true,
+          //       prefix: 'Events: '
+          //     }
+          //   }, _.mapValues(_.keyBy(allEvents), () => true))
+          // }
         }
         function onFiltersChanged () {
           $scope.hideAllFilterPanels()
