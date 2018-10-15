@@ -207,19 +207,6 @@ function ResourceListGetterFactory (ResourceSettings) {
     }
 
     _processResources (getNextPage, showProgressBar, resources) {
-      function convertScoreToScoreRange (newV) {
-        if (newV <= 2) {
-          return 'VeryLow'
-        } else if (newV <= 3) {
-          return 'Low'
-        } else if (newV <= 4) {
-          return 'Medium'
-        } else if (newV > 4) {
-          return 'High'
-        } else {
-          return '?'
-        }
-      }
       if (showProgressBar) this.progressBar.complete()
       if (!getNextPage) this.resources.length = 0
       if (this.resourceType === 'Device') {
@@ -295,11 +282,11 @@ function ResourceListGetterFactory (ResourceSettings) {
               },
               'appearance': {
                 'score': rate.appearance,
-                'general': 'B' // TODO
+                'general': rate.appearanceRange // TODO
               },
               'functionality': {
-                'score': rate.functionalityScore,
-                'general': 'B' // TODO
+                'score': rate.functionality,
+                'general': rate.functionalityRange
               },
               'components': {
                 'hardDrives': rate.data_storage,
@@ -311,9 +298,9 @@ function ResourceListGetterFactory (ResourceSettings) {
                 'range':
                   rate.rating > 8 ? 'Very high'
                     : rate.rating > 6 ? 'High'
-                      : rate.rating > 4 ? 'Normal'
-                        : rate.rating > 2 ? 'Low'
-                          : 'Very low'
+                    : rate.rating > 4 ? 'Normal'
+                      : rate.rating > 2 ? 'Low'
+                        : 'Very low'
               }
             }
           }
@@ -337,10 +324,6 @@ function ResourceListGetterFactory (ResourceSettings) {
             title: title,
             parentLots: parentLots
           })
-
-          let pathToScoreRange = 'condition.general.range'
-          let pathToScore = 'condition.general.score'
-          _.set(r, pathToScoreRange, convertScoreToScoreRange(_.get(r, pathToScore)))
         })
 
         this._updateResourcesAfterGet(getNextPage, resources)
