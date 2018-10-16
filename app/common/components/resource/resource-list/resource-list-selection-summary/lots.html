@@ -13,15 +13,20 @@
     >
       <div class="selected-lot"
            ng-class="{ 'pill-lot': !selection.multiSelection, 'pill-lot-flex': !selection.multiSelection }">
-        <a ng-click="goTo(lot)">
-          <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.name }} ({{lot.selectedDevices.length}})
-        </a>
+        <i class="fa fa-fw fa-lg fa-folder-o "></i>{{ lot.name }} ({{lot.selectedDevices.length}})
         <button type="button"
-                class="btn"
+                class="btn btn-sm btn-default-inverted"
+                ng-show="selection.multiSelection"
+                ng-click="selectLot(lot)"
+        >
+          <span>Select lot</span>
+        </button>
+        <button type="button"
+                class="btn btn-sm btn-default-inverted"
                 ng-show="selection.multiSelection"
                 ng-click="deselectAll(lot.selectedDevices)"
         >
-          <span>Deselect</span>
+          <span>Deselect devices</span>
         </button>
       </div>
       <ul class="selected-devices-in-lot row" ng-show="selection.multiSelection">

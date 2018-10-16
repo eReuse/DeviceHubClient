@@ -1,19 +1,52 @@
 @import '_resource-list.directive'
 
 lots-tree-navigation
+  .create-new-lot-btn
+    margin-top: 10px
+    font-size: 18px
+    @media (min-width: $screen-sm-min)
+      font-size: 16px
   .tree-node.tree-node-content
+    margin: 5px 0
+    //@media (min-width: $screen-sm-min)
+    //  margin: 0
+    a.btn
+      width: 100%
+      text-align: left
     span
-      font-size: 14px
+      font-size: 18px
+      @media (min-width: $screen-sm-min)
+        font-size: 16px
+      .clickable
+        font-size: 20px
+        padding: 5px
+        @media (min-width: $screen-sm-min)
+          font-size: 16px
+          padding: 3px
+        &:nth-child(2n)
+          margin-left: 10px
+
     &.selected span
       font-weight: bold
 
     resource-field-edit .edit-button
       display: none
-    &:hover resource-field-edit .edit-button
+    &:hover resource-field-edit .edit-button, &.selected resource-field-edit .edit-button
       display: block
+    .add-lot-button
+      display: none
+    &:hover .add-lot-button, &.selected .add-lot-button
+      display: block
+
 
 .btn-normal
   color: #333333
+  &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
+    color: #333333
+.btn-default-inverted
+  color: #333333
+  background-color: white
+  border-color: grey
   &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
     color: #333333
 
@@ -54,7 +87,11 @@ lots-tree-navigation
   padding: 0
   .tabs-lots-events
     background-color: #E8E8DC
-    padding: 15px 15px 10px 30px
+    padding: 15px 10px 10px 10px
+    @media (min-width: $screen-sm-min)
+      padding-left: 30px
+      padding-right: 15px
+      position: inherit
     position: absolute
     top: 0
     z-index: 10
@@ -439,10 +476,7 @@ lots-tree-navigation
                 &:hover
                   color: #333333
               button
-                background-color: white
                 margin-left: 10px
-                border-color: grey
-                padding: 7px
                 &:hover
                   color: #333333
             .selected-devices-in-lot

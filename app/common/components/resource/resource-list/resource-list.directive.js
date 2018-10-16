@@ -39,8 +39,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
          * main window.
          * @param {Object} lot - Minimum properties are @type and _id
          */
-        $scope.goTo = lot => {
-          ResourceBreadcrumb.go(lot)
+        $scope.selectLot = lot => {
+          lotsSelector.selectOnly(lot)
         }
 
         // Set up getters and selectors for devices
@@ -61,18 +61,19 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         // Selected lots
-        function updateLotSelection (selectedLots) {
+        function updateLotSelection (selectedLots = []) {
           $scope.selectedLots = selectedLots
           if ($scope.selectedLots.length > 0) {
             $scope.selectedLotsText = $scope.selectedLots.map((l) => l.name).join(', ')
           } else {
-            $scope.selectedLotsText = 'All devices'
+            $scope.selectedLotsText = 'All lots'
           }
-          getterDevices.updateFilters('LOTS', {
+          const filter = selectedLots.length > 0 ? {
             lot: {
               id: selectedLots.map(l => l._id)
             }
-          })
+          } : null
+          getterDevices.updateFilters('LOTS', filter)
         }
         updateLotSelection([])
         lotsSelector.callbackOnSelection(updateLotSelection)
@@ -154,15 +155,15 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               endpoint: true,
               prefix: 'Devices: '
             }
-          },
-          [keyEvents]: {
-            types: _.assign({
-              _meta: {
-                endpoint: true,
-                prefix: 'Events: '
-              }
-            }, _.mapValues(_.keyBy(allEvents), () => true))
           }
+          // [keyEvents]: {
+          //   types: _.assign({
+          //     _meta: {
+          //       endpoint: true,
+          //       prefix: 'Events: '
+          //     }
+          //   }, _.mapValues(_.keyBy(allEvents), () => true))
+          // }
         }
         function onFiltersChanged () {
           $scope.hideAllFilterPanels()
@@ -660,7 +661,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
           // TODO Remove?
           // mark current lot
-          let currentLot = _.find($scope.selection.lots, { _id: $scope.parentResource._id })
+          let currentLot = _.find($scope.selection.lots, {_id: $scope.parentResource._id})
           if (currentLot) {
             currentLot.current = true
           }
@@ -766,20 +767,30 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               contentSummary: props.status,
               cssClass: 'status',
               templateUrl: selectionSummaryTemplateFolder + '/status.html'
-            },
-            {
+            }
+          ])
+          if (_.get(props, 'pricing.total.' + $scope.currencyOptions.val)) {
+            $scope.selection.summary.push({
               title: 'Price',
               contentSummary: props.pricing.total[$scope.currencyOptions.val],
               cssClass: 'price',
               templateUrl: selectionSummaryTemplateFolder + '/price.html'
-            },
-            {
+            })
+          }
+          if (_.get(props, 'condition.general.range') ||
+            _.get(props, 'condition.functionality.range') ||
+            _.get(props, 'condition.appearance.range')) {
+            $scope.selection.summary.push({
               title: 'Condition score',
-              contentSummary: props.condition.general.range,
+              contentSummary: _.get(props, 'condition.general.range')
+                ? _.get(props, 'condition.general.range')
+                : _.get(props, 'condition.functionality.range')
+                  ? 'Functionality: ' + _.get(props, 'condition.functionality.range')
+                  : 'Appearance: ' + _.get(props, 'condition.appearance.range'),
               cssClass: 'condition-score',
               templateUrl: selectionSummaryTemplateFolder + '/condition-score.html'
-            }
-          ])
+            })
+          }
           if (componentsContentSummary) {
             $scope.selection.summary.push({
               title: 'Components',

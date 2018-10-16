@@ -169,6 +169,9 @@ function ResourceServer (schema, Restangular) {
  * @param schema
  */
 function parse (item, schema) {
+  if (_.isNil(item)) {
+    return
+  }
   _.assign(item, {
     _id: item.id,
     _updated: item.updated,

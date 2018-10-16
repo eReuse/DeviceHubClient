@@ -8,15 +8,17 @@ class LotsSelectorService {
     }
 
     this.toggle = (lot) => {
-      if (!lot._id) {
-        console.error('lot does not have id set', lot)
-        throw new Error('lot does not have id set')
-      }
       let isSelected = selectedNodes[lot._id]
       this.deselectAll(true)
       if (!isSelected) {
         selectedNodes[lot._id] = lot
       }
+      _control()
+    }
+
+    this.selectOnly = (lot) => {
+      this.deselectAll(true)
+      selectedNodes[lot._id] = lot
       _control()
     }
 

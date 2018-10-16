@@ -15,7 +15,7 @@ function registerButton (SnapshotFormSchema, ResourceSettings, dhModal, FormSche
               '@type': 'devices:Snapshot',
               'device': {
                 'events': [{ type: 'AppRate' }],
-                'tags': []
+                'tags': [{ type: 'Tag' }]
               }
             })
             const options = () => ({

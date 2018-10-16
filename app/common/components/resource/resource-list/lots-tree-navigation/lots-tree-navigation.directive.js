@@ -1,4 +1,4 @@
-function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar, $rootScope, LotsSelector) {
+function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar, $rootScope, LotsSelector, ResourceSettings) {
   const PATH = require('./__init__').PATH
   // const PATH = 'common/components/resource/resource-list/lots-tree-navigation'
   return {
@@ -55,6 +55,36 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
           scope.toggle()
         }
 
+        function newLot (parentLot) {
+          function startEditing (lot) {
+            reload().then(() => {
+              // TODO set newly created lot's resource-field-edit to editing
+            })
+          }
+          ResourceSettings('Lot').server.post({name: 'New lot'}).then(childLot => {
+            if (parentLot) {
+              ResourceSettings('Lot').server
+                .one(parentLot._id)
+                .post('children', null, { id: childLot._id })
+                .then(() => {
+                  startEditing(childLot)
+                })
+            } else {
+              startEditing(childLot)
+            }
+          })
+        }
+
+        $scope.newChildLot = (parentLot) => {
+          newLot(parentLot)
+        }
+
+        $scope.newLot = ($event) => {
+          $event && $event.preventDefault()
+          $event && $event.stopPropagation()
+          newLot()
+        }
+
         // get data
         $scope.data = []
         // Set up getters for lots
@@ -66,8 +96,12 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
           $scope.findNodes()
         })
 
+        function reload () {
+          return getterLots.getResources()
+        }
+
         $scope.$on('lots:reload', () => {
-          getterLots.getResources()
+          reload()
         })
         // // TODO delete as soon as getter works
         // _.assign($scope.data, [

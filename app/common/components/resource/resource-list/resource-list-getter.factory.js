@@ -6,77 +6,6 @@ function ResourceListGetterFactory (ResourceSettings) {
   // Missing properties in device, added here to stub those properties
   // TODO Provide missing properties by service and finally remove this stub
   const devicePropertiesStub = {
-    // '@type': 'Computer',
-    // 'processorModel': 'Intel(R) Atom(TM) CPU 330 @ 1.60GHz',
-    // 'totalRamSize': 2048,
-    // 'totalHardDriveSize': 305245.3359375,
-    'pricing': {
-      'refurbisher': {
-        'standard': {
-          'amount': 21.0,
-          'percentage': 0.5
-        }
-      },
-      'retailer': {
-        'standard': {
-          'amount': 7.88,
-          'percentage': 0.18
-        }
-      },
-      'platform': {
-        'standard': {
-          'amount': 12.9,
-          'percentage': 0.3
-        }
-      },
-      'total': {
-        'standard': 41.8
-      }
-    },
-    'ancestors': [
-      {
-        'lots': [
-          'gqGHPm6VAb',
-          'qqLH_MwRpR'
-        ],
-        '@type': 'Lot',
-        '_id': 'NqGv3adWT6'
-      }
-    ],
-    'events': [
-      {
-        'secured': false,
-        '_updated': '2018-06-06T10:20:05',
-        'incidence': false,
-        '@type': 'devices:Ready',
-        'byUser': '5acfa56aa0961e1b7f28c34a',
-        '_id': '5b17b555a0961e0aeab57d2b',
-        'label': 'Ready test 2'
-      }
-    ],
-    'condition': {
-      'scoringSoftware': {
-        'version': '1.0',
-        'label': 'ereuse.org'
-      },
-      'appearance': {
-        'score': 0.0,
-        'general': 'B'
-      },
-      'functionality': {
-        'score': -0.5,
-        'general': 'B'
-      },
-      'components': {
-        'hardDrives': 3.82,
-        'ram': 1.54,
-        'processors': 3.59
-      },
-      'general': {
-        'score': 2.09,
-        'range': 'Low'
-      }
-    },
     donor: 'BCN Ayuntamiento',
     owner: 'Solidança',
     distributor: 'Donalo'
@@ -278,19 +207,6 @@ function ResourceListGetterFactory (ResourceSettings) {
     }
 
     _processResources (getNextPage, showProgressBar, resources) {
-      function convertScoreToScoreRange (newV) {
-        if (newV <= 2) {
-          return 'VeryLow'
-        } else if (newV <= 3) {
-          return 'Low'
-        } else if (newV <= 4) {
-          return 'Medium'
-        } else if (newV > 4) {
-          return 'High'
-        } else {
-          return '?'
-        }
-      }
       if (showProgressBar) this.progressBar.complete()
       if (!getNextPage) this.resources.length = 0
       if (this.resourceType === 'Device') {
@@ -343,29 +259,72 @@ function ResourceListGetterFactory (ResourceSettings) {
             })
           })
 
+          // map rating
+          if (r.price) {
+            const price = r.price
+            r.pricing = {
+              'refurbisher': price.refurbisher,
+              'retailer': price.retailer,
+              'platform': price.platform,
+              'total': {
+                'standard': price.price
+              }
+            }
+          }
+
+          // map rating
+          if (r.rate) {
+            const rate = r.rate
+            r.condition = {
+              'scoringSoftware': {
+                'version': rate.software,
+                'label': rate.version
+              },
+              'appearance': {
+                'score': rate.appearance,
+                'general': rate.appearanceRange
+              },
+              'functionality': {
+                'score': rate.functionality,
+                'general': rate.functionalityRange
+              },
+              'components': {
+                'hardDrives': rate.data_storage,
+                'ram': rate.ram,
+                'processors': rate.processor
+              },
+              'general': {
+                'score': rate.rating,
+                'range':
+                  rate.rating > 8 ? 'Very high'
+                    : rate.rating > 6 ? 'High'
+                    : rate.rating > 4 ? 'Normal'
+                      : rate.rating > 2 ? 'Low'
+                        : 'Very low'
+              }
+            }
+          }
+
           // map components
-          if (_.find(r.components, { type: 'Processor' })) {
-            r.processorModel = _.find(r.components, { type: 'Processor' }).model
-          }
-          if (_.find(r.components, { type: 'RamModule' })) {
-            r.totalRamSize = _.filter(r.components, { type: 'RamModule' }).reduce((a, b) => a + b.size, 0)
-          }
-          if (_.find(r.components, { type: 'HardDrive' })) {
-            r.totalHardDriveSize = _.filter(r.components, { type: 'HardDrive' }).reduce((a, b) => a + b.size, 0)
+          r.totalRamSize = r.ramSize
+          r.totalHardDriveSize = r.dataStorageSize
+
+          // map status
+          let status = 'Registered'
+          if (r.physical && r.trading) {
+            status = r.trading + ' / ' + r.physical
+          } else if (r.physical || r.trading) {
+            status = r.trading || r.physical
           }
 
           _.defaults(r, devicePropertiesStub)
           _.assign(r, {
             _id: r.id,
             _created: r.created,
-            status: (r.events && r.events.length > 0 && r.events[0].type) || 'Registered',
             title: title,
+            status: status,
             parentLots: parentLots
           })
-
-          let pathToScoreRange = 'condition.general.range'
-          let pathToScore = 'condition.general.score'
-          _.set(r, pathToScoreRange, convertScoreToScoreRange(_.get(r, pathToScore)))
         })
 
         this._updateResourcesAfterGet(getNextPage, resources)
