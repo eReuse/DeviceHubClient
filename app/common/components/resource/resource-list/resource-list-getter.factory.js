@@ -298,12 +298,7 @@ function ResourceListGetterFactory (ResourceSettings) {
               },
               'general': {
                 'score': rate.rating,
-                'range':
-                  rate.rating > 8 ? 'Very high'
-                    : rate.rating > 6 ? 'High'
-                    : rate.rating > 4 ? 'Normal'
-                      : rate.rating > 2 ? 'Low'
-                        : 'Very low'
+                'range': rate.ratingRange
               }
             }
           }
