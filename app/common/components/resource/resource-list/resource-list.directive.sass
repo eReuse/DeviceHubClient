@@ -3,12 +3,26 @@
 lots-tree-navigation
   .create-new-lot-btn
     margin-top: 10px
+    font-size: 18px
+    @media (min-width: $screen-sm-min)
+      font-size: 16px
   .tree-node.tree-node-content
+    margin: 5px 0
+    //@media (min-width: $screen-sm-min)
+    //  margin: 0
     a.btn
       width: 100%
       text-align: left
     span
-      font-size: 16px
+      font-size: 18px
+      @media (min-width: $screen-sm-min)
+        font-size: 16px
+      .clickable
+        font-size: 20px
+        padding: 5px
+        &:nth-child(2n)
+          margin-left: 10px
+
     &.selected span
       font-weight: bold
 
@@ -70,7 +84,11 @@ lots-tree-navigation
   padding: 0
   .tabs-lots-events
     background-color: #E8E8DC
-    padding: 15px 15px 10px 30px
+    padding: 15px 10px 10px 10px
+    @media (min-width: $screen-sm-min)
+      padding-left: 30px
+      padding-right: 15px
+      position: inherit
     position: absolute
     top: 0
     z-index: 10
