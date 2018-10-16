@@ -18,7 +18,7 @@ function workbenchLink($scope, workbenchPoller, uuid, ResourceSettings, $uibModa
     } catch (e) {
       id = tag
     }
-    $scope.form.model.tags[tagNum] = {id: id}
+    $scope.form.model.device.tags[tagNum] = {id: id}
     $scope.$apply()
   }
 
