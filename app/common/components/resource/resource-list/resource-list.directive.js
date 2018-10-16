@@ -66,7 +66,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           if ($scope.selectedLots.length > 0) {
             $scope.selectedLotsText = $scope.selectedLots.map((l) => l.name).join(', ')
           } else {
-            $scope.selectedLotsText = 'All devices'
+            $scope.selectedLotsText = 'All lots'
           }
           const filter = selectedLots.length > 0 ? {
             lot: {

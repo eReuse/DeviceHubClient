@@ -13,9 +13,14 @@
   <div class="current-lot col-xs-12 col-sm-6 col-lg-6 fill-height-bar">
     <div>
       <h2 class="hidden-xs" style="margin-top: 0">{{ selectedLotsText }}</h2>
-      <a class="visible-xs" ng-click="lotsSelectionHiddenXS = !lotsSelectionHiddenXS">
-        <h2 style="margin-top: 0">{{ selectedLotsText }} <i class="fa fa-edit fa-fw"></i></h2>
-      </a>
+      <div class="visible-xs" >
+        <h2 style="margin-top: 0; display: inline-block;">{{ selectedLotsText }}</h2>
+        <a class="btn btn-sm btn-default-inverted"
+           style="margin-left: 15px; margin-bottom: 8px; font-size: 16px;"
+           ng-click="lotsSelectionHiddenXS = !lotsSelectionHiddenXS">
+          <i class="fa fa-folder-o fa-fw"></i>Select lot
+        </a>
+      </div>
     </div>
 
     <div class="search-wrapper input-group">
