@@ -18,39 +18,57 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-show="::selection.props.components.processorModel">
+    <tr ng-show="::selection.props.processorModel">
 <!--      <td>
         <device-icon type="Device" subtype="Processor"></device-icon>
       </td>-->
       <td>Processor</td>
-      <td>{{selection.props.components.processorModel}}</td>
+      <td>{{selection.props.processorModel}}</td>
       <td class="text-right">
         <span class="resource-range">{{selection.props.condition.components.processorsRange}} ({{selection.props.condition.components.processors}})</span>
       </td>
     </tr>
-    <tr ng-show="::selection.props.components.totalHardDriveSize">
+    <tr ng-show="::selection.props.totalHardDriveSize">
       <!--<td>
         <device-icon type="Device" subtype="HardDrive"></device-icon>
       </td>-->
       <td>
         Hard drive
       </td>
-      <td>{{::selection.props.components.totalHardDriveSize}}</td>
+      <td>{{::selection.props.totalHardDriveSize}}</td>
       <td class="text-right">
         <span class="resource-range">{{selection.props.condition.components.hardDrivesRange}} ({{selection.props.condition.components.hardDrives}})</span>
       </td>
     </tr>
-    <tr ng-show="::selection.props.components.totalRamSize">
+    <tr ng-show="::selection.props.totalRamSize">
       <!--<td>
         <device-icon type="Device" subtype="RamModule"></device-icon>
       </td>-->
       <td>
         RAM
       </td>
-      <td>{{::selection.props.components.totalRamSize}}</td>
+      <td>{{::selection.props.totalRamSize}}</td>
       <td class="text-right">
         <span class="resource-range">{{selection.props.condition.components.ramRange}} ({{selection.props.condition.components.ram}})</span>
       </td>
+    </tr>
+    <tr ng-show="::selection.props.graphicCardModel">
+      <!--<td>
+        <device-icon type="Device" subtype="RamModule"></device-icon>
+      </td>-->
+      <td>
+        Graphics
+      </td>
+      <td>{{::selection.props.graphicCardModel}}</td>
+    </tr>
+    <tr ng-show="::selection.props.networkSpeedsEthernet || selection.props.networkSpeedsWifi">
+      <!--<td>
+        <device-icon type="Device" subtype="RamModule"></device-icon>
+      </td>-->
+      <td>
+        Network card
+      </td>
+      <td><span ng-show="::selection.props.networkSpeedsEthernet">Ethernet max. {{::selection.props.networkSpeedsEthernet}}</span> <span ng-show="::selection.props.networkSpeedsWifi">Wireless max. {{::selection.props.networkSpeedsWifi}}</span></td>
     </tr>
     <!--<tr ng-show="::graphicCard">-->
     <!--<td>-->

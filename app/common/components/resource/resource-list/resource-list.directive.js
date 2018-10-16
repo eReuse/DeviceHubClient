@@ -712,10 +712,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                 processorsRange: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.components.processorsRange')
               }
             },
-            components: {
-              processorModel: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'processorModel'),
-              totalHardDriveSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalHardDriveSize', 'Various', ' GB HardDrive'),
-              totalRamSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalRamSize', 'Various', ' MB RAM')
+            processorModel: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'processorModel'),
+            totalHardDriveSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalHardDriveSize', 'Various', ' GB HardDrive'),
+            totalRamSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalRamSize', null, ' MB RAM'),
+            graphicCardModel: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'graphicCardModel'),
+            networkSpeedsEthernet: deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, 'networkSpeedsEthernet'),
+            networkSpeedsWifi: deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, 'networkSpeedsWifi'),
+            components: { // TODO
             },
             events: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'events', '_id'),
             lots: $scope.selection.lots
@@ -761,8 +764,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           } else {
             typeContentSummary = props.subType + manufacturer + model
           }
-          // TODO if components values need to be formatted, due it here
-          const componentsContentSummary = _.values(props.components).filter(c => !!c).join(', ')
+          // TODO if components values need to be formatted, do it here
+
+          let componentsContentSummary = _.values([props.processorModel, props.totalRamSize, props.totalHardDriveSize]).filter(c => !!c).join(', ')
           $scope.selection.summary = $scope.selection.summary.concat([
             {
               title: 'Type, manufacturer & model',

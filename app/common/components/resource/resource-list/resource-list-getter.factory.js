@@ -306,6 +306,8 @@ function ResourceListGetterFactory (ResourceSettings) {
           // map components
           r.totalRamSize = r.ramSize
           r.totalHardDriveSize = r.dataStorageSize
+          r.networkSpeedsEthernet = r.networkSpeeds && r.networkSpeeds.length && r.networkSpeeds[0]
+          r.networkSpeedsWifi = r.networkSpeeds && r.networkSpeeds.length && r.networkSpeeds[1]
 
           // map status
           let status = 'Registered'
