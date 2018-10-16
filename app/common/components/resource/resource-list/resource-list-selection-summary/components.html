@@ -9,7 +9,9 @@
   <table class="table" id="device-dashboard-components">
     <thead>
     <tr>
+<!--
       <th></th>
+-->
       <th></th>
       <th></th>
       <th>Range</th>
@@ -17,37 +19,37 @@
     </thead>
     <tbody>
     <tr ng-show="::selection.props.components.processorModel">
-      <td>
+<!--      <td>
         <device-icon type="Device" subtype="Processor"></device-icon>
-      </td>
+      </td>-->
       <td>Processor</td>
       <td>{{selection.props.components.processorModel}}</td>
-      <!--<td class="text-right">
-        <device-range score="resource.condition.components.processors"></device-range>
-      </td>-->
+      <td class="text-right">
+        <span class="resource-range">{{selection.props.condition.components.processorsRange}} ({{selection.props.condition.components.processors}})</span>
+      </td>
     </tr>
     <tr ng-show="::selection.props.components.totalHardDriveSize">
-      <td>
+      <!--<td>
         <device-icon type="Device" subtype="HardDrive"></device-icon>
-      </td>
+      </td>-->
       <td>
         Hard drive
       </td>
       <td>{{::selection.props.components.totalHardDriveSize}}</td>
-      <!--<td class="text-right">-->
-      <!--<device-range score="resource.condition.components.hardDrives"></device-range>-->
-      <!--</td>-->
+      <td class="text-right">
+        <span class="resource-range">{{selection.props.condition.components.hardDrivesRange}} ({{selection.props.condition.components.hardDrives}})</span>
+      </td>
     </tr>
     <tr ng-show="::selection.props.components.totalRamSize">
-      <td>
+      <!--<td>
         <device-icon type="Device" subtype="RamModule"></device-icon>
-      </td>
+      </td>-->
       <td>
         RAM
       </td>
       <td>{{::selection.props.components.totalRamSize}}</td>
       <td class="text-right">
-        <device-range score="resource.condition.components.ram"></device-range>
+        <span class="resource-range">{{selection.props.condition.components.ramRange}} ({{selection.props.condition.components.ram}})</span>
       </td>
     </tr>
     <!--<tr ng-show="::graphicCard">-->

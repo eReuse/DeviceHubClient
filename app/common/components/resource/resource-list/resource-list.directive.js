@@ -702,6 +702,14 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               },
               general: {
                 range: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.general.range')
+              },
+              components: {
+                hardDrives: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.components.hardDrives'),
+                hardDrivesRange: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.components.hardDrivesRange'),
+                ram: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.components.ram'),
+                ramRange: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.components.ramRange'),
+                processors: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.components.processors'),
+                processorsRange: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.components.processorsRange')
               }
             },
             components: {

@@ -290,8 +290,11 @@ function ResourceListGetterFactory (ResourceSettings) {
               },
               'components': {
                 'hardDrives': rate.data_storage,
+                'hardDrivesRange': rate.dataStorageRange,
                 'ram': rate.ram,
-                'processors': rate.processor
+                'ramRange': rate.ramRange,
+                'processors': rate.processor,
+                'processorsRange': rate.processorRange
               },
               'general': {
                 'score': rate.rating,
