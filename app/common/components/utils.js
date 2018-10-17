@@ -149,7 +149,7 @@ function getEventDescription (event) {
     case 'devices:TestDataStorage':
       return event.status + '. Lifetime of ' + (+(event.lifetime / 365 / 24).toFixed(2)) + ' years'
     case 'devices:BenchmarkDataStorage':
-      return 'OK. Read:' + event.readSpeed + '. Write' + event.writeSpeed
+      return 'Read: ' + event.readSpeed + ' MB/s Write: ' + event.writeSpeed
     case 'devices:BenchmarkProcessorSysbench':
       return event.rate + ' points'
     case 'devices:BenchmarkProcessor':
