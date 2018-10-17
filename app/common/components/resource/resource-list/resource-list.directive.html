@@ -127,14 +127,14 @@
       <h4 style="display: inline-block; margin-top: 20px; margin-bottom: 20px;">Devices (15)</h4>
 
       <button type="button"
-              class="btn btn-info btn-select-deselect"
+              class="btn btn-default-inverted btn-select-deselect"
               ng-show="!selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
               ng-click="selector.selectAll(devices, parentResource)"
       >
         <span>Select all(15)</span>
       </button>
       <button type="button"
-              class="btn btn-info btn-select-deselect"
+              class="btn btn-default-inverted btn-select-deselect"
               ng-show="selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
               ng-click="deselectAll(devices)"
       >
@@ -232,7 +232,7 @@
     <div ng-if="selectedLots.length > 0 && selection.devices.length === 0">
       <h4 style="display: inline-block;">Lots summary ({{selectedLots.length}})</h4>
       <button type="button"
-              class="btn btn-info btn-sm"
+              class="btn btn-default-inverted btn-sm"
               ng-click="deselectLots()"
               style="display: inline-block;">
         <span>Deselect all</span>
@@ -251,15 +251,15 @@
 
     <div ng-if="selection.devices.length > 0">
       <div>
-        <h4 style="display: inline-block;margin-bottom: 20px;">Selected devices ({{selection.devices.length}})</h4>
+        <h3 style="display: inline-block; margin: 15px 25px 25px 0;">Selected devices ({{selection.devices.length}})</h3>
         <button type="button"
-                class="btn btn-info btn-sm"
+                class="btn btn-default-inverted btn-sm"
                 ng-click="deselectAll()"
                 style="display: inline-block;">
           <span>Deselect all</span>
         </button>
       </div>
-      <div class="row buttons">
+      <div class="buttons">
         <group-resource-button
                 success="reloadDevices()"
                 resource-type="Device"

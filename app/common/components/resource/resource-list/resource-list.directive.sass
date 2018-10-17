@@ -1,44 +1,5 @@
 @import '_resource-list.directive'
 
-lots-tree-navigation
-  .create-new-lot-btn
-    margin-top: 10px
-    font-size: 18px
-    @media (min-width: $screen-sm-min)
-      font-size: 16px
-  .tree-node.tree-node-content
-    margin: 5px 0
-    //@media (min-width: $screen-sm-min)
-    //  margin: 0
-    a.btn
-      width: 100%
-      text-align: left
-    span
-      font-size: 18px
-      @media (min-width: $screen-sm-min)
-        font-size: 16px
-      .clickable
-        font-size: 20px
-        padding: 5px
-        @media (min-width: $screen-sm-min)
-          font-size: 16px
-          padding: 3px
-        &:nth-child(2n)
-          margin-left: 10px
-
-    &.selected span
-      font-weight: bold
-
-    resource-field-edit .edit-button
-      display: none
-    &:hover resource-field-edit .edit-button, &.selected resource-field-edit .edit-button
-      display: block
-    .add-lot-button
-      display: none
-    &:hover .add-lot-button, &.selected .add-lot-button
-      display: block
-
-
 .btn-normal
   color: #333333
   &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
@@ -86,7 +47,8 @@ lots-tree-navigation
 .resource-list
   padding: 0
   .tabs-lots-events
-    background-color: #E8E8DC
+    background-color: $sidebar-background-color
+    color: $sidebar-color
     padding: 15px 10px 10px 10px
     @media (min-width: $screen-sm-min)
       padding-left: 30px
@@ -101,6 +63,42 @@ lots-tree-navigation
       margin-bottom: 15px
     h2
       margin-top: 0
+    lots-tree-navigation
+      .create-new-lot-btn
+        margin-top: 10px
+        font-size: 18px
+        @media (min-width: $screen-sm-min)
+          font-size: 16px
+      .tree-node.tree-node-content
+        margin: 5px 0
+        a.btn
+          width: 100%
+          text-align: left
+        span
+          font-size: 18px
+          color: $sidebar-color
+          @media (min-width: $screen-sm-min)
+            font-size: 16px
+          .clickable
+            font-size: 20px
+            padding: 5px
+            @media (min-width: $screen-sm-min)
+              font-size: 16px
+              padding: 3px
+            &:nth-child(2n)
+              margin-left: 10px
+
+        &.selected span
+          font-weight: bold
+
+        resource-field-edit .edit-button
+          display: none
+        &:hover resource-field-edit .edit-button, &.selected resource-field-edit .edit-button
+          display: block
+        .add-lot-button
+          display: none
+        &:hover .add-lot-button, &.selected .add-lot-button
+          display: block
   .current-lot
     background-color: #F2F2F2
     padding: 10px
