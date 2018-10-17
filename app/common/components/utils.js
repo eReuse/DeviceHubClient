@@ -129,6 +129,45 @@ function getResourceTitle (resource) {
   return Naming.humanize(resource['@type']) + ' ' + text
 }
 
+function getEventDescription (event) {
+  if (event.error) {
+    return 'Something went wrong'
+  }
+  switch (event['@type']) {
+    case 'devices:EreusePrice':
+      return event.price + '€'
+    case 'devices:AggregateRate':
+      return event.ratingRange
+    case 'devices:Snapshot':
+      return 'OK'
+    case 'devices:WorkbenchRate':
+      return event.ratingRange + ' (appearance: ' + event.appearanceRange + ', functionality: ' + event.functionalityRange + ')'
+    case 'devices:BenchmarkRamSysbench':
+      return event.rate + ' points'
+    case 'devices:StressTest':
+      return 'OK'
+    case 'devices:TestDataStorage':
+      return event.status + '. Lifetime of ' + (+(event.lifetime / 365 / 24).toFixed(2)) + ' years'
+    case 'devices:BenchmarkDataStorage':
+      return 'OK. Read:' + event.readSpeed + '. Write' + event.writeSpeed
+    case 'devices:BenchmarkProcessorSysbench':
+      return event.rate + ' points'
+    case 'devices:BenchmarkProcessor':
+      return event.rate + ' points'
+    case 'devices:Sell':
+      return 'OK'
+    case 'devices:Price':
+      return event.price
+    case 'devices:ReadyToUse':
+      return 'OK'
+    case 'devices:Prepare':
+      return 'OK'
+    case 'devices:ToPrepare':
+      return 'OK'
+  }
+  return ''
+}
+
 /**
  * Executes $apply() after the element has scrolled.
  * @param {Object} element DOM element to detect the scroll
@@ -230,6 +269,7 @@ module.exports = {
   Naming: Naming,
   copy: copy,
   getResourceTitle: getResourceTitle,
+  getEventDescription: getEventDescription,
   applyAfterScrolling: applyAfterScrolling,
   parseDate: parseDate,
   schemaIsLoaded: schemaIsLoaded,

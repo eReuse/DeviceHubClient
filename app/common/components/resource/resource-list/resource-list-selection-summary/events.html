@@ -38,24 +38,24 @@
   <h3>Events</h3>
   <table class="resource-list-table table table-striped table-hover">
     <thead>
-    <tr>
-      <th ng-repeat="th in config.tableEvents.th"
-          class="{{::th.cssClasses}}"
-      >
-        <strong>{{th.name}}</strong>
-      </th>
-    </tr>
+      <tr>
+        <th ng-repeat="th in config.tableEvents.th"
+            class="{{::th.cssClasses}}"
+        >
+          <strong>{{th.name}}</strong>
+        </th>
+      </tr>
     </thead>
     <tbody>
       <tr ng-repeat="event in selection.props.events" ng-click="selection.details[event._id] = true">
         <td>
           {{ event['@type'].substr('devices:'.length) }}
         </td>
-        <td ng-repeat="prop in [ '_id', 'label', 'state' ]" class="hidden-xs">
-          {{ event[prop]}}
+        <td class="hidden-xs">
+          {{ utils.getEventDescription(event)}}
         </td>
         <td>
-          {{ event['_updated'] | date:'mediumDate' }}
+          {{ event.created | date:'d MMM y h:mm a' }}
         </td>
       </tr>
     </tbody>

@@ -466,18 +466,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
           name: 'Event'
         },
         {
-          key: 'Id',
-          name: 'Id',
-          cssClasses: 'hidden-xs'
-        },
-        {
-          key: 'Label',
-          name: 'Label',
-          cssClasses: 'hidden-xs'
-        },
-        {
-          key: 'State',
-          name: 'State',
+          key: 'Description',
+          name: 'Description',
           cssClasses: 'hidden-xs'
         },
         {
@@ -485,6 +475,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
           name: 'Updated'
         }
       ],
+      // TODO not used, use this in events.html
       td: [f.id.td, f.title.td, f.price.td, f.range.td, f.status.td, f.created.td]
     }
 //     Lot:{

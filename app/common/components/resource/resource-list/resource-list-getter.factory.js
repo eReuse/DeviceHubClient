@@ -249,12 +249,15 @@ function ResourceListGetterFactory (ResourceSettings) {
             title = r.type + manufacturer + model
           }
 
+          // sort events by creation date
+          r.events.sort((a, b) => {
+            return (new Date(b.created)).getTime() - (new Date(a.created)).getTime()
+          })
+
+          // and map to client props
           r.events && r.events.forEach((e) => {
             _.defaults(e, {
               '@type': 'devices:' + e.type,
-              '_updated': e.created,
-              'byUser': e.author,
-              'label': e.name || e.description,
               '_id': e.id
             })
           })
