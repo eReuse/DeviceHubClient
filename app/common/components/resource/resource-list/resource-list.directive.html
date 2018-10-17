@@ -28,7 +28,7 @@
       <div class="input-group-btn btn-group" ng-show="isAndroid" uib-dropdown is-open="status.isopen">
         <button id="event-button"
                 type="button"
-                class="btn btn-info"
+                class="btn btn-primary"
                 uib-dropdown-toggle
         >
           Scan device<span class="caret"></span>
@@ -64,7 +64,7 @@
         </li>
       </ul>
       <!-- Add button and panel -->
-      <button class="btn btn-info btn-add-filter-panels" ng-click="toggleDisplayFilterPanels()">Add filter</button>
+      <button class="btn btn-primary btn-add-filter-panels" ng-click="toggleDisplayFilterPanels()">Add filter</button>
       <div class="add-filter-panels-container">
         <div class="add-filter-panels-wrapper">
           <div ng-class="{ active: showFilterPanels }" class="add-filter-panels">
@@ -80,7 +80,7 @@
               <h3 ng-show="panel.title">{{ panel.title }}</h3>
               <ul class="filter-panel-links" ng-show="panel.children.length > 0">
                 <li ng-repeat="child in panel.children">
-                  <button class="btn-info" ng-click="child.panel.shown = true">{{ child.childName }}</button>
+                  <button class="btn-primary" ng-click="child.panel.shown = true">{{ child.childName }}</button>
                 </li>
               </ul>
               <div ng-show="!panel.children || panel.children.length === 0">
@@ -109,10 +109,10 @@
                   <!--<button type="submit" class="btn btn-primary submit-button" ng-disabled="content.form.$invalid">Submit</button>
                   <button type="button" class="btn btn-default" ng-click="content.options.resetModel()">Reset</button>-->
                   <button type="button"
-                          class="btn btn-info btn-add-filter-panels"
+                          class="btn btn-primary btn-add-filter-panels"
                           ng-click="hideAllFilterPanels()">Cancel</button>
                   <button type="submit"
-                          class="btn btn-info btn-add-filter-panels"
+                          class="btn btn-primary btn-add-filter-panels"
                           ng-disabled="content.form.$invalid"
                           style="margin-left: 10px;">Add filter</button>
                 </div>
@@ -218,8 +218,8 @@
   <div class="selection-button"
        ng-click="selectionPanelHiddenXS = !selectionPanelHiddenXS"
        ng-class="{ 'hidden': selection.devices.length === 0, 'visible-xs-block': selection.devices.length > 0 }">
-    <button ng-show="selectionPanelHiddenXS" class="btn btn-info btn-view-selected">View selected devices ({{selection.devices.length}})</button>
-    <button ng-show="!selectionPanelHiddenXS" class="btn btn-info btn-view-list">Back to device list</button>
+    <button ng-show="selectionPanelHiddenXS" class="btn btn-primary btn-view-selected">View selected devices ({{selection.devices.length}})</button>
+    <button ng-show="!selectionPanelHiddenXS" class="btn btn-primary btn-view-list">Back to device list</button>
   </div>
   <!-- Selection -->
   <aside class="selection col-xs-12 col-sm-6 col-lg-4 fill-height-bar "
