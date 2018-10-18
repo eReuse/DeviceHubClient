@@ -35,6 +35,30 @@
     </div>
     <div class="row" style="margin-top: 10px;">
       <div class="current-lot col-xs-12 col-sm-6 col-lg-7 fill-height-bar">
+        <div ng-if="selectedLots.length > 0"
+             class="selected-lots-summary">
+          <h4 style="margin-top: 0;">Actions</h4>
+          <div class="buttons">
+            <button class="btn btn-primary">
+              <i class="fa fa-user fa-fw"></i> Share
+            </button>
+            <button class="btn btn-primary">
+              <i class="fa fa-edit fa-fw"></i> Rename
+            </button>
+            <button class="btn btn-primary">
+              <i class="fa fa-remove fa-fw"></i> Delete
+            </button>
+            <group-resource-button
+                    success="reloadLots()"
+                    resource-type="Lot"
+                    get-resources="lotsSelector.getAllSelected()"
+                    register-to-resources-update="lotsSelector.callbackOnSelection(callback)">
+            </group-resource-button>
+            <!--<manual-events-button></manual-events-button>
+            <certificate-button></certificate-button>-->
+          </div>
+        </div>
+
         <div class="search-wrapper input-group">
           <resource-search on-search-changed="onSearchChanged(query)"></resource-search>
           <div class="input-group-btn btn-group" ng-show="isAndroid" uib-dropdown is-open="status.isopen">
@@ -233,31 +257,6 @@
         <div ng-if="selectedLots.length === 0 && selection.devices.length === 0">
           <h4>Select any lots, events or devices to view details</h4>
           <p>Hold Ctrl or Shift to select multiple</p>
-        </div>
-
-        <div ng-if="selectedLots.length > 0 && selection.devices.length === 0"
-             class="selected-lots-summary">
-          <h3 style="margin: 15px 25px 15px 0;">Lots summary</h3>
-          <h4 style="margin-top: 0;">Actions</h4>
-          <div class="buttons">
-            <button class="btn btn-primary">
-              <i class="fa fa-user fa-fw"></i> Share
-            </button>
-            <button class="btn btn-primary">
-              <i class="fa fa-edit fa-fw"></i> Rename
-            </button>
-            <button class="btn btn-primary">
-              <i class="fa fa-remove fa-fw"></i> Delete
-            </button>
-            <group-resource-button
-                    success="reloadLots()"
-                    resource-type="Lot"
-                    get-resources="lotsSelector.getAllSelected()"
-                    register-to-resources-update="lotsSelector.callbackOnSelection(callback)">
-            </group-resource-button>
-            <!--<manual-events-button></manual-events-button>
-            <certificate-button></certificate-button>-->
-          </div>
         </div>
 
         <div ng-if="selection.devices.length > 0" class="selected-devices-summary">
