@@ -254,8 +254,8 @@
       <aside class="selection col-xs-12 col-sm-6 col-lg-5 fill-height-bar"
              style="padding-top: 0;"
              ng-class="{ 'hidden-xs': selectionPanelHiddenXS, selected: selection.devices.length > 0 }">
-        <div ng-if="selectedLots.length === 0 && selection.devices.length === 0">
-          <h4>Select any lots, events or devices to view details</h4>
+        <div ng-if="selection.devices.length === 0">
+          <h4>Select a device to view its details</h4>
           <p>Hold Ctrl or Shift to select multiple</p>
         </div>
 
