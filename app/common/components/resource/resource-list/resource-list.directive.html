@@ -229,8 +229,9 @@
       <p>Hold Ctrl or Shift to select multiple</p>
     </div>
 
-    <div ng-if="selectedLots.length > 0 && selection.devices.length === 0">
-      <h4 style="display: inline-block;">Lots summary ({{selectedLots.length}})</h4>
+    <div ng-if="selectedLots.length > 0 && selection.devices.length === 0"
+         class="selected-lots-summary">
+      <h3 style="display: inline-block; margin: 15px 25px 25px 0;">Lots summary ({{selectedLots.length}})</h3>
       <button type="button"
               class="btn btn-default-inverted btn-sm"
               ng-click="deselectLots()"
@@ -238,18 +239,27 @@
         <span>Deselect all</span>
       </button>
       <div class="buttons">
+        <button class="btn btn-primary">
+          <i class="fa fa-user fa-fw"></i> Share
+        </button>
+        <button class="btn btn-primary">
+          <i class="fa fa-edit fa-fw"></i> Rename
+        </button>
+        <button class="btn btn-primary">
+          <i class="fa fa-remove fa-fw"></i> Delete
+        </button>
         <group-resource-button
                 success="reloadLots()"
                 resource-type="Lot"
                 get-resources="lotsSelector.getAllSelected()"
                 register-to-resources-update="lotsSelector.callbackOnSelection(callback)">
         </group-resource-button>
-        <manual-events-button></manual-events-button>
-        <certificate-button></certificate-button>
+        <!--<manual-events-button></manual-events-button>
+        <certificate-button></certificate-button>-->
       </div>
     </div>
 
-    <div ng-if="selection.devices.length > 0">
+    <div ng-if="selection.devices.length > 0" class="selected-devices-summary">
       <div>
         <h3 style="display: inline-block; margin: 15px 25px 25px 0;">Selected devices ({{selection.devices.length}})</h3>
         <button type="button"

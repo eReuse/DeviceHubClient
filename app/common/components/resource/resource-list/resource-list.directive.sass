@@ -87,9 +87,11 @@
               padding: 3px
             &:nth-child(2n)
               margin-left: 10px
-
-        &.selected span
-          font-weight: bold
+        &.selected
+          a.btn
+            background-color: #562568
+          span
+            font-weight: bold
 
         resource-field-edit .edit-button
           display: none
@@ -105,7 +107,7 @@
     @media (min-width: $screen-sm-min)
       padding: 15px 30px 30px 30px
     .devices
-      background-color: #E8E8E8
+      background-color: #DCE1E1
       padding: 0 10px
       margin-top: 15px
 
@@ -310,14 +312,11 @@
     padding: 30px
     //border-left: 2px solid $main-nav-bg
     //box-shadow: -5px -3px 10px -7px #999
-  .selection-header
-    margin-bottom: 10px
-    h3
-      display: inline-block
-    button
-      padding: 7px
-      margin-left: 10px
-      margin-bottom: 5px
+  button
+    margin-bottom: 5px
+  .selected-lots-summary .btn-primary
+    background-color: #562568
+    border-color: #562568
 
 .children-lots
   ul
