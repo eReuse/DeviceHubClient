@@ -25,7 +25,7 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
             })
             node.isVisible = !filter ||
                             filter.length === 0 ||
-                            node.title.indexOf(filter) !== -1 ||
+                            node.name.indexOf(filter) !== -1 ||
                             oneChildVisible
             return node.isVisible
           }
