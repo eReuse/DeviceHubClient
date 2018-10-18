@@ -683,6 +683,31 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             }
           ).length === 0
 
+          // TODO maybe props object can be calculated automatically
+          // function getFunctionMapper (prop) {
+          //   const isString = typeof prop === 'string'
+          //   const isNumber = typeof prop === 'number'
+          //   const isArray = _.isArray(prop)
+          //   const isBoolean = typeof prop === 'boolean'
+          //   const isDate = prop instanceof Date
+          //
+          //   if (isNumber)
+          //     return deviceSelector.getRangeOfPropertyOfSelected
+          //   }
+          //   return deviceSelector.getAggregatedPropertyOfSelected
+          // }
+          //
+          // let props = {}
+          // function traverseProps(props) {
+          //   Object.keys(props, (k) => {
+          //     let value = props[k]
+          //     const isObject = typeof value === 'object'
+          //     if (_.isNil(value) || isObject) {
+          //
+          //     }
+          //   })
+          // }
+
           // aggregated properties of selected devices
           let props = {
             _id: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, '_id'),
@@ -690,6 +715,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             subType: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'type'),
             manufacturer: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'manufacturer'),
             model: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'model'),
+            tags: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'tags').map(t => t.id),
             serialNumber: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'serialNumber', 'Various serial numbers'),
             hid: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'hid', 'Various hids'),
             status: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'status'),

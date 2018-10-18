@@ -32,11 +32,15 @@
       <h4>{{ selection.props.serialNumber }}</h4>
     </div>
     <div class="col-xs-6">
-      <h5>HID</h5>
-      <h4>{{ selection.props.hid }}</h4>
+      <h5>Tags</h5>
+      <h4>{{ selection.props.tags.join(', ') }}</h4>
     </div>
   </div>
   <div class="row">
+    <div class="col-xs-6">
+      <h5>HID</h5>
+      <h4>{{ selection.props.hid }}</h4>
+    </div>
     <div class="col-xs-6">
       <h5>Internal identifier (internal use only)</h5>
       <h4>{{ selection.props._id }}</h4>
