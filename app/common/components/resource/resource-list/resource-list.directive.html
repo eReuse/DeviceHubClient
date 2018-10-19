@@ -10,9 +10,9 @@
     </div>
     <lots-tree-navigation resource-type="Lot" on-selection-changed="onLotsSelectionChanged(selected)"></lots-tree-navigation>
   </div>
-  <div class="col-lg-10">
-    <div style="padding-left: 25px; padding-top: 15px;">
-      <div style="border-bottom: 1px solid #c5c5c5;">
+  <div class="col-lg-6 middle-col" ng-class="{'lots-selected': selectedLots.length > 0 }">
+    <div class="lot-row">
+      <div style="margin-bottom: 20px;">
         <h2 class="hidden-xs" style="margin-top: 0; display: inline-block; margin-right: 20px;" >{{ selectedLotsText }}</h2>
         <div class="visible-xs" style="display: inline-block;">
           <h2 style="margin-top: 0; display: inline-block; margin-right: 20px;">{{ selectedLotsText }}</h2>
@@ -31,33 +31,33 @@
           <span>Deselect all</span>
         </button>
       </div>
-
-    </div>
-    <div class="row" style="margin-top: 10px;">
-      <div class="current-lot col-xs-12 col-sm-6 col-lg-7 fill-height-bar">
-        <div ng-if="selectedLots.length > 0"
-             class="selected-lots-summary">
-          <h4 style="margin-top: 0;">Actions</h4>
-          <div class="buttons">
-            <button class="btn btn-primary">
-              <i class="fa fa-user fa-fw"></i> Share
-            </button>
-            <button class="btn btn-primary">
-              <i class="fa fa-edit fa-fw"></i> Rename
-            </button>
-            <button class="btn btn-primary">
-              <i class="fa fa-remove fa-fw"></i> Delete
-            </button>
-            <group-resource-button
-                    success="reloadLots()"
-                    resource-type="Lot"
-                    get-resources="lotsSelector.getAllSelected()"
-                    register-to-resources-update="lotsSelector.callbackOnSelection(callback)">
-            </group-resource-button>
-            <!--<manual-events-button></manual-events-button>
-            <certificate-button></certificate-button>-->
-          </div>
+      <div class="selected-lots-summary">
+        <h3>Actions</h3>
+        <div class="buttons">
+          <button class="btn btn-primary">
+            <i class="fa fa-user fa-fw"></i> Share
+          </button>
+          <button class="btn btn-primary">
+            <i class="fa fa-edit fa-fw"></i> Rename
+          </button>
+          <button class="btn btn-primary">
+            <i class="fa fa-remove fa-fw"></i> Delete
+          </button>
+          <group-resource-button
+                  success="reloadLots()"
+                  resource-type="Lot"
+                  get-resources="lotsSelector.getAllSelected()"
+                  register-to-resources-update="lotsSelector.callbackOnSelection(callback)">
+          </group-resource-button>
+          <!--<manual-events-button></manual-events-button>
+          <certificate-button></certificate-button>-->
         </div>
+      </div>
+    </div>
+    <div class="row devices-row">
+      <div class="devices-col col-xs-12 col-sm-6 col-lg-12 fill-height-bar">
+        <h2 ng-if="selectedLots.length === 0">All devices</h2>
+        <h3 ng-if="selectedLots.length > 0">Devices</h3>
 
         <div class="search-wrapper input-group">
           <resource-search on-search-changed="onSearchChanged(query)"></resource-search>
@@ -158,10 +158,7 @@
             </div>
           </div>
         </div>
-
         <div class="devices">
-          <h4 style="display: inline-block; margin-top: 20px; margin-bottom: 20px;">Devices (15)</h4>
-
           <button type="button"
                   class="btn btn-default-inverted btn-select-deselect"
                   ng-show="!selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
@@ -250,67 +247,70 @@
           </div>
         </div><!-- ./devices -->
       </div> <!-- ./col-sm-6 -->
-      <!-- Selection -->
-      <aside class="selection col-xs-12 col-sm-6 col-lg-5 fill-height-bar"
-             style="padding-top: 0;"
-             ng-class="{ 'hidden-xs': selectionPanelHiddenXS, selected: selection.devices.length > 0 }">
-        <div ng-if="selection.devices.length === 0">
-          <h4>Select a device to view its details</h4>
-          <p>Hold Ctrl or Shift to select multiple</p>
-        </div>
+      </div>
+  </div>
+  <!-- Selection -->
+  <aside class="selection col-xs-12 col-sm-6 col-lg-4 fill-height-bar"
+         style="padding-top: 0;"
+         ng-class="{ 'hidden-xs': selectionPanelHiddenXS, selected: selection.devices.length > 0 }">
+    <div ng-if="selection.devices.length === 0" style="height: 100%; display: flex; justify-content: center; align-items: center;">
+      <div>
+        <h4>Select a device to view its details</h4>
+        <p>Hold Ctrl or Shift to select multiple</p>
+      </div>
+    </div>
 
-        <div ng-if="selection.devices.length > 0" class="selected-devices-summary">
-          <div>
-            <h3 style="display: inline-block; margin: 15px 25px 25px 0;">Selected devices ({{selection.devices.length}})</h3>
+    <div ng-if="selection.devices.length > 0" class="selected-devices-summary">
+      <div>
+        <h3 style="display: inline-block; margin: 21px 25px 25px 0;">Selected devices ({{selection.devices.length}})</h3>
+        <button type="button"
+                class="btn btn-default-inverted btn-sm"
+                ng-click="deselectAll()"
+                style="display: inline-block;">
+          <span>Deselect all</span>
+        </button>
+      </div>
+      <div class="buttons">
+        <group-resource-button
+                success="reloadDevices()"
+                resource-type="Device"
+                get-resources="selector.getAllSelectedDevices()"
+                register-to-resources-update="selector.callbackOnSelection(callback)">
+        </group-resource-button>
+        <manual-events-button></manual-events-button>
+        <certificate-button></certificate-button>
+      </div>
+      <div class="selection-summary-wrapper" style="position: relative; overflow-x: hidden;">
+        <ul class="selection-summary">
+          <li ng-repeat="row in selection.summary track by row.title">
             <button type="button"
-                    class="btn btn-default-inverted btn-sm"
-                    ng-click="deselectAll()"
-                    style="display: inline-block;">
-              <span>Deselect all</span>
-            </button>
-          </div>
-          <div class="buttons">
-            <group-resource-button
-                    success="reloadDevices()"
-                    resource-type="Device"
-                    get-resources="selector.getAllSelectedDevices()"
-                    register-to-resources-update="selector.callbackOnSelection(callback)">
-            </group-resource-button>
-            <manual-events-button></manual-events-button>
-            <certificate-button></certificate-button>
-          </div>
-          <div class="selection-summary-wrapper" style="position: relative; overflow-x: hidden;">
-            <ul class="selection-summary">
-              <li ng-repeat="row in selection.summary track by row.title">
-                <button type="button"
-                        class="btn"
-                        ng-click="selection.details[row.title] = true"
-                >
-                  <span class="selection-summary-title">{{row.title}}</span>
-                  <span class="selection-summary-content">{{row.contentSummary}}</span>
-                  <i class="fa fa-chevron-right fa-fw"></i>
-                </button>
-              </li>
-            </ul>
-            <div ng-repeat="row in selection.summary track by row.title"
-                 class="selection-details-panel"
-                 ng-class="{ active: selection.details[row.title] }"
+                    class="btn"
+                    ng-click="selection.details[row.title] = true"
             >
-              <div class="selection-details-content-wrapper">
-                <div class="selection-details-content-container">
-                  <div ng-if="::row.templateUrl"
-                       ng-include="::row.templateUrl"
-                       ng-class="row.cssClass"
-                       style="position: relative">
-                  </div>
-                </div>
+              <span class="selection-summary-title">{{row.title}}</span>
+              <span class="selection-summary-content">{{row.contentSummary}}</span>
+              <i class="fa fa-chevron-right fa-fw"></i>
+            </button>
+          </li>
+        </ul>
+        <div ng-repeat="row in selection.summary track by row.title"
+             class="selection-details-panel"
+             ng-class="{ active: selection.details[row.title] }"
+        >
+          <div class="selection-details-content-wrapper">
+            <div class="selection-details-content-container">
+              <div ng-if="::row.templateUrl"
+                   ng-include="::row.templateUrl"
+                   ng-class="row.cssClass"
+                   style="position: relative">
               </div>
             </div>
           </div>
-        </div><!-- ./ selectDevices > 0 -->
-      </aside>
-    </div>
-  </div>
+        </div>
+      </div>
+    </div><!-- ./ selectDevices > 0 -->
+  </aside>
+
 
   <!-- Selection button-->
   <div class="selection-button"
