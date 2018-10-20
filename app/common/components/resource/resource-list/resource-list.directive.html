@@ -4,9 +4,9 @@
        ng-class="{ 'hidden-xs': lotsSelectionHiddenXS }">
     <div>
       <h2 style="display: inline-block">Lots</h2>
-      <a class="visible-xs" style="float: right" ng-click="lotsSelectionHiddenXS = !lotsSelectionHiddenXS">
+      <button class="btn btn-sm btn-dark visible-xs" style="float: right" ng-click="lotsSelectionHiddenXS = !lotsSelectionHiddenXS">
         <h2><i class="fa fa-close fa-fw"></i></h2>
-      </a>
+      </button>
     </div>
     <lots-tree-navigation resource-type="Lot" on-selection-changed="onLotsSelectionChanged(selected)"></lots-tree-navigation>
   </div>
@@ -16,7 +16,7 @@
         <h2 class="hidden-xs" style="margin-top: 0; display: inline-block; margin-right: 20px;" >{{ selectedLotsText }}</h2>
         <div class="visible-xs" style="display: inline-block;">
           <h2 style="margin-top: 0; display: inline-block; margin-right: 20px;">{{ selectedLotsText }}</h2>
-          <button type="button" class="btn btn-sm btn-default-inverted"
+          <button type="button" class="btn btn-sm btn-dark"
              style="margin-bottom: 8px; font-size: 16px;"
              ng-click="lotsSelectionHiddenXS = !lotsSelectionHiddenXS">
             <i class="fa fa-folder-o fa-fw"></i>Select lot
@@ -56,7 +56,17 @@
     </div>
     <div class="row devices-row">
       <div class="devices-col col-xs-12 col-sm-6 col-lg-12 fill-height-bar">
-        <h2 ng-if="selectedLots.length === 0">All devices</h2>
+        <div ng-if="selectedLots.length === 0">
+          <h2 style="display: inline-block;">All devices</h2>
+          <span>
+            <button type="button"
+                    class="btn btn-sm btn-dark visible-xs"
+                    style="margin-bottom: 8px; font-size: 16px;"
+                    ng-click="lotsSelectionHiddenXS = !lotsSelectionHiddenXS">
+              <i class="fa fa-folder-o fa-fw"></i>Select lot
+            </button>
+          </span>
+        </div>
         <h3 ng-if="selectedLots.length > 0">Devices</h3>
 
         <div class="search-wrapper input-group">
