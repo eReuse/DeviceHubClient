@@ -909,12 +909,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           $scope.$apply()
         })
 
-        // QR and NFC
+        // QR
         $scope.scanQR = () => {
           window.AndroidApp.scanBarcode('tagScanDoneSearch')
         }
 
-        $scope.scanNFC = () => {
+        // NFC
+        if (window.AndroidApp) {
           window.AndroidApp.startNFC('tagScanDoneSearch')
           $scope.$on('$destroy', () => {
             window.AndroidApp.stopNFC()
