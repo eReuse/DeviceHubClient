@@ -713,6 +713,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             serialNumber: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'serialNumber'),
             hid: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'hid'),
             tags: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'tags').map(t => t.id),
+            physical: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'physical'),
+            trading: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'trading'),
             status: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'status'),
             condition: {
               appearance: {
@@ -787,6 +789,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           }
           // TODO if components values need to be formatted, do it here
 
+          let statusSummary = 'Registered'
+          if (props.physical && props.trading) {
+            statusSummary = props.trading + ' / ' + props.physical
+          } else if (props.physical || props.trading) {
+            statusSummary = props.trading || props.physical
+          }
+
           let componentsContentSummary = _.values([props.processorModel, props.totalRamSize, props.totalHardDriveSize]).filter(c => !!c).join(', ')
           $scope.selection.summary = $scope.selection.summary.concat([
             {
@@ -797,7 +806,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             },
             {
               title: 'Status',
-              contentSummary: props.status,
+              contentSummary: statusSummary,
               cssClass: 'status',
               templateUrl: selectionSummaryTemplateFolder + '/status.html'
             }
