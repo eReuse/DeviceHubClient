@@ -7,43 +7,23 @@
   </button>
   <h3>Device</h3>
   <div class="row">
-    <div class="col-xs-6">
-      <h5>Type</h5>
-      <h4>{{ selection.props.type }}</h4>
-    </div>
-    <div class="col-xs-6">
-      <h5>Sub type</h5>
-      <h4>{{ selection.props.subType }}</h4>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-6">
-      <h5>Manufacturer</h5>
-      <h4>{{ selection.props.manufacturer }}</h4>
-    </div>
-    <div class="col-xs-6">
-      <h5>Model</h5>
-      <h4>{{ selection.props.model }}</h4>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-6">
-      <h5>Serial number</h5>
-      <h4>{{ selection.props.serialNumber }}</h4>
+    <div class="col-xs-6"
+         ng-repeat="prop in [{ title: 'Type', path: '@type' }, { title: 'Sub type', path: 'type' }, { title: 'Manufacturer', path: 'manufacturer' }, { title: 'Model', path: 'model' }, { title: 'Serial number', path: 'serialNumber' }, { title: 'HID', path: 'hid' }]"><!-- TODO get from config/schema -->
+      <h5>{{ prop.title }}</h5>
+      <button
+              class="btn btn-default-inverted"
+              ng-repeat="aggregated in selection.props[prop.path]"
+              ng-click="addFilter(aggregated.property, aggregated.value, prop.title)">
+        {{ aggregated.value }} ({{ aggregated.count }})
+      </button>
     </div>
     <div class="col-xs-6">
       <h5>Tags</h5>
       <h4>{{ selection.props.tags.join(', ') }}</h4>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-6">
-      <h5>HID</h5>
-      <h4>{{ selection.props.hid }}</h4>
-    </div>
     <div class="col-xs-6">
       <h5>Internal identifier (internal use only)</h5>
-      <h4>{{ selection.props._id }}</h4>
+      <h4>{{ selection.props._id.join(', ') }}</h4>
     </div>
   </div>
 </div>

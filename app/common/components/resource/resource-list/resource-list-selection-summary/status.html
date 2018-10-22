@@ -10,7 +10,18 @@
     <div class="col-lg-6">
       <div class="descriptor">
         <h5>Current status</h5>
-        <h4>{{ selection.props.status }}</h4>
+        <button
+                class="btn btn-default-inverted"
+                ng-repeat="aggregated in selection.props.physical"
+                ng-click="addFilter(aggregated.property, aggregated.value, 'Status')">
+          {{ aggregated.value }} ({{ aggregated.count }})
+        </button>
+        <button
+                class="btn btn-default-inverted"
+                ng-repeat="aggregated in selection.props.trading"
+                ng-click="addFilter(aggregated.property, aggregated.value, 'Status')">
+          {{ aggregated.value }} ({{ aggregated.count }})
+        </button>
       </div>
     </div>
   </div>

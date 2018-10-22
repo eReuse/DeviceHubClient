@@ -140,10 +140,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // TODO get events from config
         const allEvents = [ 'Ready', 'Repair', 'Allocate', 'Dispose', 'ToDispose', 'Sell', 'Receive', 'Register' ]
 
-        const keyDevices = 'resources'
+        const keyTypes = 'resources'
         const keyEvents = 'events'
         $scope.filtersModel = {
-          [keyDevices]: {
+          [keyTypes]: {
             Computer: true,
             Monitor: true,
             _meta: {
@@ -258,32 +258,32 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                   panel: {
                     title: 'Item type',
                     onSubmit: onSubmitPanel,
-                    propPath: keyDevices,
+                    propPath: keyTypes,
                     prefix: 'Devices: ',
                     fields: [
                       {
-                        key: keyDevices + '.components',
+                        key: keyTypes + '.components',
                         type: 'checkbox',
                         templateOptions: {
                           label: 'Components'
                         }
                       },
                       {
-                        key: keyDevices + '.Computer',
+                        key: keyTypes + '.Computer',
                         type: 'checkbox',
                         templateOptions: {
                           label: 'Computer'
                         }
                       },
                       {
-                        key: keyDevices + '.Monitor',
+                        key: keyTypes + '.Monitor',
                         type: 'checkbox',
                         templateOptions: {
                           label: 'Monitor'
                         }
                       },
                       {
-                        key: keyDevices + '.peripherals',
+                        key: keyTypes + '.peripherals',
                         type: 'checkbox',
                         templateOptions: {
                           label: 'Peripherals'
@@ -702,12 +702,15 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           //     }
           //   })
           // }
+          if (selectedDevices.length === 0) {
+            return
+          }
 
           // aggregated properties of selected devices
           let props = {
-            _id: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, '_id'),
-            type: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, '@type'),
-            subType: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'type'),
+            _id: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, '_id').map(t => t.value),
+            '@type': deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, '@type'),
+            type: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'type'),
             manufacturer: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'manufacturer'),
             model: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'model'),
             serialNumber: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'serialNumber'),
@@ -771,29 +774,34 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
           // Set summary for selection
           $scope.selection.summary = []
-          const manufacturer = props.manufacturer ? (' ' + props.manufacturer) : ''
-          const model = props.model ? (' ' + props.model) : ''
+          const manufacturer = props.manufacturer.length > 0 ? (' ' + props.manufacturer[0].value) : ''
+          const model = props.model.length ? (' ' + props.model[0].value) : ''
           let typeContentSummary
-          if (props.type === deviceSelector.VARIOUS) {
+
+          if (props['@type'].length > 1) {
             typeContentSummary = 'Various types'
-          } else if (props.type === 'Device') {
+          } else if (props['@type'][0].length === 'Device') {
             typeContentSummary = 'Placeholder'
-          } else if (props.subType === deviceSelector.VARIOUS) {
-            typeContentSummary = props.type + ' Various subtypes'
-          } else if (props.manufacturer === deviceSelector.VARIOUS) {
-            typeContentSummary = props.subType + ' Various manufacturers'
-          } else if (props.model === deviceSelector.VARIOUS) {
-            typeContentSummary = props.subType + manufacturer + ' Various models'
+          } else if (props.type.length > 1) {
+            typeContentSummary = props['@type'][0].value + ' Various subtypes'
+          } else if (props.manufacturer.length > 1) {
+            typeContentSummary = props.type[0].value + ' Various manufacturers'
+          } else if (props.model.length > 1) {
+            typeContentSummary = props.type[0].value + manufacturer + ' Various models'
           } else {
-            typeContentSummary = props.subType + manufacturer + model
+            typeContentSummary = props.type[0].value + manufacturer + model
           }
           // TODO if components values need to be formatted, do it here
 
+          $scope.propToString = (prop) => {
+            return prop.map(x => x.value + '(' + x.count + ')').join(', ')
+          }
+
           let statusSummary = 'Registered'
-          if (props.physical && props.trading) {
-            statusSummary = props.trading + ' / ' + props.physical
-          } else if (props.physical || props.trading) {
-            statusSummary = props.trading || props.physical
+          if (props.physical.length > 0 && props.trading.length > 0) {
+            statusSummary = $scope.propToString(props.trading) + ' / ' + $scope.propToString(props.physical)
+          } else if (props.physical.length > 0 || props.trading.length > 0) {
+            statusSummary = $scope.propToString(props.trading) || $scope.propToString(props.physical)
           }
 
           let componentsContentSummary = _.values([props.processorModel, props.totalRamSize, props.totalHardDriveSize]).filter(c => !!c).join(', ')
@@ -819,16 +827,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               templateUrl: selectionSummaryTemplateFolder + '/price.html'
             })
           }
-          if (_.get(props, 'condition.general.range') ||
-            _.get(props, 'condition.functionality.range') ||
-            _.get(props, 'condition.appearance.range')) {
+          if (_.get(props, 'condition.general.range') && _.get(props, 'condition.general.range').length > 0) {
             $scope.selection.summary.push({
               title: 'Condition score',
-              contentSummary: _.get(props, 'condition.general.range')
-                ? _.get(props, 'condition.general.range')
-                : _.get(props, 'condition.functionality.range')
-                  ? 'Functionality: ' + _.get(props, 'condition.functionality.range')
-                  : 'Appearance: ' + _.get(props, 'condition.appearance.range'),
+              contentSummary: $scope.propToString(_.get(props, 'condition.general.range')),
               cssClass: 'condition-score',
               templateUrl: selectionSummaryTemplateFolder + '/condition-score.html'
             })
@@ -858,6 +860,39 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
         deviceSelector.callbackOnSelection(updateDeviceSelection)
         updateDeviceSelection()
+
+        $scope.addFilter = (propertyPath, filter, title = '') => {
+          switch (propertyPath) {
+            case '@type':
+              $scope.filtersModel[keyTypes] = $scope.filtersModel[keyTypes] || {
+                _meta: {
+                  endpoint: true,
+                  prefix: 'Devices: '
+                }
+              }
+              $scope.filtersModel[keyTypes][filter] = true
+              break
+            case 'type':
+              $scope.filtersModel[keyTypes] = $scope.filtersModel[keyTypes] || {
+                _meta: {
+                  endpoint: true,
+                  prefix: 'Devices: '
+                }
+              }
+              $scope.filtersModel[keyTypes][filter] = true
+              break
+            default:
+              $scope.filtersModel[propertyPath] = $scope.filtersModel[propertyPath] || {
+                _meta: {
+                  endpoint: true,
+                  prefix: title + ': '
+                }
+              }
+              $scope.filtersModel[propertyPath][filter] = true
+              break
+          }
+          onFiltersChanged()
+        }
 
         // Reloading
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
