@@ -90,19 +90,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           $rootScope.$broadcast('lots:reload')
         }
 
-        // Selected events
-        // TODO
-        $scope.onEventsSelectionChanged = (selectedEvents) => {
-          // update gettter filter/query
-          $scope.selectedEvents = selectedEvents
-          // if (selectedEvents.length > 0) {
-          //   $scope.selectedLotsText = selectedEvents.map((l) => l.name).join(', ')
-          // } else {
-          //   $scope.selectedLotsText = 'All devices'
-          // }
-        }
-        $scope.onEventsSelectionChanged([])
-
         // Sorting
         $scope.sort = {}
         $scope.setSort = _.bind(getterDevices.updateSort, getterDevices, _)
