@@ -22,7 +22,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
     },
     link: {
       // Note that we load on 'pre' to initialize before our child (or inner) directives so they get real config values
-      pre: ($scope, element) => {
+      pre: ($scope, $element) => {
         $scope.utils = require('./../../utils.js')
         $scope.session = session
         progressBar.start() // getterDevices.getResources will call this too, but doing it here we avoid delay
@@ -60,13 +60,20 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           label: 'Without lot'
         }
 
+        // TODO call on screen size change. necessary for e.g. mobile portrait -> landscape
+        function recalculateDevicesRow () {
+          if ($scope.selectedLots.length > 0) {
+            $element.find('.devices-row').css({top: $element.find('.lot-row').outerHeight()})
+          } else {
+            $element.find('.devices-row').css({top: '0'})
+          }
+        }
+
         // Selected lots
         function updateLotSelection (selectedLots = []) {
           $scope.selectedLots = selectedLots
           if ($scope.selectedLots.length > 0) {
             $scope.selectedLotsText = $scope.selectedLots.map((l) => l.name).join(', ')
-          } else {
-            $scope.selectedLotsText = 'All lots'
           }
           const filter = selectedLots.length > 0 ? {
             lot: {
@@ -74,6 +81,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             }
           } : null
           getterDevices.updateFilters('LOTS', filter)
+          recalculateDevicesRow()
         }
         updateLotSelection([])
         lotsSelector.callbackOnSelection(updateLotSelection)
@@ -878,7 +886,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
          // If we don't want to collision with tables of subResources we
         // need to do this when declaring the directive
         // TODO need this?
-        const $table = element.find('.fill-height-bar')
+        const $table = $element.find('.fill-height-bar')
         getterDevices.callbackOnGetting((_, __, ___, ____, getNextPage) => {
           if (!getNextPage) {
             $table.scrollTop(0) // Scroll up to the table when loading from page 0 again
