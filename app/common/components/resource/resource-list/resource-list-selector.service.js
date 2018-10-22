@@ -160,7 +160,7 @@ class ResourceListSelector {
         let reducedValue = {}
         _.set(reducedValue, pathToProp, value)
         return reducedValue
-      })
+      }, selectedDevices[0])
 
       let aggregatedValue = _.get(reducedDevice, pathToProp)
 
