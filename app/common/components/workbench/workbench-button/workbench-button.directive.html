@@ -1,4 +1,4 @@
-<li>
+<li ng-if="::show">
   <a ng-hide="$state.current.name == 'index.workbench'"
      ui-sref="index.workbench({db: session.db})"
      ui-sref-opts="{reload: true}"

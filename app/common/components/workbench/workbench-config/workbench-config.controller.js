@@ -1,6 +1,7 @@
 function workbenchConfig($scope, $uibModalInstance, $http, CONSTANTS, SubmitForm, workbenchPoller,
-                         workbenchServer) {
+                         workbenchServer, poller) {
   $scope.cancel = () => $uibModalInstance.dismiss('cancel')
+  $scope.box = 'WorkbenchServer' in window
   const CUSTOM = 'CUSTOM'
   const HMG_IS_5 = 'HMG_IS_5'
   const EraseSectors = 'EraseSectors'
@@ -164,13 +165,12 @@ function workbenchConfig($scope, $uibModalInstance, $http, CONSTANTS, SubmitForm
       },
       {
         key: 'install',
-        type: 'input',
+        type: 'radio',
         defaultValue: null,
         templateOptions: {
+          options: [],
           label: 'Install an Operative System',
-          description: 'Write the name of the FSA image to install, without the ".fsa",' +
-            'or leave it blank to avoid installation.',
-          addonRight: {text: '.fsa'}
+          description: 'OS .fsa files that are in "workbench/images" automatically appear here.'
         }
       }
     ],
@@ -210,6 +210,15 @@ function workbenchConfig($scope, $uibModalInstance, $http, CONSTANTS, SubmitForm
   workbenchPoller.stop()
   $scope.$on('$destroy', () => {
     workbenchPoller.start()
+  })
+
+  const p = poller.get(workbenchServer.authority + '/config/images', {delay: CONSTANTS.workbenchPollingDelay})
+  p.promise.then(null, null, response => {
+    // It seems poller reuses response.data and push gets multiplied over time
+    _.last($scope.form.fields).templateOptions.options = [{value: null, name: 'Do not install an OS.'}].concat(response.data)
+  })
+  $scope.$on('$destroy', () => {
+    p.stop()
   })
 }
 
