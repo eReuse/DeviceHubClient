@@ -322,8 +322,6 @@ function ResourceListGetterFactory (ResourceSettings) {
 
           _.defaults(r, devicePropertiesStub)
           _.assign(r, {
-            _id: r.id,
-            _created: r.created,
             title: title,
             status: status,
             parentLots: parentLots
@@ -334,8 +332,6 @@ function ResourceListGetterFactory (ResourceSettings) {
       } else if (this.resourceType === 'Lot') {
         resources.forEach(r => {
           _.assign(r, {
-            _id: r.id,
-            _created: r.created,
             '@type': 'Lot'
           })
         })
