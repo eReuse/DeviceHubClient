@@ -13,9 +13,9 @@
   <div class="col-lg-6 middle-col" ng-class="{'lots-selected': selectedLots.length > 0 }">
     <div class="lot-row">
       <div style="margin-bottom: 20px;">
-        <h2 class="hidden-xs" style="margin-top: 0; display: inline-block; margin-right: 20px;" >{{ selectedLotsText }}</h2>
+        <h2 class="hidden-xs" style="margin-top: 0; display: inline-block; margin-right: 20px;" >{{ selectedLotsText || 'All lots'}}</h2>
         <div class="visible-xs" style="display: inline-block;">
-          <h2 style="margin-top: 0; display: inline-block; margin-right: 20px;">{{ selectedLotsText }}</h2>
+          <h2 style="margin-top: 0; display: inline-block; margin-right: 20px;">{{ selectedLotsText || 'All lots' }}</h2>
           <button type="button" class="btn btn-sm btn-dark"
              style="margin-bottom: 8px; font-size: 16px;"
              ng-click="lotsSelectionHiddenXS = !lotsSelectionHiddenXS">
