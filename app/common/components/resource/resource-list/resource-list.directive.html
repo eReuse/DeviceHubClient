@@ -206,7 +206,6 @@
                     ng-click="toggleSelect(resource, $index, $event)"
                     on-long-press="multiSelect(resource, $index, $event)"
                 >
-                <!-- $evalasync from https://stackoverflow.com/a/31352712 -->
                 <td ng-repeat="td in ::config.table.td"
                     class="{{::td.cssClasses}}"
                     ng-init="value = $root._.get(resource, td.value)"
