@@ -160,12 +160,7 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @param newSorts
      */
     updateSort (newSorts) {
-      let oldSort = _.clone(this._sort)
       this._sort = newSorts
-
-      // TODO need this?
-      // If there is no sort defined this._filters will equal with oldsort
-      // if (!_.isEqual(this._filters, oldSort) && !_.isNull(this._filters)) this.getResources()
 
       if (!_.isNull(this._sort)) this.getResources()
     }
