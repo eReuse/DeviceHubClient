@@ -71,32 +71,13 @@
 
         <div class="search-wrapper input-group">
           <resource-search on-search-changed="onSearchChanged(query)"></resource-search>
-          <div class="input-group-btn btn-group" ng-show="isAndroid" uib-dropdown is-open="status.isopen">
-            <button id="event-button"
-                    type="button"
+          <div class="input-group-btn btn-group" ng-show="isAndroid">
+            <button type="button"
                     class="btn btn-primary"
-                    uib-dropdown-toggle
+                    ng-click="scanQR()"
             >
-              Scan device<span class="caret"></span>
+              QR <i class="fa fa-fw fa-camera"></i>
             </button>
-            <ul uib-dropdown-menu role="menu" aria-labelledby="event-button">
-              <li role="menuitem"
-                  tooltip-placement="right"
-                  tooltip-append-to-body="true"
-              >
-                <a ng-click="scanQR()">
-                  Scan QR
-                </a>
-              </li>
-              <li role="menuitem"
-                  tooltip-placement="right"
-                  tooltip-append-to-body="true"
-              >
-                <a ng-click="scanNFC()">
-                  Scan NFC
-                </a>
-              </li>
-            </ul>
           </div><!-- /btn-group -->
         </div><!-- /input-group -->
 
@@ -168,7 +149,7 @@
             </div>
           </div>
         </div>
-        <div class="devices table-responsive">
+        <div class="devices">
           <button type="button"
                   class="btn btn-default-inverted btn-select-deselect"
                   ng-show="!selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
@@ -188,6 +169,7 @@
           <div infinite-scroll="getMore()" infinite-scroll-distance='0.8' infinite-scroll-use-document-bottom="false"
                infinite-scroll-parent infinite-scroll-disabled="getMoreIsBusy || !moreDevicesAvailable"
                infinite-scroll-listen-for-event="list:filtered"
+               class="table-responsive"
           >
             <table id="resource-list-table" class="resource-list-table table table-striped table-hover">
               <thead>
