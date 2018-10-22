@@ -10,7 +10,7 @@
     </div>
     <lots-tree-navigation resource-type="Lot" on-selection-changed="onLotsSelectionChanged(selected)"></lots-tree-navigation>
   </div>
-  <div class="col-lg-6 middle-col" ng-class="{'lots-selected': selectedLots.length > 0 }">
+  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 middle-col" ng-class="{'lots-selected': selectedLots.length > 0 }">
     <div class="lot-row">
       <div style="margin-bottom: 20px;">
         <h2 class="hidden-xs" style="margin-top: 0; display: inline-block; margin-right: 20px;" >{{ selectedLotsText || 'All lots'}}</h2>
@@ -55,7 +55,7 @@
       </div>
     </div>
     <div class="row devices-row">
-      <div class="devices-col col-xs-12 col-sm-6 col-lg-12 fill-height-bar">
+      <div class="devices-col col-xs-12 fill-height-bar">
         <div ng-if="selectedLots.length === 0">
           <h2 style="display: inline-block;">All devices</h2>
           <span>
@@ -259,7 +259,7 @@
       </div>
   </div>
   <!-- Selection -->
-  <aside class="selection col-xs-12 col-sm-6 col-lg-4 fill-height-bar"
+  <aside class="selection col-xs-12 col-sm-2 col-md-4 col-lg-4 fill-height-bar"
          style="padding-top: 0;"
          ng-class="{ 'hidden-xs': selectionPanelHiddenXS, selected: selection.devices.length > 0 }">
     <div ng-if="selection.devices.length === 0" style="height: 100%; display: flex; justify-content: center; align-items: center;">
