@@ -739,8 +739,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               }
             },
             processorModel: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'processorModel'),
-            totalHardDriveSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalHardDriveSize', 'Various', ' GB HardDrive'),
-            totalRamSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalRamSize', null, ' MB RAM'),
+            totalHardDriveSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalHardDriveSize', { postfix: ' GB HardDrive' }),
+            totalRamSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalRamSize', { postfix: ' MB RAM' }),
             graphicCardModel: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'graphicCardModel'),
             networkSpeedsEthernet: deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, 'networkSpeedsEthernet'),
             networkSpeedsWifi: deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, 'networkSpeedsWifi'),
@@ -794,7 +794,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           // TODO if components values need to be formatted, do it here
 
           $scope.propToString = (prop) => {
-            return prop.map(x => x.value + '(' + x.count + ')').join(', ')
+            return prop.map(x =>
+              (x.prefix ? x.prefix : '') +
+              x.value +
+              (x.postfix ? x.postfix : '') +
+              '(' + x.count + ')')
+              .join(', ')
           }
 
           let statusSummary = 'Registered'
@@ -804,7 +809,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             statusSummary = $scope.propToString(props.trading) || $scope.propToString(props.physical)
           }
 
-          let componentsContentSummary = _.values([props.processorModel, props.totalRamSize, props.totalHardDriveSize]).filter(c => !!c).join(', ')
+          let componentsContentSummary = $scope.propToString(props.processorModel
+            .concat(props.totalRamSize)
+            .concat(props.totalHardDriveSize)
+            .filter(c => !!c))
           $scope.selection.summary = $scope.selection.summary.concat([
             {
               title: 'Type, manufacturer & model',

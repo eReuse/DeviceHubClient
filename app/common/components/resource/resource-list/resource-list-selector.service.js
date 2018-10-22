@@ -123,18 +123,22 @@ class ResourceListSelector {
     }
 
     // TODO move to resource-list.directive
-    this.getAggregatedPropertyOfSelected = (selectedDevices = [], pathToProp) => {
+    this.getAggregatedPropertyOfSelected = (selectedDevices = [], pathToProp, options = {}) => {
       if (selectedDevices.length === 0) {
         return null
       }
       selectedDevices = _.filter(selectedDevices, (d) => { return !_.isNil(_.get(d, pathToProp)) })
       const counts = _(selectedDevices).mapValues((d) => { return _.get(d, pathToProp) }).countBy().value()
       const countsList = _.values(_.mapValues(counts, (value, key) => {
-        return {
-          count: value,
-          value: key,
-          property: pathToProp
-        }
+        return _.defaults(
+          {},
+          _.pick(options, [ 'postfix', 'prefix' ]),
+          {
+            count: value,
+            value: key,
+            property: pathToProp
+          }
+        )
       }))
       return countsList
       // if (selectedDevices.length > 1) {
