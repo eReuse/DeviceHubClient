@@ -178,12 +178,17 @@ function parse (item, schema) {
     _created: item.created
   })
 
+  function convertToUTC (dateString) {
+    // return new Date(dateString + 'Z') TODO this doesn't work anymore
+    return new Date(dateString)
+  }
+
   // todo this first for should be nested
   for (const fieldName in schema) {
     switch (schema[fieldName].type) {
       case 'datetime':
         if (item[fieldName]) {
-          item[fieldName] = new Date(item[fieldName] + 'Z') // z stands for 'utc'
+          item[fieldName] = convertToUTC(item[fieldName])
         }
         break
     }
@@ -205,7 +210,7 @@ function parse (item, schema) {
       if (!item[propertyName]) {
         return
       }
-      const a = new Date(item[propertyName] + 'Z') // z stands for 'utc'
+      const a = convertToUTC(item[propertyName]) // z stands for 'utc'
       if (!_.isNaN(a.getTime())) item[propertyName] = a
     }
   }

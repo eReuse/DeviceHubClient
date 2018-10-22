@@ -15,7 +15,7 @@ class NewButton extends Base {
     this.modal = $('.modal')
     this.submit = this.modal.$('[type=submit]')
     this.submitPopover = $('.popover [type=submit]')
-    this.done = this.modal.$('.btn.btn-info[ng-click="done()"]')
+    this.done = this.modal.$('.btn.btn-primary[ng-click="done()"]')
     this.cancel = this.modal.$('.btn.btn-warning[ng-click="cancel()"]')
     this.label = this.modal.$('[name*=label]')
     // new Computer

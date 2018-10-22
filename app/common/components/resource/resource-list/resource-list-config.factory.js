@@ -47,12 +47,12 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
       td: {templateUrl: configFolder + '/resource-button-device.html'}
     },
     created: {
-      th: {key: '_created', name: 'Created', cssClasses: 'hidden-xs'},
-      td: {value: '_created', cssClasses: 'hidden-xs'}
+      th: {key: '_created', name: 'Created', cssClasses: 'hidden-sm hidden-xs'},
+      td: {value: '_created', cssClasses: 'hidden-sm hidden-xs'}
     },
     range: {
-      th: {key: 'condition.general.score', name: 'Range', cssClasses: 'hidden-xs'},
-      td: {templateUrl: configFolder + '/device-range.html', cssClasses: 'hidden-xs'}
+      th: {key: 'condition.general.range', name: 'Range', cssClasses: 'visible-lg'},
+      td: {templateUrl: configFolder + '/device-range.html', cssClasses: 'visible-lg'}
     },
     model: {th: {key: 'model', name: 'Model'}, td: {value: 'model'}},
     state: {
@@ -60,8 +60,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
       td: {templateUrl: configFolder + '/event-state.html'}
     },
     price: {
-      th: {key: 'pricing.total.standard', name: `Price ${CONSTANTS.currency}`},
-      td: {value: 'pricing.total.standard', currency: true}
+      th: {key: 'pricing.total.standard', name: `Price ${CONSTANTS.currency}`, cssClasses: 'visible-lg'},
+      td: {value: 'pricing.total.standard', currency: true, cssClasses: 'visible-lg'}
     }
   }
   f.lastEvent.thDef = _.assign({default: true}, f.lastEvent.th)
@@ -466,18 +466,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
           name: 'Event'
         },
         {
-          key: 'Id',
-          name: 'Id',
-          cssClasses: 'hidden-xs'
-        },
-        {
-          key: 'Label',
-          name: 'Label',
-          cssClasses: 'hidden-xs'
-        },
-        {
-          key: 'State',
-          name: 'State',
+          key: 'Description',
+          name: 'Description',
           cssClasses: 'hidden-xs'
         },
         {
@@ -485,6 +475,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
           name: 'Updated'
         }
       ],
+      // TODO not used, use this in events.html
       td: [f.id.td, f.title.td, f.price.td, f.range.td, f.status.td, f.created.td]
     }
 //     Lot:{

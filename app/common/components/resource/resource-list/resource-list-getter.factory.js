@@ -160,12 +160,7 @@ function ResourceListGetterFactory (ResourceSettings) {
      * @param newSorts
      */
     updateSort (newSorts) {
-      let oldSort = _.clone(this._sort)
       this._sort = newSorts
-
-      // TODO need this?
-      // If there is no sort defined this._filters will equal with oldsort
-      // if (!_.isEqual(this._filters, oldSort) && !_.isNull(this._filters)) this.getResources()
 
       if (!_.isNull(this._sort)) this.getResources()
     }
@@ -249,12 +244,15 @@ function ResourceListGetterFactory (ResourceSettings) {
             title = r.type + manufacturer + model
           }
 
+          // sort events by creation date
+          r.events.sort((a, b) => {
+            return (new Date(b.created)).getTime() - (new Date(a.created)).getTime()
+          })
+
+          // and map to client props
           r.events && r.events.forEach((e) => {
             _.defaults(e, {
               '@type': 'devices:' + e.type,
-              '_updated': e.created,
-              'byUser': e.author,
-              'label': e.name || e.description,
               '_id': e.id
             })
           })
@@ -290,17 +288,15 @@ function ResourceListGetterFactory (ResourceSettings) {
               },
               'components': {
                 'hardDrives': rate.data_storage,
+                'hardDrivesRange': rate.dataStorageRange,
                 'ram': rate.ram,
-                'processors': rate.processor
+                'ramRange': rate.ramRange,
+                'processors': rate.processor,
+                'processorsRange': rate.processorRange
               },
               'general': {
                 'score': rate.rating,
-                'range':
-                  rate.rating > 8 ? 'Very high'
-                    : rate.rating > 6 ? 'High'
-                    : rate.rating > 4 ? 'Normal'
-                      : rate.rating > 2 ? 'Low'
-                        : 'Very low'
+                'range': rate.ratingRange
               }
             }
           }
@@ -308,6 +304,8 @@ function ResourceListGetterFactory (ResourceSettings) {
           // map components
           r.totalRamSize = r.ramSize
           r.totalHardDriveSize = r.dataStorageSize
+          r.networkSpeedsEthernet = r.networkSpeeds && r.networkSpeeds.length && r.networkSpeeds[0]
+          r.networkSpeedsWifi = r.networkSpeeds && r.networkSpeeds.length && r.networkSpeeds[1]
 
           // map status
           let status = 'Registered'
@@ -319,8 +317,6 @@ function ResourceListGetterFactory (ResourceSettings) {
 
           _.defaults(r, devicePropertiesStub)
           _.assign(r, {
-            _id: r.id,
-            _created: r.created,
             title: title,
             status: status,
             parentLots: parentLots
@@ -331,8 +327,6 @@ function ResourceListGetterFactory (ResourceSettings) {
       } else if (this.resourceType === 'Lot') {
         resources.forEach(r => {
           _.assign(r, {
-            _id: r.id,
-            _created: r.created,
             '@type': 'Lot'
           })
         })

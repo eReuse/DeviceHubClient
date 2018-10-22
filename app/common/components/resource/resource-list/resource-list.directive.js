@@ -22,7 +22,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
     },
     link: {
       // Note that we load on 'pre' to initialize before our child (or inner) directives so they get real config values
-      pre: ($scope, element) => {
+      pre: ($scope, $element) => {
         $scope.utils = require('./../../utils.js')
         $scope.session = session
         progressBar.start() // getterDevices.getResources will call this too, but doing it here we avoid delay
@@ -60,13 +60,20 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           label: 'Without lot'
         }
 
+        // TODO call on screen size change. necessary for e.g. mobile portrait -> landscape
+        function recalculateDevicesRow () {
+          if ($scope.selectedLots.length > 0) {
+            $element.find('.devices-row').css({top: $element.find('.lot-row').outerHeight()})
+          } else {
+            $element.find('.devices-row').css({top: '0'})
+          }
+        }
+
         // Selected lots
         function updateLotSelection (selectedLots = []) {
           $scope.selectedLots = selectedLots
           if ($scope.selectedLots.length > 0) {
             $scope.selectedLotsText = $scope.selectedLots.map((l) => l.name).join(', ')
-          } else {
-            $scope.selectedLotsText = 'All devices'
           }
           const filter = selectedLots.length > 0 ? {
             lot: {
@@ -74,6 +81,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             }
           } : null
           getterDevices.updateFilters('LOTS', filter)
+          recalculateDevicesRow()
         }
         updateLotSelection([])
         lotsSelector.callbackOnSelection(updateLotSelection)
@@ -81,19 +89,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         $scope.reloadLots = () => {
           $rootScope.$broadcast('lots:reload')
         }
-
-        // Selected events
-        // TODO
-        $scope.onEventsSelectionChanged = (selectedEvents) => {
-          // update gettter filter/query
-          $scope.selectedEvents = selectedEvents
-          // if (selectedEvents.length > 0) {
-          //   $scope.selectedLotsText = selectedEvents.map((l) => l.name).join(', ')
-          // } else {
-          //   $scope.selectedLotsText = 'All devices'
-          // }
-        }
-        $scope.onEventsSelectionChanged([])
 
         // Sorting
         $scope.sort = {}
@@ -683,6 +678,31 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             }
           ).length === 0
 
+          // TODO maybe props object can be calculated automatically
+          // function getFunctionMapper (prop) {
+          //   const isString = typeof prop === 'string'
+          //   const isNumber = typeof prop === 'number'
+          //   const isArray = _.isArray(prop)
+          //   const isBoolean = typeof prop === 'boolean'
+          //   const isDate = prop instanceof Date
+          //
+          //   if (isNumber)
+          //     return deviceSelector.getRangeOfPropertyOfSelected
+          //   }
+          //   return deviceSelector.getAggregatedPropertyOfSelected
+          // }
+          //
+          // let props = {}
+          // function traverseProps(props) {
+          //   Object.keys(props, (k) => {
+          //     let value = props[k]
+          //     const isObject = typeof value === 'object'
+          //     if (_.isNil(value) || isObject) {
+          //
+          //     }
+          //   })
+          // }
+
           // aggregated properties of selected devices
           let props = {
             _id: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, '_id'),
@@ -692,6 +712,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             model: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'model'),
             serialNumber: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'serialNumber'),
             hid: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'hid'),
+            tags: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'tags').map(t => t.id),
             status: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'status'),
             condition: {
               appearance: {
@@ -702,12 +723,23 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               },
               general: {
                 range: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.general.range')
+              },
+              components: {
+                hardDrives: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.components.hardDrives'),
+                hardDrivesRange: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.components.hardDrivesRange'),
+                ram: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.components.ram'),
+                ramRange: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.components.ramRange'),
+                processors: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.components.processors'),
+                processorsRange: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.components.processorsRange')
               }
             },
-            components: {
-              processorModel: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'processorModel'),
-              totalHardDriveSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalHardDriveSize', 'Various', ' GB HardDrive'),
-              totalRamSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalRamSize', 'Various', ' MB RAM')
+            processorModel: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'processorModel'),
+            totalHardDriveSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalHardDriveSize', 'Various', ' GB HardDrive'),
+            totalRamSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalRamSize', null, ' MB RAM'),
+            graphicCardModel: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'graphicCardModel'),
+            networkSpeedsEthernet: deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, 'networkSpeedsEthernet'),
+            networkSpeedsWifi: deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, 'networkSpeedsWifi'),
+            components: { // TODO
             },
             events: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'events', '_id'),
             lots: $scope.selection.lots
@@ -753,8 +785,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           } else {
             typeContentSummary = props.subType + manufacturer + model
           }
-          // TODO if components values need to be formatted, due it here
-          const componentsContentSummary = _.values(props.components).filter(c => !!c).join(', ')
+          // TODO if components values need to be formatted, do it here
+
+          let componentsContentSummary = _.values([props.processorModel, props.totalRamSize, props.totalHardDriveSize]).filter(c => !!c).join(', ')
           $scope.selection.summary = $scope.selection.summary.concat([
             {
               title: 'Type, manufacturer & model',
@@ -840,7 +873,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
          // If we don't want to collision with tables of subResources we
         // need to do this when declaring the directive
         // TODO need this?
-        const $table = element.find('.fill-height-bar')
+        const $table = $element.find('.fill-height-bar')
         getterDevices.callbackOnGetting((_, __, ___, ____, getNextPage) => {
           if (!getNextPage) {
             $table.scrollTop(0) // Scroll up to the table when loading from page 0 again
@@ -876,12 +909,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           $scope.$apply()
         })
 
-        // QR and NFC
+        // QR
         $scope.scanQR = () => {
           window.AndroidApp.scanBarcode('tagScanDoneSearch')
         }
 
-        $scope.scanNFC = () => {
+        // NFC
+        if (window.AndroidApp) {
           window.AndroidApp.startNFC('tagScanDoneSearch')
           $scope.$on('$destroy', () => {
             window.AndroidApp.stopNFC()
