@@ -129,6 +129,17 @@ function getResourceTitle (resource) {
   return Naming.humanize(resource['@type']) + ' ' + text
 }
 
+function aggregateToString (aggregate) {
+  return aggregate.map(aggregateEntryToString).join(', ')
+}
+
+function aggregateEntryToString (entry) {
+  return (entry.prefix ? entry.prefix : '') +
+    entry.value +
+    (entry.postfix ? entry.postfix : '') +
+    ' (' + entry.count + ')'
+}
+
 function getEventDescription (event) {
   if (event.error) {
     return 'Something went wrong'
@@ -277,5 +288,7 @@ module.exports = {
   setImageGetter: setImageGetter,
   Progress: Progress,
   getSetting: getSetting,
-  perms: perms
+  perms: perms,
+  aggregateToString: aggregateToString,
+  aggregateEntryToString: aggregateEntryToString
 }

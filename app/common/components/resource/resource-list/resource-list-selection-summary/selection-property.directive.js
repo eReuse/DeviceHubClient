@@ -6,6 +6,11 @@ module.exports = function () {
       addFilter: '&',
       entry: '=',
       title: '='
+    },
+    link: {
+      pre: ($scope) => {
+        $scope.utils = require('./../../../utils.js')
+      }
     }
   }
 }

@@ -793,23 +793,14 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           }
           // TODO if components values need to be formatted, do it here
 
-          $scope.propToString = (prop) => {
-            return prop.map(x =>
-              (x.prefix ? x.prefix : '') +
-              x.value +
-              (x.postfix ? x.postfix : '') +
-              '(' + x.count + ')')
-              .join(', ')
-          }
-
           let statusSummary = 'Registered'
           if (props.physical.length > 0 && props.trading.length > 0) {
-            statusSummary = $scope.propToString(props.trading) + ' / ' + $scope.propToString(props.physical)
+            statusSummary = $scope.utils.aggregateToString(props.trading) + ' / ' + $scope.utils.aggregateToString(props.physical)
           } else if (props.physical.length > 0 || props.trading.length > 0) {
-            statusSummary = $scope.propToString(props.trading) || $scope.propToString(props.physical)
+            statusSummary = $scope.utils.aggregateToString(props.trading) || $scope.utils.aggregateToString(props.physical)
           }
 
-          let componentsContentSummary = $scope.propToString(props.processorModel
+          let componentsContentSummary = $scope.utils.aggregateToString(props.processorModel
             .concat(props.totalRamSize)
             .concat(props.totalHardDriveSize)
             .filter(c => !!c))
@@ -838,7 +829,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           if (_.get(props, 'condition.general.range') && _.get(props, 'condition.general.range').length > 0) {
             $scope.selection.summary.push({
               title: 'Condition score',
-              contentSummary: $scope.propToString(_.get(props, 'condition.general.range')),
+              contentSummary: $scope.utils.aggregateToString(_.get(props, 'condition.general.range')),
               cssClass: 'condition-score',
               templateUrl: selectionSummaryTemplateFolder + '/condition-score.html'
             })

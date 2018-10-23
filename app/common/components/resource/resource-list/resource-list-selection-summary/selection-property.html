@@ -1,5 +1,5 @@
 <button
         class="btn btn-default-inverted"
         ng-click="addFilter({ path: entry.property, value: entry.value, title: title})">
-  {{ entry.value }} ({{ entry.count }})
+  {{ utils.aggregateEntryToString(entry) }}
 </button>
