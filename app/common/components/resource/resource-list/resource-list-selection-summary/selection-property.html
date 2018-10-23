@@ -1,5 +1,6 @@
+{{ utils.aggregateEntryToString(entry) }}
 <button
-        class="btn btn-default-inverted"
+        class="btn btn-sm btn-default-inverted"
         ng-click="addFilter({ path: entry.property, value: entry.value, title: title})">
-  {{ utils.aggregateEntryToString(entry) }}
+  <i class="fa fa-search"></i>
 </button>
