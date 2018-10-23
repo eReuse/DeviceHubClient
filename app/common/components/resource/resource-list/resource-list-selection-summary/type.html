@@ -10,12 +10,7 @@
     <div class="col-xs-6"
          ng-repeat="prop in [{ title: 'Type', path: '@type' }, { title: 'Sub type', path: 'type' }, { title: 'Manufacturer', path: 'manufacturer' }, { title: 'Model', path: 'model' }, { title: 'Serial number', path: 'serialNumber' }, { title: 'HID', path: 'hid' }]"><!-- TODO get from config/schema -->
       <h5>{{ prop.title }}</h5>
-      <button
-              class="btn btn-default-inverted"
-              ng-repeat="aggregated in selection.props[prop.path]"
-              ng-click="addFilter(aggregated.property, aggregated.value, prop.title)">
-        {{ aggregated.value }} ({{ aggregated.count }})
-      </button>
+      <selection-aggregated-property aggregate="selection.props[prop.path]" title="prop.title" add-filter="addFilter(path, value, title)"></selection-aggregated-property>
     </div>
     <div class="col-xs-6">
       <h5>Tags</h5>

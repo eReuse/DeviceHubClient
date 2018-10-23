@@ -44,6 +44,8 @@ module.exports = angular.module('common.components.resource',
   .filter('palletSizeLocale', require('./pallet-size-locale.filter'))
   // Resource-list
   .directive('lotsTreeNavigation', require('./resource-list/lots-tree-navigation/lots-tree-navigation.directive'))
+  .directive('selectionAggregatedProperty', require('./resource-list/resource-list-selection-summary/selection-aggregated-property.directive'))
+  .directive('selectionProperty', require('./resource-list/resource-list-selection-summary/selection-property.directive'))
   .service('LotsSelector', require('./resource-list/lots-tree-navigation/lots-selector.service'))
   .directive('resourceList', require('./resource-list/resource-list.directive'))
   .factory('ResourceListGetter', require('./resource-list/resource-list-getter.factory'))
