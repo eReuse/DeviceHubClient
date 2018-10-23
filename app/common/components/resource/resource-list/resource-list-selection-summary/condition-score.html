@@ -11,44 +11,56 @@
     <tr>
       <th></th>
       <th></th>
-      <th></th>
       <th>Condition</th>
     </tr>
     </thead>
+    <!-- { path: 'functionality.general', title: 'Functionality', fa: 'fa-wrench' }, { path: 'general.range', title: 'Total condition', fa: 'fa-inline-chart', deviceRange: true, cssClasses: 'active'} -->
+    <!--<tbody ng-repeat="prop in [ { path: 'appearance.general', title: 'Appearance', fa: 'fa-eye' }]">
+      <tr ng-repeat="entry in _.get(selection.props.condition, prop.path)">
+        <td>
+          <i class="fa fa-fw {{ prop.fa }}"></i>
+        </td>
+        <td>{{ prop.title }}</td>
+        <td><selection-property entry="entry" title="prop.title" add-filter="addFilter(path, value, title)"></selection-property></td>
+        <td class="text-right"
+            ng-swow="!prop.deviceRange">
+            <span class="label label-primary">{{::entry.value}}</span>
+        </td>
+        <td ng-show="prop.deviceRange" class="text-right">
+          <selection-property entry="entry" title="prop.title" add-filter="addFilter(path, value, title)"></selection-property>
+        </td>
+      </tr>
+    </tbody>-->
     <tbody>
-    <tr ng-show="::selection.props.condition.appearance.general">
+    <tr ng-repeat="entry in selection.props.condition.appearance.general">
       <td>
         <i class="fa fa-fw fa-eye"></i>
       </td>
       <td>Appearance</td>
-      <td>
-      </td>
       <td class="text-right"
-          uib-tooltip="{{::appearance[selection.props.condition.appearance.general]}}">
-        <span class="label label-primary">{{::selection.props.condition.appearance.general}}</span>
+          ng-click="addFilter('condition.appearance', entry.value, 'Appearance')"
+          uib-tooltip="{{::appearance[entry.value]}}">
+        <span class="label label-primary">{{::entry.value}}</span>
       </td>
     </tr>
-    <tr ng-show="::selection.props.condition.functionality.general">
+    <tr ng-repeat="entry in selection.props.condition.functionality.general">
       <td>
         <i class="fa fa-fw fa-wrench"></i>
       </td>
       <td>Functionality</td>
-      <td>
-      </td>
       <td class="text-right"
-          uib-tooltip="{{::functionality[selection.props.condition.functionality.general]}}">
-        <span class="label label-primary">{{::selection.props.condition.functionality.general}}</span>
+          ng-click="addFilter('condition.functionality', entry.value, 'Functionality')"
+          uib-tooltip="{{::functionality[entry.value]}}">
+        <span class="label label-primary">{{::entry.value}}</span>
       </td>
     </tr>
-    <tr class="active" ng-show="::selection.props.condition.general.range">
+    <tr ng-repeat="entry in selection.props.condition.general.range">
       <td><i class="fa fa-fw fa-line-chart"></i></td>
       <td>Total condition</td>
-      <td></td>
-      <td class="text-right">
-        <big>
-          <device-range score="selection.props.condition.general.range"></device-range>
-        </big>
-      </td>
+      <td><selection-property
+              entry="entry"
+              title="'Total condition'"
+              add-filter="addFilter(path, value, title)"></selection-property></td>
     </tr>
     </tbody>
   </table>

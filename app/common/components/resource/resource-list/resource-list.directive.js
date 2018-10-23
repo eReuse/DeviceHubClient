@@ -721,10 +721,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             status: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'status'),
             condition: {
               appearance: {
-                general: deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, 'condition.appearance.general')
+                general: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.appearance.general')
               },
               functionality: {
-                general: deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, 'condition.functionality.general')
+                general: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.functionality.general')
               },
               general: {
                 range: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.general.range')
