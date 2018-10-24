@@ -1156,11 +1156,14 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
                 },
                 {
                   'key': 'device.manufacturer',
-                  'type': 'input',
-                  'templateOptions': {
-                    'label': 'Manufacturer',
-                    'disabled': false
-                  }
+                  'type': 'typeahead',
+                  'templateOptions': _.assign(
+                    {
+                      required: true,
+                      resourceName: ResourceSettings('Manufacturer').resourceName
+                    },
+                    _.clone(ResourceSettings('Manufacturer').getSetting('dataRelation'))
+                  )
                 },
                 {
                   'key': 'device.imei',
