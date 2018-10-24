@@ -211,10 +211,10 @@ const RESOURCE_CONFIG = {
     Manufacturer: {
       dataRelation: {
         label: 'Name of the manufacturer',
-        labelFieldName: 'label',
-        filterFieldNames: ['label'],
+        labelFieldName: 'name',
+        filterFieldNames: ['name'],
         fieldType: 'typeahead',
-        keyFieldName: 'label'
+        keyFieldName: 'name'
       },
       _root: true
     }

@@ -67,7 +67,7 @@ function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
       if (this.schema) {
         this.settings = _.assign(this._getInnerSettings(), this.schema._settings)
         this.server = ResourceServer(this.settings)
-        this.types = this.schema['@type'].allowed
+        this.types = this.schema['@type'] ? this.schema['@type'].allowed : []
         this.subResourcesNames = _.without(this.types, this.type)
         this.isALeaf = this.subResourcesNames.length === 0 || this.type === 'devices:EraseBasic' // todo so works redo
         // Get which is our root ancestor

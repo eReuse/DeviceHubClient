@@ -28,14 +28,25 @@ function typeahead (formlyConfigProvider) {
         })
         return promise
       }
-      // TODO this works currently only for lots
+
       $scope.formatLabel = (model) => {
         if (!$scope.resources) {
           return model
         }
+        let idField
+        let valueField
+        switch ($scope.to.resourceName) {
+          case 'lots':
+            idField = '_id'
+            valueField = 'name'
+            break
+        }
+        if (!idField || !valueField) {
+          return model
+        }
         for (let i = 0; i < $scope.resources.length; i++) {
-          if (model === $scope.resources[i]._id) {
-            return $scope.resources[i].name
+          if (model === $scope.resources[i][idField]) {
+            return $scope.resources[i][valueField]
           }
         }
       }

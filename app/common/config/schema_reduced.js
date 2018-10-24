@@ -13299,6 +13299,7 @@ module.exports = {
       'sink': -4
     }
   },
+  /* END EVENTS END EVENTS END EVENTS END EVENTS */
   'peripheral': {
     'height': {
       'type': 'float',
@@ -16344,6 +16345,39 @@ module.exports = {
     },
     '_blacklist': {
       'type': 'set'
+    }
+  },
+  'manufacturers': {
+    '_settings': {
+      'icon': 'devices/icons/',
+      'useDefaultDatabase': false,
+      // 'parent': 'IndividualProduct',
+      'url': 'manufacturers/',
+      'pathToDataInResponse': 'items',
+      'itemMethods': [
+        'GET',
+        'PATCH',
+        'DELETE'
+      ],
+      'resourceMethods': [
+        'GET'
+      ],
+      'fa': 'fa-wrench'
+    },
+    'name': {
+      'type': 'string',
+      'description': 'A short, descriptive title',
+      'sink': 5
+    },
+    'url': {
+      'type': 'string',
+      'description': 'A url',
+      'sink': 5
+    },
+    'logo': {
+      'type': 'string',
+      'description': 'A logo',
+      'sink': 5
     }
   },
   'television-set': {
