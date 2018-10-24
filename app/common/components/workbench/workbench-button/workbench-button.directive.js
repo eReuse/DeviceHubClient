@@ -6,6 +6,7 @@ function workbenchButton (session, $state) {
     link: $scope => {
       $scope.session = session
       $scope.$state = $state
+      $scope.show = 'WorkbenchServer' in window || 'AndroidApp' in window
     }
   }
 }
