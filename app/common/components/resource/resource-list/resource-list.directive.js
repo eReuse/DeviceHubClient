@@ -451,7 +451,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                 {
                   childName: 'History and events',
                   panel: {
-                    title: 'Events',
+                    title: 'Traceability log',
                     children: [
                       {
                         childName: 'Filter by event type',
@@ -844,7 +844,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           }
           $scope.selection.summary = $scope.selection.summary.concat([
             {
-              title: 'Events',
+              title: 'Traceability log',
               contentSummary: props.events.length + ' events',
               cssClass: 'events',
               templateUrl: selectionSummaryTemplateFolder + '/events.html'
