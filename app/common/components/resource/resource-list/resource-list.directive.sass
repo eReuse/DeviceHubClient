@@ -474,6 +474,13 @@
       height: 100%
       padding: 0
       overflow-x: hidden
+      selection-property
+        button
+          opacity: 0 !important
+          transition: opacity 200ms
+        &:hover
+          button
+            opacity: 1 !important
       .components > .table
         max-width: 650px
       .condition-score
