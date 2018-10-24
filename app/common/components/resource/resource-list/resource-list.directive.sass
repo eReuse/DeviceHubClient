@@ -18,8 +18,10 @@
 
 .btn-normal
   color: #333333
+  background-color: transparent
   &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
-    color: #333333
+    background-color: $btn-primary-bg
+    color: $btn-primary-color
 .btn-default-inverted
   color: #333333
   background-color: white
@@ -109,7 +111,7 @@
               padding: 3px
             &:nth-child(2n)
               margin-left: 10px
-        &.selected
+        &.selected, &:hover
           a.btn
             background-color: #562568
           span
@@ -475,11 +477,11 @@
       padding: 0
       overflow-x: hidden
       selection-property
-        button
+        i
           opacity: 0 !important
           transition: opacity 200ms
         &:hover
-          button
+          i
             opacity: 1 !important
       .components > .table
         max-width: 650px

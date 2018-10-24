@@ -1,6 +1,5 @@
-<div ng-repeat="entry in aggregate">
-  <selection-property
-          entry="entry"
-          title="title"
-          add-filter="_addFilter(path, value, title)"></selection-property>
-</div>
+<selection-property
+        entry="entry"
+        title="title"
+        add-filter="_addFilter(path, value, title)"
+        ng-repeat="entry in aggregate"></selection-property>
