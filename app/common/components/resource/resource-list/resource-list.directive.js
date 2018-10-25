@@ -893,6 +893,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           onFiltersChanged()
         }
 
+        $scope.showLots = () => {
+          $scope.lotsSelectionHiddenXS = false
+        }
+
         // Reloading
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
         $scope.reloadDevices = () => {

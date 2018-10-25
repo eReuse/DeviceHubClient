@@ -18,7 +18,7 @@
           <h2 style="margin-top: 0; display: inline-block; margin-right: 20px;">{{ selectedLotsText || 'All lots' }}</h2>
           <button type="button" class="btn btn-sm btn-dark"
              style="margin-bottom: 8px; font-size: 16px;"
-             ng-click="lotsSelectionHiddenXS = !lotsSelectionHiddenXS">
+             ng-click="showLots()">
             <i class="fa fa-folder-o fa-fw"></i>Select lot
           </button>
         </div>
@@ -60,9 +60,9 @@
           <h2 style="display: inline-block;">All devices</h2>
           <span>
             <button type="button"
-                    class="btn btn-sm btn-dark visible-xs"
-                    style="margin-bottom: 8px; font-size: 16px;"
-                    ng-click="lotsSelectionHiddenXS = !lotsSelectionHiddenXS">
+                    class="btn btn-sm btn-dark visible-xs-inline"
+                    style="margin-bottom: 8px; font-size: 16px; margin-left: 10px;"
+                    ng-click="showLots()">
               <i class="fa fa-folder-o fa-fw"></i>Select lot
             </button>
           </span>
