@@ -325,10 +325,16 @@ function ResourceListGetterFactory (ResourceSettings) {
 
         this._updateResourcesAfterGet(getNextPage, resources)
       } else if (this.resourceType === 'Lot') {
-        resources.forEach(r => {
-          _.assign(r, {
-            '@type': 'Lot'
-          })
+        resources.forEach(lot => {
+          function assignTypeRec (lot) {
+            _.assign(lot, {
+              '@type': 'Lot'
+            })
+            lot.nodes && lot.nodes.length && lot.nodes.forEach((node) => {
+              assignTypeRec(node)
+            })
+          }
+          assignTypeRec(lot)
         })
         this._updateResourcesAfterGet(getNextPage, resources)
       }
