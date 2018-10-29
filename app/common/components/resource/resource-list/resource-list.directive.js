@@ -172,17 +172,18 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               const filterKey = pair[0]
               const fullPath = parentPath + filterKey
               let value = pair[1]
-              const fullPrefix = parentPrefix + _.get(value, '_meta.prefix', '')
 
-              const endPoint = value._meta && value._meta.endpoint
+              const filterPanel = _.find($scope.filterPanels, { propPath: fullPath })
+              const fullPrefix = parentPrefix + _.get(filterPanel, 'prefix', '')
+              const endPoint = !!filterPanel
 
               if (!endPoint) {
-                console.log('fullPath', fullPath, 'is an endpoint')
                 return addToActiveFiltersRecursive(fullPath, value, fullPrefix)
               }
 
-              const meta = value._meta
-              let filterText = meta ? meta.prefix : ''
+              _.set(value, '_meta.endpoint', true) // TODO setting endpoint is necessary for resource-getter only
+
+              let filterText = fullPrefix
               let skipProcessingProps
               if (fullPath === (keyEvents + '.types')) {
                 if (_.values(_.pickBy(value, (v) => { return v === true })).length === allEvents.length) {
@@ -229,20 +230,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           // update filters
           getterDevices.updateFiltersFromSearch($scope.filtersModel)
         }
-        onFiltersChanged()
 
         function onSubmitPanel () {
           if (!this.propPath) {
             throw new Error('propPath not defined: ' + this.propPath)
           }
-          // TODO better determination of endpoint: search in filterPanels for occurence of propPath
-          _.set($scope.filtersModel, this.propPath + '._meta.endpoint', true)
 
-          // TODO prefix could be object with keys describing individual fields in case of multiple
-          // e.g. prefix : { min : 'Minimum (GB): ', max : 'Maximum(GB): ' }
-          if (this.prefix) {
-            _.set($scope.filtersModel, this.propPath + '._meta.prefix', this.prefix)
-          }
           onFiltersChanged()
         }
 
@@ -556,6 +549,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         $scope.filterPanels = filterPanelsFlat
         $scope.showFilterPanels = false
 
+        onFiltersChanged()
+
         // Selecting
         $scope.toggleSelect = (resource, $index, $event) => {
           $event.stopPropagation() // Avoids the ng-click from the row (<tr>) to trigger
@@ -860,36 +855,17 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         deviceSelector.callbackOnSelection(updateDeviceSelection)
         updateDeviceSelection()
 
-        $scope.addFilter = (propertyPath, filter, title = '') => {
-          switch (propertyPath) {
+        $scope.addFilter = (propPath, filter) => {
+          switch (propPath) {
             case '@type':
-              $scope.filtersModel[keyTypes] = $scope.filtersModel[keyTypes] || {
-                _meta: {
-                  endpoint: true,
-                  prefix: 'Devices: '
-                }
-              }
-              $scope.filtersModel[keyTypes][filter] = true
+              propPath = keyTypes
               break
             case 'type':
-              $scope.filtersModel[keyTypes] = $scope.filtersModel[keyTypes] || {
-                _meta: {
-                  endpoint: true,
-                  prefix: 'Devices: '
-                }
-              }
-              $scope.filtersModel[keyTypes][filter] = true
-              break
-            default:
-              $scope.filtersModel[propertyPath] = $scope.filtersModel[propertyPath] || {
-                _meta: {
-                  endpoint: true,
-                  prefix: title + ': '
-                }
-              }
-              $scope.filtersModel[propertyPath][filter] = true
+              propPath = keyTypes
               break
           }
+
+          _.set($scope.filtersModel, propPath + '.' + filter, true) // TODO set value depending on filterPanel
           onFiltersChanged()
         }
 
