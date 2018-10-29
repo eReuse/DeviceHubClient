@@ -48,6 +48,7 @@ module.exports = angular.module('common.components.resource',
   .directive('selectionProperty', require('./resource-list/resource-list-selection-summary/selection-property.directive'))
   .service('LotsSelector', require('./resource-list/lots-tree-navigation/lots-selector.service'))
   .directive('resourceList', require('./resource-list/resource-list.directive'))
+  .directive('resourceListFilters', require('./resource-list/resource-list-filters/resource-list-filters.directive'))
   .factory('ResourceListGetter', require('./resource-list/resource-list-getter.factory'))
   .service('ResourceListSelector', require('./resource-list/resource-list-selector.service'))
   .factory('resourceListConfig', require('./resource-list/resource-list-config.factory'))
