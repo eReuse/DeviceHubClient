@@ -471,8 +471,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
           cssClasses: 'hidden-xs'
         },
         {
-          key: 'Updated',
-          name: 'Updated'
+          key: 'Created',
+          name: 'Created  '
         }
       ],
       // TODO not used, use this in events.html
