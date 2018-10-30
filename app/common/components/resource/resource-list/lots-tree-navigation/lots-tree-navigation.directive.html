@@ -1,6 +1,6 @@
 <div ng-show="data.length > 0">
   <input class="form-control" placeholder="Enter lot name" ng-model="filter" ng-change="findNodes(filter)">
-  <div ui-tree>
+  <div data-ui-tree="treeOptions" data-drag-delay="100">
     <ol ui-tree-nodes="" ng-model="data" id="tree-root">
       <li ng-repeat="node in data" ui-tree-node ng-include="treeTemplateURL" ng-show="node.isVisible"></li>
     </ol>

@@ -1,4 +1,4 @@
-<div class="tree-node tree-node-content" ng-class="{selected: selector.isSelected(node) }">
+<div class="tree-node tree-node-content" ui-tree-handle ng-click="toggleLot(node, $event)" ng-class="{selected: selector.isSelected(node) }">
   <!--
   <a class="btn btn-normal btn-xs" ng-if="node.nodes && node.nodes.length > 0" data-nodrag ng-click="toggleExpand(this)"><span
           class="glyphicon"
@@ -7,18 +7,18 @@
           'glyphicon-chevron-down': !collapsed
         }"></span></a>
         -->
-  <a class="btn btn-normal btn-xs" data-nodrag ng-click="toggleLot(node, $event)">
+  <a class="btn btn-normal btn-xs" >
     <resource-field-edit resource="node"
                          field="{ key: 'name', value: node.name, editable: true }"
                          new-child-lot="newChildLot(parentLot)">
       {{node.name}}
     </resource-field-edit>
   </a>
-  <!-- TODO comment in to enable drag&drop to move
-  <div class="pull-right tree-handle angular-ui-tree-handle" ui-tree-handle>
-    <span>MOVE</span>
-  </div>
-  -->
+
+  <!--<div class="pull-right tree-handle angular-ui-tree-handle" ui-tree-handle>-->
+    <!--<span>MOVE</span>-->
+  <!--</div>-->
+
   <!--<a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="openLot(node.id)"><span-->
           <!--class="glyphicon glyphicon-remove"></span></a>-->
   <!--<a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span-->
