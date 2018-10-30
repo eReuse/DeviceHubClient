@@ -466,7 +466,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           } catch (e) {
             id = tag
           }
-          $rootScope.$broadcast('updateSearchQuery', id)
+          $rootScope.$broadcast('addToSearchQuery', id)
 
           $scope.$apply()
         })
@@ -482,7 +482,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           $scope.$on('$destroy', () => {
             window.AndroidApp.stopNFC()
           })
-          Notification.success('NFC activated')
         }
 
         // TODO what does next line?

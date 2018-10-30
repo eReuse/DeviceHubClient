@@ -9,8 +9,9 @@ function resourceSearch () {
     link: {
       pre: ($scope, element) => {
         let timeout
-        $scope.$on('updateSearchQuery', (_, query) => {
-          $scope.searchQuery = query
+        $scope.$on('addToSearchQuery', (_, query) => {
+          $scope.searchQuery = $scope.searchQuery ? $scope.searchQuery + ', ' : ''
+          $scope.searchQuery += query
           $scope.onSearchChanged({ query: query })
         })
         element.bind('keyup keypress', function () {
