@@ -10,13 +10,14 @@
     <thead>
     <tr>
       <th></th>
-      <th></th>
       <th>Range</th>
     </tr>
     </thead>
     <tbody ng-repeat="prop in [{ name: 'processorModel', title: 'Processor', conditionRangeName: 'processorsRange', conditionName: 'processors'}, { name: 'totalHardDriveSize', title: 'Hard drive', conditionRangeName: 'hardDrivesRange', conditionName: 'hardDrives'}, { name: 'totalRamSize', title: 'RAM', conditionRangeName: 'ramRange', conditionName: 'ram'}, { name: 'graphicCardModel', title: 'Graphics'}, { name: 'networkSpeedsEthernet', title: 'Network Ethernet' }, { name: 'networkSpeedsWifi', title: 'Wireless' }]">
+      <tr>
+        <td><span style="font-style: italic;">{{ prop.title }}</span></td>
+      </tr>
       <tr ng-repeat="entry in selection.props[prop.name]">
-        <td>{{ prop.title }}</td>
         <td><selection-property entry="entry" title="prop.title" add-filter="addFilter(path, value, title)"></selection-property></td>
         <td>
           <span class="resource-range"
