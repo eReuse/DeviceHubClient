@@ -303,7 +303,9 @@ function ResourceListGetterFactory (ResourceSettings) {
 
           // map components
           r.totalRamSize = r.ramSize
-          r.totalHardDriveSize = Math.round(r.dataStorageSize / 1024)
+          r.totalHardDriveSize = _.isFinite(parseInt(r.dataStorageSize))
+            ? Math.round(r.dataStorageSize / 1024)
+            : r.dataStorageSize
           r.networkSpeedsEthernet = r.networkSpeeds && r.networkSpeeds.length && r.networkSpeeds[0]
           r.networkSpeedsWifi = r.networkSpeeds && r.networkSpeeds.length && r.networkSpeeds[1]
 
