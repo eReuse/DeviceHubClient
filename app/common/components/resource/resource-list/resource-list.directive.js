@@ -288,8 +288,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               }
             },
             processorModel: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'processorModel'),
-            totalHardDriveSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalHardDriveSize', { postfix: ' GB HardDrive' }),
-            totalRamSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalRamSize', { postfix: ' MB RAM' }),
+            totalHardDriveSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalHardDriveSize', { postfix: ' GB' }),
+            totalRamSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalRamSize', { postfix: ' MB' }),
             graphicCardModel: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'graphicCardModel'),
             networkSpeedsEthernet: deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, 'networkSpeedsEthernet'),
             networkSpeedsWifi: deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, 'networkSpeedsWifi'),
