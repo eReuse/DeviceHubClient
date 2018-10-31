@@ -477,6 +477,8 @@
       padding: 0
       overflow-x: hidden
       selection-property
+        button
+          text-align: left
         i
           opacity: 0 !important
           transition: opacity 200ms
@@ -556,7 +558,7 @@
             color: #333333
       .selection-details-content
         padding: 15px
-        &.selection-details-content-type
+        &.selection-details-content-type,&.selection-details-content-status
           h5
             font-weight: normal
             text-transform: uppercase
@@ -564,6 +566,7 @@
             padding-bottom: 2px
         *
           word-wrap: break-word
+          white-space: normal
         h3
           display: inline-block
         .btn-hide-details
