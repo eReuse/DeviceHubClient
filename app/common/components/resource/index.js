@@ -12,6 +12,7 @@ require('meanie-angular-focus')
 require('checklist-model')
 require('angular-long-press')
 require('angular-ui-tree')
+require('angular-clipboard')
 
 module.exports = angular.module('common.components.resource',
   [
@@ -32,6 +33,7 @@ module.exports = angular.module('common.components.resource',
     'checklist-model',
     'pr.longpress',
     'ui.tree',
+    'angular-clipboard',
     require('./../group').name // the button in resource-list
   ])
   .constant('RESOURCE_CONFIG', require('./resource-config.constant'))

@@ -57,7 +57,7 @@
     <div class="row devices-row">
       <div class="devices-col col-xs-12 fill-height-bar">
         <div ng-if="selectedLots.length === 0">
-          <h2 style="display: inline-block;">All devices</h2>
+          <h2 style="display: inline-block; margin-top: 0;">All devices</h2>
           <span>
             <button type="button"
                     class="btn btn-sm btn-dark visible-xs-inline"
@@ -204,6 +204,11 @@
         </group-resource-button>
         <manual-events-button></manual-events-button>
         <certificate-button></certificate-button>
+        <button class="btn btn-primary"
+                clipboard
+                text="selection.props.urls.join(' \n')"
+                on-copied="Notification.success('Device URLs copied to clipboard')"
+                on-error="Notification.error('Device URLs could not be copied: ' + err)">Share publicly</button>
       </div>
       <div class="selection-summary-wrapper" style="position: relative; overflow-x: hidden;">
         <ul class="selection-summary">

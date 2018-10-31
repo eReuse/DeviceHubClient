@@ -23,6 +23,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
     link: {
       // Note that we load on 'pre' to initialize before our child (or inner) directives so they get real config values
       pre: ($scope, $element) => {
+        $scope.Notification = Notification
         $scope.utils = require('./../../utils.js')
         $scope.session = session
         progressBar.start() // getterDevices.getResources will call this too, but doing it here we avoid delay
@@ -295,7 +296,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             components: { // TODO
             },
             events: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'events', '_id'),
-            lots: $scope.selection.lots
+            lots: $scope.selection.lots,
+            urls: selectedDevices.map(d => (new URL(d.url, CONSTANTS.url)).href)
           }
           $scope.currencyOptions.roles.forEach((roleName) => {
             let path = 'pricing.' + roleName + '.' + $scope.currencyOptions.val
