@@ -133,11 +133,11 @@ function aggregateToString (aggregate) {
   return aggregate.map(aggregateEntryToString).join(', ')
 }
 
-function aggregateEntryToString (entry, multipleSelected) {
+function aggregateEntryToString (entry, multiSelection) {
   return (entry.prefix ? entry.prefix : '') +
     entry.value +
     (entry.postfix ? entry.postfix : '') +
-    (multipleSelected ? ' (' + entry.count + ')' : '')
+    (multiSelection ? ' (' + entry.count + ')' : '')
 }
 
 function getEventDescription (event) {
