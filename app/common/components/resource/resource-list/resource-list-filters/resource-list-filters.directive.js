@@ -107,6 +107,7 @@ function resourceListFilters () {
               }
             }
             if (!skipProcessingProps) {
+              let propsString = []
               _.forOwn(value, (prop, key) => {
                 if (key === '_meta') {
                   return
@@ -116,22 +117,24 @@ function resourceListFilters () {
                 const isText = typeof prop === 'string'
                 const isDate = prop instanceof Date
 
+                let propStr = ''
                 if (isBoolean) {
                   if (prop) {
-                    filterText += key
+                    propStr += key
                   }
                 } else {
-                  filterText += key + ': '
+                  propStr += key + ': '
                   if (isNumber) {
-                    filterText += prop
+                    propStr += prop
                   } else if (isText) {
-                    filterText += prop
+                    propStr += prop
                   } else if (isDate) {
-                    filterText += prop.toDateString()
+                    propStr += prop.toDateString()
                   }
                 }
-                filterText += ' '
+                propsString.push(propStr)
               })
+              filterText += propsString.join(', ')
             }
 
             $scope.activeFilters.push({
