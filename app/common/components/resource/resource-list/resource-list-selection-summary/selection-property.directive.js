@@ -13,7 +13,7 @@ module.exports = function (ResourceListSelector) {
         const deviceSelector = ResourceListSelector
 
         function updateDeviceSelection () {
-          $scope.multipleSelected = deviceSelector.getAllSelectedDevices().length > 1
+          $scope.multiSelection = deviceSelector.getAllSelectedDevices().length > 1
         }
         deviceSelector.callbackOnSelection(updateDeviceSelection)
         updateDeviceSelection()
