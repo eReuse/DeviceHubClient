@@ -1,19 +1,16 @@
-<table class="table table-condensed" id="device-dashboard-components">
-  <tbody ng-repeat="prop in [{ name: 'processorModel', title: 'Processor', conditionRangeName: 'processorsRange', conditionName: 'processors'}, { name: 'totalHardDriveSize', title: 'Hard drive', conditionRangeName: 'hardDrivesRange', conditionName: 'hardDrives'}, { name: 'totalRamSize', title: 'RAM', conditionRangeName: 'ramRange', conditionName: 'ram'}, { name: 'graphicCardModel', title: 'Graphics'}, { name: 'networkSpeedsEthernet', title: 'Network Ethernet' }, { name: 'networkSpeedsWifi', title: 'Wireless' }]">
-    <tr>
-      <td><span style="font-style: italic;">{{ prop.title }}</span></td>
-    </tr>
-    <tr ng-repeat="entry in selection.props[prop.name]">
-      <td>{{ utils.aggregateEntryToString(entry, selection.multiSelection) }}</td>
-      <td>
-        <span class="resource-range"
-              ng-show="prop.conditionName && selection.props.condition.components[prop.conditionName][$index]">
-          <span>{{selection.props.condition.components[prop.conditionRangeName][$index].value}}</span>
-        </span>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div style="margin-top: 5px">
+  <div ng-repeat="prop in [{ name: 'processorModel', title: 'Processor', conditionName: 'processors', conditionName: 'processors'}, { name: 'totalHardDriveSize', title: 'Hard drive', conditionName: 'hardDrives', conditionName: 'hardDrives'}, { name: 'totalRamSize', title: 'RAM', conditionName: 'ram', conditionName: 'ram'}, { name: 'graphicCardModel', title: 'Graphics'}, { name: 'networkSpeedsEthernet', title: 'Network Ethernet' }, { name: 'networkSpeedsWifi', title: 'Wireless' }]"
+       ng-if="selection.props[prop.name]"
+       style="margin-top: 5px;"
+  >
+    <div style="font-style: italic; margin-bottom: 3px">{{ prop.title }}</div>
+    <span ng-repeat="entry in selection.props[prop.name]">
+      <span>{{ utils.aggregateEntryToString(entry, false) }}</span>
+      <device-range score="selection.props.condition.components[prop.conditionName][$index].value"></device-range>
+      <span ng-if="!$last">,</span>
+    </span>
+  </div>
+</div>
 <!--<div ng-repeat="prop in [{ name: 'processorModel', title: 'Processor', conditionRangeName: 'processorsRange', conditionName: 'processors'}, { name: 'totalHardDriveSize', title: 'Hard drive', conditionRangeName: 'hardDrivesRange', conditionName: 'hardDrives'}, { name: 'totalRamSize', title: 'RAM', conditionRangeName: 'ramRange', conditionName: 'ram'}, { name: 'graphicCardModel', title: 'Graphics'}, { name: 'networkSpeedsEthernet', title: 'Network Ethernet' }, { name: 'networkSpeedsWifi', title: 'Wireless' }]">-->
   <!--<div class="row" ng-repeat="entry in selection.props[prop.name]">-->
     <!--<div class="col-sm-8">{{ utils.aggregateEntryToString(entry, multipleSelected) }} {{ prop.title }}</div>-->

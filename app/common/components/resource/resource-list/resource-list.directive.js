@@ -291,8 +291,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             totalHardDriveSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalHardDriveSize', { postfix: ' GB' }),
             totalRamSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalRamSize', { postfix: ' MB' }),
             graphicCardModel: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'graphicCardModel'),
-            networkSpeedsEthernet: deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, 'networkSpeedsEthernet'),
-            networkSpeedsWifi: deviceSelector.getRangeOfPropertyOfSelected(selectedDevices, 'networkSpeedsWifi'),
+            networkSpeedsEthernet: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'networkSpeedsEthernet', 'Mbps (max)'),
+            networkSpeedsWifi: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'networkSpeedsWifi', 'Mbps (max)'),
             components: { // TODO
             },
             events: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'events', '_id'),
@@ -345,15 +345,17 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
           let statusSummary = 'Registered'
           if (props.physical.length > 0 && props.trading.length > 0) {
-            statusSummary = $scope.utils.aggregateToString(props.trading) + ' / ' + $scope.utils.aggregateToString(props.physical)
+            statusSummary = $scope.utils.aggregateToString(props.trading, $scope.selection.multiSelection) + ' / ' + $scope.utils.aggregateToString(props.physical, $scope.selection.multiSelection)
           } else if (props.physical.length > 0 || props.trading.length > 0) {
-            statusSummary = $scope.utils.aggregateToString(props.trading) || $scope.utils.aggregateToString(props.physical)
+            statusSummary = $scope.utils.aggregateToString(props.trading, $scope.selection.multiSelection) || $scope.utils.aggregateToString(props.physical, $scope.selection.multiSelection)
           }
 
-          let componentsContentSummary = $scope.utils.aggregateToString(props.processorModel
-            .concat(props.totalRamSize)
-            .concat(props.totalHardDriveSize)
-            .filter(c => !!c))
+          let componentsContentSummary = $scope.utils.aggregateToString(
+            props.processorModel
+              .concat(props.totalRamSize)
+              .concat(props.totalHardDriveSize)
+              .filter(c => !!c),
+            $scope.selection.multiSelection)
           $scope.selection.summary = $scope.selection.summary.concat([
             {
               title: 'Type, manufacturer & model',
@@ -379,17 +381,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           if (_.get(props, 'condition.general.range') && _.get(props, 'condition.general.range').length > 0) {
             $scope.selection.summary.push({
               title: 'Condition score',
-              contentSummary: $scope.utils.aggregateToString(_.get(props, 'condition.general.range')),
+              contentSummary: $scope.utils.aggregateToString(_.get(props, 'condition.general.range'), $scope.selection.multiSelection),
               cssClass: 'condition-score',
               templateUrl: selectionSummaryTemplateFolder + '/condition-score.html'
-            })
-          }
-          if (componentsContentSummary) {
-            $scope.selection.summary.push({
-              title: 'Components',
-              contentSummary: componentsContentSummary,
-              cssClass: 'components',
-              templateUrl: selectionSummaryTemplateFolder + '/components.html'
             })
           }
           $scope.selection.summary = $scope.selection.summary.concat([
@@ -406,6 +400,14 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               templateUrl: selectionSummaryTemplateFolder + '/lots.html'
             }
           ])
+          if (componentsContentSummary) {
+            $scope.selection.summary.push({
+              title: 'Components',
+              contentSummaryTemplate: selectionSummaryTemplateFolder + '/components-summary.html',
+              cssClass: 'components',
+              templateUrl: selectionSummaryTemplateFolder + '/components.html'
+            })
+          }
         }
         deviceSelector.callbackOnSelection(updateDeviceSelection)
         updateDeviceSelection()

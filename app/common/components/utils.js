@@ -129,14 +129,15 @@ function getResourceTitle (resource) {
   return Naming.humanize(resource['@type']) + ' ' + text
 }
 
-function aggregateToString (aggregate) {
-  return aggregate.map(aggregateEntryToString).join(', ')
+function aggregateToString (aggregate, multiSelection, additionalValue) {
+  return aggregate.map((entry) => aggregateEntryToString(entry, multiSelection, additionalValue)).join(', ')
 }
 
-function aggregateEntryToString (entry, multiSelection) {
+function aggregateEntryToString (entry, multiSelection, additionalValue) {
   return (entry.prefix ? entry.prefix : '') +
     entry.value +
     (entry.postfix ? entry.postfix : '') +
+    (additionalValue ? ' ' + additionalValue : '') +
     (multiSelection ? ' (' + entry.count + ')' : '')
 }
 
