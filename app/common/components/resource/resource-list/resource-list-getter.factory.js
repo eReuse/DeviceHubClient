@@ -307,7 +307,7 @@ function ResourceListGetterFactory (ResourceSettings) {
             ? Math.round(r.dataStorageSize / 1024)
             : r.dataStorageSize
           r.networkSpeedsEthernet = r.networkSpeeds && r.networkSpeeds.length && r.networkSpeeds[0]
-          r.networkSpeedsWifi = r.networkSpeeds && r.networkSpeeds.length && r.networkSpeeds[1]
+          r.networkSpeedsWifi = r.networkSpeeds && (r.networkSpeeds.length > 1) && r.networkSpeeds[1]
 
           // map status
           let status = 'Registered'
