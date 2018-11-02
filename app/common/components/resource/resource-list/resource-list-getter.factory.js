@@ -308,6 +308,10 @@ function ResourceListGetterFactory (ResourceSettings) {
             : r.dataStorageSize
           r.networkSpeedsEthernet = r.networkSpeeds && r.networkSpeeds.length && r.networkSpeeds[0]
           r.networkSpeedsWifi = r.networkSpeeds && (r.networkSpeeds.length > 1) && r.networkSpeeds[1]
+          const existsValue = 'Yes' // TODO move to config (see utils.aggregateEntryToString)
+          if (r.networkSpeedsWifi === 0) {
+            r.networkSpeedsWifi = existsValue
+          }
 
           // map status
           let status = 'Registered'

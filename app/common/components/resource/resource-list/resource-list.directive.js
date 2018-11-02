@@ -291,8 +291,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             totalHardDriveSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalHardDriveSize', { postfix: ' GB' }),
             totalRamSize: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'totalRamSize', { postfix: ' MB' }),
             graphicCardModel: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'graphicCardModel'),
-            networkSpeedsEthernet: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'networkSpeedsEthernet', 'Mbps (max)'),
-            networkSpeedsWifi: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'networkSpeedsWifi', 'Mbps (max)'),
+            networkSpeedsEthernet: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'networkSpeedsEthernet', { postfix: ' Mbps (max)' }),
+            networkSpeedsWifi: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'networkSpeedsWifi', { postfix: ' Mbps (max)' }),
             components: { // TODO
             },
             events: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'events', '_id'),

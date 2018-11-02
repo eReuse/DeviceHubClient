@@ -133,11 +133,15 @@ function aggregateToString (aggregate, multiSelection, additionalValue) {
   return aggregate.map((entry) => aggregateEntryToString(entry, multiSelection, additionalValue)).join(', ')
 }
 
-function aggregateEntryToString (entry, multiSelection, additionalValue) {
+const existsValue = 'Yes' // TODO move to config (see resource-list-getter)
+function aggregateEntryToString (entry, multiSelection) {
+  if (existsValue === entry.value) {
+    return entry.value +
+        (multiSelection ? ' (' + entry.count + ')' : '')
+  }
   return (entry.prefix ? entry.prefix : '') +
     entry.value +
     (entry.postfix ? entry.postfix : '') +
-    (additionalValue ? ' ' + additionalValue : '') +
     (multiSelection ? ' (' + entry.count + ')' : '')
 }
 
