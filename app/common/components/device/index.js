@@ -41,3 +41,4 @@ module.exports = angular.module('common.components.device',
   .factory('ComputerSnapshotFormSchema', require('./computer-snapshot-modal/computer-snapshot.form-schema.factory'))
   .config(require('./computer-snapshot-modal/computer-snapshot-modal.config'))
   .directive('deviceRange', require('./device-range.directive'))
+  .directive('deviceRating', require('./device-rating.directive'))

@@ -276,7 +276,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
                 general: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.functionality.general')
               },
               general: {
-                range: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.general.range')
+                range: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.general.range'),
+                score: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.general.score')
               },
               components: {
                 hardDrives: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.components.hardDrives'),
@@ -378,10 +379,10 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               templateUrl: selectionSummaryTemplateFolder + '/price.html'
             })
           }
-          if (_.get(props, 'condition.general.range') && _.get(props, 'condition.general.range').length > 0) {
+          if (_.get(props, 'condition.general.score') && _.get(props, 'condition.general.score').length > 0) {
             $scope.selection.summary.push({
               title: 'Condition score',
-              contentSummary: $scope.utils.aggregateToString(_.get(props, 'condition.general.range'), $scope.selection.multiSelection),
+              contentSummaryTemplate: selectionSummaryTemplateFolder + '/condition-summary.html',
               cssClass: 'condition-score',
               templateUrl: selectionSummaryTemplateFolder + '/condition-score.html'
             })

@@ -51,7 +51,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
       td: {value: '_created', cssClasses: 'hidden-sm hidden-xs'}
     },
     range: {
-      th: {key: 'condition.general.range', name: 'Range', cssClasses: 'visible-lg'},
+      th: {key: 'condition.general.range', name: 'Rating', cssClasses: 'visible-lg'},
       td: {templateUrl: configFolder + '/device-range.html', cssClasses: 'visible-lg'}
     },
     model: {th: {key: 'model', name: 'Model'}, td: {value: 'model'}},

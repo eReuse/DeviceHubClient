@@ -9,7 +9,10 @@ function deviceRange () {
       score: '='
     },
     link: $scope => {
-      $scope.stars = new Array(Math.round($scope.score))
+      const score = parseFloat($scope.score)
+      if (_.isFinite(score)) {
+        $scope.stars = new Array(Math.round(score))
+      }
     }
   }
 }

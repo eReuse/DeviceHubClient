@@ -220,7 +220,9 @@
               <span class="selection-summary-title">{{row.title}}</span>
               <span ng-if="::row.contentSummary" class="selection-summary-content">{{row.contentSummary}}</span>
               <div ng-if="::row.contentSummaryTemplate"
-                   ng-include="::row.contentSummaryTemplate">
+                   ng-include="::row.contentSummaryTemplate"
+                   class="selection-summary-content"
+                   style="display: inline-block;">
               </div>
               <i class="fa fa-chevron-right fa-fw selection-view-details"></i>
             </button>
