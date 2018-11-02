@@ -52,7 +52,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
     },
     range: {
       th: {key: 'condition.general.range', name: 'Rating', cssClasses: 'visible-lg'},
-      td: {templateUrl: configFolder + '/device-range.html', cssClasses: 'visible-lg'}
+      td: {templateUrl: configFolder + '/device-range.html', cssClasses: 'visible-lg column-range'}
     },
     model: {th: {key: 'model', name: 'Model'}, td: {value: 'model'}},
     state: {
