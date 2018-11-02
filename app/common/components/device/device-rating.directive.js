@@ -19,7 +19,7 @@ function deviceRange () {
         } else if (score < 2.5) {
           return 'Low'
         } else if (score < 3.5) {
-          return 'Moderate'
+          return 'Medium'
         } else if (score < 4.5) {
           return 'High'
         } else if (score >= 4.5) {

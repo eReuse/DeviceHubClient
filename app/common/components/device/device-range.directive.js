@@ -18,7 +18,8 @@ function deviceRange () {
       const score = parseFloat($scope.score)
       const max = 5 // TODO get from config
       if (_.isFinite(score)) {
-        const rounded = Math.round(score)
+        let rounded = Math.round(score)
+        rounded = rounded || 1 // minimum of 1 star
         $scope.stars = new Array(rounded)
         $scope.emptyStars = new Array(max - rounded)
       }
