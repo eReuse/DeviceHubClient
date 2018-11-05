@@ -13,7 +13,6 @@ const runSequence = require('run-sequence')
 const gulpif = require('gulp-if')
 const buffer = require('vinyl-buffer')
 const sourcemaps = require('gulp-sourcemaps')
-const notify = require('gulp-notify')
 const templateCache = require('gulp-angular-templatecache')
 const del = require('del')
 // Note that we only use harmony for our code (bundle.js) not vendor.js, where we use normal minify
@@ -25,6 +24,8 @@ const gulpProtractor = require('gulp-protractor')
 const karma = require('karma')
 const stringify = require('stringify')
 const sassUnicode = require('gulp-sass-unicode')
+const gulpNgConfig = require('gulp-ng-config')
+const expect = require('gulp-expect-file')
 
 const filePath = {
   destination: './dist',
@@ -57,7 +58,7 @@ const filePath = {
   },
   copyFonts: {
     src: './node_modules/font-awesome/fonts/*',
-    dest: './dist/fonts'
+    dest: './dist/css/fonts'
   },
   copyFavicon: {
     src: './app/common/favicon/*'
@@ -124,7 +125,6 @@ bundle.conf = {
   cache: {},
   packageCache: {},
   paths: filePath.browserify.paths
-  // transform: [require('strictify').name]
 }
 
 function dhbrowserify () {
@@ -159,7 +159,6 @@ gulp.task('bundle-dev', function () {
   bundle.bundler.on('error', handleError)
   bundle.bundler.on('time', function (time) {
     const text = 'Bundle finished in ' + time / 1000 + ' s'
-    notifyTask(text)
     console.log(text)
   })
   return rebundle()
@@ -207,6 +206,7 @@ function copyIndex () {
     .pipe(inlinesource({compress: false}))
     .pipe(gulp.dest(filePath.build.dest))
 }
+
 gulp.task('copyIndex', copyIndex)
 
 // =======================================================================
@@ -215,6 +215,22 @@ gulp.task('copyIndex', copyIndex)
 gulp.task('copyFavicon', function () {
   return gulp.src(filePath.copyFavicon.src)
     .pipe(gulp.dest(filePath.build.dest))
+})
+
+// =======================================================================
+// Generate Config file
+// =======================================================================
+gulp.task('config', () => {
+  const c = 'config.yml'
+  return gulp.src(c)
+    .pipe(expect(c))
+    .pipe(gulpNgConfig('common.constants', {
+      environment: ['default', process.env.DH_ENV || 'development'],
+      parser: 'yml',
+      createModule: false,
+      wrap: 'module.exports = <%= module %>'
+    }))
+    .pipe(gulp.dest(filePath.destination))
 })
 
 // =======================================================================
@@ -238,7 +254,8 @@ gulp.task('clean', function () {
 
 gulp.task('afterClean', function () {
   return del([
-    // filePath.destination + '/templates.js',
+    filePath.destination + '/templates.js',
+    filePath.destination + '/config.js',
     filePath.assets.images.dest + '/spinner.scss'
   ])
 })
@@ -278,13 +295,6 @@ gulp.task('copyFonts', function () {
     .pipe(gulp.dest(filePath.copyFonts.dest))
 })
 
-function notifyTask (text) {
-  text = typeof text === 'string' ? text : 'Done!'
-  return gulp.src(filePath.copyIndex.src)
-    .pipe(notify(text))
-}
-gulp.task('notify', notifyTask)
-
 // =======================================================================
 // Sequential Build Rendering
 // =======================================================================
@@ -293,10 +303,10 @@ gulp.task('notify', notifyTask)
 gulp.task('build-dev', function (callback) {
   runSequence(
     // images and vendor tasks are removed to speed up build time. Use "gulp build" to do a full re-build of the dev app.
-    ['templates'],
+    ['config', 'templates'],
     ['bundle-dev', '_sass'],
     ['copyIndex'],
-    ['notify', 'afterClean', 'watch'],
+    ['afterClean', 'watch'],
     callback
   )
 })
@@ -305,10 +315,9 @@ gulp.task('build-dev', function (callback) {
 gulp.task('build', function (callback) {
   runSequence(
     ['clean'],
-    ['templates'],
-    ['bundle-dev', 'vendorJS', 'vendorCSS', '_sass', 'images', 'copyFavicon', 'copyFonts'],
-    ['copyIndex'],
-    ['afterClean', 'notify'],
+    ['config', 'templates'],
+    ['bundle-dev', 'vendorJS', 'vendorCSS', '_sass', 'images', 'copyFavicon', 'copyFonts', 'copyIndex'],
+    ['afterClean'],
     callback
   )
 })
@@ -317,10 +326,9 @@ gulp.task('build', function (callback) {
 gulp.task('build-prod', function (callback) {
   runSequence(
     ['clean'],
-    ['templates'],
-    ['bundle-prod', 'vendorJS', 'vendorCSS', '_sass', 'images', 'copyFavicon', 'copyFonts'],
-    ['copyIndex'],
-    ['notify', 'afterClean'],
+    ['config', 'templates'],
+    ['bundle-prod', 'vendorJS', 'vendorCSS', '_sass', 'images', 'copyFavicon', 'copyFonts', 'copyIndex'],
+    ['afterClean'],
     callback
   )
 })
