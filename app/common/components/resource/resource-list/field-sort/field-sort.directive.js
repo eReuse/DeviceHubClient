@@ -17,6 +17,7 @@ function fieldSort () {
       sort: '&',
       key: '@',
       name: '@',
+      fa: '@',
       group: '=', // empty object, same for the group of orders
       sortByDefault: '=?'
     },

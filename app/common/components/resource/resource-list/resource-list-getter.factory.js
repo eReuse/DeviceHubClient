@@ -241,7 +241,7 @@ function ResourceListGetterFactory (ResourceSettings) {
             }
             const manufacturer = r.manufacturer ? (' ' + r.manufacturer) : ''
             const model = r.model ? (' ' + r.model) : ''
-            title = r.type + manufacturer + model
+            title = manufacturer + model
           }
 
           // sort events by creation date

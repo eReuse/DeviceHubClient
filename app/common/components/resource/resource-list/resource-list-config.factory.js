@@ -29,9 +29,9 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
     id: {th: {key: '_id', name: 'Id'}, td: {value: '_id'}},
     tags: {th: {key: 'tags', name: 'Tags'}, td: {value: 'tags', array: true, map: x => x.id, join: ', '}},
     label: {th: {key: 'label', name: 'Label'}, td: {value: 'label', limitTo: 30}},
-    title: {th: {key: 'title', name: 'Title'}, td: {value: 'title', humanize: false}},
+    title: {th: {key: 'title', name: 'Title'}, td: {value: 'title', humanize: false, limitTo: 30}},
     '@type': {th: {key: '@type', name: 'Type'}, td: {value: '@type', humanize: true}},
-    type: {th: {key: 'type', name: 'Subtype'}, td: {value: 'type', humanize: true}},
+    type: {th: {key: 'type', name: ''}, td: {templateUrl: configFolder + '/device-type.html'}},
     from: {th: {key: 'from', name: 'From client'}, td: {value: 'from.name'}},
     to: {th: {key: 'to', name: 'To client'}, td: {value: 'to.name'}},
     name: {th: {key: 'name', name: 'Name'}, td: {value: 'name'}},
@@ -63,7 +63,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
       td: {templateUrl: configFolder + '/device-appearance.html', cssClasses: 'visible-lg column-range'}
     },
     issues: {
-      th: {key: 'condition.issues', name: 'Issues'},
+      th: {key: 'condition.issues', fa: 'fa-warning'},
       td: {templateUrl: configFolder + '/device-issues.html'}
     },
     model: {th: {key: 'model', name: 'Model'}, td: {value: 'model'}},
@@ -468,8 +468,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
       }
     },
     table: {
-      th: [f.tags.th, f.title.th, f.price.th, f.appearance.th, f.components.th, f.issues.th, f.status.thDef],
-      td: [f.tags.td, f.title.td, f.price.td, f.appearance.td, f.components.td, f.issues.td, f.status.td]
+      th: [f.tags.th, f.type.th, f.title.th, f.appearance.th, f.components.th, f.issues.th, f.status.thDef],
+      td: [f.tags.td, f.type.td, f.title.td, f.appearance.td, f.components.td, f.issues.td, f.status.td]
     },
     tableEvents: {
       th: [
