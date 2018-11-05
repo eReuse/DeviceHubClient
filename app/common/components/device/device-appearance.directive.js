@@ -1,7 +1,7 @@
 function deviceAppearance () {
   return {
     template: `
-        <device-range score="score" display-empty="true"></device-range>
+        <device-range score="score" display-empty="displayEmpty"></device-range>
     `,
     restrict: 'E',
     scope: {

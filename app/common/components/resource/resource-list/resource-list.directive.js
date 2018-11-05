@@ -381,8 +381,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           }
           if (_.get(props, 'condition.general.score') && _.get(props, 'condition.general.score').length > 0) {
             $scope.selection.summary.push({
-              title: 'Condition score',
-              contentSummaryTemplate: selectionSummaryTemplateFolder + '/condition-summary.html',
+              title: 'Appearance',
+              contentSummaryTemplate: selectionSummaryTemplateFolder + '/appearance.html',
               cssClass: 'condition-score',
               templateUrl: selectionSummaryTemplateFolder + '/condition-score.html'
             })
