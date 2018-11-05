@@ -1,4 +1,4 @@
-function deviceRange () {
+function deviceRating () {
   return {
     template: `
         <span class="resource-range"><span>{{range}}</span></span>
@@ -30,4 +30,4 @@ function deviceRange () {
   }
 }
 
-module.exports = deviceRange
+module.exports = deviceRating

@@ -51,8 +51,20 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
       td: {value: '_created', cssClasses: 'hidden-sm hidden-xs'}
     },
     range: {
-      th: {key: 'condition.general.range', name: 'Rating', cssClasses: 'visible-lg'},
+      th: {key: 'condition.general.range', name: 'Components', cssClasses: 'visible-lg'},
       td: {templateUrl: configFolder + '/device-range.html', cssClasses: 'visible-lg column-range'}
+    },
+    components: {
+      th: {key: 'condition.general.range', name: 'Components', cssClasses: 'visible-lg'},
+      td: {templateUrl: configFolder + '/device-range.html', cssClasses: 'visible-lg column-range'}
+    },
+    appearance: {
+      th: {key: 'condition.appearance.general', name: 'Appearance', cssClasses: 'visible-lg'},
+      td: {templateUrl: configFolder + '/device-appearance.html', cssClasses: 'visible-lg column-range'}
+    },
+    issues: {
+      th: {key: 'condition.issues', name: 'Issues'},
+      td: {templateUrl: configFolder + '/device-issues.html'}
     },
     model: {th: {key: 'model', name: 'Model'}, td: {value: 'model'}},
     state: {
@@ -60,7 +72,7 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
       td: {templateUrl: configFolder + '/event-state.html'}
     },
     price: {
-      th: {key: 'pricing.total.standard', name: `Price ${CONSTANTS.currency}`, cssClasses: 'visible-lg'},
+      th: {key: 'pricing.total.standard', name: `PVP ${CONSTANTS.currency}`, cssClasses: 'visible-lg'},
       td: {value: 'pricing.total.standard', currency: true, cssClasses: 'visible-lg'}
     }
   }
@@ -456,8 +468,8 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
       }
     },
     table: {
-      th: [f.tags.th, f.title.th, f.price.th, f.range.th, f.status.thDef, f.created.th],
-      td: [f.tags.td, f.title.td, f.price.td, f.range.td, f.status.td, f.created.td]
+      th: [f.tags.th, f.title.th, f.price.th, f.appearance.th, f.components.th, f.issues.th, f.status.thDef],
+      td: [f.tags.td, f.title.td, f.price.td, f.appearance.td, f.components.td, f.issues.td, f.status.td]
     },
     tableEvents: {
       th: [

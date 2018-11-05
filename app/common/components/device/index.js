@@ -42,3 +42,4 @@ module.exports = angular.module('common.components.device',
   .config(require('./computer-snapshot-modal/computer-snapshot-modal.config'))
   .directive('deviceRange', require('./device-range.directive'))
   .directive('deviceRating', require('./device-rating.directive'))
+  .directive('deviceAppearance', require('./device-appearance.directive'))
