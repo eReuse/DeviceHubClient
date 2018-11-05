@@ -4,21 +4,23 @@ AngularJS client for [DeviceHub](https://github.com/eReuse/DeviceHub).
 DeviceTag.io has [a nice quickstart guide 
 that showcases DeviceHubClient](https://www.devicetag.io/support/quick-start/).
 
-## Installation
-### Requirements
-- NodeJS 7.4 or greater with npm (usually bundled together).
-- Several npm and bower packages that are automatically installed. See them [here](package.json)
-  and [here](bower.json).
- 
-### Install and build
+## Building
+NodeJS >=7.4 with npm required.
+
 1. Download or clone this project.
-2. In the folder of the project, execute `npm install`. This will install both npm and bower
-   dependencies.
-3. Configure the project by modifying
-   [the constants file](app/common/config/constants/CONSTANTS.js).
-4. Build the project by executing `npm run-script build-prod` in the project folder.
-   This will create an inner folder called `dist` containing an `index.html` that you can run with
-   your favorite server.
+2. In the folder of the project, execute `npm install`. This installs
+   both npm and bower dependencies.
+3. Copy [the constants file](examples/config.yml) to the root of the 
+   project; default values are already suited for development.
+   Read the file for more info.
+4. Build the project by executing `npm run-script build` in the
+   project folder. After a while it generates an inner folder
+   called `dist` containing the built website.
+
+Execute `npm run-script build-dev` for auto-building when there
+are changes in code, and `npm run-script build-prod` for building
+a *compressed* version of the website suitable to use in production
+environments. `build-dev` and `build` generates sourcemaps.
 
 ## Testing
 You can run the project locally for manual testing. In such case build the project with 

@@ -7,7 +7,7 @@ const inflection = require('inflection')
  * @param value
  * @returns {*}
  */
-function copy (value) {
+function copy(value) {
   try {
     return value.clone()
   } catch (err) {
@@ -21,7 +21,19 @@ function copy (value) {
 const Naming = {
   RESOURCE_PREFIX: '_',
   TYPE_PREFIX: ':',
-  RESOURCES_CHANGING_NUMBER: require('./../constants/CONSTANTS.js').resourcesChangingNumber,
+  RESOURCES_CHANGING_NUMBER: [
+    'device',
+    'event',
+    'account',
+    'place',
+    'erase',
+    'project',
+    'package',
+    'lot',
+    'manufacturer',
+    'group',
+    'pallet'
+  ],
 
   /**
    * @param string {string} type or resource case
@@ -97,7 +109,8 @@ const Naming = {
     let converted = string
     try {
       converted = this.popPrefix(string)[1]
-    } catch (err) {}
+    } catch (err) {
+    }
     converted = inflection.humanize(inflection.underscore(converted))
     // Humanize destroys acronyms by adding a space between letters
     if (converted[0] !== ' ' && converted[1] === ' ' && converted[2] !== '' && converted[3] === ' ') {
@@ -113,7 +126,7 @@ const Naming = {
  * @param message
  * @constructor
  */
-function NoPrefix (message) {
+function NoPrefix(message) {
   this.message = message
 }
 
@@ -124,20 +137,20 @@ NoPrefix.prototype = Object.create(Error.prototype)
  * @param {Object} resource Resource object (not schema) with, at least, @type field
  * @return {string}
  */
-function getResourceTitle (resource) {
+function getResourceTitle(resource) {
   const text = resource.label || resource.email || resource._id
   return Naming.humanize(resource['@type']) + ' ' + text
 }
 
-function aggregateToString (aggregate, multiSelection, additionalValue) {
+function aggregateToString(aggregate, multiSelection, additionalValue) {
   return aggregate.map((entry) => aggregateEntryToString(entry, multiSelection, additionalValue)).join(', ')
 }
 
 const existsValue = 'Yes' // TODO move to config (see resource-list-getter)
-function aggregateEntryToString (entry, multiSelection) {
+function aggregateEntryToString(entry, multiSelection) {
   if (existsValue === entry.value) {
     return entry.value +
-        (multiSelection ? ' (' + entry.count + ')' : '')
+      (multiSelection ? ' (' + entry.count + ')' : '')
   }
   return (entry.prefix ? entry.prefix : '') +
     entry.value +
@@ -145,7 +158,7 @@ function aggregateEntryToString (entry, multiSelection) {
     (multiSelection ? ' (' + entry.count + ')' : '')
 }
 
-function getEventDescription (event) {
+function getEventDescription(event) {
   if (event.error) {
     return 'Something went wrong'
   }
@@ -189,7 +202,7 @@ function getEventDescription (event) {
  * @param {Object} element DOM element to detect the scroll
  * @param {$scope} $scope The scope which to execute apply()
  */
-function applyAfterScrolling (element, $scope) {
+function applyAfterScrolling(element, $scope) {
   $(element).scroll(function () {
     $.doTimeout('scroll', 250, function () {
       $scope.$apply()
@@ -202,7 +215,7 @@ function applyAfterScrolling (element, $scope) {
  * @param {Date} oldDate
  * @returns {string}
  */
-function parseDate (oldDate) {
+function parseDate(oldDate) {
   const datetime = oldDate.toISOString()
   return datetime.substring(0, datetime.indexOf('.'))
 }
@@ -213,11 +226,11 @@ function parseDate (oldDate) {
  * @param schema The schema service.
  * @return {$q.promise} The promise.
  */
-function schemaIsLoaded (schema) {
+function schemaIsLoaded(schema) {
   return schema.isLoaded()
 }
 
-function setImageGetter ($scope, jqueryExpression, pathToStore) {
+function setImageGetter($scope, jqueryExpression, pathToStore) {
   $(jqueryExpression).change(function () {
     if (this.files && this.files[0]) {
       const reader = new FileReader()
@@ -259,7 +272,7 @@ const Progress = {
  * @throw {TypeError} - No setting found in the resource or ancestors
  * @returns {*}
  */
-function getSetting (settings, rSettings, path) {
+function getSetting(settings, rSettings, path) {
   let value = _.get(settings, rSettings.type + '.' + path)
   if (_.isUndefined(value)) {
     let ancestorSetting = _.find(settings, (setting, rType) => _.has(setting, path) && rSettings.isSubResource(rType))
