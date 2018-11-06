@@ -1,5 +1,5 @@
 
-function resourceListFilters () {
+function resourceListFilters (Notification, $uibModal) {
   return {
     template: require('./resource-list-filters.directive.html'),
     restrict: 'E',
@@ -8,6 +8,18 @@ function resourceListFilters () {
       $scope.removeFilter = propPath => {
         _.unset($scope.filtersModel, propPath)
         onFiltersChanged()
+      }
+
+      $scope.openImportModal = () => {
+        const modal = $uibModal.open({
+          template: require('./import-filters.modal.controller.html'),
+          controller: 'importFiltersModalCtrl'
+        })
+        modal.result.then((filtersModelStr) => {
+          console.log('modal closed', filtersModelStr)
+          $scope.filtersModel = JSON.parse(filtersModelStr)
+          onFiltersChanged()
+        })
       }
 
       // $scope.openFilter = propPath => {
@@ -52,6 +64,14 @@ function resourceListFilters () {
         onFiltersChanged()
       }
 
+      $scope.filtersExported = (error) => {
+        if (error) {
+          Notification.error('Filters could not be copied')
+        } else {
+          Notification.success('Filters copied to clipboard')
+        }
+      }
+
       // TODO get events from config
       const allEvents = [ 'Ready', 'Repair', 'Allocate', 'Dispose', 'ToDispose', 'Sell', 'Receive', 'Register' ]
 
@@ -76,6 +96,7 @@ function resourceListFilters () {
         // }
       }
       function onFiltersChanged () {
+        $scope.filtersModelStr = JSON.stringify($scope.filtersModel)
         $scope.hideAllFilterPanels()
 
         // create active filters list so they can be displayed
