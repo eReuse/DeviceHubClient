@@ -9,7 +9,8 @@ function resourceFieldEdit (ResourceSettings, SubmitForm, $focus, $timeout, Noti
       field: '=',
       resource: '=?',
       editing: '&?',
-      newChildLot: '&'
+      newChildLot: '&',
+      showNewLotBtn: '@'
     },
     link: {
       pre: ($scope, $element) => {

@@ -31,6 +31,16 @@
           <span>Deselect all</span>
         </button>
       </div>
+      <div ng-show="selectedLots.length === 1" class="lot-description">
+        <resource-field-edit resource="selectedLots[0]" ç
+                             field="{ key: 'description', value: selectedLots[0].description, editable: true }">
+          {{ selectedLots[0].description }}
+        </resource-field-edit>
+      </div>
+      <div ng-show="selectedLots.length === 0" class="lot-description" style="color: transparent">
+        Dummy text necessary so that while no lot is selected, height of lot-row is properly calculated
+      </div>
+
       <div class="selected-lots-summary">
         <h3>Actions</h3>
         <div class="buttons">
