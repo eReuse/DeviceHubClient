@@ -8,3 +8,4 @@ tmp
 .idea
 .idea/**
 Thumbs.db
+/config.yml

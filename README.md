@@ -10,9 +10,9 @@ NodeJS >=7.4 with npm required.
 1. Download or clone this project.
 2. In the folder of the project, execute `npm install`. This installs
    both npm and bower dependencies.
-3. Copy [the constants file](examples/config.yml) to the root of the 
+3. Copy [the config file](examples/config.yml) to the root of the 
    project; default values are already suited for development.
-   Read the file for more info.
+   Read the config for more info.
 4. Build the project by executing `npm run-script build` in the
    project folder. After a while it generates an inner folder
    called `dist` containing the built website.
@@ -20,13 +20,9 @@ NodeJS >=7.4 with npm required.
 Execute `npm run-script build-dev` for auto-building when there
 are changes in code, and `npm run-script build-prod` for building
 a *compressed* version of the website suitable to use in production
-environments. `build-dev` and `build` generates sourcemaps.
+environments. `build-dev` and `build` generate sourcemaps.
 
 ## Testing
-You can run the project locally for manual testing. In such case build the project with 
-`npm run-script build`. This will build the project with *sourcemaps* and auto-build when you save 
-a file, which is very handy.
-
 To run the **unit** tests, execute `npm run-script test`. This will run the tests once. You can
 keep a daemon open which will re-run the tests once it detects a change in the code. For that
 execute `node ./node_modules/gulp/bin/gulp.js unit-test`.

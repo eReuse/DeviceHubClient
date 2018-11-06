@@ -1,8 +1,13 @@
 # Config file for devicehub-client
-# Copy this file to the root folder of the project and modify it according your needs
-# The root properties of this config file are the different environments (ex. 'development')
-# except the first property, 'default', which is the default config used
-# for all environments
+
+# Copy this file to the root folder of the project.
+# Each root property is a config environment (ex. 'development').
+# 'default' is a base config environment for the rest ones.
+
+# When building with gulp, pass-in an environment variable
+# to select which environment config you want to use.
+# The env. variable must be called `DH_ENV`. Ex. `export DH_ENV=development`.
+# If no variable is set, by default it is used `development`.
 
 # In the following case 'development' env adds 'url' setting and
 # overrides 'debug' setting from the default one.

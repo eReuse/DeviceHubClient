@@ -12,7 +12,6 @@ module.exports = angular.module('common.components.device',
     'RecursionHelper',
     'restangular',
     require('./../authentication').name,
-    require('./certificate').name,
     require('./../forms').name,
     require('./../utilities').name,
     'percentage'
