@@ -268,6 +268,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             physical: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'physical'),
             trading: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'trading'),
             status: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'status'),
+            issues: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'issues'),
             condition: {
               appearance: {
                 general: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.appearance.general')
@@ -371,6 +372,15 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               templateUrl: selectionSummaryTemplateFolder + '/status.html'
             }
           ])
+          if (_.get(props, 'issues') && _.get(props, 'issues').length > 0) {
+            $scope.selection.summary.push({
+              title: 'Issues',
+              titleFa: 'fa-warning',
+              contentSummary: _.get(props, 'issues').map(i => i.description).join(', '),
+              cssClass: 'issues',
+              templateUrl: selectionSummaryTemplateFolder + '/issues.html'
+            })
+          }
           if (_.get(props, 'pricing.total.' + $scope.currencyOptions.val)) {
             $scope.selection.summary.push({
               title: 'Price',
