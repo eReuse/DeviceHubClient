@@ -9,6 +9,14 @@
   </ul>
   <!-- Add button and panel -->
   <button class="btn btn-primary btn-add-filter-panels" ng-click="toggleDisplayFilterPanels()">Add filter</button>
+  <button class="btn btn-default-inverted btn-add-filter-panels"
+          ng-click="copyFiltersToClipBoard()">Export</button>
+  <button type="button"
+          class="btn btn-default-inverted btn-add-filter-panels"
+          ng-click="openImportModal()"
+  >
+    Import
+  </button>
   <div class="add-filter-panels-container">
     <div class="add-filter-panels-wrapper">
       <div ng-class="{ active: showFilterPanels }" class="add-filter-panels">
