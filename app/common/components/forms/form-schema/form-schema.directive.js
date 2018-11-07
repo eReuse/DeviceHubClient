@@ -45,13 +45,15 @@ function formSchema (FormSchema, Notification) {
           // set value to
           // TODO listen to NFC events only or both NFC+QR events?
           $scope.$on('tagScanDone', (_, tag) => {
-            const tagURLPrefix = 'http://t.devicetag.io/' // TODO move to config
-            let device = $scope.model.device
-
-            if (tag.indexOf(tagURLPrefix) === 0) { // is ID encompassed in URL ?
-              tag = tag.substring(tagURLPrefix.length, tag.length)
+            let id
+            try {
+              const url = new URL(tag)
+              id = url.pathname.substring(1) // Remove initial slash
+            } catch (e) {
+              id = tag
             }
-            device.newTagID = tag
+            let device = $scope.model.device
+            device.tags[0].id = id
             $scope.$apply()
           })
         }
