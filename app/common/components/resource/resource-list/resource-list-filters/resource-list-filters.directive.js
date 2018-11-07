@@ -1,5 +1,5 @@
 
-function resourceListFilters (Notification, $uibModal) {
+function resourceListFilters (Notification, $uibModal, clipboard) {
   return {
     template: require('./resource-list-filters.directive.html'),
     restrict: 'E',
@@ -16,8 +16,30 @@ function resourceListFilters (Notification, $uibModal) {
           controller: 'importFiltersModalCtrl'
         })
         modal.result.then((filtersModelStr) => {
-          console.log('modal closed', filtersModelStr)
           $scope.filtersModel = JSON.parse(filtersModelStr)
+          function addMissingFilterPanels (prop, parentKey) {
+            _.forOwn(prop, function (value, key) {
+              let fullPath = parentKey ? parentKey + '.' + key : key
+              let filterPanel = _.find($scope.filterPanels, { propPath: fullPath })
+              if (value && value._custom) {
+                filterPanel = {
+                  title: value._custom.title,
+                  propPath: fullPath,
+                  prefix: value._custom.title + ': '
+                  // TODO if filter panel should be added dynamically, uncomment the following lines
+                  // onSubmit: onSubmitPanel,
+                  // fields: [ input field? ]
+                }
+                // render filterPanels
+                $scope.filterPanels.push(filterPanel) // necessary so that it's found later
+              }
+              if (!filterPanel) {
+                // neither registered filter nor custom added filter
+                addMissingFilterPanels(value, fullPath)
+              }
+            })
+          }
+          addMissingFilterPanels($scope.filtersModel, '')
           onFiltersChanged()
         })
       }
@@ -50,7 +72,7 @@ function resourceListFilters (Notification, $uibModal) {
         }
       }
 
-      $scope.addFilter = (propPath, filter) => {
+      $scope.addFilter = (propPath, filter, title) => {
         switch (propPath) {
           case '@type':
             propPath = keyTypes
@@ -60,8 +82,46 @@ function resourceListFilters (Notification, $uibModal) {
             break
         }
 
+        let filterPanel = _.find($scope.filterPanels, { propPath: propPath })
+        if (!filterPanel) {
+          filterPanel = {
+            title: title,
+            propPath: propPath,
+            prefix: title + ': ',
+            _custom: {
+              title: title
+            }
+            // TODO if filter panel should be added dynamically, uncomment the following lines
+            // onSubmit: onSubmitPanel,
+            // fields: [ input field? ]
+            // render filterPanels
+          }
+          $scope.filterPanels.push(filterPanel) // necessary so that it's found later
+        }
         _.set($scope.filtersModel, propPath + '.' + filter, true) // TODO set value depending on filterPanel
         onFiltersChanged()
+      }
+
+      $scope.copyFiltersToClipBoard = () => {
+        let exportFilters = {}
+        function setCustomRec (prop, parentKey) {
+          _.forOwn(prop, function (value, key) {
+            let fullPath = parentKey ? parentKey + '.' + key : key
+            let filterPanel = _.find($scope.filterPanels, {propPath: fullPath})
+            if (filterPanel) {
+              let merged = value
+              if (filterPanel._custom) {
+                merged._custom = filterPanel._custom
+              }
+              _.set(exportFilters, fullPath, merged)
+            } else {
+              setCustomRec(value, fullPath)
+            }
+          })
+        }
+        setCustomRec($scope.filtersModel, '')
+        clipboard.copyText(JSON.stringify(exportFilters))
+        Notification.success('Filters copied to clipboard')
       }
 
       $scope.filtersExported = (error) => {
@@ -80,11 +140,7 @@ function resourceListFilters (Notification, $uibModal) {
       $scope.filtersModel = {
         [keyTypes]: {
           Computer: true,
-          Monitor: true,
-          _meta: {
-            endpoint: true,
-            prefix: 'Devices: '
-          }
+          Monitor: true
         }
         // [keyEvents]: {
         //   types: _.assign({
@@ -96,7 +152,6 @@ function resourceListFilters (Notification, $uibModal) {
         // }
       }
       function onFiltersChanged () {
-        $scope.filtersModelStr = JSON.stringify($scope.filtersModel)
         $scope.hideAllFilterPanels()
 
         // create active filters list so they can be displayed
@@ -117,7 +172,7 @@ function resourceListFilters (Notification, $uibModal) {
               return addToActiveFiltersRecursive(fullPath, value, fullPrefix)
             }
 
-            _.set(value, '_meta.endpoint', true) // TODO setting endpoint is necessary for resource-getter only
+            // _.set(value, '_meta.endpoint', true) // TODO setting endpoint is necessary for resource-getter only
 
             let filterText = fullPrefix
             let skipProcessingProps
@@ -130,7 +185,7 @@ function resourceListFilters (Notification, $uibModal) {
             if (!skipProcessingProps) {
               let propsString = []
               _.forOwn(value, (prop, key) => {
-                if (key === '_meta') {
+                if (key === '_meta' || key === '_custom') {
                   return
                 }
                 const isBoolean = typeof prop === 'boolean'
