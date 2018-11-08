@@ -1604,7 +1604,7 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
                       'key': 'school',
                       'type': 'checkbox',
                       'templateOptions': {
-                        'label': 'Schhols'
+                        'label': 'Schools'
                       }
                     },
                     {
