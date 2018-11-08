@@ -101,7 +101,7 @@ function ResourceListGetterFactory (ResourceSettings) {
      * to all the filters.
      * @param {object} newFilters
      */
-    updateFiltersFromSearch (newFilters) {
+    updateFiltersFromSearch (newFilters, checkIfEndpoint) {
       newFilters = _.cloneDeep(newFilters)
       let mappedFilters = {}
 
@@ -109,7 +109,8 @@ function ResourceListGetterFactory (ResourceSettings) {
         // map filter prop names to server prop names
         _.forOwn(filters, function (value, key) {
           let fullPath = parentKey ? parentKey + '.' + key : key
-          if (!_.get(value, '_meta.endpoint')) {
+          const isEndpoint = checkIfEndpoint(value, fullPath)
+          if (!isEndpoint) {
             return mapFilterToServer(value, fullPath)
           }
 
@@ -327,6 +328,7 @@ function ResourceListGetterFactory (ResourceSettings) {
             status: status,
             parentLots: parentLots
           })
+
         })
 
         this._updateResourcesAfterGet(getNextPage, resources)
@@ -334,7 +336,8 @@ function ResourceListGetterFactory (ResourceSettings) {
         resources.forEach(lot => {
           function assignTypeRec (lot) {
             _.assign(lot, {
-              '@type': 'Lot'
+              '@type': 'Lot',
+              'description': lot.description || 'Enter a description, rules, comments, restrictions etc. for this lot'
             })
             lot.nodes && lot.nodes.length && lot.nodes.forEach((node) => {
               assignTypeRec(node)

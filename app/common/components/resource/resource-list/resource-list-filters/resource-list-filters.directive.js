@@ -154,6 +154,11 @@ function resourceListFilters (Notification, $uibModal, clipboard) {
       function onFiltersChanged () {
         $scope.hideAllFilterPanels()
 
+        function checkIfEndpoint (value, propPath) {
+          const filterPanel = _.find($scope.filterPanels, { propPath: propPath })
+          return !!filterPanel
+        }
+
         // create active filters list so they can be displayed
         $scope.activeFilters = []
         function addToActiveFiltersRecursive (parentPath, obj, parentPrefix) {
@@ -222,7 +227,7 @@ function resourceListFilters (Notification, $uibModal, clipboard) {
         addToActiveFiltersRecursive('', $scope.filtersModel)
 
         // update filters
-        $scope.updateFiltersFromSearch($scope.filtersModel)
+        $scope.updateFiltersFromSearch($scope.filtersModel, checkIfEndpoint)
       }
 
       function onSubmitPanel () {

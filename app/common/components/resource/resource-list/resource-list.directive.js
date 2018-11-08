@@ -101,8 +101,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         }
 
         // Filtering
-        $scope.updateFiltersFromSearch = newFilters => {
-          getterDevices.updateFiltersFromSearch(newFilters)
+        $scope.updateFiltersFromSearch = (newFilters, checkIfEndpoint) => {
+          getterDevices.updateFiltersFromSearch(newFilters, checkIfEndpoint)
         }
 
         // Selecting
