@@ -1,0 +1,27 @@
+<h2>test</h2>
+<input
+        placeholder="Enter ids"
+        ng-model="ids">
+</input>
+<div ng-if="missing && missing.length">
+  <h2>Missing</h2>
+  <div ng-repeat="id in missing">
+    {{ id }}
+  </div>
+</div>
+<div ng-if="additional && additional.length">
+  <h2>Additional</h2>
+  <div ng-repeat="id in additional">
+    {{ id }}
+  </div>
+</div>
+<button class="btn btn-warning"
+        type="button"
+        ng-click="cancel()"
+>Cancel
+</button>
+<button class="btn btn-primary"
+        type="button"
+        ng-click="calculate()"
+>Calculate
+</button>
