@@ -10,7 +10,7 @@
  * @param {ResourceBreadcrumb} ResourceBreadcrumb
  * @param {Session} session
  */
-function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, UNIT_CODES, CONSTANTS, SearchService, $filter, $rootScope, Notification, LotsSelector) {
+function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, $uibModal, clipboard, UNIT_CODES, CONSTANTS, SearchService, $filter, $rootScope, Notification, LotsSelector) {
   const PATH = require('./__init__').PATH
   const selectionSummaryTemplateFolder = PATH + '/resource-list-selection-summary'
   return {
@@ -103,6 +103,17 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // Filtering
         $scope.updateFiltersFromSearch = (newFilters, checkIfEndpoint) => {
           getterDevices.updateFiltersFromSearch(newFilters, checkIfEndpoint)
+        }
+
+        $scope.openNonConformityReportModal = () => {
+          // TODO load all devices before opening modal
+          $uibModal.open({
+            template: require('./non-conformity-report/non-conformity.modal.controller.html'),
+            controller: 'nonConformityModalCtrl',
+            resolve: {
+              devices: () => $scope.devices
+            }
+          })
         }
 
         // Selecting

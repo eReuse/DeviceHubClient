@@ -53,6 +53,8 @@ module.exports = angular.module('common.components.resource',
   // filters
   .directive('resourceListFilters', require('./resource-list/resource-list-filters/resource-list-filters.directive'))
   .controller('importFiltersModalCtrl', require('./resource-list/resource-list-filters/import-filters.modal.controller'))
+  // non-conformity
+  .controller('nonConformityModalCtrl', require('./resource-list/non-conformity-report/non-conformity.modal.controller'))
   //
   .factory('ResourceListGetter', require('./resource-list/resource-list-getter.factory'))
   .service('ResourceListSelector', require('./resource-list/resource-list-selector.service'))
