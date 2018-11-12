@@ -287,7 +287,8 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             physical: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'physical'),
             trading: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'trading'),
             status: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'status'),
-            issues: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'issues'),
+            working: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'working'),
+            problems: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'problems'),
             condition: {
               appearance: {
                 general: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.appearance.general')
@@ -391,11 +392,13 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               templateUrl: selectionSummaryTemplateFolder + '/status.html'
             }
           ])
-          if (_.get(props, 'issues') && _.get(props, 'issues').length > 0) {
+          if (_.get(props, 'problems').length > 0 || _.get(props, 'working').length > 0) {
             $scope.selection.summary.push({
               title: 'Issues',
               titleFa: 'fa-warning',
-              contentSummary: _.get(props, 'issues').map(i => i.description).join(', '),
+              contentSummary: props.problems.concat(props.working)
+                .map(i => i.type + ': ' + (i.description || i.status))
+                .join(', '),
               cssClass: 'issues',
               templateUrl: selectionSummaryTemplateFolder + '/issues.html'
             })

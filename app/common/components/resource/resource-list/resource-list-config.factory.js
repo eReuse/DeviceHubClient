@@ -51,11 +51,11 @@ function resourceListConfig (RESOURCE_SEARCH, ResourceSettings, CONSTANTS, schem
       td: {value: '_created', cssClasses: 'hidden-sm hidden-xs'}
     },
     range: {
-      th: {key: 'condition.general.range', name: 'Components', cssClasses: 'visible-lg'},
+      th: {key: 'condition.general.range', name: 'Performance', cssClasses: 'visible-lg'},
       td: {templateUrl: configFolder + '/device-range.html', cssClasses: 'visible-lg column-range'}
     },
     components: {
-      th: {key: 'condition.general.range', name: 'Components', cssClasses: 'visible-lg'},
+      th: {key: 'condition.general.range', name: 'Performance', cssClasses: 'visible-lg'},
       td: {templateUrl: configFolder + '/device-range.html', cssClasses: 'visible-lg column-range'}
     },
     appearance: {

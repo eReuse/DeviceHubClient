@@ -1,3 +1,6 @@
-<div ng-if="resource.issues.length">
+<div ng-if="resource.working && resource.working.length">
   <i class="fa fa-warning fa-fw"></i>
+</div>
+<div ng-if="(!resource.working || !resource.working.length) && resource.problems && resource.problems.length">
+  <i class="fa fa-warning fa-fw"></i><i class="fa fa-warning fa-fw"></i>
 </div>

@@ -6,7 +6,15 @@
     <i class="fa fa-chevron-left fa-fw"></i>
   </button>
   <h3>Issues</h3>
-  <div ng-repeat="issue in selection.props.issues">
-    <p>{{ issue.description}}</p>
+  <div ng-repeat="issue in selection.props.working.concat(selection.props.problems)">
+    <span>{{ issue.type }}: {{ issue.description || issue.status || issue.severity }}</span>
+    <span ng-switch="issue.severity">
+      <span ng-switch-when="Error">
+        <i class="fa fa-warning fa-fw"></i>
+      </span>
+      <span ng-switch-when="Warning">
+        <i class="fa fa-warning fa-fw"></i>
+      </span>
+    </span>
   </div>
 </div>
