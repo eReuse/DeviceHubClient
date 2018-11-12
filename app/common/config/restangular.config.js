@@ -8,7 +8,8 @@ function restangularConfig (RestangularProvider, CONSTANTS) {
       case 'getList':
         _.forEach(data, buildLink)
         extractedData = data
-        extractedData._meta = data._meta
+        extractedData._meta = data._meta || {}
+        _.assign(extractedData._meta, data.pagination)
         break
       case 'get':
         buildLink(data)

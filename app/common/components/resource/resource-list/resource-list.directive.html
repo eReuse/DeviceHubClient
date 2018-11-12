@@ -98,7 +98,7 @@
                   ng-show="!selection.areAllDevicesOfCurrentLotSelected && (devices.length > 0)"
                   ng-click="selector.selectAll(devices, parentResource)"
           >
-            <span>Select all(15)</span>
+            <span>Select all ({{totalNumberOfDevices}})</span>
           </button>
           <button type="button"
                   class="btn btn-default-inverted btn-select-deselect"
@@ -217,7 +217,7 @@
                 clipboard
                 text="selection.props.urls.join(' \n')"
                 on-copied="Notification.success('Device URLs copied to clipboard')"
-                on-error="Notification.error('Device URLs could not be copied: ' + err)">Share publicly</button>
+                on-error="Notification.error('Device URLs could not be copied: ' + err)">Get public link</button>
       </div>
       <div class="selection-summary-wrapper" style="position: relative; overflow-x: hidden;">
         <ul class="selection-summary">
