@@ -47,7 +47,9 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // Set up getters and selectors for devices
         const getterDevices = new ResourceListGetter('Device', $scope.devices, config, progressBar, null)
         const deviceSelector = $scope.selector = ResourceListSelector
+        $scope.gettingDevices = true
         getterDevices.callbackOnGetting(() => {
+          $scope.gettingDevices = false
           deviceSelector.reselect($scope.devices)
           $scope.totalNumberOfDevices = getterDevices.getTotalNumberResources()
           $scope.moreDevicesAvailable = $scope.totalNumberOfDevices > $scope.devices.length
@@ -81,6 +83,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               id: selectedLots.map(l => l._id)
             }
           } : null
+          $scope.gettingDevices = true
           getterDevices.updateFilters('LOTS', filter)
           recalculateDevicesRow()
         }
@@ -104,15 +107,20 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
 
         // Sorting
         $scope.sort = {}
-        $scope.setSort = _.bind(getterDevices.updateSort, getterDevices, _)
+        $scope.setSort = (sort) => {
+          $scope.gettingDevices = true
+          getterDevices.updateSort(sort)
+        }
 
         // Search
         $scope.onSearchChanged = (query) => {
+          $scope.gettingDevices = true
           getterDevices.updateSearchQuery(query)
         }
 
         // Filtering
         $scope.updateFiltersFromSearch = (newFilters, checkIfEndpoint) => {
+          $scope.gettingDevices = true
           getterDevices.updateFiltersFromSearch(newFilters, checkIfEndpoint)
         }
 
@@ -441,21 +449,21 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         // Reloading
         // When a button succeeds in submitting info and the list needs to be reloaded in order to get the updates
         $scope.reloadDevices = () => {
+          $scope.gettingDevices = true
           getterDevices.getResources()
         }
 
         // Pagination Devices
         // Let's avoid the user pressing multiple times the 'load more'
         $scope.getMoreIsBusy = false
-        let getMoreFirstTime = false
         $scope.getMore = () => {
-          if (!$scope.getMoreIsBusy && getMoreFirstTime) {
+          if (!$scope.getMoreIsBusy) {
             $scope.getMoreIsBusy = true
+            $scope.gettingDevices = true
             getterDevices.getResources(true, false).finally(() => {
               $scope.getMoreIsBusy = false
             })
           }
-          getMoreFirstTime = true
         }
 
          // If we don't want to collision with tables of subResources we
