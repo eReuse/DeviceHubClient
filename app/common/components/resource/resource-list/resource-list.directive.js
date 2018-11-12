@@ -91,6 +91,17 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           $rootScope.$broadcast('lots:reload')
         }
 
+        $scope.deleteSelectedLots = () => {
+          const selectedLots = lotsSelector.getAllSelected()
+          Promise.all(selectedLots.map(lot => {
+            return ResourceSettings('Lot').server.one(lot._id).remove()
+          })).then(() => {
+            Notification.success('Successfully deleted ' + selectedLots.length + ' lots')
+            lotsSelector.deselectAll()
+            $scope.reloadLots()
+          })
+        }
+
         // Sorting
         $scope.sort = {}
         $scope.setSort = _.bind(getterDevices.updateSort, getterDevices, _)
