@@ -5,6 +5,12 @@ function resourceListFilters (Notification, $uibModal, clipboard) {
     restrict: 'E',
     scope: false,
     link: function ($scope) {
+      // TODO move configuration incl. filterPanelsNested into separate config file
+      const allEvents = [ 'Ready', 'Repair', 'Allocate', 'Dispose', 'ToDispose', 'Sell', 'Receive', 'Register' ]
+
+      const keyTypes = 'resources'
+      const keyEvents = 'events'
+
       $scope.removeFilter = propPath => {
         _.unset($scope.filtersModel, propPath)
         onFiltersChanged()
@@ -132,11 +138,6 @@ function resourceListFilters (Notification, $uibModal, clipboard) {
         }
       }
 
-      // TODO get events from config
-      const allEvents = [ 'Ready', 'Repair', 'Allocate', 'Dispose', 'ToDispose', 'Sell', 'Receive', 'Register' ]
-
-      const keyTypes = 'resources'
-      const keyEvents = 'events'
       $scope.filtersModel = {
         [keyTypes]: {
           Computer: true,
