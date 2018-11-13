@@ -15,7 +15,7 @@
 function resourceSettingsFactory (ResourceServer, schema, RESOURCE_CONFIG) {
   const utils = require('./../utils')
 
-  const schemas = require('./../../config/schema_reduced')
+  const schemas = require('../../config/schema')
   // const schemas = []
 
   function _getSchema (resourceName) {

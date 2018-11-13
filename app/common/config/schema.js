@@ -3203,7 +3203,7 @@ module.exports = {
       'sink': -5,
       'useDefaultDatabase': false,
       'parent': 'devices:EventWithDevices',
-      'url': 'events/devices/reserve',
+      'url': '/events/',
       'itemMethods': [
         'GET',
         'DELETE'
@@ -4578,7 +4578,7 @@ module.exports = {
     '_settings': {
       'useDefaultDatabase': false,
       'parent': 'devices:EventWithOneDevice',
-      'url': 'events/devices/register',
+      'url': '/events/',
       'itemMethods': [
         'GET',
         'DELETE'
@@ -4771,7 +4771,7 @@ module.exports = {
       'sink': -1,
       'useDefaultDatabase': false,
       'parent': 'devices:EventWithDevices',
-      'url': 'events/devices/repair',
+      'url': '/events/',
       'itemMethods': [
         'GET',
         'DELETE'
@@ -4987,7 +4987,7 @@ module.exports = {
       'sink': -2,
       'useDefaultDatabase': false,
       'parent': 'devices:EventWithDevices',
-      'url': 'events/devices/ready',
+      'url': '/events/',
       'itemMethods': [
         'GET',
         'DELETE'
@@ -5189,7 +5189,7 @@ module.exports = {
       'sink': -7,
       'useDefaultDatabase': false,
       'parent': 'devices:EventWithDevices',
-      'url': 'events/devices/receive',
+      'url': '/events/',
       'itemMethods': [
         'GET',
         'DELETE'
@@ -6004,7 +6004,7 @@ module.exports = {
       'sink': -5,
       'useDefaultDatabase': false,
       'parent': 'devices:EventWithDevices',
-      'url': 'events/devices/sell',
+      'url': '/events/',
       'itemMethods': [
         'GET',
         'DELETE'
@@ -6297,7 +6297,7 @@ module.exports = {
       'sink': 1,
       'useDefaultDatabase': false,
       'parent': 'devices:EventWithDevices',
-      'url': 'events/devices/to-prepare',
+      'url': '/events/',
       'itemMethods': [
         'GET',
         'DELETE'
@@ -6742,7 +6742,7 @@ module.exports = {
       'sink': -8,
       'useDefaultDatabase': false,
       'parent': 'devices:EventWithDevices',
-      'url': 'events/devices/to-dispose',
+      'url': '/events/',
       'itemMethods': [
         'GET',
         'DELETE'
@@ -6958,7 +6958,7 @@ module.exports = {
       'sink': -9,
       'useDefaultDatabase': false,
       'parent': 'devices:EventWithDevices',
-      'url': 'events/devices/dispose',
+      'url': '/events/',
       'itemMethods': [
         'GET',
         'DELETE'
@@ -13102,7 +13102,7 @@ module.exports = {
       'sink': 0,
       'useDefaultDatabase': false,
       'parent': 'devices:EventWithDevices',
-      'url': 'events/devices/to-repair',
+      'url': '/events/',
       'itemMethods': [
         'GET',
         'DELETE'

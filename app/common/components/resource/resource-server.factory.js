@@ -1,7 +1,7 @@
 // TODO what's the difference to config/restangular.config.js ? Merge the two config files?
 
 const utils = require('./../utils.js')
-const schemas = require('./../../config/schema_reduced')
+const schemas = require('../../config/schema')
 
 /**
  * Provides a suitable connexion to DeviceHub, personalised for the resource.
@@ -41,6 +41,9 @@ function ResourceServer (schema, Restangular) {
             return element
           })
         }).service(url)
+        break
+      case '/events/':
+        service = RestangularConfigurerResource.service(url)
         break
       default:
         url = url.split('/')
