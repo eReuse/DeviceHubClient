@@ -24,6 +24,7 @@ function groupResourceRemove (ResourceSettings, GroupResourceSubmitter) {
     },
     link: {
       pre: $scope => {
+        const parentLotsKey = $scope.resourceType === 'Lot' ? 'parents' : 'parentLots'
         const groupType = $scope.groupType
         const gSettings = ResourceSettings(groupType)
         const form = { // Note that for the form to work correctly with formly, we need to be in link's pre
@@ -35,7 +36,7 @@ function groupResourceRemove (ResourceSettings, GroupResourceSubmitter) {
               options: _($scope.resources)
                 .flatMap(res => {
                   //  _(res.ancestors).filter(_.subResourceF(groupType)).value()
-                  return res.parentLots
+                  return res[parentLotsKey]
                 })
                 .uniqBy('_id')
                 .map(lot => {

@@ -117,7 +117,7 @@ function ResourceServer (schema, Restangular) {
      * Parses resources received from the server.
      */
     RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response) {
-      const meta = data._meta
+      const meta = data && data._meta
       // TODO update this and move code form resource-list-getter here
       if (operation === 'getList') {
         data = data.items
@@ -127,7 +127,9 @@ function ResourceServer (schema, Restangular) {
       } else if (response.status !== 204) {
         parse(data, schemas[resourceName])
       }
-      data._meta = meta
+      if (data) {
+        data._meta = meta
+      }
       return data
     })
 

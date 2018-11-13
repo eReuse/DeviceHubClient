@@ -24,23 +24,39 @@ function restangularConfig (RestangularProvider, CONSTANTS) {
   })
   RestangularProvider.addResponseInterceptor(function (data, operation, what, url, response, deferred) {
     if (what === 'schema') return data
-    var extractedData
-    // .. to look for getList operations
-    switch (operation) {
-      case 'getList':
-        _.forEach(data, buildLink)
-        extractedData = data
-        extractedData._meta = data._meta || {}
-        _.assign(extractedData._meta, data.pagination)
-        break
-      case 'get':
-        buildLink(data)
-        extractedData = data
-        break
-      default:
-        extractedData = data
+
+    function buildLotsTree (tree = [], map) {
+      tree.forEach((node) => {
+        _.assign(node, map[node.id])
+        buildLotsTree(node.nodes, map)
+      })
     }
-    return extractedData
+    switch (what) {
+      case 'lots/':
+        if (data.tree) {
+          buildLotsTree(data.tree, data.items)
+          return { items: data.tree }
+        }
+        return data
+      case 'devices/':
+        let extractedData
+        // .. to look for getList operations
+        switch (operation) {
+          case 'getList':
+            _.forEach(data, buildLink)
+            extractedData = data
+            extractedData._meta = data._meta || {}
+            _.assign(extractedData._meta, data.pagination)
+            break
+          case 'get':
+            buildLink(data)
+            extractedData = data
+            break
+          default:
+            extractedData = data
+        }
+        return extractedData
+    }
   })
   RestangularProvider.setRestangularFields({
     selfLink: '_links.self.href',

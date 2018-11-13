@@ -35,11 +35,7 @@ function groupResourceSubmitterFactory (SubmitForm, ResourceSettings) {
       if (this.submitForm.isValid()) {
         this.submitForm.prepare()
         let method
-        if (this.addingResources) {
-          method = 'post'
-        } else {
-          method = 'remove'
-        }
+
         let resourceURL // TODO get URL from config
         switch (this.resourceType) {
           case 'Lot':
@@ -54,7 +50,15 @@ function groupResourceSubmitterFactory (SubmitForm, ResourceSettings) {
         const query = {
           id: this.children
         }
-        const promise = this.groupServer.one(groupId).all(resourceURL)[method](null, query).then(this.success)
+        const endpoint = this.groupServer.one(groupId).all(resourceURL)
+        let call
+        if (this.addingResources) {
+          call = endpoint.post(null, query)
+        } else {
+          call = endpoint.remove(query)
+        }
+        const promise = call.then(this.success)
+
         const humanName = this.gSettings.humanName
         this.submitForm.after(promise,
           `The items have been ${this.addingResources ? 'added or moved' : 'removed'} to ${humanName}.`,
