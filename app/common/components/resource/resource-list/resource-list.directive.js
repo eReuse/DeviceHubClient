@@ -284,6 +284,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             status: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'status'),
             working: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'working'),
             problems: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'problems'),
+            privacy: deviceSelector.getAggregatedSetOfSelected(selectedDevices, 'privacy'),
             condition: {
               appearance: {
                 general: deviceSelector.getAggregatedPropertyOfSelected(selectedDevices, 'condition.appearance.general')
@@ -414,6 +415,33 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
               templateUrl: selectionSummaryTemplateFolder + '/condition-score.html'
             })
           }
+          let privacyContentSummary
+          if (!props.privacy || !props.privacy.length) {
+            privacyContentSummary = 'Disk has not been erased'
+          } else {
+            privacyContentSummary = _(props.privacy)
+              .map((p) => {
+                switch (p.severity) {
+                  case 'Info':
+                    return 'Successfully erased disk'
+                  case 'Error':
+                    return 'Failed erasing disk'
+                  case 'Warning':
+                    return 'Disk might not have been erased'
+                }
+              })
+              .countBy()
+              .toPairs()
+              .map(p => p[0] + ' (' + p[1] + ')')
+              .value()
+              .join(', ')
+          }
+          $scope.selection.summary.push({
+            title: 'Disk erasure',
+            contentSummary: privacyContentSummary,
+            cssClass: 'disk-erasure',
+            templateUrl: selectionSummaryTemplateFolder + '/privacy.html'
+          })
           $scope.selection.summary = $scope.selection.summary.concat([
             {
               title: 'Traceability log',

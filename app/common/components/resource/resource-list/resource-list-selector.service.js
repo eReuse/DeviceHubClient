@@ -202,7 +202,7 @@ class ResourceListSelector {
     }
 
     // TODO move to resource-list.directive
-    this.getAggregatedSetOfSelected = (selectedDevices = [], pathToProp, valueIdProp) => {
+    this.getAggregatedSetOfSelected = (selectedDevices = [], pathToProp, valueIdProp = 'id') => {
       let set = {}
       selectedDevices.forEach(device => {
         _.get(device, pathToProp, []).forEach(value => {
