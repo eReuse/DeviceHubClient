@@ -1,5 +1,17 @@
 function restangularConfig (RestangularProvider, CONSTANTS) {
   RestangularProvider.setBaseUrl(CONSTANTS.url)
+  RestangularProvider.addRequestInterceptor(function (data, operation, what, url) {
+    if (what === '/events/') {
+      let eventData = _.clone(data)
+      eventData.type = eventData['@type'].substring('devices:'.length, eventData['@type'].length)
+      delete eventData['@type']
+      if (eventData.type === 'Ready') { // TODO change 'Ready' to 'ReadyToUse' in schema, config, etc.
+        eventData.type = 'ReadyToUse'
+      }
+      return eventData
+    }
+    return data
+  })
   RestangularProvider.addResponseInterceptor(function (data, operation, what, url, response, deferred) {
     if (what === 'schema') return data
     var extractedData
