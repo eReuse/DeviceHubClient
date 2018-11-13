@@ -35,11 +35,6 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
         $scope.isAndroid = !!window.AndroidApp
         const lotsSelector = $scope.lotsSelector = LotsSelector
 
-        /**
-         * Gets into the resource; traverse one step into the resource hierarchy by opening the resource in the
-         * main window.
-         * @param {Object} lot - Minimum properties are @type and _id
-         */
         $scope.selectLot = lot => {
           lotsSelector.selectOnly(lot)
         }
@@ -63,7 +58,7 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
           label: 'Without lot'
         }
 
-        // TODO call on screen size change. necessary for e.g. mobile portrait -> landscape
+        // TODO call recalculateDevicesRow on screen size change. necessary for e.g. mobile portrait -> landscape
         function recalculateDevicesRow () {
           if ($scope.selectedLots.length > 0) {
             $element.find('.devices-row').css({top: $element.find('.lot-row').outerHeight()})
