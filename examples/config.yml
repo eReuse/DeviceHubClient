@@ -26,7 +26,7 @@ default:
     debug: false
     currency: €
     workbenchPollingDelay: 2650
-    workbench: http://localhost:8091
+    workbench: localhost
 development:
   CONSTANTS:
     url: http://localhost:5000
