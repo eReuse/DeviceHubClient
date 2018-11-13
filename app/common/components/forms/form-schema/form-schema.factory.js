@@ -208,6 +208,47 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
               'disabled': false
             }
           }]
+        case 'devices:Prepare':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'devices',
+            'name': 'devices',
+            'type': 'resources',
+            'templateOptions': {'key': '_id', 'label': 'Devices', 'disabled': false, 'placeholder': []}
+          }, {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
         case 'devices:ToRepair':
           return [{
             'key': 'label',
@@ -567,6 +608,247 @@ function FormSchemaFactory (ResourceSettings, SubmitForm, $rootScope, Notificati
             }
           }]
         case 'devices:Sell':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'to',
+            'name': 'to',
+            'type': 'getFromDataRelationOrCreate',
+            'templateOptions': {
+              'resourceName': 'accounts',
+              'keyFieldName': '_id',
+              'label': 'To',
+              'labelFieldName': 'email',
+              'filterFieldNames': ['email'],
+              'schema': {
+                'fieldGroup': [{'template': '<h4>To</h4>'}, {
+                  'key': 'email',
+                  'name': 'to.to.email',
+                  'type': 'input',
+                  'templateOptions': {'type': 'email', 'required': true, 'label': 'Email', 'disabled': false}
+                }, {
+                  'key': 'name',
+                  'name': 'to.to.name',
+                  'type': 'input',
+                  'templateOptions': {
+                    'description': 'The name of an account, if it is a person or an organization.',
+                    'label': 'Name',
+                    'disabled': false
+                  }
+                }, {
+                  'key': 'isOrganization',
+                  'name': 'to.to.isOrganization',
+                  'type': 'checkbox',
+                  'templateOptions': {'label': 'Is organization', 'disabled': false}
+                }, {
+                  'key': 'organization',
+                  'name': 'to.to.organization',
+                  'type': 'input',
+                  'templateOptions': {
+                    'description': 'The name of the organization the account is in. Organizations can be inside others.',
+                    'label': 'Organization',
+                    'disabled': false
+                  }
+                }],
+                'key': 'to',
+                'sink': 2
+              },
+              'getFromDataRelationOrCreate': 'email',
+              'description': 'The user buying. If you leave it empty and you reference below a reference, we will set it to the user of the reference.',
+              'disabled': false
+            }
+          }, {
+            'key': 'shippingDate',
+            'name': 'shippingDate',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When are the devices going to be ready for shipping?',
+              'label': 'Shipping date',
+              'disabled': false
+            }
+          }, {
+            'key': 'reserve',
+            'name': 'reserve',
+            'type': 'typeahead',
+            'templateOptions': {
+              'resourceName': 'events',
+              'keyFieldName': '_id',
+              'label': 'Reserve',
+              'labelFieldName': '_id',
+              'filterFieldNames': ['_id'],
+              'description': 'The reserve this sell confirms.',
+              'disabled': false
+            }
+          }, {
+            'key': 'devices',
+            'name': 'devices',
+            'type': 'resources',
+            'templateOptions': {'key': '_id', 'label': 'Devices', 'disabled': false, 'placeholder': []}
+          }, {
+            'key': 'invoiceNumber',
+            'name': 'invoiceNumber',
+            'type': 'input',
+            'templateOptions': {
+              'description': 'The id of your invoice so they can be linked.',
+              'label': 'Invoice number',
+              'disabled': false
+            }
+          }, {
+            'key': 'invoices',
+            'name': 'invoices',
+            'type': 'upload',
+            'templateOptions': {
+              'accept': 'application/pdf',
+              'multiple': true,
+              'description': 'Upload invoices in PDF. You can select multiple by pressing Ctrl or Cmd.You won\'t be able to modify them later and we will save them with the name they have.',
+              'label': 'Invoices',
+              'disabled': false
+            }
+          }, {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
+        case 'devices:Donate':
+          return [{
+            'key': 'label',
+            'name': 'label',
+            'type': 'input',
+            'templateOptions': {'description': 'A short, descriptive title', 'label': 'Label', 'disabled': false}
+          }, {
+            'key': 'to',
+            'name': 'to',
+            'type': 'getFromDataRelationOrCreate',
+            'templateOptions': {
+              'resourceName': 'accounts',
+              'keyFieldName': '_id',
+              'label': 'To',
+              'labelFieldName': 'email',
+              'filterFieldNames': ['email'],
+              'schema': {
+                'fieldGroup': [{'template': '<h4>To</h4>'}, {
+                  'key': 'email',
+                  'name': 'to.to.email',
+                  'type': 'input',
+                  'templateOptions': {'type': 'email', 'required': true, 'label': 'Email', 'disabled': false}
+                }, {
+                  'key': 'name',
+                  'name': 'to.to.name',
+                  'type': 'input',
+                  'templateOptions': {
+                    'description': 'The name of an account, if it is a person or an organization.',
+                    'label': 'Name',
+                    'disabled': false
+                  }
+                }, {
+                  'key': 'isOrganization',
+                  'name': 'to.to.isOrganization',
+                  'type': 'checkbox',
+                  'templateOptions': {'label': 'Is organization', 'disabled': false}
+                }, {
+                  'key': 'organization',
+                  'name': 'to.to.organization',
+                  'type': 'input',
+                  'templateOptions': {
+                    'description': 'The name of the organization the account is in. Organizations can be inside others.',
+                    'label': 'Organization',
+                    'disabled': false
+                  }
+                }],
+                'key': 'to',
+                'sink': 2
+              },
+              'getFromDataRelationOrCreate': 'email',
+              'description': 'The user buying. If you leave it empty and you reference below a reference, we will set it to the user of the reference.',
+              'disabled': false
+            }
+          }, {
+            'key': 'shippingDate',
+            'name': 'shippingDate',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When are the devices going to be ready for shipping?',
+              'label': 'Shipping date',
+              'disabled': false
+            }
+          }, {
+            'key': 'reserve',
+            'name': 'reserve',
+            'type': 'typeahead',
+            'templateOptions': {
+              'resourceName': 'events',
+              'keyFieldName': '_id',
+              'label': 'Reserve',
+              'labelFieldName': '_id',
+              'filterFieldNames': ['_id'],
+              'description': 'The reserve this sell confirms.',
+              'disabled': false
+            }
+          }, {
+            'key': 'devices',
+            'name': 'devices',
+            'type': 'resources',
+            'templateOptions': {'key': '_id', 'label': 'Devices', 'disabled': false, 'placeholder': []}
+          },
+          {
+            'key': 'date',
+            'name': 'date',
+            'type': 'datepicker',
+            'templateOptions': {
+              'description': 'When this happened. Leave blank if it is happening now.',
+              'label': 'Date',
+              'disabled': false
+            }
+          }, {
+            'key': 'incidence',
+            'name': 'incidence',
+            'type': 'checkbox',
+            'templateOptions': {
+              'description': 'Check if something went wrong, you can add details in a comment',
+              'label': 'Incidence',
+              'disabled': false,
+              'placeholder': false
+            }
+          }, {
+            'key': 'description',
+            'name': 'description',
+            'type': 'textarea',
+            'templateOptions': {
+              'maxlength': 500,
+              'description': 'Full long description.',
+              'label': 'Description',
+              'disabled': false
+            }
+          }]
+        case 'devices:Rent':
           return [{
             'key': 'label',
             'name': 'label',

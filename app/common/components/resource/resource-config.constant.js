@@ -29,11 +29,12 @@ const v = {
 }
 const RESOURCE_CONFIG = {
   resources: {
+    'devices:Prepare': {manual: true},
     'devices:ToPrepare': {manual: true},
     'devices:Ready': {manual: true},
-    'devices:Locate': {manual: true},
-    'devices:Allocate': {manual: true},
-    'devices:Deallocate': {manual: true},
+    // 'devices:Locate': {manual: true},
+    // 'devices:Allocate': {manual: true},
+    // 'devices:Deallocate': {manual: true},
     'devices:Receive': {manual: true},
     'devices:ToRepair': {manual: true},
     'devices:Repair': {manual: true},

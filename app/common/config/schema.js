@@ -6494,6 +6494,222 @@ module.exports = {
       'sink': -4
     }
   },
+  'devices_prepare': {
+    'components': {
+      'type': 'list',
+      'schema': {
+        'type': 'string',
+        'data_relation': {
+          'resource': 'devices',
+          'field': '_id',
+          'embeddable': true
+        }
+      },
+      'materialized': true,
+      'description': 'Components affected by the event.',
+      'teaser': false
+    },
+    '_settings': {
+      'sink': 1,
+      'useDefaultDatabase': false,
+      'parent': 'devices:EventWithDevices',
+      'url': '/events/',
+      'itemMethods': [
+        'GET',
+        'DELETE'
+      ],
+      'resourceMethods': [
+        'POST'
+      ],
+      'fa': 'fa-wrench',
+      'shortDescription': 'The devices need some maintenance, some kind of testing or preparation to be ready'
+    },
+    '@type': {
+      'type': 'string',
+      'required': true,
+      'allowed': [
+        'devices:ToPrepare'
+      ],
+      'teaser': false
+    },
+    'originalGroups': {
+      'type': 'dict',
+      'schema': {
+        'lots': {
+          'type': 'list',
+          'schema': {
+            'type': 'string',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'lots'
+            }
+          },
+          'unique_values': true
+        },
+        'packages': {
+          'type': 'list',
+          'schema': {
+            'type': 'string',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'packages'
+            }
+          },
+          'unique_values': true
+        }
+      },
+      'readonly': true,
+      'doc': 'The groups the user performed the event on, without its descendants.'
+    },
+    'date': {
+      'type': 'datetime',
+      'description': 'When this happened. Leave blank if it is happening now.',
+      'sink': -2
+    },
+    'secured': {
+      'type': 'boolean',
+      'default': false,
+      'sink': -3
+    },
+    'incidence': {
+      'type': 'boolean',
+      'default': false,
+      'description': 'Check if something went wrong, you can add details in a comment',
+      'sink': -3
+    },
+    'created': {
+      'dh_allowed_write_role': 'su',
+      'type': 'datetime',
+      'writeonly': true,
+      'doc': 'Sets the _created and _updated, thought to be used in imports.'
+    },
+    'description': {
+      'maxlength': 500,
+      'type': 'string',
+      'description': 'Full long description.',
+      'sink': -4
+    },
+    'byUser': {
+      'type': 'objectid',
+      'data_relation': {
+        'embeddable': true,
+        'field': '_id',
+        'resource': 'accounts'
+      },
+      'coerce_with_context': '<callable>',
+      'sink': 2
+    },
+    'geo': {
+      'type': 'point',
+      'description': 'Where did it happened',
+      'sink': -5
+    },
+    'label': {
+      'type': 'string',
+      'description': 'A short, descriptive title',
+      'sink': 5
+    },
+    'url': {
+      'type': 'url',
+      'move': 'sameAs',
+      'doc': 'The url of the resource. If passed in, the value it is moved to sameAs.',
+      'teaser': false
+    },
+    'perms': {
+      'type': 'list',
+      'schema': {
+        'type': 'dict',
+        'schema': {
+          'perm': {
+            'type': 'string',
+            'required': true,
+            'allowed': [
+              'ad',
+              're',
+              'e',
+              'r'
+            ]
+          },
+          'account': {
+            'type': 'objectid',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'accounts'
+            },
+            'required': true
+          }
+        }
+      },
+      'doc': 'These permissions are set on groups, and their children inherit them.Apart from this, accounts can have access to resources if they have access to the entire database, too.That access is stored in the Account *databases* field.',
+      'materialized': true,
+      'description': 'The permissions accounts have on the resource.'
+    },
+    'sameAs': {
+      'type': 'list',
+      'unique': true,
+      'teaser': false
+    },
+    'groups': {
+      'type': 'dict',
+      'schema': {
+        'lots': {
+          'type': 'list',
+          'schema': {
+            'type': 'string',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'lots'
+            }
+          },
+          'unique_values': true
+        },
+        'packages': {
+          'type': 'list',
+          'schema': {
+            'type': 'string',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'packages'
+            }
+          },
+          'unique_values': true
+        }
+      },
+      'doc': 'This field contains the groups and all its descendants.',
+      'description': 'The groups the event has been performed on.'
+    },
+    'byOrganization': {
+      'type': 'string',
+      'readonly': true
+    },
+    '_id': {
+      'type': 'objectid'
+    },
+    'devices': {
+      'type': 'list',
+      'schema': {
+        'type': 'string',
+        'data_relation': {
+          'embeddable': true,
+          'field': '_id',
+          'resource': 'devices'
+        }
+      },
+      'default': [],
+      'doc': 'We want either \'devices\' xor \'groups\'.'
+    },
+    'comment': {
+      'type': 'string',
+      'description': 'Short comment for fast and easy reading',
+      'doc': 'This field is deprecated (it does not show in clients); use description instead.',
+      'sink': -4
+    }
+  },
   'devices_deallocate': {
     '_settings': {
       'sink': -6,
@@ -12838,7 +13054,7 @@ module.exports = {
       'sink': -6,
       'useDefaultDatabase': false,
       'parent': 'devices:EventWithDevices',
-      'url': 'events/devices/cancel-reservation',
+      'url': '/events/',
       'itemMethods': [
         'GET',
         'DELETE'
