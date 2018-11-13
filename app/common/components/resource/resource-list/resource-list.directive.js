@@ -392,8 +392,12 @@ function resourceList (resourceListConfig, ResourceListGetter, ResourceListSelec
             $scope.selection.summary.push({
               title: 'Issues',
               titleFa: 'fa-warning',
-              contentSummary: props.problems.concat(props.working)
+              contentSummary: _(props.problems.concat(props.working))
                 .map(i => i.type + ': ' + (i.description || i.status))
+                .countBy()
+                .toPairs()
+                .map(p => p[0] + ' (' + p[1] + ')')
+                .value()
                 .join(', '),
               cssClass: 'issues',
               templateUrl: selectionSummaryTemplateFolder + '/issues.html'
