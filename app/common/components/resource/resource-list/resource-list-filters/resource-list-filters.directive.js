@@ -178,8 +178,6 @@ function resourceListFilters (Notification, $uibModal, clipboard) {
               return addToActiveFiltersRecursive(fullPath, value, fullPrefix)
             }
 
-            // _.set(value, '_meta.endpoint', true) // TODO setting endpoint is necessary for resource-getter only
-
             let filterText = fullPrefix
             let skipProcessingProps
             if (fullPath === (keyEvents + '.types')) {
