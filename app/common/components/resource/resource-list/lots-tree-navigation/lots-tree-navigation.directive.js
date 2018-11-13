@@ -138,53 +138,6 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
         $scope.$on('lots:reload', () => {
           reload()
         })
-        // // TODO delete as soon as getter works
-        // _.assign($scope.data, [
-        //   {
-        //     'id': 1,
-        //     'name': 'Donación BCN Activa',
-        //     'nodes': [
-        //       {
-        //         'id': 11,
-        //         'name': '2017',
-        //         'nodes': [
-        //           {
-        //             'id': 111,
-        //             'name': 'Febrero',
-        //             'nodes': []
-        //           },
-        //           {
-        //             'id': 112,
-        //             'name': 'Marzo',
-        //             'nodes': []
-        //           }
-        //         ]
-        //       },
-        //       {
-        //         'id': 12,
-        //         'name': '2018',
-        //         'nodes': []
-        //       }
-        //     ]
-        //   },
-        //   {
-        //     'id': 2,
-        //     'name': 'Banc de Recurs',
-        //     'nodes': []
-        //   },
-        //   {
-        //     'id': 3,
-        //     'name': 'Salidas',
-        //     'nodes': [
-        //       {
-        //         'id': 2,
-        //         'name': 'Banc de Recurs',
-        //         'nodes': []
-        //       }
-        //     ]
-        //   }
-        // ])
-        // $scope.findNodes()
       }
     }
   }
