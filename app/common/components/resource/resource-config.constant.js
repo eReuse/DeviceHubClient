@@ -1,3 +1,5 @@
+// TODO merge this config with config/schema.js (get fields from from-schema)
+
 const DO_NOT_USE = ['sameAs', '_id', 'byUser', '@type', 'secured', 'url', '_settings', 'hid', 'comment']
 const GROUP_DO_NOT_USE = DO_NOT_USE.concat(['children', 'policies', 'perms', 'sharedWith'])
 
