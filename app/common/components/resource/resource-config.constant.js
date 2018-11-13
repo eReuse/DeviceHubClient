@@ -55,6 +55,12 @@ const RESOURCE_CONFIG = {
       subviews: [v.Sell, v.Device, v.Detail],
       subviewSmall: v.Sell
     },
+    'devices:Donate': {
+      manual: true
+    },
+    'devices:Rent': {
+      manual: true
+    },
     'devices:NewTag': {
       manual: true,
       _root: true

@@ -6278,6 +6278,564 @@ module.exports = {
       'description': 'The id of your invoice so they can be linked.'
     }
   },
+  'devices_donate': {
+    '_settings': {
+      'sink': -5,
+      'useDefaultDatabase': false,
+      'parent': 'devices:EventWithDevices',
+      'url': '/events/',
+      'itemMethods': [
+        'GET',
+        'DELETE'
+      ],
+      'resourceMethods': [
+        'POST'
+      ],
+      'fa': 'fa-money',
+      'shortDescription': 'A successful selling.'
+    },
+    'originalGroups': {
+      'type': 'dict',
+      'schema': {
+        'lots': {
+          'type': 'list',
+          'schema': {
+            'type': 'string',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'lots'
+            }
+          },
+          'unique_values': true
+        },
+        'packages': {
+          'type': 'list',
+          'schema': {
+            'type': 'string',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'packages'
+            }
+          },
+          'unique_values': true
+        }
+      },
+      'readonly': true,
+      'doc': 'The groups the user performed the event on, without its descendants.'
+    },
+    'date': {
+      'type': 'datetime',
+      'description': 'When this happened. Leave blank if it is happening now.',
+      'sink': -2
+    },
+    'groups': {
+      'type': 'dict',
+      'schema': {
+        'lots': {
+          'type': 'list',
+          'schema': {
+            'type': 'string',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'lots'
+            }
+          },
+          'unique_values': true
+        },
+        'packages': {
+          'type': 'list',
+          'schema': {
+            'type': 'string',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'packages'
+            }
+          },
+          'unique_values': true
+        }
+      },
+      'doc': 'This field contains the groups and all its descendants.',
+      'description': 'The groups the event has been performed on.'
+    },
+    'byOrganization': {
+      'type': 'string',
+      'readonly': true
+    },
+    'invoices': {
+      'type': 'list',
+      'schema': {
+        'type': 'media',
+        'accept': 'application/pdf'
+      },
+      'description': 'Upload invoices in PDF. You can select multiple by pressing Ctrl or Cmd.You won\'t be able to modify them later and we will save them with the name they have.'
+    },
+    'created': {
+      'dh_allowed_write_role': 'su',
+      'type': 'datetime',
+      'writeonly': true,
+      'doc': 'Sets the _created and _updated, thought to be used in imports.'
+    },
+    '@type': {
+      'type': 'string',
+      'required': true,
+      'allowed': [
+        'devices:Sell'
+      ],
+      'teaser': false
+    },
+    'description': {
+      'maxlength': 500,
+      'type': 'string',
+      'description': 'Full long description.',
+      'sink': -4
+    },
+    'label': {
+      'type': 'string',
+      'description': 'A short, descriptive title',
+      'sink': 5
+    },
+    '_id': {
+      'type': 'objectid'
+    },
+    'byUser': {
+      'type': 'objectid',
+      'data_relation': {
+        'embeddable': true,
+        'field': '_id',
+        'resource': 'accounts'
+      },
+      'coerce_with_context': '<callable>',
+      'sink': 2
+    },
+    'components': {
+      'type': 'list',
+      'schema': {
+        'type': 'string',
+        'data_relation': {
+          'resource': 'devices',
+          'field': '_id',
+          'embeddable': true
+        }
+      },
+      'materialized': true,
+      'description': 'Components affected by the event.',
+      'teaser': false
+    },
+    'shippingDate': {
+      'type': 'datetime',
+      'description': 'When are the devices going to be ready for shipping?'
+    },
+    'to': {
+      'sink': 2,
+      'schema': {
+        'email': {
+          'type': 'email',
+          'required': true,
+          'sink': 5,
+          'unique': true
+        },
+        'isOrganization': {
+          'type': 'boolean',
+          'sink': 2
+        },
+        'organization': {
+          'type': 'string',
+          'description': 'The name of the organization the account is in. Organizations can be inside others.',
+          'sink': 1
+        },
+        'name': {
+          'type': 'string',
+          'description': 'The name of an account, if it is a person or an organization.',
+          'sink': 3
+        }
+      },
+      'get_from_data_relation_or_create': 'email',
+      'type': [
+        'objectid',
+        'dict',
+        'string'
+      ],
+      'data_relation': {
+        'embeddable': true,
+        'field': '_id',
+        'resource': 'accounts'
+      },
+      'description': 'The user buying. If you leave it empty and you reference below a reference, we will set it to the user of the reference.'
+    },
+    'secured': {
+      'type': 'boolean',
+      'default': false,
+      'sink': -3
+    },
+    'incidence': {
+      'type': 'boolean',
+      'default': false,
+      'description': 'Check if something went wrong, you can add details in a comment',
+      'sink': -3
+    },
+    'reserve': {
+      'type': 'objectid',
+      'data_relation': {
+        'embeddable': true,
+        'field': '_id',
+        'resource': 'events'
+      },
+      'description': 'The reserve this sell confirms.',
+      'unique': true
+    },
+    'comment': {
+      'type': 'string',
+      'description': 'Short comment for fast and easy reading',
+      'doc': 'This field is deprecated (it does not show in clients); use description instead.',
+      'sink': -4
+    },
+    'geo': {
+      'type': 'point',
+      'description': 'Where did it happened',
+      'sink': -5
+    },
+    'perms': {
+      'type': 'list',
+      'schema': {
+        'type': 'dict',
+        'schema': {
+          'perm': {
+            'type': 'string',
+            'required': true,
+            'allowed': [
+              'ad',
+              're',
+              'e',
+              'r'
+            ]
+          },
+          'account': {
+            'type': 'objectid',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'accounts'
+            },
+            'required': true
+          }
+        }
+      },
+      'doc': 'These permissions are set on groups, and their children inherit them.Apart from this, accounts can have access to resources if they have access to the entire database, too.That access is stored in the Account *databases* field.',
+      'materialized': true,
+      'description': 'The permissions accounts have on the resource.'
+    },
+    'sameAs': {
+      'type': 'list',
+      'unique': true,
+      'teaser': false
+    },
+    'url': {
+      'type': 'url',
+      'move': 'sameAs',
+      'doc': 'The url of the resource. If passed in, the value it is moved to sameAs.',
+      'teaser': false
+    },
+    'devices': {
+      'type': 'list',
+      'schema': {
+        'type': 'string',
+        'data_relation': {
+          'embeddable': true,
+          'field': '_id',
+          'resource': 'devices'
+        }
+      },
+      'default': [],
+      'doc': 'We want either \'devices\' xor \'groups\'.'
+    },
+    'invoiceNumber': {
+      'type': 'string',
+      'description': 'The id of your invoice so they can be linked.'
+    }
+  },
+  'devices_rent': {
+    '_settings': {
+      'sink': -5,
+      'useDefaultDatabase': false,
+      'parent': 'devices:EventWithDevices',
+      'url': '/events/',
+      'itemMethods': [
+        'GET',
+        'DELETE'
+      ],
+      'resourceMethods': [
+        'POST'
+      ],
+      'fa': 'fa-money',
+      'shortDescription': 'A successful selling.'
+    },
+    'originalGroups': {
+      'type': 'dict',
+      'schema': {
+        'lots': {
+          'type': 'list',
+          'schema': {
+            'type': 'string',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'lots'
+            }
+          },
+          'unique_values': true
+        },
+        'packages': {
+          'type': 'list',
+          'schema': {
+            'type': 'string',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'packages'
+            }
+          },
+          'unique_values': true
+        }
+      },
+      'readonly': true,
+      'doc': 'The groups the user performed the event on, without its descendants.'
+    },
+    'date': {
+      'type': 'datetime',
+      'description': 'When this happened. Leave blank if it is happening now.',
+      'sink': -2
+    },
+    'groups': {
+      'type': 'dict',
+      'schema': {
+        'lots': {
+          'type': 'list',
+          'schema': {
+            'type': 'string',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'lots'
+            }
+          },
+          'unique_values': true
+        },
+        'packages': {
+          'type': 'list',
+          'schema': {
+            'type': 'string',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'packages'
+            }
+          },
+          'unique_values': true
+        }
+      },
+      'doc': 'This field contains the groups and all its descendants.',
+      'description': 'The groups the event has been performed on.'
+    },
+    'byOrganization': {
+      'type': 'string',
+      'readonly': true
+    },
+    'invoices': {
+      'type': 'list',
+      'schema': {
+        'type': 'media',
+        'accept': 'application/pdf'
+      },
+      'description': 'Upload invoices in PDF. You can select multiple by pressing Ctrl or Cmd.You won\'t be able to modify them later and we will save them with the name they have.'
+    },
+    'created': {
+      'dh_allowed_write_role': 'su',
+      'type': 'datetime',
+      'writeonly': true,
+      'doc': 'Sets the _created and _updated, thought to be used in imports.'
+    },
+    '@type': {
+      'type': 'string',
+      'required': true,
+      'allowed': [
+        'devices:Sell'
+      ],
+      'teaser': false
+    },
+    'description': {
+      'maxlength': 500,
+      'type': 'string',
+      'description': 'Full long description.',
+      'sink': -4
+    },
+    'label': {
+      'type': 'string',
+      'description': 'A short, descriptive title',
+      'sink': 5
+    },
+    '_id': {
+      'type': 'objectid'
+    },
+    'byUser': {
+      'type': 'objectid',
+      'data_relation': {
+        'embeddable': true,
+        'field': '_id',
+        'resource': 'accounts'
+      },
+      'coerce_with_context': '<callable>',
+      'sink': 2
+    },
+    'components': {
+      'type': 'list',
+      'schema': {
+        'type': 'string',
+        'data_relation': {
+          'resource': 'devices',
+          'field': '_id',
+          'embeddable': true
+        }
+      },
+      'materialized': true,
+      'description': 'Components affected by the event.',
+      'teaser': false
+    },
+    'shippingDate': {
+      'type': 'datetime',
+      'description': 'When are the devices going to be ready for shipping?'
+    },
+    'to': {
+      'sink': 2,
+      'schema': {
+        'email': {
+          'type': 'email',
+          'required': true,
+          'sink': 5,
+          'unique': true
+        },
+        'isOrganization': {
+          'type': 'boolean',
+          'sink': 2
+        },
+        'organization': {
+          'type': 'string',
+          'description': 'The name of the organization the account is in. Organizations can be inside others.',
+          'sink': 1
+        },
+        'name': {
+          'type': 'string',
+          'description': 'The name of an account, if it is a person or an organization.',
+          'sink': 3
+        }
+      },
+      'get_from_data_relation_or_create': 'email',
+      'type': [
+        'objectid',
+        'dict',
+        'string'
+      ],
+      'data_relation': {
+        'embeddable': true,
+        'field': '_id',
+        'resource': 'accounts'
+      },
+      'description': 'The user buying. If you leave it empty and you reference below a reference, we will set it to the user of the reference.'
+    },
+    'secured': {
+      'type': 'boolean',
+      'default': false,
+      'sink': -3
+    },
+    'incidence': {
+      'type': 'boolean',
+      'default': false,
+      'description': 'Check if something went wrong, you can add details in a comment',
+      'sink': -3
+    },
+    'reserve': {
+      'type': 'objectid',
+      'data_relation': {
+        'embeddable': true,
+        'field': '_id',
+        'resource': 'events'
+      },
+      'description': 'The reserve this sell confirms.',
+      'unique': true
+    },
+    'comment': {
+      'type': 'string',
+      'description': 'Short comment for fast and easy reading',
+      'doc': 'This field is deprecated (it does not show in clients); use description instead.',
+      'sink': -4
+    },
+    'geo': {
+      'type': 'point',
+      'description': 'Where did it happened',
+      'sink': -5
+    },
+    'perms': {
+      'type': 'list',
+      'schema': {
+        'type': 'dict',
+        'schema': {
+          'perm': {
+            'type': 'string',
+            'required': true,
+            'allowed': [
+              'ad',
+              're',
+              'e',
+              'r'
+            ]
+          },
+          'account': {
+            'type': 'objectid',
+            'data_relation': {
+              'embeddable': true,
+              'field': '_id',
+              'resource': 'accounts'
+            },
+            'required': true
+          }
+        }
+      },
+      'doc': 'These permissions are set on groups, and their children inherit them.Apart from this, accounts can have access to resources if they have access to the entire database, too.That access is stored in the Account *databases* field.',
+      'materialized': true,
+      'description': 'The permissions accounts have on the resource.'
+    },
+    'sameAs': {
+      'type': 'list',
+      'unique': true,
+      'teaser': false
+    },
+    'url': {
+      'type': 'url',
+      'move': 'sameAs',
+      'doc': 'The url of the resource. If passed in, the value it is moved to sameAs.',
+      'teaser': false
+    },
+    'devices': {
+      'type': 'list',
+      'schema': {
+        'type': 'string',
+        'data_relation': {
+          'embeddable': true,
+          'field': '_id',
+          'resource': 'devices'
+        }
+      },
+      'default': [],
+      'doc': 'We want either \'devices\' xor \'groups\'.'
+    },
+    'invoiceNumber': {
+      'type': 'string',
+      'description': 'The id of your invoice so they can be linked.'
+    }
+  },
   'devices_to-prepare': {
     'components': {
       'type': 'list',
@@ -6528,7 +7086,7 @@ module.exports = {
       'type': 'string',
       'required': true,
       'allowed': [
-        'devices:ToPrepare'
+        'devices:Prepare'
       ],
       'teaser': false
     },
@@ -11705,6 +12263,9 @@ module.exports = {
         'devices:Dispose',
         'devices:ToDispose',
         'devices:ToPrepare',
+        'devices:Prepare',
+        'devices:Recycle',
+        'devices:ToRecycle',
         'devices:EventWithDevices',
         'devices:Remove',
         'devices:EraseSectors',
@@ -24068,11 +24629,16 @@ module.exports = {
         'devices:Dispose',
         'devices:ToDispose',
         'devices:ToPrepare',
+        'devices:Prepare',
+        'devices:Recycle',
+        'devices:ToRecycle',
         'devices:EventWithDevices',
         'devices:Remove',
         'devices:EraseSectors',
         'Event',
         'devices:Sell',
+        'devices:Donate',
+        'devices:Rent',
         'devices:Live',
         'devices:Repair',
         'devices:Add',

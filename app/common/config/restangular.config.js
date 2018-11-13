@@ -5,8 +5,18 @@ function restangularConfig (RestangularProvider, CONSTANTS) {
       let eventData = _.clone(data)
       eventData.type = eventData['@type'].substring('devices:'.length, eventData['@type'].length)
       delete eventData['@type']
-      if (eventData.type === 'Ready') { // TODO change 'Ready' to 'ReadyToUse' in schema, config, etc.
-        eventData.type = 'ReadyToUse'
+      // TODO change type in config files instead of mapping here
+      switch (eventData.type) {
+        case 'Ready':
+          eventData.type = 'ReadyToUse'
+          break
+        case 'Dispose':
+          eventData.type = 'DisposeProduct'
+          break
+        case 'ToDispose':
+          eventData.type = 'ToDisposeProduct'
+          break
+
       }
       return eventData
     }
