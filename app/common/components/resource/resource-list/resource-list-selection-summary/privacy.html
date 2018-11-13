@@ -1,0 +1,22 @@
+<div class="selection-details-content">
+  <button
+          type="button"
+          class="btn ng-scope btn-hide-details"
+          ng-click="selection.details[row.title] = false">
+    <i class="fa fa-chevron-left fa-fw"></i>
+  </button>
+  <h3>Disk erasures</h3>
+  <div ng-repeat="issue in selection.props.privacy">
+    <span ng-switch="issue.severity">
+      <span ng-switch-when="Error">
+        Failed erasing disk <i class="fa fa-warning fa-fw"></i>
+      </span>
+      <span ng-switch-when="Warning">
+        Disk might not have been erased <i class="fa fa-warning fa-fw"></i>
+      </span>
+      <span ng-switch-when="Info">
+        Successfully erased disk
+      </span>
+    </span>
+  </div>
+</div>
