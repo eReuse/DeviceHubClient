@@ -22,41 +22,31 @@ function restangularConfig (RestangularProvider, CONSTANTS) {
     }
     return data
   })
+
+  function buildLotsTree (tree = [], map) {
+    tree.forEach((node) => {
+      _.assign(node, map[node.id])
+      buildLotsTree(node.nodes, map)
+    })
+  }
+
   RestangularProvider.addResponseInterceptor(function (data, operation, what, url, response, deferred) {
     if (what === 'schema') return data
-
-    function buildLotsTree (tree = [], map) {
-      tree.forEach((node) => {
-        _.assign(node, map[node.id])
-        buildLotsTree(node.nodes, map)
-      })
+    if ('tree' in data) {
+      buildLotsTree(data.tree, data.items)
+      return {items: data.tree}
     }
-    switch (what) {
-      case 'lots/':
-        if (data.tree) {
-          buildLotsTree(data.tree, data.items)
-          return { items: data.tree }
-        }
-        return data
-      case 'devices/':
-        let extractedData
-        // .. to look for getList operations
-        switch (operation) {
-          case 'getList':
-            _.forEach(data, buildLink)
-            extractedData = data
-            extractedData._meta = data._meta || {}
-            _.assign(extractedData._meta, data.pagination)
-            break
-          case 'get':
-            buildLink(data)
-            extractedData = data
-            break
-          default:
-            extractedData = data
-        }
-        return extractedData
+    const extractedData = data
+    switch (operation) {
+      case 'getList':
+        _.forEach(data, buildLink)
+        extractedData._meta = data._meta || {}
+        _.assign(extractedData._meta, data.pagination)
+        break
+      case 'get':
+        buildLink(data)
     }
+    return extractedData
   })
   RestangularProvider.setRestangularFields({
     selfLink: '_links.self.href',
@@ -67,10 +57,12 @@ function restangularConfig (RestangularProvider, CONSTANTS) {
     console.log(response)
   })
   RestangularProvider.setDefaultHeaders(CONSTANTS.headers)
+
   function buildLink (item) {
     try {
       item._links.self.href = CONSTANTS.url + '/' + item._links.self.href
-    } catch (err) {}
+    } catch (err) {
+    }
   }
 }
 
