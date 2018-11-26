@@ -27,6 +27,7 @@ default:
     currency: €
     workbenchPollingDelay: 2650
     workbench: localhost
+    androidWorkbench: 192.168.12.1
 development:
   CONSTANTS:
     url: http://localhost:5000

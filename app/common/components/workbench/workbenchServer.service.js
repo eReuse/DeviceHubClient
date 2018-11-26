@@ -5,7 +5,7 @@
  */
 class workbenchServer {
   constructor (CONSTANTS) {
-    this.host = 'AndroidApp' in window ? '192.168.2.2' : CONSTANTS.workbench
+    this.host = 'AndroidApp' in window ? CONSTANTS.androidWorkbench : CONSTANTS.workbench
     this.port = '8091'
   }
 
