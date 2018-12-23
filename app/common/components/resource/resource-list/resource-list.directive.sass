@@ -17,129 +17,101 @@
   opacity: 1
 
 .unselectable
-  -webkit-user-select: none  /* Chrome all / Safari all */
-  -moz-user-select: none     /* Firefox all */
-  -ms-user-select: none      /* IE 10+ */
-  user-select: none          /* Likely future */
+  -webkit-user-select: none
+  /* Chrome all / Safari all */
+  -moz-user-select: none
+  /* Firefox all */
+  -ms-user-select: none
+  /* IE 10+ */
+  user-select: none
+/* Likely future */
 
 .btn-normal
   color: #333333
   background-color: transparent
+
   &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
     background-color: $btn-primary-bg
     color: $btn-primary-color
+
 .btn-default-inverted
   color: #333333
   background-color: white
   border-color: grey
+
   &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
     color: #333333
+
 .btn-dark
   color: white
   background-color: #393939
   border-color: grey
+
   &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
     color: white
 
 .fa-star-o-inactive
   color: lightgrey
 
-.breadcrumb
-  padding: 6px 0
-  font-size: 22px
-  margin-bottom: 0
-  background-color: transparent
-  group-resource-button
-    float: right
-    margin-left: 10px
-    .btn-primary
-      color: #767676
-      background-color: #ffffff
-      border-color: #a8a8a8
-      padding: 6px
-      border-radius: 3px
-
-  resource-field-edit
-    form
-      display: inline-block
-      width: inherit
-    .buttons
-      margin-left: 10px
-      margin-right: 10px
-  li + li:before
-    padding: 0 5px 0 15px
-  resource-icon
-    font-size: 1em
-    line-height: inherit
-  a
-    color: grey
-    text-decoration: none
-    &:hover
-      text-decoration: none
+#lots
+  background-color: $main-nav-bg
 
 .resource-list
-  padding: 0
-  .tabs-lots-events
-    background-color: $sidebar-background-color
-    color: $sidebar-color
-    padding: 15px 10px 10px 10px
-    @media (min-width: $screen-sm-min)
-      padding-left: 30px
-      padding-right: 15px
-      position: inherit
-    position: absolute
-    top: 0
-    z-index: 10
-    @media (min-width: $screen-sm-min)
-      position: inherit
-    input
-      margin-bottom: 15px
-    h2
-      margin-top: 0
-    lots-tree-navigation
-      .create-new-lot-btn
-        margin-top: 10px
+
+  lots-tree-navigation
+    .create-new-lot-btn
+      margin-top: 10px
+      font-size: 18px
+      @media (min-width: $screen-sm-min)
+        font-size: 16px
+
+    .tree-node.tree-node-content
+      margin: 5px 0
+
+      a.btn
+        width: 100%
+        text-align: left
+
+      span
         font-size: 18px
         @media (min-width: $screen-sm-min)
           font-size: 16px
-      .tree-node.tree-node-content
-        margin: 5px 0
-        a.btn
-          width: 100%
-          text-align: left
-        span
-          font-size: 18px
-          color: $sidebar-color
+
+        .clickable
+          font-size: 20px
+          padding: 5px
           @media (min-width: $screen-sm-min)
             font-size: 16px
-          .clickable
-            font-size: 20px
-            padding: 5px
-            @media (min-width: $screen-sm-min)
-              font-size: 16px
-              padding: 3px
-            &:nth-child(2n)
-              margin-left: 10px
-        &.selected, &:hover
-          a.btn
-            background-color: #562568
-          span
-            font-weight: bold
+            padding: 3px
 
-        resource-field-edit .edit-button
-          display: none
-        &:hover resource-field-edit .edit-button, &.selected resource-field-edit .edit-button
-          display: block
-        .add-lot-button
-          display: none
-        &:hover .add-lot-button, &.selected .add-lot-button
-          display: block
+          &:nth-child(2n)
+            margin-left: 10px
+
+      &.selected, &:hover
+        a.btn
+
+        span
+          font-weight: bold
+
+      resource-field-edit .edit-button
+        display: none
+
+      &:hover resource-field-edit .edit-button, &.selected resource-field-edit .edit-button
+        display: block
+
+      .add-lot-button
+        display: none
+
+      &:hover .add-lot-button, &.selected .add-lot-button
+        display: block
+
   .middle-col
     .lot-row
       padding-left: 25px
       padding-top: 15px
       margin-bottom: 10px
       position: absolute
+
     .devices-row
       margin-left: 0
       margin-top: 0
@@ -147,17 +119,14 @@
       top: 0
       left: 0
       transition: all 300ms ease 0s
+
       .devices-col
         background-color: white
-        padding: 10px
-        @media (min-width: $screen-sm-min)
-          padding: 15px 30px 30px 30px
-        .devices
-          margin-top: 10px
 
   #screener
     display: inline-block
     position: relative
+
     > :first-child
       width: 100%
       height: 100%
@@ -168,26 +137,6 @@
   resource-icon img
     max-width: 2em
 
-  .buttons
-    margin-bottom: 20px
-    .btn
-      padding-top: 0.25em
-      padding-bottom: 0.25em
-    button
-      width: calc(50% - 2px)
-    .btn-group
-      width: calc(50% - 2px)
-      button
-        width: 100%
-    @media (min-width: $screen-md-min)
-      button
-        width: auto
-      .btn-group
-        width: auto
-        button
-          width: auto
-
-
 
   .blink
     // from @extend input[type="checkbox"]:focus
@@ -197,50 +146,62 @@
   .search-wrapper
     width: 100%
     margin-bottom: 15px
+
   resource-search
     input
       margin-bottom: 10px
+
   .active-filters-container
     .active-filters
       display: inline-block
       padding: 0
       margin-bottom: 5px
+
       .active-filter
         list-style: none
         display: inline-flex
         padding: 5px 10px
         margin-bottom: 6px
         background-color: #d9d9d9
+
         &:not(:last-child)
           margin-right: 6px
+
         .fa-close
           line-height: 1.5em
+
   .btn-add-filter-panels
     padding: 5px 10px
     display: block
     @media (min-width: $screen-sm-min)
       display: inline-flex
+
   .add-filter-panels-container
     position: relative
     display: inline-flex
     top: -13px
     @media (min-width: $screen-sm-min)
-      top: 16px // button height
-      left: -82px // button width
+      top: 16px
+      // button height
+      left: -82px
+    // button width
     .add-filter-panels-wrapper
       position: absolute
       z-index: 99
       top: 0
       box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.349019607843137)
       background-color: white
+
       .add-filter-panels
         position: relative
         width: 300px
         height: 0
         overflow-x: hidden
         transition: height 500ms
+
         &.active
           height: 400px
+
         .filter-panel
           h3
             margin-top: 0
@@ -252,33 +213,44 @@
           top: 0
           left: 100%
           transition: left 500ms
+
           &.isRoot
             left: 0
+
             .btn-hide-filter-panel
               display: none
+
           &.active
             left: 0
+
           .btn-hide-filter-panel
             float: left
             padding: 4px 10px
             margin-right: 5px
             border-radius: 5px
             color: #333333
+
             &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
               color: #333333
+
           .filter-panel-links
             padding: 0
+
             li
               list-style: none
               outline: none !important
+
               &:first-child > button
                 border-top-left-radius: 5px
                 border-top-right-radius: 5px
+
               &:last-child > button
                 border-bottom-left-radius: 5px
                 border-bottom-right-radius: 5px
+
               &:not(:first-child) > button
                 border-top: none
+
               button
                 font-size: 16px
                 line-height: 1.8
@@ -289,6 +261,7 @@
 
                 width: 100%
                 text-align: left
+
                 &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
                   box-shadow: none
                   outline: none
@@ -302,64 +275,36 @@
     margin-bottom: 10px
 
   .fill-height-bar
-    overflow-y: auto
     height: calc(100vh - #{$navbar-height})
+    overflow-y: auto
 
-  .resource-list-table
-    &.table-hover
-      tbody
-        tr
-          &.active > td
-            background-color: #b7d9e3ff
-          &:hover > td
-            background-color: #53A6BE
-            color: white
-    tr
-      *
-        &:first-child
-          white-space: nowrap
+  #resource-list-table-scroll
+    overflow-y: hidden
 
-        .resource-list-checkbox
-          zoom: 1.5
-          -moz-transform: scale(1.5)
-
-      td
-        user-select: none
-        cursor: pointer
-        &.column-range
-          font-size: 12px
-      th
-        padding-top: 0 !important
-      .label
-        display: block
 
 .selection-button
-  z-index: 9
-  position: fixed
-  bottom: 0
-  padding: 10px 0 10px 0
-  width: 100%
-  background-color: #e5e5e5
-  text-align: center
+  @media (max-width: $screen-sm-min)
+    position: fixed
+    bottom: 0
+    padding: 1em 0
+    width: 100%
+    background-color: rgba($gray-lighter, 0.5)
+    text-align: center
 
 .selection
-  position: absolute
-  top: 0
-  background-color: #F2F2F2
-  padding: 5px 10px 65px 10px
-  z-index: 5
-  &.selected
-    background-color: #DCE1E1
-  ul
-    padding: 0
-  @media (min-width: $screen-sm-min)
-    position: inherit
-    padding: 30px
 
-    //border-left: 2px solid $main-nav-bg
-    //box-shadow: -5px -3px 10px -7px #999
+  .selection-empty
+    height: 100%
+    display: flex
+    justify-content: center
+    align-items: center
+
+
+  //border-left: 2px solid $main-nav-bg
+  //box-shadow: -5px -3px 10px -7px #999
   button.btn-primary
     margin-bottom: 5px
+
 .selected-lots-summary .btn-primary
   background-color: #562568
   border-color: #562568
@@ -367,6 +312,7 @@
 .children-lots
   ul
     padding: 0
+
     li
       list-style: none
       display: inline-flex
@@ -375,8 +321,10 @@
       border: 1px solid
       margin-bottom: 6px
       background-color: white
+
       &:not(:last-child)
         margin-right: 6px
+
       button
         background: none
         border: none
@@ -390,11 +338,14 @@
   margin-bottom: 6px
   background-color: white
   cursor: pointer
+
   button
     background-color: transparent
     padding: 0
+
     &.btn:hover, &.btn:focus, &.btn.focus
       color: #333333
+
   &:not(:last-child)
     margin-right: 6px
 
@@ -407,188 +358,16 @@
   margin-bottom: 6px
   background-color: white
   cursor: pointer
+
   button
     background-color: transparent
     padding: 0
+
     &.btn:hover, &.btn:focus, &.btn.focus
       color: #333333
+
   &:not(:last-child)
     margin-right: 6px
 
 .pill-lot-flex
   display: inline-flex
-
-.selection-summary
-  margin-bottom: 0
-  li
-    list-style: none
-    outline: none !important
-    &:first-child > button
-      border-top-left-radius: 5px
-      border-top-right-radius: 5px
-    &:last-child > button
-      border-bottom-left-radius: 5px
-      border-bottom-right-radius: 5px
-    &:not(:first-child) > button
-      border-top: none
-    button
-      background-color: white
-      color: #333333
-      box-shadow: none
-      border: 1px solid #bfbfbf
-      white-space: normal
-
-      width: 100%
-      text-align: left
-      &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
-        box-shadow: none
-        outline: none
-        background-color: #449bb4
-        border-color: white
-        color: white
-        .fa
-          visibility: visible
-          color: white
-      .selection-summary-title
-        display: block
-      .selection-summary-content
-        font-size: 18px
-      .fa.selection-view-details
-        float: right
-        font-size: 22px
-        visibility: hidden
-
-
-
-.selection-details-panel
-  border: 1px solid #bfbfbf
-  border-radius: 5px
-  position: absolute
-  top: 0
-  width: 100%
-  height: 100%
-  background-color: white
-  left: 100%
-  transition: all 700ms
-  //overflow-x: hidden
-  //overflow-y: scroll
-  &.active
-    left: 0
-  .selection-details-content-wrapper
-    position: relative
-    padding: 0
-    width: 100%
-    height: 100%
-    .selection-details-content-container
-      position: absolute
-      top: 0
-      width: 100%
-      height: 100%
-      padding: 0
-      overflow-x: hidden
-      selection-property
-        button
-          text-align: left
-        i
-          opacity: 0 !important
-          transition: opacity 200ms
-        &:hover
-          i
-            opacity: 1 !important
-      .components > .table
-        max-width: 650px
-      .condition-score
-        td:last-child span
-          display: block
-      .lots
-        .selected-lots-list
-          padding-top: 20px
-          &.multi-selection
-            .pill-lot-container
-              background-color: #e8e8e8
-              border-radius: 7px
-              &:not(:last-child)
-                margin-bottom: 20px
-              .selected-lot
-                padding-bottom: 10px
-                margin-bottom: 12px
-                border-bottom: 1px #a6a6a6 solid
-                @media (min-width: $screen-sm-min)
-                  width: 75%
-          .pill-lot-container
-            list-style: none
-            padding: 8px
-            .selected-lot
-              a
-                color: #333333
-                &:hover
-                  color: #333333
-              button
-                margin-left: 10px
-                &:hover
-                  color: #333333
-            .selected-devices-in-lot
-              .device
-                list-style: none
-                display:
-                padding: 5px
-                &:not(:last-child)
-                  margin-right: 6px
-      .type
-        .descriptor
-          margin-bottom: 30px
-      .status
-        .descriptor
-          margin-top: 20px
-          selection-aggregated-property > div
-            margin-bottom: 30px
-            font-size: 16px
-      .status-selector
-        display: -webkit-box
-        display: -webkit-flex
-        display: -ms-flexbox
-        display: flex
-        flex-wrap: wrap
-        margin-top: 20px
-        .btn
-          height: 100%
-          text-align: center
-          align-items: center
-          display: -webkit-box
-          display: -webkit-flex
-          display: -ms-flexbox
-          display: flex
-          justify-content: center
-          background-color: #ffffff
-          border-radius: 5px
-          border: 1px solid grey
-          h4
-            font-size: 22px
-          &.btn:hover, &.btn:focus, &.btn.focus
-            color: #333333
-      .selection-details-content
-        padding: 15px
-        &.selection-details-content-type,&.selection-details-content-status
-          h5
-            font-weight: normal
-            text-transform: uppercase
-            border-bottom: 1px solid lightgrey
-            padding-bottom: 2px
-        *
-          word-wrap: break-word
-          white-space: normal
-        h3
-          display: inline-block
-        .btn-hide-details
-          display: inline-block
-          margin-top: -5px
-          padding: 4px 10px
-          margin-right: 5px
-          border-radius: 5px
-          color: #333333
-          &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
-            color: #333333
-
-
-
-

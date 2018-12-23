@@ -1,8 +1,8 @@
 <div class="selection-details-content">
   <button
-          type="button"
-          class="btn ng-scope btn-hide-details"
-          ng-click="selection.details[row.title] = false">
+      type="button"
+      class="btn ng-scope btn-hide-details"
+      ng-click="selection.details[row.title] = false">
     <i class="fa fa-chevron-left fa-fw"></i>
   </button>
   <h3>Condition score</h3>
@@ -14,23 +14,6 @@
       <th>Condition</th>
     </tr>
     </thead>
-    <!-- { path: 'functionality.general', title: 'Functionality', fa: 'fa-wrench' }, { path: 'general.range', title: 'Total condition', fa: 'fa-inline-chart', deviceRange: true, cssClasses: 'active'} -->
-    <!--<tbody ng-repeat="prop in [ { path: 'appearance.general', title: 'Appearance', fa: 'fa-eye' }]">
-      <tr ng-repeat="entry in _.get(selection.props.condition, prop.path)">
-        <td>
-          <i class="fa fa-fw {{ prop.fa }}"></i>
-        </td>
-        <td>{{ prop.title }}</td>
-        <td><selection-property entry="entry" title="prop.title" add-filter="addFilter(path, value, title)"></selection-property></td>
-        <td class="text-right"
-            ng-swow="!prop.deviceRange">
-            <span class="label label-primary">{{::entry.value}}</span>
-        </td>
-        <td ng-show="prop.deviceRange" class="text-right">
-          <selection-property entry="entry" title="prop.title" add-filter="addFilter(path, value, title)"></selection-property>
-        </td>
-      </tr>
-    </tbody>-->
     <tbody>
     <tr ng-repeat="entry in selection.props.condition.appearance.general">
       <td>
@@ -57,10 +40,12 @@
     <tr ng-repeat="entry in selection.props.condition.general.range">
       <td><i class="fa fa-fw fa-line-chart"></i></td>
       <td>Total condition</td>
-      <td><selection-property
-              entry="entry"
-              title="'Total condition'"
-              add-filter="addFilter(path, value, title)"></selection-property></td>
+      <td>
+        <selection-property entry="entry"
+                            title="'Total condition'"
+                            add-filter="addFilter(path, value, title)">
+        </selection-property>
+      </td>
     </tr>
     </tbody>
   </table>

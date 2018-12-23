@@ -84,4 +84,5 @@ module.exports = window.angular.module('deviceHub', [
     $rootScope.COMMON = window.COMMON
     $rootScope.COMPONENTS = window.COMPONENTS
     $rootScope.CONSTANTS = CONSTANTS
+    window.CONSTANTS = CONSTANTS // todo are we sure this is ok?
   })

@@ -2,6 +2,7 @@ function deviceRange () {
   return {
     template: `
         <span class="resource-range">
+        
           <span ng-repeat="s in stars track by $index"><i class="fa fa-star-o fa-fw"></i></span>
           <span ng-if="displayEmpty">
             <span ng-repeat="s in emptyStars track by $index"><i class="fa fa-star-o fa-star-o-inactive fa-fw"></i></span>

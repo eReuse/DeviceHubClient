@@ -3,11 +3,12 @@ require('angular')
 const inflection = require('inflection')
 
 /**
- * Tries to copy a value using an own 'clone' property of it, or uses the angular standard way of doing it.
+ * Tries to copy a value using an own 'clone' property of it, or uses the angular standard way of
+ * doing it.
  * @param value
  * @returns {*}
  */
-function copy(value) {
+function copy (value) {
   try {
     return value.clone()
   } catch (err) {
@@ -106,18 +107,11 @@ const Naming = {
    * @returns {string}
    */
   humanize: function (string) {
-    let converted = string
-    try {
-      converted = this.popPrefix(string)[1]
-    } catch (err) {
-    }
-    converted = inflection.humanize(inflection.underscore(converted))
-    // Humanize destroys acronyms by adding a space between letters
-    if (converted[0] !== ' ' && converted[1] === ' ' && converted[2] !== '' && converted[3] === ' ') {
-      return string
-    } else {
-      return converted
-    }
+    console.assert(_.isString(string), `Humanize only works with strings, not ${string}.`)
+    let res = inflection.underscore(string)
+    // inflection.underscore breaks camelCase words
+    if (res[1] === '_' && res[3] === '_') res = string
+    return inflection.humanize(res)
   }
 }
 
@@ -126,7 +120,7 @@ const Naming = {
  * @param message
  * @constructor
  */
-function NoPrefix(message) {
+function NoPrefix (message) {
   this.message = message
 }
 
@@ -137,32 +131,16 @@ NoPrefix.prototype = Object.create(Error.prototype)
  * @param {Object} resource Resource object (not schema) with, at least, @type field
  * @return {string}
  */
-function getResourceTitle(resource) {
+function getResourceTitle (resource) {
   const text = resource.label || resource.email || resource._id
-  return Naming.humanize(resource['@type']) + ' ' + text
+  return Naming.humanize(resource.type) + ' ' + text
 }
 
-function aggregateToString(aggregate, multiSelection, additionalValue) {
-  return aggregate.map((entry) => aggregateEntryToString(entry, multiSelection, additionalValue)).join(', ')
-}
-
-const existsValue = 'Yes' // TODO move to config (see resource-list-getter)
-function aggregateEntryToString(entry, multiSelection) {
-  if (existsValue === entry.value) {
-    return entry.value +
-      (multiSelection ? ' (' + entry.count + ')' : '')
-  }
-  return (entry.prefix ? entry.prefix : '') +
-    entry.value +
-    (entry.postfix ? entry.postfix : '') +
-    (multiSelection ? ' (' + entry.count + ')' : '')
-}
-
-function getEventDescription(event) {
+function getEventDescription (event) {
   if (event.error) {
     return 'Something went wrong'
   }
-  switch (event['@type']) {
+  switch (event.type) {
     case 'devices:EreusePrice':
       return event.price + '€'
     case 'devices:AggregateRate':
@@ -202,7 +180,7 @@ function getEventDescription(event) {
  * @param {Object} element DOM element to detect the scroll
  * @param {$scope} $scope The scope which to execute apply()
  */
-function applyAfterScrolling(element, $scope) {
+function applyAfterScrolling (element, $scope) {
   $(element).scroll(function () {
     $.doTimeout('scroll', 250, function () {
       $scope.$apply()
@@ -215,22 +193,22 @@ function applyAfterScrolling(element, $scope) {
  * @param {Date} oldDate
  * @returns {string}
  */
-function parseDate(oldDate) {
+function parseDate (oldDate) {
   const datetime = oldDate.toISOString()
   return datetime.substring(0, datetime.indexOf('.'))
 }
 
 /**
- * It is used in the views (see main app.js) to block loading of a view until schema is ready, needed for
- * views that manage resources (i.e. all except login view).
+ * It is used in the views (see main app.js) to block loading of a view until schema is ready,
+ * needed for views that manage resources (i.e. all except login view).
  * @param schema The schema service.
  * @return {$q.promise} The promise.
  */
-function schemaIsLoaded(schema) {
+function schemaIsLoaded (schema) {
   return schema.isLoaded()
 }
 
-function setImageGetter($scope, jqueryExpression, pathToStore) {
+function setImageGetter ($scope, jqueryExpression, pathToStore) {
   $(jqueryExpression).change(function () {
     if (this.files && this.files[0]) {
       const reader = new FileReader()
@@ -245,8 +223,9 @@ function setImageGetter($scope, jqueryExpression, pathToStore) {
 }
 
 /**
- * Barebone for a progress package that handles switching a global progress (cursor style). It is interesting
- * to handle different begin and end globally (e.x. only stopping the cursor after all end() have been executed)
+ * Barebone for a progress package that handles switching a global progress (cursor style). It is
+ * interesting to handle different begin and end globally (e.x. only stopping the cursor after all
+ * end() have been executed)
  */
 const Progress = {
   PROGRESS_NAME: 'dh-progress',
@@ -262,8 +241,8 @@ const Progress = {
 }
 
 /**
- * Given a setting object (note there are two) and a path to a property, retrieves the property. If the property is
- * not in the object, it looks at the ancestors and retrieves from them.
+ * Given a setting object (note there are two) and a path to a property, retrieves the property.
+ * If the property is not in the object, it looks at the ancestors and retrieves from them.
  *
  * If the setting object is RESOURCE_CONFIG, just use *ResourceSettings.getSetting*.
  * @param settings - An object where the first level keys are resource types.
@@ -272,7 +251,7 @@ const Progress = {
  * @throw {TypeError} - No setting found in the resource or ancestors
  * @returns {*}
  */
-function getSetting(settings, rSettings, path) {
+function getSetting (settings, rSettings, path) {
   let value = _.get(settings, rSettings.type + '.' + path)
   if (_.isUndefined(value)) {
     let ancestorSetting = _.find(settings, (setting, rType) => _.has(setting, path) && rSettings.isSubResource(rType))
@@ -306,7 +285,5 @@ module.exports = {
   setImageGetter: setImageGetter,
   Progress: Progress,
   getSetting: getSetting,
-  perms: perms,
-  aggregateToString: aggregateToString,
-  aggregateEntryToString: aggregateEntryToString
+  perms: perms
 }

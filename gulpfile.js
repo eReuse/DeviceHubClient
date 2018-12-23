@@ -57,7 +57,7 @@ const filePath = {
     watch: './app/index.html'
   },
   copyFonts: {
-    src: './node_modules/font-awesome/fonts/*',
+    src: './node_modules/@fortawesome/fontawesome-free/webfonts/*',
     dest: './dist/css/fonts'
   },
   copyFavicon: {

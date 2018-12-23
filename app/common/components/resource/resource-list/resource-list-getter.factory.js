@@ -1,4 +1,4 @@
-function ResourceListGetterFactory (ResourceSettings) {
+function ResourceListGetterFactory (ResourceSettings, resources) {
   const SEARCH = 'search'
   // const utils = require('./../../utils.js')
   // const NoMorePagesAvailableException = require('./no-more-pages-available.exception')
@@ -16,18 +16,19 @@ function ResourceListGetterFactory (ResourceSettings) {
      * Creates a resourceListGetter for a specific resourceType.
      *
      * Note: A limitation of resourceListGetter is that needs a default sort.
-     * @param {string} resourceType - The resource type where to get new resources. //TODO Deprecated
-     * @param {array} resources - An array of resource objects to update when new resources are got. This array is
-     * updated by reference, so do not re-assign it.
+     * @param {string} resourceType - The resource type where to get new resources. //TODO
+     *   Deprecated
+     * @param {array} models - An array of resource objects to update when new resources are got.
+     *   This array is updated by reference, so do not re-assign it.
      * @param {object} filterSettings - Configuration object for the filters.
      * @param {progressBar} progressBar - An instance of ngProgress.
      * @param {defaultFilters} defaultFilters - Filters that will be applied to any request
      */
-    constructor (resourceType, resources, filterSettings, progressBar, defaultFilters, format) {
+    constructor (resourceType, models, filterSettings, progressBar, defaultFilters, format) {
       this.resourceType = resourceType
-      this.resources = resources
+      this.resources = models
       this.filterSettings = filterSettings
-      this.server = ResourceSettings(resourceType).server
+      this.Model = resources.resourceClass(resourceType)
       this.progressBar = progressBar
       this.defaultFilters = defaultFilters
       this._format = format
@@ -41,19 +42,21 @@ function ResourceListGetterFactory (ResourceSettings) {
        */
       this._filtersBySource = {}
 
-      // All resource lists have a sort and a search. In init time, sort and search initializes the sort and filters
-      // object, maybe with defaults, maybe not. To avoid double querying (once for sort, once for search), we
-      // wait until _filters and _sort are both initialized, i.e. not null.
+      // All resource lists have a sort and a search. In init time, sort and search initializes
+      // the sort and filters object, maybe with defaults, maybe not. To avoid double querying
+      // (once for sort, once for search), we wait until _filters and _sort are both initialized,
+      // i.e. not null.
       /**
-       * Filter object, containing a *filterName: filterValue* object, result of merging. If `null` then means
-       * it has not been initialized.
+       * Filter object, containing a *filterName: filterValue* object, result of merging. If
+       * `null` then means it has not been initialized.
        * _filtersBySource.
        * @type {object|null}
        * @private
        */
       this._filters = null
       /**
-       * Primitive object containing the sort parameters. If `null` then means that has not been initialized.
+       * Primitive object containing the sort parameters. If `null` then means that has not been
+       * initialized.
        * @type {object|null}
        * @private
        */
@@ -85,7 +88,8 @@ function ResourceListGetterFactory (ResourceSettings) {
       _.merge(this._filters, this._filtersBySource[SEARCH])
       // The default filters have preference over others
       _.merge(this._filters, this.defaultFilters)
-      // todo if this is called multiple times for the same parameters use isEqual and firstTime combo
+      // todo if this is called multiple times for the same parameters use isEqual and firstTime
+      // combo
       if (!_.isNull(this._filters) && !_.isNull(this._sort)) this.getResources()
     }
 
@@ -97,8 +101,8 @@ function ResourceListGetterFactory (ResourceSettings) {
     /**
      * updateFilters for source: search
      *
-     * Filters of search come encoded and are not suitable for the query. This method adapts them and adds them
-     * to all the filters.
+     * Filters of search come encoded and are not suitable for the query. This method adapts them
+     * and adds them to all the filters.
      * @param {object} newFilters
      */
     updateFiltersFromSearch (newFilters, checkIfEndpoint) {
@@ -118,7 +122,7 @@ function ResourceListGetterFactory (ResourceSettings) {
 
           // range mapping
           if (value.min || value.max) {
-            value = [ value.min, value.max ]
+            value = [value.min, value.max]
           }
 
           // field specific mappings
@@ -169,9 +173,11 @@ function ResourceListGetterFactory (ResourceSettings) {
     /**
      * Obtains a new batch of resources from the server, updating the 'resources' array.
      *
-     * You do not usually need to call this method, as it is automatically done by the other 'update' methods.
+     * You do not usually need to call this method, as it is automatically done by the other
+     * 'update' methods.
      *
-     * @param {boolean} getNextPage - Shall we get the next page? If *false* then the first page is returned.
+     * @param {boolean} getNextPage - Shall we get the next page? If *false* then the first page
+     *   is returned.
      * @param {boolean} showProgressBar - Should the progress bar be shown?
      * @return {promise} The Restangular promise.
      */
@@ -182,158 +188,23 @@ function ResourceListGetterFactory (ResourceSettings) {
       if (showProgressBar) this.progressBar.start()
       // Only 'Load more' adds pages, so if not getNextPage equals a new search from page 1
       this.pagination.pageNumber = getNextPage ? this.pagination.pageNumber + 1 : 1
-      const q = {
+      const q = { // todo from old format to new
         filter: this._filters,
         search: this._query
       }
       if (this._format) {
         q.format = this._format
       }
-      //
-      // const q = {
-      //   where: this._filters,
-      //   page: this.pagination.pageNumber,
-      //   sort: this._sort,
-      //   max_results: this.resourceType === 'Device'
-      //     ? ($(window).height() < 800 ? 20 : 30)
-      //     : 15
-      // }
-
-      return this.server.getList(q).then(this._processResources.bind(this, getNextPage, showProgressBar))
+      return this.Model.server.getList(q).then(
+        models => this._processResources(getNextPage, showProgressBar, models)
+      )
     }
 
-    _processResources (getNextPage, showProgressBar, resources) {
+    _processResources (getNextPage, showProgressBar, models) {
       if (showProgressBar) this.progressBar.complete()
       if (!getNextPage) this.resources.length = 0
-      if (this.resourceType === 'Device') {
-        resources.forEach(r => {
-          const components = ['Motherboard', 'RamModule', 'SoundCard', 'GraphicCard', 'OpticalDrive', 'HardDrive', 'Processor', 'NetworkAdapter']
-          const isComponent = components.indexOf(r['type']) !== -1
-          const computers = ['Desktop', 'Laptop']
-          const isComputer = computers.indexOf(r['type']) !== -1
-          const isPlaceholder = r['@type'] === 'Device'
-
-          let parentLots = r.lots
-
-          if (parentLots.length === 0) {
-            parentLots.push({
-              _id: 'NoParent',
-              '@type': 'Lot',
-              name: 'Without lot'
-            })
-          }
-
-          let title
-          if (isPlaceholder) {
-            title = 'Placeholder'
-          } else {
-            if (isComponent) {
-              _.assign(r, {
-                '@type': 'Component'
-              })
-            } else if (isComputer) {
-              _.assign(r, {
-                '@type': 'Computer'
-              })
-            } else {
-              _.assign(r, {
-                '@type': 'Peripheral'
-              })
-            }
-            const manufacturer = r.manufacturer ? (' ' + r.manufacturer) : ''
-            const model = r.model ? (' ' + r.model) : ''
-            title = manufacturer + model
-          }
-
-          // sort events by creation date
-          r.events.sort((a, b) => {
-            return (new Date(b.created)).getTime() - (new Date(a.created)).getTime()
-          })
-
-          // and map to client props
-          r.events && r.events.forEach((e) => {
-            _.defaults(e, {
-              '@type': 'devices:' + e.type,
-              '_id': e.id
-            })
-          })
-
-          // map rating
-          if (r.price) {
-            const price = r.price
-            r.pricing = {
-              'refurbisher': price.refurbisher,
-              'retailer': price.retailer,
-              'platform': price.platform,
-              'total': {
-                'standard': price.price
-              }
-            }
-          }
-
-          // map rating
-          if (r.rate) {
-            const rate = r.rate
-            r.condition = {
-              'scoringSoftware': {
-                'version': rate.software,
-                'label': rate.version
-              },
-              'appearance': {
-                'score': rate.appearance,
-                'general': rate.appearanceRange
-              },
-              'functionality': {
-                'score': rate.functionality,
-                'general': rate.functionalityRange
-              },
-              'components': {
-                'hardDrives': rate.data_storage,
-                'hardDrivesRange': rate.dataStorageRange,
-                'ram': rate.ram,
-                'ramRange': rate.ramRange,
-                'processors': rate.processor,
-                'processorsRange': rate.processorRange
-              },
-              'general': {
-                'score': rate.rating,
-                'range': rate.ratingRange
-              }
-            }
-          }
-
-          // map components
-          r.totalRamSize = r.ramSize
-          r.totalHardDriveSize = _.isFinite(parseInt(r.dataStorageSize))
-            ? Math.round(r.dataStorageSize / 1024)
-            : r.dataStorageSize
-          r.networkSpeedsEthernet = r.networkSpeeds && r.networkSpeeds.length && r.networkSpeeds[0]
-          r.networkSpeedsWifi = r.networkSpeeds && (r.networkSpeeds.length > 1) && r.networkSpeeds[1]
-          const existsValue = 'Yes' // TODO move to config (see utils.aggregateEntryToString)
-          if (r.networkSpeedsWifi === 0) {
-            r.networkSpeedsWifi = existsValue
-          }
-
-          // map status
-          let status = 'Registered'
-          if (r.physical && r.trading) {
-            status = r.trading + ' / ' + r.physical
-          } else if (r.physical || r.trading) {
-            status = r.trading || r.physical
-          }
-
-          _.defaults(r, devicePropertiesStub)
-          _.assign(r, {
-            title: title,
-            status: status,
-            parentLots: parentLots
-          })
-
-        })
-
-        this._updateResourcesAfterGet(getNextPage, resources)
-      } else if (this.resourceType === 'Lot') {
-        resources.forEach(lot => {
+      if (this.resourceType === 'Lot') {
+        models.forEach(lot => {
           function assignTypeRec (lot) {
             _.assign(lot, {
               '@type': 'Lot',
@@ -343,17 +214,21 @@ function ResourceListGetterFactory (ResourceSettings) {
               assignTypeRec(node)
             })
           }
+
           assignTypeRec(lot)
         })
-        this._updateResourcesAfterGet(getNextPage, resources)
       }
-
-      return resources
+      this._updateResourcesAfterGet(getNextPage, models)
+      return models
     }
 
     _updateResourcesAfterGet (getNextPage, resources) {
       _.assign(this.resources, this.resources.concat(resources))
-      this.totalNumberResources = (resources._meta && resources._meta.total) || 0 // TODO sometimes total number is not returned
+      this.totalNumberResources = (resources._meta && resources._meta.total) || 0 // TODO
+                                                                                  // sometimes
+                                                                                  // total number
+                                                                                  // is not
+                                                                                  // returned
       this.pagination.morePagesAvailable = resources._meta && resources._meta.page * resources._meta.max_results < resources._meta.total
       this.pagination.totalResources = resources._meta && resources._meta.total
       // broadcast to callbacks
@@ -365,7 +240,8 @@ function ResourceListGetterFactory (ResourceSettings) {
     }
 
     /**
-     * Calls the method back every time the instance of resourceListGetter gets resources from server.
+     * Calls the method back every time the instance of resourceListGetter gets resources from
+     * server.
      *
      * The signature is as follows: callback(resources, resourceType, pagination)
      * @param callback

@@ -1,17 +1,11 @@
 <div class="modal-header">
   <h3 class="modal-title">
-    <resource-icon resource-type="{{::model['@type']}}"></resource-icon>
-    {{::title}}
+    <resource-icon resource="model"></resource-icon>
+    {{::model.title}}
   </h3>
 </div>
 <div class="modal-body">
-  <form-schema
-    model="model"
-    options="options"
-    status="status"
-    l-container="lContainer"
-    parser-options="parserOptions"
-  ></form-schema>
+  <resource-form model="model" status="status"></resource-form>
 </div>
 <div class="modal-footer">
   <div class="row">
@@ -23,13 +17,13 @@
           <li ng-repeat="(key, value) in status.errorListFromServer">{{key}}: {{value}}</li>
         </ul>
       </div>
-      <div ng-if="status.errorFromLocal"><i class="fa fa-warning"></i>Cannot submit. Check the form and
-                                                                      repair the errors.
+      <div ng-if="status.errorFromLocal"><i class="fa fa-warning"></i>
+        Cannot submit. Check the form and repair the errors.
       </div>
     </div>
     <div class="col-xs-5">
       <button type="submit"
-              form="form-schema"
+              form="resource-form"
               class="btn btn-primary submit-button"
               dh-submit-button="status.loading"
       >Submit
@@ -39,13 +33,6 @@
               ng-click="cancel()"
               ng-disabled="status.loading"
       >Cancel
-      </button>
-      <button ng-if="options.canDelete"
-              type="button"
-              ng-click="options.delete(model)"
-              class="btn btn-danger"
-              dh-submit-button="status.loading"
-      >Delete
       </button>
     </div>
   </div>

@@ -1,0 +1,42 @@
+@import '_device-list-summary.directive'
+
+device-list-summary
+  #device-list-summary
+    .property
+      .fa-chevron-right
+        position: absolute
+        top: 50%
+        transform: translateY(-50%)
+        right: 0
+
+  #device-list-full
+    transition: right 600ms
+    position: fixed
+    top: $navbar-height
+    height: calc(100vh - #{$navbar-height})
+    right: -34%
+    // col-4 size
+    margin: 0
+    z-index: 3
+    // forms have a z-index of 2
+    &.opened
+      // By default just get all space of the summary
+      right: 0
+
+    @media (min-width: $screen-sm-min)
+      // For sm and bigger (not smartphone) take a bit more of screen
+      // in case of big full props
+      &.opened.big
+        width: 40vw
+        @media (max-width: $screen-md-max)
+          // In case of sm - md screens take more space to compensate
+          // the small screen
+          width: 60vw
+
+    .panel-body
+      // font size + 2 * vertical padding + 1 border
+      $panel-heading-vertical: ceil(($font-size-base * 1.125)) + 2 * nth($panel-heading-padding, 1) + 1
+      height: calc(100vh - #{$navbar-height} - #{$panel-heading-vertical})
+      overflow-y: auto
+
+

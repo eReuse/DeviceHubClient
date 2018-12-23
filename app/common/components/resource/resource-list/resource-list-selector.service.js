@@ -1,24 +1,22 @@
-/**
- * Manages selecting resources in the resource-list.
- *
- * The user can select them through a checkbox in every row and through a 'select all on this list' / 'unselect all'
- * button at the end of the table.
- *
- * There is the concept of *actual list* and *total*. The actual list is formed by the list of resources the user
- * sees. However, as the user filters the list, resources appear and disappear. Those resources that
- * the user selected and disappeared are still being held in a *total* array, and if through the filters
- * those resources appear again, the user will see them selected.
- */
-class ResourceListSelector {
+function resourceListSelectorFactory () {
   /**
+   * Manages selecting resources in the resource-list.
    *
-   * @param {object} selector - A selector object with the ng-models of the checkboxes
-   *  - 'checked': the ng-model for the 'selectAll' checkbox
-   *  - 'checkboxes': an array of ng-models for the individual resource select checkboxes where the '_id' is the key.
+   * The user can select them through a checkbox in every row and through a 'select all on this
+   * list' / 'unselect all' button at the end of the table.
+   *
+   * There is the concept of *actual list* and *total*. The actual list is formed by the list of
+   * resources the user sees. However, as the user filters the list, resources appear and
+   * disappear. Those resources that the user selected and disappeared are still being held in a
+   * *total* array, and if through the filters those resources appear again, the user will see
+   * them selected.
    */
-  constructor () {
-    let callbacksForSelections = []
-    let selected = {}
+  class ResourceListSelector {
+    constructor () {
+      this.callbacksForSelections = []
+      /** @type {Object.<integer, module:resources.Device>} */
+      this.selected = {}
+    }
 
     /**
      * Toggles the selected state of given resource, selecting (or deselecting) the device(s)
@@ -26,43 +24,43 @@ class ResourceListSelector {
      *
      * @param {object} resource - The resource to select/deselect
      */
-    this.toggle = (resource) => {
+    toggle (resource) {
       if (this.isSelected(resource)) { // Remove
-        remove(resource)
+        this.remove(resource)
       } else { // Add
-        add(resource)
+        this.add(resource)
       }
-      _control()
+      this._control()
     }
 
     /**
      * Selects all given resources
      * @param resources
      */
-    this.selectAll = (resources) => {
+    selectAll (resources) {
       _.forEach(resources, resource => {
-        add(resource)
+        this.add(resource)
       })
-      _control()
+      this._control()
     }
 
     /**
      * Deselects all given devices
      */
-    this.deselectAll = devices => {
-      _deselectAll(devices)
-      _control()
+    deselectAll (devices) {
+      this._deselectAll(devices)
+      this._control()
     }
 
-    let _deselectAll = devices => {
+    _deselectAll (devices) {
       if (!devices || !devices.slice) {
-        selected = {}
+        this.selected = {}
         return
       }
 
       devices = devices.slice() // given devices might be the same array we remove devices from
       devices.forEach(device => {
-        remove(device)
+        this.remove(device)
       })
     }
 
@@ -71,156 +69,67 @@ class ResourceListSelector {
      * @param {object} resource
      * @returns {boolean}
      */
-    this.isSelected = resource => {
-      return selected[resource._id]
+    isSelected (resource) {
+      return !!this.selected[resource.id]
     }
 
     /**
      * @param {object} resource - The resource to add
      */
-    let add = (resource) => {
-      selected[resource._id] = resource
+    add (resource) {
+      this.selected[resource.id] = resource
     }
 
     /**
      * @param resource
      */
-    let remove = resource => {
-      selected[resource._id] = null
-      delete selected[resource._id]
+    remove (resource) {
+      this.selected[resource.id] = null
+      delete this.selected[resource.id]
     }
 
-    this.callbackOnSelection = callback => {
-      callbacksForSelections.push(callback)
+    callbackOnSelection (callback) {
+      this.callbacksForSelections.push(callback)
     }
 
-    this.getAllSelectedDevices = () => {
-      return Object.values(selected)
+    getAllSelectedDevices () {
+      return Object.values(this.selected)
     }
 
     /**
      * Returns non empty lots. Lots in which devices where selected have lower indexes
      */
-    this.getLots = () => {
+    getLots () {
       let lots = {}
       this.getAllSelectedDevices().forEach((device) => {
-        device.parentLots.forEach((lot) => {
-          if (!lots[lot._id]) {
-            lots[lot._id] = _.defaults({}, lot, { selectedDevices: [] })
+        device.lots.forEach((lot) => {
+          if (!lots[lot.id]) {
+            lots[lot.id] = _.defaults({}, lot, {selectedDevices: []})
           }
-          lots[lot._id].selectedDevices.push(device)
+          lots[lot.id].selectedDevices.push(device)
         })
       })
       return Object.values(lots)
     }
 
-    this.reselect = (devices) => {
+    reselect (devices) {
       let selectedList = devices.filter((device) => {
-        return selected[device._id]
+        return this.selected[device.id]
       })
-      selected = _.keyBy(selectedList, '_id')
-      _control()
-    }
-
-    // TODO move to resource-list.directive
-    this.getAggregatedPropertyOfSelected = (selectedDevices = [], pathToProp, options = {}) => {
-      if (selectedDevices.length === 0) {
-        return null
-      }
-      selectedDevices = _.filter(selectedDevices, (d) => { return !_.isNil(_.get(d, pathToProp)) })
-      const counts = _(selectedDevices).mapValues((d) => { return _.get(d, pathToProp) }).countBy().value()
-      const countsList = _.values(_.mapValues(counts, (value, key) => {
-        return _.defaults(
-          {},
-          _.pick(options, [ 'postfix', 'prefix' ]),
-          {
-            count: value,
-            value: key,
-            property: pathToProp
-          }
-        )
-      }))
-      return countsList
-      // if (selectedDevices.length > 1) {
-      //   if (_.keys(counts).length <= 5) {
-      //     let text = ''
-      //     _.toPairs(counts).forEach(pair => {
-      //       const key = pair[0]
-      //       const count = pair[1]
-      //       if (_.isNil(key)) {
-      //
-      //       }
-      //       text += key
-      //       if (postfix) {
-      //         text += ' ' + postfix
-      //       }
-      //       text += ' (' + count + ') '
-      //     })
-      //     return text
-      //   }
-      // }
-      //
-      // let reducedDevice = selectedDevices.reduce((accumulate, device) => {
-      //   let value = accumulate[pathToProp]
-      //   if (_.has(device, pathToProp) && value !== _.get(device, pathToProp)) {
-      //     value = valueIfDifferent
-      //     postfix = ''
-      //   }
-      //   let reducedValue = {}
-      //   _.set(reducedValue, pathToProp, value)
-      //   return reducedValue
-      // }, selectedDevices[0])
-      //
-      // let aggregatedValue = _.get(reducedDevice, pathToProp)
-      //
-      // if (aggregatedValue && postfix) {
-      //   aggregatedValue += postfix
-      // }
-      // return aggregatedValue
-    }
-
-    // TODO move to resource-list.directive
-    this.getRangeOfPropertyOfSelected = (selectedDevices = [], pathToProp, filter = (a) => a) => {
-      let min = null
-      let max = null
-      selectedDevices.forEach(device => {
-        if (_.has(device, pathToProp) && _.isNil(min) || _.get(device, pathToProp) < min) {
-          min = _.get(device, pathToProp)
-        }
-        if ((_.has(device, pathToProp) && _.isNil(max)) ||
-            (_.has(device, pathToProp) && _.get(device, pathToProp) > max)) {
-          max = _.get(device, pathToProp)
-        }
-      })
-      if (_.isNil(min)) {
-        return min
-      }
-      if (min === max) {
-        return filter(min)
-      }
-      return filter(min) + ' - ' + filter(max)
-    }
-
-    // TODO move to resource-list.directive
-    this.getAggregatedSetOfSelected = (selectedDevices = [], pathToProp, valueIdProp = 'id') => {
-      let set = {}
-      selectedDevices.forEach(device => {
-        _.get(device, pathToProp, []).forEach(value => {
-          let id = value[valueIdProp]
-          set[id] = value
-        })
-      })
-      return _.values(set)
+      this.selected = _.keyBy(selectedList, 'id')
+      this._control()
     }
 
     /**
      * Performs common tasks after adding/removing resources on both lists.
      * @private
      */
-    let _control = () => {
-      _.invokeMap(callbacksForSelections, _.call, null, this.getAllSelectedDevices())
+    _control () {
+      _.invokeMap(this.callbacksForSelections, _.call, null, this.getAllSelectedDevices())
     }
   }
+
+  return ResourceListSelector
 }
 
-module.exports = ResourceListSelector
+module.exports = resourceListSelectorFactory

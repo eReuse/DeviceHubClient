@@ -1,4 +1,4 @@
-function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar, $rootScope, LotsSelector, ResourceSettings) {
+function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar, $rootScope, LotsSelector, ResourceSettings, resources) {
   const PATH = require('./__init__').PATH
   // const PATH = 'common/components/resource/resource-list/lots-tree-navigation'
   return {
@@ -11,31 +11,30 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
       pre: ($scope) => {
         const config = _.cloneDeep(resourceListConfig)
         $scope.treeTemplateURL = PATH + '/lots-tree.html'
-        $scope.data = []
         $scope.selector = LotsSelector
 
-        $scope.findNodes = function (filter) {
-          function markAsVisible (node) {
-            let oneChildVisible = false
-            node.nodes && node.nodes.forEach((child) => {
-              let childIsVisible = markAsVisible(child)
-              if (childIsVisible) {
-                oneChildVisible = true
-              }
+        /**
+         * Finds nodes containing text and makes them visible
+         * @param {string} text
+         */
+        function makeNodesWithTextVisible (text) {
+          /** @param {module:resources.LotNode} node */
+          function visibleIfHasText (node) {
+            let atLeastOneChildVisible = false
+            node.nodes.forEach(child => {
+              let childIsVisible = visibleIfHasText(child)
+              if (childIsVisible) atLeastOneChildVisible = true
+              node.isVisible = !text || node.hasText(text) || atLeastOneChildVisible
+              return node.isVisible
             })
-            node.isVisible = !filter ||
-                            filter.length === 0 ||
-                            node.name.indexOf(filter) !== -1 ||
-                            oneChildVisible
-            return node.isVisible
           }
 
-          $scope.data.forEach((node) => markAsVisible(node))
+          $scope.lots.tree.forEach((node) => visibleIfHasText(node))
         }
 
+        $scope.makeNodesWithTextVisible = makeNodesWithTextVisible
+
         $scope.treeOptions = {
-          // beforeDrop : function ($event) {
-          // },
           dropped: function ($event) {
             // if element was not moved, use click event
             if ($event.source.index === $event.dest.index) {
@@ -69,17 +68,7 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
         }
 
         $scope.toggleLot = (lot, $event) => {
-          /*
-          TODO implement shift select
-          if ($event.shiftKey) {
-            let lastSelectedIndex = $scope.lastSelectedIndex || 0
-            let start = Math.min(lastSelectedIndex, $index)
-            let end = Math.max(lastSelectedIndex, $index)
-            let devicesToSelect = $scope.lots.slice(start, end + 1)
-            selector.selectAll(devicesToSelect)
-          } else
-          */
-          if ($event.ctrlKey) {
+          if ($event.ctrlKey || $event.metaKey) {
             $scope.selector.toggleMultipleSelection(lot)
           } else { // normal click
             $scope.selector.toggle(lot)
@@ -96,11 +85,12 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
               // TODO set newly created lot's resource-field-edit to editing
             })
           }
+
           ResourceSettings('Lot').server.post({name: 'New lot'}).then(childLot => {
             if (parentLot) {
               ResourceSettings('Lot').server
                 .one(parentLot._id)
-                .post('children', null, { id: childLot._id })
+                .post('children', null, {id: childLot._id})
                 .then(() => {
                   startEditing(childLot)
                 })
@@ -120,21 +110,13 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
           newLot()
         }
 
-        // get data
-        $scope.data = []
-        // Set up getters for lots
-        const getterLots = new ResourceListGetter('Lot', $scope.data, config, progressBar, null, 'UiTree')
-        getterLots.updateSort('name')
-        getterLots.callbackOnGetting(() => {
-          $scope.totalNumberOfLots = getterLots.getTotalNumberResources()
-          $scope.moreLotsAvailable = $scope.totalNumberOfLots > $scope.data.length
-          $scope.findNodes()
-        })
-
         function reload () {
-          return getterLots.getResources()
+          resources.Lot.server.getList({format: 'UiTree'}).then(lots => {
+            $scope.lots = lots
+          })
         }
 
+        reload()
         $scope.$on('lots:reload', () => {
           reload()
         })

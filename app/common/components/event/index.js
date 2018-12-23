@@ -13,3 +13,4 @@ module.exports = angular.module('common.components.event',
   .directive('reserveView', require('./reserve-view/reserve-view.directive'))
   .directive('sellView', require('./sell-view/sell-view.directive'))
   .factory('ReserveFormSchema', require('./reserve.form-schema.factory'))
+  .factory('openEventModal', require('./open-event-modal.factory'))

@@ -1,4 +1,4 @@
-function reserveView (dhModal, ReserveFormSchema, session) {
+function reserveView (dhModal, ReserveFormSchema, session, openEventModal) {
   return {
     template: require('./reserve-view.directive.html'),
     restrict: 'E',
@@ -7,7 +7,6 @@ function reserveView (dhModal, ReserveFormSchema, session) {
     },
     link: $scope => {
       $scope.session = session
-      const openEventModal = require('./../open-event-modal')(dhModal)
       $scope.account = {'@type': 'Account', _id: $scope.resource.for}
       const options = {FormSchema: ReserveFormSchema}
       // $scope.resource might not be totally defined when accessing this view through the URL

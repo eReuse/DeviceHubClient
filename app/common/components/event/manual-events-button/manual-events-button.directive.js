@@ -1,17 +1,27 @@
-function manualEventsButton (dhModal, ResourceListSelector) {
+/**
+ *
+ * @param {module:dh-modal-provider} dhModal
+ * @param {module:resources} resources
+ * @param {module:open-event-modal} openEventModal
+ */
+function manualEventsButton (dhModal, resources, openEventModal) {
   return {
     template: require('./manual-events-button.directive.html'),
     restrict: 'E',
-    scope: {},
+    scope: {
+      models: '<'
+    },
+    /**
+     * @param {$scope} $scope
+     * @param {module:resources.Device[]} $scope.models
+     */
     link: $scope => {
-      function setView () {
-        $scope.resources = ResourceListSelector.getAllSelectedDevices()
-        $scope.singleSelection = $scope.resources.length === 1
-      }
-      setView()
-      ResourceListSelector.callbackOnSelection(setView)
+      $scope.events = [
+        resources.ReadyToUse
+      ]
 
-      $scope.events = [ // TODO move to config
+      // todo removeØ
+      $scope._events = [ // TODO move to config
         {'type': 'devices:Ready', 'humanName': 'Ready'},
         {'type': 'devices:ToPrepare', 'humanName': 'To prepare'},
         {'type': 'devices:Prepare', 'humanName': 'Prepare'},
@@ -30,11 +40,7 @@ function manualEventsButton (dhModal, ResourceListSelector) {
         // {'type': 'devices:TransferAssetLicense', 'humanName': 'Transfer asset license'},
         {'type': 'devices:NewTag', 'humanName': 'Add tag', 'singleSelectionOnly': true}
       ]
-
-      $scope.openModal = (eventType) => {
-        let resources = $scope.resources
-        require('./../open-event-modal')(dhModal)(eventType, resources)
-      }
+      $scope.openModal = Event => openEventModal.open(Event, 'foo')
     }
   }
 }

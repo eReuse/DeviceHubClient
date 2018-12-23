@@ -1,7 +1,6 @@
 // TODO what's the difference to config/restangular.config.js ? Merge the two config files?
 
 const utils = require('./../utils.js')
-const schemas = require('../../config/schema')
 
 /**
  * Provides a suitable connexion to DeviceHub, personalised for the resource.
@@ -10,7 +9,7 @@ const schemas = require('../../config/schema')
  *
  * This is an extension of {@link https:// github.com/mgonto/restangular#how-to-create-a-restangular-service-with-a-different-configuration-from-the-global-one Restangular's different configuration manual}.
  */
-function ResourceServer (schema, Restangular) {
+function ResourceServer (Restangular) {
   /**
    * Obtains the server proxy for a ResourceSettings.
    *
@@ -37,7 +36,6 @@ function ResourceServer (schema, Restangular) {
         service = Restangular.withConfig(function (RestangularProvider) {
           RestangularProvider.addRequestInterceptor(function (element) {
             element = utils.copy(element)
-            delete element['@type']
             return element
           })
         }).service(url)
@@ -112,44 +110,8 @@ function ResourceServer (schema, Restangular) {
    configuration we want, and then we extend this one for the specific case of the databases, modifying again
    those parameters.
    */
-  const RestangularConfigurerResource = Restangular.withConfig(function (RestangularProvider) {
-    /**
-     * Parses resources received from the server.
-     */
-    RestangularProvider.addResponseInterceptor(function (data, operation, resourceName, url, response) {
-      const meta = data && data._meta
-      // TODO update this and move code form resource-list-getter here
-      if (operation === 'getList') {
-        data = data.items
-        for (let i = 0; i < data.length; i++) {
-          parse(data[i], schemas[resourceName])
-        }
-      } else if (response.status !== 204) {
-        parse(data, schemas[resourceName])
-      }
-      if (data) {
-        data._meta = meta
-      }
-      return data
-    })
+  const RestangularConfigurerResource = Restangular.withConfig(RestangularProvider => {
 
-    /**
-     * Parses resources sent to the server.
-     */
-    RestangularProvider.addRequestInterceptor(function (element, operation) {
-      if (operation === 'put') {
-        // Note we can't copy FormData
-        element = utils.copy(element) // We don't want to touch the passed-in element
-        for (const fieldName in element) {
-          if (fieldName === '_created' ||
-            fieldName === '_updated' ||
-            fieldName === '_links') {
-            delete element[fieldName]
-          }
-        }
-      }
-      return element
-    })
   })
 
   // /**
@@ -166,61 +128,6 @@ function ResourceServer (schema, Restangular) {
   // session.callWhenDbChanges(setDatabaseInUrl) // For next changes
 
   return _ResourceServer
-}
-
-/**
- * Auxiliary method that parses (from DeviceHub to DeviceHubClient) resources.
- *
- * todo this could read from a Translator dictionary in constants, being easily extensible
- * @param item
- * @param schema
- */
-function parse (item, schema) {
-  if (_.isNil(item)) {
-    return
-  }
-  _.assign(item, {
-    _id: item.id,
-    _updated: item.updated,
-    _created: item.created
-  })
-
-  function convertToUTC (dateString) {
-    // return new Date(dateString + 'Z') TODO this doesn't work anymore
-    return new Date(dateString)
-  }
-
-  // todo this first for should be nested
-  for (const fieldName in schema) {
-    switch (schema[fieldName].type) {
-      case 'datetime':
-        if (item[fieldName]) {
-          item[fieldName] = convertToUTC(item[fieldName])
-        }
-        break
-    }
-  }
-
-  // We do only one nested level, as python-eve cannot go more deeper neither (of object and array)
-  _.forOwn(item, function (prop) {
-    if (_.isArray(prop)) {
-      _.forEach(prop, parse)
-    }
-  })
-  parseDate(item)
-
-  function parseDate (item) {
-    _parseDate(item, '_updated')
-    _parseDate(item, '_created')
-
-    function _parseDate (item, propertyName) {
-      if (!item[propertyName]) {
-        return
-      }
-      const a = convertToUTC(item[propertyName]) // z stands for 'utc'
-      if (!_.isNaN(a.getTime())) item[propertyName] = a
-    }
-  }
 }
 
 module.exports = ResourceServer

@@ -1,0 +1,22 @@
+<ul class="list-group">
+  <li ng-repeat="fieldType in activeModel"
+      ng-init="title=fieldType[0]; description=fieldType[1]; issues=fieldType[2]"
+      class="list-group-item">
+    <h4 class="list-group-item-heading">{{::title}}</h4>
+    <div class="list-group-item-text">
+      {{::description}}
+      <table class="table table-condensed table-striped">
+        <tbody>
+        <tr ng-repeat="issue in issues | orderBy:'created':true">
+          <td>{{::issue.typeHuman}}</td>
+          <td>{{::issue.statusHuman()}}</td>
+          <td>{{::issue.lifetimeHuman()}}</td>
+          <td>{{::issue.device.title}}</td>
+          <td>{{::issue.parent.title}}</td>
+          <td>{{::issue.createdHuman}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </li>
+</ul>

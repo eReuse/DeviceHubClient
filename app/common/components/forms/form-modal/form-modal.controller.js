@@ -1,14 +1,11 @@
-const utils = require('./../../utils')
-
-function formModal ($scope, $uibModalInstance, options, model, parserOptions, ResourceSettings) {
+function formModal ($scope, $uibModalInstance, model, resources) {
+  console.assert(model instanceof resources.Thing, 'Model should be an instance of Thing')
   $scope.model = model
-  $scope.options = options
   $scope.status = {}
-  $scope.humanize = utils.Naming
-  $scope.parserOptions = parserOptions
   $scope.cancel = () => $uibModalInstance.dismiss('cancel')
-  $scope.$watch('status.succeeded', newV => { if (newV) $uibModalInstance.close('success') })
-  $scope.title = $scope.options.title || ResourceSettings(model['@type']).humanName
+  $scope.$watch('status.succeeded', newV => {
+    if (newV) $uibModalInstance.close('success')
+  })
 }
 
 module.exports = formModal

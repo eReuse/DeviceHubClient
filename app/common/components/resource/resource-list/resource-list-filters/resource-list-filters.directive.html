@@ -4,11 +4,11 @@
   <ul class="active-filters">
     <li class="active-filter" ng-repeat="filter in activeFilters" ng-click="openFilter(filter.propPath)">
       <span>{{ filter.text }}</span>
-      <i class="fa fa-fw fa-close" ng-click="removeFilter(filter.propPath)"></i>
+      <i class="fa fa-fw fa-times" ng-click="removeFilter(filter.propPath)"></i>
     </li>
   </ul>
   <!-- Add button and panel -->
-  <button class="btn btn-primary btn-add-filter-panels" ng-click="toggleDisplayFilterPanels()">Add filter</button>
+
   <div class="add-filter-panels-container">
     <div class="add-filter-panels-wrapper">
       <div ng-class="{ active: showFilterPanels }" class="add-filter-panels">
@@ -37,19 +37,33 @@
               <button type="submit"
                       class="btn btn-primary btn-add-filter-panels"
                       ng-disabled="content.form.$invalid"
-                      style="margin-left: 10px;">Add filter</button>
+                      style="margin-left: 10px;">
+                Add filter
+              </button>
             </div>
           </div>
         </form>
       </div>
     </div>
   </div>
-  <button class="btn btn-default-inverted btn-add-filter-panels "
-          ng-click="copyFiltersToClipBoard()">Export</button>
-  <button type="button"
-          class="btn btn-default-inverted btn-add-filter-panels"
-          ng-click="openImportModal()"
-  >
-    Import
-  </button>
+  <div class="btn-group btn-group-sm">
+    <button class="btn btn-primary" ng-click="toggleDisplayFilterPanels()">
+      <i class="fa fa-filter"></i>
+      Add filter
+      <span class="caret"></span>
+    </button>
+    <button
+        class="btn btn-default-inverted"
+            ng-click="copyFiltersToClipBoard()">
+      <i class="fa fa-file-export"></i>
+      Export filters
+    </button>
+    <button type="button"
+            class="btn btn-default-inverted"
+            ng-click="openImportModal()"
+    >
+      <i class="fa fa-file-import"></i>
+      Import filters
+    </button>
+  </div>
 </div>

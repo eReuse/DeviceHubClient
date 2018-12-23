@@ -1,13 +1,9 @@
-function resourceIcon (ResourceSettings) {
+function resourceIcon () {
   return {
-    templateUrl: require('./__init__').PATH + '/resource-icon.directive.html',
+    template: '<i class="fa fa-fw {{::resource.icon}}"></i>',
     restrict: 'E',
     scope: {
-      resourceType: '@'
-    },
-    link: function ($scope) {
-      let rSettings = ResourceSettings($scope.resourceType)
-      $scope.settings = rSettings.settings
+      resource: '<' // Class or instance
     }
   }
 }

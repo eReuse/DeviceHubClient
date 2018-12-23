@@ -1,17 +1,11 @@
-<div ng-show="data.length > 0">
-  <input class="form-control" placeholder="Enter lot name" ng-model="filter" ng-change="findNodes(filter)">
+<div ng-if="lots.tree.length">
+  <input class="form-control" placeholder="Enter lot name" ng-model="filter" ng-change="makeNodesWithTextVisible(filter)">
   <div data-ui-tree="treeOptions" data-drag-delay="100">
-    <ol ui-tree-nodes="" ng-model="data" id="tree-root">
-      <li ng-repeat="node in data" ui-tree-node ng-include="treeTemplateURL" ng-show="node.isVisible"></li>
+    <ol ui-tree-nodes="" ng-model="lots.tree" id="tree-root">
+      <li ng-repeat="node in lots.tree" ui-tree-node ng-include="treeTemplateURL" ng-show="node.isVisible"></li>
     </ol>
   </div>
 </div>
-<div ng-show="data.length === 0">
-  <p>There are no lots in this inventory. Create a lot first.</p>
+<div ng-hide="lots.length">
+  <p>Just 0 lots in here...</p>
 </div>
-<a class="btn btn-default-inverted btn-sm create-new-lot-btn" ng-click="newLot($event)">
-    <span class="" style="">
-      Create new lot
-      <i class="fa fa-plus fa-fw"></i>
-    </span>
-</a>

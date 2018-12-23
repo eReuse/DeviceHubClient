@@ -13,6 +13,7 @@ require('checklist-model')
 require('angular-long-press')
 require('angular-ui-tree')
 require('angular-clipboard')
+require('dynamic-bind-html')
 
 module.exports = angular.module('common.components.resource',
   [
@@ -34,6 +35,8 @@ module.exports = angular.module('common.components.resource',
     'pr.longpress',
     'ui.tree',
     'angular-clipboard',
+    'ngSanitize',
+    'dynamicBindHtml',
     require('./../group').name // the button in resource-list
   ])
   .constant('RESOURCE_CONFIG', require('./resource-config.constant'))
@@ -46,8 +49,8 @@ module.exports = angular.module('common.components.resource',
   .filter('palletSizeLocale', require('./pallet-size-locale.filter'))
   // Resource-list
   .directive('lotsTreeNavigation', require('./resource-list/lots-tree-navigation/lots-tree-navigation.directive'))
-  .directive('selectionAggregatedProperty', require('./resource-list/resource-list-selection-summary/selection-aggregated-property.directive'))
-  .directive('selectionProperty', require('./resource-list/resource-list-selection-summary/selection-property.directive'))
+  .directive('selectionAggregatedProperty', require('./resource-list/device-list-summary/selection-aggregated-property.directive'))
+  .directive('selectionProperty', require('./resource-list/device-list-summary/selection-property.directive'))
   .service('LotsSelector', require('./resource-list/lots-tree-navigation/lots-selector.service'))
   .directive('resourceList', require('./resource-list/resource-list.directive'))
   // filters
@@ -55,7 +58,7 @@ module.exports = angular.module('common.components.resource',
   .controller('importFiltersModalCtrl', require('./resource-list/resource-list-filters/import-filters.modal.controller'))
   //
   .factory('ResourceListGetter', require('./resource-list/resource-list-getter.factory'))
-  .service('ResourceListSelector', require('./resource-list/resource-list-selector.service'))
+  .factory('ResourceListSelector', require('./resource-list/resource-list-selector.service'))
   .factory('resourceListConfig', require('./resource-list/resource-list-config.factory'))
   .directive('resourceListFooter', require('./resource-list/resource-list-footer/resource-list-footer.directive'))
   .directive('resourceListSelectAll', require('./resource-list/resource-list-select-all/resource-list-select-all.directive'))
@@ -96,3 +99,5 @@ module.exports = angular.module('common.components.resource',
    * @description Service to open a modal to label.
    */
   .config(require('./resource-label/label-modal.config'))
+  .factory('resources', require('./resources.factory'))
+  .directive('deviceListSummary', require('./resource-list/device-list-summary/device-list-summary.directive'))

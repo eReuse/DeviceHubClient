@@ -16,7 +16,6 @@ function restangularConfig (RestangularProvider, CONSTANTS) {
         case 'ToDispose':
           eventData.type = 'ToDisposeProduct'
           break
-
       }
       return eventData
     }

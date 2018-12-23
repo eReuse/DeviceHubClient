@@ -1,13 +1,6 @@
-<div class="tree-node tree-node-content" ui-tree-handle ng-click="toggleLot(node, $event)" ng-class="{selected: selector.isSelected(node) }">
-  <!--
-  Enable expand/collapse of tree nodes
-  <a class="btn btn-normal btn-xs" ng-if="node.nodes && node.nodes.length > 0" data-nodrag ng-click="toggleExpand(this)"><span
-          class="glyphicon"
-          ng-class="{
-          'glyphicon-chevron-right': collapsed,
-          'glyphicon-chevron-down': !collapsed
-        }"></span></a>
-        -->
+<div class="tree-node tree-node-content"
+     ui-tree-handle ng-click="toggleLot(node, $event)"
+     ng-class="{active: selector.isSelected(node)}">
   <a class="btn btn-normal btn-xs" >
     <resource-field-edit resource="node"
                          field="{ key: 'name', value: node.name, editable: true }"
