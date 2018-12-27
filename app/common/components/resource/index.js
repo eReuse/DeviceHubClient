@@ -20,6 +20,8 @@ module.exports = angular.module('common.components.resource',
     require('./../../config').name,
     'restangular',
     'RecursionHelper',
+    require('angular-formly'),
+    require('angular-formly-templates-bootstrap'),
     require('./resource-search').name,
     'ui.bootstrap',
     'ngAnimate',
@@ -55,8 +57,6 @@ module.exports = angular.module('common.components.resource',
   .directive('resourceList', require('./resource-list/resource-list.directive'))
   // filters
   .directive('resourceListFilters', require('./resource-list/resource-list-filters/resource-list-filters.directive'))
-  .controller('importFiltersModalCtrl', require('./resource-list/resource-list-filters/import-filters.modal.controller'))
-  //
   .factory('ResourceListGetter', require('./resource-list/resource-list-getter.factory'))
   .factory('ResourceListSelector', require('./resource-list/resource-list-selector.service'))
   .factory('resourceListConfig', require('./resource-list/resource-list-config.factory'))
@@ -72,7 +72,8 @@ module.exports = angular.module('common.components.resource',
    * @ngdoc directive
    * @name label
    * @description Generates a label for a given resource.
-   * @param {Object} resource - resource object with, at least, the fields that are going to be shown in the label and
+   * @param {Object} resource - resource object with, at least, the fields that are going to be
+   *   shown in the label and
    * ``@type``.
    * @param {Object} model - The model or properties that defines the representation of the label.
    * @param {object} model.size - The size of the label.
@@ -101,3 +102,4 @@ module.exports = angular.module('common.components.resource',
   .config(require('./resource-label/label-modal.config'))
   .factory('resources', require('./resources.factory'))
   .directive('deviceListSummary', require('./resource-list/device-list-summary/device-list-summary.directive'))
+  .config(require('./resource-list/resource-list-filters/panel-filter.wrapper.formly.config'))

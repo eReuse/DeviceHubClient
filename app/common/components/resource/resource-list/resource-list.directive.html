@@ -2,146 +2,100 @@
 <div class="row">
   <nav id="lots"
        class="col-xs-12 col-sm-2 col-md-2 col-lg-2 fill-height-bar"
-       ng-class="{ 'hidden-xs': lotsSelectionHiddenXS }">
-    <div>
-      <h3>
-        Lots
-        <button class="btn btn-default-inverted btn-sm" ng-click="newLot($event)">
-          <span class="" style="">
-          <i class="fa fa-plus fa-fw"></i>
-            New lot
-          </span>
-        </button>
-      </h3>
-      <button class="btn btn-sm btn-dark visible-xs"
-              style="float: right"
-              ng-click="lotsSelectionHiddenXS = !lotsSelectionHiddenXS">
-        <h2><i class="fa fa-times fa-fw"></i></h2>
-      </button>
-    </div>
-    <lots-tree-navigation on-selection-changed="onLotsSelectionChanged(selected)"></lots-tree-navigation>
+       ng-class="{'hidden-xs': lotsSelectionHiddenXS}">
+    <button class="btn btn-sm btn-dark visible-xs"
+            style="float: right"
+            ng-click="lotsSelectionHiddenXS = !lotsSelectionHiddenXS">
+      <h2><i class="fa fa-times fa-fw"></i></h2>
+    </button>
+    <lots-tree-navigation on-selection-changed="onLotsSelectionChanged(selected)">
+    </lots-tree-navigation>
   </nav>
-  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 middle-col"
-       ng-class="{'lots-selected': selectedLots.length > 0 }"
-       ng-show="selectionPanelHiddenXS">
-    <div class="lot-row">
-      <div style="margin-bottom: 20px;">
-        <h2 class="hidden-xs" style="margin-top: 0; display: inline-block; margin-right: 20px;">{{
-          selectedLotsText || 'All lots'}}</h2>
-        <div class="visible-xs" style="display: inline-block;">
-          <h2 style="margin-top: 0; display: inline-block; margin-right: 20px;">{{ selectedLotsText
-            || 'All lots' }}</h2>
-          <button type="button" class="btn btn-sm btn-dark"
-                  style="margin-bottom: 8px; font-size: 16px;"
-                  ng-click="showLots()">
-            <i class="fa fa-folder-o fa-fw"></i>Select lot
-          </button>
-        </div>
-        <button ng-show="selectedLots.length > 0"
-                type="button"
-                class="btn btn-default-inverted btn-sm hidden-xs"
-                style="margin-bottom: 8px; font-size: 16px;"
-                ng-click="deselectLots()"
-                style="display: inline-block;">
-          <span>Deselect all</span>
+  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" ng-show="selectionPanelHiddenXS">
+    <div id="lot-row" ng-if="lotsM.lots.length">
+      <div class="btn-group pull-right">
+        <button type="button"
+                class="btn btn-link hidden-xs"
+                ng-click="lotsM.selector.deselectAll()"
+        >
+          Deselect all ({{lotsM.lots.length}})
         </button>
+        <button class="btn btn-primary" ng-click="lotsM.deleteSelection()">
+          <i class="fa fa-times fa-fw"></i>
+          Delete lots
+        </button>
+        <group-resource-button
+            success="lotsM.reload()"
+            resource-type="Lot"
+            get-resources="lotsM.selector.getAllSelected()"
+            register-to-resources-update="lotsM.selector.callbackOnSelection(callback)">
+        </group-resource-button>
       </div>
-      <div ng-show="selectedLots.length === 1" class="lot-description">
+      <h2 class="hidden-xs">
+        {{lotsM.title}}
+        <button type="button"
+                class="btn btn-sm btn-dark visible-xs-inline-block"
+                ng-click="showLots()">
+          <i class="fa fa-folder-o fa-fw"></i>
+          Select lot
+        </button>
+      </h2>
+      <div ng-show="lotsM.lots.length === 1" class="lot-description">
         <resource-field-edit resource="selectedLots[0]"
                              field="{ key: 'description', value: selectedLots[0].description, editable: true }">
-          {{ selectedLots[0].description }}
+          {{ lotsM.lots[0].description }}
         </resource-field-edit>
-      </div>
-      <div ng-show="selectedLots.length === 0" class="lot-description" style="color: transparent">
-        Dummy text necessary so that while no lot is selected, height of lot-row is properly
-        calculated
-      </div>
-
-      <div class="selected-lots-summary">
-        <h3>Actions</h3>
-        <div class="buttons">
-          <button class="btn btn-primary">
-            <i class="fa fa-user fa-fw"></i> Share
-          </button>
-          <button class="btn btn-primary">
-            <i class="fa fa-edit fa-fw"></i> Rename
-          </button>
-          <button class="btn btn-primary" ng-click="deleteSelectedLots()">
-            <i class="fa fa-remove fa-fw"></i> Delete
-          </button>
-          <group-resource-button
-              success="reloadLots()"
-              resource-type="Lot"
-              get-resources="lotsSelector.getAllSelected()"
-              register-to-resources-update="lotsSelector.callbackOnSelection(callback)">
-          </group-resource-button>
-        </div>
       </div>
     </div>
     <div class="row devices-row">
       <div class="devices-col col-xs-12 fill-height-bar">
-        <div ng-if="!selectedLots.length">
-          <h2 style="display: inline-block; margin-top: 0;">All devices</h2>
-          <span>
-            <button type="button"
-                    class="btn btn-sm btn-dark visible-xs-inline"
-                    style="margin-bottom: 8px; font-size: 16px; margin-left: 10px;"
-                    ng-click="showLots()">
-              <i class="fa fa-folder-o fa-fw"></i>Select lot
-            </button>
-          </span>
-        </div>
-        <h3 ng-if="selectedLots.length > 0">Devices</h3>
-        <div class="search-wrapper input-group">
-          <resource-search on-search-changed="onSearchChanged(query)"></resource-search>
-          <div class="input-group-btn btn-group" ng-show="isAndroid">
-            <button type="button"
-                    class="btn btn-primary"
-                    ng-click="scanQR()"
-            >
-              QR <i class="fa fa-fw fa-camera"></i>
-            </button>
-          </div><!-- /btn-group -->
-        </div><!-- /input-group -->
-        <resource-list-filters></resource-list-filters>
-        <div>
+        <div ng-hide="lotsM.lots.length">
+          <h2>All devices</h2>
           <button type="button"
-                  class="btn btn-default-inverted btn-sm"
-                  ng-show="!selection.devices.length"
-                  ng-click="deviceSelector.selectAll(devices, parentResource)"
-          >
-            <span>Select all ({{totalNumberOfDevices}})</span>
-          </button>
-          <button type="button"
-                  class="btn btn-default-inverted btn-sm"
-                  ng-show="selection.devices.length"
-                  ng-click="deviceSelector.deselectAll(devices)"
-          >
-
-            <span>Deselect all ({{selection.devices.length}})</span>
+                  class="btn btn-sm btn-dark visible-xs-inline"
+                  style="margin-bottom: 8px; font-size: 16px; margin-left: 10px;"
+                  ng-click="showLots()">
+            <i class="fa fa-folder-o fa-fw"></i>Select lot
           </button>
         </div>
-        <div class="devices">
+        <h3 ng-show="lotsM.lots.length">Devices in lots</h3>
+        <resource-search on-update="getter.setSearch(text)"></resource-search>
+        <div class="pull-right">
+          <button type="button"
+                  class="btn btn-link btn-sm"
+                  ng-show="!selected.length"
+                  ng-click="selected.selectAll()"
+          >
+            Select all devices ({{getter.devices.pagination.total}})
+          </button>
+          <button type="button"
+                  class="btn btn-link btn-sm"
+                  ng-show="selected.length"
+                  ng-click="selected.deselectAll()"
+          >
+            Deselect all devices ({{selected.length}})
+          </button>
+        </div>
+        <resource-list-filters on-update="getter.setFilters(filters)"></resource-list-filters>
+        <div class="devices"
+             infinite-scroll="getter.gentlyGet()"
+             infinite-scroll-distance="0.8"
+             infinite-scroll-disabled="getter.working || !getter.nextPage">
           <!-- Devices table -->
-          <div infinite-scroll="getMore()"
-               infinite-scroll-distance="0.8"
-               infinite-scroll-use-document-bottom="false"
-               infinite-scroll-parent
-               infinite-scroll-disabled="getMoreIsBusy || !moreDevicesAvailable"
-               infinite-scroll-listen-for-event="list:filtered"
+          <div
                id="resource-list-table-scroll"
                class="table-responsive"
           >
             <table class="resource-list-table table table-striped table-hover unselectable table-condensed">
               <thead>
               <tr>
-                <th ng-repeat="Field in config.table"
+                <th ng-repeat="Field in ::config.table track by Field.type"
                     class="{{::Field.cssClasses}}"
                     field-sort
-                    sort="setSort(sort)"
+                    sort="getter.setSort(key, order)"
                     key="{{::Field.sortKey}}"
                     name="{{::Field.name}}"
-                    group="sort"
+                    group="_sort"
                     sort-by-default="Field.type === 'Updated'"
                 >
                   {{::Field.name}}
@@ -149,10 +103,10 @@
               </tr>
               </thead>
               <tbody>
-              <tr ng-repeat="device in devices track by device.id"
-                  ng-class="{info: deviceSelector.isSelected(device)}"
-                  ng-click="toggleSelect(device, $index, $event)"
-                  on-long-press="multiSelect(device, $index, $event)"
+              <tr ng-repeat="device in getter.devices track by device.id"
+                  ng-class="{info: selected.isSelected(device)}"
+                  ng-click="selected.toggle(device, $index, $event)"
+                  on-long-press="selected.multi(device)"
               >
                 <td ng-repeat="Field in ::config.table"
                     ng-init="field = Field.init(device)"
@@ -164,12 +118,7 @@
               </tbody>
             </table>
             <div class="text-center">
-              <i
-                  ng-class="{
-                          'fa fa-circle-o-notch fa-spin fa-lg': gettingDevices
-                        }
-                       "
-              ></i>
+              <i ng-class="{'fa fa-circle-o-notch fa-spin fa-lg': getter.working}"></i>
             </div>
           </div>
         </div><!-- ./devices -->
@@ -178,23 +127,23 @@
   </div>
   <!-- Selection -->
   <aside class="selection col-xs-12 col-sm-4 col-md-4 col-lg-4 fill-height-bar">
-    <div ng-if="!selection.devices.length" CLASS="selection-empty">
+    <div ng-if="!selected.length" class="selection-empty">
       <div>
         <h4>Select a device to view its details</h4>
         <p>Hold <kbd>Ctrl</kbd> or <kbd>Shift</kbd> to select multiple devices.</p>
       </div>
     </div>
     <h3>
-      Selected devices — {{selection.devices.length}}
+      Selected devices — {{selected.length}}
       <button type="button"
-              class="btn btn-default-inverted btn-xs"
-              ng-click="deviceSelector.deselectAll()">
+              class="btn btn-link btn-xs"
+              ng-click="selected.deselectAll()">
         Deselect all
       </button>
     </h3>
-    <div class="buttons text-center" ng-if="selection.devices.length">
+    <div class="buttons text-center" ng-if="selected.length">
       <group-resource-button
-          success="reloadDevices()"
+          success="getter.reload()"
           resource-type="Device"
           get-resources="selector.getAllSelectedDevices()"
           register-to-resources-update="selector.callbackOnSelection(callback)">
@@ -209,22 +158,20 @@
         Public link
       </button>
     </div>
-    <device-list-summary ng-if="selection.devices.length"
-                         devices="selection.devices"></device-list-summary>
+    <device-list-summary ng-if="selected.length"
+                         devices="selection.devices"
+    ></device-list-summary>
   </aside>
-
-
   <!-- Selection button-->
   <div class="selection-button visible-xs visible-sm"
-       ng-show="selection.devices.length"
+       ng-show="selected.length"
        ng-click="selectionPanelHiddenXS = !selectionPanelHiddenXS">
     <button ng-show="selectionPanelHiddenXS" class="btn btn-primary btn-view-selected">
       View selected devices
-      &nbsp;
-      <span class="badge">{{selection.devices.length}}</span>
+      <span class="badge">{{selected.length}}</span>
     </button>
-    <button ng-show="!selectionPanelHiddenXS" class="btn btn-primary btn-view-list">Back to device
-      list
+    <button ng-show="!selectionPanelHiddenXS" class="btn btn-primary btn-view-list">
+      Back to device list
     </button>
   </div>
 </div>

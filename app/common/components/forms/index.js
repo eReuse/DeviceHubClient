@@ -24,3 +24,4 @@ module.exports = angular.module('common.components.forms',
 .controller('formModalCtrl', require('./form-modal/form-modal.controller'))
 .directive('resourceForm', require('./resource.form.directive'))
 .factory('ResourceForm', require('./resource.form.factory'))
+.factory('fields', require('./fields.factory'))

@@ -22,19 +22,8 @@ function restangularConfig (RestangularProvider, CONSTANTS) {
     return data
   })
 
-  function buildLotsTree (tree = [], map) {
-    tree.forEach((node) => {
-      _.assign(node, map[node.id])
-      buildLotsTree(node.nodes, map)
-    })
-  }
-
   RestangularProvider.addResponseInterceptor(function (data, operation, what, url, response, deferred) {
     if (what === 'schema') return data
-    if ('tree' in data) {
-      buildLotsTree(data.tree, data.items)
-      return {items: data.tree}
-    }
     const extractedData = data
     switch (operation) {
       case 'getList':

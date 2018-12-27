@@ -1,1 +1,13 @@
-<input type="text" class="form-control" placeholder="Enter a device id, serial-number, ..." ng-model="searchQuery">
+<div class="input-group">
+  <input type="text"
+         class="form-control"
+         placeholder="Enter a device id, serial-number, ..."
+         ng-model="searchQuery"
+  >
+  <div class="input-group-addon">
+    <i class="fa fa-search"></i>
+  </div>
+  <div class="input-group-addon" ng-show="scanner.isAndroid" ng-click="scanner.scanQR()">
+    Scan <i class="fa fa-fw fa-qrcode"></i>
+  </div>
+</div>

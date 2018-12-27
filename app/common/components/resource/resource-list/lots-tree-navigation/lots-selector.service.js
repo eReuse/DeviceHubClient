@@ -1,34 +1,38 @@
+/**
+ * @module LotsSelector
+ */
+
 class LotsSelectorService {
   constructor () {
     let callbacksForSelections = []
     let selectedNodes = {} // TODO should not be exposed
 
-    this.isSelected = (lot) => {
-      return !!selectedNodes[lot._id]
+    this.isSelected = (lotId) => {
+      return !!selectedNodes[lotId]
     }
 
     this.toggle = (lot) => {
-      let isSelected = selectedNodes[lot._id]
+      let isSelected = selectedNodes[lot.id]
       this.deselectAll(true)
       if (!isSelected) {
-        selectedNodes[lot._id] = lot
+        selectedNodes[lot.id] = lot
       }
       _control()
     }
 
     this.selectOnly = (lot) => {
       this.deselectAll(true)
-      selectedNodes[lot._id] = lot
+      selectedNodes[lot.id] = lot
       _control()
     }
 
     this.toggleMultipleSelection = (lot) => {
-      let isSelected = selectedNodes[lot._id]
+      let isSelected = selectedNodes[lot.id]
       if (!isSelected) {
-        selectedNodes[lot._id] = lot
+        selectedNodes[lot.id] = lot
       } else {
-        selectedNodes[lot._id] = null
-        delete selectedNodes[lot._id]
+        selectedNodes[lot.id] = null
+        delete selectedNodes[lot.id]
       }
       _control()
     }

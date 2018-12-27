@@ -37,7 +37,7 @@ function fieldSort () {
       }
 
       function setSorting () {
-        $scope.sort({sort: (actualSorting ? '' : '-') + $scope.key})
+        $scope.sort({key: $scope.key, order: actualSorting})
         $scope.group.actual = $scope.key
         setClassSorting()
       }
@@ -51,7 +51,7 @@ function fieldSort () {
       }
 
       // Let's listen if another field becomes the actual
-      $scope.$watch('group.actual', function (newV) {
+      $scope.$watch('group.actual', newV => {
         if (newV !== $scope.key) {
           actualSorting = null
           setClassSorting()

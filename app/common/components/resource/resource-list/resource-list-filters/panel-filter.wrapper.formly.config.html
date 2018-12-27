@@ -1,0 +1,19 @@
+<div ng-show="options.isActual">
+  <button type="button"
+          class="btn btn-link"
+          ng-click="options.back()">
+    <i class="fa fa-chevron-left"></i>
+    Go back
+  </button>
+  <div class="list-group">
+    <button type="button"
+            class="list-group-item"
+            ng-repeat="panel in ::options.panels"
+            ng-click="panel.open()">
+      {{::panel.templateOptions.label}}
+    </button>
+  </div>
+</div>
+<div ng-show="options.panels.length || options.isActual">
+  <formly-transclude></formly-transclude>
+</div>

@@ -52,7 +52,7 @@ function resourceFieldEdit (ResourceSettings, SubmitForm, $focus, $timeout, Noti
           $scope.newLot = ($event, resource) => {
             $event && $event.preventDefault()
             $event && $event.stopPropagation()
-            $scope.newChildLot({ parentLot: resource })
+            $scope.newChildLot({ parentLotId: resource.id })
           }
 
           $scope.edit = {

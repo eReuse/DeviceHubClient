@@ -1,14 +1,14 @@
-<div class="tree-node tree-node-content"
-     ui-tree-handle ng-click="toggleLot(node, $event)"
-     ng-class="{active: selector.isSelected(node)}">
-  <a class="btn btn-normal btn-xs" >
+<div class="tree-node tree-node-content" ui-tree-handle>
+  <button class="btn btn-xs btn-normal"
+          ng-class="{selected: selector.isSelected(node.id)}"
+          ng-click="toggleLot(node, $event)">
     <resource-field-edit resource="node"
                          field="{ key: 'name', value: node.name, editable: true }"
-                         new-child-lot="newChildLot(parentLot)"
+                         new-child-lot="newChildLot(parentLotId)"
                          show-new-lot-btn="true">
-      {{node.name}}
+      {{node.lot.name}}
     </resource-field-edit>
-  </a>
+  </button>
 </div>
 <ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
   <li ng-show="node.isVisible" ng-repeat="node in node.nodes" ui-tree-node ng-include="treeTemplateURL">

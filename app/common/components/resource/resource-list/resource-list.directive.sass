@@ -1,4 +1,5 @@
 @import '_resource-list.directive'
+@import ./../../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins/buttons
 
 .animationIf.ng-enter,
 .animationIf.ng-leave
@@ -26,30 +27,6 @@
   user-select: none
 /* Likely future */
 
-.btn-normal
-  color: #333333
-  background-color: transparent
-
-  &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
-    background-color: $btn-primary-bg
-    color: $btn-primary-color
-
-.btn-default-inverted
-  color: #333333
-  background-color: white
-  border-color: grey
-
-  &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
-    color: #333333
-
-.btn-dark
-  color: white
-  background-color: #393939
-  border-color: grey
-
-  &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
-    color: white
-
 .fa-star-o-inactive
   color: lightgrey
 
@@ -57,7 +34,6 @@
   background-color: $main-nav-bg
 
 .resource-list
-
   lots-tree-navigation
     .create-new-lot-btn
       margin-top: 10px
@@ -68,9 +44,15 @@
     .tree-node.tree-node-content
       margin: 5px 0
 
-      a.btn
+      button
         width: 100%
         text-align: left
+        color: #333333
+        background-color: transparent
+
+        &:hover, &.selected
+          background-color: $btn-primary-bg
+          color: $btn-primary-color
 
       span
         font-size: 18px
@@ -105,24 +87,6 @@
       &:hover .add-lot-button, &.selected .add-lot-button
         display: block
 
-  .middle-col
-    .lot-row
-      padding-left: 25px
-      padding-top: 15px
-      margin-bottom: 10px
-      position: absolute
-
-    .devices-row
-      margin-left: 0
-      margin-top: 0
-      position: relative
-      top: 0
-      left: 0
-      transition: all 300ms ease 0s
-
-      .devices-col
-        background-color: white
-
   #screener
     display: inline-block
     position: relative
@@ -143,131 +107,30 @@
     outline: 4px auto -webkit-focus-ring-color
     outline-offset: -2px
 
-  .search-wrapper
-    width: 100%
-    margin-bottom: 15px
-
   resource-search
-    input
-      margin-bottom: 10px
+    margin-bottom: 1em
+    display: block
 
   .active-filters-container
     .active-filters
       display: inline-block
       padding: 0
-      margin-bottom: 5px
 
       .active-filter
+        @include button-size($padding-small-vertical, $padding-small-horizontal, $font-size-small, $line-height-small, $btn-border-radius-small)
         list-style: none
         display: inline-flex
-        padding: 5px 10px
-        margin-bottom: 6px
         background-color: #d9d9d9
 
         &:not(:last-child)
-          margin-right: 6px
+          margin-right: 0.5em
 
-        .fa-close
-          line-height: 1.5em
 
   .btn-add-filter-panels
     padding: 5px 10px
     display: block
     @media (min-width: $screen-sm-min)
       display: inline-flex
-
-  .add-filter-panels-container
-    position: relative
-    display: inline-flex
-    top: -13px
-    @media (min-width: $screen-sm-min)
-      top: 16px
-      // button height
-      left: -82px
-    // button width
-    .add-filter-panels-wrapper
-      position: absolute
-      z-index: 99
-      top: 0
-      box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.349019607843137)
-      background-color: white
-
-      .add-filter-panels
-        position: relative
-        width: 300px
-        height: 0
-        overflow-x: hidden
-        transition: height 500ms
-
-        &.active
-          height: 400px
-
-        .filter-panel
-          h3
-            margin-top: 0
-          background-color: white
-          width: 100%
-          min-height: 100%
-          position: absolute
-          padding: 10px 15px
-          top: 0
-          left: 100%
-          transition: left 500ms
-
-          &.isRoot
-            left: 0
-
-            .btn-hide-filter-panel
-              display: none
-
-          &.active
-            left: 0
-
-          .btn-hide-filter-panel
-            float: left
-            padding: 4px 10px
-            margin-right: 5px
-            border-radius: 5px
-            color: #333333
-
-            &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
-              color: #333333
-
-          .filter-panel-links
-            padding: 0
-
-            li
-              list-style: none
-              outline: none !important
-
-              &:first-child > button
-                border-top-left-radius: 5px
-                border-top-right-radius: 5px
-
-              &:last-child > button
-                border-bottom-left-radius: 5px
-                border-bottom-right-radius: 5px
-
-              &:not(:first-child) > button
-                border-top: none
-
-              button
-                font-size: 16px
-                line-height: 1.8
-                background-color: white
-                color: #333333
-                box-shadow: none
-                border: 1px solid #bfbfbf
-
-                width: 100%
-                text-align: left
-
-                &.btn:hover, &.btn:focus, &.btn.focus, &.btn:active
-                  box-shadow: none
-                  outline: none
-                  background-color: #449bb4
-                  border-color: white
-                  color: white
 
   .btn-select-deselect
     display: inline-block
@@ -371,3 +234,4 @@
 
 .pill-lot-flex
   display: inline-flex
+

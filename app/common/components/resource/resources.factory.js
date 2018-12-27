@@ -26,7 +26,11 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
    *
    */
   class Thing {
-    constructor (sameAs = null, updated = null, created = null) {
+    constructor (args = {}) {
+      this.define(args)
+    }
+
+    define ({sameAs = null, updated = null, created = null}) {
       /**
        * @type {URL}
        */
@@ -106,7 +110,7 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
      * parsing all properties, etc.
      */
     static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created)
+      return new this(data)
     }
 
     /** The URL path to access the resource. */
@@ -170,9 +174,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
    * @extends module:resources.Thing
    */
   class Device extends Thing {
-    constructor (sameAs, updated, created, id = null, hid = null, tags = [], model = null, manufacturer = null, serialNumber = null, weight = null, width = null, height = null, depth = null, events = [], problems = [], url = null, lots = [], rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, working = []) {
-      super(sameAs, updated, created)
-      if (id) cache.devices[id] = this
+    define ({id = null, hid = null, tags = [], model = null, manufacturer = null, serialNumber = null, weight = null, width = null, height = null, depth = null, events = [], problems = [], url = null, lots = [], rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, working = [], ...rest}) {
+      super.define(rest)
       /** @type {int} */
       this.id = id
       /** @type {?string} */
@@ -217,10 +220,6 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
       this.working = this.constructor._relationships(working)
     }
 
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.hid, data.tags, data.model, data.manufacturer, data.serialNumber, data.weight, data.width, data.height, data.depth, data.events, data.problems, data.url, data.lots, data.rate, data.price, data.trading, data.physical, data.physicalPossessor, data.productionDate, data.working)
-    }
-
     static get icon () {
       return ''
     }
@@ -258,12 +257,26 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
         this.updated
       )
     }
+
+    static fromObject (data) {
+      if (data.id && data.id in cache.lots) cache.devices[data.id].define(data)
+      else {
+        const device = super.fromObject(data)
+        cache.devices[device.id] = device
+        return device
+      }
+      return cache.lots[data.id]
+    }
   }
 
+  /**
+   * @alias module:resources.Computer
+   * @extends module:resources.Device
+   */
   class Computer extends Device {
-    constructor (sameAs, updated, created, id, hid, tags, model, manufacturer, serialNumber, weight, width, height, depth, events, problems, url, lots, rate, price, trading, physical, physicalPossessor, productionDate, working, components = [], chassis = null, ramSize = null, dataStorageSize = null, processorModel = null, graphicCardModel = null, networkSpeeds = [], privacy = []) {
-      super(sameAs, updated, created, id, hid, tags, model, manufacturer, serialNumber, weight, width, height, depth, events, problems, url, lots, rate, price, trading, physical, physicalPossessor, productionDate, working)
+    define ({components = [], chassis = null, ramSize = null, dataStorageSize = null, processorModel = null, graphicCardModel = null, networkSpeeds = [], privacy = [], ...rest}) {
       /** @type {Components[]} */
+      super.define(rest)
       this.components = components ? components.map(c => Component.fromObject(c)) : []
       this.chassis = chassis
       this.ramSize = ramSize
@@ -274,27 +287,87 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
       this.privacy = this.constructor._relationships(privacy)
     }
 
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.hid, data.tags, data.model, data.manufacturer, data.serialNumber, data.weight, data.width, data.height, data.depth, data.events, data.problems, data.url, data.lots, data.rate, data.price, data.trading, data.physical, data.physicalPossessor, data.productionDate, data.working, data.components, data.chassis, data.ramSize, data.StorageSize, data.processorModel, data.graphicCardModel, data.networkSpeeds, data.privacy)
-    }
-
     static get icon () {
       return 'fa-building'
     }
   }
 
+  /**
+   * @alias {module:resources.ComputerMonitor}
+   * @extends {module:resources.Device}
+   */
   class ComputerMonitor extends Device {
     static get icon () {
       return 'fa-desktop'
     }
   }
 
+  /**
+   * @alias {module:resources.Desktop}
+   * @extends {module:resources.Computer}
+   */
   class Desktop extends Computer {
   }
 
+  /**
+   * @alias {module:resources.Laptop}
+   * @extends {module:resources.Computer}
+   */
   class Laptop extends Computer {
     static get icon () {
       return 'fa-laptop'
+    }
+  }
+
+  /**
+   * @alias {module:resources.Server}
+   * @extends {module:resources.Computer}
+   */
+  class Server extends Computer {
+    static get icon () {
+      return 'fa-server'
+    }
+  }
+
+  /**
+   * @alias {module:resources.Mobile}
+   * @extends {module:resources.Device}
+   */
+  class Mobile extends Device {
+    define ({imei = null, meid = null, ...rest}) {
+      super.define(rest)
+      this.imei = imei
+      this.meid = meid
+    }
+  }
+
+  /**
+   * @alias {module:resources.Smartphone}
+   * @extends {module:resources.Mobile}
+   */
+  class Smartphone extends Mobile {
+    static get icon () {
+      return 'fa-mobile'
+    }
+  }
+
+  /**
+   * @alias {module:resources.Tablet}
+   * @extends {module:resources.Mobile}
+   */
+  class Tablet extends Mobile {
+    static get icon () {
+      return 'fa-tablet'
+    }
+  }
+
+  /**
+   * @alias {module:resources.Cellphone}
+   * @extends {module:resources.Mobile}
+   */
+  class Cellphone extends Mobile {
+    static get icon () {
+      return 'fa-mobile-alt'
     }
   }
 
@@ -303,17 +376,13 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
    * @extends module:resources.Device
    */
   class Component extends Device {
-    constructor (sameAs, updated, created, id, hid, tags, model, manufacturer, serialNumber, weight, width, height, depth, events, problems, url, lots, rate, price, trading, physical, physicalPossessor, productionDate, working, parent = null) {
-      super(sameAs, updated, created, id, hid, tags, model, manufacturer, serialNumber, weight, width, height, depth, events, problems, url, lots, rate, price, trading, physical, physicalPossessor, productionDate, working)
+    define ({parent = null, ...rest}) {
+      super.define(rest)
       this._parent = parent
     }
 
     get parent () {
       return _.get(cache.devices, this._parent, this._parent)
-    }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.hid, data.tags, data.model, data.manufacturer, data.serialNumber, data.weight, data.width, data.height, data.depth, data.events, data.problems, data.url, data.lots, data.rate, data.price, data.trading, data.physical, data.physicalPossessor, data.productionDate, data.working, data.parent)
     }
 
     static get icon () {
@@ -326,13 +395,194 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
+   * @alias {module:resources.GraphicCard}
+   * @extends {module:resources.Component}
+   */
+  class GraphicCard extends Component {
+    define ({memory = null, ...rest}) {
+      super.define(rest)
+      this.memory = memory
+    }
+
+    static get icon () {
+      return 'fa-paint-brush'
+    }
+  }
+
+  /**
+   * @alias {module:resources.DataStorage}
+   * @extends {module:resources.Component}
+   */
+  class DataStorage extends Component {
+    define ({size = null, privacy = null, ...rest}) {
+      super.define(rest)
+      this.size = size
+      this.privacy = privacy
+      this.interface = rest.interface || null
+    }
+
+    static get icon () {
+      return 'fa-hdd'
+    }
+  }
+
+  /**
+   * @alias {module:resources.HardDrive}
+   * @extends {module:resources.DataStorage}
+   */
+  class HardDrive extends DataStorage {
+  }
+
+  /**
+   * @alias {module:resources.SolidStateDrive}
+   * @extends {module:resources.HardDrive}
+   */
+  class SolidStateDrive extends HardDrive {
+  }
+
+  /**
+   * @alias {module:resources.Motherboard}
+   * @extends {module:resources.Component}
+   */
+  class Motherboard extends Component {
+    define ({slots = null, usb = null, firewire = null, serial = null, pcmcia = null, ...rest}) {
+      super.define(rest)
+      this.slots = slots
+      this.usb = usb
+      this.firewire = firewire
+      this.serial = serial
+      this.pcmcia = pcmcia
+    }
+  }
+
+  /**
+   * @alias {module:resources.NetworkAdapter}
+   * @extends {module:resources.Component}
+   */
+  class NetworkAdapter extends Component {
+    define ({speed = null, wireless = null, ...rest}) {
+      super.define(rest)
+      this.speed = speed
+      this.wireless = wireless
+    }
+
+    static get icon () {
+      return 'fa-ethernet'
+    }
+  }
+
+  /**
+   * @alias {module:resources.Processor}
+   * @extends {module:resources.Component}
+   */
+  class Processor extends Component {
+    define ({speed = null, cores = null, threads = null, address, ...rest}) {
+      super.define(rest)
+      this.speed = speed
+      this.cores = cores
+      this.threads = threads
+      this.address = address
+    }
+  }
+
+  /**
+   * @alias {module:resources.RamModule}
+   * @extends {module:resources.Component}
+   */
+  class RamModule extends Component {
+    define ({size = null, speed = null, format = null, ...rest}) {
+      super.define(rest)
+      this.size = size
+      this.speed = speed
+      this.interface = rest.interface || null
+      this.format = format
+    }
+
+    static get icon () {
+      return 'fa-memory'
+    }
+  }
+
+  /**
+   * @alias {module:resources.SoundCard}
+   * @extends {module:resources.Component}
+   */
+  class SoundCard extends Component {
+    static get icon () {
+      return 'fa-volume-up'
+    }
+  }
+
+  /**
+   * @alias {module:resources.Display}
+   * @extends {module:resources.Component}
+   */
+  class Display extends Component {
+  }
+
+  /**
+   * @alias {module:resources.ComputerAccessory}
+   * @extends {module:resources.Device}
+   */
+  class ComputerAccessory extends Device {
+    static get icon () {
+      return 'fa-box'
+    }
+  }
+
+  /**
+   * @alias {module:resources.Mouse}
+   * @extends {module:resources.ComputerAccessory}
+   */
+  class Mouse extends ComputerAccessory {
+    static get icon () {
+      return 'fa-mouse-pointer'
+    }
+  }
+
+  /**
+   * @alias {module:resources.MemoryCardReader}
+   * @extends {module:resources.ComputerAccessory}
+   */
+  class MemoryCardReader extends ComputerAccessory {
+    static get icon () {
+      return 'fa-sd-card'
+    }
+  }
+
+  /**
+   * @alias {module:resources.SAI}
+   * @extends {module:resources.ComputerAccessory}
+   */
+  class SAI extends ComputerAccessory {
+    static get icon () {
+      return 'fa-plug'
+    }
+  }
+
+  /**
+   * @alias {module:resources.Keyboard}
+   * @extends {module:resources.ComputerAccessory}
+   */
+  class Keyboard extends ComputerAccessory {
+    define ({layout = null, ...rest}) {
+      super.define(rest)
+      this.layout = layout
+    }
+
+    static get icon () {
+      return 'fa-keyboard'
+    }
+  }
+
+  /**
    * Class representing an event.
    * @alias module:resources.Event
    * @extends module:resources.Thing
    */
   class Event extends Thing {
-    constructor (sameAs, updated, created, id = null, name = null, closed = null, severity = null, description = null, startTime = null, endTime = null, snaphsot = null, agent = null, author = null, components = null, parent = null, url = null) {
-      super(sameAs, updated, created)
+    define ({id = null, name = null, closed = null, severity = null, description = null, startTime = null, endTime = null, snaphsot = null, agent = null, author = null, components = null, parent = null, url = null, ...rest}) {
+      super.define(rest)
       /** @type {?string} */
       this.id = id
       /** @type {?string} */
@@ -397,15 +647,15 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
     get teaser () {
       return super.teaser
     }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url)
-    }
   }
 
+  /**
+   * @alias {resources:EventWithMultipleDevices}
+   * @extends {resources:Event}
+   */
   class EventWithMultipleDevices extends Event {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, devices = []) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url)
+    define ({devices = [], ...rest}) {
+      super.define(rest)
       this._devices = devices // todo we assume we only have a list of
                               //  ids here as we don't directly require events as of now
     }
@@ -413,36 +663,44 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
     get devices () {
       return this._devices.map(id => _.get(cache.devices, id, id))
     }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.devices)
-    }
   }
 
+  /**
+   * @alias {resources:EventWithOneDevice}
+   * @extends {resources:Event}
+   */
   class EventWithOneDevice extends Event {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url)
+    define ({device = null, ...rest}) {
+      super.define(rest)
       this._device = device // todo see todo in multiple devices
     }
 
     get device () {
       return _.get(cache.devices, this._device, this._device)
     }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device)
-    }
   }
 
+  /**
+   * @alias {resources:Add}
+   * @extends {resources:EventWithOneDevice}
+   */
   class Add extends EventWithOneDevice {
   }
 
+  /**
+   * @alias {resources:Remove}
+   * @extends {resources:EventWithOneDevice}
+   */
   class Remove extends EventWithOneDevice {
   }
 
+  /**
+   * @alias {resources:EraseBasic}
+   * @extends {resources:EventWithOneDevice}
+   */
   class EraseBasic extends EventWithOneDevice {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, steps = [], standards = [], certificate = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device)
+    define ({steps = [], standards = [], certificate = null, ...rest}) {
+      super.define(rest)
       this.steps = steps
       this.standards = standards.map(std => new enums.ErasureStandard(std))
       this.certificate = certificate ? new URL(certificate, CONSTANTS.url) : null
@@ -452,10 +710,6 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
       return this.standards.length ? this.standards : 'Non-standard'
     }
 
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device, data.steps, data.standards, data.certificate)
-    }
-
     get title () {
       return `${super.title} — ${this.constructor.method} ${this.standardsHuman}`
     }
@@ -463,44 +717,60 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
 
   EraseBasic.method = 'Shred'
 
+  /**
+   * @alias {resources:EraseSectors}
+   * @extends {resources:EraseBasic}
+   */
   class EraseSectors extends EraseBasic {
   }
 
   EraseSectors.method = 'Badblocks'
 
+  /**
+   * @alias {resources:ErasePhysical}
+   * @extends {resources:EraseBasic}
+   */
   class ErasePhysical extends EraseBasic {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, steps, standards, certificate, method = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, steps, standards, url)
+    define ({method = null, ...rest}) {
+      super.define(rest)
       this.method = method
-    }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device, data.steps, data.standards, data.certificate, data.method)
     }
   }
 
+  /**
+   * @alias {resources:Step}
+   * @extends {resources:Thing}
+   */
   class Step extends Thing {
-    constructor (sameAs, updated, created, startTime = null, endTime = null, severity = null) {
-      super(sameAs, updated, created)
+    define ({startTime = null, endTime = null, severity = null, ...rest}) {
+      super.define(rest)
       this.startTime = startTime ? new Date(startTime) : null
       this.endTime = endTime ? new Date(endTime) : null
       this.severity = severity
     }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.startTime, data.endTime, data.severity)
-    }
   }
 
+  /**
+   * @alias {resources:StepZero}
+   * @extends {resources:Step}
+   */
   class StepZero extends Step {
   }
 
+  /**
+   * @alias {resources:StepRandom}
+   * @extends {resources:Step}
+   */
   class StepRandom extends Step {
   }
 
+  /**
+   * @alias {resources:Rate}
+   * @extends {resources:EventWithOneDevice}
+   */
   class Rate extends EventWithOneDevice {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, rating = null, software = null, version = null, appearance = null, functionality = null, ratingRange = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device)
+    define ({rating = null, software = null, version = null, appearance = null, functionality = null, ratingRange = null, ...rest}) {
+      super.define(rest)
       this.rating = rating
       this.software = software
       this.version = version
@@ -510,34 +780,38 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
       this.ratingRangeHuman = ratingRange ? utils.Naming.humanize(ratingRange) : null
     }
 
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device, data.rating, data.software, data.version, data.appearance, data.functionality, data.ratingRange)
-    }
-
     get title () {
       return this.ratingRangeHuman
     }
   }
 
+  /**
+   * @alias {resources:IndividualRate}
+   * @extends {resources:Rate}
+   */
   class IndividualRate extends Rate {
   }
 
+  /**
+   * @alias {resources:ManualRate}
+   * @extends {resources:IndividualRate}
+   */
   class ManualRate extends IndividualRate {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, rating, software, version, appearance, functionality, ratingRange, appearanceRange = null, functionalityRange = null, labelling = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, rating, software, version, appearance, functionality, ratingRange)
+    define ({appearanceRange = null, functionalityRange = null, labelling = null, ...rest}) {
+      super.define(rest)
       this.appearanceRange = appearanceRange ? new enums.AppearanceRange(appearanceRange) : null
       this.functionalityRange = functionalityRange ? new enums.FunctionalityRange(functionalityRange) : null
       this.labelling = labelling
     }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device, data.rating, data.software, data.version, data.appearance, data.functionality, data.ratingRange, data.appearanceRange, data.functionalityRange, data.labelling)
-    }
   }
 
+  /**
+   * @alias {resources:WorkbenchRate}
+   * @extends {resources:ManualRate}
+   */
   class WorkbenchRate extends ManualRate {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, rating, software, version, appearance, functionality, ratingRange, appearanceRange, functionalityRange, labelling, processor = null, ram = null, dataStorage = null, graphicCard = null, bios = null, biosRange = null, dataStorageRange = null, ramRange = null, processorRange = null, graphicCardRange = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, rating, software, version, appearance, functionality, ratingRange, appearanceRange, functionalityRange, labelling)
+    define ({processor = null, ram = null, dataStorage = null, graphicCard = null, bios = null, biosRange = null, dataStorageRange = null, ramRange = null, processorRange = null, graphicCardRange = null, ...rest}) {
+      super.define(rest)
       this.processor = processor
       this.ram = ram
       this.dataStorage = dataStorage
@@ -553,15 +827,15 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
       this.graphicCardRange = graphicCardRange
       this.graphicCardRangeHuman = graphicCardRange ? utils.Naming.humanize(graphicCardRange) : null
     }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device, data.rating, data.software, data.version, data.appearance, data.functionality, data.ratingRange, data.appearanceRange, data.functionalityRange, data.labelling, data.processor, data.ram, data.dataStorage, data.graphicCard, data.bios, data.biosRange, data.dataStorageRange, data.ramRange, data.processorRange, data.graphicCardRange)
-    }
   }
 
+  /**
+   * @alias {resources:AggregateRate}
+   * @extends {resources:Rate}
+   */
   class AggregateRate extends Rate {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, rating, software, version, appearance, functionality, ratingRange, workbench = null, manual = null, processor = null, ram = null, dataStorage = null, graphicCard = null, bios = null, biosRange = null, appearanceRange = null, functionalityRange = null, labelling = null, dataStorageRange = null, ramRange = null, processorRange = null, graphicCardRange = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, rating, software, version, appearance, functionality, ratingRange)
+    define ({workbench = null, manual = null, processor = null, ram = null, dataStorage = null, graphicCard = null, bios = null, biosRange = null, appearanceRange = null, functionalityRange = null, labelling = null, dataStorageRange = null, ramRange = null, processorRange = null, graphicCardRange = null, ...rest}) {
+      super.define(rest)
       this.workbench = workbench
       this.manual = manual
       this.processor = processor
@@ -582,15 +856,15 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
       this.graphicCardRange = graphicCardRange
       this.graphicCardRangeHuman = graphicCardRange ? utils.Naming.humanize(graphicCardRange) : null
     }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device, data.rating, data.software, data.version, data.appearance, data.functionality, data.ratingRange, data.workbench, data.manual, data.processor, data.ram, data.dataStorage, data.graphicCard, data.bios, data.biosRange, data.appearanceRange, data.functionalityRange, data.labelling, data.dataStorageRange, data.ramRange, data.processorRange, data.graphicCardRange)
-    }
   }
 
+  /**
+   * @alias {resources:Price}
+   * @extends {resources:EventWithOneDevice}
+   */
   class Price extends EventWithOneDevice {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, currency, price, software, version, rating) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device)
+    define ({currency, price, software, version, rating, ...rest}) {
+      super.define(rest)
       this.currency = currency
       this.price = price
       this.software = software
@@ -598,40 +872,41 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
       this.rating = rating
     }
 
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device, data.software, data.version, data.rating)
-    }
   }
 
+  /**
+   * @alias {resources:EreusePrice}
+   * @extends {resources:Price}
+   */
   class EreusePrice extends Price {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, warranty2 = null, refurbisher = null, retailer = null, platform = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device)
+    define ({warranty2 = null, refurbisher = null, retailer = null, platform = null, ...rest}) {
+      super.define(rest)
       this.warranty2 = warranty2
       this.refurbisher = refurbisher
       this.retailer = retailer
       this.platform = platform
     }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device, data.software, data.version, data.rating, data.warranty2, data.refurbisher, data.retailer, data.platform)
-    }
   }
 
+  /**
+   * @alias {resources:Install}
+   * @extends {resources:EventWithOneDevice}
+   */
   class Install extends EventWithOneDevice {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, elapsed = null, address = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device)
+    define ({elapsed = null, address = null, ...rest}) {
+      super.define(rest)
       this.elapsed = elapsed
       this.address = address
     }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device, data.elapsed, data.address)
-    }
   }
 
+  /**
+   * @alias {resources:Snapshot}
+   * @extends {resources:EventWithOneDevice}
+   */
   class Snapshot extends EventWithOneDevice {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, uuid = null, software = null, version = null, events = null, expectedEvents = null, elapsed = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device)
+    define ({uuid = null, software = null, version = null, events = null, expectedEvents = null, elapsed = null, components, ...rest}) {
+      super.define(rest)
       this.uuid = uuid
       this.software = software
       this.version = version
@@ -641,29 +916,29 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
       this._components = components
     }
 
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device, data.uuid, data.software, data.version, data.events, data.expectedEvents, data.elapsed)
-    }
-
     get title () {
       return `${super.title} — ${this.software} ${this.version}`
     }
   }
 
+  /**
+   * @alias {resources:Test}
+   * @extends {resources:EventWithOneDevice}
+   */
   class Test extends EventWithOneDevice {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, elapsed = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device)
+    define ({elapsed = null, ...rest}) {
+      super.define(rest)
       this.elapsed = elapsed
-    }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device, data.elapsed)
     }
   }
 
+  /**
+   * @alias {resources:TestDataStorage}
+   * @extends {resources:Test}
+   */
   class TestDataStorage extends Test {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, elapsed, length = null, status = null, lifetime = null, assessment = null, reallocatedSectorCount = null, powerCycleCount = null, reportedUncorrectableErrors = null, commandTimeout = null, currentPendingSectorCount = null, offlineUncorrectable = null, remainingLifetimePercentage = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, elapsed)
+    define ({length = null, status = null, lifetime = null, assessment = null, reallocatedSectorCount = null, powerCycleCount = null, reportedUncorrectableErrors = null, commandTimeout = null, currentPendingSectorCount = null, offlineUncorrectable = null, remainingLifetimePercentage = null, ...rest}) {
+      super.define(rest)
       this.length = length
       this.status = status
       /**
@@ -679,10 +954,6 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
       this.currentPendingSectorCount = currentPendingSectorCount
       this.offlineUncorrectable = offlineUncorrectable
       this.remainingLifetimePercentage = remainingLifetimePercentage
-    }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device, data.elapsed, data.length, data.status, data.lifetime, data.assessment, data.reallocatedSectorCount, data.powerCycleCount, data.reportedUncorrectableErrors, data.commandTimeout, data.currentPendingSectorCount, data.offline, data.remainingLifetimePercentage)
     }
 
     statusHuman () {
@@ -714,131 +985,199 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
     }
   }
 
+  /**
+   * @alias {resources:StressTest}
+   * @extends {resources:Test}
+   */
   class StressTest extends Test {
   }
 
+  /**
+   * @alias {resources:Benchmark}
+   * @extends {resources:EventWithOneDevice}
+   */
   class Benchmark extends EventWithOneDevice {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, elapsed = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device)
+    define ({elapsed = null, ...rest}) {
+      super.define(rest)
       this.elapsed = elapsed
-    }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device, data.elapsed)
     }
   }
 
+  /**
+   * @alias {resources:BenchmarkDataStorage}
+   * @extends {resources:Benchmark}
+   */
   class BenchmarkDataStorage extends Benchmark {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, elapsed, readSpeed = null, writeSpeed = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, elapsed)
+    define ({readSpeed = null, writeSpeed = null, ...rest}) {
+      super.define(rest)
       this.readSpeed = readSpeed
       this.writeSpeed = writeSpeed
     }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device, data.elapsed, data.readSpeed, data.writeSpeed)
-    }
   }
 
+  /**
+   * @alias {resources:BenchmarkWithRate}
+   * @extends {resources:Benchmark}
+   */
   class BenchmarkWithRate extends Benchmark {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, elapsed, rate = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, device, elapsed)
+    define ({rate = null, ...rest}) {
+      super.define(rest)
       this.rate = rate
     }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.device, data.elapsed, data.rate)
-    }
   }
 
+  /**
+   * @alias {resources:BenchmarkProcessor}
+   * @extends {resources:BenchmarkWithRate}
+   */
   class BenchmarkProcessor extends BenchmarkWithRate {
   }
 
+  /**
+   * @alias {resources:BenchmarkProcessorSysbench}
+   * @extends {resources:BenchmarkProcessor}
+   */
   class BenchmarkProcessorSysbench extends BenchmarkProcessor {
   }
 
+  /**
+   * @alias {resources:BenchmarkRamSysbench}
+   * @extends {resources:BenchmarkWithRate}
+   */
   class BenchmarkRamSysbench extends BenchmarkWithRate {
   }
 
+  /**
+   * @alias {resources:ToRepair}
+   * @extends {resources:EventWithMultipleDevices}
+   */
   class ToRepair extends EventWithMultipleDevices {
   }
 
+  /**
+   * @alias {resources:Repair}
+   * @extends {resources:EventWithMultipleDevices}
+   */
   class Repair extends EventWithMultipleDevices {
   }
 
+  /**
+   * @alias {resources:ReadyToUse}
+   * @extends {resources:EventWithMultipleDevices}
+   */
   class ReadyToUse extends EventWithMultipleDevices {
     static get icon () {
       return 'fa-check'
     }
   }
 
+  /**
+   * @alias {resources:ToPrepare}
+   * @extends {resources:EventWithMultipleDevices}
+   */
   class ToPrepare extends EventWithMultipleDevices {
   }
 
+  /**
+   * @alias {resources:Prepare}
+   * @extends {resources:EventWithMultipleDevices}
+   */
   class Prepare extends EventWithMultipleDevices {
   }
 
+  /**
+   * @alias {resources:Organize}
+   * @extends {resources:EventWithMultipleDevices}
+   */
   class Organize extends EventWithMultipleDevices {
   }
 
+  /**
+   * @alias {resources:Reserve}
+   * @extends {resources:Organize}
+   */
   class Reserve extends Organize {
   }
 
+  /**
+   * @alias {resources:CancelReservation}
+   * @extends {resources:Organize}
+   */
   class CancelReservation extends Organize {
   }
 
+  /**
+   * @alias {resources:Trade}
+   * @extends {resources:EventWithMultipleDevices}
+   */
   class Trade extends EventWithMultipleDevices {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, devices, shippingDate = null, invoiceNumber = null, price = null, to = null, confirms = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, devices)
+    define ({shippingDate = null, invoiceNumber = null, price = null, to = null, confirms = null, ...rest}) {
+      super.define(rest)
       this.shippingDate = shippingDate
       this.invoiceNumber = invoiceNumber
       this.price = price
       this.to = to
       this.confirms = confirms
     }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.devices, data.shippingDate, data.invoiceNumber, data.price, data.to, data.confirms)
-    }
   }
 
+  /**
+   * @alias {resources:Sell}
+   * @extends {resources:Trade}
+   */
   class Sell extends Trade {
   }
 
+  /**
+   * @alias {resources:Donate}
+   * @extends {resources:Trade}
+   */
   class Donate extends Trade {
   }
 
+  /**
+   * @alias {resources:CancelTrade}
+   * @extends {resources:Trade}
+   */
   class CancelTrade extends Trade {
   }
 
+  /**
+   * @alias {resources:ToDisposeProduct}
+   * @extends {resources:Trade}
+   */
   class ToDisposeProduct extends Trade {
   }
 
+  /**
+   * @alias {resources:DisposeProduct}
+   * @extends {resources:Trade}
+   */
   class DisposeProduct extends Trade {
   }
 
+  /**
+   * @alias {resources:Receive}
+   * @extends {resources:EventWithMultipleDevices}
+   */
   class Receive extends EventWithMultipleDevices {
-    constructor (sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, devices, role = null) {
-      super(sameAs, updated, created, id, name, closed, severity, description, startTime, endTime, snaphsot, agent, author, components, parent, url, devices)
+    define ({role = null, ...rest}) {
+      super.define(rest)
       this.role = role
-    }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.closed, data.severity, data.description, data.startTime, data.endTime, data.snaphsot, data.agent, data.author, data.components, data.parent, data.url, data.devices, data.role)
     }
   }
 
+  /**
+   * @alias {resources:Tag}
+   * @extends {resources:Thing}
+   */
   class Tag extends Thing {
-    constructor (sameAs, updated, created, id = null, org = null, secondary = null, device = null) {
-      super(sameAs, updated, created)
+    define ({id = null, org = null, secondary = null, device = null, ...rest}) {
+      super.define(rest)
       this.id = id
       this.org = org
       this.secondary = secondary
       this.device = this.constructor._relationship(device)
-    }
-
-    static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.org, data.secondary, data.device)
     }
 
     get title () {
@@ -850,19 +1189,20 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
    * @alias module:resources.Lot
    */
   class Lot extends Thing {
-    constructor (sameAs, updated, created, id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null) {
-      super(sameAs, updated, created)
-      this.sameAs = sameAs
-      this.updated = updated
-      this.created = created
+    define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null, ...rest}) {
+      super.define(rest)
       this.id = id
       this.name = name
       this.description = description
       this.closed = closed
       this.devices = devices
       this.children = children
-      this.parents = parents
+      this._parents = this.constructor._relationships(parents)
       this.url = url
+    }
+
+    get parents () {
+      return this._parents.map(id => cache.lots[id])
     }
 
     static get basePath () {
@@ -870,24 +1210,46 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
     }
 
     static fromObject (data) {
-      return new this(data.sameAs, data.updated, data.created, data.id, data.name, data.description, data.closed, data.devices, data.children, data.parents, data.url)
+      if (data.id && data.id in cache.lots) cache.lots[data.id].define(data)
+      else {
+        const lot = super.fromObject(data)
+        cache.lots[lot.id] = lot
+        return lot
+      }
+      return cache.lots[data.id]
+    }
+
+    /**
+     * Prepares the lot and posts it to Devicehub
+     * @return {Promise}
+     */
+    create () {
+      console.assert(!this.id, 'Cannot POST lot %s because it already has an ID', this.id)
+      const parentsIds = this._parents
+      return this.server.post(_.pick(this, ['name', 'description'])).then(obj => {
+        this.define(obj)
+        cache.lots[this.id] = this
+        if (parentsIds.length) {
+          return this.server.one(parentsIds[0]).post('children', null, {id: this.id})
+        }
+      })
     }
   }
 
+  /**
+   * @alias module:resources.ResourceList
+   */
   class ResourceList extends Array {
     /**
      * @param {Thing[]} items
      * @param {object} pagination
-     * @param {string} url
+     * @param {?string} url
      */
-    constructor (items, pagination, url) {
+    constructor (items = [],
+                 pagination = {page: null, perPage: null, total: null, previous: null, next: 1},
+                 url = null) {
       super(...items)
       this.pagination = pagination
-      console.assert(this.pagination.page)
-      console.assert(this.pagination.perPage)
-      console.assert(this.pagination.total)
-      console.assert('previous' in this.pagination)
-      console.assert('next' in this.pagination)
       this.url = url
     }
 
@@ -900,6 +1262,25 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
     static fromServer (items, pagination, url) {
       const things = items.map(x => resourceClass(x.type).fromObject(x))
       return new this(things, pagination, url)
+    }
+
+    /**
+     *
+     * @param {module:resources.ResourceList} other
+     */
+    add (other) {
+      this.push(...other)
+      this.pagination = other.pagination
+      this.url = other.url
+    }
+
+    /**
+     *
+     * @param {module:resources.ResourceList} other
+     */
+    set (other) {
+      this.length = 0
+      this.add(other)
     }
   }
 
@@ -935,19 +1316,25 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   class Lots extends Array {
+    /**
+     *
+     * @param {Object.<string, object>} items
+     * @param {LotNode[]} tree
+     * @param {string} url
+     */
     constructor (items, tree, url) {
-      super(...items.map(x => resourceClass(x.type).fromObject(x)))
+      items = _.mapValues(items, x => resourceClass(x.type).fromObject(x))
+      super(..._.values(items))
       this.tree = this._trees(tree)
       this.url = url
-
-      cache.lots = {}
-      this.forEach(lot => {
-        cache.lots[lot.id] = lot
-      })
     }
 
     _trees (objs) {
       return objs.map(obj => new LotNode(obj.id, this._trees(obj.nodes)))
+    }
+
+    addToTree (lotId) {
+      this.tree.push(new LotNode(lotId))
     }
   }
 
@@ -964,17 +1351,20 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
 
   /** Restangular for resources */
   const RestangularConfigurerResource = Restangular.withConfig(RestangularProvider => {
-    RestangularProvider.addResponseInterceptor((data, operation, ...other) => {
+    RestangularProvider.addResponseInterceptor((data, operation) => {
       let res
-      if ('tree' in other[2].data) {
+      if ('tree' in data) { // todo set good variable naming
         console.assert(operation === 'getList')
-        res = new Lots(data.items, other[2].data.tree, other[2].data.url)
+        res = new Lots(data.items, data.tree, data.url)
       } else if ('items' in data) {
         console.assert(operation === 'getList')
         res = ResourceList.fromServer(data.items, data.pagination, data.url)
+      } else if (operation === 'get') {
+        res = resourceClass(data.type).fromObject(data)
       } else {
-        console.assert(operation !== 'getList')
-        res = resourceClass(data)
+        // Do not handle post methods, let the object that POSTed handle it
+        // itself (usually performing this.define() with the data)
+        res = data
       }
       return res
     })
@@ -997,7 +1387,27 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
     ComputerMonitor: ComputerMonitor,
     Desktop: Desktop,
     Laptop: Laptop,
+    Server: Server,
+    Mobile: Mobile,
+    Smartphone: Smartphone,
+    Tablet: Tablet,
+    Cellphone: Cellphone,
     Component: Component,
+    GraphicCard: GraphicCard,
+    DataStorage: DataStorage,
+    HardDrive: HardDrive,
+    SolidStateDrive: SolidStateDrive,
+    Motherboard: Motherboard,
+    NetworkAdapter: NetworkAdapter,
+    Processor: Processor,
+    RamModule: RamModule,
+    SoundCard: SoundCard,
+    ComputerAccessory: ComputerAccessory,
+    Mouse: Mouse,
+    MemoryCardReader: MemoryCardReader,
+    SAI: SAI,
+    Keyboard: Keyboard,
+    Display: Display,
     Event: Event,
     EventWithMultipleDevices: EventWithMultipleDevices,
     EventWithOneDevice: EventWithOneDevice,

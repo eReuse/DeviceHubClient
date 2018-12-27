@@ -1,553 +1,233 @@
+const PATH = require('./__init__').PATH
 
-function resourceListFilters (Notification, $uibModal, clipboard) {
+/**
+ * @name ResourceListFilter directive.
+ * @description Manages filters for devices, presenting a form
+ * to the user so it can parametrize the filters, and a list
+ * of pills (tags) of the filters so user can see the active ones.
+ * Finally it allows the user to export and import filters from
+ * the clipboard.
+ *
+ * @param Notification
+ * @param $uibModal
+ * @param clipboard
+ * @param {module:fields} fields
+ * @param {module:resources} resources
+ */
+function resourceListFilters (Notification, $uibModal, clipboard, fields, resources) {
   return {
     template: require('./resource-list-filters.directive.html'),
     restrict: 'E',
-    scope: false,
-    link: function ($scope) {
-      // TODO move configuration incl. filterPanelsNested into separate config file
-      const allEvents = [ 'Ready', 'Repair', 'Allocate', 'Dispose', 'ToDispose', 'Sell', 'Receive', 'Register' ]
-
-      const keyTypes = 'resources'
-      const keyEvents = 'events'
-
-      $scope.removeFilter = propPath => {
-        _.unset($scope.filtersModel, propPath)
-        onFiltersChanged()
+    scope: {
+      onUpdate: '&'
+    },
+    /**
+     * @param $scope
+     * @param {Function} $scope.onUpdate
+     */
+    link: $scope => {
+      /**
+       * The popover that contains the filter form.
+       * @type {{isOpen: boolean, title: string, templateUrl: string}}
+       */
+      $scope.popover = {
+        templateUrl: `${PATH}/filters.popover.html`,
+        isOpen: false,
+        title: 'Select a filter'
       }
 
-      $scope.openImportModal = () => {
-        const modal = $uibModal.open({
-          template: require('./import-filters.modal.controller.html'),
-          controller: 'importFiltersModalCtrl'
-        })
-        modal.result.then((filtersModelStr) => {
-          $scope.filtersModel = JSON.parse(filtersModelStr)
-          function addMissingFilterPanels (prop, parentKey) {
-            _.forOwn(prop, function (value, key) {
-              let fullPath = parentKey ? parentKey + '.' + key : key
-              let filterPanel = _.find($scope.filterPanels, { propPath: fullPath })
-              if (value && value._custom) {
-                filterPanel = {
-                  title: value._custom.title,
-                  propPath: fullPath,
-                  prefix: value._custom.title + ': '
-                  // TODO if filter panel should be added dynamically, uncomment the following lines
-                  // onSubmit: onSubmitPanel,
-                  // fields: [ input field? ]
-                }
-                // render filterPanels
-                $scope.filterPanels.push(filterPanel) // necessary so that it's found later
-              }
-              if (!filterPanel) {
-                // neither registered filter nor custom added filter
-                addMissingFilterPanels(value, fullPath)
-              }
-            })
+      class Panel extends fields.Group {
+        constructor (label, fields, isActual = false) {
+          super(label, fields)
+          this.wrapper = 'panelFilter'
+          this.panels = _.filter(fields, f => f instanceof Panel)
+
+          /**
+           * The parent that opened this panel, if panel is not top.
+           * @type {?Panel}
+           */
+          this.parent = null
+          // Set the parent for all children Panel
+          this.fieldGroup.forEach(field => {
+            if (field instanceof Panel) field.parent = this
+          })
+          // Open this model so when user opens the popover this
+          // modal appears (if isActual)
+          if (isActual) this.open()
+        }
+
+        /** Goes back to the parent panel. */
+        back () {
+          if (this.parent) this.parent.open()
+          else $scope.popover.isOpen = false
+        }
+
+        /** Sets this panel as the visible one. */
+        open () {
+          this.constructor.actual = this
+          $scope.popover.title = this.templateOptions.label
+        }
+
+        /** Is this the opened panel? */
+        get isActual () {
+          return this.constructor.actual === this
+        }
+
+        /** The fields without the Panels. */
+        fields () {
+          return _.flatMapDeep(this.fieldGroup, f => (f instanceof Panel) ? f.fields() : f)
+        }
+      }
+
+      /**
+       * The actual opened panel.
+       * @type {?Panel}
+       */
+      Panel.actual = null
+
+      /**
+       * The Form managing the filters.
+       */
+      class FilterForm extends fields.Form {
+        constructor (...args) {
+          super(...args)
+          this.pills = FilterPill.generatePills(this.fields[0], this.model)
+        }
+
+        submit () {
+          // Generate filter pills
+          this.pills = FilterPill.generatePills(this.fields[0], this.model)
+          $scope.onUpdate({filters: this.model})
+        }
+      }
+
+      /**
+       * The pill o tag that visually represents an active filter
+       * for the user.
+       */
+      class FilterPill {
+        /**
+         * @param {module:fields.Field} field
+         * @param model
+         */
+        constructor (field, model) {
+          this.key = field.key
+          this.label = field.templateOptions.label
+          this.text = _.get(model, field.key)
+          // We only want filterPills from non-empty values
+          if (_.isEmpty(this.text) && !_.isNumber(this.text) && !_.isString(this.text)) {
+            throw new EmptyFilterPill()
           }
-          addMissingFilterPanels($scope.filtersModel, '')
-          onFiltersChanged()
-        })
-      }
-
-      // $scope.openFilter = propPath => {
-      //   // const filterPanel = _.find(filterPanelsFlat, { content: { propPathModel: propPath } })
-      //   // $scope.showFilterPanels = true
-      //   // filterPanel.shown = true
-      // }
-
-      $scope.hideFilterPanel = ($event, panel) => {
-        $event && $event.preventDefault() // Prevents submitting the containing form
-        panel.shown = false
-      }
-
-      $scope.hideAllFilterPanels = $event => {
-        $event && $event.preventDefault()
-        $scope.filterPanels && $scope.filterPanels.forEach((panel) => {
-          $scope.hideFilterPanel(null, panel)
-        })
-        $scope.showFilterPanels = false
-      }
-
-      $scope.toggleDisplayFilterPanels = $event => {
-        $event && $event.preventDefault()
-        if ($scope.showFilterPanels) {
-          $scope.hideAllFilterPanels()
-        } else {
-          $scope.showFilterPanels = true
-        }
-      }
-
-      $scope.addFilter = (propPath, filter, title) => {
-        switch (propPath) {
-          case '@type':
-            propPath = keyTypes
-            break
-          case 'type':
-            propPath = keyTypes
-            break
-        }
-
-        let filterPanel = _.find($scope.filterPanels, { propPath: propPath })
-        if (!filterPanel) {
-          filterPanel = {
-            title: title,
-            propPath: propPath,
-            prefix: title + ': ',
-            _custom: {
-              title: title
-            }
-            // TODO if filter panel should be added dynamically, uncomment the following lines
-            // onSubmit: onSubmitPanel,
-            // fields: [ input field? ]
-            // render filterPanels
+          if (_.isArray(this.text)) {
+            this.text = this.text.join(', ')
           }
-          $scope.filterPanels.push(filterPanel) // necessary so that it's found later
         }
-        _.set($scope.filtersModel, propPath + '.' + filter, true) // TODO set value depending on filterPanel
-        onFiltersChanged()
-      }
 
-      $scope.copyFiltersToClipBoard = () => {
-        let exportFilters = {}
-        function setCustomRec (prop, parentKey) {
-          _.forOwn(prop, function (value, key) {
-            let fullPath = parentKey ? parentKey + '.' + key : key
-            let filterPanel = _.find($scope.filterPanels, {propPath: fullPath})
-            if (filterPanel) {
-              let merged = value
-              if (filterPanel._custom) {
-                merged._custom = filterPanel._custom
-              }
-              _.set(exportFilters, fullPath, merged)
-            } else {
-              setCustomRec(value, fullPath)
+        /**
+         * Generates a list of FilterPill for the active filters.
+         * @param {Panel} rootPanel
+         * @param model
+         * @return {FilterPill[]}
+         */
+        static generatePills (rootPanel, model) {
+          const ret = []
+          rootPanel.fields().forEach(f => {
+            try {
+              ret.push(new this(f, model))
+            } catch (e) {
+              if (!(e instanceof EmptyFilterPill)) throw e
             }
           })
+          return ret
         }
-        setCustomRec($scope.filtersModel, '')
-        clipboard.copyText(JSON.stringify(exportFilters))
-        Notification.success('Filters copied to clipboard')
+
+        /** Removes a filterPill and its associated filter in model. */
+        remove () {
+          // If the value is an array we want to return to an
+          // empty array or Formly won't like it
+          const value = _.get($scope.form.model, this.key)
+          if (_.isArray(value)) _.set($scope.form.model, this.key, [])
+          else _.unset($scope.form.model, this.key)
+          $scope.form.submit()
+        }
       }
 
-      $scope.filtersExported = (error) => {
-        if (error) {
-          Notification.error('Filters could not be copied')
-        } else {
-          Notification.success('Filters copied to clipboard')
-        }
+      /**
+       * The FilterPill represents a filter / model that does not
+       * have value.
+       */
+      class EmptyFilterPill extends Error {
       }
 
-      $scope.filtersModel = {
-        [keyTypes]: {
-          Computer: true,
-          Monitor: true
-        }
-        // [keyEvents]: {
-        //   types: _.assign({
-        //     _meta: {
-        //       endpoint: true,
-        //       prefix: 'Events: '
-        //     }
-        //   }, _.mapValues(_.keyBy(allEvents), () => true))
-        // }
-      }
-      function onFiltersChanged () {
-        $scope.hideAllFilterPanels()
+      // Instantiate the form of filters
+      $scope.form = new FilterForm(
+        { // Set defaults
+          rating: {
+            rating: []
+          },
+          type: [resources.Computer.type]
+        },
+        new Panel('Select a filter', [
+          new Panel('Item type', [
+            new fields.MultiCheckbox(
+              'type',
+              'Type of device',
+              [
+                new fields.Option('Computer'),
+                new fields.Option('Laptop')
+              ])
+          ]),
+          new Panel('Manufacturer and model', [
+            new fields.String('manufacturer', 'Manufacturer'),
+            new fields.String('model', 'Model')
+          ]),
+          new Panel('Price and Rating', [
+            new Panel('Price', [
+              new fields.Number('rating.rating[0]', 'Min price'),
+              new fields.Number('rating.rating[1]', 'Max price')
+            ])
+          ])
+        ], true)
+      )
 
-        function checkIfEndpoint (value, propPath) {
-          const filterPanel = _.find($scope.filterPanels, { propPath: propPath })
-          return !!filterPanel
-        }
-
-        // create active filters list so they can be displayed
-        $scope.activeFilters = []
-        function addToActiveFiltersRecursive (parentPath, obj, parentPrefix) {
-          parentPath = parentPath ? parentPath + '.' : ''
-          parentPrefix = parentPrefix ? parentPrefix + ':' : ''
-          _.toPairs(obj).map(pair => {
-            const filterKey = pair[0]
-            const fullPath = parentPath + filterKey
-            let value = pair[1]
-
-            const filterPanel = _.find($scope.filterPanels, { propPath: fullPath })
-            const fullPrefix = parentPrefix + _.get(filterPanel, 'prefix', '')
-            const endPoint = !!filterPanel
-
-            if (!endPoint) {
-              return addToActiveFiltersRecursive(fullPath, value, fullPrefix)
-            }
-
-            let filterText = fullPrefix
-            let skipProcessingProps
-            if (fullPath === (keyEvents + '.types')) {
-              if (_.values(_.pickBy(value, (v) => { return v === true })).length === allEvents.length) {
-                filterText += 'All'
-                skipProcessingProps = true
-              }
-            }
-            if (!skipProcessingProps) {
-              let propsString = []
-              _.forOwn(value, (prop, key) => {
-                if (key === '_meta' || key === '_custom') {
-                  return
-                }
-                const isBoolean = typeof prop === 'boolean'
-                const isNumber = typeof prop === 'number'
-                const isText = typeof prop === 'string'
-                const isDate = prop instanceof Date
-
-                let propStr = ''
-                if (isBoolean) {
-                  if (prop) {
-                    propStr += key
-                  }
-                } else {
-                  propStr += key + ': '
-                  if (isNumber) {
-                    propStr += prop
-                  } else if (isText) {
-                    propStr += prop
-                  } else if (isDate) {
-                    propStr += prop.toDateString()
-                  }
-                }
-                propsString.push(propStr)
-              })
-              filterText += propsString.join(', ')
-            }
-
-            $scope.activeFilters.push({
-              propPath: fullPath,
-              text: filterText
-            })
-          })
-        }
-        addToActiveFiltersRecursive('', $scope.filtersModel)
-
-        // update filters
-        $scope.updateFiltersFromSearch($scope.filtersModel, checkIfEndpoint)
-      }
-
-      function onSubmitPanel () {
-        if (!this.propPath) {
-          throw new Error('propPath not defined: ' + this.propPath)
-        }
-
-        onFiltersChanged()
-      }
-
-      // Default value can not be used, since they are not displayed
-      let filterPanelsNested = [
-        {
-          childName: 'Root',
-          panel: {
-            title: 'Select a filter',
-            children: [
-              {
-                childName: 'Item type',
-                panel: {
-                  title: 'Item type',
-                  onSubmit: onSubmitPanel,
-                  propPath: keyTypes,
-                  prefix: 'Devices: ',
-                  fields: [
-                    {
-                      key: keyTypes + '.components',
-                      type: 'checkbox',
-                      templateOptions: {
-                        label: 'Components'
-                      }
-                    },
-                    {
-                      key: keyTypes + '.Computer',
-                      type: 'checkbox',
-                      templateOptions: {
-                        label: 'Computer'
-                      }
-                    },
-                    {
-                      key: keyTypes + '.Monitor',
-                      type: 'checkbox',
-                      templateOptions: {
-                        label: 'Monitor'
-                      }
-                    },
-                    {
-                      key: keyTypes + '.peripherals',
-                      type: 'checkbox',
-                      templateOptions: {
-                        label: 'Peripherals'
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                childName: 'Brand and model',
-                panel: {
-                  title: 'Brand and model',
-                  onSubmit: onSubmitPanel,
-                  propPath: 'brandmodel',
-                  fields: [
-                    {
-                      key: 'brandmodel.brand',
-                      type: 'input',
-                      templateOptions: {
-                        label: 'Brand',
-                        placeholder: 'Enter a brand'
-                      }
-                    },
-                    {
-                      key: 'brandmodel.model',
-                      type: 'input',
-                      templateOptions: {
-                        label: 'Model',
-                        placeholder: 'Enter a model'
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                childName: 'Status',
-                panel: {}
-              },
-              {
-                childName: 'Price and rating',
-                panel: {
-                  children: [
-                    {
-                      childName: 'Price',
-                      panel: {
-                        title: 'Price (€)',
-                        onSubmit: onSubmitPanel,
-                        propPath: 'price',
-                        prefix: 'Price (€): ',
-                        fields: [
-                          {
-                            key: 'price.min',
-                            type: 'input',
-                            // TODO need placeholder instead of defaultValue. defaultValue will be set in formly model as well, we don't want this to happen, since formly model properties will be displayed and sent to server. tried also initialValue, which doesn't work. formly placeholder does not exist
-                            // defaultValue: 0,
-                            templateOptions: {
-                              type: 'number',
-                              min: 0,
-                              label: 'Min'
-                            }
-                          },
-                          {
-                            key: 'price.max',
-                            type: 'input',
-                            // TODO see above
-                            // defaultValue: 999,
-                            templateOptions: {
-                              type: 'number',
-                              min: 0,
-                              label: 'Max'
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      childName: 'Rating',
-                      panel: {
-                        title: 'Rating',
-                        onSubmit: onSubmitPanel,
-                        propPath: 'rating.rating',
-                        prefix: 'Rating: ',
-                        fields: [
-                          {
-                            key: 'rating.rating.min',
-                            type: 'select',
-                            templateOptions: {
-                              label: 'Min',
-                              options: [
-                                {name: 'Very low', value: 'Very low'},
-                                {name: 'Low', value: 'Low'},
-                                {name: 'Medium', value: 'Medium'},
-                                {name: 'High', value: 'High'},
-                                {name: 'Very high', value: 'Very high'}
-                              ]
-                            }
-                          },
-                          {
-                            key: 'rating.rating.max',
-                            type: 'select',
-                            templateOptions: {
-                              label: 'Max',
-                              options: [
-                                {name: 'Very low', value: 'Very low'},
-                                {name: 'Low', value: 'Low'},
-                                {name: 'Medium', value: 'Medium'},
-                                {name: 'High', value: 'High'},
-                                {name: 'Very high', value: 'Very high'}
-                              ]
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                childName: 'Components',
-                panel: {
-                  title: 'Components',
-                  children: [
-                    {
-                      childName: 'Memory ram',
-                      panel: {
-                        title: 'Memory RAM (GB)',
-                        onSubmit: onSubmitPanel,
-                        prefix: 'RAM (GB): ',
-                        propPath: 'components.ram',
-                        fields: [
-                          {
-                            key: 'components.ram.min',
-                            type: 'input',
-                            templateOptions: {
-                              type: 'number',
-                              min: 0,
-                              label: 'Min'
-                            }
-                          },
-                          {
-                            key: 'components.ram.max',
-                            type: 'input',
-                            // TODO see above
-                            // defaultValue: 999,
-                            templateOptions: {
-                              type: 'number',
-                              min: 0,
-                              label: 'Max'
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                childName: 'Service providers',
-                panel: {}
-              },
-              {
-                childName: 'User and location',
-                panel: {}
-              },
-              {
-                childName: 'History and events',
-                panel: {
-                  title: 'Traceability log',
-                  children: [
-                    {
-                      childName: 'Filter by event type',
-                      panel: {
-                        title: 'Filter by event type',
-                        onSubmit: onSubmitPanel,
-                        propPath: keyEvents + '.types',
-                        prefix: 'Events: ',
-                        fields: allEvents.map((eventName) => {
-                          return {
-                            key: keyEvents + '.types.' + eventName,
-                            type: 'checkbox',
-                            templateOptions: {
-                              label: eventName
-                            }
-                          }
-                        })
-                      }
-                    },
-                    {
-                      childName: 'Filter by single event details',
-                      panel: {
-                        title: 'Select event type',
-                        children: [
-                          {
-                            childName: 'Register',
-                            panel: {
-                              title: 'Register',
-                              onSubmit: onSubmitPanel,
-                              propPath: keyEvents + '.single.register',
-                              prefix: 'Register: ',
-                              fields: [
-                                {
-                                  key: keyEvents + '.single.register' + '.from',
-                                  type: 'datepicker',
-                                  templateOptions: {
-                                    label: 'From'
-                                  }
-                                },
-                                {
-                                  key: keyEvents + '.single.register' + '.to',
-                                  type: 'datepicker',
-                                  templateOptions: {
-                                    label: 'To'
-                                  }
-                                },
-                                {
-                                  key: keyEvents + '.single.register' + '.name',
-                                  type: 'input',
-                                  templateOptions: {
-                                    label: 'Name'
-                                  }
-                                }
-                              ]
-                            }
-                          },
-                          {
-                            childName: 'To repair',
-                            panel: {}
-                          },
-                          {
-                            childName: 'Ready to sell',
-                            panel: {}
-                          },
-                          {
-                            childName: 'Sell',
-                            panel: {}
-                          },
-                          {
-                            childName: 'Receive',
-                            panel: {}
-                          },
-                          {
-                            childName: 'Recycle',
-                            panel: {}
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                childName: 'Licenses and restrictions',
-                panel: {}
-              }
-            ]
+      /**
+       * Importer and Exporter.
+       */
+      class IO {
+        constructor () {
+          this.popover = {
+            templateUrl: `${PATH}/importer.popover.html`,
+            isOpen: false,
+            title: 'Import the filters',
+            form: new fields.Form(
+              {},
+              new fields.Textarea(
+                'value',
+                'Paste the filters',
+                undefined,
+                undefined,
+                undefined,
+                true
+              )
+            )
           }
         }
-      ]
-      function getPanelsRecursive (nested, flat) {
-        nested.forEach((fp) => {
-          flat.push(fp.panel)
-          if (fp.panel.children && fp.panel.children.length > 0) {
-            getPanelsRecursive(fp.panel.children, flat)
-          }
-        })
-      }
-      let filterPanelsFlat = []
-      getPanelsRecursive(filterPanelsNested, filterPanelsFlat)
-      $scope.filterPanelsRoot = filterPanelsNested[0].panel
-      $scope.filterPanels = filterPanelsFlat
-      $scope.showFilterPanels = false
 
-      onFiltersChanged()
+        /** Exports filter model to clipboard */
+        export () {
+          clipboard.copyText(JSON.stringify($scope.form.model))
+          Notification.success('Filters exported to clipboard.')
+        }
+
+        /** Imports filter model from IO's textarea form. */
+        import () {
+          $scope.form.model = JSON.parse(this.popover.form.model.value)
+          $scope.form.submit()
+          this.popover.isOpen = false
+        }
+      }
+
+      $scope.io = new IO()
     }
   }
 }

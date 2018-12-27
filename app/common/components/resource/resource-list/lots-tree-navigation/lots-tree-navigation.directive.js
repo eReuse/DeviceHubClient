@@ -1,3 +1,14 @@
+/**
+ *
+ * @param resourceListConfig
+ * @param ResourceListGetter
+ * @param progressBar
+ * @param $rootScope
+ * @param {module:LotsSelector} LotsSelector
+ * @param ResourceSettings
+ * @param {module:resources} resources
+ * @return {{template, scope: {resourceType: string}, link: {pre: link.pre}, restrict: string}}
+ */
 function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar, $rootScope, LotsSelector, ResourceSettings, resources) {
   const PATH = require('./__init__').PATH
   // const PATH = 'common/components/resource/resource-list/lots-tree-navigation'
@@ -9,7 +20,6 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
     },
     link: {
       pre: ($scope) => {
-        const config = _.cloneDeep(resourceListConfig)
         $scope.treeTemplateURL = PATH + '/lots-tree.html'
         $scope.selector = LotsSelector
 
@@ -24,18 +34,18 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
             node.nodes.forEach(child => {
               let childIsVisible = visibleIfHasText(child)
               if (childIsVisible) atLeastOneChildVisible = true
-              node.isVisible = !text || node.hasText(text) || atLeastOneChildVisible
-              return node.isVisible
             })
+            node.isVisible = !text || node.hasText(text) || atLeastOneChildVisible
+            return node.isVisible
           }
 
-          $scope.lots.tree.forEach((node) => visibleIfHasText(node))
+          $scope.lots.tree.forEach(visibleIfHasText)
         }
 
         $scope.makeNodesWithTextVisible = makeNodesWithTextVisible
 
         $scope.treeOptions = {
-          dropped: function ($event) {
+          dropped: $event => {
             // if element was not moved, use click event
             if ($event.source.index === $event.dest.index) {
               $scope.toggleLot($event.source.nodeScope.$modelValue, $event)
@@ -67,11 +77,11 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
           }
         }
 
-        $scope.toggleLot = (lot, $event) => {
+        $scope.toggleLot = (lotNode, $event) => {
           if ($event.ctrlKey || $event.metaKey) {
-            $scope.selector.toggleMultipleSelection(lot)
+            $scope.selector.toggleMultipleSelection(lotNode.lot)
           } else { // normal click
-            $scope.selector.toggle(lot)
+            $scope.selector.toggle(lotNode.lot)
           }
         }
 
@@ -79,29 +89,20 @@ function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar
           scope.toggle()
         }
 
-        function newLot (parentLot) {
-          function startEditing (lot) {
-            reload().then(() => {
-              // TODO set newly created lot's resource-field-edit to editing
-            })
-          }
-
-          ResourceSettings('Lot').server.post({name: 'New lot'}).then(childLot => {
-            if (parentLot) {
-              ResourceSettings('Lot').server
-                .one(parentLot._id)
-                .post('children', null, {id: childLot._id})
-                .then(() => {
-                  startEditing(childLot)
-                })
-            } else {
-              startEditing(childLot)
-            }
+        /**
+         * Creates a new lot.
+         * @param {?string} parentLotId
+         */
+        function newLot (parentLotId) {
+          const lot = new resources.Lot({name: 'New lot', parents: parentLotId ? [parentLotId] : undefined})
+          lot.create().then(() => {
+            if (parentLotId) reload()
+            else $scope.lots.addToTree(lot.id)
           })
         }
 
-        $scope.newChildLot = (parentLot) => {
-          newLot(parentLot)
+        $scope.newChildLot = (parentLotId) => {
+          newLot(parentLotId)
         }
 
         $scope.newLot = ($event) => {
