@@ -16,7 +16,6 @@ function deviceListSummary ($filter, CONSTANTS) {
     restrict: 'E',
     scope: {
       devices: '<'
-
     },
     /**
      * @param {$scope} $scope

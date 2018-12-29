@@ -91,13 +91,30 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
       class FilterForm extends fields.Form {
         constructor (...args) {
           super(...args)
-          this.pills = FilterPill.generatePills(this.fields[0], this.model)
+          this.submit()
         }
 
         submit () {
           // Generate filter pills
           this.pills = FilterPill.generatePills(this.fields[0], this.model)
-          $scope.onUpdate({filters: this.model})
+          // Remove falsey / empty values from the model
+          // to comply with DH API
+          const filters = _.cloneDeep(this.model)
+          this._removeFalseyEmptyDeep(filters)
+          $scope.onUpdate({filters: filters})
+        }
+
+        /**
+         * Removes the falsey and empty values of an object
+         * recursively.
+         * @param {Object} obj
+         * @private
+         */
+        _removeFalseyEmptyDeep (obj) {
+          for (const [key, value] of _.toPairs(obj)) {
+            if (_.isPlainObject(value)) this._removeFalseyEmptyDeep(value)
+            if (_.isEmpty(value) || _.isNil(value)) delete obj[key]
+          }
         }
       }
 

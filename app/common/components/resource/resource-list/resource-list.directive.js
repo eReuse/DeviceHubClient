@@ -1,21 +1,12 @@
 /**
  * @param {module:resources} resources
- * @param {resourceListConfig} resourceListConfig
- * @param {ResourceListGetter} ResourceListGetter
- * @param {ResourceListSelector} ResourceListSelector
- * @param {ResourceSettings} ResourceSettings
- * @param {progressBar} progressBar
- * @param {ResourceBreadcrumb} ResourceBreadcrumb
- * @param {Session} session
- * @param UNIT_CODES
- * @param CONSTANTS
- * @param SearchService
- * @param $filter
- * @param $rootScope
+ * @param {module:resourceListConfig} resourceListConfig
+ * @param {module:ResourceListSelector} ResourceListSelector
+ * @param  progressBar
  * @param Notification
  * @param {module:LotsSelector} LotsSelector
  */
-function resourceList (resources, resourceListConfig, ResourceListGetter, ResourceListSelector, ResourceSettings, progressBar, ResourceBreadcrumb, session, UNIT_CODES, CONSTANTS, SearchService, $filter, $rootScope, Notification, LotsSelector) {
+function resourceList (resources, resourceListConfig, ResourceListSelector, progressBar, Notification, LotsSelector) {
   return {
     template: require('./resource-list.directive.html'),
     restrict: 'E',
@@ -23,17 +14,24 @@ function resourceList (resources, resourceListConfig, ResourceListGetter, Resour
     link: {
       /**
        * @param {Object} $scope
-       * @param {module:resources.Device[]} $scope.devices
+       * @param {Object} $scope.Notification
+       * @param {Object} $scope._sort
+       * @param {function} $scope.showLots
+       * @param {boolean} $scope.selectionPanelHiddenXS
+       * @param {boolean} $scope.lotsSelectionHiddenXS
+       * @param {LotsManager} $scope.lotsM
+       * @param {module:resourceListConfig} $scope.config
+       * @param {SelectedDevices} $scope.selected
        * @param $element
        */
       pre: ($scope, $element) => {
         // We load on 'pre' to initialize before our child
         // (or inner) directives so they get real config values
         $scope.Notification = Notification
-        const config = _.cloneDeep(resourceListConfig)
+        $scope.config = resourceListConfig
         const $topElem = $element.find('.fill-height-bar')
 
-        $scope._sort = {}
+        $scope._sort = {} // Sort directive uses this internally
 
         /**
          * State of the selection panel (shown/hidden) when in xs or
@@ -57,9 +55,16 @@ function resourceList (resources, resourceListConfig, ResourceListGetter, Resour
              */
             this.devices = new resources.ResourceList()
             this.q = {
-              filter: {},
+              /** @type {object.<string, object>} */
+              filter: null, // null only when not initialized
+              /** @type {string} */
               search: '',
-              sort: {},
+              /** @type {object.<string, boolean>} */
+              sort: null, // null only when not initialized
+              /**
+               * The page requested or null.
+               * @type {?number}
+               */
               page: null
             }
             /**
@@ -78,37 +83,69 @@ function resourceList (resources, resourceListConfig, ResourceListGetter, Resour
             return this.devices.pagination.next
           }
 
+          /** Are the initial filters / sort being set already? */
+          get ready () {
+            return this.q.filter != null && this.q.sort != null
+          }
+
+          /** Override the filters and, if ready, get new devices. */
           setFilters (filters) {
             this.q.filter = filters
-            this.get()
+            if (this.ready) this.get(false)
           }
 
+          /** Set a filter and, if ready, get new devices. */
           setFilter (key, value) {
+            this.q.filter = this.q.filter || {}
             this.q.filter[key] = value
-            this.get()
-          }
-
-          setSearch (text) {
-            this.q.search = text
-            this.get()
+            if (this.ready) this.get(false)
           }
 
           /**
-           *
+           * Set the search text and, if ready, get new devices.
+           * @param {string} text - Search text.
+           * */
+          setSearch (text) {
+            console.assert(_.isString(text))
+            this.q.search = text
+            if (this.ready) this.get(false)
+          }
+
+          /**
+           * Override the sort and, if ready, get new devices.
            * @param {string} key
            * @param {boolean} order
            */
           setSort (key, order) {
             console.assert(_.isBoolean(order), 'Order must be boolean, not %s', order)
-            this.q.sort = {key: order}
+            this.q.sort = {[key]: order}
             this.get()
           }
 
+          /**
+           * Reload the devices.
+           * @param showProgressBar
+           * @return {*}
+           */
           reload (showProgressBar = true) {
             return this.get(false, showProgressBar)
           }
 
+          /**
+           * Get new devices.
+           *
+           * This starts a new petition for more devices,
+           * independently if there was another one before.
+           *
+           * @param {boolean} getNextPage - Fetch the next page.
+           * @param {boolean} showProgressBar - Should we show the
+           * progress bar?
+           * @throws {NoMorePagesAvailable} - If `getNextPage`
+           * but not next pages to get from.
+           * @return {$q}
+           */
           get (getNextPage = true, showProgressBar = true) {
+            console.assert(this.ready, 'Getter is not yet ready to get devices.')
             if (getNextPage) {
               if (!this.nextPage) throw new NoMorePagesAvailable()
               else this.q.page = this.nextPage
@@ -121,14 +158,19 @@ function resourceList (resources, resourceListConfig, ResourceListGetter, Resour
               if (getNextPage) this.devices.add(devices)
               else this.devices.set(devices)
               selected.deselectDevicesNotIn(this.devices)
-              if (!this.nextPage) $topElem.scrollTop(0) // Scroll to top when loading from 0
+              if (!getNextPage) $topElem.scrollTop(0) // Scroll to top when loading from 0
             }).finally(() => {
               this.working = false
             })
           }
 
+          /**
+           * Get devices only if there are more pages and there is
+           * not an already existing petition.
+           * @return {?$q}
+           */
           gentlyGet (getNextPage, showProgressBar) {
-            if (!this.working) return this.get(getNextPage, showProgressBar)
+            if (!this.working && this.nextPage) return this.get(getNextPage, showProgressBar)
           }
         }
 
@@ -137,9 +179,15 @@ function resourceList (resources, resourceListConfig, ResourceListGetter, Resour
 
         const getter = $scope.getter = new DeviceGetter()
 
+        /**
+         * The devices that the user has selected.
+         *
+         * This is a normal array of devices that has extra methods
+         * to select, deselect, and toggle selection.
+         */
         class SelectedDevices extends Array {
-          constructor () {
-            super()
+          constructor (...devices) {
+            super(...devices)
             this.lastSelectedIndex = 0
             /**
              * Is the user selecting multiple devices through
@@ -149,17 +197,19 @@ function resourceList (resources, resourceListConfig, ResourceListGetter, Resour
           }
 
           /**
+           * Select or unselected a device or several, if
+           * *shift* or *ctrl* are pressed.
            *
            * @param {Device} device
            * @param {number} i
-           * @param  $event
+           * @param {module:jquery.Event} $event
            */
           toggle (device, i, $event) {
             $event.stopPropagation()
             if ($event.shiftKey) {
               const start = Math.min(this.lastSelectedIndex, i)
               const end = Math.max(this.lastSelectedIndex, i)
-              const devicesToSelect = getter.devices.slice(start, end + 1)
+              const devicesToSelect = _.slice(getter.devices, start, end + 1)
               this.select(...devicesToSelect)
             } else if ($event.ctrlKey || $event.metaKey) {
               this._toggle(device)
@@ -178,6 +228,7 @@ function resourceList (resources, resourceListConfig, ResourceListGetter, Resour
           }
 
           multi (device) {
+            // todo this is not used
             // detect touch screen
             // https://stackoverflow.com/questions/29747004/find-if-device-is-touch-screen-then-apply-touch-event-instead-of-click-event
             // https://hacks.mozilla.org/2013/04/detecting-touch-its-the-why-not-the-how/ links
@@ -195,7 +246,7 @@ function resourceList (resources, resourceListConfig, ResourceListGetter, Resour
 
           _toggle (device) {
             if (this.isSelected(device)) this.deselect(device)
-            else this.add(device)
+            else this.select(device)
           }
 
           isSelected (device) {
@@ -215,6 +266,7 @@ function resourceList (resources, resourceListConfig, ResourceListGetter, Resour
 
           deselect (...devices) {
             _.pullAllBy(this, devices, 'id')
+            // todo if length = 0 shouldn't we do like in 'deselectAll'?
           }
 
           /**
@@ -255,7 +307,7 @@ function resourceList (resources, resourceListConfig, ResourceListGetter, Resour
           reload () {
             // todo review
             this.selector.deselectAll()
-            $rootScope.$broadcast('lots:reload')
+            // $rootScope.$broadcast('lots:reload')
           }
 
           deleteSelection () {
@@ -269,11 +321,40 @@ function resourceList (resources, resourceListConfig, ResourceListGetter, Resour
           }
         }
 
-        const lotsM = $scope.lotsM = new LotsManager()
+        $scope.lotsM = new LotsManager()
+      },
+      post: ($scope, $element) => {
+        /**
+         * Gets new devices under the Infinite scrolling.
+         */
+        class InfiniteScrolling {
+          /**
+           *
+           * @param {string} container - The element that has the overflow
+           * property.
+           * @param {string} selector - The element that has the list of
+           * things. It is inside container.
+           */
+          constructor (container, selector) {
+            this.$window = $(window)
+            this.$container = $element.find(container)
+            this.$el = this.$container.find(selector)
+            console.assert(this.$el.length === 1)
+            this.$container.scroll(() => this.getIfNecessary())
+          }
 
-        // As we touch config in the init, we add it to $scope at the end to avoid $watch
-        // triggering multiple times
-        $scope.config = config
+          getIfNecessary () {
+            const tableBottom = this.$el.position().top + this.$el.height()
+            const windowBottom = this.$window.height()
+            const almostWindowBottom = windowBottom + (windowBottom * 0.3)
+            if (tableBottom < almostWindowBottom) $scope.getter.gentlyGet()
+          }
+        }
+
+        $scope.scrolling = new InfiniteScrolling(
+          '#main-row .fill-height-bar',
+          '#device-list-table'
+        )
       }
     }
   }
