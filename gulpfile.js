@@ -6,6 +6,7 @@ const clean = require('gulp-clean')
 const source = require('vinyl-source-stream')
 const sass = require('gulp-sass')
 const concat = require('gulp-concat')
+const composer = require('gulp-uglify/composer')
 const uglify = require('gulp-uglify')
 const streamify = require('gulp-streamify')
 const watchify = require('watchify')
@@ -16,8 +17,7 @@ const sourcemaps = require('gulp-sourcemaps')
 const templateCache = require('gulp-angular-templatecache')
 const del = require('del')
 // Note that we only use harmony for our code (bundle.js) not vendor.js, where we use normal minify
-const uglifyjs = require('uglify-js-harmony')
-const minifier = require('gulp-uglify/minifier')
+const uglifyjs = require('uglify-es')
 const footer = require('gulp-footer')
 const inlinesource = require('gulp-inline-source')
 const gulpProtractor = require('gulp-protractor')
@@ -66,11 +66,10 @@ const filePath = {
   vendorCSS: {
     src: [
       './resources/animate.min.css',
-      './bower_components/angular-bootstrap-nav-tree/dist/abn_tree.css',
-      './node_modules/jsonformatter/dist/json-formatter.min.css',
+      './node_modules/angular-bootstrap-nav-tree/dist/abn_tree.css',
       './node_modules/angular-ui-notification/dist/angular-ui-notification.css',
       './node_modules/angular-chart.js/dist/angular-chart.css',
-      './bower_components/ngprogress/ngProgress.css',
+      './node_components/ngprogress/ngProgress.css',
       './node_modules/angular-ui-tree/dist/angular-ui-tree.min.css'
     ]
   },
@@ -81,30 +80,20 @@ const filePath = {
       './node_modules/angular-sanitize/angular-sanitize.js',
       './node_modules/angular-simple-logger/dist/index.js',
       './node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
-      './node_modules/checklist-model/checklist-model.js',
       './node_modules/jquery/dist/jquery.js',
       './node_modules/bootstrap/dist/js/bootstrap.js',
       './node_modules/restangular/dist/restangular.js',
       './node_modules/angular-bootstrap-nav-tree/dist/abn_tree_directive.js',
-      './node_modules/angular-google-maps/dist/angular-google-maps.js',
-      './node_modules/angular-qrcode/angular-qrcode.js',
       './node_modules/angular-ui-router/release/angular-ui-router.js',
       './node_modules/angular-formly/dist/formly.js',
       './node_modules/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js',
-      './node_modules/jsonformatter/dist/json-formatter.js',
       './node_modules/angular-ui-notification/dist/angular-ui-notification.js',
-      './node_modules/pluralize/pluralize.js',
-      './bower_components/Sortable/Sortable.js',
-      './node_modules/angular-chart.js/angular-chart.js',
-      './node_modules/chart.js/src/chart.js',
-      './node_modules/lodash/lodash.js',
-      './resources/qrcode.js',
-      './resources/jspdf.min.js',
-      './bower_components/Boxer/jquery.ba-dotimeout.js',
-      './bower_components/ngprogress/build/ngprogress.min.js'
+      './node_modules/lodash/lodash.js'
     ]
   }
 }
+
+const minify = composer(uglifyjs, console)
 
 function handleError (err) {
   console.log(err.toString())
@@ -139,7 +128,7 @@ function rebundle () {
       loadMaps: true
     })))
     .pipe(gulpif(!bundle.prod, sourcemaps.write('./')))
-    .pipe(gulpif(bundle.prod, streamify(minifier({mangle: false}, uglifyjs))))
+    .pipe(gulpif(bundle.prod, streamify(minify({mangle: false}))))
     .pipe(gulp.dest(filePath.build.jsDest))
 }
 

@@ -198,15 +198,6 @@ function parseDate (oldDate) {
   return datetime.substring(0, datetime.indexOf('.'))
 }
 
-/**
- * It is used in the views (see main app.js) to block loading of a view until schema is ready,
- * needed for views that manage resources (i.e. all except login view).
- * @param schema The schema service.
- * @return {$q.promise} The promise.
- */
-function schemaIsLoaded (schema) {
-  return schema.isLoaded()
-}
 
 function setImageGetter ($scope, jqueryExpression, pathToStore) {
   $(jqueryExpression).change(function () {
@@ -280,7 +271,6 @@ module.exports = {
   getEventDescription: getEventDescription,
   applyAfterScrolling: applyAfterScrolling,
   parseDate: parseDate,
-  schemaIsLoaded: schemaIsLoaded,
   NoPrefix: NoPrefix,
   setImageGetter: setImageGetter,
   Progress: Progress,

@@ -1,6 +1,4 @@
-function inventoryCtrl ($scope, progressBar, ResourceBreadcrumb) {
-  const entry = _.last(ResourceBreadcrumb.log) // This resource might only be @type and _id
-  if (!_.isEmpty(entry)) $scope.resource = entry
+function inventoryCtrl ($scope, progressBar) {
   window.progressSetVal(3)
   progressBar.complete()
 }

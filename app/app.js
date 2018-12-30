@@ -30,17 +30,12 @@ module.exports = window.angular.module('deviceHub', [
         url: '/inventories/:db',
         template: require('./views/inventory/inventory.controller.html'),
         controller: 'inventoryCtrl as inCl',
-        resolve: {schemaLoaded: utils.schemaIsLoaded}
-      }).state('index.inventory.resource', {
-        url: '/{folderPath:[a-zA-Z0-9-.\'_|]*}?filters',
-        template: require('./views/inventory/inventory.controller.html'),
-        controller: 'inventoryCtrl as inCl',
-        resolve: {schemaLoaded: utils.schemaIsLoaded}
+        resolve: {resourceServerLoaded: resourceServer => resourceServer.loaded}
       }).state('index.workbench', {
         url: '/workbench/:db',
         template: require('./views/workbench/workbench.controller.html'),
         controller: 'workbenchCtl as wbCtl',
-        resolve: {schemaLoaded: utils.schemaIsLoaded}
+        resolve: {resourceServerLoaded: resourceServer => resourceServer.loaded}
       }).state('login', {
         url: '/login',
         template: require('./views/login/login.controller.html'),

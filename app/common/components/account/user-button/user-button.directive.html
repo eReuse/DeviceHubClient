@@ -1,9 +1,13 @@
 <li uib-dropdown id="user-button">
   <a uib-dropdown-toggle>
-    <i class="fa fa-user-circle fa-fw fa-lg"></i>Me<span class="caret"></span>
+    <i class="fa fa-user-circle fa-fw fa-lg"></i>
+    <span class="visible-xs-inline visible-sm-inline">Me</span>
+    <span class="visible-md-inline visible-lg-inline">{{::user}}</span>
+    <span class="caret"></span>
   </a>
   <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="single-button">
-    <li role="menuitem" class="dropdown-header">{{::account.email}}</li>
+    <li role="menuitem" class="dropdown-header">{{::user}}
+    </li>
     <li class="divider"></li>
     <li role="menuitem"><a class="text-danger-important" ng-click="logout()">Logout</a></li>
   </ul>

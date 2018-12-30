@@ -33,73 +33,72 @@
 #lots
   background-color: $main-nav-bg
 
-.resource-list
-  lots-tree-navigation
-    .create-new-lot-btn
-      margin-top: 10px
+lots-tree-navigation
+  .create-new-lot-btn
+    margin-top: 10px
+    font-size: 18px
+    @media (min-width: $screen-sm-min)
+      font-size: 16px
+
+  .tree-node.tree-node-content
+    margin: 5px 0
+
+    button
+      width: 100%
+      text-align: left
+      color: #333333
+      background-color: transparent
+
+      &:hover, &.selected
+        background-color: $btn-primary-bg
+        color: $btn-primary-color
+
+    span
       font-size: 18px
       @media (min-width: $screen-sm-min)
         font-size: 16px
 
-    .tree-node.tree-node-content
-      margin: 5px 0
-
-      button
-        width: 100%
-        text-align: left
-        color: #333333
-        background-color: transparent
-
-        &:hover, &.selected
-          background-color: $btn-primary-bg
-          color: $btn-primary-color
-
-      span
-        font-size: 18px
+      .clickable
+        font-size: 20px
+        padding: 5px
         @media (min-width: $screen-sm-min)
           font-size: 16px
+          padding: 3px
 
-        .clickable
-          font-size: 20px
-          padding: 5px
-          @media (min-width: $screen-sm-min)
-            font-size: 16px
-            padding: 3px
+        &:nth-child(2n)
+          margin-left: 10px
 
-          &:nth-child(2n)
-            margin-left: 10px
+    &.selected, &:hover
+      a.btn
 
-      &.selected, &:hover
-        a.btn
+      span
+        font-weight: bold
 
-        span
-          font-weight: bold
+    resource-field-edit .edit-button
+      display: none
 
-      resource-field-edit .edit-button
-        display: none
+    &:hover resource-field-edit .edit-button, &.selected resource-field-edit .edit-button
+      display: block
 
-      &:hover resource-field-edit .edit-button, &.selected resource-field-edit .edit-button
-        display: block
+    .add-lot-button
+      display: none
 
-      .add-lot-button
-        display: none
+    &:hover .add-lot-button, &.selected .add-lot-button
+      display: block
 
-      &:hover .add-lot-button, &.selected .add-lot-button
-        display: block
+#screener
+  display: inline-block
+  position: relative
 
-  #screener
-    display: inline-block
-    position: relative
+  > :first-child
+    width: 100%
+    height: 100%
+    z-index: 1
+    position: absolute
+    cursor: not-allowed
 
-    > :first-child
-      width: 100%
-      height: 100%
-      z-index: 1
-      position: absolute
-      cursor: not-allowed
-
-  resource-icon img
-    max-width: 2em
+resource-icon img
+  max-width: 2em
 
 
   .blink
@@ -137,12 +136,13 @@
     padding: 5px 10px
     margin-bottom: 10px
 
-  .fill-height-bar
-    height: calc(100vh - #{$navbar-height})
-    overflow-y: auto
 
   #resource-list-table-scroll
     overflow-y: hidden
+
+.fill-height-bar
+  height: calc(100vh - #{$navbar-height})
+  overflow-y: auto
 
 
 .selection-button

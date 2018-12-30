@@ -1,12 +1,11 @@
 /**
  * @param {module:resources} resources
  * @param {module:resourceListConfig} resourceListConfig
- * @param {module:ResourceListSelector} ResourceListSelector
  * @param  progressBar
  * @param Notification
  * @param {module:LotsSelector} LotsSelector
  */
-function resourceList (resources, resourceListConfig, ResourceListSelector, progressBar, Notification, LotsSelector) {
+function resourceList (resources, resourceListConfig, progressBar, Notification, LotsSelector) {
   return {
     template: require('./resource-list.directive.html'),
     restrict: 'E',

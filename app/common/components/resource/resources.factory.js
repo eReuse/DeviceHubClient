@@ -120,7 +120,9 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
 
     /** A connection to Devicehub. Ex. myThing.server.post() */
     static get server () {
-      return RestangularConfigurerResource.service(this.basePath)
+      console.assert(resources.RestangularConfigurerResource,
+        'No credentials for accessing Dhub; perform first login.')
+      return resources.RestangularConfigurerResource.service(this.basePath)
     }
 
     /** A connection to Devicehub. Ex. myThing.server.post() */
@@ -1168,8 +1170,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:Tag}
-   * @extends {resources:Thing}
+   * @alias {module:resources.Tag}
+   * @extends {module:resources.Thing}
    */
   class Tag extends Thing {
     define ({id = null, org = null, secondary = null, device = null, ...rest}) {
@@ -1233,6 +1235,29 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
           return this.server.one(parentsIds[0]).post('children', null, {id: this.id})
         }
       })
+    }
+  }
+
+  /**
+   * @alias {module:resources.User}
+   * @extends {module:resources.Thing}
+   */
+  class User extends Thing {
+    define ({id = null, email = null, individuals = [], name = null, token = null, ...rest}) {
+      super.define(rest)
+      this.id = id
+      this.email = email
+      this.individuals = individuals
+      this.name = name
+      this.token = token
+    }
+
+    get icon () {
+      return 'fa-user'
+    }
+
+    get title () {
+      return this.name || this.email
     }
   }
 
@@ -1349,27 +1374,6 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
     return cls
   }
 
-  /** Restangular for resources */
-  const RestangularConfigurerResource = Restangular.withConfig(RestangularProvider => {
-    RestangularProvider.addResponseInterceptor((data, operation) => {
-      let res
-      if ('tree' in data) { // todo set good variable naming
-        console.assert(operation === 'getList')
-        res = new Lots(data.items, data.tree, data.url)
-      } else if ('items' in data) {
-        console.assert(operation === 'getList')
-        res = ResourceList.fromServer(data.items, data.pagination, data.url)
-      } else if (operation === 'get') {
-        res = resourceClass(data.type).fromObject(data)
-      } else {
-        // Do not handle post methods, let the object that POSTed handle it
-        // itself (usually performing this.define() with the data)
-        res = data
-      }
-      return res
-    })
-  })
-
   class Teaser {
     constructor (type, title, description, date, severity) {
       this.type = utils.Naming.humanize(type)
@@ -1454,10 +1458,12 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
     Receive: Receive,
     Tag: Tag,
     Lot: Lot,
+    User: User,
     LotNode: LotNode,
     ResourceList: ResourceList,
     Lots: Lots,
-    resourceClass: resourceClass
+    resourceClass: resourceClass,
+    RestangularConfigurerResource: null
   }
   return resources
 }

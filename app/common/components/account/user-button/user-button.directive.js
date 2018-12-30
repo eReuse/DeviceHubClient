@@ -5,7 +5,7 @@ function userButton (session) {
     replace: true,
     scope: {},
     link: $scope => {
-      $scope.account = session.account
+      $scope.user = session.user
       $scope.logout = () => session.logout()
     }
   }

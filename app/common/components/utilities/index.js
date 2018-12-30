@@ -1,6 +1,6 @@
 require('angular-ui-bootstrap')
 require('angular-ui-notification')
-require('./../../../../bower_components/ngprogress/build/ngprogress.min.js')
+require('ngprogress')
 /**
  * @ngdoc module
  * @name common.components.utilities

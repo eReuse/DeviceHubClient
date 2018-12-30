@@ -8,7 +8,6 @@ require('angular-ui-router')
 module.exports = angular.module('common.components.elements',
   [
     require('./../resource').name,
-    require('./../device').name,
     require('./../event').name,
     require('./../utilities').name,
     require('./../account').name,
@@ -18,5 +17,4 @@ module.exports = angular.module('common.components.elements',
     require('./../workbench').name,
     'ui.router'
   ])
-  .directive('newButton', require('./new-button/new-button.directive'))
   .directive('headerNav', require('./header-nav/header-nav.directive'))

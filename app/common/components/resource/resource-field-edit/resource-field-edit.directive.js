@@ -1,6 +1,6 @@
 const isPresent = require('is-present')
 
-function resourceFieldEdit (ResourceSettings, SubmitForm, $focus, $timeout, Notification) {
+function resourceFieldEdit (SubmitForm, $focus, $timeout, Notification) {
   return {
     template: require('./resource-field-edit.directive.html'),
     restrict: 'E',
@@ -32,14 +32,14 @@ function resourceFieldEdit (ResourceSettings, SubmitForm, $focus, $timeout, Noti
                   const patch = {
                     [$scope.field.key]: isPresent(form.model.value) ? form.model.value : ''
                   }
-                  const promise = ResourceSettings($scope.resource['@type'])
+                  /*const promise = ResourceSettings($scope.resource['@type'])
                     .server
                     .one($scope.resource._id)
                     .patch(patch)
-                    .then($scope.edit.stopEdit)
+                    .then($scope.edit.stopEdit)*/
                   $scope.resource[$scope.field.key] = $scope.field.value = form.model.value
                   const fieldName = $scope.field.name || $scope.field.key
-                  submitForm.after(promise, `${fieldName} updated.`, `We couldn't update it.`)
+                  //submitForm.after(promise, `${fieldName} updated.`, `We couldn't update it.`)
                 } else {
                   Notification.warning('You have not changed the value.')
                   $scope.edit.stopEdit()

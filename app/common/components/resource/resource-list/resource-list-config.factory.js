@@ -14,10 +14,6 @@ function resourceListConfig ($filter) {
       return this.name
     }
 
-    static get name () {
-      return utils.Naming.humanize(this.type)
-    }
-
     static get cssClasses () {
       return this.hide ? 'visible-lg' : ''
     }

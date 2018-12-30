@@ -1,15 +1,12 @@
 /**
  *
- * @param resourceListConfig
- * @param ResourceListGetter
  * @param progressBar
  * @param $rootScope
  * @param {module:LotsSelector} LotsSelector
- * @param ResourceSettings
  * @param {module:resources} resources
  * @return {{template, scope: {resourceType: string}, link: {pre: link.pre}, restrict: string}}
  */
-function lotsTreeNavigation (resourceListConfig, ResourceListGetter, progressBar, $rootScope, LotsSelector, ResourceSettings, resources) {
+function lotsTreeNavigation (progressBar, $rootScope, LotsSelector, resources) {
   const PATH = require('./__init__').PATH
   // const PATH = 'common/components/resource/resource-list/lots-tree-navigation'
   return {
