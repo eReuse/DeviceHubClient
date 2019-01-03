@@ -112,7 +112,11 @@
           </tbody>
         </table>
         <div class="text-center">
-          <i ng-class="{'fa fa-circle-o-notch fa-spin fa-lg': getter.working}"></i>
+          <i class="fa"
+             ng-class="{
+              'fa-spinner fa-spin fa-lg': getter.working,
+              'fa-ellipsis-h': !getter.working && !getter.nextPage
+              }"></i>
         </div>
       </div>
     </div> <!-- ./col-sm-6 -->
