@@ -36,7 +36,7 @@ function sessionFactory ($q, $state, resources, Restangular) {
         this.user = resources.User.fromObject(userObj)
         this.storage.save(this.user, !saveInBrowser)
         const promise = this._afterGettingUser()
-        $state.go('index.inventory')
+        $state.go('auth.inventory')
         return promise
       })
     }

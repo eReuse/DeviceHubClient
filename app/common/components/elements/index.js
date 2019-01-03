@@ -1,4 +1,3 @@
-require('angular-ui-router')
 /**
  * @ngdoc module
  * @name common.components.elements
@@ -15,6 +14,6 @@ module.exports = angular.module('common.components.elements',
     require('./../../constants').name,
     require('./../forms').name,
     require('./../workbench').name,
-    'ui.router'
+    require('@uirouter/angularjs').default
   ])
   .directive('headerNav', require('./header-nav/header-nav.directive'))

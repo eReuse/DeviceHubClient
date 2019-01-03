@@ -1,14 +1,11 @@
-function shieldStatesRun ($rootScope, session, $state) {
-  $rootScope.$on('$stateChangeStart', (event, next, params) => {
-    if (next.name !== 'login') {
-      if (!session.user) {
-        try {
-          session.load()
-        } catch (e) {
-          if (!(e instanceof session.constructor.NoStoredUser)) throw e
-          event.preventDefault()
-          $state.go('login')
-        }
+function shieldStatesRun ($rootScope, $transitions, session) {
+  $transitions.onStart({to: 'auth.**'}, trans => {
+    if (!session.user) {
+      try {
+        session.load()
+      } catch (e) {
+        if (!(e instanceof session.constructor.NoStoredUser)) throw e
+        return trans.router.stateService.target('login')
       }
     }
   })

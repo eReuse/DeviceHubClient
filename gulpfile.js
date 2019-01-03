@@ -66,7 +66,6 @@ const filePath = {
   vendorCSS: {
     src: [
       './resources/animate.min.css',
-      './node_modules/angular-bootstrap-nav-tree/dist/abn_tree.css',
       './node_modules/angular-ui-notification/dist/angular-ui-notification.css',
       './node_modules/angular-chart.js/dist/angular-chart.css',
       './node_components/ngprogress/ngProgress.css',
@@ -83,8 +82,11 @@ const filePath = {
       './node_modules/jquery/dist/jquery.js',
       './node_modules/bootstrap/dist/js/bootstrap.js',
       './node_modules/restangular/dist/restangular.js',
-      './node_modules/angular-bootstrap-nav-tree/dist/abn_tree_directive.js',
-      './node_modules/angular-ui-router/release/angular-ui-router.js',
+      './node_modules/@uirouter/angularjs/release/angular-ui-router.js',
+      './node_modules/@uirouter/angularjs/release/resolveService.js',
+      './node_modules/@uirouter/angularjs/release/stateEvents.js',
+      './node_modules/@uirouter/core/lib/index.js',
+      './node_modules/@uirouter/angularjs/release/ui-router-angularjs.js',
       './node_modules/angular-formly/dist/formly.js',
       './node_modules/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js',
       './node_modules/angular-ui-notification/dist/angular-ui-notification.js',
@@ -241,7 +243,6 @@ gulp.task('clean', function () {
 
 gulp.task('afterClean', function () {
   return del([
-    filePath.destination + '/templates.js',
     filePath.destination + '/config.js',
     filePath.assets.images.dest + '/spinner.scss'
   ])

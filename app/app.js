@@ -1,5 +1,4 @@
 require('./init.js')
-const utils = require('./common/components/utils')
 
 /**
  * @ngdoc module
@@ -10,7 +9,7 @@ const utils = require('./common/components/utils')
  * Glues the views of the application by using the library `UI.router`.
  */
 module.exports = window.angular.module('deviceHub', [
-  'ui.router',
+  require('@uirouter/angularjs').default,
   require('./views').name,
   require('./common/components').name, // Only adds close-popover
   require('dist/templates.js').name,
@@ -18,38 +17,36 @@ module.exports = window.angular.module('deviceHub', [
   'ngSanitize'  // angular-sanitize
 ])
   .config(
-    ($urlRouterProvider, $stateProvider) => {
+    ($urlServiceProvider, $stateProvider) => {
       // The views of the application
       // views that use the `resolve` property require the schema
       // to be loaded.
-      $stateProvider.state('index', {
+      $stateProvider.state({
+        name: 'auth',
         url: '',
         template: require('./views/index/index.controller.html'),
         abstract: true
-      }).state('index.inventory', {
-        url: '/inventories/:db',
+      }).state({
+        name: 'auth.inventory',
+        url: '/inventories/',
         template: require('./views/inventory/inventory.controller.html'),
         controller: 'inventoryCtrl as inCl',
         resolve: {resourceServerLoaded: resourceServer => resourceServer.loaded}
-      }).state('index.workbench', {
-        url: '/workbench/:db',
+      }).state({
+        name: 'auth.workbench',
+        url: '/workbench/',
         template: require('./views/workbench/workbench.controller.html'),
         controller: 'workbenchCtl as wbCtl',
         resolve: {resourceServerLoaded: resourceServer => resourceServer.loaded}
-      }).state('login', {
+      }).state({
+        name: 'login',
         url: '/login',
         template: require('./views/login/login.controller.html'),
         controller: 'loginCtrl as LnCl'
-      }).state('redirect', {
-        url: '/',
-        controller: ($state, session) => {
-          try {
-            $state.go('index.inventory', {db: session.account.defaultDatabase})
-          } catch (err) {
-          } // user without database
-        }
       })
-      $urlRouterProvider.otherwise('/')
+      $urlServiceProvider.rules.otherwise((matchValue, url, router) => {
+        return '/inventories/'
+      })
     })
   /**
    * @ngdoc type

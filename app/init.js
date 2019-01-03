@@ -8,13 +8,11 @@ window.VIEWS = 'views'
 
 window.$ = window.jQuery = require('jquery') // We globally load jQuery
 window._ = require('lodash')
-window.Sortable = require('bower_components/Sortable/Sortable.js')
 
 const apiCheck = require('api-check')
 apiCheck.globalConfig.disabled = true
 
 require('angular')
-require('angular-ui-router')
 require('bootstrap')
 require('angular-sanitize')
 const isPresent = require('is-present')

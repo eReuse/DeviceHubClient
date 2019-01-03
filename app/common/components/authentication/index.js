@@ -1,4 +1,3 @@
-require('angular-ui-router')
 require('restangular')
 
 /**
@@ -16,7 +15,7 @@ require('restangular')
 module.exports = angular.module('common.components.authentication',
   [
     'restangular',
-    'ui.router'
+    require('@uirouter/angularjs').default
   ])
 .service('session', require('./session.service.js'))
 .run(require('./shield-states.run.js'))
