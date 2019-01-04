@@ -1,0 +1,36 @@
+<div class="container fill-height-bar">
+  <h2 translate="newEvent.title" translate-value-type="{{::event.typeHuman}}"></h2>
+  <div class="row">
+    <div class="col-xs-12">
+      <form ng-submit="post()" id="resource-form" novalidate>
+        <formly-form model="form.model" fields="form.fields" form="form.form"></formly-form>
+      </form>
+      <div class="text-left" ng-show="!_.isEmpty(form.status.errorListFromServer)">
+        <i class="fa fa-warning"></i>
+        Cannot submit. Fix the following errors:
+        <ul>
+          <li ng-repeat="(key, value) in form.status.errorListFromServer">{{key}}: {{value}}</li>
+        </ul>
+      </div>
+      <div ng-if="form.status.errorFromLocal"><i class="fa fa-warning"></i>
+        Cannot submit. Check the form and repair the errors.
+      </div>
+    </div>
+    <div class="col-xs-5">
+      <button type="submit"
+              form="resource-form"
+              class="btn btn-primary submit-button"
+              dh-submit-button="form.status.loading"
+      >
+        <span translate="newEvent.submit"></span>
+      </button>
+      <button class="btn btn-warning"
+              ui-sref="^"
+              type="button"
+              ng-disabled="form.status.loading"
+      >
+        <span translate="newEvent.cancel"></span>
+      </button>
+    </div>
+  </div>
+</div>

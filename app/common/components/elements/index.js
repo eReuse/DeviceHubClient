@@ -1,3 +1,4 @@
+require('angular-translate')
 /**
  * @ngdoc module
  * @name common.components.elements
@@ -14,6 +15,8 @@ module.exports = angular.module('common.components.elements',
     require('./../../constants').name,
     require('./../forms').name,
     require('./../workbench').name,
-    require('@uirouter/angularjs').default
+    require('@uirouter/angularjs').default,
+    'pascalprecht.translate'
   ])
   .directive('headerNav', require('./header-nav/header-nav.directive'))
+  .directive('languageButton', require('./language-button/language-button.directive'))

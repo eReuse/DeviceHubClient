@@ -1,9 +1,9 @@
-<div>
+<div> <!-- filter pills -->
   <button class="btn btn-link btn-sm"
           ng-repeat="pill in form.pills | orderBy: 'label' track by pill.key"
           ng-click="pill.remove()"
   >
-    <span>{{::pill.label}}: {{pill.text}}</span>
+    <span translate="{{::pill.textPath + '.l'}}"></span>: {{pill.text}}
     <i class="fa fa-times"></i>
   </button>
 </div>

@@ -24,3 +24,10 @@ module.exports = angular.module('views.inventory',
     require('./../../common/components/utilities').name
   ])
   .controller('inventoryCtrl', require('./inventory.controller.js'))
+  .controller('newEventCtrl', require('./new-event.controller.js'))
+  .run(function notAccessNewEventViewDirectly ($transitions) {
+    $transitions.onStart({to: 'auth.inventory.newEvent'}, trans => {
+      const params = trans.params()
+      if (!params.event) return trans.router.stateService.target('auth.inventory')
+    })
+  })

@@ -1,10 +1,17 @@
 const utils = require('./../../utils')
 
 /**
+ * @module resourceListConfig
+ */
+
+/**
  * Creates the configuration object for resource-list.
  * @param $filter
  */
 function resourceListConfig ($filter) {
+  /**
+   * @alias module:resourceListConfig:Field
+   */
   class Field {
     constructor (resource, content = _.get(resource, this.constructor.name.toLowerCase())) {
       this.content = content

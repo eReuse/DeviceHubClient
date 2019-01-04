@@ -1,4 +1,4 @@
-function shieldStatesRun ($rootScope, $transitions, session) {
+function shieldStatesRun ($transitions, session) {
   $transitions.onStart({to: 'auth.**'}, trans => {
     if (!session.user) {
       try {

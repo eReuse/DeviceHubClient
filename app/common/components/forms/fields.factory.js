@@ -1,11 +1,29 @@
+const inflection = require('inflection')
+
 /**
  * @module fields
  */
 
-function fieldsFactory () {
+function fieldsFactory ($translate) {
+  /**
+   * @alias modulefields.STR_SIZE
+   * @type {number}
+   */
   const STR_SIZE = 64
+  /**
+   * @alias module:fields.STR_BIG_SIZE
+   * @type {number}
+   */
   const STR_BIG_SIZE = 128
+  /**
+   * @alias module:fields.STR_SM_SIZE
+   * @type {number}
+   */
   const STR_SM_SIZE = 32
+  /**
+   * @alias module:fields.STR_XSM_SIZE
+   * @type {number}
+   */
   const STR_XSM_SIZE = 16
 
   /**
@@ -13,21 +31,46 @@ function fieldsFactory () {
    * @alias module:fields.Field
    */
   class Field {
-    constructor (key, label, description, disabled = false, placeholder, required = false) {
+    /**
+     * @param {string} key - The technical key of the field.
+     * @param {string} namespace - A namespace to reach the translation
+     * strings inside 'form' namespace. Ex. if 'key' is 'foo', and
+     * namespace 'bar', then the path to get the texts are: 1) for
+     * the label 'bar.foo.l', for description
+     * 'bar.foo.d', and for placeholder 'bar.foo.p'.
+     * @param {string} keyText - Override the use of key when getting the
+     * translations.
+     * @param {boolean} required
+     * @param {boolean} disabled
+     * @param {boolean} placeholder - If true, set a placeholder from
+     * the translation text.
+     */
+    constructor (key, {namespace = 'forms.fields.r', keyText = key, required = false, disabled = false, placeholder = false, description = true}) {
+      console.assert(key, 'Key must be passed.')
       this.key = key
       this.type = this.constructor.name.toLowerCase()
       this.templateOptions = {
-        label: label,
-        description: description,
         disabled: disabled,
-        placeholder: placeholder,
         required: required
+      }
+      this.textPath = `${namespace}.${keyText}`
+      this.expressionProperties = {
+        'templateOptions.label': `'${this.textPath}.l' | translate`
+      }
+      if (description) {
+        this.templateOptions.description = ''
+        this.expressionProperties['templateOptions.description'] = `'${this.textPath}.d' | translate`
+      }
+      if (placeholder) {
+        this.templateOptions.placeholder = ''
+        this.expressionProperties['templateOptions.placeholder'] = `'${this.textPath}.p' | translate`
       }
     }
   }
 
   /**
    * @alias module:fields.Input
+   * @extends module:fields.Field
    */
   class Input extends Field {
 
@@ -35,10 +78,11 @@ function fieldsFactory () {
 
   /**
    * @alias module:fields.String
+   * @extends module:fields.Input
    */
   class String extends Input {
-    constructor (key, label, description, disabled, placeholder, required, maxLength = STR_SIZE) {
-      super(key, label, description, disabled, placeholder, required)
+    constructor (key, {maxLength = STR_SIZE, ...rest}) {
+      super(key, rest)
       this.type = 'input'
       this.templateOptions.maxLength = maxLength
     }
@@ -46,10 +90,11 @@ function fieldsFactory () {
 
   /**
    * @alias module:fields.Number
+   * @extends module:fields.Input
    */
   class Number extends Input {
-    constructor (key, label, description, disabled, placeholder, required, min, max) {
-      super(key, label, description, disabled, placeholder, required)
+    constructor (key, {min, max, ...rest}) {
+      super(key, rest)
       this.type = 'input'
       this.templateOptions.type = 'number'
       this.templateOptions.min = min
@@ -59,76 +104,77 @@ function fieldsFactory () {
 
   /**
    * @alias module:fields.Textarea
+   * @extends module:fields.Field
    */
   class Textarea extends Field {
   }
 
   /**
    * @alias module:fields.Datepicker
+   * @extends module:fields.Field
    */
   class Datepicker extends Field {
   }
 
   /**
    * @alias module:fields.Select
+   * @extends module:fields.Field
    */
   class Select extends Field {
     /**
      * Generates a select field.
-     * @param key
-     * @param label
-     * @param description
-     * @param disabled
-     * @param placeholder
-     * @param required
      * @param {Option[]} options
+     * @param rest
      */
-    constructor (key, label, options = [], description, disabled, placeholder, required) {
-      super(key, label, description, disabled, placeholder, required)
+    constructor (key, {options = [], ...rest}) {
+      super(key, rest)
       this.templateOptions.options = options
     }
   }
 
   /**
    * @alias module:fields.MultiCheckbox
+   * @extends module:fields.Field
    */
   class MultiCheckbox extends Field {
     /**
-     * @param key
-     * @param label
-     * @param description
-     * @param disabled
-     * @param placeholder
-     * @param required
+     * @param {string} key
      * @param {Option[]} options
+     * @param rest
      */
-    constructor (key, label, options = [], description, disabled, placeholder, required) {
-      super(key, label, description, disabled, placeholder, required)
+    constructor (key, {options = [], ...rest}) {
+      super(key, rest)
       this.type = 'multiCheckbox'
       this.templateOptions.options = options
     }
   }
 
-  class Resources extends Field {
-  }
-
   /**
-   * @alias module:fields.Field
+   * @alias module:fields.Option
    */
   class Option {
-    constructor (value, name = value) {
+    constructor (value, {namespace, keyText = inflection.camelize(value, true)}) {
       this.value = value
-      this.name = name
+      this.name = $translate.instant(`${namespace}.${keyText}`)
     }
+  }
+
+  class Resources extends Field {
+
   }
 
   /**
    * @alias module:fields.Group
    */
   class Group {
-    constructor (label, fields) {
-      this.templateOptions = {label: label}
+    constructor ({namespace = 'forms.fields.r', keyText}, ...fields) {
       this.fieldGroup = fields
+      this.templateOptions = {}
+
+      this.textPath = `${namespace}.${keyText}`
+      this.expressionProperties = {
+        'templateOptions.label': `'${this.textPath}.l' | translate`
+      }
     }
   }
 
@@ -154,7 +200,7 @@ function fieldsFactory () {
     }
   }
 
-  return /** @alias {module:fields} */ {
+  return {
     Field: Field,
     Input: Input,
     Form: Form,
@@ -165,8 +211,12 @@ function fieldsFactory () {
     Textarea: Textarea,
     Datepicker: Datepicker,
     Select: Select,
+    Resources: Resources,
     MultiCheckbox: MultiCheckbox,
-    Resources: Resources
+    STR_SIZE: STR_SIZE,
+    STR_BIG_SIZE: STR_BIG_SIZE,
+    STR_SM_SIZE: STR_SM_SIZE,
+    STR_XSM_SIZE: STR_XSM_SIZE
   }
 }
 

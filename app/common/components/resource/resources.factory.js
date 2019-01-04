@@ -24,6 +24,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
    * Please look at the Devicehub counterpart to learn about
    * the fields, etc.
    *
+   * @alias module:resources.Thing
+   *
    */
   class Thing {
     constructor (args = {}) {
@@ -130,8 +132,36 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
       return this.constructor.server
     }
 
+    /**
+     * Creates a thing to Devicehub by POSTing it, asynchronously
+     * updating the contents of this object with the result of
+     * devicehub.
+     *
+     * @return {Promise}
+     */
     post () {
-      return this.server.post(this)
+      console.assert(!this.id, '%s %s has already been posted.', this.type, this.id)
+      return this.server.post(this._post()).then(obj => {
+        this.define(obj)
+        return this
+      })
+    }
+
+    /**
+     * Returns a posteable version of the thing, complying with
+     * Restangular and Devicehub's API.
+     * @return {Object.<string, Object>}
+     * @private
+     */
+    _post () {
+      const cleaned = {
+        type: this.type
+      }
+      _.forOwn(this, (value, key) => {
+        // Note that 0 is as 'not present'
+        if (_.isPresent(value) && key[0] !== '_') cleaned[key] = value
+      })
+      return cleaned
     }
 
     toString () {
@@ -295,8 +325,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.ComputerMonitor}
-   * @extends {module:resources.Device}
+   * @alias module:resources.ComputerMonitor
+   * @extends module:resources.Device
    */
   class ComputerMonitor extends Device {
     static get icon () {
@@ -305,15 +335,15 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.Desktop}
-   * @extends {module:resources.Computer}
+   * @alias module:resources.Desktop
+   * @extends module:resources.Computer
    */
   class Desktop extends Computer {
   }
 
   /**
-   * @alias {module:resources.Laptop}
-   * @extends {module:resources.Computer}
+   * @alias module:resources.Laptop
+   * @extends module:resources.Computer
    */
   class Laptop extends Computer {
     static get icon () {
@@ -322,8 +352,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.Server}
-   * @extends {module:resources.Computer}
+   * @alias module:resources.Server
+   * @extends module:resources.Computer}
    */
   class Server extends Computer {
     static get icon () {
@@ -332,8 +362,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.Mobile}
-   * @extends {module:resources.Device}
+   * @alias module:resources.Mobile
+   * @extends module:resources.Device}
    */
   class Mobile extends Device {
     define ({imei = null, meid = null, ...rest}) {
@@ -344,8 +374,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.Smartphone}
-   * @extends {module:resources.Mobile}
+   * @alias module:resources.Smartphone
+   * @extends module:resources.Mobile}
    */
   class Smartphone extends Mobile {
     static get icon () {
@@ -354,8 +384,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.Tablet}
-   * @extends {module:resources.Mobile}
+   * @alias module:resources.Tablet
+   * @extends module:resources.Mobile}
    */
   class Tablet extends Mobile {
     static get icon () {
@@ -364,8 +394,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.Cellphone}
-   * @extends {module:resources.Mobile}
+   * @alias module:resources.Cellphone
+   * @extends module:resources.Mobile}
    */
   class Cellphone extends Mobile {
     static get icon () {
@@ -397,8 +427,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.GraphicCard}
-   * @extends {module:resources.Component}
+   * @alias module:resources.GraphicCard
+   * @extends module:resources.Component
    */
   class GraphicCard extends Component {
     define ({memory = null, ...rest}) {
@@ -412,8 +442,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.DataStorage}
-   * @extends {module:resources.Component}
+   * @alias module:resources.DataStorage
+   * @extends module:resources.Component
    */
   class DataStorage extends Component {
     define ({size = null, privacy = null, ...rest}) {
@@ -429,22 +459,22 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.HardDrive}
-   * @extends {module:resources.DataStorage}
+   * @alias module:resources.HardDrive
+   * @extends module:resources.DataStorage
    */
   class HardDrive extends DataStorage {
   }
 
   /**
-   * @alias {module:resources.SolidStateDrive}
-   * @extends {module:resources.HardDrive}
+   * @alias module:resources.SolidStateDrive
+   * @extends module:resources.HardDrive
    */
   class SolidStateDrive extends HardDrive {
   }
 
   /**
-   * @alias {module:resources.Motherboard}
-   * @extends {module:resources.Component}
+   * @alias module:resources.Motherboard
+   * @extends module:resources.Component
    */
   class Motherboard extends Component {
     define ({slots = null, usb = null, firewire = null, serial = null, pcmcia = null, ...rest}) {
@@ -458,8 +488,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.NetworkAdapter}
-   * @extends {module:resources.Component}
+   * @alias module:resources.NetworkAdapter
+   * @extends module:resources.Component
    */
   class NetworkAdapter extends Component {
     define ({speed = null, wireless = null, ...rest}) {
@@ -474,8 +504,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.Processor}
-   * @extends {module:resources.Component}
+   * @alias module:resources.Processor
+   * @extends module:resources.Component
    */
   class Processor extends Component {
     define ({speed = null, cores = null, threads = null, address, ...rest}) {
@@ -488,8 +518,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.RamModule}
-   * @extends {module:resources.Component}
+   * @alias module:resources.RamModule
+   * @extends module:resources.Component
    */
   class RamModule extends Component {
     define ({size = null, speed = null, format = null, ...rest}) {
@@ -506,8 +536,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.SoundCard}
-   * @extends {module:resources.Component}
+   * @alias module:resources.SoundCard
+   * @extends module:resources.Component
    */
   class SoundCard extends Component {
     static get icon () {
@@ -516,15 +546,15 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.Display}
-   * @extends {module:resources.Component}
+   * @alias module:resources.Display
+   * @extends module:resources.Component
    */
   class Display extends Component {
   }
 
   /**
-   * @alias {module:resources.ComputerAccessory}
-   * @extends {module:resources.Device}
+   * @alias module:resources.ComputerAccessory
+   * @extends module:resources.Device
    */
   class ComputerAccessory extends Device {
     static get icon () {
@@ -533,8 +563,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.Mouse}
-   * @extends {module:resources.ComputerAccessory}
+   * @alias module:resources.Mouse
+   * @extends module:resources.ComputerAccessory
    */
   class Mouse extends ComputerAccessory {
     static get icon () {
@@ -543,8 +573,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.MemoryCardReader}
-   * @extends {module:resources.ComputerAccessory}
+   * @alias module:resources.MemoryCardReader
+   * @extends module:resources.ComputerAccessory
    */
   class MemoryCardReader extends ComputerAccessory {
     static get icon () {
@@ -553,8 +583,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.SAI}
-   * @extends {module:resources.ComputerAccessory}
+   * @alias module:resources.SAI
+   * @extends module:resources.ComputerAccessory
    */
   class SAI extends ComputerAccessory {
     static get icon () {
@@ -563,8 +593,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {module:resources.Keyboard}
-   * @extends {module:resources.ComputerAccessory}
+   * @alias module:resources.Keyboard
+   * @extends module:resources.ComputerAccessory
    */
   class Keyboard extends ComputerAccessory {
     define ({layout = null, ...rest}) {
@@ -652,24 +682,30 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:EventWithMultipleDevices}
-   * @extends {resources:Event}
+   * @alias module:resources.EventWithMultipleDevices
+   * @extends module:resources.Event
    */
   class EventWithMultipleDevices extends Event {
     define ({devices = [], ...rest}) {
       super.define(rest)
-      this._devices = devices // todo we assume we only have a list of
-                              //  ids here as we don't directly require events as of now
+      // Devices can be either a Device[] or a int[]. We only want the int[]
+      this._devices = devices.map(d => _.get(d, 'id', d))
     }
 
     get devices () {
       return this._devices.map(id => _.get(cache.devices, id, id))
     }
+
+    _post () {
+      const cleaned = super._post()
+      cleaned.devices = this._devices
+      return cleaned
+    }
   }
 
   /**
-   * @alias {resources:EventWithOneDevice}
-   * @extends {resources:Event}
+   * @alias module:resources.EventWithOneDevice
+   * @extends module:resources.Event
    */
   class EventWithOneDevice extends Event {
     define ({device = null, ...rest}) {
@@ -683,22 +719,22 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:Add}
-   * @extends {resources:EventWithOneDevice}
+   * @alias module:resources.Add
+   * @extends module:resources.EventWithOneDevice
    */
   class Add extends EventWithOneDevice {
   }
 
   /**
-   * @alias {resources:Remove}
-   * @extends {resources:EventWithOneDevice}
+   * @alias module:resources.Remove
+   * @extends module:resources.EventWithOneDevice
    */
   class Remove extends EventWithOneDevice {
   }
 
   /**
-   * @alias {resources:EraseBasic}
-   * @extends {resources:EventWithOneDevice}
+   * @alias module:resources.EraseBasic
+   * @extends module:resources.EventWithOneDevice
    */
   class EraseBasic extends EventWithOneDevice {
     define ({steps = [], standards = [], certificate = null, ...rest}) {
@@ -720,8 +756,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   EraseBasic.method = 'Shred'
 
   /**
-   * @alias {resources:EraseSectors}
-   * @extends {resources:EraseBasic}
+   * @alias module:resources.EraseSectors
+   * @extends module:resources.EraseBasic
    */
   class EraseSectors extends EraseBasic {
   }
@@ -729,8 +765,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   EraseSectors.method = 'Badblocks'
 
   /**
-   * @alias {resources:ErasePhysical}
-   * @extends {resources:EraseBasic}
+   * @alias module:resources.ErasePhysical
+   * @extends module:resources.EraseBasic
    */
   class ErasePhysical extends EraseBasic {
     define ({method = null, ...rest}) {
@@ -740,8 +776,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:Step}
-   * @extends {resources:Thing}
+   * @alias module:resources.Step
+   * @extends module:resources.Thing
    */
   class Step extends Thing {
     define ({startTime = null, endTime = null, severity = null, ...rest}) {
@@ -753,22 +789,22 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:StepZero}
-   * @extends {resources:Step}
+   * @alias module:resources.StepZero
+   * @extends module:resources.Step
    */
   class StepZero extends Step {
   }
 
   /**
-   * @alias {resources:StepRandom}
-   * @extends {resources:Step}
+   * @alias module:resources.StepRandom
+   * @extends module:resources.Step
    */
   class StepRandom extends Step {
   }
 
   /**
-   * @alias {resources:Rate}
-   * @extends {resources:EventWithOneDevice}
+   * @alias module:resources.Rate
+   * @extends module:resources.EventWithOneDevice
    */
   class Rate extends EventWithOneDevice {
     define ({rating = null, software = null, version = null, appearance = null, functionality = null, ratingRange = null, ...rest}) {
@@ -788,15 +824,15 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:IndividualRate}
-   * @extends {resources:Rate}
+   * @alias module:resources.IndividualRate
+   * @extends module:resources.Rate
    */
   class IndividualRate extends Rate {
   }
 
   /**
-   * @alias {resources:ManualRate}
-   * @extends {resources:IndividualRate}
+   * @alias module:resources.ManualRate
+   * @extends module:resources.IndividualRate
    */
   class ManualRate extends IndividualRate {
     define ({appearanceRange = null, functionalityRange = null, labelling = null, ...rest}) {
@@ -808,8 +844,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:WorkbenchRate}
-   * @extends {resources:ManualRate}
+   * @alias module:resources.WorkbenchRate
+   * @extends module:resources.ManualRate
    */
   class WorkbenchRate extends ManualRate {
     define ({processor = null, ram = null, dataStorage = null, graphicCard = null, bios = null, biosRange = null, dataStorageRange = null, ramRange = null, processorRange = null, graphicCardRange = null, ...rest}) {
@@ -832,8 +868,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:AggregateRate}
-   * @extends {resources:Rate}
+   * @alias module:resources.AggregateRate
+   * @extends module:resources.Rate
    */
   class AggregateRate extends Rate {
     define ({workbench = null, manual = null, processor = null, ram = null, dataStorage = null, graphicCard = null, bios = null, biosRange = null, appearanceRange = null, functionalityRange = null, labelling = null, dataStorageRange = null, ramRange = null, processorRange = null, graphicCardRange = null, ...rest}) {
@@ -861,8 +897,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:Price}
-   * @extends {resources:EventWithOneDevice}
+   * @alias module:resources.Price
+   * @extends module:resources.EventWithOneDevice
    */
   class Price extends EventWithOneDevice {
     define ({currency, price, software, version, rating, ...rest}) {
@@ -877,8 +913,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:EreusePrice}
-   * @extends {resources:Price}
+   * @alias module:resources.EreusePrice
+   * @extends module:resources.Price
    */
   class EreusePrice extends Price {
     define ({warranty2 = null, refurbisher = null, retailer = null, platform = null, ...rest}) {
@@ -891,8 +927,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:Install}
-   * @extends {resources:EventWithOneDevice}
+   * @alias module:resources.Install
+   * @extends module:resources.EventWithOneDevice}
    */
   class Install extends EventWithOneDevice {
     define ({elapsed = null, address = null, ...rest}) {
@@ -903,8 +939,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:Snapshot}
-   * @extends {resources:EventWithOneDevice}
+   * @alias module:resources.Snapshot
+   * @extends module:resources.EventWithOneDevice
    */
   class Snapshot extends EventWithOneDevice {
     define ({uuid = null, software = null, version = null, events = null, expectedEvents = null, elapsed = null, components, ...rest}) {
@@ -924,8 +960,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:Test}
-   * @extends {resources:EventWithOneDevice}
+   * @alias module:resources.Test
+   * @extends module:resources.EventWithOneDevice
    */
   class Test extends EventWithOneDevice {
     define ({elapsed = null, ...rest}) {
@@ -935,8 +971,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:TestDataStorage}
-   * @extends {resources:Test}
+   * @alias module:resources.TestDataStorage
+   * @extends module:resources.Test
    */
   class TestDataStorage extends Test {
     define ({length = null, status = null, lifetime = null, assessment = null, reallocatedSectorCount = null, powerCycleCount = null, reportedUncorrectableErrors = null, commandTimeout = null, currentPendingSectorCount = null, offlineUncorrectable = null, remainingLifetimePercentage = null, ...rest}) {
@@ -988,15 +1024,15 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:StressTest}
-   * @extends {resources:Test}
+   * @alias module:resources.StressTest
+   * @extends module:resources.Test
    */
   class StressTest extends Test {
   }
 
   /**
-   * @alias {resources:Benchmark}
-   * @extends {resources:EventWithOneDevice}
+   * @alias module:resources.Benchmark
+   * @extends module:resources.EventWithOneDevice
    */
   class Benchmark extends EventWithOneDevice {
     define ({elapsed = null, ...rest}) {
@@ -1006,8 +1042,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:BenchmarkDataStorage}
-   * @extends {resources:Benchmark}
+   * @alias module:resources.BenchmarkDataStorage
+   * @extends module:resources.Benchmark
    */
   class BenchmarkDataStorage extends Benchmark {
     define ({readSpeed = null, writeSpeed = null, ...rest}) {
@@ -1018,8 +1054,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:BenchmarkWithRate}
-   * @extends {resources:Benchmark}
+   * @alias module:resources.BenchmarkWithRate
+   * @extends module:resources.Benchmark
    */
   class BenchmarkWithRate extends Benchmark {
     define ({rate = null, ...rest}) {
@@ -1029,88 +1065,94 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:BenchmarkProcessor}
-   * @extends {resources:BenchmarkWithRate}
+   * @alias module:resources.BenchmarkProcessor
+   * @extends module:resources.BenchmarkWithRate
    */
   class BenchmarkProcessor extends BenchmarkWithRate {
   }
 
   /**
-   * @alias {resources:BenchmarkProcessorSysbench}
-   * @extends {resources:BenchmarkProcessor}
+   * @alias module:resources.BenchmarkProcessorSysbench
+   * @extends module:resources.BenchmarkProcessor
    */
   class BenchmarkProcessorSysbench extends BenchmarkProcessor {
   }
 
   /**
-   * @alias {resources:BenchmarkRamSysbench}
-   * @extends {resources:BenchmarkWithRate}
+   * @alias module:resources.BenchmarkRamSysbench
+   * @extends module:resources.BenchmarkWithRate
    */
   class BenchmarkRamSysbench extends BenchmarkWithRate {
   }
 
   /**
-   * @alias {resources:ToRepair}
-   * @extends {resources:EventWithMultipleDevices}
+   * @alias module:resources.ToRepair
+   * @extends module:resources.EventWithMultipleDevices
    */
   class ToRepair extends EventWithMultipleDevices {
   }
 
   /**
-   * @alias {resources:Repair}
-   * @extends {resources:EventWithMultipleDevices}
+   * @alias module:resources.Repair
+   * @extends module:resources.EventWithMultipleDevices
    */
   class Repair extends EventWithMultipleDevices {
   }
 
   /**
-   * @alias {resources:ReadyToUse}
-   * @extends {resources:EventWithMultipleDevices}
+   * @alias module:resources.ReadyToUse
+   * @extends module:resources.EventWithMultipleDevices
    */
   class ReadyToUse extends EventWithMultipleDevices {
+    static get icon () {
+      return 'fa-check-double'
+    }
+  }
+
+  /**
+   * @alias module:resources.ToPrepare
+   * @extends module:resources.EventWithMultipleDevices
+   */
+  class ToPrepare extends EventWithMultipleDevices {
+    static get icon () {
+      return 'fa-tools'
+    }
+  }
+
+  /**
+   * @alias module:resources.Prepare
+   * @extends module:resources.EventWithMultipleDevices
+   */
+  class Prepare extends EventWithMultipleDevices {
     static get icon () {
       return 'fa-check'
     }
   }
 
   /**
-   * @alias {resources:ToPrepare}
-   * @extends {resources:EventWithMultipleDevices}
-   */
-  class ToPrepare extends EventWithMultipleDevices {
-  }
-
-  /**
-   * @alias {resources:Prepare}
-   * @extends {resources:EventWithMultipleDevices}
-   */
-  class Prepare extends EventWithMultipleDevices {
-  }
-
-  /**
-   * @alias {resources:Organize}
-   * @extends {resources:EventWithMultipleDevices}
+   * @alias module:resources.Organize
+   * @extends module:resources.EventWithMultipleDevices
    */
   class Organize extends EventWithMultipleDevices {
   }
 
   /**
-   * @alias {resources:Reserve}
-   * @extends {resources:Organize}
+   * @alias module:resources.Reserve
+   * @extends module:resources.Organize
    */
   class Reserve extends Organize {
   }
 
   /**
-   * @alias {resources:CancelReservation}
-   * @extends {resources:Organize}
+   * @alias module:resources.CancelReservation
+   * @extends module:resources.Organize
    */
   class CancelReservation extends Organize {
   }
 
   /**
-   * @alias {resources:Trade}
-   * @extends {resources:EventWithMultipleDevices}
+   * @alias module:resources.Trade
+   * @extends module:resources.EventWithMultipleDevices
    */
   class Trade extends EventWithMultipleDevices {
     define ({shippingDate = null, invoiceNumber = null, price = null, to = null, confirms = null, ...rest}) {
@@ -1124,54 +1166,71 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   }
 
   /**
-   * @alias {resources:Sell}
-   * @extends {resources:Trade}
+   * @alias module:resources.Sell
+   * @extends module:resources.Trade
    */
   class Sell extends Trade {
+    static get icon () {
+      return 'money-bill-alt'
+    }
   }
 
   /**
-   * @alias {resources:Donate}
-   * @extends {resources:Trade}
+   * @alias module:resources.Donate
+   * @extends module:resources.Trade
    */
   class Donate extends Trade {
+    static get icon () {
+      return 'money-bill'
+    }
   }
 
   /**
-   * @alias {resources:CancelTrade}
-   * @extends {resources:Trade}
+   * @alias module:resources.CancelTrade
+   * @extends module:resources.Trade
    */
   class CancelTrade extends Trade {
+
   }
 
   /**
-   * @alias {resources:ToDisposeProduct}
-   * @extends {resources:Trade}
+   * @alias module:resources.ToDisposeProduct
+   * @extends module:resources.Trade
    */
   class ToDisposeProduct extends Trade {
+    static get icon () {
+      return 'fa-dumpster'
+    }
   }
 
   /**
-   * @alias {resources:DisposeProduct}
-   * @extends {resources:Trade}
+   * @alias module:resources.DisposeProduct
+   * @extends module:resources.Trade
    */
   class DisposeProduct extends Trade {
+    static get icon () {
+      return 'fa-dumpster'
+    }
   }
 
   /**
-   * @alias {resources:Receive}
-   * @extends {resources:EventWithMultipleDevices}
+   * @alias module:resources.Receive
+   * @extends module:resources.EventWithMultipleDevices
    */
   class Receive extends EventWithMultipleDevices {
     define ({role = null, ...rest}) {
       super.define(rest)
       this.role = role
     }
+
+    static get icon () {
+      return 'fa-map-pin'
+    }
   }
 
   /**
-   * @alias {module:resources.Tag}
-   * @extends {module:resources.Thing}
+   * @alias module:resources.Tag
+   * @extends module:resources.Thing
    */
   class Tag extends Thing {
     define ({id = null, org = null, secondary = null, device = null, ...rest}) {
@@ -1221,26 +1280,24 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
       return cache.lots[data.id]
     }
 
-    /**
-     * Prepares the lot and posts it to Devicehub
-     * @return {Promise}
-     */
-    create () {
-      console.assert(!this.id, 'Cannot POST lot %s because it already has an ID', this.id)
+    post () {
       const parentsIds = this._parents
-      return this.server.post(_.pick(this, ['name', 'description'])).then(obj => {
-        this.define(obj)
+      return super.post().then(() => {
         cache.lots[this.id] = this
         if (parentsIds.length) {
           return this.server.one(parentsIds[0]).post('children', null, {id: this.id})
         }
       })
     }
+
+    _post () {
+      return _.pick(this, ['name', 'description'])
+    }
   }
 
   /**
-   * @alias {module:resources.User}
-   * @extends {module:resources.Thing}
+   * @alias module:resources.User
+   * @extends module:resources.Thing
    */
   class User extends Thing {
     define ({id = null, email = null, individuals = [], name = null, token = null, ...rest}) {
@@ -1384,7 +1441,7 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
     }
   }
 
-  const resources = /** @alias module:resources */{
+  const resources = {
     Thing: Thing,
     Device: Device,
     Computer: Computer,

@@ -43,15 +43,12 @@ class Severity {
 
   /**
    * Returns a list of selects to be used in forms.
-   * @returns {{name: string, value: int}[]}
+   * @returns {module:fields.Option[]}
    */
-  static get formSelect () {
-    return [
-      {name: '✓ Info', value: Severity.Info},
-      {name: 'ℹ️ Notice', value: Severity.Notice},
-      {name: '⚠ Warning', value: Severity.Warning},
-      {name: '❌ Error', value: Severity.Error}
-    ]
+  static formSelect (fields) {
+    return [this.Info, this.Notice, this.Warning, this.Error].map(
+      value => new fields.Option(value, {namespace: 'e.severity'})
+    )
   }
 }
 

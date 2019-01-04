@@ -51,7 +51,7 @@
     </div>
     <div class="col-xs-12 fill-height-bar">
       <div ng-hide="lotsM.lots.length">
-        <h2>All devices</h2>
+        <h2 translate>resourceList.allDevices</h2>
         <button type="button"
                 class="btn btn-sm btn-dark visible-xs-inline"
                 style="margin-bottom: 8px; font-size: 16px; margin-left: 10px;"
@@ -144,7 +144,7 @@
           get-resources="selector.getAllSelectedDevices()"
           register-to-resources-update="selector.callbackOnSelection(callback)">
       </group-resource-button>
-      <manual-events-button selector="selector"></manual-events-button>
+      <manual-events-button devices="selected"></manual-events-button>
       <certificate-button></certificate-button>
       <button class="btn btn-primary"
               clipboard

@@ -1,4 +1,3 @@
-//const eForms = require('./event.forms')
 const CannotSubmit = require('./cannot-submit.exception')
 
 /**
@@ -41,51 +40,7 @@ function resourceFormFactory (SubmitForm, $rootScope, resources) {
       console.assert(this.submitForm)
     }
 
-    post () {
-      this.submit(this.constructor.POST)
-    }
 
-    /**
-     * Submits the form.
-     * @param {string} op
-     */
-    submit (op) {
-      console.assert(this.constructor[op], 'OP must be a REST method.')
-      if (this.submitForm.isValid()) {
-        this.submitForm.prepare()
-        return this._submit(op)
-      } else {
-        throw new CannotSubmit('Form is invalid')
-      }
-    }
-
-    /**
-     * Internal function that performs the actual submission,
-     * without checking.
-     * @returns {Promise.<T>|*}
-     * @private
-     */
-    _submit (op) {
-      const model = this.model.copy()
-      const promise = model.post()
-      promise.then(this._succeedSubmissionFactory(op, model))
-      this.submitForm.after(promise)
-      return promise
-    }
-
-    /**
-     * @param {string} op
-     * @param {Thing} model
-     * @returns {Function}
-     * @private
-     */
-    _succeedSubmissionFactory (op, model) {
-      return response => {
-        Notification.success(`${model.title} successfully ${this.constructor.NOTIFICATIONS[op]}.`)
-        $rootScope.$broadcast(`submitted@${model.type}`)
-        return response
-      }
-    }
   }
 
   ResourceForm.POST = 'POST'

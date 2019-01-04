@@ -1,5 +1,6 @@
 <ul class="list-inline">
   <li ng-repeat="(_, resource) in to._resources">
-    <resource-button resource="resource"></resource-button>
+    <i class="fa fa-fw {{::resource.icon}}"></i>
+    {{::resource}}
   </li>
 </ul>

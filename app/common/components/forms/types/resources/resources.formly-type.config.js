@@ -11,7 +11,7 @@ function resources (formlyConfigProvider) {
   formlyConfigProvider.setType({
     name: 'resources',
     wrapper: ['bootstrapLabel', 'bootstrapHasError'],
-    templateUrl: require('./__init__').PATH + '/resources.formly-type.config.html',
+    template: require('./resources.formly-type.config.html'),
     defaultOptions: {
       templateOptions: {
         key: null

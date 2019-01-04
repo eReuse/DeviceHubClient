@@ -2,6 +2,7 @@ require('restangular')
 require('angular-ui-bootstrap')
 require('angular-ui-notification')
 require('angular-simple-logger')
+require('angular-translate')
 
 module.exports = angular.module('common.config',
   [
@@ -9,14 +10,15 @@ module.exports = angular.module('common.config',
     'restangular',
     'ui.bootstrap',
     'ui-notification',
-    require('angular-formly')
+    require('angular-formly'),
+    'pascalprecht.translate'
   ])
   .config(require('./restangular.config'))
   .config(require('./modal.config'))
   .config(require('./html5.config'))
   .config(require('./ui-notification.config'))
   .config(require('./formly.config'))
-  .factory('RestangularFactory', require('./restangular.factory'))
+  .config(require('./translations.config'))
   .run(require('./formly.run'))
   .run(function ($rootScope) {
     $rootScope._ = window._

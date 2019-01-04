@@ -39,6 +39,17 @@ module.exports = window.angular.module('deviceHub', [
         controller: 'workbenchCtl as wbCtl',
         resolve: {resourceServerLoaded: resourceServer => resourceServer.loaded}
       }).state({
+        name: 'auth.inventory.newEvent',
+        url: 'new-event/',
+        params: {
+          event: {
+            type: 'any',
+            value: null
+          }
+        },
+        template: require('./views/inventory/new-event.controller.html'),
+        controller: 'newEventCtrl as neCl'
+      }).state({
         name: 'login',
         url: '/login',
         template: require('./views/login/login.controller.html'),

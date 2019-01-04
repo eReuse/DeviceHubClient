@@ -3,6 +3,8 @@
          class="form-control"
          placeholder="Enter a device id, serial-number, ..."
          ng-model="searchQuery"
+         ng-change="onUpdate({text: searchQuery})"
+         ng-model-options="{debounce: 500}"
   >
   <div class="input-group-addon">
     <i class="fa fa-search"></i>

@@ -5,16 +5,7 @@ function resourceSearch () {
     scope: {
       onUpdate: '&'
     },
-    link: ($scope, element) => {
-      let timeout
-      element.bind('keyup keypress', () => {
-        let query = $scope.searchQuery
-        clearTimeout(timeout)
-        timeout = setTimeout(() => {
-          $scope.onUpdate({text: query})
-        }, 1000)
-      })
-
+    link: $scope => {
       class Scanner {
         constructor () {
           this.isAndroid = 'AndroidApp' in window

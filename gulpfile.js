@@ -90,7 +90,8 @@ const filePath = {
       './node_modules/angular-formly/dist/formly.js',
       './node_modules/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js',
       './node_modules/angular-ui-notification/dist/angular-ui-notification.js',
-      './node_modules/lodash/lodash.js'
+      './node_modules/lodash/lodash.js',
+      './node_modules/angular-translate/dist/angular-translate.js'
     ]
   }
 }

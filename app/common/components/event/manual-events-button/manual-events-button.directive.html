@@ -12,8 +12,8 @@
         tooltip-placement="right"
         tooltip-append-to-body="true"
     >
-      <a ng-click="openModal(Event)">
-        <resource-icon resource="Event"></resource-icon>
+      <a ng-click="open(Event)">
+        <i class="fa fa-fw {{::Event.icon}}"></i>
         {{::Event.type | humanize}}
       </a>
     </li>

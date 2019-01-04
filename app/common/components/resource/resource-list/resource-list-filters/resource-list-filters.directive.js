@@ -14,7 +14,7 @@ const PATH = require('./__init__').PATH
  * @param {module:fields} fields
  * @param {module:resources} resources
  */
-function resourceListFilters (Notification, $uibModal, clipboard, fields, resources) {
+function resourceListFilters (Notification, $uibModal, clipboard, fields, resources, $translate) {
   return {
     template: require('./resource-list-filters.directive.html'),
     restrict: 'E',
@@ -33,12 +33,12 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
       $scope.popover = {
         templateUrl: `${PATH}/filters.popover.html`,
         isOpen: false,
-        title: 'Select a filter'
+        title: $translate.instant('resourceList.filters.popover.title')
       }
 
       class Panel extends fields.Group {
-        constructor (label, fields, isActual = false) {
-          super(label, fields)
+        constructor ({isActual = false, ...rest}, ...fields) {
+          super(rest, ...fields)
           this.wrapper = 'panelFilter'
           this.panels = _.filter(fields, f => f instanceof Panel)
 
@@ -65,7 +65,7 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
         /** Sets this panel as the visible one. */
         open () {
           this.constructor.actual = this
-          $scope.popover.title = this.templateOptions.label
+          $scope.popover.title = $translate.instant(this.textPath + '.l')
         }
 
         /** Is this the opened panel? */
@@ -129,7 +129,7 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
          */
         constructor (field, model) {
           this.key = field.key
-          this.label = field.templateOptions.label
+          this.textPath = field.textPath
           this.text = _.get(model, field.key)
           // We only want filterPills from non-empty values
           if (_.isEmpty(this.text) && !_.isNumber(this.text) && !_.isString(this.text)) {
@@ -176,6 +176,9 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
       class EmptyFilterPill extends Error {
       }
 
+      const namespace = 'resourceList.filters'
+      const namespaceObj = {namespace: namespace}
+
       // Instantiate the form of filters
       $scope.form = new FilterForm(
         { // Set defaults
@@ -184,27 +187,37 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
           },
           type: [resources.Computer.type]
         },
-        new Panel('Select a filter', [
-          new Panel('Item type', [
-            new fields.MultiCheckbox(
-              'type',
-              'Type of device',
-              [
-                new fields.Option('Computer'),
-                new fields.Option('Laptop')
-              ])
-          ]),
-          new Panel('Manufacturer and model', [
-            new fields.String('manufacturer', 'Manufacturer'),
-            new fields.String('model', 'Model')
-          ]),
-          new Panel('Price and Rating', [
-            new Panel('Price', [
-              new fields.Number('rating.rating[0]', 'Min price'),
-              new fields.Number('rating.rating[1]', 'Max price')
-            ])
-          ])
-        ], true)
+        new Panel({keyText: 'panel', namespace: namespace, isActual: true},
+          new Panel({keyText: 'itemTypePanel', namespace: namespace},
+            new fields.MultiCheckbox('type',
+              {
+                namespace: namespace,
+                options: [
+                  new fields.Option('Computer', namespaceObj),
+                  new fields.Option('Laptop', namespaceObj)
+                ]
+              }
+            )
+          ),
+          new Panel({keyText: 'manPanel', namespace: namespace},
+            new fields.String('manufacturer', namespaceObj),
+            new fields.String('model', namespaceObj)
+          ),
+          new Panel({keyText: 'priceRatingPanel', namespace: namespace},
+            new Panel({keyText: 'ratingPanel', namespace: namespace},
+              new fields.Number('rating.rating[0]', {
+                namespace: namespace,
+                keyText: 'rating.min',
+                description: false
+              }),
+              new fields.Number('rating.rating[1]', {
+                namespace: namespace,
+                keyText: 'rating.max',
+                description: false
+              })
+            )
+          )
+        )
       )
 
       /**

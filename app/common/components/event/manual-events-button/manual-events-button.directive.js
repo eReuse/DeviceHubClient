@@ -2,45 +2,31 @@
  *
  * @param {module:dh-modal-provider} dhModal
  * @param {module:resources} resources
- * @param {module:open-event-modal} openEventModal
  */
-function manualEventsButton (dhModal, resources, openEventModal) {
+function manualEventsButton (dhModal, resources, $state) {
   return {
     template: require('./manual-events-button.directive.html'),
     restrict: 'E',
     scope: {
-      models: '<'
+      devices: '='
     },
     /**
      * @param {$scope} $scope
-     * @param {module:resources.Device[]} $scope.models
+     * @param {module:resources.Device[]} $scope.devices
      */
     link: $scope => {
       $scope.events = [
-        resources.ReadyToUse
+        resources.ToPrepare,
+        resources.Prepare,
+        resources.ToRepair,
+        resources.ReadyToUse,
+        resources.ToDisposeProduct,
+        resources.Receive
       ]
-
-      // todo removeØ
-      $scope._events = [ // TODO move to config
-        {'type': 'devices:Ready', 'humanName': 'Ready'},
-        {'type': 'devices:ToPrepare', 'humanName': 'To prepare'},
-        {'type': 'devices:Prepare', 'humanName': 'Prepare'},
-        {'type': 'devices:ToRepair', 'humanName': 'To repair'},
-        {'type': 'devices:Repair', 'humanName': 'Repair'},
-        {'type': 'devices:ToDispose', 'humanName': 'To dispose'},
-        {'type': 'devices:Dispose', 'humanName': 'Dispose'},
-        // {'type': 'devices:Locate', 'humanName': 'Locate'},
-        {'type': 'devices:Sell', 'humanName': 'Sell'},
-        {'type': 'devices:Donate', 'humanName': 'Donate'},
-        {'type': 'devices:Rent', 'humanName': 'Rent'},
-        {'type': 'devices:Reserve', 'humanName': 'Reserve'},
-        // {'type': 'devices:Deallocate', 'humanName': 'Deallocate'},
-        {'type': 'devices:Receive', 'humanName': 'Receive'},
-        // {'type': 'devices:Allocate', 'humanName': 'Allocate'},
-        // {'type': 'devices:TransferAssetLicense', 'humanName': 'Transfer asset license'},
-        {'type': 'devices:NewTag', 'humanName': 'Add tag', 'singleSelectionOnly': true}
-      ]
-      $scope.openModal = Event => openEventModal.open(Event, 'foo')
+      $scope.open = Event => {
+        const event = new Event({devices: $scope.devices})
+        $state.go('.newEvent', {event: event})
+      }
     }
   }
 }
