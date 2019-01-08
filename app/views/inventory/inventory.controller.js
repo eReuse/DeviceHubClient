@@ -1,6 +1,6 @@
 function inventoryCtrl ($scope, progressBar) {
-  window.progressSetVal(3)
   progressBar.complete()
+  $('#dh-loading').fadeOut(800)
 }
 
 module.exports = inventoryCtrl

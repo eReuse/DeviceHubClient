@@ -13,19 +13,16 @@
   </head>
   <body class="dh-wait" ng-app="deviceHub" ng-controller="deviceHubCtrl as Mc">
     <div id="dh-loading" class="container-fluid" style="background-image: url('common/assets/login-background.jpg')">
-      <div class="row" id="dh-loading-container">
+      <div class="row text-center" id="dh-loading-container">
         <h1>
           <img src="./common/assets/devicehub-logo.svg"/>
         </h1>
-        <div class="progress">
-          <div class="progress-bar progress-bar-striped active" id="dh-loading-progress"></div>
-        </div>
+        <i class="fa fa-3x fa-spinner fa-pulse"></i>
       </div>
     </div>
     <section ui-view></section>
     <script src="./common/assets/browser-support.js" inline></script>
-    <script src="./common/assets/dh-loading.js" inline></script>
-    <script src="js/bundle.js"></script>
+    <script src="js/bundle.js" async></script>
     <link rel="stylesheet" type="text/css" href="css/vendor.css">
   </body>
 </html>

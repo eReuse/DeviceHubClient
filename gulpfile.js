@@ -46,19 +46,13 @@ const filePath = {
     src: './app/**/*.html'
   },
   assets: {
-    images: {
-      src: ['./app/common/assets/**/*', './app/**/*.svg'],
-      watch: ['./dist/common/assets/', './dist/common/assets/**/*'],
-      dest: './dist/common/assets/'
-    }
+    src: ['./app/common/assets/**/*', './app/**/*.svg'],
+    watch: ['./dist/common/assets/', './dist/common/assets/**/*'],
+    dest: './dist/common/assets/'
   },
   copyIndex: {
     src: './app/index.html',
     watch: './app/index.html'
-  },
-  copyPdf: {
-    src: './resources/pdf.min.js',
-    dest: './dist/js/'
   },
   copyFonts: {
     src: './node_modules/@fortawesome/fontawesome-free/webfonts/*',
@@ -141,14 +135,13 @@ gulp.task('bundle-prod', function () {
   return rebundle()
 })
 
-
 // =======================================================================
 // Images Task
 // =======================================================================
-gulp.task('images', function () {
-  return gulp.src(filePath.assets.images.src)
+gulp.task('assets', function () {
+  return gulp.src(filePath.assets.src)
     .on('error', handleError)
-    .pipe(gulp.dest(filePath.assets.images.dest))
+    .pipe(gulp.dest(filePath.assets.dest))
 })
 
 // =======================================================================
@@ -161,16 +154,6 @@ function copyIndex () {
 }
 
 gulp.task('copyIndex', copyIndex)
-
-// =======================================================================
-// Copy pdf.min.js
-// =======================================================================
-function copyPdf () {
-  return gulp.src(filePath.copyPdf.src)
-    .pipe(gulp.dest(filePath.copyPdf.dest))
-}
-
-gulp.task('copyPdf', copyPdf)
 
 // =======================================================================
 // Copy Favicon
@@ -203,7 +186,7 @@ gulp.task('watch', function () {
   gulp.watch(filePath.styles.sass, ['sass'])
   gulp.watch(filePath.styles.src, ['sass'])
   gulp.watch(filePath.templates.src, ['templates'])
-  gulp.watch(filePath.assets.images.watch, ['images'])
+  gulp.watch(filePath.assets.watch, ['assets'])
   gulp.watch(filePath.copyIndex.watch, ['copyIndex'])
   console.log('Watching...')
 })
@@ -218,7 +201,7 @@ gulp.task('clean', function () {
 gulp.task('afterClean', function () {
   return del([
     filePath.destination + '/config.js',
-    filePath.assets.images.dest + '/spinner.scss'
+    filePath.assets.dest + '/spinner.scss'
   ])
 })
 
@@ -264,7 +247,8 @@ gulp.task('copyFonts', function () {
 // run "gulp" in terminal to build the DEV app
 gulp.task('build-dev', function (callback) {
   runSequence(
-    // images and vendor tasks are removed to speed up build time. Use "gulp build" to do a full re-build of the dev app.
+    // images and vendor tasks are removed to speed up build time. Use "gulp build" to do a full
+    // re-build of the dev app.
     ['config', 'templates'],
     ['bundle-dev', '_sass'],
     ['copyIndex'],
@@ -278,7 +262,7 @@ gulp.task('build', function (callback) {
   runSequence(
     ['clean'],
     ['config', 'templates'],
-    ['bundle-dev', 'vendorCSS', '_sass', 'images', 'copyFavicon', 'copyFonts', 'copyIndex', 'copyPdf'],
+    ['bundle-dev', 'vendorCSS', '_sass', 'assets', 'copyFavicon', 'copyFonts', 'copyIndex'],
     ['afterClean'],
     callback
   )
@@ -289,7 +273,7 @@ gulp.task('build-prod', function (callback) {
   runSequence(
     ['clean'],
     ['config', 'templates'],
-    ['bundle-prod', 'vendorCSS', '_sass', 'images', 'copyFavicon', 'copyFonts', 'copyIndex', 'copyPdf'],
+    ['bundle-prod', 'vendorCSS', '_sass', 'assets', 'copyFavicon', 'copyFonts', 'copyIndex'],
     ['afterClean'],
     callback
   )

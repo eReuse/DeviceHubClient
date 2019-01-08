@@ -90,7 +90,6 @@ module.exports = window.angular.module('deviceHub', [
    * the Angular and DeviceHub ready.
    */
   .controller('deviceHubCtrl', $scope => {
-    window.progressSetVal(2)
     $('html,body').removeClass('dh-wait')
     $scope.isNotAndroid = !('AndroidApp' in window)
   })

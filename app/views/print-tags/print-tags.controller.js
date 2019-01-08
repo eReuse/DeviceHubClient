@@ -71,7 +71,7 @@ function printTags ($scope, $stateParams, fields, Notification, $translate, $ocL
 
   class TagsToPdf {
     constructor () {
-      this.ready = $ocLazyLoad.load('js/pdf.min.js')
+      this.ready = $ocLazyLoad.load('common/assets/pdf.min.js')
     }
 
     print () {
