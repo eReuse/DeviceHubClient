@@ -1,40 +1,25 @@
-<div> <!-- filter pills -->
-  <button class="btn btn-link btn-sm"
-          ng-repeat="pill in form.pills | orderBy: 'label' track by pill.key"
-          ng-click="pill.remove()"
-  >
-    <span translate="{{::pill.textPath + '.l'}}"></span>: {{pill.text}}
-    <i class="fa fa-times"></i>
-  </button>
-</div>
-<div class="btn-group btn-group-sm">
-  <button class="btn btn-primary"
-          uib-popover-template="popover.templateUrl"
-          popover-title="{{popover.title}}"
-          popover-is-open="popover.isOpen"
-          popover-append-to-body="true"
-          popover-placement="auto bottom-left"
-  >
-    <i class="fa fa-filter"></i>
-    Add filter
-    <span class="caret"></span>
-  </button>
-  <button
-      class="btn btn-link"
-      ng-click="io.export()">
-    <i class="fa fa-file-export"></i>
-    Export filters
-  </button>
-  <button type="button"
-          class="btn btn-link"
-          uib-popover-template="io.popover.templateUrl"
-          popover-title="{{::io.popover.title}}"
-          popover-is-open="io.popover.isOpen"
-          popover-append-to-body="true"
-          popover-placement="auto bottom"
-  >
-    <i class="fa fa-file-import"></i>
-    Import filters
-  </button>
-</div>
+<div class="btn btn-group no-padding">
+  <div class="btn-group btn-group-sm">
+    <button class="btn btn-primary btn-sm"
+            uib-popover-template="popover.templateUrl"
+            popover-title="{{popover.title}}"
+            popover-is-open="popover.isOpen"
+            popover-append-to-body="true"
+            popover-placement="auto bottom-left"
+    >
+      <i class="fa fa-filter"></i>
+      Filters
+      <span class="caret"></span>
+    </button>
+  </div>
+  <div class="btn-group btn-group-sm">
 
+    <button class="btn btn-primary"
+            ng-repeat="pill in form.pills | orderBy: 'label' track by pill.key"
+            ng-click="pill.remove()"
+    >
+      <span translate="{{::pill.textPath + '.l'}}"></span>: {{pill.text}}
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+</div>

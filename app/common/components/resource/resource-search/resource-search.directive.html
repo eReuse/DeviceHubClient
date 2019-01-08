@@ -9,7 +9,7 @@
   <div class="input-group-addon">
     <i class="fa fa-search"></i>
   </div>
-  <div class="input-group-addon" ng-show="scanner.isAndroid" ng-click="scanner.scanQR()">
+  <div class="input-group-addon" ng-if="::scanner.isAndroid" ng-click="scanner.scanQR()">
     Scan <i class="fa fa-fw fa-qrcode"></i>
   </div>
 </div>

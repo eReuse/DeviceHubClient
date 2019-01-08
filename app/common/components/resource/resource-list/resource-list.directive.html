@@ -61,23 +61,23 @@
       </div>
       <h3 ng-show="lotsM.lots.length">Devices in lots</h3>
       <resource-search on-update="getter.setSearch(text)"></resource-search>
-      <div class="pull-right">
+      <resource-list-filters on-update="getter.setFilters(filters)"></resource-list-filters>
+      <div class="text-right">
         <button type="button"
-                class="btn btn-link btn-sm"
+                class="btn btn-link btn-xs"
                 ng-show="!selected.length"
                 ng-click="selected.selectAll()"
         >
           Select all devices ({{getter.devices.pagination.total}})
         </button>
         <button type="button"
-                class="btn btn-link btn-sm"
+                class="btn btn-link btn-xs"
                 ng-show="selected.length"
                 ng-click="selected.deselectAll()"
         >
           Deselect all devices ({{selected.length}})
         </button>
       </div>
-      <resource-list-filters on-update="getter.setFilters(filters)"></resource-list-filters>
       <div class="devices">
         <table id="device-list-table"
                class="table table-striped table-hover unselectable table-condensed">
