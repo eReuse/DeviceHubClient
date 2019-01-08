@@ -18,6 +18,7 @@ module.exports = window.angular.module('deviceHub', [
 ])
   .config(
     ($urlServiceProvider, $stateProvider) => {
+      const resourceServerResolve = {resourceServerLoaded: resourceServer => resourceServer.loaded}
       // The views of the application
       // views that use the `resolve` property require the schema
       // to be loaded.
@@ -31,13 +32,31 @@ module.exports = window.angular.module('deviceHub', [
         url: '/inventories/',
         template: require('./views/inventory/inventory.controller.html'),
         controller: 'inventoryCtrl as inCl',
-        resolve: {resourceServerLoaded: resourceServer => resourceServer.loaded}
+        resolve: resourceServerResolve
+      }).state({
+        name: 'auth.tags',
+        url: '/tags/',
+        template: require('./views/tags/tags.controller.html'),
+        controller: 'tagsCtrl as tgCl',
+        resolve: resourceServerResolve
+      }).state({
+        name: 'auth.printTags',
+        url: '/tags/print',
+        params: {
+          tags: {
+            type: 'any',
+            value: []
+          }
+        },
+        template: require('./views/print-tags/print-tags.controller.html'),
+        resolve: resourceServerResolve,
+        controller: 'printTagsCtrl as ptCl'
       }).state({
         name: 'auth.workbench',
         url: '/workbench/',
         template: require('./views/workbench/workbench.controller.html'),
         controller: 'workbenchCtl as wbCtl',
-        resolve: {resourceServerLoaded: resourceServer => resourceServer.loaded}
+        resolve: resourceServerResolve
       }).state({
         name: 'auth.inventory.newEvent',
         url: 'new-event/',

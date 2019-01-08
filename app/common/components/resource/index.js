@@ -1,6 +1,5 @@
 require('angular-qrcode')
 require('restangular')
-require('angular-ui-bootstrap')
 require('angular-ui-notification')
 require('angular-recursion')
 require('angular-animate')
@@ -18,7 +17,7 @@ module.exports = angular.module('common.components.resource',
     require('angular-formly'),
     require('angular-formly-templates-bootstrap'),
     require('./resource-search').name,
-    'ui.bootstrap',
+    require('angular-ui-bootstrap'),
     'ngAnimate',
     require('./../authentication').name,
     require('./../../constants').name,
@@ -29,6 +28,7 @@ module.exports = angular.module('common.components.resource',
     'angular-clipboard',
     'ngSanitize',
     'dynamicBindHtml',
+    require('./../tag').name,
     require('./../group').name // the button in resource-list
   ])
   .directive('lotsTreeNavigation', require('./resource-list/lots-tree-navigation/lots-tree-navigation.directive'))

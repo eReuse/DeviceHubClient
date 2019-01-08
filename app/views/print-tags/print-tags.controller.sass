@@ -1,0 +1,11 @@
+@import ../../common/styles/variables
+#print-tags
+  tag
+    display: inline-block
+    margin-bottom: 1em
+    margin-right: 1em
+
+.fill-height-bar-h2
+  // navbar - h2 font size - h2 line height - h2 margin top - h2 margin botttom
+  height: calc(100vh - #{$navbar-height} - #{$font-size-h2} - #{$line-height-computed} - #{($line-height-computed / 2)})
+  overflow-y: auto

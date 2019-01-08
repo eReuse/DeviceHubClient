@@ -25,6 +25,7 @@ const en = {
   forms: {
     submit: 'Submit',
     cancel: 'Cancel',
+    reset: 'Reset',
     resource: {
       notification: {
         success: '{{title}} successfully {{op}}',
@@ -87,6 +88,22 @@ const en = {
       error: '❌ Error'
     }
   },
+  tags: {
+    title: 'Tags'
+  },
+  nav: {
+    workbenchPc: 'Workbench PC',
+    tags: '@:tags.title',
+    inventory: 'Inventory'
+  },
+  printTags: {
+    title: 'Design and print tags',
+    toPdf: 'Print to PDF',
+    reset: '@:forms.reset',
+    button: 'Tagging',
+    save: 'Save',
+    saved: 'Tag design saved.'
+  }
 }
 
 const es = {
@@ -106,6 +123,9 @@ const es = {
 
 function translateConfig ($translateProvider) {
   $translateProvider
+  // Following https://angular-translate.github.io/docs/#/guide/19_security
+    .useSanitizeValueStrategy('escape')
+    // Available translations
     .translations('en', en)
     .translations('es', es)
     .fallbackLanguage('en')

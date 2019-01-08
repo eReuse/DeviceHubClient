@@ -44,8 +44,14 @@ function fieldsFactory ($translate) {
      * @param {boolean} disabled
      * @param {boolean} placeholder - If true, set a placeholder from
      * the translation text.
+     * @param description
+     * @param {object.<string, string>} expressions - Formly's Expression Properties
+     * @param {?string} hide = An angular expression that, if true, hides this.
+     * @param {?Object} watcher
+     * @param {string} watcher.expression
+     * @param {module:fields.Field~listener} watcher.listener
      */
-    constructor (key, {namespace = 'forms.fields.r', keyText = key, required = false, disabled = false, placeholder = false, description = true}) {
+    constructor (key, {namespace = 'forms.fields.r', keyText = key, required = false, disabled = false, placeholder = false, description = true, expressions = {}, hide = null, watcher}) {
       console.assert(key, 'Key must be passed.')
       this.key = key
       this.type = this.constructor.name.toLowerCase()
@@ -54,9 +60,9 @@ function fieldsFactory ($translate) {
         required: required
       }
       this.textPath = `${namespace}.${keyText}`
-      this.expressionProperties = {
+      this.expressionProperties = _.assign({
         'templateOptions.label': `'${this.textPath}.l' | translate`
-      }
+      }, expressions)
       if (description) {
         this.templateOptions.description = ''
         this.expressionProperties['templateOptions.description'] = `'${this.textPath}.d' | translate`
@@ -65,8 +71,19 @@ function fieldsFactory ($translate) {
         this.templateOptions.placeholder = ''
         this.expressionProperties['templateOptions.placeholder'] = `'${this.textPath}.p' | translate`
       }
+      this.hideExpression = hide
+      this.watcher = watcher
     }
   }
+
+  /**
+   * @callback module:fields.Field~listener
+   * @param {Field} field
+   * @param {object} newValue
+   * @param {object} oldValue
+   * @param {object} scope
+   * @param stopWatching
+   */
 
   /**
    * @alias module:fields.Input
@@ -114,6 +131,41 @@ function fieldsFactory ($translate) {
    * @extends module:fields.Field
    */
   class Datepicker extends Field {
+  }
+
+  class Upload extends Field {
+    /**
+     *
+     * @param key
+     * @param {string} accept - A MIME describing files accepted.
+     * @param {boolean} multiple - Allow multiple files?
+     * @param {Upload.READ_AS.DATA_URL | Upload.READ_AS.TEXT} readAs
+     * - How should we represent the files? See Upload.READ_AS
+     */
+    constructor (key, {accept = '*/*', multiple = false, readAs, ...rest}) {
+      super(key, rest)
+      this.accept = accept
+      this.multiple = multiple
+      this.readAs = readAs
+      /**
+       * Where the files are going to be in. Note that this cannot
+       * save to the regular model.
+       * @type {File[]}
+       */
+      this.files = []
+    }
+  }
+
+  /**
+   * How to represent the files.
+   *
+   * See http://blog.teamtreehouse.com/reading-files-using-the-html5-filereader-api
+   */
+  Upload.READ_AS = {
+    /** Image or any file to upload to server */
+    DATA_URL: 'readAsDataUrl',
+    /** Json or similar */
+    TEXT: 'readAsText'
   }
 
   /**

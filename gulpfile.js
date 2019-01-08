@@ -56,6 +56,10 @@ const filePath = {
     src: './app/index.html',
     watch: './app/index.html'
   },
+  copyPdf: {
+    src: './resources/pdf.min.js',
+    dest: './dist/js/'
+  },
   copyFonts: {
     src: './node_modules/@fortawesome/fontawesome-free/webfonts/*',
     dest: './dist/css/fonts'
@@ -67,31 +71,8 @@ const filePath = {
     src: [
       './resources/animate.min.css',
       './node_modules/angular-ui-notification/dist/angular-ui-notification.css',
-      './node_modules/angular-chart.js/dist/angular-chart.css',
       './node_components/ngprogress/ngProgress.css',
       './node_modules/angular-ui-tree/dist/angular-ui-tree.min.css'
-    ]
-  },
-  vendorJS: {
-    src: [
-      './node_modules/angular/angular.js',
-      './node_modules/angular-animate/angular-animate.js',
-      './node_modules/angular-sanitize/angular-sanitize.js',
-      './node_modules/angular-simple-logger/dist/index.js',
-      './node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
-      './node_modules/jquery/dist/jquery.js',
-      './node_modules/bootstrap/dist/js/bootstrap.js',
-      './node_modules/restangular/dist/restangular.js',
-      './node_modules/@uirouter/angularjs/release/angular-ui-router.js',
-      './node_modules/@uirouter/angularjs/release/resolveService.js',
-      './node_modules/@uirouter/angularjs/release/stateEvents.js',
-      './node_modules/@uirouter/core/lib/index.js',
-      './node_modules/@uirouter/angularjs/release/ui-router-angularjs.js',
-      './node_modules/angular-formly/dist/formly.js',
-      './node_modules/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js',
-      './node_modules/angular-ui-notification/dist/angular-ui-notification.js',
-      './node_modules/lodash/lodash.js',
-      './node_modules/angular-translate/dist/angular-translate.js'
     ]
   }
 }
@@ -110,7 +91,6 @@ function handleError (err) {
 const bundle = {}
 bundle.conf = {
   entries: filePath.browserify.src,
-  external: filePath.vendorJS.src,
   debug: true,
   cache: {},
   packageCache: {},
@@ -161,23 +141,6 @@ gulp.task('bundle-prod', function () {
   return rebundle()
 })
 
-// =======================================================================
-// Vendor JS Task
-// =======================================================================
-gulp.task('vendorJS', function () {
-  const b = browserify({
-    debug: false,
-    require: filePath.vendorJS.src
-  })
-
-  return b.bundle()
-    .pipe(source('vendor.js'))
-    .on('error', handleError)
-    .pipe(buffer())
-    .pipe(uglify())
-    .pipe(footer(`window.progressSetVal(1);`)) // This let us know that vendor.js has been loaded
-    .pipe(gulp.dest(filePath.build.jsDest))
-})
 
 // =======================================================================
 // Images Task
@@ -198,6 +161,16 @@ function copyIndex () {
 }
 
 gulp.task('copyIndex', copyIndex)
+
+// =======================================================================
+// Copy pdf.min.js
+// =======================================================================
+function copyPdf () {
+  return gulp.src(filePath.copyPdf.src)
+    .pipe(gulp.dest(filePath.copyPdf.dest))
+}
+
+gulp.task('copyPdf', copyPdf)
 
 // =======================================================================
 // Copy Favicon
@@ -305,7 +278,7 @@ gulp.task('build', function (callback) {
   runSequence(
     ['clean'],
     ['config', 'templates'],
-    ['bundle-dev', 'vendorJS', 'vendorCSS', '_sass', 'images', 'copyFavicon', 'copyFonts', 'copyIndex'],
+    ['bundle-dev', 'vendorCSS', '_sass', 'images', 'copyFavicon', 'copyFonts', 'copyIndex', 'copyPdf'],
     ['afterClean'],
     callback
   )
@@ -316,7 +289,7 @@ gulp.task('build-prod', function (callback) {
   runSequence(
     ['clean'],
     ['config', 'templates'],
-    ['bundle-prod', 'vendorJS', 'vendorCSS', '_sass', 'images', 'copyFavicon', 'copyFonts', 'copyIndex'],
+    ['bundle-prod', 'vendorCSS', '_sass', 'images', 'copyFavicon', 'copyFonts', 'copyIndex', 'copyPdf'],
     ['afterClean'],
     callback
   )

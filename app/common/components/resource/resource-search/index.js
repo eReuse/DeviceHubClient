@@ -1,5 +1,3 @@
-require('angular-ui-bootstrap')
-
 module.exports = angular.module('common.components.resource.resource-search',
   [
     require('./../../../config').name

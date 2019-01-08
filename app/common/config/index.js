@@ -1,5 +1,4 @@
 require('restangular')
-require('angular-ui-bootstrap')
 require('angular-ui-notification')
 require('angular-simple-logger')
 require('angular-translate')
@@ -8,7 +7,7 @@ module.exports = angular.module('common.config',
   [
     require('./../constants').name,
     'restangular',
-    'ui.bootstrap',
+    require('angular-ui-bootstrap'),
     'ui-notification',
     require('angular-formly'),
     'pascalprecht.translate'

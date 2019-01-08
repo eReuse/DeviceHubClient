@@ -1,4 +1,3 @@
-require('angular-ui-bootstrap')
 require('angular-ui-notification')
 require('ngprogress')
 /**
@@ -9,7 +8,7 @@ require('ngprogress')
  */
 module.exports = angular.module('common.components.utilities',
   [
-    'ui.bootstrap',
+    require('angular-ui-bootstrap'),
     'ui-notification',
     'ngProgress'
   ])

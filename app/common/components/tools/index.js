@@ -1,8 +1,6 @@
-require('angular-ui-bootstrap')
-
 module.exports = angular.module('common.components.tools',
   [
-    'ui.bootstrap',
+    require('angular-ui-bootstrap'),
     require('./../../constants').name
   ])
 /**

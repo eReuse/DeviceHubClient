@@ -20,3 +20,4 @@ module.exports = angular.module('common.components.elements',
   ])
   .directive('headerNav', require('./header-nav/header-nav.directive'))
   .directive('languageButton', require('./language-button/language-button.directive'))
+  .directive('siteNav', require('./site-nav/site-nav.directive'))

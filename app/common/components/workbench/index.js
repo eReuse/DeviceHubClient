@@ -1,11 +1,10 @@
 require('restangular')
-require('angular-ui-bootstrap')
 
 module.exports = angular.module('common.components.workbench',
   [
     require('./../../config').name,
     'restangular',
-    'ui.bootstrap',
+    require('angular-ui-bootstrap'),
     require('./../authentication').name,
     require('./../../constants').name,
     require('./../utilities').name,

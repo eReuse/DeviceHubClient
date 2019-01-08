@@ -37,20 +37,13 @@ function upload (formlyConfigProvider) {
       }
     },
     defaultOptions: {
+      // See module fields' Upload for info
       templateOptions: {
         accept: '*/*',
         type: 'file',
-        /**
-         * Should the user be able to select multiple files?
-         */
         multiple: false,
-        /**
-         * Contains the file objects for the current files, as file objects can't be added in the model.
-         */
         files: [],
-        readAs: 'readAsDataURL' // see http://blog.teamtreehouse.com/reading-files-using-the-html5-filereader-api
-        // readAsDataUrl = image or any file to upload to server
-        // readAsText = json or similar
+        readAs: 'readAsDataURL'
       }
     }
   })

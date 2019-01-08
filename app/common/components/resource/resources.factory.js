@@ -233,7 +233,7 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
       /** @type {Event[]} */
       this.problems = this.constructor._relationships(problems)
       /** @type {string} */
-      this.url = url ? new URL(url, window.CONSTANTS.url) : null
+      this.url = url ? new URL(url, CONSTANTS.url) : null
       /** @type {Lot[]} */
       this.lots = lots
       /** @type {Rate} */
@@ -1233,12 +1233,14 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
    * @extends module:resources.Thing
    */
   class Tag extends Thing {
-    define ({id = null, org = null, secondary = null, device = null, ...rest}) {
+    define ({id = null, org = null, secondary = null, device = null, printable = null, url = null, ...rest}) {
       super.define(rest)
       this.id = id
       this.org = org
       this.secondary = secondary
+      this.printable = printable
       this.device = this.constructor._relationship(device)
+      this.url = url ? new URL(url, CONSTANTS.url) : null
     }
 
     get title () {

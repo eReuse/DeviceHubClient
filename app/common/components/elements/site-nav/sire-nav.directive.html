@@ -1,0 +1,6 @@
+<li ng-repeat="element in ::nav" ng-class="{active: element.active}">
+  <a ui-sref="{{::element.sref}}">
+    <i class="fa fa-fw {{::element.icon}}"></i>
+    <span translate="{{::element.textPath}}"></span>
+  </a>
+</li>

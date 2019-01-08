@@ -1,5 +1,3 @@
-require('angular-ui-bootstrap')
-
 /**
  * @ngdoc module
  * @name common.components.accounts
@@ -15,6 +13,6 @@ require('angular-ui-bootstrap')
 module.exports = angular.module('common.components.accounts',
   [
     require('./../authentication').name,
-    'ui.bootstrap'
+    require('angular-ui-bootstrap')
   ])
   .directive('userButton', require('./user-button/user-button.directive.js'))
