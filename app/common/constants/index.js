@@ -4,4 +4,4 @@
 module.exports = angular.module('common.constants', [])
   .constant('UNIT_CODES', require('./UNIT_CODES'))
 
-require('dist/config.js')
+require('dist/config.js') // DevicehubClient config from yaml

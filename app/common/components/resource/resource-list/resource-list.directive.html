@@ -137,7 +137,7 @@
         Deselect all
       </button>
     </h3>
-    <div class="buttons text-center" ng-if="selected.length">
+    <div class="text-center" ng-if="selected.length">
       <group-resource-button
           success="getter.reload()"
           resource-type="Device"
@@ -145,14 +145,7 @@
           register-to-resources-update="selector.callbackOnSelection(callback)">
       </group-resource-button>
       <manual-events-button devices="selected"></manual-events-button>
-      <certificate-button></certificate-button>
-      <button class="btn btn-primary"
-              clipboard
-              text="selection.props.urls.join(' \n')"
-              on-copied="Notification.success('Device URLs copied to clipboard')"
-              on-error="Notification.error('Device URLs could not be copied: ' + err)">
-        Public link
-      </button>
+      <export-button devices="selected"></export-button>
       <print-tags-button devices="selected"></print-tags-button>
     </div>
     <device-list-summary ng-if="selected.length" devices="selected"></device-list-summary>

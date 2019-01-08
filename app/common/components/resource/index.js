@@ -29,7 +29,8 @@ module.exports = angular.module('common.components.resource',
     'ngSanitize',
     'dynamicBindHtml',
     require('./../tag').name,
-    require('./../group').name // the button in resource-list
+    require('./../group').name, // the button in resource-list,
+    require('./../export').name
   ])
   .directive('lotsTreeNavigation', require('./resource-list/lots-tree-navigation/lots-tree-navigation.directive'))
   .service('LotsSelector', require('./resource-list/lots-tree-navigation/lots-selector.service'))
@@ -43,3 +44,4 @@ module.exports = angular.module('common.components.resource',
   .directive('deviceListSummary', require('./resource-list/device-list-summary/device-list-summary.directive'))
   .config(require('./resource-list/resource-list-filters/panel-filter.wrapper.formly.config'))
   .factory('resourceServer', require('./resource-server.factory'))
+  .factory('deviceGetter', require('./device-getter.factory'))

@@ -198,12 +198,6 @@ gulp.task('clean', function () {
     }))
 })
 
-gulp.task('afterClean', function () {
-  return del([
-    filePath.destination + '/config.js',
-    filePath.assets.dest + '/spinner.scss'
-  ])
-})
 
 gulp.task('templates', function () {
   return gulp.src(filePath.templates.src)
@@ -252,7 +246,7 @@ gulp.task('build-dev', function (callback) {
     ['config', 'templates'],
     ['bundle-dev', '_sass'],
     ['copyIndex'],
-    ['afterClean', 'watch'],
+    ['watch'],
     callback
   )
 })
@@ -263,7 +257,6 @@ gulp.task('build', function (callback) {
     ['clean'],
     ['config', 'templates'],
     ['bundle-dev', 'vendorCSS', '_sass', 'assets', 'copyFavicon', 'copyFonts', 'copyIndex'],
-    ['afterClean'],
     callback
   )
 })
@@ -274,7 +267,6 @@ gulp.task('build-prod', function (callback) {
     ['clean'],
     ['config', 'templates'],
     ['bundle-prod', 'vendorCSS', '_sass', 'assets', 'copyFavicon', 'copyFonts', 'copyIndex'],
-    ['afterClean'],
     callback
   )
 })

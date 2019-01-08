@@ -103,6 +103,21 @@ const en = {
     button: 'Tagging',
     save: 'Save',
     saved: 'Tag design saved.'
+  },
+  export: {
+    clipboard: {
+      success: 'Copied.',
+      button: 'Copy public links'
+    },
+    spreadsheet: {
+      button: 'Spreadsheet',
+      fileName: '@:export.spreadsheet.button'
+    },
+    erasure: {
+      button: 'Erasure certificate',
+      fileName: '@:export.erasure.button'
+    },
+    error: 'We could not download it. Try again later.'
   }
 }
 

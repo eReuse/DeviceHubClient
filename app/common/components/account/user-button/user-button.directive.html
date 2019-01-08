@@ -6,9 +6,19 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="single-button">
-    <li role="menuitem" class="dropdown-header">{{::user}}
+    <li role="menuitem" class="dropdown-header">Tools</li>
+    <li role="menuitem">
+      <a href="https://play.google.com/store/apps/details?id=org.ereuse.scanner" target="_blank">
+        <i class="fa fa-fw fa-mobile"></i>
+        Android App
+      </a>
     </li>
     <li class="divider"></li>
-    <li role="menuitem"><a class="text-danger-important" ng-click="logout()">Logout</a></li>
+    <li role="menuitem" class="dropdown-header">{{::user}}</li>
+    <li role="menuitem">
+      <a class="text-danger-important" ng-click="logout()">
+        <i class="fa fa-fw fa-sign-out-alt"></i>
+      Logout
+    </a></li>
   </ul>
 </li>

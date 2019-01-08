@@ -24,7 +24,7 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
    * Please look at the Devicehub counterpart to learn about
    * the fields, etc.
    *
-   * @alias module:resources.Thing
+   * @memberOf module:resources
    *
    */
   class Thing {
@@ -202,7 +202,7 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
 
   /**
    * Class representing a device
-   * @alias module:resources.Device
+   * @memberOf module:resources
    * @extends module:resources.Thing
    */
   class Device extends Thing {
