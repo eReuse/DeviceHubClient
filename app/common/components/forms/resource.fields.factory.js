@@ -1,4 +1,3 @@
-const enums = require('./../enums')
 const CannotSubmit = require('./cannot-submit.exception')
 
 /**
@@ -7,8 +6,9 @@ const CannotSubmit = require('./cannot-submit.exception')
 
 /**
  * @param {module:fields} fields
+ * @param {module:enums} enums
  */
-function resourceFields (fields, resources, SubmitForm, $translate, Notification) {
+function resourceFields (fields, resources, SubmitForm, $translate, Notification, enums) {
   const f = fields
 
   /**
@@ -85,7 +85,7 @@ function resourceFields (fields, resources, SubmitForm, $translate, Notification
         new f.String('name', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.Datepicker('endTime', def),
         new f.Select('severity',
-          _.defaults({options: enums.Severity.formSelect(f)}, def)),
+          _.defaults({options: enums.Severity.options(f)}, def)),
         new f.Textarea('description', def),
         ...fields
       )

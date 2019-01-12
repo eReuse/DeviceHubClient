@@ -9,9 +9,43 @@
       </a>
     </div>
     <div class="collapse navbar-collapse" id="main-navbar">
+      <!-- Site nav -->
       <ul class="nav navbar-nav navbar-right">
-        <new-button></new-button>
-        <site-nav></site-nav>
+        <li uib-dropdown
+            ng-class="{active: wbActive()}">
+          <a uib-dropdown-toggle>
+            <img src="common/assets/workbench-short.svg" id="wb-logo">
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a ui-sref="auth.workbench.computer">
+                <i class="fa fa-fw fa-laptop"></i>
+                <span translate="nav.workbench.computer">
+              </a>
+            </li>
+            <li>
+              <a ui-sref="auth.workbench.mobile">
+                <i class="fa fa-fw fa-mobile"></i>
+                <span translate="nav.workbench.mobile">
+              </a>
+            </li>
+            <li class="divider"></li>
+            <li>
+              <a ui-sref="auth.workbench.settings">
+                <i class="fa fa-fw fa-cog"></i>
+                <span translate="nav.workbench.settings">
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li ng-repeat="element in ::nav" ng-class="{active: element.active}">
+          <a ui-sref="{{::element.sref}}">
+            <i class="fa fa-fw {{::element.icon}}"></i>
+            <span translate="{{::element.textPath}}"></span>
+          </a>
+        </li>
+        <!-- Other buttons -->
         <user-button></user-button>
         <language-button></language-button>
       </ul>

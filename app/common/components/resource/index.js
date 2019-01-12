@@ -45,3 +45,4 @@ module.exports = angular.module('common.components.resource',
   .config(require('./resource-list/resource-list-filters/panel-filter.wrapper.formly.config'))
   .factory('resourceServer', require('./resource-server.factory'))
   .factory('deviceGetter', require('./device-getter.factory'))
+  .factory('table', require('./table.factory'))

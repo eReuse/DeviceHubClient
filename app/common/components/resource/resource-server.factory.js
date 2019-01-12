@@ -14,7 +14,7 @@ function ResourceServer (Restangular, CONSTANTS, session, resources) {
             res = new resources.Lots(data.items, data.tree, data.url)
           } else if ('items' in data) {
             console.assert(operation === 'getList')
-            res = resources.ResourceList.fromServer(data.items, data.pagination, data.url)
+            res = resources.ResourceList.fromServer(data)
           } else if (operation === 'get') {
             res = resources.resourceClass(data.type).fromObject(data)
           } else {

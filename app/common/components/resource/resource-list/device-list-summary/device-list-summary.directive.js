@@ -1,4 +1,3 @@
-const enums = require('./../../../enums')
 const fullContents = {
   type: require('./aggregates.full.html'),
   status: require('./aggregates.full.html'),
@@ -10,8 +9,14 @@ const fullContents = {
   components: require('./components.full.html')
 }
 
-function deviceListSummary ($filter, CONSTANTS) {
-  return {
+/**
+ *
+ * @param $filter
+ * @param CONSTANTS
+ * @param {module:enums} enums
+ */
+function deviceListSummary ($filter, CONSTANTS, enums) {
+  const directive = {
     template: require('./device-list-summary.directive.html'),
     restrict: 'E',
     scope: {
@@ -70,365 +75,367 @@ function deviceListSummary ($filter, CONSTANTS) {
       }
     }
   }
-}
 
-function pushIfValues (props, Prop, devices, filter) {
-  try {
-    props.push(new Prop(devices, filter))
-  } catch (e) {
-    if (!(e instanceof NoValuesForProperty)) throw e
+  function pushIfValues (props, Prop, devices, filter) {
+    try {
+      props.push(new Prop(devices, filter))
+    } catch (e) {
+      if (!(e instanceof NoValuesForProperty)) throw e
+    }
   }
-}
 
-/**
- * A pane in the device list summary. It offers a resumed vision
- * of a device value, or property.
- */
-class Property {
   /**
-   * @param {module:resources.Device[]} devices
-   * @param {string} title
+   * A pane in the device list summary. It offers a resumed vision
+   * of a device value, or property.
    */
-  constructor (devices, title) {
-    /** @type {module:resources.Device[]} */
-    this.devices = devices
+  class Property {
     /**
-     * The title of the property.
-     * @type {string}
+     * @param {module:resources.Device[]} devices
+     * @param {string} title
      */
-    this.title = title
+    constructor (devices, title) {
+      /** @type {module:resources.Device[]} */
+      this.devices = devices
+      /**
+       * The title of the property.
+       * @type {string}
+       */
+      this.title = title
+      /**
+       * Angular HTML template with the content of the property when
+       * seen as a summary.
+       * @type {?string}
+       */
+      this.content = null // Fulfill this through the subclasses
+      this.cssClass = `${this.constructor.name}-property`
+    }
+
     /**
-     * Angular HTML template with the content of the property when
-     * seen as a summary.
-     * @type {?string}
+     * Angular HTML template to show when the property is being
+     * seen in full view.
+     * @return {string}
      */
-    this.content = null // Fulfill this through the subclasses
-    this.cssClass = `${this.constructor.name}-property`
-  }
-
-  /**
-   * Angular HTML template to show when the property is being
-   * seen in full view.
-   * @return {string}
-   */
-  get fullContent () {
-    return fullContents[this.constructor.name.toLowerCase()]
-  }
-
-  /**
-   * Returns a list of aggregate entries.
-   *
-   * This method counts the value repetitions for the given property
-   * for all devices.
-   * @param {string} pathToProp
-   * @param options
-   * @param {?string} key - The key used to consider if two
-   * things are the same (a repetition).
-   * @returns {AggregateEntry[]}
-   */
-  aggregatesOne (pathToProp, options = {}, key) {
-    return _(this.devices)
-      .map(pathToProp)
-      .compact()
-      .groupBy(key)
-      // todo future version could use groupBy and hold
-      //  an array of values instead of length
-      .map((values, key) => new AggregateEntry(values, key, pathToProp, options))
-      .value()
-  }
-
-  aggregates (pathToProp, options = {}, key) {
-    return _(this.devices)
-      .map(pathToProp)
-      .flatten()
-      .compact()
-      .groupBy(key)
-      .map((values, key) => new AggregateEntry(values, key, pathToProp, options))
-      .value()
-  }
-
-  /**
-   * Returns a tuple with the minimum and maximum Thing of
-   * path's value of all devices, by using the property at rangedBy.
-   * @param {string} path
-   * @param {string} rangedBy
-   * @returns {Thing[]}
-   */
-  range (path, rangedBy) {
-    const prices = _(this.devices).map(path)
-    const min = prices.minBy(rangedBy)
-    if (_.isUndefined(min)) {
-      throw new NoValuesForProperty(`No range values for ${this.constructor.name}.`)
+    get fullContent () {
+      return fullContents[this.constructor.name.toLowerCase()]
     }
-    return [min, prices.maxBy(rangedBy)]
-  }
 
-  /**
-   * Given a path of a value containing a list of things,
-   * this method iterates through all devices returning a global set
-   * of those things.
-   * @param {string} path - The path to a property.
-   * @returns {Thing[]} — No null values included.
-   */
-  set (path) {
-    return _(this.devices).map(path).flatten().compact().uniqBy('id').value()
-  }
+    /**
+     * Returns a list of aggregate entries.
+     *
+     * This method counts the value repetitions for the given property
+     * for all devices.
+     * @param {string} pathToProp
+     * @param options
+     * @param {?string} key - The key used to consider if two
+     * things are the same (a repetition).
+     * @returns {AggregateEntry[]}
+     */
+    aggregatesOne (pathToProp, options = {}, key) {
+      return _(this.devices)
+        .map(pathToProp)
+        .compact()
+        .groupBy(key)
+        // todo future version could use groupBy and hold
+        //  an array of values instead of length
+        .map((values, key) => new AggregateEntry(values, key, pathToProp, options))
+        .value()
+    }
 
-  /**
-   * As set but for values not containing a list.
-   * @param {string} path
-   * @return {Thing[]} — No null values included.
-   */
-  setOne (path) {
-    return _(this.devices).map(path).compact().uniqBy('id').value()
-  }
+    aggregates (pathToProp, options = {}, key) {
+      return _(this.devices)
+        .map(pathToProp)
+        .flatten()
+        .compact()
+        .groupBy(key)
+        .map((values, key) => new AggregateEntry(values, key, pathToProp, options))
+        .value()
+    }
 
-  /**
-   * Returns a string representation of an array of aggregate entries.
-   * @param {AggregateEntry[]} aggregate
-   * @returns {string}
-   */
-  aggregateToString (aggregate) {
-    return aggregate.join(', ')
-  }
+    /**
+     * Returns a tuple with the minimum and maximum Thing of
+     * path's value of all devices, by using the property at rangedBy.
+     * @param {string} path
+     * @param {string} rangedBy
+     * @returns {Thing[]}
+     */
+    range (path, rangedBy) {
+      const prices = _(this.devices).map(path)
+      const min = prices.minBy(rangedBy)
+      if (_.isUndefined(min)) {
+        throw new NoValuesForProperty(`No range values for ${this.constructor.name}.`)
+      }
+      return [min, prices.maxBy(rangedBy)]
+    }
 
-  rangeToString (min, max, filter = _.identity) {
-    if (min === max) return filter(min)
-    else return `${filter(min)} — ${filter(max)}`
-  }
+    /**
+     * Given a path of a value containing a list of things,
+     * this method iterates through all devices returning a global set
+     * of those things.
+     * @param {string} path - The path to a property.
+     * @returns {Thing[]} — No null values included.
+     */
+    set (path) {
+      return _(this.devices).map(path).flatten().compact().uniqBy('id').value()
+    }
 
-  /**
-   * Get a representation of how many Things have the same property
-   * value.
-   * @param {Thing[]} things
-   * @param {string} prop
-   * @return {string}
-   */
-  numberOf (things, prop = 'title') {
-    return _(things).countBy(prop).map((count, value) => `${value} (${count})`).join(', ')
-  }
+    /**
+     * As set but for values not containing a list.
+     * @param {string} path
+     * @return {Thing[]} — No null values included.
+     */
+    setOne (path) {
+      return _(this.devices).map(path).compact().uniqBy('id').value()
+    }
 
-  /**
-   * Returns an object that the full template internally uses.
-   */
-  full () {
-    throw Error('Not implemented.')
-  }
-}
+    /**
+     * Returns a string representation of an array of aggregate entries.
+     * @param {AggregateEntry[]} aggregate
+     * @returns {string}
+     */
+    aggregateToString (aggregate) {
+      return aggregate.join(', ')
+    }
 
-Property.fullBig = false
+    rangeToString (min, max, filter = _.identity) {
+      if (min === max) return filter(min)
+      else return `${filter(min)} — ${filter(max)}`
+    }
 
-/**
- * The result of an aggregation.
- */
-class AggregateEntry {
-  constructor (values, key, pathToProp, options) {
-    this.postfix = options.postfix
-    this.prefix = options.prefix
-    /** @type{Thing[]} */
-    this.things = values
-    /** @type {integer} */
-    this.count = values.length
-    /** @type {*} */
-    this.value = key
-    /** @type {string} */
-    this.property = pathToProp
-  }
+    /**
+     * Get a representation of how many Things have the same property
+     * value.
+     * @param {Thing[]} things
+     * @param {string} prop
+     * @return {string}
+     */
+    numberOf (things, prop = 'title') {
+      return _(things).countBy(prop).map((count, value) => `${value} (${count})`).join(', ')
+    }
 
-  toString () {
-    const count = this.count.length > 1 ? `(${this.count})` : ''
-    return this.value === 'Yes'
-      ? `${this.value} ${count}`
-      : `${this.prefix || ''} ${this.value} ${this.postfix || ''} ${count}`
-  }
-
-  valueOf () {
-    return this.toString()
-  }
-}
-
-class Type extends Property {
-  constructor (devices) {
-    super(devices, 'Type, manufacturer & model')
-    this.typeAggr = this.aggregatesOne('typeHuman')
-    this.manufacturerAggr = this.aggregatesOne('manufacturer')
-    this.modelAggr = this.aggregatesOne('model')
-
-    if (this.typeAggr.length > 1) {
-      this.content = 'Various types'
-    } else if (this.manufacturerAggr.length > 1) {
-      this.content = `${this.typeAggr[0].value} Various manufacturers`
-    } else if (this.modelAggr.length > 1) {
-      this.content = `${this.typeAggr[0].value} ${this.manufacturerAggr[0].value} Various models`
-    } else {
-      this.content = `${this.typeAggr[0].value} ${this.manufacturerAggr[0].value} ${this.modelAggr[0].value}`
+    /**
+     * Returns an object that the full template internally uses.
+     */
+    full () {
+      throw Error('Not implemented.')
     }
   }
 
-  full () {
-    return [
-      ['Type', this.typeAggr],
-      ['Manufacturer', this.manufacturerAggr],
-      ['Model', this.modelAggr],
-      ['serial Number', this.aggregatesOne('serialNumber')]
-    ]
-  }
-}
+  Property.fullBig = false
 
-class Status extends Property {
-  constructor (devices) {
-    super(devices, 'Status')
-    this.physicals = this.aggregatesOne('physical')
-    this.tradings = this.aggregatesOne('trading')
-    this.content = 'Registered'
-    if (this.physicals.length || this.tradings.length) {
-      const textTrading = this.aggregateToString(this.tradings)
-      const textPhysical = this.aggregateToString(this.physicals)
-      this.content = this.physicals.length && this.tradings.length
-        ? `${textTrading} / ${textPhysical}`
-        : textTrading || textPhysical
+  /**
+   * The result of an aggregation.
+   */
+  class AggregateEntry {
+    constructor (values, key, pathToProp, options) {
+      this.postfix = options.postfix
+      this.prefix = options.prefix
+      /** @type{Thing[]} */
+      this.things = values
+      /** @type {integer} */
+      this.count = values.length
+      /** @type {*} */
+      this.value = key
+      /** @type {string} */
+      this.property = pathToProp
+    }
+
+    toString () {
+      const count = this.count.length > 1 ? `(${this.count})` : ''
+      return this.value === 'Yes'
+        ? `${this.value} ${count}`
+        : `${this.prefix || ''} ${this.value} ${this.postfix || ''} ${count}`
+    }
+
+    valueOf () {
+      return this.toString()
     }
   }
 
-  full () {
-    return [
-      ['Physical states', this.physicals],
-      ['Trading states', this.tradings]
-    ]
-  }
-}
+  class Type extends Property {
+    constructor (devices) {
+      super(devices, 'Type, manufacturer & model')
+      this.typeAggr = this.aggregatesOne('typeHuman')
+      this.manufacturerAggr = this.aggregatesOne('manufacturer')
+      this.modelAggr = this.aggregatesOne('model')
 
-class Issues extends Property {
-  constructor (devices) {
-    super(devices, 'Issues')
-    this.problems = this.set('problems')
-    this.working = this.set('working')
-    const issues = this.problems.concat(this.working)
-    if (!issues.length) throw new NoValuesForProperty()
-    this.content = this.numberOf(issues)
-  }
+      if (this.typeAggr.length > 1) {
+        this.content = 'Various types'
+      } else if (this.manufacturerAggr.length > 1) {
+        this.content = `${this.typeAggr[0].value} Various manufacturers`
+      } else if (this.modelAggr.length > 1) {
+        this.content = `${this.typeAggr[0].value} ${this.manufacturerAggr[0].value} Various models`
+      } else {
+        this.content = `${this.typeAggr[0].value} ${this.manufacturerAggr[0].value} ${this.modelAggr[0].value}`
+      }
+    }
 
-  full () {
-    return [
-      ['Working', 'Wrong last tests.', this.working],
-      ['Problems', 'Regular events that have warnings or errors.', this.problems]
-    ]
-  }
-}
-
-Issues.fullBig = true
-
-class Price extends Property {
-  constructor (devices, currency) {
-    super(devices, 'Price')
-    const range = this.range('price', 'price')
-    this.min = range[0] // unpack messes eslint
-    this.max = range[1]
-    this.content = this.rangeToString(this.min, this.max, currency)
-  }
-}
-
-class Rate extends Property {
-  constructor (devices) {
-    super(devices, 'Rate')
-    const rates = this.setOne('rate')
-    if (!rates.length) throw new NoValuesForProperty()
-    this.content = this.numberOf(rates)
+    full () {
+      return [
+        ['Type', this.typeAggr],
+        ['Manufacturer', this.manufacturerAggr],
+        ['Model', this.modelAggr],
+        ['serial Number', this.aggregatesOne('serialNumber')]
+      ]
+    }
   }
 
-  // todo handle rating software / versions
-  full () {
-    return [
-      ['Rating', this.aggregatesOne('rate', undefined, 'ratingRangeHuman')],
-      [
-        'Appearance',
-        this._reAddRate(this.aggregatesOne('rate', undefined, 'appearanceRange'), enums.AppearanceRange)
-      ],
-      [
-        'Functionality',
-        this._reAddRate(this.aggregatesOne('rate', undefined, 'functionalityRange'), enums.FunctionalityRange)
-      ],
-      ['Processor', this.aggregatesOne('rate', undefined, 'processorRangeHuman')],
-      ['RAM', this.aggregatesOne('rate', undefined, 'ramRangeHuman')],
-      ['Data storage', this.aggregatesOne('rate', undefined, 'dataStorageRangeHuman')]
-    ]
+  class Status extends Property {
+    constructor (devices) {
+      super(devices, 'Status')
+      this.physicals = this.aggregatesOne('physical')
+      this.tradings = this.aggregatesOne('trading')
+      this.content = 'Registered'
+      if (this.physicals.length || this.tradings.length) {
+        const textTrading = this.aggregateToString(this.tradings)
+        const textPhysical = this.aggregateToString(this.physicals)
+        this.content = this.physicals.length && this.tradings.length
+          ? `${textTrading} / ${textPhysical}`
+          : textTrading || textPhysical
+      }
+    }
+
+    full () {
+      return [
+        ['Physical states', this.physicals],
+        ['Trading states', this.tradings]
+      ]
+    }
   }
 
-  /**
-   * Re-adds the enum to the aggregate value, as internal countBy
-   * method returns a string, not the original object value enum.
-   * @param {AggregateEntry[]} aggregates
-   * @param {typeof module:enums.Enum} Cls
-   * @private
-   */
-  _reAddRate (aggregates, Cls) {
-    aggregates.forEach(aggr => {
-      aggr.value = new Cls(aggr.value)
-    })
-    return aggregates
-  }
-}
+  class Issues extends Property {
+    constructor (devices) {
+      super(devices, 'Issues')
+      this.problems = this.set('problems')
+      this.working = this.set('working')
+      const issues = this.problems.concat(this.working)
+      if (!issues.length) throw new NoValuesForProperty()
+      this.content = this.numberOf(issues)
+    }
 
-class Privacy extends Property {
-  constructor (devices) {
-    super(devices, 'Disk erasure')
-    const privacies = this.set('privacy')
-    if (!privacies.length) throw new NoValuesForProperty()
-    this.content = this.numberOf(privacies)
+    full () {
+      return [
+        ['Working', 'Wrong last tests.', this.working],
+        ['Problems', 'Regular events that have warnings or errors.', this.problems]
+      ]
+    }
   }
 
-  full () {
-    // todo is this going to work directly with hdds?
-    return this.aggregates('privacy', undefined, 'severity')
-  }
-}
+  Issues.fullBig = true
 
-Privacy.fullBig = true
-
-class Traceability extends Property {
-  constructor (devices) {
-    super(devices, 'Traceability log')
-    this.events = this.set('events')
-    this.content = `${this.events.length} events`
+  class Price extends Property {
+    constructor (devices, currency) {
+      super(devices, 'Price')
+      const range = this.range('price', 'price')
+      this.min = range[0] // unpack messes eslint
+      this.max = range[1]
+      this.content = this.rangeToString(this.min, this.max, currency)
+    }
   }
 
-  full () {
-    return this.events
-  }
-}
+  class Rate extends Property {
+    constructor (devices) {
+      super(devices, 'Rate')
+      const rates = this.setOne('rate')
+      if (!rates.length) throw new NoValuesForProperty()
+      this.content = this.numberOf(rates)
+    }
 
-class Lots extends Property {
-  constructor (devices) {
-    super(devices, 'Lots')
-    this.lots = this.aggregates('lots')
-    this.content = `${this.lots.length} lots`
+    // todo handle rating software / versions
+    full () {
+      return [
+        ['Rating', this.aggregatesOne('rate', undefined, 'ratingRangeHuman')],
+        [
+          'Appearance',
+          this._reAddRate(this.aggregatesOne('rate', undefined, 'appearanceRange'), enums.AppearanceRange)
+        ],
+        [
+          'Functionality',
+          this._reAddRate(this.aggregatesOne('rate', undefined, 'functionalityRange'), enums.FunctionalityRange)
+        ],
+        ['Processor', this.aggregatesOne('rate', undefined, 'processorRangeHuman')],
+        ['RAM', this.aggregatesOne('rate', undefined, 'ramRangeHuman')],
+        ['Data storage', this.aggregatesOne('rate', undefined, 'dataStorageRangeHuman')]
+      ]
+    }
+
+    /**
+     * Re-adds the enum to the aggregate value, as internal countBy
+     * method returns a string, not the original object value enum.
+     * @param {AggregateEntry[]} aggregates
+     * @param {typeof module:enums.Enum} Cls
+     * @private
+     */
+    _reAddRate (aggregates, Cls) {
+      aggregates.forEach(aggr => {
+        aggr.value = new Cls(aggr.value)
+      })
+      return aggregates
+    }
   }
 
-  full () {
-    return this.lots
-  }
-}
+  class Privacy extends Property {
+    constructor (devices) {
+      super(devices, 'Disk erasure')
+      const privacies = this.set('privacy')
+      if (!privacies.length) throw new NoValuesForProperty()
+      this.content = this.numberOf(privacies)
+    }
 
-class Components extends Property {
-  constructor (devices) {
-    super(devices, 'Components')
-    this.components = this.aggregatesOne('components')
-    if (!this.components.length) throw new NoValuesForProperty()
-    this.content = require('./components.summary.html')
+    full () {
+      // todo is this going to work directly with hdds?
+      return this.aggregates('privacy', undefined, 'severity')
+    }
   }
 
-  aggregatesOne (pathToProp, options = {}) {
-    return _(this.devices)
-      .map(pathToProp)
-      .flatten()
-      .compact()
-      .groupBy()
-      .map((values, key) => new AggregateEntry(values, key, pathToProp, options))
-      .value()
-  }
-}
+  Privacy.fullBig = true
 
-class NoValuesForProperty extends Error {
+  class Traceability extends Property {
+    constructor (devices) {
+      super(devices, 'Traceability log')
+      this.events = this.set('events')
+      this.content = `${this.events.length} events`
+    }
+
+    full () {
+      return this.events
+    }
+  }
+
+  class Lots extends Property {
+    constructor (devices) {
+      super(devices, 'Lots')
+      this.lots = this.aggregates('lots')
+      this.content = `${this.lots.length} lots`
+    }
+
+    full () {
+      return this.lots
+    }
+  }
+
+  class Components extends Property {
+    constructor (devices) {
+      super(devices, 'Components')
+      this.components = this.aggregatesOne('components')
+      if (!this.components.length) throw new NoValuesForProperty()
+      this.content = require('./components.summary.html')
+    }
+
+    aggregatesOne (pathToProp, options = {}) {
+      return _(this.devices)
+        .map(pathToProp)
+        .flatten()
+        .compact()
+        .groupBy()
+        .map((values, key) => new AggregateEntry(values, key, pathToProp, options))
+        .value()
+    }
+  }
+
+  class NoValuesForProperty extends Error {
+  }
+
+  return directive
 }
 
 module.exports = deviceListSummary

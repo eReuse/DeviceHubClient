@@ -65,7 +65,7 @@ const filePath = {
     src: [
       './resources/animate.min.css',
       './node_modules/angular-ui-notification/dist/angular-ui-notification.css',
-      './node_components/ngprogress/ngProgress.css',
+      './node_modules/ngprogress/ngProgress.css',
       './node_modules/angular-ui-tree/dist/angular-ui-tree.min.css'
     ]
   }

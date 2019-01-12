@@ -19,6 +19,9 @@ module.exports = window.angular.module('deviceHub', [
   .config(
     ($urlServiceProvider, $stateProvider) => {
       const resourceServerResolve = {resourceServerLoaded: resourceServer => resourceServer.loaded}
+      const fadeLoadingSCreen = () => {
+        $('#dh-loading').fadeOut(600)
+      }
       // The views of the application
       // views that use the `resolve` property require the schema
       // to be loaded.
@@ -26,19 +29,19 @@ module.exports = window.angular.module('deviceHub', [
         name: 'auth',
         url: '',
         template: require('./views/index/index.controller.html'),
+        resolve: resourceServerResolve,
+        onEnter: fadeLoadingSCreen,
         abstract: true
       }).state({
         name: 'auth.inventory',
         url: '/inventories/',
         template: require('./views/inventory/inventory.controller.html'),
-        controller: 'inventoryCtrl as inCl',
-        resolve: resourceServerResolve
+        controller: 'inventoryCtrl as inCl'
       }).state({
         name: 'auth.tags',
         url: '/tags/',
         template: require('./views/tags/tags.controller.html'),
-        controller: 'tagsCtrl as tgCl',
-        resolve: resourceServerResolve
+        controller: 'tagsCtrl as tgCl'
       }).state({
         name: 'auth.printTags',
         url: '/tags/print',
@@ -49,14 +52,26 @@ module.exports = window.angular.module('deviceHub', [
           }
         },
         template: require('./views/print-tags/print-tags.controller.html'),
-        resolve: resourceServerResolve,
         controller: 'printTagsCtrl as ptCl'
       }).state({
         name: 'auth.workbench',
         url: '/workbench/',
-        template: require('./views/workbench/workbench.controller.html'),
-        controller: 'workbenchCtl as wbCtl',
-        resolve: resourceServerResolve
+        abstract: true
+      }).state({
+        name: 'auth.workbench.computer',
+        url: 'computer/',
+        template: require('./views/workbench/workbench-computer.controller.html'),
+        controller: 'workbenchComputerCtl as wcCl'
+      }).state({
+        name: 'auth.workbench.mobile',
+        url: 'mobile/',
+        template: require('./views/workbench/workbench-mobile.controller.html'),
+        controller: 'workbenchMobileCtl as wmCl'
+      }).state({
+        name: 'auth.workbench.settings',
+        url: 'settings/',
+        template: require('./views/workbench/workbench-settings.controller.html'),
+        controller: 'workbenchSettingsCtl as wsCl'
       }).state({
         name: 'auth.inventory.newEvent',
         url: 'new-event/',
@@ -74,9 +89,7 @@ module.exports = window.angular.module('deviceHub', [
         template: require('./views/login/login.controller.html'),
         controller: 'loginCtrl as LnCl'
       })
-      $urlServiceProvider.rules.otherwise((matchValue, url, router) => {
-        return '/inventories/'
-      })
+      $urlServiceProvider.rules.otherwise(() => '/inventories/')
     })
   /**
    * @ngdoc type

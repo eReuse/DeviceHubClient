@@ -32,14 +32,21 @@ function fieldsFactory ($translate) {
    */
   class Field {
     /**
+     * Instantiates a field.
+     *
+     * Translations are defined as follows:
+     *
+     *
      * @param {string} key - The technical key of the field.
      * @param {string} namespace - A namespace to reach the translation
      * strings inside 'form' namespace. Ex. if 'key' is 'foo', and
-     * namespace 'bar', then the path to get the texts are: 1) for
-     * the label 'bar.foo.l', for description
-     * 'bar.foo.d', and for placeholder 'bar.foo.p'.
-     * @param {string} keyText - Override the use of key when getting the
-     * translations.
+     * namespace 'bar', then the path to get the texts are 'bar.foo',
+     * which means 'bar.foo.l' for the label, 'bar.foo.d' for
+     * the description, 'bar.foo.p' for the placeholder, 'bar.foo.aR'
+     * for the addonRight if it is a text.
+     * @param {string} keyText - Allows changing the key part of the
+     * path for the translations. In the example above, the 'foo'
+     * string.
      * @param {boolean} required
      * @param {boolean} disabled
      * @param {boolean} placeholder - If true, set a placeholder from
@@ -50,8 +57,23 @@ function fieldsFactory ($translate) {
      * @param {?Object} watcher
      * @param {string} watcher.expression
      * @param {module:fields.Field~listener} watcher.listener
+     * @param {module:fields.Field.ADDON_RIGHT} addonRight - If not falsy,
+     * an addon right. If Text, it looks for a translation string
+     * in the same path as for the title / description, but in this
+     * case looking for a key 'aR'.
      */
-    constructor (key, {namespace = 'forms.fields.r', keyText = key, required = false, disabled = false, placeholder = false, description = true, expressions = {}, hide = null, watcher}) {
+    constructor (key, {
+      namespace = 'forms.fields',
+      keyText = key,
+      required = false,
+      disabled = false,
+      placeholder = false,
+      description = true,
+      expressions = {},
+      hide = null,
+      watcher,
+      addonRight
+    }) {
       console.assert(key, 'Key must be passed.')
       this.key = key
       this.type = this.constructor.name.toLowerCase()
@@ -71,9 +93,17 @@ function fieldsFactory ($translate) {
         this.templateOptions.placeholder = ''
         this.expressionProperties['templateOptions.placeholder'] = `'${this.textPath}.p' | translate`
       }
+      this.addonRight = addonRight
+      if (addonRight === this.constructor.ADDON_RIGHT.Text) {
+        this.expressionProperties['templateOptions.addonRight.text'] = `'${this.textPath}.aR' | translate`
+      }
       this.hideExpression = hide
       this.watcher = watcher
     }
+  }
+
+  Field.ADDON_RIGHT = {
+    Text: 'Text'
   }
 
   /**
@@ -110,12 +140,13 @@ function fieldsFactory ($translate) {
    * @extends module:fields.Input
    */
   class Number extends Input {
-    constructor (key, {min, max, ...rest}) {
+    constructor (key, {min, max, step, ...rest}) {
       super(key, rest)
       this.type = 'input'
       this.templateOptions.type = 'number'
       this.templateOptions.min = min
       this.templateOptions.max = max
+      this.templateOptions.step = step
     }
   }
 
@@ -178,7 +209,7 @@ function fieldsFactory ($translate) {
      * @param {Option[]} options
      * @param rest
      */
-    constructor (key, {options = [], ...rest}) {
+    constructor (key, {options = [], ...rest} = {}) {
       super(key, rest)
       this.templateOptions.options = options
     }
@@ -202,14 +233,33 @@ function fieldsFactory ($translate) {
   }
 
   /**
+   * @memberOf module:fields
+   * @extends module:fields.Field
+   */
+  class Radio extends Field {
+    constructor (key, {options = [], ...rest}) {
+      super(key, rest)
+      this.templateOptions.options = options
+    }
+  }
+
+  /**
    * @alias module:fields.Option
    */
   class Option {
-    constructor (value, {namespace, keyText = inflection.camelize(value, true)}) {
+    constructor (value, {
+      namespace = 'forms.fields',
+      keyText = inflection.camelize(value == null ? 'null' : value, true)
+    }) {
       this.value = value
       this.name = $translate.instant(`${namespace}.${keyText}`)
     }
   }
+
+  /** @alias module:fields.Yes */
+  const Yes = new Option(true, {keyText: 'optionYes'})
+  /** @alias module:fields.No */
+  const No = new Option(false, {keyText: 'optionNo'})
 
   class Resources extends Field {
 
@@ -265,6 +315,9 @@ function fieldsFactory ($translate) {
     Select: Select,
     Resources: Resources,
     MultiCheckbox: MultiCheckbox,
+    Radio: Radio,
+    Yes: Yes,
+    No: No,
     STR_SIZE: STR_SIZE,
     STR_BIG_SIZE: STR_BIG_SIZE,
     STR_SM_SIZE: STR_SM_SIZE,

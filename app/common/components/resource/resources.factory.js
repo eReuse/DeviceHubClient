@@ -1,5 +1,4 @@
 const utils = require('./../utils')
-const enums = require('./../enums')
 const inflection = require('inflection')
 
 /**
@@ -7,7 +6,14 @@ const inflection = require('inflection')
  * @module resources
  */
 
-function resourceFactory (Restangular, CONSTANTS, $filter) {
+/**
+ *
+ * @param Restangular
+ * @param CONSTANTS
+ * @param $filter
+ * @param {module:enums} enums
+ */
+function resourceFactory (Restangular, CONSTANTS, $filter, enums) {
   const cache = {
     /** @type {Object.<int, Device>} */
     devices: {},
@@ -621,8 +627,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
       this.name = name
       /** @type {?boolean} */
       this.closed = closed
-      /** @type {?Severity} */
-      this.severity = severity ? new enums.Severity(severity) : null
+      /** @type {?module:enums.Severity} */
+      this.severity = severity ? enums.Severity.get(severity) : null
       /** @type {?string} */
       this.description = description
       /** @type {?Date} */
@@ -710,7 +716,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   class EventWithOneDevice extends Event {
     define ({device = null, ...rest}) {
       super.define(rest)
-      this._device = device // todo see todo in multiple devices
+      device = this.constructor._relationship(device)
+      this._device = _.get(device, 'id', device)  // todo see todo in multiple devices
     }
 
     get device () {
@@ -740,7 +747,7 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
     define ({steps = [], standards = [], certificate = null, ...rest}) {
       super.define(rest)
       this.steps = steps
-      this.standards = standards.map(std => new enums.ErasureStandard(std))
+      this.standards = standards.map(std => enums.ErasureStandard.get(std))
       this.certificate = certificate ? new URL(certificate, CONSTANTS.url) : null
     }
 
@@ -837,8 +844,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
   class ManualRate extends IndividualRate {
     define ({appearanceRange = null, functionalityRange = null, labelling = null, ...rest}) {
       super.define(rest)
-      this.appearanceRange = appearanceRange ? new enums.AppearanceRange(appearanceRange) : null
-      this.functionalityRange = functionalityRange ? new enums.FunctionalityRange(functionalityRange) : null
+      this.appearanceRange = appearanceRange ? enums.AppearanceRange.get(appearanceRange) : null
+      this.functionalityRange = functionalityRange ? enums.FunctionalityRange.get(functionalityRange) : null
       this.labelling = labelling
     }
   }
@@ -882,8 +889,8 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
       this.graphicCard = graphicCard
       this.bios = bios
       this.biosRange = biosRange
-      this.appearanceRange = appearanceRange ? new enums.AppearanceRange(appearanceRange) : null
-      this.functionalityRange = functionalityRange ? new enums.FunctionalityRange(functionalityRange) : null
+      this.appearanceRange = appearanceRange ? enums.AppearanceRange.get(appearanceRange) : null
+      this.functionalityRange = functionalityRange ? enums.FunctionalityRange.get(functionalityRange) : null
       this.labelling = labelling
       this.dataStorageRange = dataStorageRange
       this.dataStorageRangeHuman = dataStorageRange ? utils.Naming.humanize(dataStorageRange) : null
@@ -996,7 +1003,7 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
 
     statusHuman () {
       let status = utils.Naming.humanize(this.status)
-      if (this.severity.is(this.severity.constructor.Warning)) {
+      if (this.severity === this.severity.constructor.Warning) {
         status = 'Data storage can die soon.'
       }
       return `${this.severity}: ${status}`
@@ -1330,8 +1337,10 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
      * @param {?string} url
      */
     constructor (items = [],
-                 pagination = {page: null, perPage: null, total: null, previous: null, next: 1},
-                 url = null) {
+                 {
+                   pagination = {page: null, perPage: null, total: null, previous: null, next: 1},
+                   url = null
+                 } = {}) {
       super(...items)
       this.pagination = pagination
       this.url = url
@@ -1340,12 +1349,10 @@ function resourceFactory (Restangular, CONSTANTS, $filter) {
     /**
      *
      * @param {object[]} items
-     * @param {object} pagination
-     * @param {string} url
      */
-    static fromServer (items, pagination, url) {
+    static fromServer ({items, ...rest}) {
       const things = items.map(x => resourceClass(x.type).fromObject(x))
-      return new this(things, pagination, url)
+      return new this(things, rest)
     }
 
     /**

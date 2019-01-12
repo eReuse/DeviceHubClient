@@ -3,8 +3,9 @@ require('ngprogress')
 /**
  * @ngdoc module
  * @name common.components.utilities
- * @description Utilities are standalone components to be used by other modules, so they do no have dependencies in
- * the app. Use `common.components.elements` for reusable components with dependencies.
+ * @description Utilities are standalone components to be used by other modules, so they do no
+ *   have dependencies in the app. Use `common.components.elements` for reusable components with
+ *   dependencies.
  */
 module.exports = angular.module('common.components.utilities',
   [
@@ -19,3 +20,4 @@ module.exports = angular.module('common.components.utilities',
   .filter('toInches', require('./to-inches.filter'))
   .filter('resourceTitle', require('./resource-title.filter'))
   .filter('humanize', require('./humanize'))
+  .factory('enums', require('./enums'))

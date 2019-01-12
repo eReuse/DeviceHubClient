@@ -3,7 +3,8 @@
  */
 module.exports = angular.module('views.workbench',
   [
-    require('./../../common/components/workbench').name,
-
+    require('./../../common/components/workbench').name
   ])
-  .controller('workbenchCtl', require('./workbench.controller.js'))
+  .controller('workbenchComputerCtl', require('./workbench-computer.controller'))
+  .controller('workbenchMobileCtl', require('./workbench-mobile.controller'))
+  .controller('workbenchSettingsCtl', require('./workbench-settings.controller'))

@@ -33,6 +33,10 @@ const en = {
         put: 'modified',
         delete: 'deleted'
       }
+    },
+    fields: {
+      optionYes: 'Yes.',
+      optionNo: 'No.'
     }
   },
   r: { // resources
@@ -81,6 +85,38 @@ const en = {
       d: 'D. Is acceptable (visual damage in visible parts, not screens)',
       e: 'E. Is unacceptable (considerable visual damage that can affect usage)'
     },
+    functionalityRange: {
+      a: 'A. Everything works perfectly (buttons, and in case of screens there are no scratches)',
+      b: 'B. There is a button difficult to press or a small scratch in an edge of a screen',
+      c: 'C. A non-important button (or similar) doesn\'t work; screen has multiple scratches in edges',
+      d: 'D. Multiple buttons don\'t work; screen has visual damage resulting in uncomfortable usage'
+    },
+    workbenchComputerPhase: {
+      error: 'Error',
+      done: 'Done',
+      uploading: 'Uploading',
+      link: 'Link',
+      benchmark: 'Benchmark',
+      testDataStorage: 'TestDataStorage',
+      stressTest: 'StressTest',
+      eraseBasic: 'EraseBasic',
+      eraseSectors: 'EraseSectors',
+      smartTest: 'SmartTest',
+      install: 'Install'
+    },
+    workbenchMobilePhase: {
+      recovery: 'Recovery',
+      erasing: 'Erasing',
+      waitingSideload: 'WaitingSideload',
+      installingOS: 'InstallingOS',
+      waitSideloadAgain: 'WaitSideloadAgain',
+      installingGapps: 'InstallingGapps',
+      bootingIntoOS: 'BootingIntoOS',
+      done: 'Done'
+    },
+    erasureStandard: {
+      hMGIs5: 'British HMG Infosec Standard 5 (HMG IS5)'
+    },
     severity: {
       info: '✓ Ok',
       notice: 'ℹ️ Notice',
@@ -92,7 +128,11 @@ const en = {
     title: 'Tags'
   },
   nav: {
-    workbenchPc: 'Workbench PC',
+    workbench: {
+      computer: 'Computer',
+      mobile: 'Mobile',
+      settings: 'Settings'
+    },
     tags: '@:tags.title',
     inventory: 'Inventory'
   },
@@ -118,6 +158,56 @@ const en = {
       fileName: '@:export.erasure.button'
     },
     error: 'We could not download it. Try again later.'
+  },
+  workbench: {
+    computer: {
+      title: 'Workbench Computer',
+    },
+    settings: {
+      title: 'Workbench Settings',
+      notification: {
+        ok: 'Settings saved.'
+      },
+      stress: {
+        l: 'Stress the computer for an amount of time',
+        d: 'Execute a stress test for the amount of minutes. Set 0 to skip it.',
+        aR: 'minutes'
+      },
+      smart: {
+        l: 'Test the data storage units',
+        d: 'Perform SMART test on storage units like Hard Drives.'
+      },
+      short: 'Short test: Checks one part of the hard-drive to guess the overall health. ETA ~ 2 minutes.',
+      long: 'Long test: Fully checks the hard-drive for errors, taking way more time.',
+      smartNull: 'Don\'t test the hard-drive.',
+      eraseNull: 'Don\'t erase the hard-drives.',
+      eraseCustom: 'Customize the erasure; choose yourself the erasure options.',
+      _erase: {
+        l: 'Erase the hard-drives',
+        d: 'Shall we erase the hard-drives?'
+      },
+      erase: {
+        l: 'Erasure type',
+        d: 'Both types can generate a certificate, however only the Secure uses an official certified erasure process, as it guarantees all data has been erased.'
+      },
+      eraseBasic: 'Normal: faster but without final verification.',
+      eraseSectors: 'Secure: slower but verifies erasure for each disk sector.',
+      erase_steps: {
+        l: 'Number of erasure steps.',
+        d: 'Usually 1. More can be enforced by policy.',
+        aR: 'steps'
+      },
+      erase_leading_zeros: {
+        l: 'Overwrite with zeros?',
+        d: 'Can be enforced by policy.'
+      },
+      install: {
+        l: 'Install an Operative System',
+        d: 'OS .fsa files that are in "workbench/images" automatically appear here.'
+      },
+      submit: '@:forms.submit',
+      cancel: '@:forms.cancel'
+    }
   }
 }
 
