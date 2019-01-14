@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <h2 translate="workbench.link.title"></h2>
+      <div class="fill-height-bar-h2">
+        <ul class="list-inline">
+          <li><i class="fa {{::usb.snapshot.device.icon}}"></i>
+          <li>{{::usb.snapshot.device.manufacturer}}
+          <li>{{::usb.snapshot.device.model}}
+          <li>{{::usb.snapshot.device.serialNumber}}
+        </ul>
+        <form ng-submit="form.submit()" novalidate>
+          <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
+            <button type="submit" class="btn btn-primary submit-button" dh-submit-button="loading">
+              <span translate="workbench.link.submit"></span>
+            </button>
+            <button type="button" class="btn btn-danger" onclick="history.back()">
+              <span translate="workbench.link.cancel"></span>
+            </button>
+          </formly-form>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

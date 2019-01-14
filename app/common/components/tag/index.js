@@ -1,3 +1,4 @@
+// This init lines for angular-qrcode are taken from its website
 window.qrcode = require('qrcode-generator')
 const ngQrcode = require('angular-qrcode')
 

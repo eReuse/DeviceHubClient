@@ -57,6 +57,19 @@ function workbenchGetterFactory (resources, poller, CONSTANTS, session, $http) {
     stop () {
       this.poller.stop()
     }
+
+    patch (model, id) {
+      return $http.patch(this.url + id, model)
+    }
+
+    /**
+     *
+     * @param {object} model
+     * @return {Promise}
+     */
+    post (model) {
+      return $http.post(this.url.toString(), model)
+    }
   }
 
   /**

@@ -114,6 +114,22 @@ function enumsFactory ($translate) {
    * @memberOf module:enums
    * @extends module:enums.Enum
    */
+  class BiosRange extends Enum {
+    toString () {
+      return this.value
+    }
+  }
+
+  BiosRange.A = new BiosRange('A')
+  BiosRange.B = new BiosRange('B')
+  BiosRange.C = new BiosRange('C')
+  BiosRange.D = new BiosRange('D')
+  BiosRange.E = new BiosRange('E')
+
+  /**
+   * @memberOf module:enums
+   * @extends module:enums.Enum
+   */
   class WorkbenchComputerPhase extends Enum {
   }
 
@@ -174,7 +190,8 @@ function enumsFactory ($translate) {
     FunctionalityRange: FunctionalityRange,
     WorkbenchComputerPhase: WorkbenchComputerPhase,
     WorkbenchMobilePhase: WorkbenchMobilePhase,
-    NotAValidEnum: NotAValidEnum
+    NotAValidEnum: NotAValidEnum,
+    BiosRange: BiosRange
   }
 }
 

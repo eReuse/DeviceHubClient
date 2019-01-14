@@ -1,33 +1,77 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-sm-4">
       <h2>Workbench Computer</h2>
-      <div class="fill-height-bar-h2">
-        <table class="table table-striped">
-          <thead>
-          <tr>
-            <th ng-repeat="Field in ::table.fields track by Field.type"
-                class="{{::Field.cssClasses}}"
-            >
-              {{::Field.name}}
-            </th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr ng-repeat="snapshot in getter.things track by snapshot.uuid">
-            <td ng-repeat="Field in ::table.fields"
-                ng-init="field = Field.init(snapshot)"
-                class="{{::Field.cssClasses}}"
-            >
-              <span ng-bind-html="field.content"></span>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-        <div class="text-center">
-          <i class="fa fa-ellipsis-h"></i>
-        </div>
+    </div>
+    <div class="col-sm-8 text-right">
+      <workbench-link-button usbs="getter.things.usbs"></workbench-link-button>
+    </div>
+    <div class="col-xs-12 hidden-xs">
+      <ul class="list-inline text-center text-muted">
+        <li translate="workbench.computer.working"
+            translate-value-num="{{getter.things.working}}">
+        <li class="text-info"
+            translate="workbench.computer.link"
+            translate-value-num="{{getter.things.phases.Link}}">
+        <li class="text-success"
+            translate="workbench.computer.done"
+            translate-value-num="{{getter.things.phases.Done}}">
+        <li class="text-warning"
+            translate="workbench.computer.error"
+            translate-value-num="{{getter.things.phases.Error}}">
+        <li ng-show="getter.things.attempts === 0">
+          <i class="fa fa-link"></i>
+          <span translate="workbench.computer.upload.info"
+                translate-value-user="{{::session.user}}">
+        </span>
+        </li>
+        <li ng-show="getter.things.attempts > 0">
+          <i class="fa fa-unlink"></i>
+          <span translate="workbench.computer.upload.error"></span>
+        </li>
+        <li>
+          <i class="fa fa-fw fa-wifi"></i>
+          {{getter.things.ip}}
+        </li>
+      </ul>
+      <div ng-show="getter.things.attempts === 1" class="text-warning text-center">
+        <i class="fa fa-warning"></i>
+        <span translate="workbench.computer.upload.unstable" translate-value-app="{{::appName}}">
+        </span>
+        <span translate="workbench.computer.upload.check"></span>
       </div>
     </div>
+    <div ng-show="getter.things.attempts >= 2" class="alert alert-danger text-center">
+      <i class="fa fa-warning fa-lg"></i>
+      <span translate="workbench.computer.upload.lost" translate-value-app="{{::appName}}"></span>
+      <span translate="workbench.computer.upload.check"></span>
+    </div>
   </div>
+  <div class="col-xs-12 fill-height-bar-h2">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th ng-repeat="Field in ::table.fields track by Field.type"
+            class="{{::Field.cssClasses}}"
+        >
+          {{::Field.name}}
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="snapshot in getter.things track by snapshot.uuid">
+        <td ng-repeat="Field in ::table.fields"
+            ng-init="field = Field.init(snapshot)"
+            class="{{::Field.cssClasses}}"
+        >
+          <span ng-bind-html="field.content"></span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="text-center">
+      <i class="fa fa-ellipsis-h"></i>
+    </div>
+  </div>
+</div>
 </div>

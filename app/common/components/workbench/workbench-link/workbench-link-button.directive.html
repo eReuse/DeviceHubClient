@@ -1,0 +1,12 @@
+<button ng-repeat="usb in usbs track by usb.hid"
+        class="btn btn-primary"
+        ng-class="{disabled: usb.snapshot.saved}"
+        ng-click="openWorkbenchLink(usb)"
+        type="button"
+>
+  <strong class="block">{{::usb.model}}</strong>
+  <small class="block" ng-hide="::usb.snapshot.saved">{{::usb.serialNumber}}</small>
+  <small class="block" ng-show="::usb.snapshot.saved"
+         translate="workbench.linkButton.alreadyUploaded">
+  </small>
+</button>

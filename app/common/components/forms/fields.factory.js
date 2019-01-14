@@ -1,10 +1,12 @@
 const inflection = require('inflection')
+const CannotSubmit = require('./cannot-submit.exception')
+const utils = require('./../../components/utils')
 
 /**
  * @module fields
  */
 
-function fieldsFactory ($translate) {
+function fieldsFactory ($translate, Notification) {
   /**
    * @alias modulefields.STR_SIZE
    * @type {number}
@@ -57,10 +59,13 @@ function fieldsFactory ($translate) {
      * @param {?Object} watcher
      * @param {string} watcher.expression
      * @param {module:fields.Field~listener} watcher.listener
-     * @param {module:fields.Field.ADDON_RIGHT} addonRight - If not falsy,
+     * @param {module:fields.Field.ADDON_RIGHT | object | null} addonRight - If not falsy,
      * an addon right. If Text, it looks for a translation string
      * in the same path as for the title / description, but in this
-     * case looking for a key 'aR'.
+     * case looking for a key 'aR'. If an object, must have the following
+     * properties:
+     * @param {function} addonRight.onClick
+     * @param {string} addonRight.class
      */
     constructor (key, {
       namespace = 'forms.fields',
@@ -93,7 +98,7 @@ function fieldsFactory ($translate) {
         this.templateOptions.placeholder = ''
         this.expressionProperties['templateOptions.placeholder'] = `'${this.textPath}.p' | translate`
       }
-      this.addonRight = addonRight
+      this.templateOptions.addonRight = _.isString(addonRight) ? {text: addonRight} : addonRight
       if (addonRight === this.constructor.ADDON_RIGHT.Text) {
         this.expressionProperties['templateOptions.addonRight.text'] = `'${this.textPath}.aR' | translate`
       }
@@ -128,10 +133,35 @@ function fieldsFactory ($translate) {
    * @extends module:fields.Input
    */
   class String extends Input {
-    constructor (key, {maxLength = STR_SIZE, ...rest}) {
+    constructor (key, {maxLength = STR_SIZE, minLength = null, ...rest}) {
       super(key, rest)
       this.type = 'input'
-      this.templateOptions.maxLength = maxLength
+      this.templateOptions.maxlength = maxLength
+      this.templateOptions.minlength = minLength
+    }
+  }
+
+  /**
+   * @alias module:fields.Email
+   * @extends module:fields.String
+   */
+  class Email extends String {
+    constructor (key, rest) {
+      super(key, rest)
+      this.type = 'input'
+      this.templateOptions.type = 'email'
+    }
+  }
+
+  /**
+   * @alias module:fields.Password
+   * @extends module:fields.String
+   */
+  class Password extends String {
+    constructor (key, rest) {
+      super(key, rest)
+      this.type = 'input'
+      this.templateOptions.type = 'password'
     }
   }
 
@@ -216,6 +246,13 @@ function fieldsFactory ($translate) {
   }
 
   /**
+   * @alias module:fields.Checkbox
+   * @extends module:fields.Field
+   */
+  class Checkbox extends Field {
+  }
+
+  /**
    * @alias module:fields.MultiCheckbox
    * @extends module:fields.Field
    */
@@ -261,6 +298,9 @@ function fieldsFactory ($translate) {
   /** @alias module:fields.No */
   const No = new Option(false, {keyText: 'optionNo'})
 
+  /**
+   * @alias module:fields.Resources
+   */
   class Resources extends Field {
 
   }
@@ -282,25 +322,167 @@ function fieldsFactory ($translate) {
 
   /**
    * @alias module:fields.Form
-   * @abstract
    */
   class Form {
     /**
-     *
      * @param {Object} model
      * @param {Field | Group} fields
      */
     constructor (model, ...fields) {
       this.fields = fields
       this.model = model
+      /** @type {formlyForm} */
       this.form = null
+      /**
+       * Formly field's options.
+       */
       this.options = {}
+      this.status = {
+        loading: false,
+        errorFromLocal: false,
+        done: false,
+        succeeded: false,
+        errorFromServer: null
+      }
     }
 
-    submit () {
+    cancel () {
+      throw new Error('Not implemented.')
+    }
+
+    /**
+     *  Resets the form to the model that was when this initialized.
+     */
+    reset () {
+      // See https://jsbin.com/puyosevago/
+      this.options.resetModel()
+    }
+
+    post () {
+      return this.submit(this.constructor.POST)
+    }
+
+    put () {
+      return this.submit(this.constructor.PUT)
+    }
+
+    delete () {
+      return this.submit(this.constructor.DELETE)
+    }
+
+    patch () {
+      return this.submit(this.constructor.PATCH)
+    }
+
+    /**
+     * Submits the form.
+     * @param {module:fields.Form.POST | module:fields.Form.PUT | module:fields.Form.DELETE} op
+     * @throws {CannotSubmit}
+     * @return {Promise}
+     */
+    submit (op = this.constructor.POST) {
+      console.assert(this.constructor[op], 'OP must be a REST method.')
+      // Reset from previous executions
+      this.status.errorFromServer = null
+      this.status.succeeded = this.status.done = false
+      // Check and perform
+      if (!this.isValid()) throw new CannotSubmit('Form is invalid')
+      this.status.loading = true
+      this._prepare()
+      return this._submit(op)
+        .then(response => {
+          this.status.succeeded = true
+          return this._success(op, response)
+        })
+        .catch(response => {
+          this.form.triedSubmission = true
+          this.status.errorFromServer = response.data
+          return this._error(op, response)
+        })
+        .finally(() => {
+          this.status.loading = false
+          this.status.done = true
+        })
+    }
+
+    /**
+     * Checks form validation.
+     *
+     * This method internally sets a flag in form, needed to show
+     * errors in the form. See the file *formly.config.js* to see
+     * why the need of this flag.
+     * @returns {boolean}
+     */
+    isValid () {
+      const isValid = this.form.$valid
+      this.form.triedSubmission = this.status.errorFromLocal = !isValid
+      if (!isValid) this.constructor._scrollToFormlyError(this.form.form)
+      return isValid
+    }
+
+    /**
+     * Internal function that performs the actual submission,
+     * without checking nor executing anything after.
+     * @returns {Promise}
+     */
+    _submit (op) {
       throw Error('Not implemented.')
     }
+
+    /**
+     * Prepares a server submission.
+     *
+     * Internally raises some flags to show to the user a
+     * 'working...' state.
+     */
+    _prepare () {
+
+    }
+
+    /**
+     * A method that is executed after the form has succeeded
+     * @param {string} op
+     * @param response
+     * @param {?string} namespace
+     * @private
+     */
+    _success (op, response, namespace = this.constructor.NS) {
+      const text = $translate.instant(`${namespace}.success`,
+        {
+          title: this.model,
+          op: $translate.instant(`${namespace}.${op.toLowerCase()}`)
+        })
+      Notification.success(text)
+    }
+
+    _error (op, response, namespace = this.constructor.NS) {
+      const text = $translate.instant(`${namespace}.error`,
+        {
+          title: this.model,
+          op: $translate.instant(`${namespace}.${op.toLowerCase()}`)
+        })
+      Notification.error(text)
+    }
+
+    static _scrollToFormlyError (form) {
+      const idFieldError = form.$error[Object.keys(form.$error)[0]][0].$name
+      try { // Let's try to scroll to the label of the field with error (if exists)
+        $('[for=' + idFieldError + ']').get(0).scrollIntoView()
+      } catch (err) {
+        try {
+          document.getElementById(idFieldError).scrollIntoView()
+        } catch (err) { // If the error is general of the form it will not work
+        }
+      }
+    }
+
   }
+
+  Form.POST = 'POST'
+  Form.PUT = 'PUT'
+  Form.DELETE = 'DELETE'
+  Form.PATCH = 'PATCH'
+  Form.NS = 'forms.notification'
 
   return {
     Field: Field,
@@ -314,10 +496,13 @@ function fieldsFactory ($translate) {
     Datepicker: Datepicker,
     Select: Select,
     Resources: Resources,
+    Checkbox: Checkbox,
+    Password: Password,
     MultiCheckbox: MultiCheckbox,
     Radio: Radio,
     Yes: Yes,
     No: No,
+    Email: Email,
     STR_SIZE: STR_SIZE,
     STR_BIG_SIZE: STR_BIG_SIZE,
     STR_SM_SIZE: STR_SM_SIZE,

@@ -21,3 +21,4 @@ module.exports = angular.module('common.components.utilities',
   .filter('resourceTitle', require('./resource-title.filter'))
   .filter('humanize', require('./humanize'))
   .factory('enums', require('./enums'))
+  .factory('android', require('./android.factory'))

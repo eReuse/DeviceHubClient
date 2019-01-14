@@ -13,3 +13,4 @@ module.exports = angular.module('common.components.workbench',
     require('angular-poller')
   ])
   .factory('workbenchGetter', require('./workbench-getter.factory'))
+  .directive('workbenchLinkButton', require('./workbench-link/workbench-link-button.directive'))

@@ -5,7 +5,7 @@
   z-index: 99
   position: absolute
 
-  form, #dh-loading-container
+  #login-form, #dh-loading-container
     width: 40em
     max-width: 90%
     position: relative
@@ -14,7 +14,10 @@
     margin-right: auto
 
     button:first-of-type
-      width: 10em
+      width: 100%
+
+  .alert
+    margin-top: 1em
 
   footer
     position: absolute
@@ -26,17 +29,3 @@
   footer img
     width: 30vw
     min-width: 5em
-
-  #saveInBrowser
-    width: auto
-    height: auto
-
-  .alert
-    margin-bottom: 0 !important
-    padding: 10px !important
-
-  .progress
-    height: 0.5em
-    .progress-bar
-      font-size: 0.5em
-      line-height: 0.5em

@@ -28,6 +28,8 @@ function sessionFactory ($q, $state, resources, Restangular) {
      * Performs login.
      * @name login
      * @param {object} credentials
+     * @param {string} credentials.email
+     * @param {string} credentials.password
      * @param {boolean} saveInBrowser
      * @return {Promise}
      */
@@ -56,7 +58,7 @@ function sessionFactory ($q, $state, resources, Restangular) {
     logout () {
       this.user = null
       this.storage.clear()
-      $state.go('login')
+      window.location.reload(false)
     }
   }
 

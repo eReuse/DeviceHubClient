@@ -19,9 +19,32 @@ module.exports = window.angular.module('deviceHub', [
   .config(
     ($urlServiceProvider, $stateProvider) => {
       const resourceServerResolve = {resourceServerLoaded: resourceServer => resourceServer.loaded}
-      const fadeLoadingSCreen = () => {
-        $('#dh-loading').fadeOut(600)
+
+      /**
+       * Fades the loading screen. Useful for after-logging states.
+       * @return {jQuery}
+       */
+      function fadeLoadingScreen () {
+        return $('#dh-loading').fadeOut(600)
       }
+
+      /**
+       * A factory that generates a function that redirects to
+       * `target` when the user directly accesses the state through
+       * the URL.
+       * @param {string} target
+       * @return {Function}
+       */
+      function redirectToIfAccessedThroughURLFactory (target) {
+        return trans => {
+          // Passed-in params to the states are of type 'any'
+          // and not set in the URL
+          const params = trans.params()
+          const oneParam = _.find(params, _.isPresent)
+          if (!oneParam) return trans.router.stateService.target(target)
+        }
+      }
+
       // The views of the application
       // views that use the `resolve` property require the schema
       // to be loaded.
@@ -30,7 +53,7 @@ module.exports = window.angular.module('deviceHub', [
         url: '',
         template: require('./views/index/index.controller.html'),
         resolve: resourceServerResolve,
-        onEnter: fadeLoadingSCreen,
+        onEnter: fadeLoadingScreen,
         abstract: true
       }).state({
         name: 'auth.inventory',
@@ -52,6 +75,7 @@ module.exports = window.angular.module('deviceHub', [
           }
         },
         template: require('./views/print-tags/print-tags.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
         controller: 'printTagsCtrl as ptCl'
       }).state({
         name: 'auth.workbench',
@@ -73,6 +97,18 @@ module.exports = window.angular.module('deviceHub', [
         template: require('./views/workbench/workbench-settings.controller.html'),
         controller: 'workbenchSettingsCtl as wsCl'
       }).state({
+        name: 'auth.workbench.link',
+        url: 'link/',
+        params: {
+          usb: {
+            type: 'any',
+            value: null
+          }
+        },
+        template: require('./views/workbench/workbench-link.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.workbench.computer'),
+        controller: 'workbenchLinkCtl as wlCl'
+      }).state({
         name: 'auth.inventory.newEvent',
         url: 'new-event/',
         params: {
@@ -82,6 +118,7 @@ module.exports = window.angular.module('deviceHub', [
           }
         },
         template: require('./views/inventory/new-event.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('^'),
         controller: 'newEventCtrl as neCl'
       }).state({
         name: 'login',
@@ -118,5 +155,6 @@ module.exports = window.angular.module('deviceHub', [
     $rootScope.COMMON = window.COMMON
     $rootScope.COMPONENTS = window.COMPONENTS
     $rootScope.CONSTANTS = CONSTANTS
+    window.document.title = CONSTANTS.appName
     window.CONSTANTS = CONSTANTS // todo are we sure this is ok?
   })

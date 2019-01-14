@@ -8,3 +8,4 @@ module.exports = angular.module('views.workbench',
   .controller('workbenchComputerCtl', require('./workbench-computer.controller'))
   .controller('workbenchMobileCtl', require('./workbench-mobile.controller'))
   .controller('workbenchSettingsCtl', require('./workbench-settings.controller'))
+  .controller('workbenchLinkCtl', require('./workbench-link.controller'))

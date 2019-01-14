@@ -1,0 +1,23 @@
+<form id="{{::id}}" ng-submit="form.submit()" novalidate ng-if="form">
+  <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
+    <button ng-show="_submit"
+            dh-submit-button="form.status.loading"
+            class="btn btn-primary submit-button"
+            type="submit"
+    >
+      <span translate="{{::_submit}}"></span>
+    </button>
+    <button ng-show="_reset"
+            type="button"
+            class="btn btn-warning"
+            ng-click="form.reset()">
+      <span translate="{{::_reset}}"></span>
+    </button>
+    <button ng-show="_cancel"
+            type="button"
+            class="btn btn-danger"
+            ng-click="form.cancel()">
+      <span translate="{{::_cancel}}"></span>
+    </button>
+  </formly-form>
+</form>

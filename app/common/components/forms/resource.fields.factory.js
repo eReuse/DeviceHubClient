@@ -1,5 +1,3 @@
-const CannotSubmit = require('./cannot-submit.exception')
-
 /**
  * @module resourceFields
  */
@@ -8,7 +6,7 @@ const CannotSubmit = require('./cannot-submit.exception')
  * @param {module:fields} fields
  * @param {module:enums} enums
  */
-function resourceFields (fields, resources, SubmitForm, $translate, Notification, enums) {
+function resourceFields (fields, resources, $translate, Notification, enums) {
   const f = fields
 
   /**
@@ -19,26 +17,6 @@ function resourceFields (fields, resources, SubmitForm, $translate, Notification
     constructor (model, ...fields) {
       console.assert(model instanceof resources.Thing)
       super(model, ...fields)
-      this.status = {}
-      this.submitForm = new SubmitForm(this, this.status)
-    }
-
-    post () {
-      return this.submit(this.constructor.POST)
-    }
-
-    /**
-     * Submits the form.
-     * @param {string} op
-     */
-    submit (op) {
-      console.assert(this.constructor[op], 'OP must be a REST method.')
-      if (this.submitForm.isValid()) {
-        this.submitForm.prepare()
-        return this._submit(op)
-      } else {
-        throw new CannotSubmit('Form is invalid')
-      }
     }
 
     /**
@@ -48,31 +26,14 @@ function resourceFields (fields, resources, SubmitForm, $translate, Notification
      * @private
      */
     _submit (op) {
-      const promise = this.model.post()
-      promise.then(() => this._success(op))
-      this.submitForm.after(promise)
-      return promise
-    }
-
-    /**
-     * @param {string} op
-     * @private
-     */
-    _success (op) {
-      const namespace = 'forms.resource.notification'
-      Notification.success(
-        $translate.instant(`${namespace}.success`,
-          {
-            title: this.model,
-            op: $translate.instant(`${namespace}.${op.toLowerCase()}`)
-          })
-      )
+      switch (op) {
+        case this.constructor.POST:
+          return this.model.post()
+        default:
+          throw new Error(`Method ${op} not implemented.`)
+      }
     }
   }
-
-  ResourceForm.POST = 'POST'
-  ResourceForm.PUT = 'PUT'
-  ResourceForm.DELETE = 'DELETE'
 
   /**
    * @alias module:resourceFields.Event

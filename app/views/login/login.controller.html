@@ -1,26 +1,22 @@
 <div id="login">
-  <form ng-submit="form.login(form.model)" name="loginForm" id="loginForm" novalidate>
-    <img ng-src="{{::siteLogo}}" title="{{::APP_NAME}}"/>
-    <div uib-collapse="isCollapsed">
-      <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
-        <button type="submit" class="btn btn-primary submit-button" dh-submit-button="loading">
-          Log in
-        </button>
-        <span ng-show="submissionError"
-              class="alert alert-danger ani-show pull-right"
-        >
-        <span ng-switch="status">
-          <span ng-switch-when="-1">You are not connected to the Internet &#128534;</span>
-          <span ng-switch-when="401">Incorrect username or password.</span>
-          <span ng-switch-default>There has been an error,
-            <a href="mailto:hello@ereuse.org">contact the administrator</a>.</span>
+  <div id="login-form" uib-collapse="isCollapsed">
+    <img ng-src="{{::$root.CONSTANTS.siteLogo}}" title="{{::$root.CONSTANTS.appName}}"/>
+    <dh-form form="form" submit="login.login"></dh-form>
+    <div ng-show="submissionError" class="alert alert-danger ani-show">
+      <span ng-switch="status">
+        <span ng-switch-when="-1">
+          <span translate="login.error.1"></span>
         </span>
-
+        <span ng-switch-when="401">
+          <span translate="login.error.401"></span>
+        </span>
+        <span ng-switch-default>
+          <span translate="login.error.def"></span>
+        </span>
       </span>
-      </formly-form>
     </div>
-  </form>
+  </div>
   <footer class="row">
-    <img ng-src="{{::eReuseLogo}}"/>
+    <img ng-src="{{::$root.CONSTANTS.eReuseLogo}}"/>
   </footer>
 </div>

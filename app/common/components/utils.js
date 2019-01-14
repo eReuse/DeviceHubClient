@@ -1,4 +1,3 @@
-require('bower_components/Boxer/jquery.ba-dotimeout.js')
 require('angular')
 const inflection = require('inflection')
 

@@ -2,8 +2,8 @@ require('angular-translate')
 /**
  * @ngdoc module
  * @name common.components.elements
- * @description Elements are UI components that are not explicitly inherent of any module, and they have inner
- * dependencies.
+ * @description Elements are UI components that are not explicitly inherent of any module, and
+ *   they have inner dependencies.
  */
 module.exports = angular.module('common.components.elements',
   [
@@ -18,4 +18,3 @@ module.exports = angular.module('common.components.elements',
     'pascalprecht.translate'
   ])
   .directive('headerNav', require('./header-nav/header-nav.directive'))
-  .directive('languageButton', require('./language-button/language-button.directive'))

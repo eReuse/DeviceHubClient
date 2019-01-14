@@ -6,7 +6,9 @@
  * @param {module:table} table
  * @param {module:enums} enums
  */
-function workbenchComputerCtl ($scope, workbenchGetter, resources, table, enums) {
+function workbenchComputerCtl ($scope, workbenchGetter, resources, table, enums, CONSTANTS, session) {
+  $scope.session = session
+  $scope.appName = CONSTANTS.appName
   class WCSnapshot extends resources.Snapshot {
     define ({_actualPhase, ...rest}) {
       super.define(rest)
@@ -22,8 +24,20 @@ function workbenchComputerCtl ($scope, workbenchGetter, resources, table, enums)
     }
   }
 
-  class USB extends resources.Device {
+  class USBFlashDrive extends resources.Device {
+    define ({uuid, ...rest}) {
+      super.define(rest)
+      this.uuid = uuid
+    }
 
+    static fromObject (obj, snapshots) {
+      // todo workaround to set snapshot to usb meanwhile we don't
+      //   set events to cache
+      const usb = super.fromObject(obj)
+      usb.snapshot = _.find(snapshots, {uuid: obj.uuid})
+      console.assert(usb.snapshot)
+      return usb
+    }
   }
 
   class WCSList extends workbenchGetter.WorkbenchResponse {
@@ -48,7 +62,7 @@ function workbenchComputerCtl ($scope, workbenchGetter, resources, table, enums)
         Install: 0
       }, _.countBy(this, 'phase'))
       this.working = this.length - this.phases.Error - this.phases.Done
-      this.usbs = usbs.map(usb => USB.fromObject(usb))
+      this.usbs = usbs.map(usb => USBFlashDrive.fromObject(usb, things))
     }
   }
 

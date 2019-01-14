@@ -1,4 +1,21 @@
 const en = {
+  login: {
+    email: {
+      l: 'Email'
+    },
+    password: {
+      l: 'Password'
+    },
+    saveInBrowser: {
+      l: 'Remember me'
+    },
+    login: 'Login',
+    error: {
+      1: 'You are not connected to the Internet.',
+      401: 'Incorrect username or password.',
+      def: 'Undefined error. Please contact the administrator.'
+    }
+  },
   resourceList: {
     allDevices: 'All devices',
     filters: {
@@ -91,6 +108,13 @@ const en = {
       c: 'C. A non-important button (or similar) doesn\'t work; screen has multiple scratches in edges',
       d: 'D. Multiple buttons don\'t work; screen has visual damage resulting in uncomfortable usage'
     },
+    biosRange: {
+      a: 'A. If by pressing a key you could access a boot menu with the network boot',
+      b: 'B. You had to get into the BIOS, and in less than 5 steps you could set the network boot',
+      c: 'C. Like B, but with more than 5 steps',
+      d: 'D. Like B or C, but you had to unlock the BIOS (i.e. by removing the battery)',
+      e: 'E. The device could not be booted through the network.'
+    },
     workbenchComputerPhase: {
       error: 'Error',
       done: 'Done',
@@ -162,6 +186,47 @@ const en = {
   workbench: {
     computer: {
       title: 'Workbench Computer',
+      working: '{{num}} working.',
+      link: '{{num}} waiting to link.',
+      done: '{{num}} completed.',
+      error: '{{num}} to upload manually.',
+      upload: {
+        info: 'Auto uploading as {{user}}',
+        error: 'Cannot upload. Retrying...',
+        unstable: 'Unstable connection to {{app}}.',
+        lost: 'Connection to {{app}} lost.',
+        check: 'Check Wi-Fi and Internet.'
+      }
+    },
+    link: {
+      title: 'Workbench Link',
+      tag0: {
+        l: 'Tag',
+        d: 'A tag that you want to link with this device.'
+      },
+      tag1: {
+        l: 'Second tag',
+        d: 'Another tag that you want to link with this device.'
+      },
+      appearance: {
+        l: 'Appearance',
+        d: 'Grades the imperfections that aesthetically affect the device, but not its usage.'
+      },
+      functionality: {
+        l: 'Functionality',
+        d: 'Grades the defects of a device that affect its usage'
+      },
+      bios: {
+        l: 'Bios',
+        d: 'How difficult it has been to set the bios to boot from the network.'
+      },
+      description: {
+        l: 'Description',
+        d: 'Any comment you want to write about the device.'
+      }
+    },
+    linkButton: {
+      alreadyUploaded: 'Already uploaded; unplug USB'
     },
     settings: {
       title: 'Workbench Settings',
@@ -204,9 +269,7 @@ const en = {
       install: {
         l: 'Install an Operative System',
         d: 'OS .fsa files that are in "workbench/images" automatically appear here.'
-      },
-      submit: '@:forms.submit',
-      cancel: '@:forms.cancel'
+      }
     }
   }
 }

@@ -34,17 +34,27 @@ window._.mixin({
    */
   removeOne: (array, predicate) => _.remove(array, predicate)[0],
   /**
-   * Like concat but without creating a new array. Internally uses Jquery's merge
+   * Like concat but without creating a new array. Internally
+   * uses Jquery's merge
    * @param {Array} array
    * @param {Array} otherArray
    */
-  arrayExtend: (array, otherArray) => { window.$.merge(array, otherArray) },
+  arrayExtend: (array, otherArray) => {
+    window.$.merge(array, otherArray)
+  },
   /**
-   * Like _.matches for isMatch; creates a function that executes includes for a giving path and array.
+   * Like _.matches for isMatch; creates a function that executes
+   * includes for a giving path and array.
    * @param {string} path - Path of the object to check.
    * @param {array} array - Array to check against.
-   * @return {Function} - A function that performs _.includes for the value in the path for the passed in object.
+   * @return {Function} - A function that performs _.includes for
+   * the value in the path for the passed in object.
    */
   includesF: (array, path) => value => _.includes(array, _.get(value, path)),
+  /**
+   * Is the variable not empty (checked in a smart way)?
+   *
+   * See https://www.npmjs.com/package/is-present#usage
+   */
   isPresent: isPresent
 })
