@@ -2,18 +2,16 @@
 <div class="row">
   <nav id="lots"
        class="col-xs-12 col-sm-2 col-md-2 col-lg-2 fill-height-bar"
-       ng-class="{'hidden-xs': lotsSelectionHiddenXS}">
-    <button class="btn btn-sm btn-dark visible-xs"
-            style="float: right"
-            ng-click="lotsSelectionHiddenXS = !lotsSelectionHiddenXS">
-      <h2><i class="fa fa-times fa-fw"></i></h2>
+       ng-class="{'hidden-xs': !lotXs.visible}">
+    <button class="btn btn-sm btn-dark visible-xs pull-right" ng-click="lotXs.toggle()">
+      <i class="fa fa-times fa-fw fa-2x"></i>
     </button>
     <lots-tree-navigation on-selection-changed="onLotsSelectionChanged(selected)">
     </lots-tree-navigation>
   </nav>
   <div id="main-row"
        class="col-xs-12 col-sm-6 col-md-6 col-lg-6"
-       ng-show="selectionPanelHiddenXS">
+       ng-show="!lotXs.visible && !selectionXs.visible">
     <div id="lot-row" ng-if="lotsM.lots.length">
       <div class="btn-group pull-right">
         <button type="button"
@@ -33,15 +31,7 @@
             register-to-resources-update="lotsM.selector.callbackOnSelection(callback)">
         </group-resource-button>
       </div>
-      <h2 class="hidden-xs">
-        {{lotsM.title}}
-        <button type="button"
-                class="btn btn-sm btn-dark visible-xs-inline-block"
-                ng-click="showLots()">
-          <i class="fa fa-folder-o fa-fw"></i>
-          Select lot
-        </button>
-      </h2>
+      <h2 class="hidden-xs">{{lotsM.title}}</h2>
       <div ng-show="lotsM.lots.length === 1" class="lot-description">
         <resource-field-edit resource="selectedLots[0]"
                              field="{ key: 'description', value: selectedLots[0].description, editable: true }">
@@ -51,13 +41,12 @@
     </div>
     <div class="col-xs-12 fill-height-bar">
       <div ng-hide="lotsM.lots.length">
-        <h2 translate>resourceList.allDevices</h2>
         <button type="button"
-                class="btn btn-sm btn-dark visible-xs-inline"
-                style="margin-bottom: 8px; font-size: 16px; margin-left: 10px;"
-                ng-click="showLots()">
-          <i class="fa fa-folder-o fa-fw"></i>Select lot
+                class="btn btn-dark visible-xs pull-right mini-margin-top"
+                ng-click="lotXs.show()">
+          <i class="fa fa-folder fa-fw"></i>Select lot
         </button>
+        <h2 translate="resourceList.allDevices"></h2>
       </div>
       <h3 ng-show="lotsM.lots.length">Devices in lots</h3>
       <resource-search on-update="getter.setSearch(text)"></resource-search>
@@ -122,7 +111,9 @@
     </div> <!-- ./col-sm-6 -->
   </div>
   <!-- Selection -->
-  <aside class="selection col-xs-12 col-sm-4 col-md-4 col-lg-4 fill-height-bar">
+  <aside class="selection col-xs-12 col-sm-4 col-md-4 col-lg-4 fill-height-bar"
+         ng-class="{'hidden-xs': !selectionXs.visible}"
+  >
     <div ng-if="!selected.length" class="selection-empty">
       <div>
         <h4>Select a device to view its details</h4>
@@ -153,12 +144,12 @@
   <!-- Selection button-->
   <div class="selection-button visible-xs visible-sm"
        ng-show="selected.length"
-       ng-click="selectionPanelHiddenXS = !selectionPanelHiddenXS">
-    <button ng-show="selectionPanelHiddenXS" class="btn btn-primary btn-view-selected">
+       ng-click="selectionXs.toggle()">
+    <button ng-hide="selectionXs.visible" class="btn btn-primary btn-view-selected">
       View selected devices
       <span class="badge">{{selected.length}}</span>
     </button>
-    <button ng-show="!selectionPanelHiddenXS" class="btn btn-primary btn-view-list">
+    <button ng-show="selectionXs.visible" class="btn btn-primary btn-view-list">
       Back to device list
     </button>
   </div>

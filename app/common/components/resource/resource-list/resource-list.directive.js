@@ -16,7 +16,6 @@ function resourceList (resources, resourceListConfig, progressBar, Notification,
        * @param {Object} $scope
        * @param {Object} $scope.Notification
        * @param {Object} $scope._sort
-       * @param {function} $scope.showLots
        * @param {boolean} $scope.selectionPanelHiddenXS
        * @param {boolean} $scope.lotsSelectionHiddenXS
        * @param {LotsManager} $scope.lotsM
@@ -41,11 +40,25 @@ function resourceList (resources, resourceListConfig, progressBar, Notification,
          * a button only visible in xs / sm screens.
          * @type {boolean}
          */
-        $scope.selectionPanelHiddenXS = true
-        $scope.lotsSelectionHiddenXS = true
-        $scope.showLots = () => {
-          $scope.lotsSelectionHiddenXS = false
+        class VisibleXs {
+          constructor () {
+            this.visible = false
+          }
+
+          toggle () {
+            this.visible = !this.visible
+          }
+
+          show () {
+            this.visible = true
+          }
+
+          hide () {
+            this.visible = false
+          }
         }
+        $scope.lotXs = new VisibleXs()
+        $scope.selectionXs = new VisibleXs()
 
         class DeviceListGetter extends deviceGetter.DeviceGetter {
           get (getNextPage, ...params) {
