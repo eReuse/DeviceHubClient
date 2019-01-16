@@ -116,7 +116,7 @@ function deviceGetterFactory (resources, progressBar) {
       if (!getNextPage) this.q.page = 1
       if (showProgressBar) progressBar.start()
       this.working = true
-      return resources.Device.server.getList(_.defaults(query, this.q)).then(devices => {
+      return resources.Device.server.get('', {params: _.defaults(query, this.q)}).then(devices => {
         progressBar.complete()
         if (getNextPage) this.devices.add(devices)
         else this.devices.set(devices)

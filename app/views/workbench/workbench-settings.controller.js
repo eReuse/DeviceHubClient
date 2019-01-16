@@ -1,13 +1,13 @@
 /**
  *
  * @param $scope
- * @param {module:workbenchGetter} workbenchGetter
  * @param {module:fields} fields
  * @param {module:enums} enums
  * @param {module:resources}
  * @param {$http} $http
+ * @param {module:server} server
  */
-function workbenchSettings ($scope, fields, workbenchGetter, enums, resources, Notification, $translate, $http) {
+function workbenchSettings ($scope, fields, enums, resources, Notification, $translate, server) {
   const namespace = 'workbench.settings'
 
   class WorkbenchSettingsForm extends fields.Form {
@@ -74,11 +74,11 @@ function workbenchSettings ($scope, fields, workbenchGetter, enums, resources, N
     }
 
     _submit (op) {
-      return settingsGetter.post(this.model)
+      return workbenchSettings.post(this.model)
     }
 
-    _success (op) {
-      Notification.success($translate.instant('notification.ok'))
+    _success (...args) {
+      super._success(...args)
       window.history.back()
     }
 
@@ -86,15 +86,13 @@ function workbenchSettings ($scope, fields, workbenchGetter, enums, resources, N
       window.history.back()
     }
   }
-  $scope.form = new WorkbenchSettingsForm({})
 
-  /** @type {module:workbenchGetter.WorkbenchGetter} */
-  const settingsGetter = new workbenchGetter.WorkbenchGetter('config')
-  /** @type {module:workbenchGetter.WorkbenchGetter} */
-  const imagesGetter = new workbenchGetter.WorkbenchGetter('config/images')
-  settingsGetter.get().then(response => {
+  $scope.form = new WorkbenchSettingsForm({})
+  const workbenchSettings = new server.Workbench('config/')
+  const workbenchImages = new server.Workbench('config/images/')
+  workbenchSettings.get().then(response => {
     $scope.form.model = response.data
-    imagesGetter.start().then(null, null, response => {
+    workbenchImages.start().then(null, null, response => {
       // It seems poller reuses response.data and push gets multiplied over time
       _.last($scope.form.fields).templateOptions.options = [{
         value: null,
@@ -104,7 +102,7 @@ function workbenchSettings ($scope, fields, workbenchGetter, enums, resources, N
   })
 
   $scope.$on('$destroy', () => {
-    imagesGetter.stop()
+    workbenchImages.stop()
   })
 }
 

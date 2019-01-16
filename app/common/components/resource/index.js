@@ -1,5 +1,4 @@
 require('angular-qrcode')
-require('restangular')
 require('angular-ui-notification')
 require('angular-recursion')
 require('angular-animate')
@@ -12,7 +11,6 @@ require('meanie-angular-focus')
 module.exports = angular.module('common.components.resource',
   [
     require('./../../config').name,
-    'restangular',
     'RecursionHelper',
     require('angular-formly'),
     require('angular-formly-templates-bootstrap'),
@@ -43,6 +41,6 @@ module.exports = angular.module('common.components.resource',
   .factory('resources', require('./resources.factory'))
   .directive('deviceListSummary', require('./resource-list/device-list-summary/device-list-summary.directive'))
   .config(require('./resource-list/resource-list-filters/panel-filter.wrapper.formly.config'))
-  .factory('resourceServer', require('./resource-server.factory'))
+  .factory('server', require('./server.factory'))
   .factory('deviceGetter', require('./device-getter.factory'))
   .factory('table', require('./table.factory'))

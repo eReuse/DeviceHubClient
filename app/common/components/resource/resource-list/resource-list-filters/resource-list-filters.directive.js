@@ -14,7 +14,7 @@ const PATH = require('./__init__').PATH
  * @param {module:fields} fields
  * @param {module:resources} resources
  */
-function resourceListFilters (Notification, $uibModal, clipboard, fields, resources, $translate) {
+function resourceListFilters (Notification, $uibModal, clipboard, fields, resources, $translate, $q) {
   return {
     template: require('./resource-list-filters.directive.html'),
     restrict: 'E',
@@ -91,10 +91,10 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
       class FilterForm extends fields.Form {
         constructor (...args) {
           super(...args)
-          this.submit()
+          this._submit() // At the beginning we do not need to validate, etc
         }
 
-        submit () {
+        _submit () {
           // Generate filter pills
           this.pills = FilterPill.generatePills(this.fields[0], this.model)
           // Remove falsey / empty values from the model
@@ -102,6 +102,7 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
           const filters = _.cloneDeep(this.model)
           this._removeFalseyEmptyDeep(filters)
           $scope.onUpdate({filters: filters})
+          return super._submit()
         }
 
         /**
@@ -115,6 +116,9 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
             if (_.isPlainObject(value)) this._removeFalseyEmptyDeep(value)
             if (_.isEmpty(value) || _.isNil(value)) delete obj[key]
           }
+        }
+
+        _success () {
         }
       }
 
@@ -229,7 +233,7 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
             templateUrl: `${PATH}/importer.popover.html`,
             isOpen: false,
             title: 'Import the filters',
-            form: new fields.Form(
+            form: new ExportForm(
               {},
               new fields.Textarea(
                 'value',
@@ -249,11 +253,22 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
           Notification.success('Filters exported to clipboard.')
         }
 
+      }
+
+      class ExportForm extends fields.Form {
         /** Imports filter model from IO's textarea form. */
-        import () {
-          $scope.form.model = JSON.parse(this.popover.form.model.value)
-          $scope.form.submit()
-          this.popover.isOpen = false
+        _submit () {
+          try {
+            $scope.form.model = JSON.parse($scope.io.popover.form.model.value)
+          } catch (e) {
+            return $q.reject()
+          }
+          $scope.io.popover.isOpen = false
+          return $scope.form.submit()
+        }
+
+        _error (op, response, namespace = 'resourceList.filters.import') {
+          return super._error(op, response, namespace)
         }
       }
 

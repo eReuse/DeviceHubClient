@@ -14,6 +14,13 @@ function resourceListConfig ($filter, table) {
    * @alias module:resourceListConfig:Field
    */
 
+  class Title extends table.Title {
+    constructor (resource) {
+      const content = `${resource.manufacturer || ''} ${resource.model || ''} ${resource.tags}`
+      super(resource, content)
+    }
+  }
+
   class Rate extends table.Field {
   }
 
@@ -63,7 +70,7 @@ function resourceListConfig ($filter, table) {
   Updated.hide = true
 
   return {
-    table: [table.Tags, table.Icon, table.Title, Rate, Issues, Status, Price, Updated]
+    table: [table.Icon, Title, Rate, Issues, Status, Price, Updated]
   }
 }
 

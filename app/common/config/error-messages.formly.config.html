@@ -1,11 +1,7 @@
 <formly-transclude></formly-transclude>
-<div uib-tooltip-template="'common/config/tooltip.error-messages.formly.config.html'"
-     tooltip-is-open="fc.$invalid && (form.triedSubmission || options.formControl.$touched)"
-     tooltip-placement="bottom"
-     tooltip-trigger="none"
-     ng-class="{
-         'form-tooltip-with-description': options.templateOptions.description,
-         'form-tooltip-checkbox': options.type == 'checkbox',
-         'tooltip-is-open': fc.$invalid && (form.triedSubmission || options.formControl.$touched)
-         }"
-></div>
+<span ng-show="fc.$invalid && (form.triedSubmission || options.formControl.$touched)">
+  <span class="help-block" ng-repeat="(errorKey, _) in fc.$error">
+    <span translate="{{::options.error(errorKey)}}"
+          translate-value-to="{{options.templateOptions[errorKey]}}"></span>
+  </span>
+</span>

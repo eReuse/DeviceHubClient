@@ -5,7 +5,7 @@
  * @param {module:fields} fields
  * @return {Spec}
  */
-function printTags ($scope, $stateParams, fields, Notification, $translate, $ocLazyLoad, $q) {
+function printTags ($scope, $stateParams, fields, $translate, $ocLazyLoad, $q) {
 
   $scope.tags = $stateParams.tags
 
@@ -26,7 +26,6 @@ function printTags ($scope, $stateParams, fields, Notification, $translate, $ocL
 
     save () {
       localStorage.setItem(this.constructor.STORAGE_KEY, JSON.stringify(this))
-      Notification.success($translate.instant('printTags.saved'))
     }
 
     load () {
@@ -48,8 +47,13 @@ function printTags ($scope, $stateParams, fields, Notification, $translate, $ocL
   }
 
   class SpecForm extends fields.Form {
-    submit () {
-      this.model.save()
+    _submit () {
+      try {
+        this.model.save()
+      } catch (e) {
+        return $q.reject(e)
+      }
+      return super._submit()
     }
   }
 

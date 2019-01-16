@@ -8,7 +8,7 @@
  * A DH Form.
  *
  * @param {expression} form - A `module:fields.Form` or null.
- * @param {?string} id - Optional ID to link the form to.
+ * @param {?string} formId - Optional ID to link the form to.
  * @param {boolean|string} submit - Show the 'submit' button if
  * the attribute is set. If the attribute has, moreover, text,
  * use the text as a keyPath for translation.
@@ -28,7 +28,7 @@ function dhForm () {
     restrict: 'E',
     scope: {
       form: '=',
-      id: '@?',
+      formId: '@?',
       submit: '@?',
       cancel: '@?',
       reset: '@?'

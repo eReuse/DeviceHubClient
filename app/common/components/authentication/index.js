@@ -1,5 +1,3 @@
-require('restangular')
-
 /**
  * @ngdoc module
  * @name common.components.authentication
@@ -14,8 +12,18 @@ require('restangular')
  */
 module.exports = angular.module('common.components.authentication',
   [
-    'restangular',
     require('@uirouter/angularjs').default
   ])
-.service('session', require('./session.service.js'))
-.run(require('./shield-states.run.js'))
+  .service('session', require('./session.service'))
+  .run(require('./shield-states.run.js'))
+  .service('sessionLoaded', class SessionLoaded {
+    constructor ($q) {
+      this._defer = $q.defer()
+      /**
+       * A promise that resolves once the user is loaded, returning
+       * the user.
+       * @type {Promise}
+       */
+      this.loaded = this._defer.promise
+    }
+})

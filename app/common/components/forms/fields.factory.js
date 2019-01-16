@@ -1,12 +1,11 @@
 const inflection = require('inflection')
 const CannotSubmit = require('./cannot-submit.exception')
-const utils = require('./../../components/utils')
 
 /**
  * @module fields
  */
 
-function fieldsFactory ($translate, Notification) {
+function fieldsFactory ($translate, Notification, $q) {
   /**
    * @alias modulefields.STR_SIZE
    * @type {number}
@@ -104,6 +103,19 @@ function fieldsFactory ($translate, Notification) {
       }
       this.hideExpression = hide
       this.watcher = watcher
+    }
+
+    /**
+     * Gets the keyPath for an error. Used to represent errors.
+     *
+     * To add a new type of error add a formly validator and the
+     * corresponding key in the translation dict. translate is called
+     * passing a templateOptions[key].
+     * @param {string} key
+     * @return {string}
+     */
+    error (key) {
+      return 'forms.e.' + key
     }
   }
 
@@ -321,6 +333,8 @@ function fieldsFactory ($translate, Notification) {
   }
 
   /**
+   * A Form.
+   * @class
    * @alias module:fields.Form
    */
   class Form {
@@ -330,6 +344,10 @@ function fieldsFactory ($translate, Notification) {
      */
     constructor (model, ...fields) {
       this.fields = fields
+      /**
+       * The model as formly wants it.
+       * @type {Object}
+       */
       this.model = model
       /** @type {formlyForm} */
       this.form = null
@@ -388,7 +406,6 @@ function fieldsFactory ($translate, Notification) {
       // Check and perform
       if (!this.isValid()) throw new CannotSubmit('Form is invalid')
       this.status.loading = true
-      this._prepare()
       return this._submit(op)
         .then(response => {
           this.status.succeeded = true
@@ -396,7 +413,7 @@ function fieldsFactory ($translate, Notification) {
         })
         .catch(response => {
           this.form.triedSubmission = true
-          this.status.errorFromServer = response.data
+          this.status.errorFromServer = _.get(response, 'data', response)
           return this._error(op, response)
         })
         .finally(() => {
@@ -416,27 +433,22 @@ function fieldsFactory ($translate, Notification) {
     isValid () {
       const isValid = this.form.$valid
       this.form.triedSubmission = this.status.errorFromLocal = !isValid
-      if (!isValid) this.constructor._scrollToFormlyError(this.form.form)
+      if (!isValid) this.constructor._scrollToFormlyError(this.form)
       return isValid
     }
 
     /**
      * Internal function that performs the actual submission,
      * without checking nor executing anything after.
+     *
+     * Override it with custom submition logic. By default it returns
+     * a resolved promise with the model. Caller methods expects
+     * a promise with the result.
+     *
      * @returns {Promise}
      */
     _submit (op) {
-      throw Error('Not implemented.')
-    }
-
-    /**
-     * Prepares a server submission.
-     *
-     * Internally raises some flags to show to the user a
-     * 'working...' state.
-     */
-    _prepare () {
-
+      return $q.resolve(this.model)
     }
 
     /**

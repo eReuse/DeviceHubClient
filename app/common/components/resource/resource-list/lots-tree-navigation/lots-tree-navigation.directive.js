@@ -109,7 +109,7 @@ function lotsTreeNavigation (progressBar, $rootScope, LotsSelector, resources) {
         }
 
         function reload () {
-          resources.Lot.server.getList({format: 'UiTree'}).then(lots => {
+          resources.Lot.server.get('', {params: {format: 'UiTree'}}).then(lots => {
             $scope.lots = lots
           })
         }

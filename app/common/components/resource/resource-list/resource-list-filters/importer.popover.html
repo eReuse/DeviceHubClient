@@ -1,15 +1,2 @@
 <close-popover popover="io.popover" close-on-clickout="true"></close-popover>
-<form ng-submit="io.import()" novalidate>
-  <formly-form model="io.popover.form.model"
-               fields="io.popover.form.fields"
-               form="io.popover.form.form"
-               options="io.popover.form.options"
-  >
-  </formly-form>
-  <button type="submit" class="btn btn-primary btn-block">
-    Import filters
-  </button>
-</form>
-
-
-
+<dh-form form="io.popover.form" submit="resourceList.filters.import.submit"></dh-form>

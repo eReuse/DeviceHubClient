@@ -1,6 +1,6 @@
 const FileSaver = require('file-saver')
 
-function exportButton (Notification, clipboard, $translate, CONSTANTS, $http, session, Notification) {
+function exportButton (Notification, clipboard, $translate, CONSTANTS, session, server) {
   return {
     template: require('./export-button.directive.html'),
     restrict: 'AE',
@@ -12,23 +12,22 @@ function exportButton (Notification, clipboard, $translate, CONSTANTS, $http, se
      * @param {module:resources.Device[]} $scope.devices
      */
     link: $scope => {
+      const docsEndpoint = new server.Devicehub('documents/')
       function saveFile (path, format, mimeType, textPath) {
-        return $http({
-          method: 'GET',
-          url: `${CONSTANTS.url}/documents/${path}`,
+        return docsEndpoint.get(path, {
           params: {
             filter: {id: _.map($scope.devices, 'id')},
             format: format.toUpperCase()
           },
-          headers: {Accept: mimeType, Authorization: `Basic ${session.user.token}`},
-          responseType: 'arraybuffer'
+          headers: {Accept: mimeType},
+          responseType: docsEndpoint.constructor.RESPONSE_TYPE.ARRAY_BUFFER
         }).then(response => {
           const file = new File([response.data],
             `${$translate.instant(`export.${textPath}.fileName`)}.${format}`,
             {type: mimeType})
           FileSaver.saveAs(file)
           return file
-        }).catch(response => {
+        }).catch(() => {
           Notification.error($translate.instant('export.error'))
         })
       }

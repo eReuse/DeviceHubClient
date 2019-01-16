@@ -18,8 +18,6 @@ module.exports = window.angular.module('deviceHub', [
 ])
   .config(
     ($urlServiceProvider, $stateProvider) => {
-      const resourceServerResolve = {resourceServerLoaded: resourceServer => resourceServer.loaded}
-
       /**
        * Fades the loading screen. Useful for after-logging states.
        * @return {jQuery}
@@ -52,7 +50,6 @@ module.exports = window.angular.module('deviceHub', [
         name: 'auth',
         url: '',
         template: require('./views/index/index.controller.html'),
-        resolve: resourceServerResolve,
         onEnter: fadeLoadingScreen,
         abstract: true
       }).state({
@@ -118,7 +115,7 @@ module.exports = window.angular.module('deviceHub', [
           }
         },
         template: require('./views/inventory/new-event.controller.html'),
-        redirectTo: redirectToIfAccessedThroughURLFactory('^'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
         controller: 'newEventCtrl as neCl'
       }).state({
         name: 'login',

@@ -3,9 +3,9 @@
  * @param {module:fields} fields
  * @param {module:android} android
  * @param {module:enums} enums
- * @param {module:workbenchGetter} workbenchGetter
+ * @param {module:server} server
  */
-function workbenchLinkCtl (fields, $scope, android, enums, workbenchGetter, $stateParams) {
+function workbenchLinkCtl (fields, $scope, android, enums, server, $stateParams) {
   /** @type {module:resources.Snapshot} */
   const usb = $scope.usb = $stateParams.usb
 
@@ -54,15 +54,29 @@ function workbenchLinkCtl (fields, $scope, android, enums, workbenchGetter, $sta
 
   const androidTag = new AndroidTag()
 
+  /**
+   * @class
+   * @extends module:fields.Form
+   */
   class WLForm extends fields.Form {
     constructor (...params) {
       super(...params)
-      this.patcher = new workbenchGetter.WorkbenchGetter('snapshots/')
+      // We patch without passing auth header
+      this.workbench = new server.Workbench('snapshots/')
     }
-    submit () {
-      // todo is valid and prepare...
+
+    _submit () {
       this.model.device.tags.forEach(tag => (tag.type = 'Tag'))
-      this.patcher.patch(this.model, usb.uuid).then($scope.back)
+      return this.workbench.patch(this.model, usb.uuid)
+    }
+
+    _success (...args) {
+      $scope.back()
+      return super._success(...args)
+    }
+
+    cancel () {
+      window.history.back()
     }
   }
 

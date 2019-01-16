@@ -2,31 +2,7 @@
   <div class="row">
     <h2 class="col-lg-offset-1 col-xs-12" translate="printTags.title"></h2>
     <article class="col-sm-4 col-lg-2 col-lg-offset-1 fill-height-bar-h2">
-      <form id="form-tag-spec" ng-submit="form.submit()" novalidate>
-        <formly-form model="form.model"
-                     fields="form.fields"
-                     form="form.form"
-                     options="form.options">
-        </formly-form>
-      </form>
-      <div class="btn-group btn-group-justified">
-        <div class="btn-group">
-          <button type="submit"
-                  form="form-tag-spec"
-                  class="btn btn-primary submit-button"
-                  dh-submit-button="status.loading"
-          >
-            <i class="fa fa-save"></i>
-            <span translate="printTags.save"></span>
-          </button>
-        </div>
-        <div class="btn-group">
-          <button type="button" class="btn btn-warning" ng-click="form.model.define()">
-            <i class="fa fa-eraser fa-fw"></i>
-            <span translate="printTags.reset"></span>
-          </button>
-        </div>
-      </div>
+      <dh-form form="form" submit="printTags.save" reset="printTags.reset"></dh-form>
       <hr>
       <div class="btn-group btn-group-justified">
         <div class="btn-group">

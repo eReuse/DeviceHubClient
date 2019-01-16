@@ -7,13 +7,22 @@
  */
 function newEventCtrl ($scope, $stateParams, resourceFields, $state) {
   const model = $stateParams.event
-  $scope.form = new resourceFields[model.type](model)
 
-  $scope.post = () => {
-    $scope.form.post().then(() => {
-      $state.go('^')
-    })
+  function leave () {
+    $state.go('^')
   }
+
+  class NewEventForm extends resourceFields[model.type] {
+    _submit (op) {
+      return super._submit(op).then(leave)
+    }
+
+    cancel () {
+      leave()
+    }
+  }
+
+  $scope.form = new NewEventForm(model)
 }
 
 module.exports = newEventCtrl

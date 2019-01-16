@@ -8,12 +8,12 @@ const inflection = require('inflection')
 
 /**
  *
- * @param Restangular
+ * @param {module:server} server
  * @param CONSTANTS
  * @param $filter
  * @param {module:enums} enums
  */
-function resourceFactory (Restangular, CONSTANTS, $filter, enums) {
+function resourceFactory (server, CONSTANTS, $filter, enums) {
   const cache = {
     /** @type {Object.<int, Device>} */
     devices: {},
@@ -23,9 +23,6 @@ function resourceFactory (Restangular, CONSTANTS, $filter, enums) {
 
   /**
    * A Devicehub resource. This mimics Devicehub's schema.Thing.
-   *
-   * This contains the model data and it is the object that
-   * restangular augments adding get / post; etc methods.
    *
    * Please look at the Devicehub counterpart to learn about
    * the fields, etc.
@@ -121,19 +118,10 @@ function resourceFactory (Restangular, CONSTANTS, $filter, enums) {
       return new this(data)
     }
 
-    /** The URL path to access the resource. */
-    static get basePath () {
-      throw Error('Not implemented error.')
-    }
-
-    /** A connection to Devicehub. Ex. myThing.server.post() */
-    static get server () {
-      console.assert(resources.RestangularConfigurerResource,
-        'No credentials for accessing Dhub; perform first login.')
-      return resources.RestangularConfigurerResource.service(this.basePath)
-    }
-
-    /** A connection to Devicehub. Ex. myThing.server.post() */
+    /**
+     * A connection to Devicehub. Ex. myThing.server.post()
+     * @return {module:server.DevicehubThing}
+     */
     get server () {
       return this.constructor.server
     }
@@ -155,7 +143,6 @@ function resourceFactory (Restangular, CONSTANTS, $filter, enums) {
 
     /**
      * Returns a posteable version of the thing, complying with
-     * Restangular and Devicehub's API.
      * @return {Object.<string, Object>}
      * @private
      */
@@ -205,6 +192,9 @@ function resourceFactory (Restangular, CONSTANTS, $filter, enums) {
       return others.map(other => this._relationship(other))
     }
   }
+
+  /** A connection to Devicehub. Ex. myThing.server.post() */
+  Thing.server = null
 
   /**
    * Class representing a device
@@ -262,14 +252,6 @@ function resourceFactory (Restangular, CONSTANTS, $filter, enums) {
       return ''
     }
 
-    get server () {
-      return super.server('/devices/')
-    }
-
-    static get basePath () {
-      return '/devices/'
-    }
-
     /**
      * A human description of the state of the device.
      * @returns {string}
@@ -284,7 +266,7 @@ function resourceFactory (Restangular, CONSTANTS, $filter, enums) {
 
     get title () {
       const tags = this.tags.length ? ` ${this.tags[0]}` : ''
-      return `${utils.Naming.humanize(this.type)} ${this.model}${tags}`
+      return `${utils.Naming.humanize(this.type)} ${this.model} ${tags}`
     }
 
     get teaser () {
@@ -665,10 +647,6 @@ function resourceFactory (Restangular, CONSTANTS, $filter, enums) {
 
     static get icon () {
       return 'fa-bookmark'
-    }
-
-    static get basePath () {
-      return '/events/'
     }
 
     /**
@@ -1275,10 +1253,6 @@ function resourceFactory (Restangular, CONSTANTS, $filter, enums) {
       return this._parents.map(id => cache.lots[id])
     }
 
-    static get basePath () {
-      return '/lots/'
-    }
-
     static fromObject (data) {
       if (data.id && data.id in cache.lots) cache.lots[data.id].define(data)
       else {
@@ -1294,7 +1268,7 @@ function resourceFactory (Restangular, CONSTANTS, $filter, enums) {
       return super.post().then(() => {
         cache.lots[this.id] = this
         if (parentsIds.length) {
-          return this.server.one(parentsIds[0]).post('children', null, {id: this.id})
+          return this.server.post({}, parentsIds[0] + '/children', {params: {id: this.id}})
         }
       })
     }
@@ -1528,9 +1502,23 @@ function resourceFactory (Restangular, CONSTANTS, $filter, enums) {
     LotNode: LotNode,
     ResourceList: ResourceList,
     Lots: Lots,
-    resourceClass: resourceClass,
-    RestangularConfigurerResource: null
+    resourceClass: resourceClass
   }
+  // Init servers
+  /**
+   * @type {module:server.DevicehubThing}
+   */
+  Device.server = new server.DevicehubThing('/devices/', resources)
+  /**
+   *
+   * @type {module:server.DevicehubThing}
+   */
+  Event.server = new server.DevicehubThing('/events/', resources)
+  /**
+   *
+   * @type {module:server.DevicehubThing}
+   */
+  Lot.server = new server.DevicehubThing('/lots/', resources)
   return resources
 }
 

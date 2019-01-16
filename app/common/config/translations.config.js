@@ -31,7 +31,11 @@ const en = {
       ratingPanel: {l: '@:r.rate.rating.l'},
       panel: {l: 'Select a filter'},
       itemTypePanel: {l: 'Item type'},
-      popover: {title: 'Select a filter', update: 'Update filters'}
+      popover: {title: 'Select a filter', update: 'Update filters'},
+      import: {
+        submit: 'Import filters',
+        error: 'Could not import; filters are not well written.'
+      }
     }
   },
   newEvent: {
@@ -54,6 +58,12 @@ const en = {
     fields: {
       optionYes: 'Yes.',
       optionNo: 'No.'
+    },
+    e: {
+      required: 'This field is required.',
+      email: 'The email is wrongly typed.',
+      minlength: 'Too short. Minimum characters are {{to}}.',
+      parse: 'Wrong format. Review that the format is correct.'
     }
   },
   r: { // resources
@@ -165,8 +175,7 @@ const en = {
     toPdf: 'Print to PDF',
     reset: '@:forms.reset',
     button: 'Tagging',
-    save: 'Save',
-    saved: 'Tag design saved.'
+    save: 'Save'
   },
   export: {
     clipboard: {

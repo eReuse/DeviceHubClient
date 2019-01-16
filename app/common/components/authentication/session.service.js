@@ -2,10 +2,9 @@
  * @param {ui.router.$state} $state
  * @param {$q }$q
  * @param {module:resources} resources
- * @param Restangular
+ * @param {module:server} server
  */
-function sessionFactory ($q, $state, resources, Restangular) {
-
+function sessionFactory ($q, $state, resources, sessionLoaded, server) {
   /**
    * @module session
    */
@@ -13,14 +12,7 @@ function sessionFactory ($q, $state, resources, Restangular) {
     constructor () {
       /** @param {?module:resources.User} */
       this.user = null
-
-      this._defer = $q.defer()
-      /**
-       * A promise that resolves once the user is loaded, returning
-       * the user.
-       * @type {Promise}
-       */
-      this.loaded = this._defer.promise
+      this.p = sessionLoaded
       this.storage = new Storage('user')
     }
 
@@ -34,12 +26,12 @@ function sessionFactory ($q, $state, resources, Restangular) {
      * @return {Promise}
      */
     login (credentials, saveInBrowser) {
-      return Restangular.all('users/login').post(credentials, saveInBrowser).then(userObj => {
-        this.user = resources.User.fromObject(userObj)
+      return server.DevicehubThing.login(credentials, resources.User).then(user => {
+        this.user = user
         this.storage.save(this.user, !saveInBrowser)
-        const promise = this._afterGettingUser()
+        this._afterGettingUser()
         $state.go('auth.inventory')
-        return promise
+        return this.p.loaded
       })
     }
 
@@ -52,7 +44,7 @@ function sessionFactory ($q, $state, resources, Restangular) {
     }
 
     _afterGettingUser () {
-      return this._defer.resolve(this.user)
+      this.p._defer.resolve(this.user)
     }
 
     logout () {
