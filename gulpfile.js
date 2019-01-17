@@ -6,19 +6,13 @@ const clean = require('gulp-clean')
 const source = require('vinyl-source-stream')
 const sass = require('gulp-sass')
 const concat = require('gulp-concat')
-const composer = require('gulp-uglify/composer')
-const uglify = require('gulp-uglify')
-const streamify = require('gulp-streamify')
 const watchify = require('watchify')
 const runSequence = require('run-sequence')
 const gulpif = require('gulp-if')
 const buffer = require('vinyl-buffer')
 const sourcemaps = require('gulp-sourcemaps')
 const templateCache = require('gulp-angular-templatecache')
-const del = require('del')
 // Note that we only use harmony for our code (bundle.js) not vendor.js, where we use normal minify
-const uglifyjs = require('uglify-es')
-const footer = require('gulp-footer')
 const inlinesource = require('gulp-inline-source')
 const gulpProtractor = require('gulp-protractor')
 const karma = require('karma')
@@ -26,6 +20,7 @@ const stringify = require('stringify')
 const sassUnicode = require('gulp-sass-unicode')
 const gulpNgConfig = require('gulp-ng-config')
 const expect = require('gulp-expect-file')
+const terser = require('gulp-terser')
 
 const filePath = {
   destination: './dist',
@@ -71,8 +66,6 @@ const filePath = {
   }
 }
 
-const minify = composer(uglifyjs, console)
-
 function handleError (err) {
   console.log(err.toString())
   this.emit('end')
@@ -105,7 +98,21 @@ function rebundle () {
       loadMaps: true
     })))
     .pipe(gulpif(!bundle.prod, sourcemaps.write('./')))
-    .pipe(gulpif(bundle.prod, streamify(minify({mangle: false}))))
+    .pipe(gulpif(bundle.prod, terser({
+      warnings: true,
+      mangle: false,
+      ecma: 6,
+      compress: {
+        unused: false,
+        unsafe_Function: true,
+        unsafe_math: true,
+        warnings: true
+      },
+      output: {
+        quote_style: 3,
+        semicolons: false
+      }
+    })))
     .pipe(gulp.dest(filePath.build.jsDest))
 }
 
@@ -197,7 +204,6 @@ gulp.task('clean', function () {
       force: true
     }))
 })
-
 
 gulp.task('templates', function () {
   return gulp.src(filePath.templates.src)

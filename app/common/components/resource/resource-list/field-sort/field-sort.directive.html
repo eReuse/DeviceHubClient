@@ -1,1 +1,5 @@
-<span ng-click="changeSorting()"><i ng-if="fa" class="fa {{fa}} fa-fw"></i>{{::name}}&nbsp;<i ng-class="SORTING"></i></span>
+<span ng-click="changeSorting()" ng-class="{clickable: sortEnabled}">
+  <i ng-if="fa" class="fa {{fa}} fa-fw"></i>
+  <span ng-transclude></span>
+  <i ng-class="SORTING" ng-show="::sortEnabled"></i>
+</span>

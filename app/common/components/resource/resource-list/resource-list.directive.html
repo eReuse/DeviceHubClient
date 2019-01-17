@@ -75,6 +75,7 @@
             <th ng-repeat="Field in ::config.table track by Field.type"
                 class="{{::Field.cssClasses}}"
                 field-sort
+                sort-enabled="Field.sortable"
                 sort="getter.setSort(key, order)"
                 key="{{::Field.sortKey}}"
                 name="{{::Field.name}}"
