@@ -32,7 +32,12 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded) {
                    Accept: 'application/json'
                  }) {
       console.assert(_.last(path) === '/', 'path must finish with a slash')
+      /** @type {string} **/
+      this.baseUrl = baseUrl
+      /** @type {string} **/
+      this.path = path
       const url = new URL(path, baseUrl)
+      /** @type {string} **/
       this.url = url.toString()
       this._config = {
         headers: headers
@@ -138,8 +143,21 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded) {
   class Devicehub extends AuthEndpoint {
     constructor (path) {
       super(Devicehub.url, path)
+      sessionLoaded.loaded.then(user => {
+        this.setInventory(user.inventories[0].id)
+      })
+    }
+
+    /**
+     * Sets the ID of the inventory to the beginning of the path
+     * for the next requests.
+     * @param {string} inventoryId
+     */
+    setInventory (inventoryId) {
+      this.url = (new URL(inventoryId + this.path, this.baseUrl)).toString()
     }
   }
+
   Devicehub.url = CONSTANTS.url
 
   /**

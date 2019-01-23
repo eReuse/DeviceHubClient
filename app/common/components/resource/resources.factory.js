@@ -1283,13 +1283,14 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    * @extends module:resources.Thing
    */
   class User extends Thing {
-    define ({id = null, email = null, individuals = [], name = null, token = null, ...rest}) {
+    define ({id = null, email = null, individuals = [], name = null, token = null, inventories = [], ...rest}) {
       super.define(rest)
       this.id = id
       this.email = email
       this.individuals = individuals
       this.name = name
       this.token = token
+      this.inventories = inventories.map(inventory => new Inventory(inventory))
     }
 
     get icon () {
@@ -1298,6 +1299,20 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
     get title () {
       return this.name || this.email
+    }
+  }
+
+  class Inventory extends Thing {
+    define ({id, name, tagProvider, tagToken, ...rest}) {
+      super.define(rest)
+      this.id = id
+      this.name = name
+      this.tagProvider = tagProvider
+      this.tagToken = tagToken
+    }
+
+    get title () {
+      return this.name
     }
   }
 
