@@ -4,7 +4,7 @@
 
 /**
  * @param {$httpProvider} $http
- * @param CONSTANTS
+ * @param {DH_CONSTANTS} CONSTANTS
  * @param {$qProvider} $q
  * @param {poller} poller
  * @param {module:android} android
@@ -150,11 +150,13 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded) {
 
     /**
      * Sets the ID of the inventory to the beginning of the path
-     * for the next requests.
+     * for the next requests —if constants allow it.
      * @param {string} inventoryId
      */
     setInventory (inventoryId) {
-      this.url = (new URL(inventoryId + this.path, this.baseUrl)).toString()
+      if (CONSTANTS.inventories) {
+        this.url = (new URL(inventoryId + this.path, this.baseUrl)).toString()
+      }
     }
   }
 

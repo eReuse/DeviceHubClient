@@ -5,8 +5,9 @@
  * @param Notification
  * @param {module:LotsSelector} LotsSelector
  * @param {module:deviceGetter} deviceGetter
+ * @param {module:selection} selection
  */
-function resourceList (resources, resourceListConfig, progressBar, Notification, LotsSelector, deviceGetter) {
+function resourceList (resources, resourceListConfig, progressBar, Notification, LotsSelector, deviceGetter, selection) {
   return {
     template: require('./resource-list.directive.html'),
     restrict: 'E',
@@ -57,13 +58,14 @@ function resourceList (resources, resourceListConfig, progressBar, Notification,
             this.visible = false
           }
         }
+
         $scope.lotXs = new VisibleXs()
         $scope.selectionXs = new VisibleXs()
 
         class DeviceListGetter extends deviceGetter.DeviceGetter {
           get (getNextPage, ...params) {
             return super.get(getNextPage, ...params).then(() => {
-              selected.deselectDevicesNotIn(this.devices)
+              selected.deselectNotIn(this.devices)
               if (!getNextPage) $topElem.scrollTop(0) // Scroll to top when loading from 0
             })
           }
@@ -76,100 +78,16 @@ function resourceList (resources, resourceListConfig, progressBar, Notification,
          *
          * This is a normal array of devices that has extra methods
          * to select, deselect, and toggle selection.
+         * @extends module:selection.Selected
          */
-        class SelectedDevices extends Array {
-          constructor (...devices) {
-            super(...devices)
-            this.lastSelectedIndex = 0
-            /**
-             * Is the user selecting multiple devices through
-             *  long-pressing?
-             *  */
-            this.selectingMultiple = false
-          }
-
-          /**
-           * Select or unselected a device or several, if
-           * *shift* or *ctrl* are pressed.
-           *
-           * @param {Device} device
-           * @param {number} i
-           * @param {module:jquery.Event} $event
-           */
-          toggle (device, i, $event) {
-            $event.stopPropagation()
-            if ($event.shiftKey) {
-              const start = Math.min(this.lastSelectedIndex, i)
-              const end = Math.max(this.lastSelectedIndex, i)
-              const devicesToSelect = _.slice(getter.devices, start, end + 1)
-              this.select(...devicesToSelect)
-            } else if ($event.ctrlKey || $event.metaKey) {
-              this._toggle(device)
-            } else if (this.selectingMultiple) {
-              this._toggle(device)
-              if (!this.length) this.selectingMultiple = false
-            } else { // Normal click
-              if (this.isSelected(device) && this.length === 1) {
-                this.deselect(device) // todo this differs from orig
-              } else {
-                this.deselectAll()
-                this.select(device)
-              }
-            }
-            this.lastSelectedIndex = i
-          }
-
-          multi (device) {
-            // todo this is not used
-            // detect touch screen
-            // https://stackoverflow.com/questions/29747004/find-if-device-is-touch-screen-then-apply-touch-event-instead-of-click-event
-            // https://hacks.mozilla.org/2013/04/detecting-touch-its-the-why-not-the-how/ links
-            // above do not work on Windows 10 due to:
-            // https://bugs.chromium.org/p/chromium/issues/detail?id=676808 TODO needs testing on
-            // different devices + OS
-            let supportsTouch = $scope.supportsTouch = (!!window.ontouchstart) || navigator.msMaxTouchPoints
-            if (supportsTouch) {
-              return
-            }
-            this.selectingMultiple = true
-            // change to multi-select (changes normal click/touch behaviour)
-            if (!this.isSelected()) this._toggle(device)
-          }
-
-          _toggle (device) {
-            if (this.isSelected(device)) this.deselect(device)
-            else this.select(device)
-          }
-
-          isSelected (device) {
-            return !!_.find(this, device, {id: device.id})
+        class SelectedDevices extends selection.Selected {
+          toggle (item, i, $event) {
+            return super.toggle(item, i, $event, getter.devices)
           }
 
           deselectAll () {
-            this.length = 0
-            this.lastSelectedIndex = 0 // todo review
+            super.deselectAll()
             $scope.selectionPanelHiddenXS = true
-          }
-
-          select (...devices) {
-            this.deselect(...devices)
-            this.push(...devices)
-          }
-
-          deselect (...devices) {
-            _.pullAllBy(this, devices, 'id')
-            // todo if length = 0 shouldn't we do like in 'deselectAll'?
-          }
-
-          /**
-           * Deselects the devices that are not in the provided
-           * array.
-           * @param {Device[]} devices
-           */
-          deselectDevicesNotIn (devices) {
-            const intersection = _.intersectionBy(this, devices, 'id')
-            this.length = 0
-            this.push(...intersection)
           }
         }
 

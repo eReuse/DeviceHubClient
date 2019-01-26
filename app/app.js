@@ -71,7 +71,7 @@ module.exports = window.angular.module('deviceHub', [
             value: []
           }
         },
-        template: require('./views/print-tags/print-tags.controller.html'),
+        template: require('./views/tags/print-tags.controller.html'),
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
         controller: 'printTagsCtrl as ptCl'
       }).state({

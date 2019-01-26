@@ -10,3 +10,4 @@ module.exports = angular.module('common.components.tag', [
 ])
   .directive('tag', require('./tag/tag.directive'))
   .directive('printTagsButton', require('./print-tags-button/print-tags-button.directive'))
+  .directive('printTags', require('./print-tags/print-tags.directive'))

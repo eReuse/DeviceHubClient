@@ -5,3 +5,19 @@ module.exports = angular.module('common.constants', [])
   .constant('UNIT_CODES', require('./UNIT_CODES'))
 
 require('dist/config.js') // DevicehubClient config from yaml
+
+/**
+ * @typedef {object} DH_CONSTANTS
+ * @property {string} appName
+ * @property {boolean} html5mode
+ * @property {string} siteLogo
+ * @property {string} eReuseLogo
+ * @property {string} defaultLabelLogo
+ * @property {string} loginBackgroundImage
+ * @property {string} androidWorkbench
+ * @property {string} workbench
+ * @property {string} url
+ * @property {string} currency
+ * @property {number} workbenchPollingDelay
+ * @property {number} inventories
+ */

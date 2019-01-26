@@ -1229,7 +1229,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     }
 
     get title () {
-      return !this.org || this.id.length <= this.org.length ? this.id : this.org
+      return this.id
     }
   }
 
@@ -1530,10 +1530,15 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    */
   Event.server = new server.DevicehubThing('/events/', resources)
   /**
-   *
+   * @memberOf {module:resources.Lot}
    * @type {module:server.DevicehubThing}
    */
   Lot.server = new server.DevicehubThing('/lots/', resources)
+  /**
+   * @alias {module:resources.Tag.server}
+   * @type {module:server.DevicehubThing}
+   */
+  Tag.server = new server.DevicehubThing('/tags/', resources)
   return resources
 }
 

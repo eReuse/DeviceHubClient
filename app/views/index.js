@@ -11,7 +11,6 @@ module.exports = angular.module('views',
     require('./login').name,
     require('./workbench').name,
     require('./tags').name,
-    require('./print-tags').name,
     require('./../common/components/elements').name,
     require('./../common/components/resource').name,
     require('./../common/components/event').name

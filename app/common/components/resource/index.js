@@ -44,3 +44,4 @@ module.exports = angular.module('common.components.resource',
   .factory('server', require('./server.factory'))
   .factory('deviceGetter', require('./device-getter.factory'))
   .factory('table', require('./table.factory'))
+  .factory('selection', require('./selection.factory'))

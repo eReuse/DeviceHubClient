@@ -1,11 +1,35 @@
-<div class="fill-height-bar container">
-  <h2 translate="tags.title"></h2>
-  <table class="table table-striped table-condensed">
-    <thead>
-      <tr ng-repeat="field"></tr>
-    </thead>
-    <tbody>
+<div class="fill-height-bar container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-lg-2">
+      <h2 translate="tags.title"></h2>
+      <div class="fill-height-bar-h2">
+        <p>{{::'tags.description' | translate}}</p>
+        <button type="button"
+                class="btn btn-primary"
+                uib-popover-template="popover.templateUrl"
+                popover-title="{{popover.title}}"
+                popover-is-open="popover.isOpen"
+                popover-append-to-body="true"
+                popover-placement="auto bottom-left"
 
-    </tbody>
-  </table>
+        >
+          {{::'tags.create.title' | translate}}
+        </button>
+        <table class="table table-striped table-condensed unselectable">
+          <tbody>
+          <tr ng-repeat="tag in tags track by tag.id"
+              ng-class="{info: selected.isSelected(tag)}"
+              ng-click="selected.toggle(tag, $index, $event, tags)"
+              on-long-press="selected.multi(tag)"
+          >
+            <td>
+              {{tag}}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <print-tags class="block col-sm-9 col-lg-10" tags="selected"></print-tags>
+  </div>
 </div>

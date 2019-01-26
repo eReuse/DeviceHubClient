@@ -159,7 +159,15 @@ const en = {
     }
   },
   tags: {
-    title: 'Tags'
+    title: 'Tags',
+    description: 'Showing the last 200 tags created.',
+    create: {
+      title: 'Create empty tags',
+      num: {
+        l: 'Quantity',
+        d: 'Number of tags to create.'
+      }
+    }
   },
   nav: {
     workbench: {
