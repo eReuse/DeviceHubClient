@@ -65,6 +65,8 @@ function fieldsFactory ($translate, Notification, $q) {
      * properties:
      * @param {function} addonRight.onClick
      * @param {string} addonRight.class
+     * @param {callback} onChange - Callback to execute when values
+     * change.
      */
     constructor (key, {
       namespace = 'forms.fields',
@@ -76,14 +78,16 @@ function fieldsFactory ($translate, Notification, $q) {
       expressions = {},
       hide = null,
       watcher,
-      addonRight
+      addonRight,
+      onChange
     }) {
       console.assert(key, 'Key must be passed.')
       this.key = key
       this.type = this.constructor.name.toLowerCase()
       this.templateOptions = {
         disabled: disabled,
-        required: required
+        required: required,
+        onChange: onChange
       }
       this.textPath = `${namespace}.${keyText}`
       this.expressionProperties = _.assign({

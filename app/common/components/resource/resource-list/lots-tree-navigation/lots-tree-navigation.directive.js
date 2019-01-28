@@ -74,6 +74,11 @@ function lotsTreeNavigation (progressBar, $rootScope, LotsSelector, resources) {
           }
         }
 
+        /**
+         * Sets the lot as the active one.
+         * @param lotNode
+         * @param $event
+         */
         $scope.toggleLot = (lotNode, $event) => {
           if ($event.ctrlKey || $event.metaKey) {
             $scope.selector.toggleMultipleSelection(lotNode.lot)
@@ -91,18 +96,21 @@ function lotsTreeNavigation (progressBar, $rootScope, LotsSelector, resources) {
          * @param {?string} parentLotId
          */
         function newLot (parentLotId) {
-          const lot = new resources.Lot({name: 'New lot', parents: parentLotId ? [parentLotId] : undefined})
+          const lot = new resources.Lot({
+            name: 'New lot',
+            parents: parentLotId ? [parentLotId] : undefined
+          })
           lot.post().then(() => {
             if (parentLotId) reload()
             else $scope.lots.addToTree(lot.id)
           })
         }
 
-        $scope.newChildLot = (parentLotId) => {
+        $scope.newChildLot = parentLotId => {
           newLot(parentLotId)
         }
 
-        $scope.newLot = ($event) => {
+        $scope.newLot = $event => {
           $event && $event.preventDefault()
           $event && $event.stopPropagation()
           newLot()

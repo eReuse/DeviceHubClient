@@ -16,6 +16,7 @@ function androidFactory ($rootScope) {
       this.exists = !!window.AndroidApp
       this._scanBarcodeCallback = null
       this._nfcCallback = null
+      // This is only called if the user did read something –not nulls
       $rootScope.$on(this.constructor.BARCODE_EVENT, (_, x) => this._scanBarcodeCallback(x))
       $rootScope.$on(this.constructor.NFC_EVENT, (_, x) => this._nfcCallback(x))
     }
@@ -55,6 +56,26 @@ function androidFactory ($rootScope) {
 
     _throwIfNoApp () {
       if (!this.exists) throw new NoAndroidApp()
+    }
+
+    /**
+     * Utility method to extract the ID of a full url tag.
+     *
+     * @param {string} fullTag - The value from the QR / NFC. It
+     * should be the full URL of a tag.
+     *
+     * @return {string} The ID of the tag or the full passed-in
+     * value in case of unknown format.
+     */
+    static parseTag (fullTag) {
+      let id
+      try {
+        const url = new URL(fullTag)
+        id = _.last(url.pathname.split('/')) // Get last part of the path
+      } catch (e) {
+        id = fullTag
+      }
+      return id
     }
   }
 

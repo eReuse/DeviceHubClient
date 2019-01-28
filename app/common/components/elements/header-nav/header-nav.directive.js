@@ -1,10 +1,15 @@
-function headerNav (CONSTANTS, $state) {
+/**
+ *
+ * @param $state
+ * @param {module:server} server
+ */
+function headerNav ($state, server) {
   return {
     template: require('./header-nav.directive.html'),
     restrict: 'E',
     link: $scope => {
-      $scope.CONSTANTS = CONSTANTS
       $scope.$state = $state
+      $scope.Workbench = server.Workbench
 
       class Element {
         constructor (key, icon, sref) {

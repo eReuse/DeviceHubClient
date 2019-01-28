@@ -22,3 +22,4 @@ module.exports = angular.module('common.components.utilities',
   .filter('humanize', require('./humanize'))
   .factory('enums', require('./enums'))
   .factory('android', require('./android.factory'))
+  .factory('box', require('./box.factory'))

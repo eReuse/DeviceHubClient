@@ -2,8 +2,9 @@
  * @param {module:fields} fields
  * @param {$q} $q
  * @param $ocLazyLoad
+ * @param {module:box} box
  */
-function printTags (fields, $q, $ocLazyLoad) {
+function printTags (fields, $q, $ocLazyLoad, box, Notification) {
   /**
    * @ngdoc directive
    * @name printTags
@@ -31,7 +32,11 @@ function printTags (fields, $q, $ocLazyLoad) {
           this.define(savedSpec || undefined)
         }
 
-        define ({size = Spec.SIZES.smallTagPrinter, sizePreset = 'smallTagPrinter', fields = ['id']} = {}) {
+        define ({
+                  size = Spec.SIZES.smallTagPrinter,
+                  sizePreset = 'brotherSmall',
+                  fields = ['id']
+                } = {}) {
           this.size = size
           this.sizePreset = sizePreset
           this.fields = fields
@@ -55,6 +60,7 @@ function printTags (fields, $q, $ocLazyLoad) {
         }
       }
       Spec.SIZES = {
+        brotherSmall: new Spec.Size(62, 29),
         smallTagPrinter: new Spec.Size(97, 59),
         anotherOne: new Spec.Size(100, 100)
       }
@@ -86,35 +92,49 @@ function printTags (fields, $q, $ocLazyLoad) {
         new fields.Number('size.height', _.defaults({min: 28, max: 200}, namespace))
       )
 
+      /**
+       * Generates PDF files of tags that user can download, or directly
+       * interface with the Workbench Box to print them in supported
+       * printers.
+       */
       class TagsToPdf {
         constructor () {
+          // Load a JS bundle with specific libraries for generating PDF
           this.ready = $ocLazyLoad.load('common/assets/pdf.min.js')
+          /**
+           * Is the pdf service actually generating the pdf or printing?
+           * @type {boolean}
+           */
+          this.printing = false
         }
 
-        print () {
+        print (saveAsPdf = false) {
           const $tags = $('.tag')
           const deferred = $q.defer()
           this.ready.then(() => {
             try {
+              this.printing = true
               const size = $scope.form.model.size
               const pdf = new window.jsPDF('l', 'mm', [size.width, size.height])
-              this._printTag(deferred, pdf, $tags, 0)
+              this._printTag(deferred, pdf, $tags, 0, saveAsPdf)
             } catch (e) {
               deferred.reject(e)
               throw e
             }
           })
-          return deferred.promise
+          return deferred.promise.finally(() => {
+            this.printing = false
+          })
         }
 
-        _printTag (deferred, pdf, $tags, i) {
+        _printTag (deferred, pdf, $tags, i, saveAsPdf) {
           if (i < $tags.length) {
             if (i !== 0) pdf.addPage()
             pdf.addHTML($tags.get(i), () => {
               const $tag = $($tags.get(i))
               // We keep removing labels so others can be onscreen and thus, printed
               $tag.css('display', 'none')
-              this._printTag(deferred, pdf, $tags, i + 1)
+              this._printTag(deferred, pdf, $tags, i + 1, saveAsPdf)
               // When we reach the bottom we put all the labels visible again
               if (i === $tags.length - 1) {
                 for (let j = 0; j < $tags.length; j++) {
@@ -123,9 +143,27 @@ function printTags (fields, $q, $ocLazyLoad) {
               }
             })
           } else {
-            pdf.save('Tags.pdf')
-            deferred.resolve()
+            if (saveAsPdf) {
+              pdf.save('Tags.pdf')
+              deferred.resolve()
+            } else {
+              this.sendToWorkbenchServer(pdf.output('datauristring'), deferred)
+            }
           }
+        }
+
+        sendToWorkbenchServer (dataUri, deferred) {
+          const [_, file] = dataUri.split(',')
+          const size = $scope.form.model.size
+          box.box.print(file, size.width, size.height, (success, message) => {
+            if (success) {
+              Notification.success('Printed.')
+              deferred.resolve()
+            } else {
+              Notification.error(message)
+              deferred.reject(message)
+            }
+          })
         }
       }
 

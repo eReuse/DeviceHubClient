@@ -40,13 +40,7 @@ function workbenchLinkCtl (fields, $scope, android, enums, server, $stateParams)
      */
     setTagFactory (tagNum) {
       return tag => {
-        let id
-        try {
-          const url = new URL(tag)
-          id = url.pathname.substring(1) // Remove initial slash
-        } catch (e) {
-          id = tag
-        }
+        const id = android.app.constructor.parseTag(tag)
         $scope.form.model.device.tags[tagNum] = {id: id}
       }
     }

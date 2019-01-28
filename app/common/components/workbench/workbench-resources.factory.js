@@ -1,13 +1,22 @@
 /**
+ * @module workbenchResources
+ */
+
+/**
  *
  * @param {module:resources} resources
  * @param {module:server} server
  */
 function workbenchResourcesFactory (resources, enums, server) {
+  /**
+   * @memberof module:workbenchResources
+   * @extends module:resources.Snapshot
+   */
   class WCSnapshot extends resources.Snapshot {
-    define ({_actualPhase, ...rest}) {
+    define ({_actualPhase, _linked, ...rest}) {
       super.define(rest)
       this.phase = enums.WorkbenchComputerPhase.get(_actualPhase)
+      this.linked = _linked
     }
 
     get title () {
@@ -19,6 +28,10 @@ function workbenchResourcesFactory (resources, enums, server) {
     }
   }
 
+  /**
+   * @memberof module:workbenchResources
+   * @extends module:resources.Device
+   */
   class USBFlashDrive extends resources.Device {
     define ({uuid, ...rest}) {
       super.define(rest)
@@ -35,6 +48,9 @@ function workbenchResourcesFactory (resources, enums, server) {
     }
   }
 
+  /**
+   * @memberof module:workbenchResources
+   */
   class WorkbenchResponse extends Array {
     constructor (things = [],
                  {
@@ -54,17 +70,21 @@ function workbenchResourcesFactory (resources, enums, server) {
 
   WorkbenchResponse.SnapshotType = null // inheritors must define this
 
+  /**
+   * @memberof module:workbenchResources
+   * @extends module:workbenchResources.WorkbenchResponse
+   */
   class WorkbenchComputerInfo extends WorkbenchResponse {
     constructor (things = [], {usbs = [], ...rest} = {}) {
       super(things, rest)
       /**
-       * @type {{Error: number, Done: number, Uploading: number, Link: number, Benchmark:
+       * @type {{Error: number, Uploaded: number, Uploading: number, Link: number, Benchmark:
        *   number, TestDataStorage: number, StressTest: number, EraseBasic: number,
        *   EraseSectors: number, SmartTest: number, Install}}
        */
       this.phases = _.assign({
         Error: 0,
-        Done: 0,
+        Uploaded: 0,
         Uploading: 0,
         Link: 0,
         Benchmark: 0,
@@ -75,7 +95,7 @@ function workbenchResourcesFactory (resources, enums, server) {
         SmartTest: 0,
         Install: 0
       }, _.countBy(this, 'phase'))
-      this.working = this.length - this.phases.Error - this.phases.Done
+      this.working = this.length - this.phases.Error - this.phases.Uploaded
       this.usbs = usbs.map(usb => USBFlashDrive.fromObject(usb, things))
     }
   }

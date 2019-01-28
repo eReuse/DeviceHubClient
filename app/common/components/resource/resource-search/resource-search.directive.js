@@ -1,4 +1,8 @@
-function resourceSearch () {
+/**
+ *
+ * @param {module:android} android
+ */
+function resourceSearch (android, $translate) {
   return {
     template: require('./resource-search.directive.html'),
     restrict: 'E',
@@ -6,41 +10,34 @@ function resourceSearch () {
       onUpdate: '&'
     },
     link: $scope => {
+      $scope.placeholder = $translate.instant(
+        android.app.exists
+          ? 'resourceSearch.placeholder.android'
+          : 'resourceSearch.placeholder.default'
+      )
+
       class Scanner {
         constructor () {
-          this.isAndroid = 'AndroidApp' in window
-          if (this.isAndroid) {
-            // Receive tag from App in here
-            $scope.$on(this.constructor.EVENT_NAME, (_, tag) => this.constructor._processScan(tag))
-
-            // Start NFC
-            window.AndroidApp.startNFC(this.constructor.EVENT_NAME)
-            $scope.$on('$destroy', () => {
-              window.AndroidApp.stopNFC()
-            })
-          }
+          this.isAndroid = android.app.exists
+          android.app.startNFC(tag => this.constructor._processScan(tag))
+          $scope.$on('$destroy', () => {
+            android.app.stopNFC()
+          })
         }
 
         static _processScan (tag) {
-          let id
-          try {
-            const url = new URL(tag)
-            id = url.pathname.substring(1) // Remove initial slash
-          } catch (e) {
-            id = tag
-          }
-          $scope.searchQuery += id + ' '
+          const id = android.app.constructor.parseTag(tag)
+          $scope.searchQuery = ($scope.searchQuery || '') + ' ' + id
           $scope.onUpdate({text: $scope.searchQuery})
           $scope.$apply()
         }
 
         scanQR () {
-          window.AndroidApp.scanBarcode(this.constructor.EVENT_NAME)
+          android.app.scanBarcode(tag => this.constructor._processScan(tag))
         }
       }
 
-      Scanner.EVENT_NAME = 'tagScanDoneSearch'
-      $scope.scanner = new Scanner()
+      if (android.app.exists) $scope.scanner = new Scanner()
     }
   }
 }

@@ -1,9 +1,12 @@
+$gray-base: #000 !default
+$gray-dark: lighten($gray-base, 20%)
+$text-color: $gray-dark !default
+
 $body-bg: #FDFDFD !default
 $dropdown-bg: $body-bg !default
 $popover-bg: $body-bg !default
 $modal-content-bg: $body-bg !default
 $panel-bg: lighten($body-bg, 50%)
-$navbar-default-bg: $body-bg
 $main-nav-bg: #EFEFEF !default
 $icon-font-path: './fonts/'
 $navbar-height: 42px !default
@@ -38,6 +41,14 @@ $border-radius-small: 3px !default
 
 $kbd-color: $brand-primary !default
 $kbd-bg: lightgrey !default
+
+// Navbar
+$navbar-default-bg: $main-nav-bg !default
+$navbar-default-color: $text-color !default
+$navbar-default-border: $body-bg !default
+$navbar-default-link-color: $text-color
+$navbar-default-link-hover-color: $text-color
+
 
 @import ./../../../node_modules/bootswatch/cosmo/variables
 @import ./../../../node_modules/@fortawesome/fontawesome-free/scss/variables

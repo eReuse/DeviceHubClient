@@ -2,17 +2,21 @@
   <article class="col-sm-4 col-lg-2">
     <dh-form form="form" submit="printTags.save" reset="printTags.reset"></dh-form>
     <hr>
-    <div class="btn-group btn-group-justified">
-      <div class="btn-group">
-        <button type="button"
-                class="btn btn-success"
-                ng-click="pdf.print()"
-                dh-submit-button="loading">
-          <i class="fa fa-file-pdf fa-fw"></i>
-          <span translate="printTags.toPdf"></span>
-        </button>
-      </div>
-    </div>
+    <button type="button"
+            class="btn btn-success btn-block"
+            ng-click="pdf.print(true)"
+            dh-submit-button="pdf.printing">
+      <i class="fa fa-file-pdf fa-fw"></i>
+      {{:: 'printTags.toPdf' | translate}}
+    </button>
+    <button type="button"
+            class="btn btn-success btn-block"
+            ng-click="pdf.print(false)"
+            dh-submit-button="pdf.printing"
+    >
+      <i class="fa fa-print fa-fw"></i>
+      {{:: 'printTags.printBox' | translate }}
+    </button>
   </article>
   <article class="col-sm-8 col-lg-10 tags fill-height-bar">
     <tag ng-repeat="tag in tags track by tag.id" tag="tag" spec="form.model"></tag>

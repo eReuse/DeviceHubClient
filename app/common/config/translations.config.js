@@ -127,16 +127,16 @@ const en = {
     },
     workbenchComputerPhase: {
       error: 'Error',
-      done: 'Done',
+      uploaded: 'Done',
       uploading: 'Uploading',
-      link: 'Link',
+      link: 'Waiting for link',
       benchmark: 'Benchmark',
-      testDataStorage: 'TestDataStorage',
-      stressTest: 'StressTest',
-      eraseBasic: 'EraseBasic',
-      eraseSectors: 'EraseSectors',
-      smartTest: 'SmartTest',
-      install: 'Install'
+      testDataStorage: 'Testing data storage',
+      stressTest: 'Stress testing',
+      eraseBasic: 'Erasing (basic)',
+      eraseSectors: 'Erasing (sectors)',
+      smartTest: 'Smart testing',
+      install: 'Installing'
     },
     workbenchMobilePhase: {
       recovery: 'Recovery',
@@ -183,7 +183,8 @@ const en = {
     toPdf: 'Print to PDF',
     reset: '@:forms.reset',
     button: 'Tagging',
-    save: 'Save'
+    save: 'Save',
+    printBox: 'Print to a supported printer'
   },
   export: {
     clipboard: {
@@ -213,7 +214,8 @@ const en = {
         unstable: 'Unstable connection to {{app}}.',
         lost: 'Connection to {{app}} lost.',
         check: 'Check Wi-Fi and Internet.'
-      }
+      },
+      wifi: 'Box\'s WiFi name: "{{name}}" Password: "{{pass}}"'
     },
     link: {
       title: 'Workbench Link',
@@ -287,6 +289,13 @@ const en = {
         l: 'Install an Operative System',
         d: 'OS .fsa files that are in "workbench/images" automatically appear here.'
       }
+    }
+  },
+  resourceSearch: {
+    scan: 'Scan',
+    placeholder: {
+      default: 'Write a model, serial number...',
+      android: 'Scan a NFC tag, write a S/N...'
     }
   }
 }

@@ -2,7 +2,7 @@
  * @module table
  */
 
-function table () {
+function table ($translate) {
   /**
    * @memberOf module:table
    */
@@ -56,13 +56,27 @@ function table () {
     }
   }
 
+  /**
+   * @memberof module:table
+   */
+  class Bool extends Field {
+    constructor (resource, content) {
+      super(resource, content)
+      this.content = $translate.instant(
+        this.content
+          ? 'forms.fields.optionYes'
+          : 'forms.fields.optionNo')
+    }
+  }
+
   Icon.sortable = false
 
   return {
     Field: Field,
     Tags: Tags,
     Title: Title,
-    Icon: Icon
+    Icon: Icon,
+    Bool: Bool
   }
 }
 

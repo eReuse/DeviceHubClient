@@ -45,7 +45,19 @@ function workbenchSettings ($scope, fields, enums, resources, Notification, $tra
             new fields.Option(null, {keyText: 'eraseNull', namespace: namespace}),
             new fields.Option('custom', {keyText: 'eraseCustom', namespace: namespace})
           ].concat(enums.ErasureStandard.options(fields)),
-          namespace: namespace
+          namespace: namespace,
+          onChange: function setErasureOptions () {
+            const model = $scope.form.model
+            if (!model._erase) {
+              model.erase = null
+            } else if (model._erase !== 'custom') {
+              /** @type {module:enums.ErasureStandard} */
+              const standard = enums.ErasureStandard[model._erase]
+              model.erase = standard.mode
+              model.erase_steps = standard.steps
+              model.erase_leading_zeros = standard.leadingZeros
+            }
+          }
         }),
         new fields.Radio('erase', {
           options: [

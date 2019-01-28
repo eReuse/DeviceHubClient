@@ -1,7 +1,7 @@
 <div class="input-group">
   <input type="text"
          class="form-control"
-         placeholder="Enter a device id, serial-number, ..."
+         placeholder="{{::placeholder}}"
          ng-model="searchQuery"
          ng-change="onUpdate({text: searchQuery})"
          ng-model-options="{debounce: 500}"
@@ -10,6 +10,7 @@
     <i class="fa fa-search"></i>
   </div>
   <div class="input-group-addon" ng-if="::scanner.isAndroid" ng-click="scanner.scanQR()">
-    Scan <i class="fa fa-fw fa-qrcode"></i>
+    {{::'resourceSearch' | translate}}
+    <i class="fa fa-fw fa-camera"></i>
   </div>
 </div>

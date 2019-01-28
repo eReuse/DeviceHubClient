@@ -231,7 +231,7 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
       this.prefix = options.prefix
       /** @type{Thing[]} */
       this.things = values
-      /** @type {integer} */
+      /** @type {number} */
       this.count = values.length
       /** @type {*} */
       this.value = key
@@ -257,15 +257,19 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
       this.typeAggr = this.aggregatesOne('typeHuman')
       this.manufacturerAggr = this.aggregatesOne('manufacturer')
       this.modelAggr = this.aggregatesOne('model')
+      const args = ['[0].value', '']
+      const type = _.get(this.typeAggr, ...args)
+      const man = _.get(this.manufacturerAggr, ...args)
+      const mod = _.get(this.modelAggr, ...args)
 
       if (this.typeAggr.length > 1) {
         this.content = 'Various types'
       } else if (this.manufacturerAggr.length > 1) {
-        this.content = `${this.typeAggr[0].value} Various manufacturers`
+        this.content = `${type} Various manufacturers`
       } else if (this.modelAggr.length > 1) {
-        this.content = `${this.typeAggr[0].value} ${this.manufacturerAggr[0].value} Various models`
-      } else {
-        this.content = `${this.typeAggr[0].value} ${this.manufacturerAggr[0].value} ${this.modelAggr[0].value}`
+        this.content = `${type} ${man} Various models`
+      } else if (this.modelAggr) {
+        this.content = `${type} ${man} ${mod}`
       }
     }
 

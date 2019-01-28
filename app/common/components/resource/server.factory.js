@@ -9,8 +9,9 @@
  * @param {poller} poller
  * @param {module:android} android
  * @param {module:session} sessionLoaded
+ * @param {module:box} box
  */
-function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded) {
+function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, box) {
   /**
    * Base class for connecting to Devicehub-like API endpoints.
    *
@@ -229,6 +230,27 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded) {
     static base () {
       const host = android.app.exists ? CONSTANTS.androidWorkbench : CONSTANTS.workbench
       return `http://${host}:8091`
+    }
+
+    /**
+     * Is there connection to a Workbench Server?
+     */
+    static get exists () {
+      if (this._exists === undefined) {
+        // If we are in the Box then we have access to a WS
+        this._exists = box.exists
+        if (!this._exists) {
+          // No box. Still we can have access to a WS. Let's try a req
+          this._exists = null // we will return before getting the info
+          const test = new this('/info/')
+          test.get().then(() => {
+            this._exists = true
+          }).catch(() => {
+            this._exists = false
+          })
+        }
+      }
+      return this._exists
     }
   }
 

@@ -29,48 +29,60 @@
           <span translate="workbench.computer.upload.error"></span>
         </li>
         <li>
-          <i class="fa fa-fw fa-wifi"></i>
+          <i class="fa fa-fw fa-cloud"></i>
           {{info.ip}}
+        </li>
+        <li>
+          <i class="fa fa-mobile"></i>
+          <i class="fa fa-wifi"></i>
+          {{::'workbench.computer.wifi' | translate:'{name: "eReuse", pass: "eReuse.org"}'}}
         </li>
       </ul>
       <div ng-show="info.attempts === 1" class="text-warning text-center">
         <i class="fa fa-warning"></i>
-        <span translate="workbench.computer.upload.unstable" translate-value-app="{{::appName}}">
+        <span translate="workbench.computer.upload.unstable"
+              translate-value-app="{{::$root.CONSTANTS.appName}}">
         </span>
         <span translate="workbench.computer.upload.check"></span>
       </div>
     </div>
     <div ng-show="info.attempts >= 2" class="alert alert-danger text-center">
       <i class="fa fa-warning fa-lg"></i>
-      <span translate="workbench.computer.upload.lost" translate-value-app="{{::appName}}"></span>
+      <span translate="workbench.computer.upload.lost"
+            translate-value-app="{{::$root.CONSTANTS.appName}}"></span>
       <span translate="workbench.computer.upload.check"></span>
     </div>
-  </div>
-  <div class="col-xs-12 fill-height-bar-h2">
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th ng-repeat="Field in ::table.fields track by Field.type"
-            class="{{::Field.cssClasses}}"
+    <div class="col-xs-12 fill-height-bar-h2">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th ng-repeat="Field in ::table.fields track by Field.type"
+              class="{{::Field.cssClasses}}"
+          >
+            {{::Field.name}}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="snapshot in info track by snapshot.uuid"
+            ng-class="{
+            info: snapshot.phase === WorkbenchComputerPhase.Link,
+            success: snapshot.phase === WorkbenchComputerPhase.Uploaded,
+            warning: snapshot.phase === WorkbenchComputerPhase.Error
+          }"
         >
-          {{::Field.name}}
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr ng-repeat="snapshot in info track by snapshot.uuid">
-        <td ng-repeat="Field in ::table.fields"
-            ng-init="field = Field.init(snapshot)"
-            class="{{::Field.cssClasses}}"
-        >
-          <span ng-bind-html="field.content"></span>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-    <div class="text-center">
-      <i class="fa fa-ellipsis-h"></i>
+          <td ng-repeat="Field in ::table.fields"
+              ng-init="field = Field.init(snapshot)"
+              class="{{::Field.cssClasses}}"
+          >
+            <span ng-bind-html="field.content"></span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="text-center">
+        <i class="fa fa-ellipsis-h"></i>
+      </div>
     </div>
   </div>
-</div>
 </div>

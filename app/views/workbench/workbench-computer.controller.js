@@ -5,11 +5,12 @@
  * @param {module:resources} resources
  * @param {module:table} table
  * @param {module:enums} enums
-
+ * @param server
+ * @param session
  */
-function workbenchComputerCtl ($scope, workbenchResources, resources, table, enums, CONSTANTS, server, session) {
+function workbenchComputerCtl ($scope, workbenchResources, resources, table, enums, server, session) {
   $scope.session = session
-  $scope.appName = CONSTANTS.appName
+  $scope.WorkbenchComputerPhase = enums.WorkbenchComputerPhase
 
   workbenchResources.WorkbenchComputerInfo.server.start().then(null, null, info => {
     $scope.info = info
@@ -24,10 +25,13 @@ function workbenchComputerCtl ($scope, workbenchResources, resources, table, enu
 
   }
 
+  class Linked extends table.Bool {
+  }
+
   Title.hide = true
 
   $scope.table = {
-    fields: [table.Icon, table.Title, Phase]
+    fields: [table.Icon, table.Title, Phase, Linked]
   }
 
   $scope.$on('$destroy', () => {

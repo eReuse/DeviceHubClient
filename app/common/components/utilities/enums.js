@@ -134,7 +134,7 @@ function enumsFactory ($translate) {
   }
 
   WorkbenchComputerPhase.Error = new WorkbenchComputerPhase('Error')
-  WorkbenchComputerPhase.Done = new WorkbenchComputerPhase('Done')
+  WorkbenchComputerPhase.Uploaded = new WorkbenchComputerPhase('Uploaded')
   WorkbenchComputerPhase.Uploading = new WorkbenchComputerPhase('Uploading')
   WorkbenchComputerPhase.Link = new WorkbenchComputerPhase('Link')
   WorkbenchComputerPhase.Benchmark = new WorkbenchComputerPhase('Benchmark')
@@ -160,23 +160,35 @@ function enumsFactory ($translate) {
   WorkbenchMobilePhase.WaitSideloadAgain = new WorkbenchMobilePhase('WaitSideloadAgain')
   WorkbenchMobilePhase.InstallingGapps = new WorkbenchMobilePhase('InstallingGapps')
   WorkbenchMobilePhase.BootingIntoOS = new WorkbenchMobilePhase('BootingIntoOS')
-  WorkbenchMobilePhase.Done = new WorkbenchMobilePhase('Done')
+  WorkbenchMobilePhase.Uploaded = new WorkbenchMobilePhase('Uploaded')
 
   /**
+   * An erasure standard.
    * @memberOf module:enums
    * @extends module:enums.Enum
    */
   class ErasureStandard extends Enum {
-    get link () {
-      return this.name.link(this.constructor._links[this.value])
+    /**
+     *
+     * @param value
+     * @param {string} mode
+     * @param {number} steps
+     * @param {boolean} leadingZeros
+     * @param {string} link
+     */
+    constructor (value, mode, steps, leadingZeros, link) {
+      super(value)
+      this.mode = mode
+      console.assert(mode === 'EraseSectors' || mode === 'EraseBasic')
+      this.steps = steps
+      this.leadingZeros = leadingZeros
+      /** An anchor tag to the description of the standard. */
+      this.link = this.name.link(link)
     }
   }
 
   /** @memberOf module:enums.ErasureStandard */
-  ErasureStandard.HMG_IS5 = new ErasureStandard('HMG_IS5')
-  ErasureStandard._links = {
-    HMG_IS5: 'https://wikipedia.org/wiki/Infosec_Standard_5'
-  }
+  ErasureStandard.HMG_IS5 = new ErasureStandard('HMG_IS5', 'EraseSectors', 1, true, 'https://wikipedia.org/wiki/Infosec_Standard_5')
 
   class NotAValidEnum extends Error {
 
