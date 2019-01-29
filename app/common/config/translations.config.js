@@ -184,7 +184,8 @@ const en = {
     reset: '@:forms.reset',
     button: 'Tagging',
     save: 'Save',
-    printBox: 'Print to a supported printer'
+    printBox: 'Print to a supported printer',
+    noTagsToPrint: 'These devices don\'t have tags that we can print.'
   },
   export: {
     clipboard: {

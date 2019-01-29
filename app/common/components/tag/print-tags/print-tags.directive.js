@@ -23,6 +23,8 @@ function printTags (fields, $q, $ocLazyLoad, box, Notification) {
       tags: '='
     },
     link: $scope => {
+      console.assert(_.every($scope.tags, 'printable'), 'Only printable tags.')
+
       /**
        * @module TagSpec
        */
@@ -106,9 +108,11 @@ function printTags (fields, $q, $ocLazyLoad, box, Notification) {
            * @type {boolean}
            */
           this.printing = false
+          this.canPrintBox = box.box.exists
         }
 
         print (saveAsPdf = false) {
+          if (!$scope.tags.length) return
           const $tags = $('.tag')
           const deferred = $q.defer()
           this.ready.then(() => {
@@ -147,12 +151,12 @@ function printTags (fields, $q, $ocLazyLoad, box, Notification) {
               pdf.save('Tags.pdf')
               deferred.resolve()
             } else {
-              this.sendToWorkbenchServer(pdf.output('datauristring'), deferred)
+              this.sendToBox(pdf.output('datauristring'), deferred)
             }
           }
         }
 
-        sendToWorkbenchServer (dataUri, deferred) {
+        sendToBox (dataUri, deferred) {
           const [_, file] = dataUri.split(',')
           const size = $scope.form.model.size
           box.box.print(file, size.width, size.height, (success, message) => {

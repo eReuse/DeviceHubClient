@@ -12,8 +12,11 @@ function exportButton (Notification, clipboard, $translate, CONSTANTS, session, 
      * @param {module:resources.Device[]} $scope.devices
      */
     link: $scope => {
+      $scope.loading = false
       const docsEndpoint = new server.Devicehub('documents/')
+
       function saveFile (path, format, mimeType, textPath) {
+        $scope.loading = true
         return docsEndpoint.get(path, {
           params: {
             filter: {id: _.map($scope.devices, 'id')},
@@ -29,6 +32,8 @@ function exportButton (Notification, clipboard, $translate, CONSTANTS, session, 
           return file
         }).catch(() => {
           Notification.error($translate.instant('export.error'))
+        }).finally(() => {
+          $scope.loading = false
         })
       }
 

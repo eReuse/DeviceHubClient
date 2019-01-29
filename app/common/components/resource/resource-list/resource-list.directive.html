@@ -6,30 +6,20 @@
     <button class="btn btn-sm btn-dark visible-xs pull-right" ng-click="lotXs.toggle()">
       <i class="fa fa-times fa-fw fa-2x"></i>
     </button>
-    <lots-tree-navigation on-selection-changed="onLotsSelectionChanged(selected)">
+    <lots-tree-navigation on-selection="lotsM.updateSelection(lots)">
     </lots-tree-navigation>
   </nav>
   <div id="main-row"
        class="col-xs-12 col-sm-6 col-md-6 col-lg-6"
        ng-show="!lotXs.visible && !selectionXs.visible">
     <div id="lot-row" ng-if="lotsM.lots.length">
-      <div class="btn-group pull-right">
+      <div class="pull-right">
         <button type="button"
-                class="btn btn-link hidden-xs"
-                ng-click="lotsM.selector.deselectAll()"
+                class="btn btn-link hidden-xs btn-xs"
+                ng-click="lotsM.deselectAll()"
         >
           Deselect all ({{lotsM.lots.length}})
         </button>
-        <button class="btn btn-primary" ng-click="lotsM.deleteSelection()">
-          <i class="fa fa-times fa-fw"></i>
-          Delete lots
-        </button>
-        <group-resource-button
-            success="lotsM.reload()"
-            resource-type="Lot"
-            get-resources="lotsM.selector.getAllSelected()"
-            register-to-resources-update="lotsM.selector.callbackOnSelection(callback)">
-        </group-resource-button>
       </div>
       <h2 class="hidden-xs">{{lotsM.title}}</h2>
       <div ng-show="lotsM.lots.length === 1" class="lot-description">
@@ -136,7 +126,7 @@
           get-resources="selector.getAllSelectedDevices()"
           register-to-resources-update="selector.callbackOnSelection(callback)">
       </group-resource-button>
-      <manual-events-button devices="selected"></manual-events-button>
+      <!--<manual-events-button devices="selected"></manual-events-button>-->
       <export-button devices="selected"></export-button>
       <print-tags-button devices="selected"></print-tags-button>
     </div>

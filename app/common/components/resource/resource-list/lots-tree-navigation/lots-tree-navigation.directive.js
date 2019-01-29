@@ -2,23 +2,30 @@
  *
  * @param progressBar
  * @param $rootScope
- * @param {module:LotsSelector} LotsSelector
+ * @param {module:selection} selection
  * @param {module:resources} resources
- * @return {{template, scope: {resourceType: string}, link: {pre: link.pre}, restrict: string}}
  */
-function lotsTreeNavigation (progressBar, $rootScope, LotsSelector, resources) {
+function lotsTreeNavigation (progressBar, $rootScope, selection, resources) {
   const PATH = require('./__init__').PATH
   // const PATH = 'common/components/resource/resource-list/lots-tree-navigation'
+
+  /**
+   * @ngdoc directive
+   * @name lotsTreeNavigation
+   * @restrict E
+   * @element lots-tree-navigation
+   * @param {expression} onSelection
+   */
+
   return {
     template: require('./lots-tree-navigation.directive.html'),
     restrict: 'E',
     scope: {
-      resourceType: '@'
+      onSelection: '&'
     },
     link: {
-      pre: ($scope) => {
+      pre: $scope => {
         $scope.treeTemplateURL = PATH + '/lots-tree.html'
-        $scope.selector = LotsSelector
 
         /**
          * Finds nodes containing text and makes them visible
@@ -74,22 +81,18 @@ function lotsTreeNavigation (progressBar, $rootScope, LotsSelector, resources) {
           }
         }
 
-        /**
-         * Sets the lot as the active one.
-         * @param lotNode
-         * @param $event
-         */
-        $scope.toggleLot = (lotNode, $event) => {
-          if ($event.ctrlKey || $event.metaKey) {
-            $scope.selector.toggleMultipleSelection(lotNode.lot)
-          } else { // normal click
-            $scope.selector.toggle(lotNode.lot)
+        class LotsSelector extends selection.Selected {
+          toggle (lot, $event) {
+            $event.shiftKey = false // We avoid the shift key
+            super.toggle(lot, undefined, $event, $scope.lots)
+          }
+
+          _after () {
+            $scope.onSelection({lots: this})
           }
         }
 
-        $scope.toggleExpand = function (scope) {
-          scope.toggle()
-        }
+        $scope.selected = new LotsSelector()
 
         /**
          * Creates a new lot.

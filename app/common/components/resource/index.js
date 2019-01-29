@@ -31,7 +31,6 @@ module.exports = angular.module('common.components.resource',
     require('./../export').name
   ])
   .directive('lotsTreeNavigation', require('./resource-list/lots-tree-navigation/lots-tree-navigation.directive'))
-  .service('LotsSelector', require('./resource-list/lots-tree-navigation/lots-selector.service'))
   .directive('resourceList', require('./resource-list/resource-list.directive'))
   // filters
   .directive('resourceListFilters', require('./resource-list/resource-list-filters/resource-list-filters.directive'))

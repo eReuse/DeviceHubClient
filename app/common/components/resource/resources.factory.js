@@ -1218,14 +1218,29 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    * @extends module:resources.Thing
    */
   class Tag extends Thing {
-    define ({id = null, org = null, secondary = null, device = null, printable = null, url = null, ...rest}) {
+    define ({id = null, org = null, secondary = null, device = null, printable = null, url, provider = null, ...rest}) {
       super.define(rest)
       this.id = id
       this.org = org
       this.secondary = secondary
       this.printable = printable
       this.device = this.constructor._relationship(device)
-      this.url = url ? new URL(url, CONSTANTS.url) : null
+      this.url = new URL(url, CONSTANTS.url)
+      /**
+       * The provider, represented as a base URL.
+       * @type {?URL}
+       */
+      this.provider = provider ? new URL(provider) : null
+      /**
+       * The URL of the tag in the provider.
+       * @type {?URL}
+       */
+      this.providerUrl = provider ? new URL(id, provider) : null
+      /**
+       * The URL that is to be printed.
+       * @type {URL}
+       */
+      this.printableUrl = this.providerUrl || this.url
     }
 
     get title () {

@@ -1,4 +1,4 @@
-function printTagsButton ($state) {
+function printTagsButton ($state, Notification, $translate) {
   return {
     template: require('./print-tags-button.directive.html'),
     restrict: 'E',
@@ -14,14 +14,13 @@ function printTagsButton ($state) {
       $scope.open = () => {
         const tags = _($scope.devices)
           .flatMap('tags')
-          //.filter({'printable': true}) todo only printable!
+          .filter({'printable': true})
           .value()
-        $state.go('auth.printTags', {tags: tags})
+        if (tags.length) $state.go('auth.printTags', {tags: tags})
+        else Notification.warning($translate.instant('printTags.noTagsToPrint'))
       }
-
     }
   }
-
 }
 
 module.exports = printTagsButton

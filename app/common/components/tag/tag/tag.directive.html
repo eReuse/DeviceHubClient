@@ -2,7 +2,10 @@
          ng-style="{width: spec.size.width + 'mm', height: spec.size.height + 'mm'}">
   <div>
     <div class="tag-body">
-      <qrcode data="{{::tag.url}}" error-correction-level="Q" size="92" version="5"></qrcode>
+      <qrcode data="{{::tag.printableUrl}}"
+              error-correction-level="Q"
+              size="92"
+              version="5"></qrcode>
       <table>
         <tr ng-repeat="path in spec.fields">
           <td></td>

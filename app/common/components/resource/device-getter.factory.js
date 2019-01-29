@@ -64,6 +64,12 @@ function deviceGetterFactory (resources, progressBar) {
       if (this.ready) this.get(false)
     }
 
+    /** Remove a filter and, if ready, get new devices. */
+    removeFilter (key) {
+      delete this.q.filter[key]
+      if (this.ready) this.get(false)
+    }
+
     /**
      * Set the search text and, if ready, get new devices.
      * @param {string} text - Search text.

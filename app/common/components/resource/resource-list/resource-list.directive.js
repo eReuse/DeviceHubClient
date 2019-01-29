@@ -3,11 +3,10 @@
  * @param {module:resourceListConfig} resourceListConfig
  * @param  progressBar
  * @param Notification
- * @param {module:LotsSelector} LotsSelector
  * @param {module:deviceGetter} deviceGetter
  * @param {module:selection} selection
  */
-function resourceList (resources, resourceListConfig, progressBar, Notification, LotsSelector, deviceGetter, selection) {
+function resourceList (resources, resourceListConfig, progressBar, Notification, deviceGetter, selection) {
   return {
     template: require('./resource-list.directive.html'),
     restrict: 'E',
@@ -92,42 +91,35 @@ function resourceList (resources, resourceListConfig, progressBar, Notification,
         }
 
         const selected = $scope.selected = new SelectedDevices()
+        $scope.onLotsSelectionChanged = lots => {
+          getter.setFilter('lot', {id: _.map(lots, 'id')})
+        }
 
         class LotsManager {
           constructor () {
-            this.selector = LotsSelector
-            this.selector.callbackOnSelection(x => this.updateSelection(x))
             /**
              * Selected lots
-             * @type {module:resources.Lot[]}
+             * @type {module:selection.Selected}
              */
             this.lots = []
           }
 
           /**
-           * @param {module:resources.Lot[]} selectedLots
+           * @param {module:resources.Lot[]} lots
            */
-          updateSelection (selectedLots = []) {
-            this.lots = selectedLots
-            this.title = _.map(selectedLots, 'name').join(', ')
+          updateSelection (lots) {
+            this.lots = lots
+            this.title = _.map(lots, 'name').join(', ')
             // Update filter
-            getter.setFilter('lot', {id: _.map(selectedLots, 'id')})
+            if (lots.length) {
+              getter.setFilter('lot', {id: _.map(lots, 'id')})
+            } else {
+              getter.removeFilter('lot')
+            }
           }
 
-          reload () {
-            // todo review
-            this.selector.deselectAll()
-            // $rootScope.$broadcast('lots:reload')
-          }
-
-          deleteSelection () {
-            // todo do
-            Promise
-              .all(this.lots.map(lot => lot.delete()))
-              .then(() => {
-                Notification.success('Successfully deleted ' + this.lots.length + ' lots.')
-                this.reload()
-              })
+          deselectAll () {
+            this.lots.deselectAll()
           }
         }
 

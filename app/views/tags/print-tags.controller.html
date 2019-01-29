@@ -1,6 +1,8 @@
 <div class="container-fluid" id="print-tags">
   <div class="row">
-    <h2 class="col-lg-offset-1 col-xs-12" translate="printTags.title"></h2>
-    <pint-tags class="fill-height-bar-h2 block col-xs-12"></pint-tags>
+    <h2 class="col-lg-offset-1 col-xs-12">
+      {{::'printTags.title' | translate}}
+    </h2>
+    <print-tags class="fill-height-bar-h2 block col-xs-12" tags="tags"></print-tags>
   </div>
 </div>

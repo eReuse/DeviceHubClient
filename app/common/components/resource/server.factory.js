@@ -238,7 +238,7 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
     static get exists () {
       if (this._exists === undefined) {
         // If we are in the Box then we have access to a WS
-        this._exists = box.exists
+        this._exists = box.box.exists
         if (!this._exists) {
           // No box. Still we can have access to a WS. Let's try a req
           this._exists = null // we will return before getting the info

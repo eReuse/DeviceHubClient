@@ -58,7 +58,7 @@ function selection () {
         if (this.isSelected(item) && this.length === 1) {
           this.deselect(item) // todo this differs from orig
         } else {
-          this.deselectAll()
+          this._deselectAll()
           this.select(item)
         }
       }
@@ -95,6 +95,11 @@ function selection () {
      * Deselect all items.
      */
     deselectAll () {
+      this._deselectAll()
+      this._after()
+    }
+
+    _deselectAll () {
       this.length = 0
       this.lastSelectedIndex = 0 // todo review
     }
@@ -104,8 +109,9 @@ function selection () {
      * @param {T} items
      */
     select (...items) {
-      this.deselect(...items)
+      this._deselect(...items)
       this.push(...items)
+      this._after()
     }
 
     /**
@@ -113,6 +119,11 @@ function selection () {
      * @param {T} items
      */
     deselect (...items) {
+      this._deselect(items)
+      this._after()
+    }
+
+    _deselect (items) {
       _.pullAllBy(this, items, 'id')
       // todo if length = 0 shouldn't we do like in 'deselectAll'?
     }
@@ -126,6 +137,16 @@ function selection () {
       const intersection = _.intersectionBy(this, items, 'id')
       this.length = 0
       this.push(...intersection)
+      this._after()
+    }
+
+    /**
+     * Method ready to be overridden that executes after changing
+     * selection.
+     * @private
+     */
+    _after () {
+      // Extend and run any code that must execute here
     }
   }
 
