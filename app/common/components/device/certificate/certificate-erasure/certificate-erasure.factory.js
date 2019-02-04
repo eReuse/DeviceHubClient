@@ -43,17 +43,11 @@ function certificateErasureFactory (CONSTANTS, CERTIFICATE_ERASURE_FACTORY_STRIN
    * @private
    */
   proto._introduction = function () {
-    var account = session.account
     var content = [
       {
         columns: [
           this._field(this.s.ORG, this.model.org || CONSTANTS.appName),
           this._field(this.s.PRINT_DATE, (new Date()).toLocaleDateString())
-        ]
-      },
-      {
-        columns: [
-          this._field(this.s.GENERATED_BY, account['name'] || account['email'])
         ]
       }
     ]
