@@ -18,3 +18,7 @@ module.exports = angular.module('common.config',
   .run(function ($rootScope) {
     $rootScope._ = window._
   })
+  .config($httpProvider => {
+    // As of angular docs, improves http performance
+    $httpProvider.useApplyAsync(true)
+  })

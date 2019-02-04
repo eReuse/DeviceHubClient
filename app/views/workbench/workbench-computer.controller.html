@@ -75,7 +75,7 @@
               ng-init="field = Field.init(snapshot)"
               class="{{::Field.cssClasses}}"
           >
-            <span ng-bind-html="field.content"></span>
+            <span dynamic-bind-html="{{field.content}}"></span>
           </td>
         </tr>
         </tbody>

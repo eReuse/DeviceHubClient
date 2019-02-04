@@ -61,7 +61,9 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
     start (config = {}) {
       this.poller = poller.get(this.url, {
         delay: CONSTANTS.workbenchPollingDelay,
-        argumentsArray: [this.config(config)]
+        argumentsArray: [this.config(config)],
+        // Poller only sends new request after previous one is resolved
+        smart: true
       })
       return this.poller.promise
     }
@@ -237,8 +239,8 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
      */
     static get exists () {
       if (this._exists === undefined) {
-        // If we are in the Box then we have access to a WS
-        this._exists = box.box.exists
+        // If we are in the Box or Android app then we have access to a WS
+        this._exists = box.box.exists || android.app.exists
         if (!this._exists) {
           // No box. Still we can have access to a WS. Let's try a req
           this._exists = null // we will return before getting the info
@@ -265,6 +267,11 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
       this.wr = workbenchResources
       this._config.params = {
         'device-hub': CONSTANTS.url
+      }
+      if (CONSTANTS.inventories) {
+        sessionLoaded.loaded.then(user => {
+          this._config.params.db = user.inventories[0].id
+        })
       }
     }
 

@@ -9,7 +9,7 @@ function headerNav ($state, server) {
     restrict: 'E',
     link: $scope => {
       $scope.$state = $state
-      $scope.Workbench = server.Workbench
+      $scope.showWorkbench = server.Workbench.exists
 
       class Element {
         constructor (key, icon, sref) {
