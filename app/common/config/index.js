@@ -22,3 +22,4 @@ module.exports = angular.module('common.config',
     // As of angular docs, improves http performance
     $httpProvider.useApplyAsync(true)
   })
+  .run(require('./formly.run'))

@@ -44,11 +44,11 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
         // Set summary pane properties
         $scope.props = [new Type(devices), new Status(devices)]
         pushIfValues($scope.props, Issues, devices)
-        pushIfValues($scope.props, Price, devices, currency)
+        /* pushIfValues($scope.props, Price, devices, currency) */
         pushIfValues($scope.props, Rate, devices)
         pushIfValues($scope.props, Privacy, devices)
         $scope.props.push(new Traceability(devices))
-        $scope.props.push(new Lots(devices))
+        /* $scope.props.push(new Lots(devices)) */
         pushIfValues($scope.props, Components, devices)
         if ($scope.activeProp) {
           // activeProp has an old property
@@ -146,6 +146,7 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
         .map(pathToProp)
         .flatten()
         .compact()
+        .uniqBy('id')
         .groupBy(key)
         .map((values, key) => new AggregateEntry(values, key, pathToProp, options))
         .value()

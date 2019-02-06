@@ -98,7 +98,7 @@ function lotsTreeNavigation (progressBar, $rootScope, selection, resources) {
          * Creates a new lot.
          * @param {?string} parentLotId
          */
-        function newLot (parentLotId) {
+        function newLot (parentLotId = null) {
           const lot = new resources.Lot({
             name: 'New lot',
             parents: parentLotId ? [parentLotId] : undefined
@@ -108,6 +108,8 @@ function lotsTreeNavigation (progressBar, $rootScope, selection, resources) {
             else $scope.lots.addToTree(lot.id)
           })
         }
+
+        $scope.newLot = newLot
 
         $scope.newChildLot = parentLotId => {
           newLot(parentLotId)

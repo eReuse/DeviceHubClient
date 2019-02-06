@@ -1,20 +1,30 @@
 const PATH = require('./__init__').PATH
 
 /**
- * @name ResourceListFilter directive.
- * @description Manages filters for devices, presenting a form
- * to the user so it can parametrize the filters, and a list
- * of pills (tags) of the filters so user can see the active ones.
- * Finally it allows the user to export and import filters from
- * the clipboard.
- *
+ * @module resourceList
+ */
+
+/**
  * @param Notification
  * @param $uibModal
  * @param clipboard
  * @param {module:fields} fields
  * @param {module:resources} resources
+ * @param {module:enums} enums
  */
-function resourceListFilters (Notification, $uibModal, clipboard, fields, resources, $translate, $q) {
+function resourceListFilters (Notification, $uibModal, clipboard, fields, resources, $translate, $q, enums) {
+  /**
+   * @ngdoc directive
+   * @name resourceListFilters
+   * @restrict E
+   * @element resource-list-filters
+   * @description Manages filters for devices, presenting a form
+   * to the user so it can parametrize the filters, and a list
+   * of pills (tags) of the filters so user can see the active ones.
+   * Finally it allows the user to export and import filters from
+   * the clipboard.
+   * @param {expression} onUpdate
+   */
   return {
     template: require('./resource-list-filters.directive.html'),
     restrict: 'E',
@@ -196,10 +206,7 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
             new fields.MultiCheckbox('type',
               {
                 namespace: namespace,
-                options: [
-                  new fields.Option('Computer', namespaceObj),
-                  new fields.Option('Laptop', namespaceObj)
-                ]
+                options: resources.Device.options(fields.Option)
               }
             )
           ),
@@ -210,14 +217,18 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
           new Panel({keyText: 'priceRatingPanel', namespace: namespace},
             new Panel({keyText: 'ratingPanel', namespace: namespace},
               new fields.Number('rating.rating[0]', {
+                min: enums.RatingRange.MIN,
+                max: enums.RatingRange.MAX,
                 namespace: namespace,
-                keyText: 'rating.min',
-                description: false
+                step: 0.1,
+                keyText: 'rating.min'
               }),
               new fields.Number('rating.rating[1]', {
+                min: enums.RatingRange.MIN,
+                max: enums.RatingRange.MAX,
+                step: 0.1,
                 namespace: namespace,
-                keyText: 'rating.max',
-                description: false
+                keyText: 'rating.max'
               })
             )
           )

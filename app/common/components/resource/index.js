@@ -28,7 +28,8 @@ module.exports = angular.module('common.components.resource',
     'dynamicBindHtml',
     require('./../tag').name,
     require('./../group').name, // the button in resource-list,
-    require('./../export').name
+    require('./../export').name,
+    require('angular-marked')
   ])
   .directive('lotsTreeNavigation', require('./resource-list/lots-tree-navigation/lots-tree-navigation.directive'))
   .directive('resourceList', require('./resource-list/resource-list.directive'))
@@ -36,7 +37,7 @@ module.exports = angular.module('common.components.resource',
   .directive('resourceListFilters', require('./resource-list/resource-list-filters/resource-list-filters.directive'))
   .factory('resourceListConfig', require('./resource-list/resource-list-config.factory'))
   .directive('fieldSort', require('./resource-list/field-sort/field-sort.directive.js'))
-  .directive('resourceFieldEdit', require('./resource-field-edit/resource-field-edit.directive'))
+  .directive('fieldEdit', require('./field-edit/field-edit.directive'))
   .factory('resources', require('./resources.factory'))
   .directive('deviceListSummary', require('./resource-list/device-list-summary/device-list-summary.directive'))
   .config(require('./resource-list/resource-list-filters/panel-filter.wrapper.formly.config'))

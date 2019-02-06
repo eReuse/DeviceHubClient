@@ -7,6 +7,8 @@ function table ($translate) {
    * @memberOf module:table
    */
   class Field {
+    // todo change this class so content is a getter that computes
+    //  the values when accessed, so it can be used with angular binding
     constructor (resource, content = _.get(resource, this.constructor.name.toLowerCase())) {
       this.content = content
     }
@@ -30,11 +32,17 @@ function table ($translate) {
 
   Field.hide = false
   Field.sortable = true
+  Field.html = false
 
   /**
    * @memberOf module:table
    */
   class Tags extends Field {
+    constructor (resource) {
+      super(resource)
+      // Angular does not perform 'toString()' on arrays like tags
+      this.content = this.content.join(', ')
+    }
   }
 
   /**
@@ -55,6 +63,8 @@ function table ($translate) {
       return ''
     }
   }
+
+  Icon.html = true
 
   /**
    * @memberof module:table

@@ -63,8 +63,7 @@ function printTags (fields, $q, $ocLazyLoad, box, Notification) {
       }
       Spec.SIZES = {
         brotherSmall: new Spec.Size(62, 29),
-        smallTagPrinter: new Spec.Size(97, 59),
-        anotherOne: new Spec.Size(100, 100)
+        smallTagPrinter: new Spec.Size(97, 59)
       }
 
       class SpecForm extends fields.Form {
@@ -90,8 +89,16 @@ function printTags (fields, $q, $ocLazyLoad, box, Notification) {
             }
           }
         }, namespace)),
-        new fields.Number('size.width', _.defaults({min: 52, max: 300}, namespace)),
-        new fields.Number('size.height', _.defaults({min: 28, max: 200}, namespace))
+        new fields.Number('size.width', _.defaults({
+          min: 52,
+          max: 300,
+          addonRight: fields.Field.ADDON_RIGHT.Text
+        }, namespace)),
+        new fields.Number('size.height', _.defaults({
+          min: 28,
+          max: 200,
+          addonRight: fields.Field.ADDON_RIGHT.Text
+        }, namespace))
       )
 
       /**

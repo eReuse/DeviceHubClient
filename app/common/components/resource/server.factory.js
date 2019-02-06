@@ -126,6 +126,12 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
       })
     }
 
+    patch (model, uri, config) {
+      return this.tokenPromise.then(headerWithAuth => {
+        return super.patch(model, uri, _.defaultsDeep(config, headerWithAuth))
+      })
+    }
+
     /**
      * Start
      * @param config
@@ -199,6 +205,19 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
           things = this.r.resourceClass(data.type).fromObject(data)
         }
         return things
+      })
+    }
+
+    /**
+     * Post.
+     * @param model
+     * @param uri
+     * @param config
+     * @return {*}
+     */
+    post (model, uri, config) {
+      return super.post(model, uri, config).then(response => {
+        return response.data
       })
     }
 

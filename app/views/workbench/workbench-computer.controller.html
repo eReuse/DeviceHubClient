@@ -71,11 +71,15 @@
             warning: snapshot.phase === WorkbenchComputerPhase.Error
           }"
         >
-          <td ng-repeat="Field in ::table.fields"
-              ng-init="field = Field.init(snapshot)"
+          <td ng-repeat="Field in ::table.fields track by Field.name"
               class="{{::Field.cssClasses}}"
           >
-            <span dynamic-bind-html="{{field.content}}"></span>
+            <span ng-if="::Field.html">
+              <span ng-bind-html="Field.init(snapshot).content"></span>
+            </span>
+            <span ng-if="::!Field.html">
+              {{Field.init(snapshot).content}}
+            </span>
           </td>
         </tr>
         </tbody>

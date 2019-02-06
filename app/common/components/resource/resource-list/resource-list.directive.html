@@ -21,12 +21,18 @@
           Deselect all ({{lotsM.lots.length}})
         </button>
       </div>
-      <h2 class="hidden-xs">{{lotsM.title}}</h2>
-      <div ng-show="lotsM.lots.length === 1" class="lot-description">
-        <resource-field-edit resource="selectedLots[0]"
-                             field="{ key: 'description', value: selectedLots[0].description, editable: true }">
-          {{ lotsM.lots[0].description }}
-        </resource-field-edit>
+      <div ng-if="lotsM.lots.length === 1">
+        <h2>
+          <field-edit field-name="name" field-type="String" resource="lotsM.lots[0]">
+            {{lotsM.lots[0].name}}
+          </field-edit>
+        </h2>
+        <field-edit field-name="description" field-type="Textarea" resource="lotsM.lots[0]">
+          <div marked="lotsM.lots[0].description"></div>
+        </field-edit>
+      </div>
+      <div ng-show="lotsM.lots.length > 1">
+        {{lotsM.title}}
       </div>
     </div>
     <div class="col-xs-12 fill-height-bar">
@@ -82,11 +88,15 @@
               ng-click="selected.toggle(device, $index, $event)"
               on-long-press="selected.multi(device)"
           >
-            <td ng-repeat="Field in ::config.table"
-                ng-init="field = Field.init(device)"
+            <td ng-repeat="Field in ::config.table track by Field.name"
                 class="{{::Field.cssClasses}}"
             >
-              <span ng-bind-html="field.content"></span>
+              <span ng-if="::Field.html">
+                <span ng-bind-html="Field.init(device).content"></span>
+              </span>
+              <span ng-if="::!Field.html">
+              {{::Field.init(device).content}}
+              </span>
             </td>
           </tr>
           </tbody>
@@ -120,12 +130,12 @@
       </button>
     </h3>
     <div class="text-center" ng-if="selected.length">
-      <group-resource-button
+      <!--<group-resource-button
           success="getter.reload()"
           resource-type="Device"
           get-resources="selector.getAllSelectedDevices()"
           register-to-resources-update="selector.callbackOnSelection(callback)">
-      </group-resource-button>
+      </group-resource-button>-->
       <manual-events-button devices="selected"></manual-events-button>
       <export-button devices="selected"></export-button>
       <print-tags-button devices="selected"></print-tags-button>

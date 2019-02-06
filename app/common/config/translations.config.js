@@ -19,12 +19,15 @@ const en = {
   resourceList: {
     allDevices: 'All devices',
     filters: {
-      type: {l: '@:r.thing.type.l', d: 'The type of the device.'},
+      type: {
+        l: '@:r.thing.type.l',
+        d: 'The type of the device.'
+      },
       manufacturer: {l: '@:r.device.manufacturer.l', d: '@:r.device.manufacturer.d'},
       model: {l: '@:r.device.model.l', d: '@:r.device.model.d'},
       rating: {
-        min: {l: 'Min price'},
-        max: {l: 'Max price'}
+        min: {l: 'Minimum rate', d: 'Inclusive.'},
+        max: {l: 'Maximum rate', d: 'Inclusive.'}
       },
       manPanel: {l: 'Manufacturer and model'},
       priceRatingPanel: {l: 'Price and Rating'},
@@ -37,6 +40,9 @@ const en = {
         error: 'Could not import; filters are not well written.'
       }
     }
+  },
+  lots: {
+    new: 'New lot'
   },
   newEvent: {
     title: 'Create a new {{type}}',
@@ -55,6 +61,10 @@ const en = {
         delete: 'deleted'
       }
     },
+    notification: {
+      success: '🙂 Done.',
+      error: 'We could not do it due an error. Please try again later or contact us.'
+    },
     fields: {
       optionYes: 'Yes.',
       optionNo: 'No.'
@@ -63,10 +73,86 @@ const en = {
       required: 'This field is required.',
       email: 'The email is wrongly typed.',
       minlength: 'Too short. Minimum characters are {{to}}.',
-      parse: 'Wrong format. Review that the format is correct.'
+      parse: 'Wrong format. Review that the format is correct.',
+      number: 'The number is incorrect.'
     }
   },
   r: { // resources
+    l: { // List of resources
+      device: 'Device',
+      computer: 'Computer',
+      computerMonitor: 'Computer monitor',
+      desktop: 'Desktop',
+      laptop: 'Laptop',
+      server: 'Server',
+      mobile: 'Mobile',
+      smartphone: 'Smartphone',
+      tablet: 'Tablet',
+      cellphone: 'Cellphone',
+      component: 'Component',
+      graphicCard: 'Graphic card',
+      dataStorage: 'Data storage',
+      hardDrive: 'Hard drive',
+      solidStateDrive: 'SSD',
+      motherboard: 'Motherboard',
+      networkAdapter: 'Network adapter',
+      processor: 'Processor',
+      ramModule: 'Ram module',
+      soundCard: 'Sound card',
+      computerAccessory: 'Computer accessory',
+      mouse: 'Mouse',
+      memoryCardReader: 'Memory card reader',
+      sAI: 'SAI',
+      keyboard: 'Keyboard',
+      display: 'Display',
+      event: 'Event',
+      eventWithMultipleDevices: 'Event with multiple devices',
+      eventWithOneDevice: 'Event with one device',
+      add: 'Add',
+      remove: 'Remove',
+      eraseBasic: 'Erase basic',
+      eraseSectors: 'Erase sectors',
+      erasePhysical: 'Erase physical',
+      step: 'Step',
+      stepZero: 'Step zero',
+      stepRandom: 'Step random',
+      rate: 'Rate',
+      individualRate: 'Individual rate',
+      manualRate: 'Manual rate',
+      workbenchRate: 'Workbench rate',
+      aggregateRate: 'Aggregate rate',
+      price: 'Price',
+      ereusePrice: 'Ereuse price',
+      install: 'Install',
+      snapshot: 'Snapshot',
+      test: 'Test',
+      testDataStorage: 'Test data storage',
+      stressTest: 'Stress test',
+      benchmark: 'Benchmark',
+      benchmarkDataStorage: 'Benchmark data storage',
+      benchmarkWithRate: 'Benchmark with rate',
+      benchmarkProcessor: 'Benchmark processor',
+      benchmarkProcessorSysbench: 'Benchmark processor sysbench',
+      benchmarkRamSysbench: 'Benchmark ram sysbench',
+      toRepair: 'To repair',
+      repair: 'Repair',
+      readyToUse: 'Ready to use',
+      toPrepare: 'To prepare',
+      prepare: 'Prepare',
+      organize: 'Organize',
+      reserve: 'Reserve',
+      cancelReservation: 'Cancel reservation',
+      trade: 'Trade',
+      sell: 'Sell',
+      donate: 'Donate',
+      cancelTrade: 'Cancel trade',
+      toDisposeProduct: 'To dispose product',
+      disposeProduct: 'Dispose product',
+      receive: 'Receive',
+      tag: 'Tag',
+      lot: 'Lot',
+      user: 'User'
+    },
     thing: {
       type: {l: 'Type', d: 'The type.'}
     },
@@ -185,7 +271,19 @@ const en = {
     button: 'Tagging',
     save: 'Save',
     printBox: 'Print to a supported printer',
-    noTagsToPrint: 'These devices don\'t have tags that we can print.'
+    noTagsToPrint: 'These devices don\'t have tags that we can print.',
+    fields: {
+      brotherSmall: 'Brother small size (62 x 29)',
+      smallTagPrinter: 'Small tag (97 x 59)',
+      size: {
+        width: {l: 'Width', d: 'Manually change the width of the tag.', aR: 'mm'},
+        height: {l: 'Height', d: 'Manually change the height of the tag.', aR: 'mm'}
+      },
+      sizePreset: {
+        l: 'Size preset',
+        d: 'A preset for the size of the tag. You can manually change the size below.'
+      }
+    }
   },
   export: {
     clipboard: {
@@ -298,6 +396,9 @@ const en = {
       default: 'Write a model, serial number...',
       android: 'Scan a NFC tag, write a S/N...'
     }
+  },
+  fieldEdit: {
+    edit: 'Click here to edit it.'
   }
 }
 

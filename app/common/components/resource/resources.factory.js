@@ -157,6 +157,18 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       return cleaned
     }
 
+    /**
+     * Modifies the field names with a PATCH to the server.
+     * @param {string} fields
+     */
+    patch (...fields) {
+      // This patch is cumberstone and assumes the thing has a field id
+      // Probably will require refactor
+      console.assert(this.id, '%s must exist on the DB before PATCHing it.', this.type)
+      const obj = _.pick(this, fields)
+      return this.server.patch(obj, this.id).then(() => this)
+    }
+
     toString () {
       return this.title
     }
@@ -190,6 +202,20 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
     static _relationships (others) {
       return others.map(other => this._relationship(other))
+    }
+
+    /**
+     * Returns an array of `fields.Option` where each option is a
+     * resource that is a subclass of this one.
+     * @param {typeof module:fields.Option} Option - Option class to
+     * use.
+     * @return {module:fields.Option[]}
+     */
+    static options (Option) {
+      return _(resources)
+        .filter(r => this.isPrototypeOf(r))
+        .map(r => new Option(r.name, {namespace: 'r.l'}))
+        .value()
     }
   }
 
@@ -794,7 +820,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
   class Rate extends EventWithOneDevice {
     define ({rating = null, software = null, version = null, appearance = null, functionality = null, ratingRange = null, ...rest}) {
       super.define(rest)
-      this.rating = rating
+      this.rating = rating ? new enums.RatingRange(rating) : null
       this.software = software
       this.version = version
       this.appearance = appearance
@@ -804,7 +830,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     }
 
     get title () {
-      return this.ratingRangeHuman
+      return this.rating
     }
   }
 
@@ -1218,7 +1244,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    * @extends module:resources.Thing
    */
   class Tag extends Thing {
-    define ({id = null, org = null, secondary = null, device = null, printable = null, url, provider = null, ...rest}) {
+    define ({id, org = null, secondary = null, device = null, printable = null, url, provider = null, ...rest}) {
+      console.assert(id, 'Tag requires an ID.')
       super.define(rest)
       this.id = id
       this.org = org
@@ -1244,7 +1271,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     }
 
     get title () {
-      return this.id
+      // We replace a regular hyphen with a non-breaking hyphen
+      return this.id.toUpperCase().replace('-', '‑')
     }
   }
 
@@ -1377,6 +1405,14 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       this.length = 0
       this.add(other)
     }
+
+    toString () {
+      return this.join(', ')
+    }
+
+    valueOf () {
+      return this.toString()
+    }
   }
 
   /**
@@ -1429,6 +1465,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     }
 
     addToTree (lotId) {
+      console.assert(lotId)
       this.tree.push(new LotNode(lotId))
     }
   }

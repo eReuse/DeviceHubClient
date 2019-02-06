@@ -23,6 +23,7 @@
     "angular-formly": "8.4.1",
     "angular-formly-templates-bootstrap": "~6.2.0",
     "angular-long-press": "^0.3.2",
+    "angular-marked": "^1.2.2",
     "angular-poller": "^0.4.5",
     "angular-qrcode": "7.2.0",
     "angular-recursion": "~1.0.5",

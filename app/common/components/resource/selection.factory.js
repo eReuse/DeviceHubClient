@@ -104,6 +104,12 @@ function selection () {
       this.lastSelectedIndex = 0 // todo review
     }
 
+    selectAll (allThings) {
+      // Although selectAll does nothing per se (only call select)
+      // angular expressions don't allow array destructuring
+      this.select(...allThings)
+    }
+
     /**
      * Selects items.
      * @param {T} items
@@ -119,11 +125,11 @@ function selection () {
      * @param {T} items
      */
     deselect (...items) {
-      this._deselect(items)
+      this._deselect(...items)
       this._after()
     }
 
-    _deselect (items) {
+    _deselect (...items) {
       _.pullAllBy(this, items, 'id')
       // todo if length = 0 shouldn't we do like in 'deselectAll'?
     }

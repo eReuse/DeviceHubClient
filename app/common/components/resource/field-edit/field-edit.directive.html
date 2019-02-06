@@ -1,0 +1,10 @@
+<div ng-hide="editing" ng-click="edit()">
+  <span ng-transclude ng-show="!editing"></span>
+  <small ng-hide="resource[fieldName].length">
+    {{::'fieldEdit.edit' | translate}}
+  </small>
+</div>
+<form ng-submit="form.submit()" novalidate ng-if="form">
+  <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
+  </formly-form>
+</form>

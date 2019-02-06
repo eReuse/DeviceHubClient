@@ -13,7 +13,7 @@ function exportButton (Notification, clipboard, $translate, CONSTANTS, session, 
      */
     link: $scope => {
       $scope.loading = false
-      const docsEndpoint = new server.Devicehub('documents/')
+      const docsEndpoint = new server.Devicehub('/documents/')
 
       function saveFile (path, format, mimeType, textPath) {
         $scope.loading = true

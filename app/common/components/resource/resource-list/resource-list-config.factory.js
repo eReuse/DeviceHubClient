@@ -16,7 +16,12 @@ function resourceListConfig ($filter, table) {
 
   class Title extends table.Title {
     constructor (resource) {
-      const content = `${resource.manufacturer || ''} ${resource.model || ''} ${resource.tags}`
+      let content
+      if (resource.manufacturer || resource.model) {
+        content = `${resource.manufacturer || ''} ${resource.model || ''}`
+      } else {
+        content = '—'
+      }
       super(resource, content)
     }
   }
@@ -36,6 +41,8 @@ function resourceListConfig ($filter, table) {
       return '!'
     }
   }
+
+  Issues.html = true
 
   class Status extends table.Field {
     constructor (resource) {
@@ -70,7 +77,7 @@ function resourceListConfig ($filter, table) {
   Updated.hide = true
 
   return {
-    table: [table.Icon, Title, Rate, Issues, Status, Price, Updated]
+    table: [table.Icon, Title, table.Tags, Rate, Issues, Status, Price, Updated]
   }
 }
 

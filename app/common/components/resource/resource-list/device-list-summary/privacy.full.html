@@ -4,11 +4,16 @@
     <table class="table table-responsive table-striped table-condensed">
       <thead ng-show="$first">
       <tr>
-        <th>Type</th><th>Method</th><th>Standards</th><th># steps</th><th>Device</th><th>Computer</th>
+        <th>Type</th>
+        <th>Method</th>
+        <th>Standards</th>
+        <th># steps</th>
+        <th>Device</th>
+        <th>Computer</th>
       </tr>
       </thead>
       <tbody>
-      <tr ng-repeat="erasure in aggregates.things | orderBy:'created'">
+      <tr ng-repeat="erasure in aggregates.things | orderBy:'created' track by erasure.id">
         <td>{{::erasure.typeHuman}}</td>
         <td>{{::erasure.constructor.method}}</td>
         <td>{{::erasure.standardsHuman}}</td>

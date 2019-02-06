@@ -29,6 +29,8 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
       switch (op) {
         case this.constructor.POST:
           return this.model.post()
+        case this.constructor.PATCH:
+          return this.model.patch()
         default:
           throw new Error(`Method ${op} not implemented.`)
       }

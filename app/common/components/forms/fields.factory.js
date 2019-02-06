@@ -52,20 +52,23 @@ function fieldsFactory ($translate, Notification, $q) {
      * @param {boolean} disabled
      * @param {boolean} placeholder - If true, set a placeholder from
      * the translation text.
-     * @param description
+     * @param {boolean} description - Use a description?
+     * @param {boolean} label - Use a label?
      * @param {object.<string, string>} expressions - Formly's Expression Properties
      * @param {?string} hide = An angular expression that, if true, hides this.
      * @param {?Object} watcher
      * @param {string} watcher.expression
      * @param {module:fields.Field~listener} watcher.listener
      * @param {module:fields.Field.ADDON_RIGHT | object | null} addonRight - If not falsy,
-     * an addon right. If Text, it looks for a translation string
+     * an addon right. If Field.ADDON_RIGHT.Text, it looks for a translation string
      * in the same path as for the title / description, but in this
      * case looking for a key 'aR'. If an object, must have the following
      * properties:
      * @param {function} addonRight.onClick
      * @param {string} addonRight.class
+     * @param {array} addons - A list of right addons. The same as addonRight but with a list.
      * @param {callback} onChange - Callback to execute when values
+     * @param {?boolean} focus - Should the field be focused initially? Only one per form.
      * change.
      */
     constructor (key, {
@@ -75,11 +78,14 @@ function fieldsFactory ($translate, Notification, $q) {
       disabled = false,
       placeholder = false,
       description = true,
+      label = true,
       expressions = {},
       hide = null,
       watcher,
       addonRight,
-      onChange
+      addons = [],
+      onChange,
+      focus
     }) {
       console.assert(key, 'Key must be passed.')
       this.key = key
@@ -87,12 +93,14 @@ function fieldsFactory ($translate, Notification, $q) {
       this.templateOptions = {
         disabled: disabled,
         required: required,
-        onChange: onChange
+        onChange: onChange,
+        focus: focus
       }
       this.textPath = `${namespace}.${keyText}`
-      this.expressionProperties = _.assign({
-        'templateOptions.label': `'${this.textPath}.l' | translate`
-      }, expressions)
+      this.expressionProperties = _.clone(expressions)
+      if (label) {
+        this.expressionProperties.label = `'${this.textPath}.l' | translate`
+      }
       if (description) {
         this.templateOptions.description = ''
         this.expressionProperties['templateOptions.description'] = `'${this.textPath}.d' | translate`
@@ -105,6 +113,7 @@ function fieldsFactory ($translate, Notification, $q) {
       if (addonRight === this.constructor.ADDON_RIGHT.Text) {
         this.expressionProperties['templateOptions.addonRight.text'] = `'${this.textPath}.aR' | translate`
       }
+      this.templateOptions.addons = addons // Addons are translated directly in html
       this.hideExpression = hide
       this.watcher = watcher
     }
@@ -201,6 +210,24 @@ function fieldsFactory ($translate, Notification, $q) {
    * @extends module:fields.Field
    */
   class Textarea extends Field {
+    /**
+     *
+     * @param key
+     * @param {number} rows - The number of rows of the textarea.
+     * @param rest
+     */
+    constructor (key, {rows = 3, ...rest}) {
+      super(key, rest)
+      this.templateOptions.rows = rows
+    }
+
+    /**
+     * Returns the best number of rows for the value string.
+     * @param {string} value
+     */
+    static autoRows (value) {
+      return Math.max(value.split('\n').length, 3)
+    }
   }
 
   /**
@@ -403,6 +430,7 @@ function fieldsFactory ($translate, Notification, $q) {
      * @return {Promise}
      */
     submit (op = this.constructor.POST) {
+      console.assert(this.form)
       console.assert(this.constructor[op], 'OP must be a REST method.')
       // Reset from previous executions
       this.status.errorFromServer = null

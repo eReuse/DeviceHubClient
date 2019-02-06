@@ -190,6 +190,36 @@ function enumsFactory ($translate) {
   /** @memberOf module:enums.ErasureStandard */
   ErasureStandard.HMG_IS5 = new ErasureStandard('HMG_IS5', 'EraseSectors', 1, true, 'https://wikipedia.org/wiki/Infosec_Standard_5')
 
+  /**
+   * The rate.
+   * @memberOf module:enums
+   */
+  class RatingRange {
+    constructor (value) {
+      this.value = value
+      console.assert(value >= this.constructor.MIN && value <= this.constructor.MAX)
+      if (value <= this.constructor.VERY_LOW) this.range = this.constructor.VERY_LOW
+      else if (value <= this.constructor.LOW) this.range = this.constructor.LOW
+      else if (value <= this.constructor.MEDIUM) this.range = this.constructor.MEDIUM
+      else this.range = this.constructor.HIGH
+    }
+
+    valueOf () {
+      return this.value
+    }
+
+    toString () {
+      return `${this.value}/${this.constructor.MAX}`
+    }
+  }
+
+  RatingRange.VERY_LOW = 2
+  RatingRange.LOW = 3
+  RatingRange.MEDIUM = 4
+  RatingRange.HIGH = 5
+  RatingRange.MAX = 8
+  RatingRange.MIN = 0
+
   class NotAValidEnum extends Error {
 
   }
@@ -203,7 +233,8 @@ function enumsFactory ($translate) {
     WorkbenchComputerPhase: WorkbenchComputerPhase,
     WorkbenchMobilePhase: WorkbenchMobilePhase,
     NotAValidEnum: NotAValidEnum,
-    BiosRange: BiosRange
+    BiosRange: BiosRange,
+    RatingRange: RatingRange
   }
 }
 

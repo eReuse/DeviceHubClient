@@ -64,6 +64,10 @@ button[ng-click], a, small[ng-click]
 
 .popover-content
   min-width: 15em
+  // Just so it does not overflows over the viewport
+  // This is a good height because (luckily) our popovers are always
+  // on the top third part of the window. This can be adjusted otherwise
+  max-height: 70vh
 
 .btn .caret
   margin-left: 0.25em

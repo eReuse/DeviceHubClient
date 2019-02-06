@@ -88,6 +88,10 @@ function resourceList (resources, resourceListConfig, progressBar, Notification,
             super.deselectAll()
             $scope.selectionPanelHiddenXS = true
           }
+
+          selectAll () {
+            super.selectAll(getter.devices)
+          }
         }
 
         const selected = $scope.selected = new SelectedDevices()
