@@ -399,6 +399,14 @@ const en = {
   },
   fieldEdit: {
     edit: 'Click here to edit it.'
+  },
+  lot: {
+    button: {
+      edit: 'Lots',
+      add: 'Add devices to lots',
+      remove: 'Remove devices from lots',
+      lotId: {l: 'Lot', d: 'Select a lot by writing its name.'}
+    }
   }
 }
 

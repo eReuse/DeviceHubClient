@@ -1,5 +1,3 @@
-var utils = require('./../../../utils')
-
 /**
  *
  *  device needs _id
@@ -12,51 +10,27 @@ function typeahead (formlyConfigProvider) {
     wrapper: ['bootstrapLabel', 'bootstrapHasError'],
     defaultOptions: {
       templateOptions: {
-        keyFieldName: '_id',
+        keyFieldName: 'id',
         options: {
           'typeahead-editable': false
         }
       }
     },
-    templateUrl: window.COMPONENTS + '/forms/types/typeahead/typeahead.formly-type.config.html',
-    controller: function ($scope, ResourceSettings) {
-      $scope.getResources = (names, text) => {
-        const server = ResourceSettings(utils.Naming.type($scope.to.resourceName)).server
-        const promise = server.findText(names, text)
-        promise.then((resources) => {
-          $scope.resources = resources
-        })
-        return promise
-      }
-
-      $scope.formatLabel = (model) => {
-        if (!$scope.resources) {
-          return model
-        }
-        let idField
-        let valueField
-        switch ($scope.to.resourceName) {
-          case 'lots':
-            idField = '_id'
-            valueField = 'name'
-            break
-        }
-        if (!idField || !valueField) {
-          return model
-        }
-        for (let i = 0; i < $scope.resources.length; i++) {
-          if (model === $scope.resources[i][idField]) {
-            return $scope.resources[i][valueField]
+    template: require('./typeahead.formly-type.config.html'),
+    link: $scope => {
+      $scope.getResources = $viewValue => {
+        return _.filter($scope.to.resources,
+          resource => {
+            return _.includesText(resource[$scope.to.labelFieldName], $viewValue)
           }
-        }
+        )
       }
     },
     apiCheck: function (check) {
       return {
         templateOptions: {
+          resources: check.array,
           keyFieldName: check.string,
-          resourceName: check.string,
-          filterFieldNames: check.array,
           labelFieldName: check.string,
           options: check.object
         }

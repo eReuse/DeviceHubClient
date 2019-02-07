@@ -197,7 +197,6 @@ function parseDate (oldDate) {
   return datetime.substring(0, datetime.indexOf('.'))
 }
 
-
 function setImageGetter ($scope, jqueryExpression, pathToStore) {
   $(jqueryExpression).change(function () {
     if (this.files && this.files[0]) {

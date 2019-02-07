@@ -1,4 +1,5 @@
-<div ng-hide="editing" ng-click="edit()">
+<div ng-hide="editing" ng-click="edit()" class="field-edit-text">
+  <i class="fa fa-pen field-edit-icon pull-right"></i>
   <span ng-transclude ng-show="!editing"></span>
   <small ng-hide="resource[fieldName].length">
     {{::'fieldEdit.edit' | translate}}

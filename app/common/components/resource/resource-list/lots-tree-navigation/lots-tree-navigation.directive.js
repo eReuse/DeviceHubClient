@@ -31,7 +31,7 @@ function lotsTreeNavigation (progressBar, $rootScope, selection, resources) {
          * Finds nodes containing text and makes them visible
          * @param {string} text
          */
-        function makeNodesWithTextVisible (text) {
+        $scope.makeNodesWithTextVisible = text => {
           /** @param {module:resources.LotNode} node */
           function visibleIfHasText (node) {
             let atLeastOneChildVisible = false
@@ -45,8 +45,6 @@ function lotsTreeNavigation (progressBar, $rootScope, selection, resources) {
 
           $scope.lots.tree.forEach(visibleIfHasText)
         }
-
-        $scope.makeNodesWithTextVisible = makeNodesWithTextVisible
 
         $scope.treeOptions = {
           dropped: $event => {

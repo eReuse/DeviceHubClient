@@ -13,7 +13,6 @@ module.exports = angular.module('common.config',
   .config(require('./modal.config'))
   .config(require('./html5.config'))
   .config(require('./ui-notification.config'))
-  .config(require('./formly.config'))
   .config(require('./translations.config'))
   .run(function ($rootScope) {
     $rootScope._ = window._
@@ -22,4 +21,5 @@ module.exports = angular.module('common.config',
     // As of angular docs, improves http performance
     $httpProvider.useApplyAsync(true)
   })
+  .config(require('./formly.config'))
   .run(require('./formly.run'))

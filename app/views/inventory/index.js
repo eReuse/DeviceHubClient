@@ -21,7 +21,8 @@
 module.exports = angular.module('views.inventory',
   [
     require('./../../common/components/resource').name,
-    require('./../../common/components/utilities').name
+    require('./../../common/components/utilities').name,
+    require('./../../common/components/lot').name // the button in resource-list
   ])
   .controller('inventoryCtrl', require('./inventory.controller.js'))
   .controller('newEventCtrl', require('./new-event.controller.js'))

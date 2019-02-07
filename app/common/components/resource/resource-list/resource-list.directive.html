@@ -130,12 +130,7 @@
       </button>
     </h3>
     <div class="text-center" ng-if="selected.length">
-      <!--<group-resource-button
-          success="getter.reload()"
-          resource-type="Device"
-          get-resources="selector.getAllSelectedDevices()"
-          register-to-resources-update="selector.callbackOnSelection(callback)">
-      </group-resource-button>-->
+      <lot-device-button devices="selected" all-lots="lots"></lot-device-button>
       <manual-events-button devices="selected"></manual-events-button>
       <export-button devices="selected"></export-button>
       <print-tags-button devices="selected"></print-tags-button>

@@ -1,13 +1,7 @@
 <input type="text"
-       ng-model="model[options.key]"
-       uib-typeahead="resource[to.keyFieldName] as resource[to.labelFieldName] for resource in getResources(to.filterFieldNames, $viewValue)"
        class="form-control"
+       ng-model="model[options.key]"
+       uib-typeahead="resource[to.keyFieldName] as resource[to.labelFieldName] for resource in getResources($viewValue)"
        typeahead-editable="to.options['typeahead-editable']"
-       typeahead-select-on-exact="to.options['typeahead-select-on-exact']"
-       typeahead-on-select="to.options['typeahead-on-select']"
-       typeahead-no-results="to.options['typeahead-no-results']"
-       typeahead-loading="to.options['typeahead-loading']"
-       typeahead-input-formatter="formatLabel($model)"
        autocomplete="off"
 >
-</input>

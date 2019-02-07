@@ -58,6 +58,10 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
       return $http.patch(this.url + uri, model, this.config(config))
     }
 
+    delete (uri = '', config = this.constructor.c) {
+      return $http.delete(this.url + uri, this.config(config))
+    }
+
     start (config = {}) {
       this.poller = poller.get(this.url, {
         delay: CONSTANTS.workbenchPollingDelay,
@@ -129,6 +133,12 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
     patch (model, uri, config) {
       return this.tokenPromise.then(headerWithAuth => {
         return super.patch(model, uri, _.defaultsDeep(config, headerWithAuth))
+      })
+    }
+
+    delete (uri, config) {
+      return this.tokenPromise.then(headerWithAuth => {
+        return super.delete(uri, _.defaultsDeep(config, headerWithAuth))
       })
     }
 

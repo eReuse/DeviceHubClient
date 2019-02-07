@@ -56,5 +56,16 @@ window._.mixin({
    *
    * See https://www.npmjs.com/package/is-present#usage
    */
-  isPresent: isPresent
+  isPresent: isPresent,
+  /**
+   * Checks if source includes text in a search-friendly way
+   * (ignoring case, etc.).
+   * @param {string} source
+   * @param {string} text
+   * @return {boolean}
+   */
+  includesText: (source, text) => {
+    console.assert(_.isString(text), 'Can only search strings, not %s', text)
+    return _.includes(source.toLowerCase(), text.toLowerCase())
+  }
 })

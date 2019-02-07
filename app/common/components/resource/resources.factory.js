@@ -1319,6 +1319,34 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     _post () {
       return _.pick(this, ['name', 'description'])
     }
+
+    hasText (text) {
+      return _.includesText(this.name, text)
+    }
+
+    /**
+     * Add devices to this lot (regardless if the devices where
+     * already in the lot).
+     * @param {int[]} ids
+     * @return {Promise}
+     */
+    addDevices (ids) {
+      return this.server.post({}, this.id + '/devices', {params: {id: ids}}).then(lot => {
+        this.define(lot)
+      })
+    }
+
+    /**
+     * Removes devices from this lot (regardless if the devices
+     * where not in the lot to start with).
+     * @param {int[]} ids
+     * @return {Promise}
+     */
+    removeDevices (ids) {
+      return this.server.delete(this.id + '/devices', {params: {id: ids}}).then(r => {
+        this.define(r.data)
+      })
+    }
   }
 
   /**
@@ -1441,8 +1469,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     }
 
     hasText (text) {
-      console.assert(_.isString(text), 'Can only search strings, not %s', text)
-      return _.includes(this.lot.name.toLowerCase(), text.toLowerCase())
+      return this.lot.hasText(text)
     }
   }
 
@@ -1569,7 +1596,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     LotNode: LotNode,
     ResourceList: ResourceList,
     Lots: Lots,
-    resourceClass: resourceClass
+    resourceClass: resourceClass,
+    cache: cache
   }
   // Init servers
   /**

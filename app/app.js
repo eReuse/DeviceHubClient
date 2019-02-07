@@ -19,10 +19,12 @@ module.exports = window.angular.module('deviceHub', [
   .config(
     ($urlServiceProvider, $stateProvider) => {
       /**
-       * Fades the loading screen. Useful for after-logging states.
+       * Fades the loading screen and removes any mouse progress.
+       * Useful for after-logging states.
        * @return {jQuery}
        */
       function fadeLoadingScreen () {
+        $('body').removeClass('dh-progress')
         return $('#dh-loading').fadeOut(600)
       }
 

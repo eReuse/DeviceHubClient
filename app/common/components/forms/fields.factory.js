@@ -54,7 +54,9 @@ function fieldsFactory ($translate, Notification, $q) {
      * the translation text.
      * @param {boolean} description - Use a description?
      * @param {boolean} label - Use a label?
-     * @param {object.<string, string>} expressions - Formly's Expression Properties
+     * @param {object.<string, string>} expressions - Formly's Expression Properties.
+     * Use this to set custom formly expressions and override the ones
+     * this constructor sets.
      * @param {?string} hide = An angular expression that, if true, hides this.
      * @param {?Object} watcher
      * @param {string} watcher.expression
@@ -66,10 +68,11 @@ function fieldsFactory ($translate, Notification, $q) {
      * properties:
      * @param {function} addonRight.onClick
      * @param {string} addonRight.class
-     * @param {array} addons - A list of right addons. The same as addonRight but with a list.
+     * @param {array} addons - A list of right addons.
+     * The same as addonRight but with a list.
      * @param {callback} onChange - Callback to execute when values
-     * @param {?boolean} focus - Should the field be focused initially? Only one per form.
-     * change.
+     * @param {?boolean} focus - Should the field be focused initially?
+     * Only one per form.
      */
     constructor (key, {
       namespace = 'forms.fields',
@@ -97,9 +100,9 @@ function fieldsFactory ($translate, Notification, $q) {
         focus: focus
       }
       this.textPath = `${namespace}.${keyText}`
-      this.expressionProperties = _.clone(expressions)
+      this.expressionProperties = {}
       if (label) {
-        this.expressionProperties.label = `'${this.textPath}.l' | translate`
+        this.expressionProperties['templateOptions.label'] = `'${this.textPath}.l' | translate`
       }
       if (description) {
         this.templateOptions.description = ''
@@ -116,6 +119,7 @@ function fieldsFactory ($translate, Notification, $q) {
       this.templateOptions.addons = addons // Addons are translated directly in html
       this.hideExpression = hide
       this.watcher = watcher
+      this.expressionProperties = _.assign(this.expressionProperties, expressions)
     }
 
     /**
@@ -349,6 +353,19 @@ function fieldsFactory ($translate, Notification, $q) {
   }
 
   /**
+   * @alias module:fields.Typeahead
+   * @extends module:fields.Field
+   */
+  class Typeahead extends Field {
+    constructor (key, {keyFieldName = 'id', labelFieldName = 'name', resources = [], ...rest}) {
+      super(key, rest)
+      this.templateOptions.keyFieldName = keyFieldName
+      this.templateOptions.labelFieldName = labelFieldName
+      this.templateOptions.resources = resources
+    }
+  }
+
+  /**
    * @alias module:fields.Group
    */
   class Group {
@@ -547,6 +564,7 @@ function fieldsFactory ($translate, Notification, $q) {
     Yes: Yes,
     No: No,
     Email: Email,
+    Typeahead: Typeahead,
     STR_SIZE: STR_SIZE,
     STR_BIG_SIZE: STR_BIG_SIZE,
     STR_SM_SIZE: STR_SM_SIZE,

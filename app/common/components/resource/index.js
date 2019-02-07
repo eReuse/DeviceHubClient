@@ -27,7 +27,6 @@ module.exports = angular.module('common.components.resource',
     'ngSanitize',
     'dynamicBindHtml',
     require('./../tag').name,
-    require('./../group').name, // the button in resource-list,
     require('./../export').name,
     require('angular-marked')
   ])
