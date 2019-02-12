@@ -10,10 +10,15 @@ function fieldEdit (resourceFields, fields, Notification) {
    * @ngdoc directive
    * @restrict E
    * @element field-edit
-   * @description A field edit.
-   * @param {string} fieldName
-   * @param {expression} resource
-   * @param {string} fieldType
+   * @description Allows editing a field of a resource by placing
+   * a form that is shown only when the user clicks the directive.
+   * @param {string} fieldName - The name of the field inside
+   * `resource`.
+   * @param {expression} resource - The model.
+   * @param {string} fieldType - The name of a subclass of
+   * `module:fields.Field`.
+   * @param {?string} description - If set, the namespace for the
+   * field having a description to be showed as a description.
    */
   return {
     template: require('./field-edit.directive.html'),
@@ -22,10 +27,11 @@ function fieldEdit (resourceFields, fields, Notification) {
     scope: {
       fieldName: '@',
       fieldType: '@',
-      resource: '='
+      resource: '=',
+      description: '@?'
     },
     link: {
-      pre: ($scope, $element) => {
+      pre: $scope => {
         $scope.editing = false
 
         class FieldEditForm extends resourceFields.ResourceForm {
@@ -33,7 +39,8 @@ function fieldEdit (resourceFields, fields, Notification) {
             super($scope.resource,
               new fields[$scope.fieldType]($scope.fieldName, {
                 label: false,
-                description: false,
+                description: !!$scope.description,
+                namespace: $scope.description,
                 focus: true,
                 rows: fields.Textarea.autoRows($scope.resource[$scope.fieldName] || ''),
                 addons: [

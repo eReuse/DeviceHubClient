@@ -18,6 +18,9 @@ const en = {
   },
   resourceList: {
     allDevices: 'All devices',
+    lot: {
+      description: {d: 'Accepts Markdown.'}
+    },
     filters: {
       type: {
         l: '@:r.thing.type.l',
@@ -71,7 +74,7 @@ const en = {
     },
     e: {
       required: 'This field is required.',
-      email: 'The email is wrongly typed.',
+      email: 'It is not a valid email.',
       minlength: 'Too short. Minimum characters are {{to}}.',
       parse: 'Wrong format. Review that the format is correct.',
       number: 'The number is incorrect.'
