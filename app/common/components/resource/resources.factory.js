@@ -257,7 +257,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       /** @type {string} */
       this.url = url ? new URL(url, CONSTANTS.url) : null
       /** @type {Lot[]} */
-      this.lots = lots
+      this._lots = _.map(lots, 'id')
       /** @type {Rate} */
       this.rate = this.constructor._relationship(rate)
       /** @type {Price} */
@@ -276,6 +276,11 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
     static get icon () {
       return ''
+    }
+
+    get lots () {
+      // todo what if we got a device inside a new lot that is not yet in the cache?
+      return this._lots.map(id => cache.lots[id])
     }
 
     /**
@@ -1287,9 +1292,15 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       this.description = description
       this.closed = closed
       this.devices = devices
-      this.children = children
-      this._parents = this.constructor._relationships(parents)
+      // We don't do `_relationship` as we know all lots will eventually
+      // be set in cache (we receive the full list of lots)
+      this._children = children.map(l => l['id'])
+      this._parents = parents.map(l => l['id'])
       this.url = url
+    }
+
+    get children () {
+      return this._children.map(id => cache.lots[id])
     }
 
     get parents () {
@@ -1304,6 +1315,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
         return lot
       }
       return cache.lots[data.id]
+    }
+
+    get title () {
+      return this.name
     }
 
     post () {
@@ -1337,13 +1352,41 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     }
 
     /**
-     * Removes devices from this lot (regardless if the devices
+     * Remove devices from this lot (regardless if the devices
      * where not in the lot to start with).
      * @param {int[]} ids
      * @return {Promise}
      */
     removeDevices (ids) {
       return this.server.delete(this.id + '/devices', {params: {id: ids}}).then(r => {
+        this.define(r.data)
+      })
+    }
+
+    /**
+     * Add lots to this lot.
+     *
+     * This method does not throw error for lots that are already
+     * previously in this lot.
+     * @param {string[]} ids
+     * @return {Promise}
+     */
+    addChildren (...ids) {
+      return this.server.post({}, this.id + '/children', {params: {id: ids}}).then(lot => {
+        this.define(lot)
+      })
+    }
+
+    /**
+     * Remove direct children lots from this lot.
+     *
+     * This method does not throw error for lots that are not inside
+     * the lot.
+     * @param {string[]} ids
+     * @return {Promise}
+     */
+    removeChildren (...ids) {
+      return this.server.delete(this.id + '/children', {params: {id: ids}}).then(r => {
         this.define(r.data)
       })
     }

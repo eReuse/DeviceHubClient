@@ -46,39 +46,6 @@ function lotsTreeNavigation (progressBar, $rootScope, selection, resources) {
           $scope.lots.tree.forEach(visibleIfHasText)
         }
 
-        $scope.treeOptions = {
-          dropped: $event => {
-            // if element was not moved, use click event
-            if ($event.source.index === $event.dest.index) {
-              $scope.toggleLot($event.source.nodeScope.$modelValue, $event)
-              return true
-            }
-
-            let lot = _.get($event, 'source.nodeScope.$modelValue')
-            let previousParent = _.get($event, 'source.nodeScope.$parentNodeScope.node')
-            let selectedParent = _.get($event, 'dest.nodesScope.node')
-
-            if (!lot) {
-              return false
-            } else if (!selectedParent && !previousParent) {
-              return false
-            }
-            const query = {
-              id: lot._id
-            }
-            let promises = []
-            if (previousParent) {
-              promises.push(ResourceSettings('Lot').server.one(previousParent._id).all('children').remove(query))
-            }
-            if (selectedParent) {
-              promises.push(ResourceSettings('Lot').server.one(selectedParent._id).all('children').post(null, query))
-            }
-            Promise.all(promises).then(() => {
-              reload()
-            })
-          }
-        }
-
         class LotsSelector extends selection.Selected {
           toggle (lot, $event) {
             $event.shiftKey = false // We avoid the shift key

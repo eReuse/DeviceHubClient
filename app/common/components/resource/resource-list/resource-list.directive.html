@@ -20,6 +20,8 @@
         >
           Deselect all ({{lotsM.lots.length}})
         </button>
+        <lot-children-button parent="lotsM.lots[0]" ng-if="lotsM.lots.length === 1">
+        </lot-children-button>
       </div>
       <div ng-if="lotsM.lots.length === 1">
         <h2>
@@ -34,9 +36,9 @@
           <div marked="lotsM.lots[0].description"></div>
         </field-edit>
       </div>
-      <div ng-show="lotsM.lots.length > 1">
+      <h2 ng-show="lotsM.lots.length > 1">
         {{lotsM.title}}
-      </div>
+      </h2>
     </div>
     <div class="col-xs-12 fill-height-bar">
       <div ng-hide="lotsM.lots.length">

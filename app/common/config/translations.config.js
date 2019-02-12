@@ -404,11 +404,17 @@ const en = {
     edit: 'Click here to edit it.'
   },
   lot: {
-    button: {
+    device: {
       edit: 'Lots',
       add: 'Add devices to lots',
       remove: 'Remove devices from lots',
       lotId: {l: 'Lot', d: 'Select a lot by writing its name.'}
+    },
+    children: {
+      edit: 'Inner lots',
+      add: 'Add lots to {{parent}}',
+      remove: 'Remove lots from {{parent}}',
+      childId: {l: 'Child lot', d: 'Select a lot by writing its name.'}
     }
   }
 }

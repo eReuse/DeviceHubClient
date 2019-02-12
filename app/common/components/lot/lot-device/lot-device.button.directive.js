@@ -30,23 +30,18 @@ function lotDeviceButton ($translate, fields, resources) {
       }
       $scope.openAdd = () => {
         $scope.popover.isOpen = true
-        $scope.popover.title = $translate.instant('lot.button.add')
-        $scope.form = new LotDeviceForm(true)
+        $scope.popover.title = $translate.instant('lot.device.add')
+        $scope.form = new LotDeviceAddForm(true)
       }
       $scope.openRemove = () => {
         $scope.popover.isOpen = true
-        $scope.popover.title = $translate.instant('lot.button.remove')
-        $scope.form = new LotDeviceForm(false)
+        $scope.popover.title = $translate.instant('lot.device.remove')
+        $scope.form = new LotDeviceRemoveForm(false)
       }
 
       class LotDeviceForm extends fields.Form {
-        constructor (add) {
-          super({},
-            new fields.Typeahead('lotId', {
-              resources: resources.cache.lots,
-              namespace: 'lot.button'
-            })
-          )
+        constructor (add, ...args) {
+          super(...args)
           this.add = add
         }
 
@@ -63,6 +58,32 @@ function lotDeviceButton ($translate, fields, resources) {
         _success (op, response, namespace) {
           super._success(op, response, namespace)
           $scope.popover.isOpen = false
+        }
+      }
+
+      class LotDeviceAddForm extends LotDeviceForm {
+        constructor () {
+          super(true, {}, new fields.Typeahead('lotId', {
+              resources: resources.cache.lots,
+              namespace: 'lot.device',
+              required: true
+            })
+          )
+        }
+      }
+
+      class LotDeviceRemoveForm extends LotDeviceForm {
+        constructor () {
+          super(false, {}, new fields.Select('lotId', {
+            options: _($scope.devices)
+              .flatMap('lots')
+              .uniq()
+              .sortBy(['name'])
+              .map(l => new fields.Option(l.id, {name: l.name}))
+              .value(),
+            namespace: 'lot.device',
+            required: true
+          }))
         }
       }
     }

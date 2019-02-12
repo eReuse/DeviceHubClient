@@ -15,7 +15,7 @@
            ng-model="filter"
            ng-change="makeNodesWithTextVisible(filter)">
   </div>
-  <div data-ui-tree="treeOptions" data-drag-delay="100">
+  <div data-ui-tree data-nodrop-enabled="true" data-drag-enabled="false">
     <ol ui-tree-nodes="" ng-model="lots.tree" id="tree-root">
       <li ng-repeat="node in lots.tree"
           ui-tree-node

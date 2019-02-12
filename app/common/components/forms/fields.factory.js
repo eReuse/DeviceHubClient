@@ -288,6 +288,7 @@ function fieldsFactory ($translate, Notification, $q) {
      */
     constructor (key, {options = [], ...rest} = {}) {
       super(key, rest)
+      for (let option of options) console.assert(option instanceof Option)
       this.templateOptions.options = options
     }
   }
@@ -328,15 +329,27 @@ function fieldsFactory ($translate, Notification, $q) {
   }
 
   /**
+   * An option to use with option forms.
    * @alias module:fields.Option
    */
   class Option {
+    /**
+     *
+     * @param value - The value of the option.
+     * @param name - The name of the option (what the user sees).
+     * If this is not set, ``namespace`` and ``keyText`` are used
+     * to get a translation text.
+     * @param namespace - As Field's ``namespace``. Not used if
+     * ``name`` is set.
+     * @param keyText
+     */
     constructor (value, {
+      name = null,
       namespace = 'forms.fields',
       keyText = inflection.camelize(value == null ? 'null' : value, true)
     }) {
       this.value = value
-      this.name = $translate.instant(`${namespace}.${keyText}`)
+      this.name = name || $translate.instant(`${namespace}.${keyText}`)
     }
   }
 

@@ -128,6 +128,10 @@ function resourceList (resources, resourceListConfig, progressBar, Notification,
         }
 
         $scope.lotsM = new LotsManager()
+
+        $scope.$on('devices:reload', () => {
+          getter.reload()
+        })
       },
       post: ($scope, $element) => {
         /**
