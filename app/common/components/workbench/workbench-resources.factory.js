@@ -19,6 +19,18 @@ function workbenchResourcesFactory (resources, enums, server) {
       this.linked = _linked
     }
 
+    _defineDevice (device) {
+      // We do not add the device to cache, neither set _device
+      // to the default value (the ID of the device)
+      // as these devices don't have ID and are not yet to the DH
+      // workflow, so better not to mix them with the others
+      this._device = resources.resourceClass(device.type).fromObject(device)
+    }
+
+    get device () {
+      return this._device
+    }
+
     get title () {
       return this.device.title
     }

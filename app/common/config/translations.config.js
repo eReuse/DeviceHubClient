@@ -317,7 +317,8 @@ const en = {
         lost: 'Connection to {{app}} lost.',
         check: 'Check Wi-Fi and Internet.'
       },
-      wifi: 'Box\'s WiFi name: "{{name}}" Password: "{{pass}}"'
+      wifi: 'Box\'s WiFi name: "{{name}}" Password: "{{pass}}"',
+      notLinked: 'Not linked.'
     },
     link: {
       title: 'Workbench Link',

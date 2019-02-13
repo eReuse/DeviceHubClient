@@ -69,3 +69,10 @@ window._.mixin({
     return _.includes(source.toLowerCase(), text.toLowerCase())
   }
 })
+/**
+ * Flags to change in runtime by developers for testing.
+ * @type {{showWorkbench: boolean}}
+ */
+window.flags = {
+  showWorkbench: false
+}

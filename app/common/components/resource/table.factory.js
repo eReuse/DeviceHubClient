@@ -38,8 +38,8 @@ function table ($translate) {
    * @memberOf module:table
    */
   class Tags extends Field {
-    constructor (resource) {
-      super(resource)
+    constructor (resource, content) {
+      super(resource, content)
       // Angular does not perform 'toString()' on arrays like tags
       this.content = this.content.join(', ')
     }

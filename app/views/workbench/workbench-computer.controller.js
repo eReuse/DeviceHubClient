@@ -8,7 +8,7 @@
  * @param server
  * @param session
  */
-function workbenchComputerCtl ($scope, workbenchResources, resources, table, enums, server, session) {
+function workbenchComputerCtl ($scope, workbenchResources, resources, table, enums, server, session, $translate) {
   $scope.session = session
   $scope.WorkbenchComputerPhase = enums.WorkbenchComputerPhase
 
@@ -25,13 +25,19 @@ function workbenchComputerCtl ($scope, workbenchResources, resources, table, enu
 
   }
 
-  class Linked extends table.Bool {
+  class Tags extends table.Tags {
+    constructor (resource) {
+      super(resource, _.get(resource, 'device.tags', []))
+      if (!this.content) {
+        this.content = $translate.instant('workbench.computer.notLinked')
+      }
+    }
   }
 
   Title.hide = true
 
   $scope.table = {
-    fields: [table.Icon, table.Title, Phase, Linked]
+    fields: [table.Icon, table.Title, Phase, Tags]
   }
 
   $scope.$on('$destroy', () => {

@@ -294,13 +294,19 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
     constructor (path, workbenchResources) {
       super(Workbench.base(), path)
       this.wr = workbenchResources
-      this._config.params = {
-        'device-hub': CONSTANTS.url
-      }
-      if (CONSTANTS.inventories) {
-        sessionLoaded.loaded.then(user => {
-          this._config.params.db = user.inventories[0].id
-        })
+      if (!android.app.exists) {
+        // Androids don't send this config info to the devicehub
+        // As the users that are logged in on the androids are
+        // regular employees, not the manager, which sets this
+        // settings directly in the Workbench Server webview
+        this._config.params = {
+          'device-hub': CONSTANTS.url
+        }
+        if (CONSTANTS.inventories) {
+          sessionLoaded.loaded.then(user => {
+            this._config.params.db = user.inventories[0].id
+          })
+        }
       }
     }
 

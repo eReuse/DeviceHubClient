@@ -156,4 +156,5 @@ module.exports = window.angular.module('deviceHub', [
     $rootScope.CONSTANTS = CONSTANTS
     window.document.title = CONSTANTS.appName
     window.CONSTANTS = CONSTANTS // todo are we sure this is ok?
+    $rootScope.flags = window.flags
   })

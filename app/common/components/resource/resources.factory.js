@@ -725,8 +725,13 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
   class EventWithOneDevice extends Event {
     define ({device = null, ...rest}) {
       super.define(rest)
-      device = this.constructor._relationship(device)
-      this._device = _.get(device, 'id', device)  // todo see todo in multiple devices
+      this._defineDevice(device)
+    }
+
+    _defineDevice (device) {
+      // Define the device separately so inhertors can override this
+      const _device = this.constructor._relationship(device)
+      this._device = _.get(_device, 'id', _device)  // todo see todo in multiple devices
     }
 
     get device () {
