@@ -123,8 +123,8 @@
   >
     <div ng-if="!selected.length" class="selection-empty">
       <div>
-        <h4>Select a device to view its details</h4>
-        <p>Hold <kbd>Ctrl</kbd> or <kbd>Shift</kbd> to select multiple devices.</p>
+        <h4>{{::'resourceList.selectAll.t' | translate}}</h4>
+        <!--<p>{{::'resourceList.selectAll.d' | translate}}</p>-->
       </div>
     </div>
     <h3 ng-show="selected.length">

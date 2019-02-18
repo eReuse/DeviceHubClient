@@ -94,9 +94,49 @@ function androidFactory ($rootScope) {
    */
   const app = new Android()
 
+  /**
+   * Integrates the Android tag scanning with the Workbench
+   * Link form.
+   * @alias module:android.Tag
+   */
+  class Tag {
+    constructor ($scope, nfcModelPath) {
+      this.$scope = $scope
+      try {
+        app.startNFC(this.setTagFactory(nfcModelPath))
+        $scope.$on('$destroy', () => {
+          app.stopNFC()
+        })
+      } catch (e) {
+        if (!(e instanceof NoAndroidApp)) throw e
+      }
+    }
+
+    addonRightScan (modelPath) {
+      return app.exists ? {
+        onClick: () => {
+          // Code tagNum as the last char of the event name
+          app.scanBarcode(this.setTagFactory(modelPath))
+        },
+        class: 'fa fa-camera'
+      } : null
+    }
+
+    /**
+     * @param {number} modelPath
+     */
+    setTagFactory (modelPath) {
+      return tag => {
+        const id = app.constructor.parseTag(tag)
+        _.set(this.$scope.form.model, modelPath, id)
+      }
+    }
+  }
+
   return {
     app: app,
-    NoAndroidApp: NoAndroidApp
+    NoAndroidApp: NoAndroidApp,
+    Tag: Tag
   }
 }
 

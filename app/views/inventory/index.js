@@ -28,5 +28,6 @@ module.exports = angular.module('views.inventory',
   .controller('inventoryCtrl', require('./inventory.controller.js'))
   .controller('newEventCtrl', require('./new-event.controller.js'))
   .controller('snapshotUploadCtrl', require('./upload.snapshot.controller.js'))
+  .controller('snapshotManualCtrl', require('./manual.snapshot.controller.js'))
 //.controller('newDevice', require('./new-device.controller.js'))
 

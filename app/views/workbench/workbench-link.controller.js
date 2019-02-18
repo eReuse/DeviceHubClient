@@ -9,44 +9,7 @@ function workbenchLinkCtl (fields, $scope, android, enums, server, $stateParams)
   /** @type {module:resources.Snapshot} */
   const usb = $scope.usb = $stateParams.usb
 
-  /**
-   * Integrates the Android tag scanning with the Workbench
-   * Link form.
-   */
-  class AndroidTag {
-    constructor () {
-      try {
-        android.app.startNFC(this.setTagFactory(0))
-        $scope.$on('$destroy', () => {
-          android.app.stopNFC()
-        })
-      } catch (e) {
-        if (!(e instanceof android.NoAndroidApp)) throw e
-      }
-    }
-
-    addonRightScan (tagNum) {
-      return android.app.exists ? {
-        onClick: () => {
-          // Code tagNum as the last char of the event name
-          android.app.scanBarcode(this.setTagFactory(tagNum))
-        },
-        class: 'fa fa-camera'
-      } : null
-    }
-
-    /**
-     * @param {number} tagNum
-     */
-    setTagFactory (tagNum) {
-      return tag => {
-        const id = android.app.constructor.parseTag(tag)
-        $scope.form.model.device.tags[tagNum] = {id: id}
-      }
-    }
-  }
-
-  const androidTag = new AndroidTag()
+  const androidTag = new android.Tag($scope, 'device.tags[0].id')
 
   /**
    * @class
@@ -91,12 +54,12 @@ function workbenchLinkCtl (fields, $scope, android, enums, server, $stateParams)
     new fields.String('device.tags[0].id', {
       namespace: ns,
       keyText: 'tag0',
-      addonRight: androidTag.addonRightScan(0)
+      addonRight: androidTag.addonRightScan('device.tags[0].id')
     }),
     new fields.String('device.tags[1].id', {
       namespace: ns,
       keyText: 'tag1',
-      addonRight: androidTag.addonRightScan(1)
+      addonRight: androidTag.addonRightScan('device.tags[1].id')
     }),
     new fields.Radio('device.events[0].appearanceRange', {
       namespace: ns,

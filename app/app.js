@@ -119,8 +119,12 @@ module.exports = window.angular.module('deviceHub', [
         name: 'auth.inventory.snapshotUpload',
         url: 'upload-snapshot/',
         template: require('./views/inventory/upload.snapshot.controller.html'),
-        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
         controller: 'snapshotUploadCtrl'
+      }).state({
+        name: 'auth.inventory.snapshotManual',
+        url: 'snapshot/',
+        template: require('./views/inventory/manual.snapshot.controller.html'),
+        controller: 'snapshotManualCtrl'
       }).state({
         name: 'login',
         url: '/login',

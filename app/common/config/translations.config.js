@@ -18,6 +18,10 @@ const en = {
   },
   resourceList: {
     allDevices: 'All devices',
+    selectAll: {
+      t: 'Select a device to view its details',
+      d: 'Hold <kbd>Ctrl</kbd> or <kbd>Shift</kbd> to select multiple devices.'
+    },
     lot: {
       description: {d: 'Accepts Markdown.'}
     },
@@ -161,7 +165,8 @@ const en = {
     },
     device: {
       manufacturer: {l: 'Manufacturer', d: 'The name of the manufacturer.'},
-      model: {l: 'Model', d: 'The name of the model or brand.'}
+      model: {l: 'Model', d: 'The name of the model or brand.'},
+      serialNumber: {l: 'Serial number', d: 'The serial number of the device.'}
     },
     event: {
       name: {
@@ -421,7 +426,19 @@ const en = {
   snapshotButton: {
     main: 'New snapshot',
     upload: 'Upload a JSON snapshot file',
-    add: 'Add a device'
+    manual: 'Add a device'
+  },
+  snapshot: {
+    files: {l: 'Select Snapshot files', d: 'Select multiple Snapshot JSON files to upload.'},
+    manual: {
+      type: {l: '@:r.thing.type.l', d: 'The type of the device.'},
+      tag0: {l: '@:workbench.link.tag0.l', d: '@:workbench.link.tag0.d'},
+      serialNumber: {l: '@:r.device.serialNumber.l', d: '@:r.device.serialNumber.d'},
+      model: {l: '@:r.device.model.l', d: '@:r.device.model.d'},
+      manufacturer: {l: '@:device.manufacturer.l', d: '@:r.device.manufacturer.d'},
+      appearance: {l: '@:workbench.link.appearance.l', d: '@:workbench.link.appearance.d'},
+      functionality: {l: '@:workbench.link.functionality.l', d: '@:workbench.link.functionality.d'}
+    }
   }
 }
 
