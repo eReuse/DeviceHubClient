@@ -22,13 +22,11 @@ module.exports = angular.module('views.inventory',
   [
     require('./../../common/components/resource').name,
     require('./../../common/components/utilities').name,
-    require('./../../common/components/lot').name // the button in resource-list
+    require('./../../common/components/lot').name, // the button in resource-list
+    require('angular-ui-bootstrap')
   ])
   .controller('inventoryCtrl', require('./inventory.controller.js'))
   .controller('newEventCtrl', require('./new-event.controller.js'))
-  .run(function notAccessNewEventViewDirectly ($transitions) {
-    $transitions.onStart({to: 'auth.inventory.newEvent'}, trans => {
-      const params = trans.params()
-      if (!params.event) return trans.router.stateService.target('auth.inventory')
-    })
-  })
+  .controller('snapshotUploadCtrl', require('./upload.snapshot.controller.js'))
+//.controller('newDevice', require('./new-device.controller.js'))
+

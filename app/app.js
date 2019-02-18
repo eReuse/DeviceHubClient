@@ -37,11 +37,7 @@ module.exports = window.angular.module('deviceHub', [
        */
       function redirectToIfAccessedThroughURLFactory (target) {
         return trans => {
-          // Passed-in params to the states are of type 'any'
-          // and not set in the URL
-          const params = trans.params()
-          const oneParam = _.find(params, _.isPresent)
-          if (!oneParam) return trans.router.stateService.target(target)
+          if (trans.options === 'url') return trans.router.stateService.target(target)
         }
       }
 
@@ -120,6 +116,12 @@ module.exports = window.angular.module('deviceHub', [
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
         controller: 'newEventCtrl as neCl'
       }).state({
+        name: 'auth.inventory.snapshotUpload',
+        url: 'upload-snapshot/',
+        template: require('./views/inventory/upload.snapshot.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
+        controller: 'snapshotUploadCtrl'
+      }).state({
         name: 'login',
         url: '/login',
         template: require('./views/login/login.controller.html'),
@@ -156,5 +158,4 @@ module.exports = window.angular.module('deviceHub', [
     $rootScope.CONSTANTS = CONSTANTS
     window.document.title = CONSTANTS.appName
     window.CONSTANTS = CONSTANTS // todo are we sure this is ok?
-    $rootScope.flags = window.flags
   })

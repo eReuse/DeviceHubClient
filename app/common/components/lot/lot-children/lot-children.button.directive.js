@@ -48,7 +48,7 @@ function lotDeviceButton ($translate, fields, resources) {
             new fields.Typeahead('childId', {
               // todo this shows ancestor lots
               resources: _.difference(
-                _.values(resources.cache.lots),
+                _.values(resources.Lot.CACHE),
                 $scope.parent.children,
                 [$scope.parent]
               ),

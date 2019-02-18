@@ -250,6 +250,38 @@ function getSetting (settings, rSettings, path) {
   return value
 }
 
+/**
+ * Like regular JS File but with an extra data property. This automatically
+ * reads the contents of file and sets them in the data property.
+ */
+class DataFile {
+  /**
+   * @param {File} file
+   * @param {string} readAs
+   */
+  constructor (file, readAs) {
+    console.assert(readAs === 'readAsDataUrl' || readAs === 'readAsText')
+    console.assert(file instanceof File)
+    this.name = file.name
+    this.size = file.size
+    this.lastModified = file.lastModified
+    this.data = null
+    // We cannot use $q as this is used by 'config' providers
+    this.loaded = new Promise(resolve => {
+      const reader = new FileReader()
+      reader.onload = event => {
+        this.data = event.target.result
+        resolve(this.data)
+      }
+      reader[readAs](file)
+    })
+  }
+
+  toString () {
+    return this.name
+  }
+}
+
 const perms = {
   READ: 'r',
   EDIT: 'e',
@@ -262,6 +294,14 @@ perms.RESOURCE_PERMS = new Set([perms.READ, perms.EDIT, perms.RESTRICTED_EDIT, p
 perms.DB_PERMS = new Set([perms.DB_PERMS, perms.PARTIAL_ACCESS, perms.ADMIN])
 perms.EXPLICIT_DB_PERMS = new Set([perms.ACCESS, perms.ADMIN])
 
+const unforgivingHandler = {
+  get: (obj, prop) => {
+    // Lodash can check for length
+    console.assert(prop === 'length' || prop in obj, 'Obj %s does not has %s', obj, prop)
+    return obj[prop]
+  }
+}
+
 module.exports = {
   Naming: Naming,
   copy: copy,
@@ -273,5 +313,7 @@ module.exports = {
   setImageGetter: setImageGetter,
   Progress: Progress,
   getSetting: getSetting,
-  perms: perms
+  perms: perms,
+  DataFile: DataFile,
+  unforgivingHandler: unforgivingHandler
 }

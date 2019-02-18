@@ -47,7 +47,7 @@ function lotDeviceButton ($translate, fields, resources) {
 
         _submit () {
           const ids = _.map($scope.devices, 'id')
-          const lot = resources.cache.lots[this.model.lotId]
+          const lot = resources.Lot.CACHE[this.model.lotId]
           if (this.add) {
             return lot.addDevices(ids)
           } else {

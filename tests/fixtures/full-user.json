@@ -1,9 +1,0 @@
-{
-  "password": "example",
-  "role": "admin",
-  "defaultDatabase": "db1",
-  "token": "123",
-  "databases": ["db1", "db2"],
-  "email": "example@example.com",
-  "_id": "1111"
-}

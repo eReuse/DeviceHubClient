@@ -47,7 +47,8 @@
                 ng-click="lotXs.show()">
           <i class="fa fa-folder fa-fw"></i>Select lot
         </button>
-        <h2 translate="resourceList.allDevices"></h2>
+        <snapshot-button class="pull-right"></snapshot-button>
+        <h2>{{::'resourceList.allDevices' | translate}}</h2>
       </div>
       <h3 ng-show="lotsM.lots.length">Devices in lots</h3>
       <resource-search on-update="getter.setSearch(text)"></resource-search>

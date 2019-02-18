@@ -63,6 +63,10 @@ function enumsFactory ($translate) {
       const enums = _.filter(this, v => v instanceof this)
       return enums.map(e => new fields.Option(e.value, e.textPath))
     }
+
+    toJSON () {
+      return this.value
+    }
   }
 
   /**

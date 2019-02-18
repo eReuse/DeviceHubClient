@@ -1,5 +1,27 @@
 const utils = require('./../utils')
 const inflection = require('inflection')
+const isEmpty = require('is-empty')
+
+/**
+ * Sets the field `name` of `obj` to be not enumerable
+ *
+ * Things use this for private elements, so they are hidden when
+ * POSTing, JSONifying, and when iterating through keys.
+ *
+ * @param obj
+ * @param name
+ */
+function setNotEnumerable (obj, name) {
+  Object.defineProperty(obj, name, {'enumerable': false, 'writable': true})
+}
+
+/**
+ * object used by Things to allow getters to be enumerable,
+ * so using them when POSTing, JSONifying, and when iterating
+ * through keys.
+ * @type {{enumerable: boolean}}
+ */
+const ENUMERABLE = {'enumerable': true}
 
 /**
  * Resources module
@@ -14,18 +36,18 @@ const inflection = require('inflection')
  * @param {module:enums} enums
  */
 function resourceFactory (server, CONSTANTS, $filter, enums) {
-  const cache = {
-    /** @type {Object.<int, Device>} */
-    devices: {},
-    /** @type {Object.<string, Lot>} */
-    lots: {}
-  }
-
   /**
-   * A Devicehub resource. This mimics Devicehub's schema.Thing.
+   * The models of Devicehub, mimicking Devicehub's `schema.Thing`.
+   * Thing classes have generic methods that can communicate with
+   * Devicehub (for example, Lot has a method to add devices to it,
+   * adding it in both the angular and Devicehub).
    *
-   * Please look at the Devicehub counterpart to learn about
-   * the fields, etc.
+   * Some Things can have caches, avoiding having the same Thing
+   * instance duplicated and allowing the programmer access
+   * relationships in an easy way between them (ex. device.events).
+   * Cache is optional and sometimes, like when building a new
+   * Thing through a form, is desirable to deactivate them for
+   * an instance. See `module:resources.Thing~init`.
    *
    * @memberOf module:resources
    *
@@ -35,7 +57,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       this.define(args)
     }
 
-    define ({sameAs = null, updated = null, created = null}) {
+    define ({sameAs = null, updated = null, created = null, _useCache = false}) {
       /**
        * @type {URL}
        */
@@ -48,6 +70,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
        * @type {Date}
        */
       this.created = created ? new Date(created) : null
+      /** @type {boolean} **/
+      setNotEnumerable(this, '_useCache')
+      this._useCache = _useCache
     }
 
     get createdHuman () {
@@ -82,19 +107,6 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       return utils.Naming.humanize(this.type)
     }
 
-    /**
-     * HTML describing the resource.
-     * @return {string}
-     */
-    get teaser () {
-      return new Teaser(
-        this.type,
-        this.title,
-        '',
-        this.created
-      )
-    }
-
     static get icon () {
       throw Error('Not implemented')
     }
@@ -111,14 +123,6 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     }
 
     /**
-     * Creates an instance of this class from a generic JS object,
-     * parsing all properties, etc.
-     */
-    static fromObject (data) {
-      return new this(data)
-    }
-
-    /**
      * A connection to Devicehub. Ex. myThing.server.post()
      * @return {module:server.DevicehubThing}
      */
@@ -131,11 +135,12 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
      * updating the contents of this object with the result of
      * devicehub.
      *
+     * Parameters are optional and usually not required.
      * @return {Promise}
      */
-    post () {
+    post (uri, config) {
       console.assert(!this.id, '%s %s has already been posted.', this.type, this.id)
-      return this.server.post(this._post()).then(obj => {
+      return this.server.post(this._post(), uri, config).then(obj => {
         this.define(obj)
         return this
       })
@@ -143,18 +148,12 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
     /**
      * Returns a posteable version of the thing, complying with
+     * Devicehub's API.
      * @return {Object.<string, Object>}
      * @private
      */
     _post () {
-      const cleaned = {
-        type: this.type
-      }
-      _.forOwn(this, (value, key) => {
-        // Note that 0 is as 'not present'
-        if (_.isPresent(value) && key[0] !== '_') cleaned[key] = value
-      })
-      return cleaned
+      return this
     }
 
     /**
@@ -178,30 +177,91 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     }
 
     /**
-     * sets a relationship (ex. Component.parent) when initializing
-     * component. This takes care of instantiating the other end
-     * of the relationship (ex. new Computer()) if the passed-in
-     * object is not a primitive (ex. the ID of the computer) or
-     * null / undefined.
-     * @param {object} other
-     * @return {*|Thing}
+     * Instantiates this type of Thing from a plain object.
+     *
+     * Note that you can use `resources:init` as a more convenient
+     * method, too.
+     *
+     * @param {object} thingLike -  The plain object.
+     * @param {boolean} useCache - If true, reconcile this object
+     * with the cache, otherwise do not link this object with the
+     * cache. This is recursive: all relationships from this object
+     * will have the same setting.
+     * @return {Thing}
      */
-    static _relationship (other) {
-      let ret = other
-      let hasType = false
-      try {
-        hasType = 'type' in other
-      } catch (e) {
+    static init (thingLike, useCache) {
+      console.assert(_.isPlainObject(thingLike))
+      console.assert('type' in thingLike)
+
+      let thing
+      if (useCache && this.CACHE) {  // Use a cache and we have a cache to use
+        const id = thingLike.id
+        if (id) { // ...and our thingLike has an ID (so we can identify it in cache)
+          if (id in this.CACHE) {  // Cache hit: update cache
+            thing = this.CACHE[id]
+            thing.define(thingLike)
+          } else {  // Cache miss: add new entry to cache
+            this.CACHE[id] = thing = new this(thingLike)
+          }
+        } else {  // Object has no ID; we cannot set it to a cache
+          // Just instantiate it
+          thing = new this(thingLike)
+        }
+      } else {  // Don't use cache; just instantiate it
+        thing = new this(thingLike)
       }
-      if (hasType) {
-        if (other instanceof Thing) ret = other
-        else ret = resourceClass(other.type).fromObject(other)
-      }
-      return ret
+      console.assert(thing instanceof this)
+      // We avoid adding values
+      Object.seal(thing)
+      return thing
     }
 
-    static _relationships (others) {
-      return others.map(other => this._relationship(other))
+    /**
+     * Creates a relationship between `this` and a passed-in `other`,
+     * instantiating it as a Thing and, if `this` is in the cache,
+     * reconciling `other` with the cache too.
+     *
+     * @param {?object} other - An ID, a plain object or null. Plain
+     * objects are initialized as a Thing, other types of values are
+     * just returned as-is.
+     * @return {string|number|object|Thing|null} - The ID of the object,
+     * if the object is a Thing living in the cache, or the passed-in
+     * value as-is.
+     */
+    _rel (other, idField = 'id') {
+      console.assert(!(other instanceof Thing) && !(other instanceof Array))
+      if (!_.isPlainObject(other)) return other
+
+      const value = resources.init(other, this._useCache)
+      return this._useCache ? _.get(value, idField, value) : value
+    }
+
+    /**
+     * The same as `relationsihp` but with an array.
+     * @param {array} others
+     * @return {*}
+     */
+    _rels (others) {
+      console.assert(others instanceof Array)
+      return others.map(other => this._rel(other))
+    }
+
+    /**
+     * Gets the full object from a relationship.
+     *
+     * @param cache - A cache where the object could potentially be.
+     * @param value - The result of `module:resources.Thing._rel`
+     * @return {*}
+     * @private
+     */
+    _getRel (cls, value) {
+      console.assert(!(cls instanceof Array))
+      return this._useCache ? _.get(cls.CACHE, value, value) : value
+    }
+
+    _getRels (cls, value) {
+      console.assert(value instanceof Array)
+      return value.map(v => this._getRel(cls, v))
     }
 
     /**
@@ -217,10 +277,31 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
         .map(r => new Option(r.name, {namespace: 'r.l'}))
         .value()
     }
+
+    toJSON () {
+      return this.dump()
+    }
+
+    dump () {
+      const dump = {}
+      for (let key in this) {
+        const v = this[key]
+        if (v === 0 || !isEmpty(v)) dump[key] = v
+      }
+      return dump
+    }
   }
+
+  // See `module:resources.setNotEnumerable`
+  Object.defineProperties(Thing.prototype, {
+    type: ENUMERABLE
+  })
 
   /** A connection to Devicehub. Ex. myThing.server.post() */
   Thing.server = null
+
+  /** A cache for this resource and subresources to use */
+  Thing.CACHE = null
 
   /**
    * Class representing a device
@@ -228,14 +309,14 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    * @extends module:resources.Thing
    */
   class Device extends Thing {
-    define ({id = null, hid = null, tags = [], model = null, manufacturer = null, serialNumber = null, weight = null, width = null, height = null, depth = null, events = [], problems = [], url = null, lots = [], rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, working = [], ...rest}) {
+    define ({id = null, hid = null, tags = [], model = null, manufacturer = null, serialNumber = null, weight = null, width = null, height = null, depth = null, events = [], problems = [], url = null, rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, working = [], ...rest}) {
       super.define(rest)
       /** @type {int} */
       this.id = id
       /** @type {?string} */
       this.hid = hid
       /** @type {Tag[]} */
-      this.tags = this.constructor._relationships(tags)
+      this.tags = tags
       /** @type {?string} */
       this.model = model ? inflection.titleize(model) : null
       /** @type {?string} */
@@ -251,17 +332,15 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       /** @type {string} */
       this.depth = depth
       /** @type {Event[]} */
-      this.events = this.constructor._relationships(events)
+      this.events = events
       /** @type {Event[]} */
-      this.problems = this.constructor._relationships(problems)
+      this.problems = this._rels(problems)
       /** @type {string} */
       this.url = url ? new URL(url, CONSTANTS.url) : null
-      /** @type {Lot[]} */
-      this._lots = _.map(lots, 'id')
       /** @type {Rate} */
-      this.rate = this.constructor._relationship(rate)
+      this.rate = this._rel(rate)
       /** @type {Price} */
-      this.price = this.constructor._relationship(price)
+      this.price = this._rel(price)
       /** @type {string} */
       this.trading = trading
       /** @type {string} */
@@ -271,16 +350,29 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       /** @type {string} */
       this.productionDate = productionDate
       /** @type {Event} */
-      this.working = this.constructor._relationships(working)
+      this.working = this._rels(working)
+      setNotEnumerable(this, '_events')
+      setNotEnumerable(this, '_tags')
+    }
+
+    get events () {
+      return this._getRels(Event, this._events)
+    }
+
+    set events (v) {
+      this._events = this._rels(v)
+    }
+
+    get tags () {
+      return this._getRels(Tag, this._tags)
+    }
+
+    set tags (v) {
+      this._tags = this._rels(v)
     }
 
     static get icon () {
       return ''
-    }
-
-    get lots () {
-      // todo what if we got a device inside a new lot that is not yet in the cache?
-      return this._lots.map(id => cache.lots[id])
     }
 
     /**
@@ -299,26 +391,15 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       const tags = this.tags.length ? ` ${this.tags[0]}` : ''
       return `${utils.Naming.humanize(this.type)} ${this.model} ${tags}`
     }
-
-    get teaser () {
-      return new Teaser(
-        this.type,
-        this.title,
-        `${this.model} (${this.manufacturer})`,
-        this.updated
-      )
-    }
-
-    static fromObject (data) {
-      if (data.id && data.id in cache.lots) cache.devices[data.id].define(data)
-      else {
-        const device = super.fromObject(data)
-        cache.devices[device.id] = device
-        return device
-      }
-      return cache.lots[data.id]
-    }
   }
+
+  Object.defineProperties(Device.prototype, {
+    events: ENUMERABLE,
+    tags: ENUMERABLE
+  })
+
+  /** @type {Object.<int, Device>} */
+  Device.CACHE = {}
 
   /**
    * @alias module:resources.Computer
@@ -328,20 +409,33 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     define ({components = [], chassis = null, ramSize = null, dataStorageSize = null, processorModel = null, graphicCardModel = null, networkSpeeds = [], privacy = [], ...rest}) {
       /** @type {Components[]} */
       super.define(rest)
-      this.components = components ? components.map(c => Component.fromObject(c)) : []
+      this.components = components
       this.chassis = chassis
       this.ramSize = ramSize
       this.datStorageSize = dataStorageSize
       this.processorModel = processorModel
       this.graphicCardModel = graphicCardModel
       this.networkSpeeds = networkSpeeds
-      this.privacy = this.constructor._relationships(privacy)
+      this.privacy = this._rels(privacy)
+      setNotEnumerable(this, '_components')
+    }
+
+    get components () {
+      return this._getRels(Component, this._components)
+    }
+
+    set components (v) {
+      this._components = this._rels(v)
     }
 
     static get icon () {
       return 'fa-building'
     }
   }
+
+  Object.defineProperties(Computer.prototype, {
+    components: ENUMERABLE
+  })
 
   /**
    * @alias module:resources.ComputerMonitor
@@ -429,11 +523,16 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
   class Component extends Device {
     define ({parent = null, ...rest}) {
       super.define(rest)
-      this._parent = parent
+      this.parent = parent
+      setNotEnumerable(this, '_parent')
     }
 
     get parent () {
-      return _.get(cache.devices, this._parent, this._parent)
+      return this._getRel(Computer, this._parent)
+    }
+
+    set parent (v) {
+      this._parent = this._rel(v)
     }
 
     static get icon () {
@@ -632,7 +731,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    * @extends module:resources.Thing
    */
   class Event extends Thing {
-    define ({id = null, name = null, closed = null, severity = null, description = null, startTime = null, endTime = null, snaphsot = null, agent = null, author = null, components = null, parent = null, url = null, ...rest}) {
+    define ({id = null, name = null, closed = null, severity = null, description = null, startTime = null, endTime = null, snaphsot = null, agent = null, author = null, components = [], parent = null, url = null, ...rest}) {
       super.define(rest)
       /** @type {?string} */
       this.id = id
@@ -654,10 +753,12 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       this.agent = agent
       /** @type {?User} */
       this.author = author
-      this._components = components
-      this._parent = parent
+      this.components = components
+      this.parent = parent
       /** @type {?URL} */
       this.url = url ? new URL(url, CONSTANTS.url) : null
+      setNotEnumerable(this, '_components')
+      setNotEnumerable(this, '_parent')
     }
 
     /**
@@ -665,7 +766,15 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
      * @return {Component[]}
      */
     get components () {
-      return this._components.map(id => _.get(cache.devices, id, id))
+      return this._getRels(Component, this._components)
+    }
+
+    set components (v) {
+      this._components = this._rels(v)
+    }
+
+    set parent (v) {
+      this._parent = this._rel(v)
     }
 
     /**
@@ -673,7 +782,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
      * @return {Computer}
      */
     get parent () {
-      return _.get(cache.devices, this._parent, this._parent)
+      return this._getRel(Computer, this._parent)
     }
 
     static get icon () {
@@ -687,14 +796,12 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     get title () {
       return `${this.typeHuman}: ${this.severity}`
     }
-
-    /**
-     * HTML describing the event exposing the device.
-     */
-    get teaser () {
-      return super.teaser
-    }
   }
+
+  Object.defineProperties(Event.prototype, {
+    components: ENUMERABLE,
+    parent: ENUMERABLE
+  })
 
   /**
    * @alias module:resources.EventWithMultipleDevices
@@ -704,19 +811,23 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     define ({devices = [], ...rest}) {
       super.define(rest)
       // Devices can be either a Device[] or a int[]. We only want the int[]
-      this._devices = devices.map(d => _.get(d, 'id', d))
+      this.devices = devices
+      setNotEnumerable(this, '_devices')
+    }
+
+    set devices (v) {
+      this._devices = this._rels(v)
     }
 
     get devices () {
-      return this._devices.map(id => _.get(cache.devices, id, id))
+      return this._getRels(Device, this._devices)
     }
 
-    _post () {
-      const cleaned = super._post()
-      cleaned.devices = this._devices
-      return cleaned
-    }
   }
+
+  Object.defineProperties(EventWithMultipleDevices.prototype, {
+    devices: ENUMERABLE
+  })
 
   /**
    * @alias module:resources.EventWithOneDevice
@@ -725,19 +836,22 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
   class EventWithOneDevice extends Event {
     define ({device = null, ...rest}) {
       super.define(rest)
-      this._defineDevice(device)
-    }
-
-    _defineDevice (device) {
-      // Define the device separately so inhertors can override this
-      const _device = this.constructor._relationship(device)
-      this._device = _.get(_device, 'id', _device)  // todo see todo in multiple devices
+      this.device = device
+      setNotEnumerable(this, '_device')
     }
 
     get device () {
-      return _.get(cache.devices, this._device, this._device)
+      return this._getRel(Device, this._device)
+    }
+
+    set device (v) {
+      this._device = this._rel(v)
     }
   }
+
+  Object.defineProperties(EventWithOneDevice.prototype, {
+    device: ENUMERABLE
+  })
 
   /**
    * @alias module:resources.Add
@@ -964,7 +1078,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    * @extends module:resources.EventWithOneDevice
    */
   class Snapshot extends EventWithOneDevice {
-    define ({uuid = null, software = null, version = null, events = null, expectedEvents = null, elapsed = null, components, ...rest}) {
+    define ({uuid = null, software = null, version = null, events = null, expectedEvents = null, elapsed = null, ...rest}) {
       super.define(rest)
       this.uuid = uuid
       this.software = software
@@ -972,12 +1086,12 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       this.events = events
       this.expectedEvents = expectedEvents
       this.elapsed = elapsed
-      this._components = components
     }
 
     get title () {
       return `${super.title} — ${this.software} ${this.version}`
     }
+
   }
 
   /**
@@ -989,6 +1103,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       super.define(rest)
       this.elapsed = elapsed
     }
+  }
+
+  class SnapshotToUpload extends Snapshot {
+
   }
 
   /**
@@ -1031,16 +1149,6 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
     get title () {
       return `${this.typeHuman} — ${this.statusHuman()}`
-    }
-
-    get teaser () {
-      return new Teaser(
-        this.type,
-        super.title,
-        `${this.statusHuman()} At ${this.device}. ${this.lifetimeHuman()}`,
-        this.created,
-        this.severity
-      )
     }
   }
 
@@ -1261,7 +1369,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       this.org = org
       this.secondary = secondary
       this.printable = printable
-      this.device = this.constructor._relationship(device)
+      this.device = device
       this.url = new URL(url, CONSTANTS.url)
       /**
        * The provider, represented as a base URL.
@@ -1278,6 +1386,15 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
        * @type {URL}
        */
       this.printableUrl = this.providerUrl || this.url
+      setNotEnumerable(this, '_device')
+    }
+
+    get device () {
+      return this._getRel(Device, this._device)
+    }
+
+    set device (v) {
+      this._device = this._rel(v)
     }
 
     get title () {
@@ -1297,29 +1414,27 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       this.description = description
       this.closed = closed
       this.devices = devices
-      // We don't do `_relationship` as we know all lots will eventually
-      // be set in cache (we receive the full list of lots)
-      this._children = children.map(l => l['id'])
-      this._parents = parents.map(l => l['id'])
+      this.parents = parents
+      this.children = children
       this.url = url
+      setNotEnumerable(this, '_children')
+      setNotEnumerable(this, '_parents')
     }
 
     get children () {
-      return this._children.map(id => cache.lots[id])
+      return this._getRels(Lot, this._children)
+    }
+
+    set children (v) {
+      this._children = this._rels(v)
     }
 
     get parents () {
-      return this._parents.map(id => cache.lots[id])
+      return this._getRels(Lot, this._parents)
     }
 
-    static fromObject (data) {
-      if (data.id && data.id in cache.lots) cache.lots[data.id].define(data)
-      else {
-        const lot = super.fromObject(data)
-        cache.lots[lot.id] = lot
-        return lot
-      }
-      return cache.lots[data.id]
+    set parents (v) {
+      this._parents = this._rels(v)
     }
 
     get title () {
@@ -1329,7 +1444,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     post () {
       const parentsIds = this._parents
       return super.post().then(() => {
-        cache.lots[this.id] = this
+        this.constructor.CACHE[this.id] = this
         if (parentsIds.length) {
           return this.server.post({}, parentsIds[0] + '/children', {params: {id: this.id}})
         }
@@ -1397,6 +1512,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     }
   }
 
+  /** @type {Object.<int, module:resources.Lot>} */
+  Lot.CACHE = {}
+
   /**
    * @alias module:resources.User
    * @extends module:resources.Thing
@@ -1436,6 +1554,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
   }
 
   /**
+   * A list of resources fetched from the server, with pagination.
    * @alias module:resources.ResourceList
    */
   class ResourceList extends Array {
@@ -1457,9 +1576,11 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     /**
      *
      * @param {object[]} items
+     * @param rest
+     * @param {boolean} useCache
      */
-    static fromServer ({items, ...rest}) {
-      const things = items.map(x => resourceClass(x.type).fromObject(x))
+    static fromServer ({items, ...rest}, useCache) {
+      const things = items.map(x => resources.init(x, useCache))
       return new this(things, rest)
     }
 
@@ -1511,7 +1632,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
      * @return {module:resources.Lot}
      */
     get lot () {
-      const lot = cache.lots[this.id]
+      const lot = Lot.CACHE[this.id]
       console.assert(lot, '%s lot is not in cache.', this.id)
       return lot
     }
@@ -1529,7 +1650,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
      * @param {string} url
      */
     constructor (items, tree, url) {
-      items = _.mapValues(items, x => resourceClass(x.type).fromObject(x))
+      items = _.mapValues(items, x => init(x, true))
       super(..._.values(items))
       this.tree = this._trees(tree)
       this.url = url
@@ -1546,27 +1667,19 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
   }
 
   /**
-   * Returns the subclass of Thing that represents type.
-   * @param {string} type
-   * @returns {Thing}
+   * Instantiates Things from a plain object.
+   * @alias module:resources.init
+   * @param {object} thingLike - The plain object.
+   * @param {boolean} useCache - Should the cache be used to retreive
+   * the value? This setting affects the whole lifespan of the thing
+   * and its relationships.
+   * @return {Thing}
    */
-  function resourceClass (type) {
-    const cls = resources[type]
-    if (!cls) throw new TypeError(`${type} is not a valid Resource.`)
-    return cls
+  function init (thingLike, useCache) {
+    return resources[thingLike.type].init(thingLike, useCache)
   }
 
-  class Teaser {
-    constructor (type, title, description, date, severity) {
-      this.type = utils.Naming.humanize(type)
-      this.title = title
-      this.description = description
-      this.date = $filter('date')(date, 'shortDate')
-      this.severity = severity
-    }
-  }
-
-  const resources = {
+  const resources = new Proxy({
     Thing: Thing,
     Device: Device,
     Computer: Computer,
@@ -1644,9 +1757,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     LotNode: LotNode,
     ResourceList: ResourceList,
     Lots: Lots,
-    resourceClass: resourceClass,
-    cache: cache
-  }
+    init: init
+  }, utils.unforgivingHandler)
   // Init servers
   /**
    * @type {module:server.DevicehubThing}
@@ -1671,3 +1783,4 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 }
 
 module.exports = resourceFactory
+

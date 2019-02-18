@@ -157,7 +157,7 @@ function resourceList (resources, resourceListConfig, progressBar, Notification,
             const tableBottom = this.$el.position().top + this.$el.height()
             const windowBottom = this.$window.height()
             const almostWindowBottom = windowBottom + (windowBottom * 0.3)
-            if (tableBottom < almostWindowBottom) $scope.getter.gentlyGet()
+            if (tableBottom < almostWindowBottom) $scope.getter.gentlyGet(true, false)
           }
         }
 

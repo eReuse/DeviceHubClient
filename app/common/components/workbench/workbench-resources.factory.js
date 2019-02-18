@@ -19,18 +19,6 @@ function workbenchResourcesFactory (resources, enums, server) {
       this.linked = _linked
     }
 
-    _defineDevice (device) {
-      // We do not add the device to cache, neither set _device
-      // to the default value (the ID of the device)
-      // as these devices don't have ID and are not yet to the DH
-      // workflow, so better not to mix them with the others
-      this._device = resources.resourceClass(device.type).fromObject(device)
-    }
-
-    get device () {
-      return this._device
-    }
-
     get title () {
       return this.device.title
     }
@@ -49,15 +37,6 @@ function workbenchResourcesFactory (resources, enums, server) {
       super.define(rest)
       this.uuid = uuid
     }
-
-    static fromObject (obj, snapshots) {
-      // todo workaround to set snapshot to usb meanwhile we don't
-      //   set events to cache
-      const usb = super.fromObject(obj)
-      usb.snapshot = _.find(snapshots, {uuid: obj.uuid})
-      console.assert(usb.snapshot)
-      return usb
-    }
   }
 
   /**
@@ -74,8 +53,8 @@ function workbenchResourcesFactory (resources, enums, server) {
       this.attempts = attempts
     }
 
-    static fromServer ({snapshots, ...rest}) {
-      const sn = snapshots.map(x => this.SnapshotType.fromObject(x))
+    static fromServer ({snapshots, ...rest}, useCache) {
+      const sn = snapshots.map(x => this.SnapshotType.init(x, useCache))
       return new this(sn, rest)
     }
   }
@@ -108,7 +87,7 @@ function workbenchResourcesFactory (resources, enums, server) {
         Install: 0
       }, _.countBy(this, 'phase'))
       this.working = this.length - this.phases.Error - this.phases.Uploaded
-      this.usbs = usbs.map(usb => USBFlashDrive.fromObject(usb, things))
+      this.usbs = usbs.map(usb => USBFlashDrive.init(usb))
     }
   }
 

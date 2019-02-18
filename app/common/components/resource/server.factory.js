@@ -48,18 +48,23 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
 
     get (uri = '', config = this.constructor.c) {
       return $http.get(this.url + uri, this.config(config))
+        .catch(this.constructor._initException)
     }
 
     post (model, uri = '', config = this.constructor.c) {
-      return $http.post(this.url + uri, model, this.config(config))
+      // Somehow angular doesn't stringify well, so we do it here
+      return $http.post(this.url + uri, angular.toJson(model), this.config(config))
+        .catch(this.constructor._initException)
     }
 
     patch (model, uri = '', config = this.constructor.c) {
-      return $http.patch(this.url + uri, model, this.config(config))
+      return $http.patch(this.url + uri, angular.toJson(model), this.config(config))
+        .catch(this.constructor._initException)
     }
 
     delete (uri = '', config = this.constructor.c) {
       return $http.delete(this.url + uri, this.config(config))
+        .catch(this.constructor._initException)
     }
 
     start (config = {}) {
@@ -78,6 +83,10 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
 
     config (config = {}) {
       return _.defaultsDeep(config, this._config)
+    }
+
+    static _initException (r) {
+      throw new (server[r.data.type] || DevicehubException)(r.data)
     }
   }
 
@@ -210,9 +219,9 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
         if ('tree' in data) {
           things = new this.r.Lots(data.items, data.tree, data.url)
         } else if ('items' in data) {
-          things = this.r.ResourceList.fromServer(data)
+          things = this.r.ResourceList.fromServer(data, true)
         } else {
-          things = this.r.resourceClass(data.type).fromObject(data)
+          things = this.r.init(data, true)
         }
         return things
       })
@@ -240,7 +249,7 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
     static login (credentials, User) {
       const dh = new Endpoint(Devicehub.url, '/users/login/')
       return dh.post(credentials).then(response => {
-        return User.fromObject(response.data)
+        return User.init(response.data)
       })
     }
 
@@ -315,21 +324,65 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
         const data = response.data
         let things
         if (_.includes(this.url, 'info')) {
-          things = this.wr.WorkbenchComputerInfo.fromServer(data)
+          things = this.wr.WorkbenchComputerInfo.fromServer(data, false)
         }
         return things
       })
     }
   }
 
-  return {
+  /**
+   * An exception from a server.
+   * @memberOf module:server
+   */
+  class ServerException extends Error {
+  }
+
+  /**
+   * An exception from the Devicehub server.
+   * @memberOf module:server
+   */
+  class DevicehubException extends ServerException {
+    constructor ({code, message, type}) {
+      super()
+      this.code = code
+      this.message = message
+      this.type = type
+    }
+
+    toString () {
+      return this.message
+    }
+
+    valueOf () {
+      return this.type
+    }
+  }
+
+  /**
+   * @memberOf module:server
+   */
+  class UniqueViolation extends DevicehubException {
+    constructor ({constraint, fieldName, fieldValue, ...args}) {
+      super(args)
+      this.constraint = constraint
+      this.fieldName = fieldName
+      this.fieldValue = fieldValue
+    }
+  }
+
+  const server = {
     Endpoint: Endpoint,
     AuthEndpoint: AuthEndpoint,
     Devicehub: Devicehub,
     DevicehubThing: DevicehubThing,
     Workbench: Workbench,
-    WorkbenchSnapshots: WorkbenchSnapshots
+    WorkbenchSnapshots: WorkbenchSnapshots,
+    DevicehubException: DevicehubException,
+    UniqueViolation: UniqueViolation
   }
+
+  return server
 }
 
 module.exports = serverFactory

@@ -56,7 +56,11 @@ function fieldsFactory ($translate, Notification, $q) {
      * @param {boolean} label - Use a label?
      * @param {object.<string, string>} expressions - Formly's Expression Properties.
      * Use this to set custom formly expressions and override the ones
-     * this constructor sets.
+     * this constructor sets. The key is the key in templateOptions, and
+     * the value an expression. Ex: {'foo': '!!bar'} makes the
+     * templateOption.foo be true / false depending on bar. The expression
+     * is evaluated in the context of the scope of the field: you
+     * can access the 'model', the 'form', the 'to'.
      * @param {?string} hide = An angular expression that, if true, hides this.
      * @param {?Object} watcher
      * @param {string} watcher.expression
@@ -241,6 +245,12 @@ function fieldsFactory ($translate, Notification, $q) {
   class Datepicker extends Field {
   }
 
+  /**
+   * @alias module:fields.Upload
+   * @extends module:fields.Field
+   * @description An input field that sets File objects in model.
+   * This field auto-reads the contents and saves them in File.data.
+   */
   class Upload extends Field {
     /**
      *
@@ -252,15 +262,10 @@ function fieldsFactory ($translate, Notification, $q) {
      */
     constructor (key, {accept = '*/*', multiple = false, readAs, ...rest}) {
       super(key, rest)
-      this.accept = accept
-      this.multiple = multiple
-      this.readAs = readAs
-      /**
-       * Where the files are going to be in. Note that this cannot
-       * save to the regular model.
-       * @type {File[]}
-       */
-      this.files = []
+      this.templateOptions.accept = accept
+      this.templateOptions.multiple = multiple
+      this.templateOptions.readAs = readAs
+      this.templateOptions.files = []
     }
   }
 
@@ -578,6 +583,7 @@ function fieldsFactory ($translate, Notification, $q) {
     No: No,
     Email: Email,
     Typeahead: Typeahead,
+    Upload: Upload,
     STR_SIZE: STR_SIZE,
     STR_BIG_SIZE: STR_BIG_SIZE,
     STR_SM_SIZE: STR_SM_SIZE,

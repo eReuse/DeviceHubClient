@@ -417,6 +417,11 @@ const en = {
       remove: 'Remove lots from {{parent}}',
       childId: {l: 'Child lot', d: 'Select a lot by writing its name.'}
     }
+  },
+  snapshotButton: {
+    main: 'New snapshot',
+    upload: 'Upload a JSON snapshot file',
+    add: 'Add a device'
   }
 }
 

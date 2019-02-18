@@ -39,7 +39,7 @@ function sessionFactory ($q, $state, resources, sessionLoaded, server) {
       console.assert(!this.user, 'User already exists.')
       const user = this.storage.load()
       if (user === null) throw new NoStoredUser()
-      this.user = resources.User.fromObject(user)
+      this.user = resources.init(user, true)
       this._afterGettingUser()
     }
 
