@@ -443,17 +443,449 @@ const en = {
 }
 
 const es = {
+  login: {
+    email: {
+      l: 'Correo electrónico'
+    },
+    password: {
+      l: 'Contraseña'
+    },
+    saveInBrowser: {
+      l: 'Recuérdame en este ordenador'
+    },
+    login: 'Login',
+    error: {
+      1: 'No tienes conexión a Internet.',
+      401: 'Usuario o contraseña incorrecta.',
+      def: 'Error indefinido. Por favor contacte con el administrador.'
+    }
+  },
   resourceList: {
-    allDevices: 'Todos los dispositivos'
+    allDevices: 'Todos los dispositivos',
+    selectAll: {
+      t: 'Seleciona un dispositivo para ver más detalles',
+      d: 'Mantiene <kbd>Ctrl</kbd> o <kbd>Mayus</kbd> para selecionar múltiples dispositivos.'
+    },
+    lot: {
+      description: {d: 'Acepta Markdown.'}
+    },
+    filters: {
+      type: {
+        l: '@:r.thing.type.l',
+        d: 'El tipo de dispositivo.'
+      },
+      manufacturer: {l: '@:r.device.manufacturer.l', d: '@:r.device.manufacturer.d'},
+      model: {l: '@:r.device.model.l', d: '@:r.device.model.d'},
+      rating: {
+        min: {l: 'Puntuación minima', d: 'Incluyente.'},
+        max: {l: 'Puntuación máxima', d: 'Incluyente.'}
+      },
+      manPanel: {l: 'Fabricante y modelo'},
+      priceRatingPanel: {l: 'Precio y puntuación'},
+      ratingPanel: {l: '@:r.rate.rating.l'},
+      panel: {l: 'Selecionar un filtro'},
+      itemTypePanel: {l: 'Tipo de elemento'},
+      popover: {title: 'Selecionar un filtro', update: 'Actualizar filtros'},
+      import: {
+        submit: 'Importar filtros',
+        error: 'No se ha podido importar; los filtros no están escritos correctamente.'
+      }
+    }
+  },
+  lots: {
+    new: 'Lote nuevo'
   },
   newEvent: {
-    title: 'Crea un nuevo {{type}}',
+    title: 'Crear un nuevo {{type}}',
     submit: '@:forms.submit',
     cancel: '@:forms.cancel'
   },
   forms: {
     submit: 'Enviar',
-    cancel: 'Cancelar'
+    cancel: 'Cancelar',
+    reset: 'Resetear',
+    resource: {
+      notification: {
+        success: '{{title}} successfully {{op}}',
+        post: 'creado',
+        put: 'modificado',
+        delete: 'eliminado'
+      }
+    },
+    notification: {
+      success: '🙂 Hecho.',
+      error: 'No hemos podido hacer-lo debido a un error. Por favor intentalo más tarde o contactanos.'
+    },
+    fields: {
+      optionYes: 'Si.',
+      optionNo: 'No.'
+    },
+    e: {
+      required: 'Este campo es obligatorio.',
+      email: 'Este no es un correo básico.',
+      minlength: 'Demasiado corto. El mínimo de caracteres son {{to}}.',
+      parse: 'Formato erróneo. Revise que el formato sea correcto.',
+      number: 'El número es incorrecto.'
+    }
+  },
+  r: { // resources
+    l: { // List of resources
+      device: 'Dispositivo',
+      computer: 'Ordenador',
+      computerMonitor: 'Monitor',
+      desktop: 'Torre',
+      laptop: 'Portátil',
+      server: 'Server',
+      mobile: 'Mobile',
+      smartphone: 'Smartphone', //
+      tablet: 'Tablet',
+      cellphone: 'Teléfono',
+      component: 'Componente',
+      graphicCard: 'Tarjeta Gráfica',
+      dataStorage: 'Almacenamiento de datos',
+      hardDrive: 'Disco Duro',
+      solidStateDrive: 'SSD',
+      motherboard: 'Placa Base',
+      networkAdapter: 'Adaptador de red',
+      processor: 'Procesador',
+      ramModule: 'Memoria RAM',
+      soundCard: 'Tarjeta de sonido',
+      computerAccessory: 'Accesorio ordenador',
+      mouse: 'Ratón',
+      memoryCardReader: 'Lector de tarjetas de memoria',
+      sAI: 'SAI',
+      keyboard: 'Teclado',
+      display: 'Pantalla',
+      event: 'Evento',
+      eventWithMultipleDevices: 'Evento con multiples dispositivos',
+      eventWithOneDevice: 'Evento con un dispositivo',
+      add: 'Añadir',
+      remove: 'Borrar',
+      eraseBasic: 'Borrado básico',
+      eraseSectors: 'Borrado por sectores',
+      erasePhysical: 'Borrado físico',
+      step: 'Paso',
+      stepZero: 'Paso cero',
+      stepRandom: 'Paso aleatorio',
+      rate: 'Puntuación',
+      individualRate: 'Puntuación individual',
+      manualRate: 'Puntuación manual',
+      workbenchRate: 'Puntuación Workbench',
+      aggregateRate: 'Puntuación agregada',
+      price: 'Precio',
+      ereusePrice: 'Precio eResue',
+      install: 'Instalar',
+      snapshot: 'Snapshot', //
+      test: 'Test',
+      testDataStorage: 'Test del disco',
+      stressTest: 'Test de estrés',
+      benchmark: 'Benchmark', // en
+      benchmarkDataStorage: 'Benchmark data storage',
+      benchmarkWithRate: 'Benchmark with rate',
+      benchmarkProcessor: 'Benchmark processor',
+      benchmarkProcessorSysbench: 'Benchmark processor sysbench',
+      benchmarkRamSysbench: 'Benchmark ram sysbench', // en
+      toRepair: 'Para reparar',
+      repair: 'Reparar',
+      readyToUse: 'Listo para usar',
+      toPrepare: 'Para preparar',
+      prepare: 'Preparar',
+      organize: 'Organizar',
+      reserve: 'Reservar',
+      cancelReservation: 'Cancelar reserva',
+      trade: 'Intercambio',
+      sell: 'Vender',
+      donate: 'Donación',
+      cancelTrade: 'Cancelar intercambio',
+      toDisposeProduct: 'To dispose product', // en
+      disposeProduct: 'Dispose product', // en
+      receive: 'Recibido',
+      tag: 'Etiqueta',
+      lot: 'Lote',
+      user: 'Usuario'
+    },
+    thing: {
+      type: {l: 'Tipo', d: 'El tipo.'}
+    },
+    device: {
+      manufacturer: {l: 'Fabricante', d: 'El nombre del fabricante.'},
+      model: {l: 'Modelo', d: 'El nombre del modelo o marca.'},
+      serialNumber: {l: 'Número de serie', d: 'El número de serie del dispositivo.'}
+    },
+    event: {
+      name: {
+        l: 'Nombre',
+        d: 'Un nombre o título del evento. Algo que buscar.'
+      },
+      severity: {
+        l: 'Severidad',
+        d: 'Un indicador que evalúa la ejecución del evento. Por ejemplo, los eventos fallidos se configuran como "Error".'
+      },
+      startTime: {
+        l: 'Tiempo de inicio',
+        d: 'Cuando la acción comienza. Para algunas acciones como las reservas en el momento en que están disponibles, para otras como el alquiler cuando comienza el alquiler.'
+      },
+      endTime: {
+        l: 'Fecha',
+        d: 'Cuando la acción termina. Para algunas acciones como reservas el tiempo cuando expiran, para otras como alquilar el tiempo que el final renta. Para las acciones puntuales es el tiempo en que se realizan; difiere de lo "creado" en que "creado" es el lugar donde el sistema recibe la acción.'
+      },
+      description: {
+        l: 'Descripción',
+        d: 'Un comentario sobre el evento.'
+      }
+    },
+    eventWithMultipleDevices: {
+      devices: {l: 'Dispositivos', d: 'Los objectos de este evento.'}
+    },
+    rate: {
+      rating: {l: 'Puntuación'}
+    }
+  },
+  e: { // enums
+    appearanceRange: {
+      z: '0. El dispositivo es nuevo.',
+      a: 'A. Como nuevo (sin daños visuales)',
+      b: 'B. En muy buenas condiciones (pequeños daños visuales en partes dificiles de detectar)',
+      c: 'C. En buenas condiciones (pequeños daños visuales en partes faciles de detectar, no la pantalla))',
+      d: 'D. Es aceptable (daño visual en partes visibles, no en la pantalla)',
+      e: 'E. Es inaceptable (daño visual considerable que puede afectar al uso)'
+    },
+    functionalityRange: {
+      a: 'A. Todo funciona perfectamente (botones, i ningún arañazo en la pantalla)',
+      b: 'B. Hay un botón difícil de presionar or pequeños arañazos en las esquinas de la pantalla',
+      c: 'C. Un botón no esencial no funciona; la pantalla tiene múltiples arañazos en las esquinas',
+      d: 'D. Múltiples botones no funcionan correctamente; la pantalla tiene daños severos que pueden afectar en el uso'
+    },
+    biosRange: {
+      a: 'A. Si al pulsar una tecla puedes acceder a un menú de arranque con el arranque por red.',
+      b: 'B. Tenías que entrar en la BIOS, y en menos de 5 pasos podías configurar el inicio de la red.',
+      c: 'C. Como la B, pero con más de 5 pasos',
+      d: 'D. Como la B o C, pero tenías que desbloquear la BIOS',
+      e: 'E. El dispositivo no se ha podido iniciar a través de la red.'
+    },
+    workbenchComputerPhase: {
+      error: 'Error',
+      uploaded: 'Hecho',
+      uploading: 'Subiendo',
+      link: 'Esperando enlace',
+      benchmark: 'Benchmark', //
+      testDataStorage: 'Testing almacenamiento', //
+      stressTest: 'Test de estrés',
+      eraseBasic: 'Borrado (básico)',
+      eraseSectors: 'Borrado (sectores)',
+      smartTest: 'Smart testing', //
+      install: 'Instalando'
+    },
+    workbenchMobilePhase: {
+      recovery: 'Restauración',
+      erasing: 'Borrado',
+      waitingSideload: 'Esperando carga adicional',
+      installingOS: 'Instalado SO',
+      waitSideloadAgain: 'Esperando carga adicional otra vez',
+      installingGapps: 'Instalando Gapps',
+      bootingIntoOS: 'Arrancando dentro del SO',
+      done: 'Hecho'
+    },
+    erasureStandard: {
+      hMGIs5: 'British HMG Infosec Standard 5 (HMG IS5)' //
+    },
+    severity: {
+      info: '✓ Ok',
+      notice: 'ℹ️ Aviso',
+      warning: '⚠ Advertencia',
+      error: '❌ Error'
+    }
+  },
+  tags: {
+    title: 'Etiquetas',
+    description: 'Mostrando las últimas 200 etiquetas creadas.',
+    create: {
+      title: 'Crear etiqueta vacía',
+      num: {
+        l: 'Cantidad',
+        d: 'Número de etiquetas a crear.'
+      }
+    }
+  },
+  nav: {
+    workbench: {
+      computer: 'Ordenador',
+      mobile: 'Mobile', //
+      settings: 'Configuración'
+    },
+    tags: '@:tags.title',
+    inventory: 'Inventario'
+  },
+  printTags: {
+    title: 'Diseño e impresión de etiquetas',
+    toPdf: 'Imprimir en PDF',
+    reset: '@:forms.reset',
+    button: 'Etiquetando',
+    save: 'Guardar',
+    printBox: 'Imprimir en una impresora compatible.',
+    noTagsToPrint: 'Estos dispositivos no tienen etiquetas que podamos imprimir.',
+    fields: {
+      brotherSmall: 'Brother tamaño pequeño (62 x 29)',
+      smallTagPrinter: 'Etiqueta pequeña (97 x 59)',
+      size: {
+        width: {l: 'Anchura', d: 'Cambiar manualmente el ancho de la etiqueta.', aR: 'mm'},
+        height: {l: 'Altura', d: 'Cambiar manualmente la altura de la etiqueta.', aR: 'mm'}
+      },
+      sizePreset: {
+        l: 'Tamaño predefinido',
+        d: 'Un tamaño predefinido de la etiqueta. Puede cambiar manualmente el tamaño a continuación.'
+      }
+    }
+  },
+  export: {
+    clipboard: {
+      success: 'Copiado.',
+      button: 'Copiar enlaces públicos.'
+    },
+    spreadsheet: {
+      button: 'Hoja de cálculo',
+      fileName: '@:export.spreadsheet.button'
+    },
+    erasure: {
+      button: 'Certificado de borrado',
+      fileName: '@:export.erasure.button'
+    },
+    error: 'No ha sido posible descargarlo. Inténtalo de nuevo más tarde.'
+  },
+  workbench: {
+    computer: {
+      title: 'Workbench Computer',
+      working: '{{num}} trabajando.',
+      link: '{{num}} esperando enlace.',
+      done: '{{num}} completado.',
+      error: '{{num}} subir manualmente.',
+      upload: {
+        info: 'Carga automática como {{user}}',
+        error: 'No se puede subir. Reintentando...',
+        unstable: 'Conexión inestable a {{app}}.',
+        lost: 'Conexión al {{app}} perdida.',
+        check: 'Compruebe la conexión Wi-Fi e Internet.'
+      },
+      wifi: 'Nombre de la Box\'s WiFi: "{{name}}" Contraseña: "{{pass}}"',
+      notLinked: 'No enlazado.'
+    },
+    link: {
+      title: 'Enlace Workbench',
+      tag0: {
+        l: 'Etiqueta',
+        d: 'Etiqueta que deseas vincular con este dispositivo.'
+      },
+      tag1: {
+        l: 'Etiqueta secundaria',
+        d: 'Otra etiqueta que deseas vincular con este dispositivo.'
+      },
+      appearance: {
+        l: 'Apariencia',
+        d: 'Califica las imperfecciones que afectan estéticamente al dispositivo, pero no a su uso.'
+      },
+      functionality: {
+        l: 'Functionalidad',
+        d: 'Califica los defectos de un dispositivo que afectan a su uso.'
+      },
+      bios: {
+        l: 'Bios',
+        d: 'Como de difícil ha sido configurar las BIOS para que se inicien desde la red.'
+      },
+      description: {
+        l: 'Descripción',
+        d: 'Cualquier comentario que quieras escribir sobre el dispositivo.'
+      }
+    },
+    linkButton: {
+      alreadyUploaded: 'Ya está cargado; desenchufe el USB.'
+    },
+    settings: {
+      title: 'Configuración Workbench',
+      notification: {
+        ok: 'La configuración ha sido guardada.'
+      },
+      stress: {
+        l: 'El dispositivo se estresara durante una cantidad de tiempo.',
+        d: 'Ejecute una prueba de esfuerzo durante la cantidad de minutos. Para omitirlo pon valor 0.',
+        aR: 'minutos'
+      },
+      smart: {
+        l: 'Test del disco duro',
+        d: 'Realice la prueba SMART en unidades de almacenamiento como unidades de disco duro.'
+      },
+      short: 'Test corto: Comprueba una parte del disco duro para adivinar el estado general de salud. ETA ~ 2 minutes.',
+      long: 'Test largo: Comprueba completamente si hay errores en el disco duro, lo que lleva mucho más tiempo.',
+      smartNull: 'No ha realizado la prueba del disco duro.',
+      eraseNull: 'No ha realizado el borrado del disco duro.',
+      eraseCustom: 'Personaliza el borrado; escoja como desee entre las opciones de borrado.',
+      _erase: {
+        l: 'Borrar los discos duros',
+        d: '¿Borramos los discos duros?'
+      },
+      erase: {
+        l: 'Tipo de borrado',
+        d: 'Ambos tipos pueden generar un certificado, sin embargo sólo el seguro utiliza un proceso de borrado oficial certificado, ya que garantiza que todos los datos han sido borrados.'
+      },
+      eraseBasic: 'Normal: más rápido pero sin verificación final.',
+      eraseSectors: 'Seguro: más lento pero verifica el borrado para cada sector del disco.',
+      erase_steps: {
+        l: 'Número de pasos de borrado.',
+        d: 'Normalmente 1. Se puede hacer cumplir más por medio de políticas.',
+        aR: 'pasos'
+      },
+      erase_leading_zeros: {
+        l: '¿Sobreescribir con ceros?',
+        d: 'Se puede hacer cumplir por política.'
+      },
+      install: {
+        l: 'Instalar un sistema operativo',
+        d: 'SO .fsa archivos que están en "workbench/images" automáticamente aparecerán aquí.'
+      }
+    }
+  },
+  resourceSearch: {
+    scan: 'Escanear',
+    placeholder: {
+      default: 'Escribir un modelo, número de serie, ...',
+      android: 'Escanear etiqueta NFC, escribir S/N...'
+    }
+  },
+  fieldEdit: {
+    edit: 'Haga clic aquí para editarlo.'
+  },
+  lot: {
+    device: {
+      edit: 'Lotes',
+      add: 'Añadir dispositivos a lotes',
+      remove: 'Eliminar dispisitvos de lotes',
+      lotId: {l: 'Lote', d: 'Seleccionar un lote escibiendo su nombre.'}
+    },
+    children: {
+      edit: 'Lotes de entrada',
+      add: 'Añadir lote a {{parent}}',
+      remove: 'Eliminar lote de {{parent}}',
+      childId: {l: 'Lote hijo', d: 'Seleccionar un lote escribiendo su nombre.'}
+    }
+  },
+  snapshotButton: {
+    main: 'Nuevo snapshot', //
+    upload: 'Subir un archivo JSON snapshot', //
+    manual: 'Añadir un dispositivo'
+  },
+  snapshot: {
+    files: {
+      l: 'Seleccionar un archivo Snapshot',
+      d: 'Seleccionar múltiples archivos Snapshot JSON para subir.'
+    },
+    manual: {
+      type: {l: '@:r.thing.type.l', d: 'El tipo de dispositivo.'},
+      tag0: {l: '@:workbench.link.tag0.l', d: '@:workbench.link.tag0.d'},
+      serialNumber: {l: '@:r.device.serialNumber.l', d: '@:r.device.serialNumber.d'},
+      model: {l: '@:r.device.model.l', d: '@:r.device.model.d'},
+      manufacturer: {l: '@:device.manufacturer.l', d: '@:r.device.manufacturer.d'},
+      appearance: {l: '@:workbench.link.appearance.l', d: '@:workbench.link.appearance.d'},
+      functionality: {l: '@:workbench.link.functionality.l', d: '@:workbench.link.functionality.d'}
+    }
   }
 }
 

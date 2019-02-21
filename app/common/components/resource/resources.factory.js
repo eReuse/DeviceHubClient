@@ -1401,6 +1401,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       // We replace a regular hyphen with a non-breaking hyphen
       return this.id.toUpperCase().replace('-', '‑')
     }
+
+    _post () {
+      return _.pick(this, ['type', 'id'])
+    }
   }
 
   /**
@@ -1452,7 +1456,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     }
 
     _post () {
-      return _.pick(this, ['name', 'description'])
+      return _.pick(this, ['name', 'description', 'type'])
     }
 
     hasText (text) {
