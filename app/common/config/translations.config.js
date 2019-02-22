@@ -899,7 +899,8 @@ function translateConfig ($translateProvider) {
     .fallbackLanguage('en')
     .registerAvailableLanguageKeys(['en', 'es'], {
       'en_*': 'en',
-      'es_*': 'es'
+      'es_*': 'es',
+      'cat': 'es'
     })
     .determinePreferredLanguage()
 }
