@@ -9,6 +9,19 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
     constructor () {
       const tag = new android.Tag($scope, 'device.tags[0].id')
       const ns = 'snapshot.manual'
+      /**
+       * A factory for formly hide that shows the resource if it is
+       * a subclass of 'type'.
+       * @param {typeof module:resources.Thing} keyResource
+       * @return {function(): boolean}
+       */
+      const showIfSubclassFactory = keyResource => {
+        return () => {
+          const r = resources[this.model.device.type]
+          return !(keyResource.isPrototypeOf(r) || r === keyResource)
+        }
+      }
+
       super(
         {
           device: {
@@ -25,7 +38,7 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
           namespace: ns,
           keyText: 'type',
           required: true,
-          options: resources.Device.options(fields.Option)
+          options: resources.Device.options(fields.Option, true, false)
         }),
         new fields.String('device.tags[0].id', {
           namespace: ns,
@@ -55,10 +68,30 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
         }),
         new fields.Radio('device.events[0].functionalityRange', {
           namespace: ns,
-          keyText: 'functionality',
+          keyText: 'appearance',
           options: enums.FunctionalityRange.options(fields),
           required: true
-        }))
+        }),
+        new fields.Select('device.chassis', {
+          namespace: ns,
+          options: enums.Chassis.options(fields),
+          required: true,
+          hide: showIfSubclassFactory(resources.Computer)
+        }),
+        new fields.Number('device.imei', {
+          namespace: 'r',
+          hide: showIfSubclassFactory(resources.Mobile)
+        }),
+        new fields.String('device.meid', {
+          namespace: 'r',
+          hide: showIfSubclassFactory(resources.Mobile)
+        }),
+        new fields.Select('device.layout', {
+          namespace: 'r',
+          options: enums.Layouts.options(fields),
+          hide: showIfSubclassFactory(resources.Keyboard)
+        })
+      )
     }
 
     _submit () {
@@ -66,7 +99,7 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
       this.model.software = 'Web'
       this.model.version = '11.0'
       if (!_.isEmpty(this.model.tags)) this.model.tags[0].type = 'Tag'
-      const snapshot = new resources.Snapshot(this.model)
+      const snapshot = new resources.Snapshot(this.model, {_useCache: false})
       return snapshot.post()
     }
 

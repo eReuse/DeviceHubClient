@@ -344,16 +344,20 @@ function fieldsFactory ($translate, Notification, $q) {
      * @param name - The name of the option (what the user sees).
      * If this is not set, ``namespace`` and ``keyText`` are used
      * to get a translation text.
+     * @param group - The name of a group containing this option.
+     * Only used in lists.
      * @param namespace - As Field's ``namespace``. Not used if
      * ``name`` is set.
      * @param keyText
      */
     constructor (value, {
       name = null,
+      group,
       namespace = 'forms.fields',
       keyText = inflection.camelize(value == null ? 'null' : value, true)
     }) {
       this.value = value
+      this.group = group
       this.name = name || $translate.instant(`${namespace}.${keyText}`)
     }
   }

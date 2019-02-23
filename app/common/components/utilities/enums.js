@@ -228,6 +228,137 @@ function enumsFactory ($translate) {
 
   }
 
+  /**
+   * The Chassis of a Computer.
+   * @memberOf module:enums
+   * @extends module:enums.Enum
+   */
+  class Chassis extends Enum {
+
+  }
+
+  Chassis.Tower = new Chassis('Tower')
+  Chassis.Docking = new Chassis('Docking')
+  Chassis.AllInOne = new Chassis('AllInOne')
+  Chassis.Microtower = new Chassis('Microtower')
+  Chassis.PizzaBox = new Chassis('PizzaBox')
+  Chassis.Lunchbox = new Chassis('Lunchbox')
+  Chassis.Stick = new Chassis('Stick')
+  Chassis.Netbook = new Chassis('Netbook')
+  Chassis.Handheld = new Chassis('Handheld')
+  Chassis.Laptop = new Chassis('Laptop')
+  Chassis.Convertible = new Chassis('Convertible')
+  Chassis.Detachable = new Chassis('Detachable')
+  Chassis.Tablet = new Chassis('Tablet')
+  Chassis.Virtual = new Chassis('Virtual')
+
+  /**
+   * @memberOf module:enums
+   * @extends module:enums.Enum
+   */
+  class Layouts extends Enum {
+  }
+
+  Layouts.US = new Layouts('US')
+  Layouts.AF = new Layouts('AF')
+  Layouts.ARA = new Layouts('ARA')
+  Layouts.AL = new Layouts('AL')
+  Layouts.AM = new Layouts('AM')
+  Layouts.AT = new Layouts('AT')
+  Layouts.AU = new Layouts('AU')
+  Layouts.AZ = new Layouts('AZ')
+  Layouts.BY = new Layouts('BY')
+  Layouts.BE = new Layouts('BE')
+  Layouts.BD = new Layouts('BD')
+  Layouts.BA = new Layouts('BA')
+  Layouts.BR = new Layouts('BR')
+  Layouts.BG = new Layouts('BG')
+  Layouts.DZ = new Layouts('DZ')
+  Layouts.MA = new Layouts('MA')
+  Layouts.CM = new Layouts('CM')
+  Layouts.MM = new Layouts('MM')
+  Layouts.CA = new Layouts('CA')
+  Layouts.CD = new Layouts('CD')
+  Layouts.CN = new Layouts('CN')
+  Layouts.HR = new Layouts('HR')
+  Layouts.CZ = new Layouts('CZ')
+  Layouts.DK = new Layouts('DK')
+  Layouts.NL = new Layouts('NL')
+  Layouts.BT = new Layouts('BT')
+  Layouts.EE = new Layouts('EE')
+  Layouts.IR = new Layouts('IR')
+  Layouts.IQ = new Layouts('IQ')
+  Layouts.FO = new Layouts('FO')
+  Layouts.FI = new Layouts('FI')
+  Layouts.FR = new Layouts('FR')
+  Layouts.GH = new Layouts('GH')
+  Layouts.GN = new Layouts('GN')
+  Layouts.GE = new Layouts('GE')
+  Layouts.DE = new Layouts('DE')
+  Layouts.GR = new Layouts('GR')
+  Layouts.HU = new Layouts('HU')
+  Layouts.IL = new Layouts('IL')
+  Layouts.IT = new Layouts('IT')
+  Layouts.JP = new Layouts('JP')
+  Layouts.KG = new Layouts('KG')
+  Layouts.KH = new Layouts('KH')
+  Layouts.KZ = new Layouts('KZ')
+  Layouts.LA = new Layouts('LA')
+  Layouts.LATAM = new Layouts('LATAM')
+  Layouts.LT = new Layouts('LT')
+  Layouts.LV = new Layouts('LV')
+  Layouts.MAO = new Layouts('MAO')
+  Layouts.ME = new Layouts('ME')
+  Layouts.MK = new Layouts('MK')
+  Layouts.MT = new Layouts('MT')
+  Layouts.MN = new Layouts('MN')
+  Layouts.NO = new Layouts('NO')
+  Layouts.PL = new Layouts('PL')
+  Layouts.PT = new Layouts('PT')
+  Layouts.RO = new Layouts('RO')
+  Layouts.RU = new Layouts('RU')
+  Layouts.RS = new Layouts('RS')
+  Layouts.SI = new Layouts('SI')
+  Layouts.SK = new Layouts('SK')
+  Layouts.ES = new Layouts('ES')
+  Layouts.SE = new Layouts('SE')
+  Layouts.CH = new Layouts('CH')
+  Layouts.SY = new Layouts('SY')
+  Layouts.TJ = new Layouts('TJ')
+  Layouts.LK = new Layouts('LK')
+  Layouts.TH = new Layouts('TH')
+  Layouts.TR = new Layouts('TR')
+  Layouts.TW = new Layouts('TW')
+  Layouts.UA = new Layouts('UA')
+  Layouts.GB = new Layouts('GB')
+  Layouts.UZ = new Layouts('UZ')
+  Layouts.VN = new Layouts('VN')
+  Layouts.KR = new Layouts('KR')
+  Layouts.IE = new Layouts('IE')
+  Layouts.PK = new Layouts('PK')
+  Layouts.MV = new Layouts('MV')
+  Layouts.ZA = new Layouts('ZA')
+  Layouts.EPO = new Layouts('EPO')
+  Layouts.NP = new Layouts('NP')
+  Layouts.NG = new Layouts('NG')
+  Layouts.ET = new Layouts('ET')
+  Layouts.SN = new Layouts('SN')
+  Layouts.BRAI = new Layouts('BRAI')
+  Layouts.TM = new Layouts('TM')
+  Layouts.ML = new Layouts('ML')
+  Layouts.TZ = new Layouts('TZ')
+  Layouts.TG = new Layouts('TG')
+  Layouts.KE = new Layouts('KE')
+  Layouts.BW = new Layouts('BW')
+  Layouts.PH = new Layouts('PH')
+  Layouts.MD = new Layouts('MD')
+  Layouts.ID = new Layouts('ID')
+  Layouts.MY = new Layouts('MY')
+  Layouts.BN = new Layouts('BN')
+  Layouts.IN = new Layouts('IN')
+  Layouts.IS = new Layouts('IS')
+  Layouts.NEC_VNDR_JP = new Layouts('NEC_VNDR_JP')
+
   return {
     Enum: Enum,
     Severity: Severity,
@@ -238,7 +369,9 @@ function enumsFactory ($translate) {
     WorkbenchMobilePhase: WorkbenchMobilePhase,
     NotAValidEnum: NotAValidEnum,
     BiosRange: BiosRange,
-    RatingRange: RatingRange
+    RatingRange: RatingRange,
+    Chassis: Chassis,
+    Layouts: Layouts
   }
 }
 

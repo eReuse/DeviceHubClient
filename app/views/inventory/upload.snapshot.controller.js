@@ -21,7 +21,6 @@ function uploadSnapshotCtl ($scope, fields, resources, $translate, server, $stat
       super({}, fileField)
       this.fileField = fileField
       this.results = []
-      window.res = this.results
     }
 
     _submit () {

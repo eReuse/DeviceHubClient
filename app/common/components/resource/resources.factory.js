@@ -96,6 +96,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     }
 
     get typeHuman () {
+      return this.constructor.typeHuman
+    }
+
+    static get typeHuman () {
       return utils.Naming.humanize(this.type)
     }
 
@@ -271,11 +275,32 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
      * use.
      * @return {module:fields.Option[]}
      */
-    static options (Option) {
+    static options (Option, onlyLeafs = false, includeComponents = true) {
+      const self = this
+      // todo make test
+      // eslint-disable-next-line no-proto
+      const THING_GRANDCHILDREN = _.filter(resources, r => r.__proto__.__proto__ === Thing)
+
+      function checkResource (r) {
+        return self.isPrototypeOf(r) &&
+          (onlyLeafs ? !_.find(resources, child => r.isPrototypeOf(child)) : true) &&
+          (includeComponents ? true : !Component.isPrototypeOf(r))
+      }
+
+      function computeGroup (resource) {
+        const r = _.find(THING_GRANDCHILDREN,
+          category => category.isPrototypeOf(resource) || resource === category)
+        return r || undefined
+      }
+
       return _(resources)
-        .filter(r => this.isPrototypeOf(r))
-        .map(r => new Option(r.name, {namespace: 'r.l'}))
+        .filter(checkResource)
+        .map(r => new Option(r.name, {group: computeGroup(r), namespace: 'r.l'}))
         .value()
+    }
+
+    static toString () {
+      return this.typeHuman
     }
 
     toJSON () {
@@ -410,7 +435,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       /** @type {Components[]} */
       super.define(rest)
       this.components = components
-      this.chassis = chassis
+      this.chassis = chassis ? new enums.Chassis(chassis) : null
       this.ramSize = ramSize
       this.datStorageSize = dataStorageSize
       this.processorModel = processorModel
@@ -717,7 +742,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
   class Keyboard extends ComputerAccessory {
     define ({layout = null, ...rest}) {
       super.define(rest)
-      this.layout = layout
+      this.layout = layout ? new enums.Layouts(layout) : null
     }
 
     static get icon () {
@@ -1103,10 +1128,6 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       super.define(rest)
       this.elapsed = elapsed
     }
-  }
-
-  class SnapshotToUpload extends Snapshot {
-
   }
 
   /**
@@ -1783,6 +1804,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    * @type {module:server.DevicehubThing}
    */
   Tag.server = new server.DevicehubThing('/tags/', resources)
+  window.res = resources
   return resources
 }
 
