@@ -8,7 +8,7 @@
  * @param server
  * @param session
  */
-function workbenchComputerCtl ($scope, workbenchResources, resources, table, enums, server, session, $translate) {
+function workbenchComputerCtl ($scope, workbenchResources, resources, table, enums, server, session, $translate, Notification) {
   $scope.session = session
   $scope.WorkbenchComputerPhase = enums.WorkbenchComputerPhase
 
@@ -43,6 +43,15 @@ function workbenchComputerCtl ($scope, workbenchResources, resources, table, enu
   $scope.$on('$destroy', () => {
     workbenchResources.WorkbenchComputerInfo.server.stop()
   })
+
+  const wb = new server.Workbench('snapshots/')
+  $scope.clean = () => {
+    wb.delete().then(() => {
+      Notification.success($translate.instant('forms.notification.success'))
+    }).catch(() => {
+      Notification.error($translate.instant('forms.notification.error'))
+    })
+  }
 }
 
 module.exports = workbenchComputerCtl

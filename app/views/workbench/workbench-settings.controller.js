@@ -25,6 +25,13 @@ function workbenchSettings ($scope, fields, enums, resources, Notification, $tra
       const nObj = {namespace: namespace}
       const erasureHideExpression = `model._erase !== 'custom'`
       super(model,
+        new fields.Radio('link', {
+          options: [
+            new fields.Option(true, {keyText: 'link.t', namespace: namespace}),
+            new fields.Option(false, {keyText: 'link.f', namespace: namespace})
+          ],
+          namespace: namespace
+        }),
         new fields.Number('stress', {
           min: 0,
           max: 100,
@@ -67,7 +74,7 @@ function workbenchSettings ($scope, fields, enums, resources, Notification, $tra
           hide: erasureHideExpression,
           namespace: namespace
         }),
-        new fields.Number('erase_steps', {
+        new fields.Number('eraseSteps', {
           min: 1,
           max: 100,
           step: 1,
@@ -75,7 +82,7 @@ function workbenchSettings ($scope, fields, enums, resources, Notification, $tra
           hide: erasureHideExpression,
           namespace: namespace
         }),
-        new fields.Radio('erase_leading_zeros', {
+        new fields.Radio('eraseLeadingZeros', {
           options: [fields.Yes, fields.No],
           hide: erasureHideExpression,
           namespace: namespace
@@ -100,10 +107,17 @@ function workbenchSettings ($scope, fields, enums, resources, Notification, $tra
   }
 
   $scope.form = new WorkbenchSettingsForm({})
-  const workbenchSettings = new server.Workbench('config/')
-  const workbenchImages = new server.Workbench('config/images/')
+  const workbenchSettings = new server.Workbench('settings/')
+  const workbenchImages = new server.Workbench('settings/images/')
   workbenchSettings.get().then(response => {
-    $scope.form.model = response.data
+    const model = $scope.form.model = response.data
+    const ES = enums.ErasureStandard
+    if (ES.find(model.erase, model.eraseSteps, model.eraseLeadingZeros) === ES.HMG_IS5) {
+      model._erase = enums.ErasureStandard.HMG_IS5.value
+    } else if (model.erase) {
+      model._erase = 'custom'
+    }
+
     workbenchImages.start().then(null, null, response => {
       // It seems poller reuses response.data and push gets multiplied over time
       _.last($scope.form.fields).templateOptions.options = [{

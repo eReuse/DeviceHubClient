@@ -224,17 +224,17 @@ const en = {
       e: 'E. The device could not be booted through the network.'
     },
     workbenchComputerPhase: {
-      error: 'Error',
-      uploaded: 'Done',
-      uploading: 'Uploading',
-      link: 'Waiting for link',
+      info: 'Info',
+      stressTest: 'Stress test',
       benchmark: 'Benchmark',
-      testDataStorage: 'Testing data storage',
-      stressTest: 'Stress testing',
-      eraseBasic: 'Erasing (basic)',
-      eraseSectors: 'Erasing (sectors)',
-      smartTest: 'Smart testing',
-      install: 'Installing'
+      dataStorage: 'Data storage',
+      link: 'Link',
+      readyToUpload: 'Ready to upload',
+      uploading: 'Uploading...',
+      uploaded: 'Uploaded',
+      connectionError: 'Connection error: Ready to re—upload',
+      hTTPerror: 'Error: upload manually.',
+      error: 'Unknown error. Contact the developers.'
     },
     workbenchMobilePhase: {
       recovery: 'Recovery',
@@ -443,6 +443,9 @@ const en = {
         lost: 'Connection to {{app}} lost.',
         check: 'Check Wi-Fi and Internet.'
       },
+      clean: {
+        button: 'Clean'
+      },
       wifi: 'Box\'s WiFi name: "{{name}}" Password: "{{pass}}"',
       notLinked: 'Not linked.'
     },
@@ -478,6 +481,13 @@ const en = {
     },
     settings: {
       title: 'Workbench Settings',
+      link: {
+        l: 'Link computers with tags',
+        d: 'Are you going to link computers with tags?',
+        t: 'Yes. Workbench does not upload a Snapshot until you link the computer with tags.',
+        f: 'No, I don\'t want to link computers with tags. ' +
+          'Workbench uploads Snapshots automatically, without any human interaction.'
+      },
       notification: {
         ok: 'Settings saved.'
       },
@@ -505,12 +515,12 @@ const en = {
       },
       eraseBasic: 'Normal: faster but without final verification.',
       eraseSectors: 'Secure: slower but verifies erasure for each disk sector.',
-      erase_steps: {
+      eraseSteps: {
         l: 'Number of erasure steps.',
         d: 'Usually 1. More can be enforced by policy.',
         aR: 'steps'
       },
-      erase_leading_zeros: {
+      eraseLeadingZeros: {
         l: 'Overwrite with zeros?',
         d: 'Can be enforced by policy.'
       },
@@ -949,12 +959,12 @@ const es = {
       },
       eraseBasic: 'Normal: más rápido pero sin verificación final.',
       eraseSectors: 'Seguro: más lento pero verifica el borrado para cada sector del disco.',
-      erase_steps: {
+      eraseSteps: {
         l: 'Número de pasos de borrado.',
         d: 'Normalmente 1. Se puede hacer cumplir más por medio de políticas.',
         aR: 'pasos'
       },
-      erase_leading_zeros: {
+      eraseLeadingZeros: {
         l: '¿Sobreescribir con ceros?',
         d: 'Se puede hacer cumplir por política.'
       },

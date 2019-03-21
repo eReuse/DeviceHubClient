@@ -19,12 +19,15 @@ function workbenchLinkCtl (fields, $scope, android, enums, server, $stateParams)
     constructor (...params) {
       super(...params)
       // We patch without passing auth header
-      this.workbench = new server.Workbench('snapshots/')
+      this.workbench = new server.Workbench('form/')
     }
 
     _submit () {
-      this.model.device.tags.forEach(tag => (tag.type = 'Tag'))
-      return this.workbench.patch(this.model, usb.uuid)
+      this.model.tags.forEach(tag => (tag.type = 'Tag'))
+      if (_.isPresent(this.model.rate)) {
+        this.model.rate.type = 'WorkbenchRate'
+      }
+      return this.workbench.post(this.model, usb.uuid)
     }
 
     _success (...args) {
@@ -42,14 +45,7 @@ function workbenchLinkCtl (fields, $scope, android, enums, server, $stateParams)
 
   $scope.form = new WLForm(
     {
-      device: {
-        tags: [],
-        events: [
-          {
-            type: 'WorkbenchRate'
-          }
-        ]
-      }
+      tags: []
     },
     new fields.String('device.tags[0].id', {
       namespace: ns,
@@ -61,19 +57,19 @@ function workbenchLinkCtl (fields, $scope, android, enums, server, $stateParams)
       keyText: 'tag1',
       addonRight: androidTag.addonRightScan('device.tags[1].id')
     }),
-    new fields.Radio('device.events[0].appearanceRange', {
+    new fields.Radio('rate.appearanceRange', {
       namespace: ns,
       keyText: 'appearance',
       options: enums.AppearanceRange.options(fields),
       required: true
     }),
-    new fields.Radio('device.events[0].functionalityRange', {
+    new fields.Radio('rate.functionalityRange', {
       namespace: ns,
       keyText: 'functionality',
       options: enums.FunctionalityRange.options(fields),
       required: true
     }),
-    new fields.Radio('device.events[0].biosRange', {
+    new fields.Radio('rate.biosRange', {
       namespace: ns,
       keyText: 'bios',
       options: enums.BiosRange.options(fields)

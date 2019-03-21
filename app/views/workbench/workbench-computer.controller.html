@@ -37,6 +37,12 @@
           <i class="fa fa-wifi"></i>
           {{::'workbench.computer.wifi' | translate:'{name: "BOX", pass: "eReuse.org"}'}}
         </li>
+        <li>
+          <button ng-click="clean()" class="btn btn-link">
+            <i class="fa fa-trash"></i>
+            {{::'workbench.computer.clean.button' | translate}}
+          </button>
+        </li>
       </ul>
       <div ng-show="info.attempts === 1" class="text-warning text-center">
         <i class="fa fa-warning"></i>

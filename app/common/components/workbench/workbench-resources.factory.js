@@ -13,9 +13,9 @@ function workbenchResourcesFactory (resources, enums, server) {
    * @extends module:resources.Snapshot
    */
   class WCSnapshot extends resources.Snapshot {
-    define ({_actualPhase, _linked, ...rest}) {
+    define ({_phase, _linked, ...rest}) {
       super.define(rest)
-      this.phase = enums.WorkbenchComputerPhase.get(_actualPhase)
+      this.phase = enums.WorkbenchComputerPhase.get(_phase)
       this.linked = _linked
     }
 

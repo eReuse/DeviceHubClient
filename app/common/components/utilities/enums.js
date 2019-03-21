@@ -137,17 +137,19 @@ function enumsFactory ($translate) {
   class WorkbenchComputerPhase extends Enum {
   }
 
-  WorkbenchComputerPhase.Error = new WorkbenchComputerPhase('Error')
-  WorkbenchComputerPhase.Uploaded = new WorkbenchComputerPhase('Uploaded')
-  WorkbenchComputerPhase.Uploading = new WorkbenchComputerPhase('Uploading')
-  WorkbenchComputerPhase.Link = new WorkbenchComputerPhase('Link')
-  WorkbenchComputerPhase.Benchmark = new WorkbenchComputerPhase('Benchmark')
-  WorkbenchComputerPhase.TestDataStorage = new WorkbenchComputerPhase('TestDataStorage')
+  WorkbenchComputerPhase.Info = new WorkbenchComputerPhase('Info')
   WorkbenchComputerPhase.StressTest = new WorkbenchComputerPhase('StressTest')
-  WorkbenchComputerPhase.EraseBasic = new WorkbenchComputerPhase('EraseBasic')
-  WorkbenchComputerPhase.EraseSectors = new WorkbenchComputerPhase('EraseSectors')
-  WorkbenchComputerPhase.SmartTest = new WorkbenchComputerPhase('SmartTest')
-  WorkbenchComputerPhase.Install = new WorkbenchComputerPhase('Install')
+  WorkbenchComputerPhase.Benchmark = new WorkbenchComputerPhase('Benchmark')
+  WorkbenchComputerPhase.DataStorage = new WorkbenchComputerPhase('DataStorage')
+  WorkbenchComputerPhase.Link = new WorkbenchComputerPhase('Link')
+
+  WorkbenchComputerPhase.ReadyToUpload = new WorkbenchComputerPhase('ReadyToUpload')
+  WorkbenchComputerPhase.Uploading = new WorkbenchComputerPhase('Uploading')
+  WorkbenchComputerPhase.Uploaded = new WorkbenchComputerPhase('Uploaded')
+  WorkbenchComputerPhase.ConnectionError = new WorkbenchComputerPhase('ConnectionError')
+  WorkbenchComputerPhase.HTTPError = new WorkbenchComputerPhase('HTTPError')
+
+  WorkbenchComputerPhase.Error = new WorkbenchComputerPhase('Error')
 
   /**
    * @memberOf module:enums
@@ -189,10 +191,28 @@ function enumsFactory ($translate) {
       /** An anchor tag to the description of the standard. */
       this.link = this.name.link(link)
     }
+
+    /**
+     * Returns the ErasureStandard that matches the passed-in
+     * characteristics, or null.
+     * @param {string} mode
+     * @param {number} steps
+     * @param {boolean} leadingZeros
+     * @return {?module:enums.ErasureStandard}
+     */
+    static find (mode, steps, leadingZeros) {
+      if (mode === ErasureStandard.HMG_IS5.mode &&
+        steps === ErasureStandard.HMG_IS5.steps &&
+        leadingZeros === ErasureStandard.HMG_IS5.leadingZeros) {
+        return ErasureStandard.HMG_IS5
+      } else {
+        return null
+      }
+    }
   }
 
   /** @memberOf module:enums.ErasureStandard */
-  ErasureStandard.HMG_IS5 = new ErasureStandard('HMG_IS5', 'EraseSectors', 1, true, 'https://wikipedia.org/wiki/Infosec_Standard_5')
+  ErasureStandard.HMG_IS5 = new ErasureStandard('HMG_IS5', 'EraseSectors', 2, true, 'https://wikipedia.org/wiki/Infosec_Standard_5')
 
   /**
    * The rate.

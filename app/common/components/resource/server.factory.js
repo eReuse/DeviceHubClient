@@ -264,12 +264,8 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
    */
   class Workbench extends Endpoint {
     constructor (path) {
-      super(Workbench.base(), path)
-    }
-
-    static base () {
       const host = android.app.exists ? CONSTANTS.androidWorkbench : CONSTANTS.workbench
-      return `http://${host}:8091`
+      super(`http://${host}:8091`, path)
     }
 
     /**
@@ -297,11 +293,11 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
   /**
    * Workbench Server endpoint translating to Snapshots.
    * @memberOf module:server
-   * @extends module:server.AuthEndpoint
+   * @extends module:server.Workbench
    */
-  class WorkbenchSnapshots extends AuthEndpoint {
+  class WorkbenchSnapshots extends Workbench {
     constructor (path, workbenchResources) {
-      super(Workbench.base(), path)
+      super(path)
       this.wr = workbenchResources
       if (!android.app.exists) {
         // Androids don't send this config info to the devicehub
@@ -309,8 +305,11 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
         // regular employees, not the manager, which sets this
         // settings directly in the Workbench Server webview
         this._config.params = {
-          'device-hub': CONSTANTS.url
+          'devicehub': CONSTANTS.url
         }
+        sessionLoaded.loaded.then(user => {
+          this._config.params.token = user.token
+        })
         if (CONSTANTS.inventories) {
           sessionLoaded.loaded.then(user => {
             this._config.params.db = user.inventories[0].id
