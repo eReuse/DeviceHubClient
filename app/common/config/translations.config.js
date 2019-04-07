@@ -224,16 +224,16 @@ const en = {
       e: 'E. The device could not be booted through the network.'
     },
     workbenchComputerPhase: {
-      info: 'Info',
-      stressTest: 'Stress test',
-      benchmark: 'Benchmark',
-      dataStorage: 'Data storage',
-      link: 'Link',
-      readyToUpload: 'Ready to upload',
+      info: 'Getting info',
+      stressTest: 'Stress testing',
+      benchmark: 'Benchmarking',
+      dataStorage: 'Processing data storage',
+      link: 'Waiting for link',
+      readyToUpload: 'WB completed: Ready to upload',
       uploading: 'Uploading...',
-      uploaded: 'Uploaded',
+      uploaded: 'Finished: uploaded.',
       connectionError: 'Connection error: Ready to re—upload',
-      hTTPerror: 'Error: upload manually.',
+      hTTPError: 'Error: upload manually.',
       error: 'Unknown error. Contact the developers.'
     },
     workbenchMobilePhase: {
@@ -529,6 +529,11 @@ const en = {
         d: 'OS .fsa files that are in "workbench/images" automatically appear here.'
       }
     }
+  },
+  import: {
+    button: 'Import',
+    title: 'Import',
+    file: {l: 'File to import', d: 'Select a file to import.'}
   },
   resourceSearch: {
     scan: 'Scan',

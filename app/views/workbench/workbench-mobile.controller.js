@@ -1,50 +1,73 @@
-
 /**
  *
  * @param $scope
- * @param {module:workbenchGetter} workbenchGetter
+ * @param {module:workbenchResources} workbenchResources
  * @param {module:resources} resources
+ * @param {module:table} table
  * @param {module:enums} enums
+ * @param server
+ * @param session
  */
-function workbenchCtl ($scope, workbenchGetter, resources, enums) {
-  class WMSnapshot extends resources.Snapshot {
-    define ({_increment = null, _error = null, _phase, ...rest}) {
-      super.define(rest)
-      /** @type {?number} */
-      this.increment = _increment
-      /** @type {?string} */
-      this.error = _error
-      this.phase = enums.WorkbenchMobilePhase.get(_phase)
+function workbenchMobileCtl ($scope, workbenchResources, resources, table, enums, server, session, $filter, $translate, Notification) {
+  $scope.session = session
+  $scope.WorkbenchComputerPhase = enums.WorkbenchComputerPhase
+
+  workbenchResources.WorkbenchMobileInfo.server.start().then(null, null, info => {
+    $scope.info = info
+  })
+
+  // Table
+
+  class Phase extends table.Field {
+  }
+
+  class SerialNumber extends table.Field {
+    constructor (resource) {
+      super(resource, resource.device.serialNumber)
+    }
+
+    static get name () {
+      return 'S/N'
     }
   }
 
-  class WMSList extends workbenchGetter.WorkbenchResponse {
-    constructor (things = [], rest) {
-      super(things, rest)
-      /**
-       * @type {{Recovery: number, Erasing: number, WaitingSideload: number, InstallingOS: number,
-       *   WaitSideloadAgain: number, InstallingGapps: number, BootingIntoOS: number, Done:
-       *   number}}
-       */
-      this.phases = _.assign({
-        Recovery: 0,
-        Erasing: 0,
-        WaitingSideload: 0,
-        InstallingOS: 0,
-        WaitSideloadAgain: 0,
-        InstallingGapps: 0,
-        BootingIntoOS: 0,
-        Done: 0
-      }, _.countBy(this, 'actualPhase'))
-      this.error = _.filter(this, 'error').length
-      this.working = this.length - this.phases.Done - this.error
+  class RAM extends table.Field {
+    constructor (resource) {
+      super(resource, $filter('number')(resource.device.ramSize / 1000))
+    }
+
+    static get name () {
+      return 'RAM (GB)'
     }
   }
 
-  WMSList.T = WMSnapshot
+  class Disk extends table.Field {
+    constructor (resource) {
+      super(resource, $filter('number')(resource.device.dataStorageSize / 1024))
+    }
 
-  const getter = $scope.getter = new workbenchGetter.WorkbenchGetter(WMSList)
+    static get name () {
+      return 'Disk (GB)'
+    }
+  }
+
+  $scope.table = {
+    fields: [table.Icon, table.Title, SerialNumber, RAM, Disk, Phase]
+  }
+
+  $scope.$on('$destroy', () => {
+    workbenchResources.WorkbenchMobileInfo.server.stop()
+  })
+
+  const wb = new server.Workbench('snapshots/mobile/')
+  $scope.clean = () => {
+    wb.delete().then(() => {
+      Notification.success($translate.instant('forms.notification.success'))
+    }).catch(() => {
+      Notification.error($translate.instant('forms.notification.error'))
+    })
+  }
 }
 
-module.exports = workbenchCtl
+module.exports = workbenchMobileCtl
 

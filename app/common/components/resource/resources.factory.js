@@ -414,7 +414,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
     get title () {
       const tags = this.tags.length ? ` ${this.tags[0]}` : ''
-      return `${utils.Naming.humanize(this.type)} ${this.model} ${tags}`
+      return `${utils.Naming.humanize(this.type)} ${this.model || ''} ${tags}`
     }
   }
 
@@ -491,7 +491,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
   /**
    * @alias module:resources.Server
-   * @extends module:resources.Computer}
+   * @extends module:resources.Computer
    */
   class Server extends Computer {
     static get icon () {
@@ -501,13 +501,36 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
   /**
    * @alias module:resources.Mobile
-   * @extends module:resources.Device}
+   * @extends module:resources.Device
    */
   class Mobile extends Device {
-    define ({imei = null, meid = null, ...rest}) {
+    define ({imei = null, meid = null, processorModel = null, processorCores = null, processorBoard = null, processorAbi = null, ramSize = null, dataStorageSize = null, graphicCardManufacturer = null, graphicCardModel = null, macs = null, bluetoothMac = null, components = [], ...rest}) {
       super.define(rest)
       this.imei = imei
       this.meid = meid
+      this.processorModel = processorModel
+      this.processorCores = processorCores
+      this.processorBoard = processorBoard
+      this.processorAbi = processorAbi
+      this.ramSize = ramSize
+      this.dataStorageSize = dataStorageSize
+      this.graphicCardManufacturer = graphicCardManufacturer
+      this.graphicCardModel = graphicCardModel
+      this.macs = macs
+      this.bluetoothMac = bluetoothMac
+      this.components = components
+    }
+
+    get components () {
+      return this._getRels(Component, this._components)
+    }
+
+    set components (v) {
+      this._components = this._rels(v)
+    }
+
+    static get icon () {
+      return 'fa-mobile'
     }
   }
 
@@ -516,9 +539,6 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    * @extends module:resources.Mobile}
    */
   class Smartphone extends Mobile {
-    static get icon () {
-      return 'fa-mobile'
-    }
   }
 
   /**
@@ -693,6 +713,38 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    * @extends module:resources.Component
    */
   class Display extends Component {
+    define ({size = null, technology = null, resolutionWidth = null, resolutionHeight = null, refreshRate = null, contrastRatio = null, touchable = null, densityWidth = null, densityHeight = null, ...rest}) {
+      super.define(rest)
+      this.size = size
+      this.technology = technology
+      this.resolutionWidth = resolutionWidth
+      this.resolutionHeight = resolutionHeight
+      this.refreshRate = refreshRate
+      this.contrastRatio = contrastRatio
+      this.touchable = touchable
+      this.densityWidth = densityWidth
+      this.densityHeight = densityHeight
+    }
+  }
+
+  /**
+   * @alias module:resources.Battery
+   * @extends module:resources.Component
+   */
+  class Battery extends Component {
+    define ({...rest}) {
+      super.define(rest)
+    }
+  }
+
+  /**
+   * @alias module:resources.Camera
+   * @extends module:resources.Component
+   */
+  class Camera extends Component {
+    define ({...rest}) {
+      super.define(rest)
+    }
   }
 
   /**
@@ -1701,6 +1753,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    * @return {Thing}
    */
   function init (thingLike, useCache) {
+    console.assert(thingLike.type, 'thing obj requires a type.')
     return resources[thingLike.type].init(thingLike, useCache)
   }
 
@@ -1732,6 +1785,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     SAI: SAI,
     Keyboard: Keyboard,
     Display: Display,
+    Camera: Camera,
+    Battery: Battery,
     Event: Event,
     EventWithMultipleDevices: EventWithMultipleDevices,
     EventWithOneDevice: EventWithOneDevice,

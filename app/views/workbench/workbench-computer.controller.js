@@ -21,10 +21,6 @@ function workbenchComputerCtl ($scope, workbenchResources, resources, table, enu
   class Phase extends table.Field {
   }
 
-  class Title extends table.Title {
-
-  }
-
   class Tags extends table.Tags {
     constructor (resource) {
       super(resource, _.get(resource, 'device.tags', []))
@@ -34,8 +30,6 @@ function workbenchComputerCtl ($scope, workbenchResources, resources, table, enu
     }
   }
 
-  Title.hide = true
-
   $scope.table = {
     fields: [table.Icon, table.Title, Phase, Tags]
   }
@@ -44,7 +38,7 @@ function workbenchComputerCtl ($scope, workbenchResources, resources, table, enu
     workbenchResources.WorkbenchComputerInfo.server.stop()
   })
 
-  const wb = new server.Workbench('snapshots/')
+  const wb = new server.Workbench('snapshots/computer/')
   $scope.clean = () => {
     wb.delete().then(() => {
       Notification.success($translate.instant('forms.notification.success'))

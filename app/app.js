@@ -126,6 +126,11 @@ module.exports = window.angular.module('deviceHub', [
         template: require('./views/inventory/manual.snapshot.controller.html'),
         controller: 'snapshotManualCtrl'
       }).state({
+        name: 'auth.inventory.import',
+        url: 'import/',
+        template: require('./views/inventory/import.controller.html'),
+        controller: 'importCtrl'
+      }).state({
         name: 'login',
         url: '/login',
         template: require('./views/login/login.controller.html'),

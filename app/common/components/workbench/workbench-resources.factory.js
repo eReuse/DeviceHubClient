@@ -65,7 +65,7 @@ function workbenchResourcesFactory (resources, enums, server) {
    * @memberof module:workbenchResources
    * @extends module:workbenchResources.WorkbenchResponse
    */
-  class WorkbenchComputerInfo extends WorkbenchResponse {
+  class WorkbenchInfo extends WorkbenchResponse {
     constructor (things = [], {usbs = [], ...rest} = {}) {
       super(things, rest)
       /**
@@ -91,11 +91,20 @@ function workbenchResourcesFactory (resources, enums, server) {
     }
   }
 
-  const workbenchResources = {
-    WorkbenchComputerInfo: WorkbenchComputerInfo
+  class WorkbenchComputerInfo extends WorkbenchInfo {
   }
-  WorkbenchComputerInfo.server = new server.WorkbenchSnapshots('/info/', workbenchResources)
-  WorkbenchComputerInfo.SnapshotType = WCSnapshot
+
+  class WorkbenchMobileInfo extends WorkbenchInfo {
+
+  }
+
+  const workbenchResources = {
+    WorkbenchComputerInfo: WorkbenchComputerInfo,
+    WorkbenchMobileInfo: WorkbenchMobileInfo
+  }
+  WorkbenchComputerInfo.server = new server.WorkbenchSnapshots('/info/computer/', workbenchResources)
+  WorkbenchMobileInfo.server = new server.WorkbenchSnapshots('/info/mobile/', workbenchResources)
+  WorkbenchInfo.SnapshotType = WCSnapshot
   return workbenchResources
 }
 
