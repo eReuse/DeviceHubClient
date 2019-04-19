@@ -14,7 +14,7 @@
       </ul>
     </div>
     <div class="col-xs-12 fill-height-bar-h2">
-      <table class="table table-striped">
+      <table class="table table-striped table-hover unselectable">
         <thead>
         <tr>
           <th ng-repeat="Field in ::table.fields track by Field.type"
@@ -26,6 +26,7 @@
         </thead>
         <tbody>
         <tr ng-repeat="snapshot in info track by snapshot.uuid"
+            ng-click="openWorkbenchLink(snapshot)"
             ng-class="{
             info: snapshot.phase === WorkbenchComputerPhase.Link,
             success: snapshot.phase === WorkbenchComputerPhase.Uploaded,

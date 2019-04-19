@@ -1233,6 +1233,20 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
   }
 
   /**
+   * @alias module:resources.MeasureBattery
+   * @extends module:resources.Test
+   */
+  class MeasureBattery extends Test {
+    define ({size = null, voltage = null, cycleCount = null, health = null, ...rest}) {
+      super.define(rest)
+      this.size = size
+      this.voltage = voltage
+      this.cycleCount = cycleCount
+      this.health = health
+    }
+  }
+
+  /**
    * @alias module:resources.Benchmark
    * @extends module:resources.EventWithOneDevice
    */
@@ -1837,7 +1851,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     LotNode: LotNode,
     ResourceList: ResourceList,
     Lots: Lots,
-    init: init
+    init: init,
+    MeasureBattery: MeasureBattery
   }, utils.unforgivingHandler)
   // Init servers
   /**

@@ -7,9 +7,9 @@
  */
 function workbenchLinkCtl (fields, $scope, android, enums, server, $stateParams) {
   /** @type {module:resources.Snapshot} */
-  const usb = $scope.usb = $stateParams.usb
+  const uuid = $scope.uuid = $stateParams.uuid
 
-  const androidTag = new android.Tag($scope, 'device.tags[0].id')
+  const androidTag = new android.Tag($scope, 'tags[0].id')
 
   /**
    * @class
@@ -19,7 +19,7 @@ function workbenchLinkCtl (fields, $scope, android, enums, server, $stateParams)
     constructor (...params) {
       super(...params)
       // We patch without passing auth header
-      this.workbench = new server.Workbench('form/')
+      this.workbench = new server.Workbench(`snapshots/${uuid}/form/`)
     }
 
     _submit () {
@@ -27,7 +27,7 @@ function workbenchLinkCtl (fields, $scope, android, enums, server, $stateParams)
       if (_.isPresent(this.model.rate)) {
         this.model.rate.type = 'WorkbenchRate'
       }
-      return this.workbench.post(this.model, usb.uuid)
+      return this.workbench.post(this.model)
     }
 
     _success (...args) {
@@ -47,15 +47,15 @@ function workbenchLinkCtl (fields, $scope, android, enums, server, $stateParams)
     {
       tags: []
     },
-    new fields.String('device.tags[0].id', {
+    new fields.String('tags[0].id', {
       namespace: ns,
       keyText: 'tag0',
-      addonRight: androidTag.addonRightScan('device.tags[0].id')
+      addonRight: androidTag.addonRightScan('tags[0].id')
     }),
-    new fields.String('device.tags[1].id', {
+    new fields.String('tags[1].id', {
       namespace: ns,
       keyText: 'tag1',
-      addonRight: androidTag.addonRightScan('device.tags[1].id')
+      addonRight: androidTag.addonRightScan('tags[1].id')
     }),
     new fields.Radio('rate.appearanceRange', {
       namespace: ns,

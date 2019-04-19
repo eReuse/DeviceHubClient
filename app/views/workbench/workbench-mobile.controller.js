@@ -8,7 +8,7 @@
  * @param server
  * @param session
  */
-function workbenchMobileCtl ($scope, workbenchResources, resources, table, enums, server, session, $filter, $translate, Notification) {
+function workbenchMobileCtl ($scope, workbenchResources, resources, table, enums, server, session, $filter, $translate, Notification, $state) {
   $scope.session = session
   $scope.WorkbenchComputerPhase = enums.WorkbenchComputerPhase
 
@@ -66,6 +66,10 @@ function workbenchMobileCtl ($scope, workbenchResources, resources, table, enums
     }).catch(() => {
       Notification.error($translate.instant('forms.notification.error'))
     })
+  }
+
+  $scope.openWorkbenchLink = snapshot => {
+    $state.go('auth.workbench.link', {uuid: snapshot.uuid})
   }
 }
 

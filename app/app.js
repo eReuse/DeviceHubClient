@@ -95,8 +95,8 @@ module.exports = window.angular.module('deviceHub', [
         name: 'auth.workbench.link',
         url: 'link/',
         params: {
-          usb: {
-            type: 'any',
+          uuid: {
+            type: 'string',
             value: null
           }
         },

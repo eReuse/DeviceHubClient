@@ -7,7 +7,7 @@ function workbenchLinkButton ($state) {
     },
     link: $scope => {
       $scope.openWorkbenchLink = usb => {
-        $state.go('auth.workbench.link', {usb: usb})
+        $state.go('auth.workbench.link', {uuid: usb.uuid})
       }
     }
   }
