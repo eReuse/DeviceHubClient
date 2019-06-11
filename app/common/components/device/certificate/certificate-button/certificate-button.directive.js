@@ -8,7 +8,8 @@ function certificateButton (dhModal) {
     link: $scope => {
       $scope.dropDownIsOpen = false
       $scope.$watchCollection('resources', resources => {
-        $scope.allComputers = _.every(resources, {'@type': 'Computer'})
+        $scope.pcsOrHdds = _.every(resources, x => x['@type'] === 'Computer') ||
+          _.every(resources, x => x['@type'] === 'HardDrive')
       })
       $scope.certificates = [
         {
@@ -23,7 +24,7 @@ function certificateButton (dhModal) {
        description: 'Generates a legal receipt for a receiver to sign.'
        }*/
       $scope.openDropdown = function ($event) {
-        if ($scope.allComputers && $scope.resources.length > 0) $scope.dropDownIsOpen = true
+        if ($scope.pcsOrHdds && $scope.resources.length > 0) $scope.dropDownIsOpen = true
         $event.stopPropagation()  // https://github.com/angular-ui/bootstrap/issues/6038
       }
       $scope.openModal = title => {

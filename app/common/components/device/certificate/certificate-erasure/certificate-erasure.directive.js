@@ -23,6 +23,18 @@ function certificateErasure (certificateErasureFactory, SubmitForm) {
               }
             },
             {
+              key: 'useComputer',
+              type: 'radio',
+              templateOptions: {
+                label: 'Add info about the computer',
+                options: [
+                  {name: 'Yes', value: true},
+                  {name: 'No', value: false}
+                ],
+                required: true
+              }
+            },
+            {
               key: 'org',
               type: 'input',
               templateOptions: {
@@ -46,7 +58,8 @@ function certificateErasure (certificateErasureFactory, SubmitForm) {
           ],
           model: {
             resources: $scope.resources,
-            lan: 'EN'
+            lan: 'EN',
+            useComputer: true
           },
           submit: model => {
             if (submitForm.isValid()) {

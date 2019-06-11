@@ -1,8 +1,8 @@
 <div class="btn-group" uib-dropdown is-open="dropDownIsOpen">
   <button type="button"
           class="btn"
-          ng-class="{'btn-primary': resources.length > 0 && allComputers}"
-          uib-tooltip="Select only computers"
+          ng-class="{'btn-primary': resources.length > 0 && pcsOrHdds}"
+          uib-tooltip="Select either computers or hard drives"
           tooltip-enable="!allComputers"
           ng-click="openDropdown($event)"
   >
