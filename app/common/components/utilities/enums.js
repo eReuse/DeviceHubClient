@@ -73,6 +73,21 @@ function enumsFactory ($translate) {
    * @memberOf module:enums
    * @extends module:enums.Enum
    */
+  class BatteryTechnology extends Enum {
+  }
+
+  BatteryTechnology.LiIon = new BatteryTechnology('LiIon')
+  BatteryTechnology.NiCd = new BatteryTechnology('NiCd')
+  BatteryTechnology.NiMH = new BatteryTechnology('NiMH')
+  BatteryTechnology.LiPoly = new BatteryTechnology('LiPoly')
+  BatteryTechnology.LiFe = new BatteryTechnology('LiFe')
+  BatteryTechnology.LiMn = new BatteryTechnology('LiMn')
+  BatteryTechnology.Al = new BatteryTechnology('Al')
+
+  /**
+   * @memberOf module:enums
+   * @extends module:enums.Enum
+   */
   class Severity extends Enum {
 
   }
@@ -381,6 +396,7 @@ function enumsFactory ($translate) {
 
   return {
     Enum: Enum,
+    BatteryTechnology: BatteryTechnology,
     Severity: Severity,
     ErasureStandard: ErasureStandard,
     AppearanceRange: AppearanceRange,

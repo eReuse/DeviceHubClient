@@ -37,7 +37,7 @@ module.exports = window.angular.module('deviceHub', [
        */
       function redirectToIfAccessedThroughURLFactory (target) {
         return trans => {
-          if (trans.options === 'url') return trans.router.stateService.target(target)
+          if (trans.options().source === 'url') return trans.router.stateService.target(target)
         }
       }
 
@@ -104,17 +104,17 @@ module.exports = window.angular.module('deviceHub', [
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.workbench.computer'),
         controller: 'workbenchLinkCtl as wlCl'
       }).state({
-        name: 'auth.inventory.newEvent',
-        url: 'new-event/',
+        name: 'auth.inventory.newAction',
+        url: 'new-action/',
         params: {
-          event: {
+          action: {
             type: 'any',
             value: null
           }
         },
-        template: require('./views/inventory/new-event.controller.html'),
+        template: require('./views/inventory/new-action.controller.html'),
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
-        controller: 'newEventCtrl as neCl'
+        controller: 'newActionCtrl as naCl'
       }).state({
         name: 'auth.inventory.snapshotUpload',
         url: 'upload-snapshot/',

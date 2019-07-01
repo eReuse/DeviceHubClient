@@ -3,9 +3,9 @@
  * @param {module:dh-modal-provider} dhModal
  * @param {module:resources} resources
  */
-function manualEventsButton (dhModal, resources, $state) {
+function manualActionsButton (dhModal, resources, $state) {
   return {
-    template: require('./manual-events-button.directive.html'),
+    template: require('./manual-actions-button.directive.html'),
     restrict: 'E',
     scope: {
       devices: '='
@@ -15,7 +15,7 @@ function manualEventsButton (dhModal, resources, $state) {
      * @param {module:resources.Device[]} $scope.devices
      */
     link: $scope => {
-      $scope.events = [
+      $scope.actions = [
         resources.ToPrepare,
         resources.Prepare,
         resources.ToRepair,
@@ -23,12 +23,12 @@ function manualEventsButton (dhModal, resources, $state) {
         resources.ToDisposeProduct,
         resources.Receive
       ]
-      $scope.open = Event => {
-        const event = new Event({devices: $scope.devices})
-        $state.go('.newEvent', {event: event})
+      $scope.open = Action => {
+        const action = new Action({devices: $scope.devices})
+        $state.go('.newAction', {action: action})
       }
     }
   }
 }
 
-module.exports = manualEventsButton
+module.exports = manualActionsButton

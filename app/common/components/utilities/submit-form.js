@@ -97,7 +97,6 @@ function submitFormFactory (Notification) {
       utils.Progress.stop()
     }
 
-
   }
 
   return SubmitForm

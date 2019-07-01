@@ -1,27 +1,7 @@
 const utils = require('./../utils')
 const inflection = require('inflection')
 const isEmpty = require('is-empty')
-
-/**
- * Sets the field `name` of `obj` to be not enumerable
- *
- * Things use this for private elements, so they are hidden when
- * POSTing, JSONifying, and when iterating through keys.
- *
- * @param obj
- * @param name
- */
-function setNotEnumerable (obj, name) {
-  Object.defineProperty(obj, name, {'enumerable': false, 'writable': true})
-}
-
-/**
- * object used by Things to allow getters to be enumerable,
- * so using them when POSTing, JSONifying, and when iterating
- * through keys.
- * @type {{enumerable: boolean}}
- */
-const ENUMERABLE = {'enumerable': true}
+const URI = require('urijs')
 
 /**
  * Resources module
@@ -34,8 +14,9 @@ const ENUMERABLE = {'enumerable': true}
  * @param CONSTANTS
  * @param $filter
  * @param {module:enums} enums
+ * @param {URI} URL
  */
-function resourceFactory (server, CONSTANTS, $filter, enums) {
+function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   /**
    * The models of Devicehub, mimicking Devicehub's `schema.Thing`.
    * Thing classes have generic methods that can communicate with
@@ -54,7 +35,24 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    */
   class Thing {
     constructor (args = {}) {
+      Object.defineProperties(this, this._props())
       this.define(args)
+    }
+
+    /**
+     * Define enumerable getters and settes.
+     * @private
+     */
+    _props () {
+      // We did not know how to define ENUMERABLE getters and setters
+      // that are correctly inherited using ES6 notation
+      // it only works when instantiating each object (not ideal!)
+      return {
+        type: {
+          get: () => this.constructor.type,
+          enumerable: true
+        }
+      }
     }
 
     define ({sameAs = null, updated = null, created = null, _useCache = false}) {
@@ -71,8 +69,37 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
        */
       this.created = created ? new Date(created) : null
       /** @type {boolean} **/
-      setNotEnumerable(this, '_useCache')
       this._useCache = _useCache
+    }
+
+    /**
+     * Creates a simple object from the non-empty, non-internal, non-angular
+     * variables of this Thing, ready to be Jsonified and POSTed to a
+     * Devicehub.
+     *
+     * Things inside this object are replaced by their IDs, as
+     * Devicehub expects.
+     */
+    dump () {
+      const dump = {}
+      for (let key in this) {
+        let v = this[key]
+        if (
+          key.charAt(0) !== '_' && // is not internal value
+          key.charAt(0) !== '$' && // is not angular value
+          (v === 0 || !isEmpty(v)) // is non empty value (we consider 0 as non-empty)
+        ) {
+          // Only dump the ID of relationships
+          // Future versions might want to toggle this behaviour
+          if (v instanceof Thing) {
+            v = v['id']
+          } else if (v instanceof Array && v[0] instanceof Thing) {
+            v = _.map(v, 'id')
+          }
+          dump[key] = v
+        }
+      }
+      return dump
     }
 
     get createdHuman () {
@@ -80,19 +107,11 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     }
 
     /**
-     * The type of the event.
+     * The type of the Thing.
      * @returns {string}
      */
     static get type () {
       return this.name
-    }
-
-    /**
-     * The type of the event.
-     * @returns {string}
-     */
-    get type () {
-      return this.constructor.type
     }
 
     get typeHuman () {
@@ -117,13 +136,6 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
     get icon () {
       return this.constructor.icon
-    }
-
-    /**
-     * Returns a deep copy of the thing.
-     */
-    copy () {
-      return utils.copy(this)
     }
 
     /**
@@ -207,6 +219,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
           } else {  // Cache miss: add new entry to cache
             this.CACHE[id] = thing = new this(thingLike)
           }
+          thing._useCache = true
         } else {  // Object has no ID; we cannot set it to a cache
           // Just instantiate it
           thing = new this(thingLike)
@@ -215,17 +228,15 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
         thing = new this(thingLike)
       }
       console.assert(thing instanceof this)
-      // We avoid adding values
-      Object.seal(thing)
       return thing
     }
 
     /**
      * Creates a relationship between `this` and a passed-in `other`,
-     * instantiating it as a Thing and, if `this` is in the cache,
+     * instantiating it as a Thing if needed and, if `this` is in the cache,
      * reconciling `other` with the cache too.
      *
-     * @param {?object} other - An ID, a plain object or null. Plain
+     * @param {?object} other - An ID, a plain object, a Thing or null. Plain
      * objects are initialized as a Thing, other types of values are
      * just returned as-is.
      * @return {string|number|object|Thing|null} - The ID of the object,
@@ -233,21 +244,25 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
      * value as-is.
      */
     _rel (other, idField = 'id') {
-      console.assert(!(other instanceof Thing) && !(other instanceof Array))
-      if (!_.isPlainObject(other)) return other
+      console.assert(_.isString(other) || _.isInteger(other) || _.isPlainObject(other) || other instanceof Thing || _.isNull(other),
+        'The relationship value must be an ID, a plain object, a Thing or null.')
+      if (!_.isPlainObject(other) && !(other instanceof Thing)) return other
 
-      const value = resources.init(other, this._useCache)
+      // The object is plain or Thing
+      const value = other instanceof Thing ? other : resources.init(other, this._useCache)
       return this._useCache ? _.get(value, idField, value) : value
     }
 
     /**
-     * The same as `relationsihp` but with an array.
+     * The same as `_rel` but with an array.
      * @param {array} others
      * @return {*}
      */
     _rels (others) {
       console.assert(others instanceof Array)
-      return others.map(other => this._rel(other))
+      const ret = others.map(other => this._rel(other))
+      console.assert(ret !== undefined)
+      return ret
     }
 
     /**
@@ -302,25 +317,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     static toString () {
       return this.typeHuman
     }
-
-    toJSON () {
-      return this.dump()
-    }
-
-    dump () {
-      const dump = {}
-      for (let key in this) {
-        const v = this[key]
-        if (v === 0 || !isEmpty(v)) dump[key] = v
-      }
-      return dump
-    }
   }
-
-  // See `module:resources.setNotEnumerable`
-  Object.defineProperties(Thing.prototype, {
-    type: ENUMERABLE
-  })
 
   /** A connection to Devicehub. Ex. myThing.server.post() */
   Thing.server = null
@@ -334,7 +331,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    * @extends module:resources.Thing
    */
   class Device extends Thing {
-    define ({id = null, hid = null, tags = [], model = null, manufacturer = null, serialNumber = null, weight = null, width = null, height = null, depth = null, events = [], problems = [], url = null, rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, working = [], ...rest}) {
+    define ({id = null, hid = null, tags = [], model = null, manufacturer = null, serialNumber = null, weight = null, width = null, height = null, depth = null, actions = [], problems = [], url = null, rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, working = [], brand = null, generation = null, version = null, variant = null, sku = null, ...rest}) {
       super.define(rest)
       /** @type {int} */
       this.id = id
@@ -348,20 +345,26 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       this.manufacturer = manufacturer ? inflection.titleize(manufacturer) : null
       /** @type {?string} */
       this.serialNumber = serialNumber ? serialNumber.toUpperCase() : null
-      /** @type {string} */
+      /** @type {?string} */
+      this.brand = brand
+      /** @type {?number} */
+      this.generation = generation
+      /** @type {?string} */
+      this.version = version
+      /** @type {number} */
       this.weight = weight
-      /** @type {string} */
+      /** @type {number} */
       this.width = width
-      /** @type {string} */
+      /** @type {number} */
       this.height = height
-      /** @type {string} */
+      /** @type {number} */
       this.depth = depth
-      /** @type {Event[]} */
-      this.events = events
-      /** @type {Event[]} */
+      /** @type {Action[]} */
+      this.actions = actions
+      /** @type {Action[]} */
       this.problems = this._rels(problems)
       /** @type {string} */
-      this.url = url ? new URL(url, CONSTANTS.url) : null
+      this.url = url ? new URI(CONSTANTS.url) : null
       /** @type {Rate} */
       this.rate = this._rel(rate)
       /** @type {Price} */
@@ -374,26 +377,31 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       this.physicalPossessor = physicalPossessor
       /** @type {string} */
       this.productionDate = productionDate
-      /** @type {Event} */
+      /** @type {Action} */
       this.working = this._rels(working)
-      setNotEnumerable(this, '_events')
-      setNotEnumerable(this, '_tags')
+      /** @type {?string} */
+      this.variant = variant
+      /** @type {?string} */
+      this.sku = sku
     }
 
-    get events () {
-      return this._getRels(Event, this._events)
-    }
-
-    set events (v) {
-      this._events = this._rels(v)
-    }
-
-    get tags () {
-      return this._getRels(Tag, this._tags)
-    }
-
-    set tags (v) {
-      this._tags = this._rels(v)
+    _props () {
+      const props = super._props()
+      props.actions = {
+        get: () => this._getRels(Action, this._events),
+        set: v => {
+          this._events = this._rels(v)
+        },
+        enumerable: true
+      }
+      props.tags = {
+        get: () => this._getRels(Tag, this._tags),
+        set: v => {
+          this._tags = this._rels(v)
+        },
+        enumerable: true
+      }
+      return props
     }
 
     static get icon () {
@@ -418,11 +426,6 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     }
   }
 
-  Object.defineProperties(Device.prototype, {
-    events: ENUMERABLE,
-    tags: ENUMERABLE
-  })
-
   /** @type {Object.<int, Device>} */
   Device.CACHE = {}
 
@@ -432,35 +435,34 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    */
   class Computer extends Device {
     define ({components = [], chassis = null, ramSize = null, dataStorageSize = null, processorModel = null, graphicCardModel = null, networkSpeeds = [], privacy = [], ...rest}) {
-      /** @type {Components[]} */
       super.define(rest)
+      /** @type {Component[]} */
       this.components = components
-      this.chassis = chassis ? new enums.Chassis(chassis) : null
+      this.chassis = chassis ? enums.Chassis.get(chassis) : null
       this.ramSize = ramSize
       this.datStorageSize = dataStorageSize
       this.processorModel = processorModel
       this.graphicCardModel = graphicCardModel
       this.networkSpeeds = networkSpeeds
       this.privacy = this._rels(privacy)
-      setNotEnumerable(this, '_components')
     }
 
-    get components () {
-      return this._getRels(Component, this._components)
-    }
-
-    set components (v) {
-      this._components = this._rels(v)
+    _props () {
+      const props = super._props()
+      props.components = {
+        get: () => this._getRels(Component, this._components),
+        set: v => {
+          this._components = this._rels(v)
+        },
+        enumerable: true
+      }
+      return props
     }
 
     static get icon () {
       return 'fa-building'
     }
   }
-
-  Object.defineProperties(Computer.prototype, {
-    components: ENUMERABLE
-  })
 
   /**
    * @alias module:resources.ComputerMonitor
@@ -569,15 +571,18 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     define ({parent = null, ...rest}) {
       super.define(rest)
       this.parent = parent
-      setNotEnumerable(this, '_parent')
     }
 
-    get parent () {
-      return this._getRel(Computer, this._parent)
-    }
-
-    set parent (v) {
-      this._parent = this._rel(v)
+    _props () {
+      const props = super._props()
+      props.parents = {
+        get: () => this._getRel(Computer, this._parent),
+        set: v => {
+          this._parent = this._rel(v)
+        },
+        enumerable: true
+      }
+      return props
     }
 
     static get icon () {
@@ -640,13 +645,19 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    * @extends module:resources.Component
    */
   class Motherboard extends Component {
-    define ({slots = null, usb = null, firewire = null, serial = null, pcmcia = null, ...rest}) {
+    define ({slots = null, usb = null, firewire = null, serial = null, pcmcia = null, ramSlots = null, ramMaxSize = null, biosDate = null, ...rest}) {
       super.define(rest)
       this.slots = slots
       this.usb = usb
       this.firewire = firewire
       this.serial = serial
       this.pcmcia = pcmcia
+      /** @type {?Date} */
+      this.biosDate = biosDate ? new Date(biosDate) : null
+      /** @type {?number} */
+      this.ramSlots = ramSlots
+      /** @type {?ramMaxSize} */
+      this.ramMaxSize = ramMaxSize
     }
   }
 
@@ -794,7 +805,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
   class Keyboard extends ComputerAccessory {
     define ({layout = null, ...rest}) {
       super.define(rest)
-      this.layout = layout ? new enums.Layouts(layout) : null
+      this.layout = layout ? enums.Layouts.get(layout) : null
     }
 
     static get icon () {
@@ -804,10 +815,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
   /**
    * Class representing an event.
-   * @alias module:resources.Event
+   * @alias module:resources.Action
    * @extends module:resources.Thing
    */
-  class Event extends Thing {
+  class Action extends Thing {
     define ({id = null, name = null, closed = null, severity = null, description = null, startTime = null, endTime = null, snaphsot = null, agent = null, author = null, components = [], parent = null, url = null, ...rest}) {
       super.define(rest)
       /** @type {?string} */
@@ -833,33 +844,26 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       this.components = components
       this.parent = parent
       /** @type {?URL} */
-      this.url = url ? new URL(url, CONSTANTS.url) : null
-      setNotEnumerable(this, '_components')
-      setNotEnumerable(this, '_parent')
+      this.url = url ? new URI(url, URL) : null
     }
 
-    /**
-     *
-     * @return {Component[]}
-     */
-    get components () {
-      return this._getRels(Component, this._components)
-    }
-
-    set components (v) {
-      this._components = this._rels(v)
-    }
-
-    set parent (v) {
-      this._parent = this._rel(v)
-    }
-
-    /**
-     *
-     * @return {Computer}
-     */
-    get parent () {
-      return this._getRel(Computer, this._parent)
+    _props () {
+      const props = super._props()
+      props.components = {
+        get: () => this._getRels(Component, this._components),
+        set: v => {
+          this._components = this._rels(v)
+        },
+        enumerable: true
+      }
+      props.parent = {
+        get: () => this._getRel(Computer, this._parent),
+        set: v => {
+          this._parent = this._rel(v)
+        },
+        enumerable: true
+      }
+      return props
     }
 
     static get icon () {
@@ -875,85 +879,80 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     }
   }
 
-  Object.defineProperties(Event.prototype, {
-    components: ENUMERABLE,
-    parent: ENUMERABLE
-  })
-
   /**
-   * @alias module:resources.EventWithMultipleDevices
-   * @extends module:resources.Event
+   * @alias module:resources.ActionWithMultipleDevices
+   * @extends module:resources.Action
    */
-  class EventWithMultipleDevices extends Event {
+  class ActionWithMultipleDevices extends Action {
     define ({devices = [], ...rest}) {
       super.define(rest)
       // Devices can be either a Device[] or a int[]. We only want the int[]
       this.devices = devices
-      setNotEnumerable(this, '_devices')
     }
 
-    set devices (v) {
-      this._devices = this._rels(v)
-    }
-
-    get devices () {
-      return this._getRels(Device, this._devices)
+    _props () {
+      const props = super._props()
+      props.devices = {
+        set: function (v) {
+          this._devices = this._rels(v)
+        },
+        get: function () {
+          return this._getRels(Device, this._devices)
+        },
+        enumerable: true
+      }
+      return props
     }
 
   }
 
-  Object.defineProperties(EventWithMultipleDevices.prototype, {
-    devices: ENUMERABLE
-  })
-
   /**
-   * @alias module:resources.EventWithOneDevice
-   * @extends module:resources.Event
+   * @alias module:resources.ActionWithOneDevice
+   * @extends module:resources.Action
    */
-  class EventWithOneDevice extends Event {
+  class ActionWithOneDevice extends Action {
     define ({device = null, ...rest}) {
       super.define(rest)
       this.device = device
-      setNotEnumerable(this, '_device')
     }
 
-    get device () {
-      return this._getRel(Device, this._device)
-    }
-
-    set device (v) {
-      this._device = this._rel(v)
+    _props () {
+      const props = super._props()
+      props.device = {
+        get: () => this._getRel(Device, this._device),
+        set: v => {
+          this._device = this._rel(v)
+        },
+        enumerable: true
+      }
+      return props
     }
   }
 
-  Object.defineProperties(EventWithOneDevice.prototype, {
-    device: ENUMERABLE
-  })
-
   /**
    * @alias module:resources.Add
-   * @extends module:resources.EventWithOneDevice
+   * @extends module:resources.ActionWithOneDevice
    */
-  class Add extends EventWithOneDevice {
+  class Add extends ActionWithOneDevice {
   }
 
   /**
    * @alias module:resources.Remove
-   * @extends module:resources.EventWithOneDevice
+   * @extends module:resources.ActionWithOneDevice
    */
-  class Remove extends EventWithOneDevice {
+  class Remove extends ActionWithOneDevice {
   }
 
   /**
    * @alias module:resources.EraseBasic
-   * @extends module:resources.EventWithOneDevice
+   * @extends module:resources.ActionWithOneDevice
    */
-  class EraseBasic extends EventWithOneDevice {
+  class EraseBasic extends ActionWithOneDevice {
     define ({steps = [], standards = [], certificate = null, ...rest}) {
       super.define(rest)
       this.steps = steps
       this.standards = standards.map(std => enums.ErasureStandard.get(std))
-      this.certificate = certificate ? new URL(certificate, CONSTANTS.url) : null
+      this.certificate = certificate ? new URI(certificate, URL) : null
     }
 
     get standardsHuman () {
@@ -1016,9 +1015,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
   /**
    * @alias module:resources.Rate
-   * @extends module:resources.EventWithOneDevice
+   * @extends module:resources.ActionWithOneDevice
    */
-  class Rate extends EventWithOneDevice {
+  class Rate extends ActionWithOneDevice {
     define ({rating = null, software = null, version = null, appearance = null, functionality = null, ratingRange = null, ...rest}) {
       super.define(rest)
       this.rating = rating ? new enums.RatingRange(rating) : null
@@ -1036,88 +1035,32 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
   }
 
   /**
-   * @alias module:resources.IndividualRate
+   * @alias module:resources.RateComputer
    * @extends module:resources.Rate
    */
-  class IndividualRate extends Rate {
-  }
-
-  /**
-   * @alias module:resources.ManualRate
-   * @extends module:resources.IndividualRate
-   */
-  class ManualRate extends IndividualRate {
-    define ({appearanceRange = null, functionalityRange = null, labelling = null, ...rest}) {
+  class RateComputer extends Rate {
+    define ({processor = null, ram = null, dataStorage = null, graphicCard = null, ...rest}) {
       super.define(rest)
-      this.appearanceRange = appearanceRange ? enums.AppearanceRange.get(appearanceRange) : null
-      this.functionalityRange = functionalityRange ? enums.FunctionalityRange.get(functionalityRange) : null
-      this.labelling = labelling
-    }
-  }
-
-  /**
-   * @alias module:resources.WorkbenchRate
-   * @extends module:resources.ManualRate
-   */
-  class WorkbenchRate extends ManualRate {
-    define ({processor = null, ram = null, dataStorage = null, graphicCard = null, bios = null, biosRange = null, dataStorageRange = null, ramRange = null, processorRange = null, graphicCardRange = null, ...rest}) {
-      super.define(rest)
-      this.processor = processor
-      this.ram = ram
-      this.dataStorage = dataStorage
-      this.graphicCard = graphicCard
-      this.bios = bios
-      this.biosRange = biosRange
-      this.dataStorageRange = dataStorageRange
-      this.dataStorageRangeHuman = dataStorageRange ? utils.Naming.humanize(dataStorageRange) : null
-      this.ramRange = ramRange
-      this.ramRangeHuman = ramRange ? utils.Naming.humanize(ramRange) : null
-      this.processorRange = processorRange
-      this.processorRangeHuman = processorRange ? utils.Naming.humanize(processorRange) : null
-      this.graphicCardRange = graphicCardRange
-      this.graphicCardRangeHuman = graphicCardRange ? utils.Naming.humanize(graphicCardRange) : null
-    }
-  }
-
-  /**
-   * @alias module:resources.AggregateRate
-   * @extends module:resources.Rate
-   */
-  class AggregateRate extends Rate {
-    define ({workbench = null, manual = null, processor = null, ram = null, dataStorage = null, graphicCard = null, bios = null, biosRange = null, appearanceRange = null, functionalityRange = null, labelling = null, dataStorageRange = null, ramRange = null, processorRange = null, graphicCardRange = null, ...rest}) {
-      super.define(rest)
-      this.workbench = workbench
-      this.manual = manual
-      this.processor = processor
-      this.ram = ram
-      this.dataStorage = dataStorage
-      this.graphicCard = graphicCard
-      this.bios = bios
-      this.biosRange = biosRange
-      this.appearanceRange = appearanceRange ? enums.AppearanceRange.get(appearanceRange) : null
-      this.functionalityRange = functionalityRange ? enums.FunctionalityRange.get(functionalityRange) : null
-      this.labelling = labelling
-      this.dataStorageRange = dataStorageRange
-      this.dataStorageRangeHuman = dataStorageRange ? utils.Naming.humanize(dataStorageRange) : null
-      this.ramRange = ramRange
-      this.ramRangeHuman = ramRange ? utils.Naming.humanize(ramRange) : null
-      this.processorRange = processorRange
-      this.processorRangeHuman = processorRange ? utils.Naming.humanize(processorRange) : null
-      this.graphicCardRange = graphicCardRange
-      this.graphicCardRangeHuman = graphicCardRange ? utils.Naming.humanize(graphicCardRange) : null
+      /** @type {?ratingRange} */
+      this.processor = processor ? new enums.RatingRange(processor) : null
+      /** @type {?ratingRange} */
+      this.ram = ram ? new enums.RatingRange(ram) : null
+      /** @type {?ratingRange} */
+      this.dataStorage = dataStorage ? new enums.RatingRange(dataStorage) : null
+      /** @type {?number} */
+      this.graphicCard = graphicCard ? new enums.RatingRange(graphicCard) : null
     }
   }
 
   /**
    * @alias module:resources.Price
-   * @extends module:resources.EventWithOneDevice
+   * @extends module:resources.ActionWithOneDevice
    */
-  class Price extends EventWithOneDevice {
-    define ({currency, price, software, version, rating, ...rest}) {
+  class Price extends ActionWithOneDevice {
+    define ({currency, price, version, rating, ...rest}) {
       super.define(rest)
       this.currency = currency
       this.price = price
-      this.software = software
       this.version = version
       this.rating = rating
     }
@@ -1140,9 +1083,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
   /**
    * @alias module:resources.Install
-   * @extends module:resources.EventWithOneDevice}
+   * @extends module:resources.ActionWithOneDevice}
    */
-  class Install extends EventWithOneDevice {
+  class Install extends ActionWithOneDevice {
     define ({elapsed = null, address = null, ...rest}) {
       super.define(rest)
       this.elapsed = elapsed
@@ -1152,15 +1095,15 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
   /**
    * @alias module:resources.Snapshot
-   * @extends module:resources.EventWithOneDevice
+   * @extends module:resources.ActionWithOneDevice
    */
-  class Snapshot extends EventWithOneDevice {
-    define ({uuid = null, software = null, version = null, events = null, expectedEvents = null, elapsed = null, ...rest}) {
+  class Snapshot extends ActionWithOneDevice {
+    define ({uuid = null, software = null, version = null, actions = null, expectedEvents = null, elapsed = null, ...rest}) {
       super.define(rest)
       this.uuid = uuid
       this.software = software
       this.version = version
-      this.events = events
+      this.actions = actions
       this.expectedEvents = expectedEvents
       this.elapsed = elapsed
     }
@@ -1173,12 +1116,22 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
   /**
    * @alias module:resources.Test
-   * @extends module:resources.EventWithOneDevice
+   * @extends module:resources.ActionWithOneDevice
    */
-  class Test extends EventWithOneDevice {
-    define ({elapsed = null, ...rest}) {
+  class Test extends ActionWithOneDevice {
+  }
+
+  /**
+   * @alias module:resources.MeasureBattery
+   * @extends module:resources.Test
+   */
+  class MeasureBattery extends Test {
+    define ({size = null, voltage = null, cycleCount = null, health = null, ...rest}) {
       super.define(rest)
-      this.elapsed = elapsed
+      this.size = size
+      this.voltage = voltage
+      this.cycleCount = cycleCount
+      this.health = health
     }
   }
 
@@ -1187,13 +1140,15 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    * @extends module:resources.Test
    */
   class TestDataStorage extends Test {
-    define ({length = null, status = null, lifetime = null, assessment = null, reallocatedSectorCount = null, powerCycleCount = null, reportedUncorrectableErrors = null, commandTimeout = null, currentPendingSectorCount = null, offlineUncorrectable = null, remainingLifetimePercentage = null, ...rest}) {
+    define ({elapsed = null, length = null, status = null, lifetime = null, assessment = null, reallocatedSectorCount = null, powerCycleCount = null, reportedUncorrectableErrors = null, commandTimeout = null, currentPendingSectorCount = null, offlineUncorrectable = null, remainingLifetimePercentage = null, ...rest}) {
       super.define(rest)
+      /** @type {number} */
+      this.elapsed = elapsed
       this.length = length
       this.status = status
       /**
        * Lifetime in hours.
-       * @type {integer}
+       * @type {?number}
        */
       this.lifetime = lifetime
       this.assessment = assessment
@@ -1230,27 +1185,93 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    * @extends module:resources.Test
    */
   class StressTest extends Test {
+    define ({elapsed = null, ...rest}) {
+      super.define(rest)
+      /** @type {number} */
+      this.elapsed = elapsed
+    }
   }
 
   /**
-   * @alias module:resources.MeasureBattery
+   * @alias module:resources.TestAudio
    * @extends module:resources.Test
    */
-  class MeasureBattery extends Test {
-    define ({size = null, voltage = null, cycleCount = null, health = null, ...rest}) {
+  class TestAudio extends Test {
+    define ({elapsed = null, speaker = null, microphone = null, ...rest}) {
       super.define(rest)
-      this.size = size
-      this.voltage = voltage
-      this.cycleCount = cycleCount
-      this.health = health
+      /** @type {number} */
+      this.elapsed = elapsed
+      /** @type {?boolean} */
+      this.speaker = speaker
+      /** @type {?boolean} */
+      this.microphone = microphone
+    }
+  }
+
+  /**
+   * @alias module:resources.TestConnectivity
+   * @extends module:resources.Test
+   */
+  class TestConnectivity extends Test {
+  }
+
+  /**
+   * @alias module:resources.TestCamera
+   * @extends module:resources.Test
+   */
+  class TestCamera extends Test {
+
+  }
+
+  /**
+   * @alias module:resources.TestKeyboard
+   * @extends module:resources.Test
+   */
+  class TestKeyboard extends Test {
+
+  }
+
+  /**
+   * @alias module:resources.TestTrackpad
+   * @extends module:resources.Test
+   */
+  class TestTrackpad extends Test {
+
+  }
+
+  /**
+   * @alias module:resources.TestBios
+   * @extends module:resources.Test
+   */
+  class TestBios extends Test {
+    define ({biosPowerOn = null, accessRange = null, ...rest}) {
+      super.define(rest)
+      /** @type {?boolean} */
+      this.biosPowerOn = biosPowerOn
+      /** @type {?enums.BiosRange} */
+      this.accessRange = accessRange ? enums.BiosRange.get(accessRange) : null
+    }
+  }
+
+  /**
+   * @alias module:resources.VisualTest
+   * @extends module:resources.Test
+   */
+  class VisualTest extends Test {
+    define ({appearanceRange = null, functionalityRange = null, ...rest}) {
+      super.define(rest)
+      /** @type {enums.AppearanceRange} */
+      this.appearanceRange = appearanceRange ? enums.AppearanceRange.get(appearanceRange) : null
+      /** @type {enums.FunctionalityRange} */
+      this.functionalityRange = functionalityRange ? enums.FunctionalityRange.get(functionalityRange) : null
     }
   }
 
   /**
    * @alias module:resources.Benchmark
-   * @extends module:resources.EventWithOneDevice
+   * @extends module:resources.ActionWithOneDevice
    */
-  class Benchmark extends EventWithOneDevice {
+  class Benchmark extends ActionWithOneDevice {
     define ({elapsed = null, ...rest}) {
       super.define(rest)
       this.elapsed = elapsed
@@ -1303,23 +1324,23 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
   /**
    * @alias module:resources.ToRepair
-   * @extends module:resources.EventWithMultipleDevices
+   * @extends module:resources.ActionWithMultipleDevices
    */
-  class ToRepair extends EventWithMultipleDevices {
+  class ToRepair extends ActionWithMultipleDevices {
   }
 
   /**
    * @alias module:resources.Repair
-   * @extends module:resources.EventWithMultipleDevices
+   * @extends module:resources.ActionWithMultipleDevices
    */
-  class Repair extends EventWithMultipleDevices {
+  class Repair extends ActionWithMultipleDevices {
   }
 
   /**
    * @alias module:resources.ReadyToUse
-   * @extends module:resources.EventWithMultipleDevices
+   * @extends module:resources.ActionWithMultipleDevices
    */
-  class ReadyToUse extends EventWithMultipleDevices {
+  class ReadyToUse extends ActionWithMultipleDevices {
     static get icon () {
       return 'fa-check-double'
     }
@@ -1327,9 +1348,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
   /**
    * @alias module:resources.ToPrepare
-   * @extends module:resources.EventWithMultipleDevices
+   * @extends module:resources.ActionWithMultipleDevices
    */
-  class ToPrepare extends EventWithMultipleDevices {
+  class ToPrepare extends ActionWithMultipleDevices {
     static get icon () {
       return 'fa-tools'
     }
@@ -1337,9 +1358,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
   /**
    * @alias module:resources.Prepare
-   * @extends module:resources.EventWithMultipleDevices
+   * @extends module:resources.ActionWithMultipleDevices
    */
-  class Prepare extends EventWithMultipleDevices {
+  class Prepare extends ActionWithMultipleDevices {
     static get icon () {
       return 'fa-check'
     }
@@ -1347,9 +1368,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
   /**
    * @alias module:resources.Organize
-   * @extends module:resources.EventWithMultipleDevices
+   * @extends module:resources.ActionWithMultipleDevices
    */
-  class Organize extends EventWithMultipleDevices {
+  class Organize extends ActionWithMultipleDevices {
   }
 
   /**
@@ -1368,9 +1389,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
   /**
    * @alias module:resources.Trade
-   * @extends module:resources.EventWithMultipleDevices
+   * @extends module:resources.ActionWithMultipleDevices
    */
-  class Trade extends EventWithMultipleDevices {
+  class Trade extends ActionWithMultipleDevices {
     define ({shippingDate = null, invoiceNumber = null, price = null, to = null, confirms = null, ...rest}) {
       super.define(rest)
       this.shippingDate = shippingDate
@@ -1431,9 +1452,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
 
   /**
    * @alias module:resources.Receive
-   * @extends module:resources.EventWithMultipleDevices
+   * @extends module:resources.ActionWithMultipleDevices
    */
-  class Receive extends EventWithMultipleDevices {
+  class Receive extends ActionWithMultipleDevices {
     define ({role = null, ...rest}) {
       super.define(rest)
       this.role = role
@@ -1451,29 +1472,29 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
   class Tag extends Thing {
     define ({id, org = null, secondary = null, device = null, printable = null, url, provider = null, ...rest}) {
       console.assert(id, 'Tag requires an ID.')
+      console.assert(url, 'Tag requires an URL.')
       super.define(rest)
       this.id = id
       this.org = org
       this.secondary = secondary
       this.printable = printable
       this.device = device
-      this.url = new URL(url, CONSTANTS.url)
+      this.url = new URI(url, URL)
       /**
        * The provider, represented as a base URL.
        * @type {?URL}
        */
-      this.provider = provider ? new URL(provider) : null
+      this.provider = provider ? new URI(provider) : null
       /**
        * The URL of the tag in the provider.
        * @type {?URL}
        */
-      this.providerUrl = provider ? new URL(id, provider) : null
+      this.providerUrl = provider ? new URI(id, provider) : null
       /**
        * The URL that is to be printed.
        * @type {URL}
        */
       this.printableUrl = this.providerUrl || this.url
-      setNotEnumerable(this, '_device')
     }
 
     get device () {
@@ -1508,8 +1529,6 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
       this.parents = parents
       this.children = children
       this.url = url
-      setNotEnumerable(this, '_children')
-      setNotEnumerable(this, '_parents')
     }
 
     get children () {
@@ -1801,9 +1820,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     Display: Display,
     Camera: Camera,
     Battery: Battery,
-    Event: Event,
-    EventWithMultipleDevices: EventWithMultipleDevices,
-    EventWithOneDevice: EventWithOneDevice,
+    Event: Action,
+    EventWithMultipleDevices: ActionWithMultipleDevices,
+    EventWithOneDevice: ActionWithOneDevice,
     Add: Add,
     Remove: Remove,
     EraseBasic: EraseBasic,
@@ -1813,10 +1832,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     StepZero: StepZero,
     StepRandom: StepRandom,
     Rate: Rate,
-    IndividualRate: IndividualRate,
-    ManualRate: ManualRate,
-    WorkbenchRate: WorkbenchRate,
-    AggregateRate: AggregateRate,
+    RateComputer: RateComputer,
     Price: Price,
     EreusePrice: EreusePrice,
     Install: Install,
@@ -1824,6 +1840,14 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     Test: Test,
     TestDataStorage: TestDataStorage,
     StressTest: StressTest,
+    MeasureBattery: MeasureBattery,
+    TestAudio: TestAudio,
+    TestConnectivity: TestConnectivity,
+    TestCamera: TestCamera,
+    TestKeyboard: TestKeyboard,
+    TestTrackpad: TestTrackpad,
+    TestBios: TestBios,
+    VisualTest: VisualTest,
     Benchmark: Benchmark,
     BenchmarkDataStorage: BenchmarkDataStorage,
     BenchmarkWithRate: BenchmarkWithRate,
@@ -1851,8 +1875,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
     LotNode: LotNode,
     ResourceList: ResourceList,
     Lots: Lots,
-    init: init,
-    MeasureBattery: MeasureBattery
+    init: init
   }, utils.unforgivingHandler)
   // Init servers
   /**
@@ -1863,7 +1886,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    *
    * @type {module:server.DevicehubThing}
    */
-  Event.server = new server.DevicehubThing('/events/', resources)
+  Action.server = new server.DevicehubThing('/actions/', resources)
   /**
    * @memberOf {module:resources.Lot}
    * @type {module:server.DevicehubThing}
@@ -1874,7 +1897,6 @@ function resourceFactory (server, CONSTANTS, $filter, enums) {
    * @type {module:server.DevicehubThing}
    */
   Tag.server = new server.DevicehubThing('/tags/', resources)
-  window.res = resources
   return resources
 }
 

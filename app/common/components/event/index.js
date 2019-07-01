@@ -6,6 +6,6 @@ module.exports = angular.module('common.components.event',
     require('angular-ui-bootstrap'),
     'RecursionHelper'
   ])
-  .directive('manualEventsButton', require('./manual-events-button/manual-events-button.directive.js'))
+  .directive('manualActionsButton', require('./manual-actions-button/manual-actions-button.directive'))
   .factory('openEventModal', require('./open-event-modal.factory'))
   .directive('snapshotButton', require('./snapshot-button/snapshot-button.directive'))

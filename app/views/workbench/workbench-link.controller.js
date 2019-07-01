@@ -25,7 +25,7 @@ function workbenchLinkCtl (fields, $scope, android, enums, server, $stateParams)
     _submit () {
       this.model.tags.forEach(tag => (tag.type = 'Tag'))
       if (_.isPresent(this.model.rate)) {
-        this.model.rate.type = 'WorkbenchRate'
+        this.model.rate.type = 'VisualTest'
       }
       return this.workbench.post(this.model)
     }

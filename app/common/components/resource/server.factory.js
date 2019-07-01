@@ -1,3 +1,5 @@
+const URI = require('urijs')
+
 /**
  * @module server
  */
@@ -37,7 +39,7 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
       this.baseUrl = baseUrl
       /** @type {string} **/
       this.path = path
-      const url = new URL(path, baseUrl)
+      const url = new URI(path, baseUrl)
       /** @type {string} **/
       this.url = url.toString()
       this._config = {
@@ -86,7 +88,7 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
     }
 
     static _initException (r) {
-      throw new (server[r.data.type] || DevicehubException)(r.data)
+      throw new (server[_.get(r, 'data.type')] || DevicehubException)(r.data)
     }
   }
 
@@ -183,7 +185,7 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
      */
     setInventory (inventoryId) {
       if (CONSTANTS.inventories) {
-        this.url = (new URL(inventoryId + this.path, this.baseUrl)).toString()
+        this.url = (new URI(this.path, this.baseUrl)).segment(inventoryId).toString()
       }
     }
   }
@@ -235,7 +237,7 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
      * @return {*}
      */
     post (model, uri, config) {
-      return super.post(model, uri, config).then(response => {
+      return super.post(model.dump(), uri, config).then(response => {
         return response.data
       })
     }

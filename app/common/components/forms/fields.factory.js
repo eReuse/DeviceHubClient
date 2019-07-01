@@ -485,6 +485,7 @@ function fieldsFactory ($translate, Notification, $q) {
         .catch(response => {
           this.form.triedSubmission = true
           this.status.errorFromServer = _.get(response, 'data', response)
+          console.warn('Erorr in submitting:', response)
           return this._error(op, response)
         })
         .finally(() => {

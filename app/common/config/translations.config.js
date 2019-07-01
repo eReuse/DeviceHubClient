@@ -51,7 +51,7 @@ const en = {
   lots: {
     new: 'New lot'
   },
-  newEvent: {
+  newAction: {
     title: 'Create a new {{type}}',
     submit: '@:forms.submit',
     cancel: '@:forms.cancel'
@@ -126,8 +126,6 @@ const en = {
       rate: 'Rate',
       individualRate: 'Individual rate',
       manualRate: 'Manual rate',
-      workbenchRate: 'Workbench rate',
-      aggregateRate: 'Aggregate rate',
       price: 'Price',
       ereusePrice: 'Ereuse price',
       install: 'Install',
@@ -631,7 +629,7 @@ const es = {
   lots: {
     new: 'Lote nuevo'
   },
-  newEvent: {
+  newAction: {
     title: 'Crear un nuevo {{type}}',
     submit: '@:forms.submit',
     cancel: '@:forms.cancel'
@@ -706,8 +704,6 @@ const es = {
       rate: 'Puntuación',
       individualRate: 'Puntuación individual',
       manualRate: 'Puntuación manual',
-      workbenchRate: 'Puntuación Workbench',
-      aggregateRate: 'Puntuación agregada',
       price: 'Precio',
       ereusePrice: 'Precio eResue',
       install: 'Instalar',

@@ -1,3 +1,5 @@
+const URI = require('urijs')
+
 /**
  * @module android
  */
@@ -68,14 +70,7 @@ function androidFactory ($rootScope) {
      * value in case of unknown format.
      */
     static parseTag (fullTag) {
-      let id
-      try {
-        const url = new URL(fullTag)
-        id = _.last(url.pathname.split('/')) // Get last part of the path
-      } catch (e) {
-        id = fullTag
-      }
-      return id
+      return (new URI(fullTag)).segment(-1)
     }
   }
 

@@ -1,3 +1,4 @@
+const URI = require('urijs')
 // Filenames for Constants are always UPPERCASE
 // You can have as many files for constants as you require (ex: USER_ROLES, NOTIFICATIONS, etc)
 // Constants are injected into controllers like any service or resource
@@ -5,6 +6,8 @@ module.exports = angular.module('common.constants', [])
   .constant('UNIT_CODES', require('./UNIT_CODES'))
 
 require('dist/config.js') // DevicehubClient config from yaml
+
+module.exports.factory('URL', CONSTANTS => new URI(CONSTANTS.url))
 
 /**
  * @typedef {object} DH_CONSTANTS
