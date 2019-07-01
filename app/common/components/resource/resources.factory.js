@@ -79,8 +79,14 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
      *
      * Things inside this object are replaced by their IDs, as
      * Devicehub expects.
+     *
+     * @param {?boolean} onlyIds - Dump only the ID of each sub thing,
+     * otherwise dump the full sub things. Dumping the ID is used
+     * when referencing sub things for devicehub, and looks like
+     * ``action.devices = [1,2,3]``. Dumping the full things looks like
+     * ``action.devices = [{full dumped device 1}, {full dumped device 2}...]``.
      */
-    dump () {
+    dump (onlyIds = true) {
       const dump = {}
       for (let key in this) {
         let v = this[key]
@@ -89,12 +95,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
           key.charAt(0) !== '$' && // is not angular value
           (v === 0 || !isEmpty(v)) // is non empty value (we consider 0 as non-empty)
         ) {
-          // Only dump the ID of relationships
-          // Future versions might want to toggle this behaviour
           if (v instanceof Thing) {
-            v = v['id']
+            v = onlyIds ? v.id : v.dump(onlyIds)
           } else if (v instanceof Array && v[0] instanceof Thing) {
-            v = _.map(v, 'id')
+            v = _.map(v, thing => onlyIds ? thing.id : thing.dump(onlyIds))
           }
           dump[key] = v
         }
@@ -169,7 +173,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
      * @private
      */
     _post () {
-      return this
+      return this.dump()
     }
 
     /**
@@ -814,6 +818,75 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
+   * @alias module:resources.Drill
+   * @extends module:resources.Device
+   */
+  class Drill extends Device {
+    define ({maxDrillBitSize = null, ...rest}) {
+      super.define(rest)
+      /** @type {number} */
+      this.maxDrillBitSize = maxDrillBitSize
+    }
+  }
+
+  /**
+   * @alias module:resources.PackOfScrewdrivers
+   * @extends module:resources.Device
+   */
+  class PackOfScrewdrivers extends Device {
+    define ({size = null, ...rest}) {
+      super.define(rest)
+      /** @type {number} */
+      this.size = size
+    }
+  }
+
+  /**
+   * @alias module:resources.Dehumidifier
+   * @extends module:resources.Device
+   */
+  class Dehumidifier extends Device {
+    define ({size = null, ...rest}) {
+      super.define(rest)
+      /** @type {number} */
+      this.size = size
+    }
+  }
+
+  /**
+   * @alias module:resources.Stairs
+   * @extends module:resources.Device
+   */
+  class Stairs extends Device {
+    define ({maxAllowedWeight = null, ...rest}) {
+      super.define(rest)
+      /** @type {number} */
+      this.maxAllowedWeight = maxAllowedWeight
+    }
+  }
+
+  /**
+   * @alias module:resources.Bike
+   * @extends module:resources.Device
+   */
+  class Bike extends Device {
+    define ({wheelSize = null, gears = null, ...rest}) {
+      super.define(rest)
+      /** @type {number} */
+      this.wheelSize = wheelSize
+      this.gears = gears
+    }
+  }
+
+  /**
+   * @alias module:resources.Racket
+   * @extends module:resources.Device
+   */
+  class Racket extends Device {
+
+  }
+
+  /**
    * Class representing an event.
    * @alias module:resources.Action
    * @extends module:resources.Thing
@@ -1112,6 +1185,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       return `${super.title} — ${this.software} ${this.version}`
     }
 
+    _post () {
+      return this.dump(false)
+    }
   }
 
   /**
@@ -1820,6 +1896,12 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     Display: Display,
     Camera: Camera,
     Battery: Battery,
+    Drill: Drill,
+    PackOfScrewdrivers: PackOfScrewdrivers,
+    Dehumidifier: Dehumidifier,
+    Stairs: Stairs,
+    Bike: Bike,
+    Racket: Racket,
     Event: Action,
     EventWithMultipleDevices: ActionWithMultipleDevices,
     EventWithOneDevice: ActionWithOneDevice,

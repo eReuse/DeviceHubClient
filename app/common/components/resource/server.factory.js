@@ -237,7 +237,7 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
      * @return {*}
      */
     post (model, uri, config) {
-      return super.post(model.dump(), uri, config).then(response => {
+      return super.post(model, uri, config).then(response => {
         return response.data
       })
     }

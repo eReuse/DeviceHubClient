@@ -27,9 +27,9 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
           device: {
             type: 'Device',
             tags: [],
-            events: [
+            actions: [
               {
-                type: 'ManualRate'
+                type: 'VisualTest'
               }
             ]
           }
@@ -46,27 +46,30 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
           addonRight: tag.addonRightScan('device.tags[0].id')
         }),
         new fields.String('device.serialNumber', {
+          required: true,
           namespace: ns,
           keyText: 'serialNumber',
           addonRight: tag.addonRightScan('device.serialNumber')
         }),
         new fields.String('device.model', {
+          required: true,
           namespace: ns,
           keyText: 'model',
           addonRight: tag.addonRightScan('device.model')
         }),
         new fields.String('device.manufacturer', {
+          required: true,
           namespace: ns,
           keyText: 'manufacturer',
           addonRight: tag.addonRightScan('device.manufacturer')
         }),
-        new fields.Radio('device.events[0].appearanceRange', {
+        new fields.Radio('device.actions[0].appearanceRange', {
           namespace: ns,
           keyText: 'appearance',
           options: enums.AppearanceRange.options(fields),
           required: true
         }),
-        new fields.Radio('device.events[0].functionalityRange', {
+        new fields.Radio('device.actions[0].functionalityRange', {
           namespace: ns,
           keyText: 'appearance',
           options: enums.FunctionalityRange.options(fields),
