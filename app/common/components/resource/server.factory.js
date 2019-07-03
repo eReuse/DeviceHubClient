@@ -185,7 +185,8 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
      */
     setInventory (inventoryId) {
       if (CONSTANTS.inventories) {
-        this.url = (new URI(this.path, this.baseUrl)).segment(inventoryId).toString()
+        const newUrl = new URI(this.baseUrl)
+        this.url = newUrl.segment([inventoryId, this.path, '']).toString() // '' = trailing slash
       }
     }
   }
