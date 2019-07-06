@@ -68,10 +68,10 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
   }
 
   /**
-   * @alias module:resourceFields.ReadyToUse
+   * @alias module:resourceFields.Available
    * @extends module:resourceFields.EventWithMultipleDevices
    */
-  class ReadyToUse extends EventWithMultipleDevices {
+  class Available extends EventWithMultipleDevices {
   }
 
   class ToPrepare extends EventWithMultipleDevices {
@@ -81,7 +81,7 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
     ResourceForm: ResourceForm,
     Event: Event,
     EventWithMultipleDevices: EventWithMultipleDevices,
-    ReadyToUse: ReadyToUse,
+    Available: Available,
     ToPrepare: ToPrepare
   }
 }

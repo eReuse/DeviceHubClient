@@ -19,7 +19,7 @@ function manualActionsButton (dhModal, resources, $state) {
         resources.ToPrepare,
         resources.Prepare,
         resources.ToRepair,
-        resources.ReadyToUse,
+        resources.Available,
         resources.ToDisposeProduct,
         resources.Receive
       ]

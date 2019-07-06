@@ -141,7 +141,7 @@ const en = {
       benchmarkRamSysbench: 'Benchmark ram sysbench',
       toRepair: 'To repair',
       repair: 'Repair',
-      readyToUse: 'Ready to use',
+      available: 'Available',
       toPrepare: 'To prepare',
       prepare: 'Prepare',
       organize: 'Organize',
@@ -719,7 +719,7 @@ const es = {
       benchmarkRamSysbench: 'Benchmark ram sysbench', // en
       toRepair: 'Para reparar',
       repair: 'Reparar',
-      readyToUse: 'Listo para usar',
+      available: 'Listo para usar',
       toPrepare: 'Para preparar',
       prepare: 'Preparar',
       organize: 'Organizar',

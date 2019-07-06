@@ -1413,10 +1413,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
-   * @alias module:resources.ReadyToUse
+   * @alias module:resources.Available
    * @extends module:resources.ActionWithMultipleDevices
    */
-  class ReadyToUse extends ActionWithMultipleDevices {
+  class Available extends ActionWithMultipleDevices {
     static get icon () {
       return 'fa-check-double'
     }
@@ -1938,7 +1938,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     BenchmarkRamSysbench: BenchmarkRamSysbench,
     ToRepair: ToRepair,
     Repair: Repair,
-    ReadyToUse: ReadyToUse,
+    Available: Available,
     ToPrepare: ToPrepare,
     Prepare: Prepare,
     Organize: Organize,

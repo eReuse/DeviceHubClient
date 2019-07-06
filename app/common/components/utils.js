@@ -164,7 +164,7 @@ function getEventDescription (event) {
       return 'OK'
     case 'devices:Price':
       return event.price
-    case 'devices:ReadyToUse':
+    case 'devices:Available':
       return 'OK'
     case 'devices:Prepare':
       return 'OK'
