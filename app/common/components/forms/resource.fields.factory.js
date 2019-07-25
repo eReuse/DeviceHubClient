@@ -68,21 +68,81 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
   }
 
   /**
-   * @alias module:resourceFields.Available
+   * @alias module:resourceFields.ToPrepare
    * @extends module:resourceFields.EventWithMultipleDevices
    */
-  class Available extends EventWithMultipleDevices {
+  class ToPrepare extends EventWithMultipleDevices {
   }
 
-  class ToPrepare extends EventWithMultipleDevices {
+  /**
+   * @alias module:resourceFields.Prepare
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class Prepare extends EventWithMultipleDevices {
+  }
+
+  /**
+   * @alias module:resourceFields.ToRepair
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class ToRepair extends EventWithMultipleDevices {
+  }
+
+  /**
+   * @alias module:resourceFields.Ready
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class Ready extends EventWithMultipleDevices {
+  }
+
+  /**
+   * @alias module:resourceFields.ToDisposeProduct
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class ToDisposeProduct extends EventWithMultipleDevices {
+  }
+
+  /**
+   * @alias module:resourceFields.Receive
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class Receive extends EventWithMultipleDevices {
+  }
+
+  /**
+   * @alias module:resourceFields.MakeAvailable
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class MakeAvailable extends EventWithMultipleDevices {
+  }
+
+  /**
+   * @alias module:resourceFields.Rent
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class Rent extends EventWithMultipleDevices {
+  }
+
+  /**
+   * @alias module:resourceFields.CancelTrade
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class CancelTrade extends EventWithMultipleDevices {
   }
 
   return {
     ResourceForm: ResourceForm,
     Event: Event,
     EventWithMultipleDevices: EventWithMultipleDevices,
-    Available: Available,
-    ToPrepare: ToPrepare
+    ToPrepare: ToPrepare,
+    Prepare: Prepare,
+    ToRepair: ToRepair,
+    Ready: Ready,
+    ToDisposeProduct: ToDisposeProduct,
+    Receive: Receive,
+    MakeAvailable: MakeAvailable,
+    Rent: Rent,
+    CancelTrade: CancelTrade
   }
 }
 

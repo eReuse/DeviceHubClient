@@ -15,12 +15,17 @@ function manualActionsButton (dhModal, resources, $state) {
      * @param {module:resources.Device[]} $scope.devices
      */
     link: $scope => {
-      $scope.actions = [
+      $scope.elements = [
+        'newAction.button.physical',
         resources.ToPrepare,
         resources.Prepare,
         resources.ToRepair,
-        resources.Available,
-        resources.ToDisposeProduct,
+        resources.Ready,
+        'newAction.button.political',
+        resources.MakeAvailable,
+        resources.Rent,
+        resources.CancelTrade,
+        'newAction.button.other',
         resources.Receive
       ]
       $scope.open = Action => {

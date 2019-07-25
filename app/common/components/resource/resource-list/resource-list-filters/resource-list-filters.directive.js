@@ -12,7 +12,7 @@ const PATH = require('./__init__').PATH
  * @param {module:resources} resources
  * @param {module:enums} enums
  */
-function resourceListFilters (Notification, $uibModal, clipboard, fields, resources, $translate, $q, enums) {
+function resourceListFilters (Notification, $uibModal, clipboard, fields, resources, $translate, $q, enums, $timeout) {
   /**
    * @ngdoc directive
    * @name resourceListFilters
@@ -42,9 +42,15 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
        */
       $scope.popover = {
         templateUrl: `${PATH}/filters.popover.html`,
-        isOpen: false,
+        isOpen: true,
         title: $translate.instant('resourceList.filters.popover.title')
       }
+      // todo we need to open and close the popover really quickly
+      //  so the filter form is loaded so the user can remove
+      //  the default filters (we need the form to remove them)
+      $timeout(() => {
+        $scope.popover.isOpen = false
+      }, 1)
 
       class Panel extends fields.Group {
         constructor ({isActual = false, ...rest}, ...fields) {

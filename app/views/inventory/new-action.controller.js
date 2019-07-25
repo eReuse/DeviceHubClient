@@ -6,7 +6,7 @@
  * @param {module:resources.Action} $stateParams.action
  */
 function newActionCtrl ($scope, $stateParams, resourceFields, $state) {
-  const model = $stateParams.action
+  const model = $scope.action = $stateParams.action
 
   function leave () {
     $state.go('^')

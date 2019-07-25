@@ -1,7 +1,6 @@
 const utils = require('./../utils')
 const inflection = require('inflection')
 const isEmpty = require('is-empty')
-const URI = require('urijs')
 
 /**
  * Resources module
@@ -335,7 +334,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Thing
    */
   class Device extends Thing {
-    define ({id = null, hid = null, tags = [], model = null, manufacturer = null, serialNumber = null, weight = null, width = null, height = null, depth = null, actions = [], problems = [], url = null, rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, working = [], brand = null, generation = null, version = null, variant = null, sku = null, ...rest}) {
+    define ({id = null, hid = null, tags = [], model = null, manufacturer = null, serialNumber = null, weight = null, width = null, height = null, depth = null, actions = [], problems = [], url = null, rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, working = [], brand = null, generation = null, version = null, variant = null, sku = null, image = null, ...rest}) {
       super.define(rest)
       /** @type {int} */
       this.id = id
@@ -367,8 +366,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       this.actions = actions
       /** @type {Action[]} */
       this.problems = this._rels(problems)
-      /** @type {string} */
-      this.url = url ? new URI(CONSTANTS.url) : null
+      /** @type {?URI} */
+      this.url = url ? new utils.URI(url, CONSTANTS.url) : null
       /** @type {Rate} */
       this.rate = this._rel(rate)
       /** @type {Price} */
@@ -387,6 +386,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       this.variant = variant
       /** @type {?string} */
       this.sku = sku
+      /** @type {?URI} */
+      this.image = image ? new utils.URI(image) : null
     }
 
     _props () {
@@ -818,10 +819,18 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
-   * @alias module:resources.Drill
+   * @alias module:resources.DIYAndGardening
    * @extends module:resources.Device
    */
-  class Drill extends Device {
+  class DIYAndGardening extends Device {
+
+  }
+
+  /**
+   * @alias module:resources.Drill
+   * @extends module:resources.DIYAndGardening
+   */
+  class Drill extends DIYAndGardening {
     define ({maxDrillBitSize = null, ...rest}) {
       super.define(rest)
       /** @type {number} */
@@ -831,9 +840,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
 
   /**
    * @alias module:resources.PackOfScrewdrivers
-   * @extends module:resources.Device
+   * @extends module:resources.DIYAndGardening
    */
-  class PackOfScrewdrivers extends Device {
+  class PackOfScrewdrivers extends DIYAndGardening {
     define ({size = null, ...rest}) {
       super.define(rest)
       /** @type {number} */
@@ -842,10 +851,18 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
-   * @alias module:resources.Dehumidifier
+   * @alias module:resources.Home
    * @extends module:resources.Device
    */
-  class Dehumidifier extends Device {
+  class Home extends Device {
+
+  }
+
+  /**
+   * @alias module:resources.Dehumidifier
+   * @extends module:resources.Home
+   */
+  class Dehumidifier extends Home {
     define ({size = null, ...rest}) {
       super.define(rest)
       /** @type {number} */
@@ -855,9 +872,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
 
   /**
    * @alias module:resources.Stairs
-   * @extends module:resources.Device
+   * @extends module:resources.Home
    */
-  class Stairs extends Device {
+  class Stairs extends Home {
     define ({maxAllowedWeight = null, ...rest}) {
       super.define(rest)
       /** @type {number} */
@@ -866,23 +883,32 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
-   * @alias module:resources.Bike
+   * @alias module:resources.Recreation
    * @extends module:resources.Device
    */
-  class Bike extends Device {
+  class Recreation extends Device {
+
+  }
+
+  /**
+   * @alias module:resources.Bike
+   * @extends module:resources.Recreation
+   */
+  class Bike extends Recreation {
     define ({wheelSize = null, gears = null, ...rest}) {
       super.define(rest)
       /** @type {number} */
       this.wheelSize = wheelSize
+      /** @type {number} */
       this.gears = gears
     }
   }
 
   /**
    * @alias module:resources.Racket
-   * @extends module:resources.Device
+   * @extends module:resources.Recreation
    */
-  class Racket extends Device {
+  class Racket extends Recreation {
 
   }
 
@@ -917,7 +943,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       this.components = components
       this.parent = parent
       /** @type {?URL} */
-      this.url = url ? new URI(url, URL) : null
+      this.url = url ? new utils.URI(url, URL) : null
     }
 
     _props () {
@@ -1025,7 +1051,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       super.define(rest)
       this.steps = steps
       this.standards = standards.map(std => enums.ErasureStandard.get(std))
-      this.certificate = certificate ? new URI(certificate, URL) : null
+      this.certificate = certificate ? new utils.URI(certificate, URL) : null
     }
 
     get standardsHuman () {
@@ -1413,10 +1439,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
-   * @alias module:resources.Available
+   * @alias module:resources.Ready
    * @extends module:resources.ActionWithMultipleDevices
    */
-  class Available extends ActionWithMultipleDevices {
+  class Ready extends ActionWithMultipleDevices {
     static get icon () {
       return 'fa-check-double'
     }
@@ -1499,6 +1525,16 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
+   * @alias module:resources.MakeAvailable
+   * @extends module:resources.Trade
+   */
+  class MakeAvailable extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-check-circle'
+    }
+  }
+
+  /**
    * @alias module:resources.CancelTrade
    * @extends module:resources.Trade
    */
@@ -1523,6 +1559,16 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   class DisposeProduct extends Trade {
     static get icon () {
       return 'fa-dumpster'
+    }
+  }
+
+  /**
+   * @alias module:resources.Rent
+   * @extends module:resources.Trade
+   */
+  class Rent extends Trade {
+    static get icon () {
+      return 'fa-hourglass-half'
     }
   }
 
@@ -1555,17 +1601,17 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       this.secondary = secondary
       this.printable = printable
       this.device = device
-      this.url = new URI(url, URL)
+      this.url = new utils.URI(url, URL)
       /**
        * The provider, represented as a base URL.
        * @type {?URL}
        */
-      this.provider = provider ? new URI(provider) : null
+      this.provider = provider ? new utils.URI(provider) : null
       /**
        * The URL of the tag in the provider.
        * @type {?URL}
        */
-      this.providerUrl = provider ? new URI(id, provider) : null
+      this.providerUrl = provider ? new utils.URI(id, provider) : null
       /**
        * The URL that is to be printed.
        * @type {URL}
@@ -1896,10 +1942,13 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     Display: Display,
     Camera: Camera,
     Battery: Battery,
+    DIYAndGardening: DIYAndGardening,
     Drill: Drill,
     PackOfScrewdrivers: PackOfScrewdrivers,
+    Home: Home,
     Dehumidifier: Dehumidifier,
     Stairs: Stairs,
+    Recreation: Recreation,
     Bike: Bike,
     Racket: Racket,
     Event: Action,
@@ -1938,7 +1987,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     BenchmarkRamSysbench: BenchmarkRamSysbench,
     ToRepair: ToRepair,
     Repair: Repair,
-    Available: Available,
+    Ready: Ready,
     ToPrepare: ToPrepare,
     Prepare: Prepare,
     Organize: Organize,
@@ -1947,7 +1996,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     Trade: Trade,
     Sell: Sell,
     Donate: Donate,
+    MakeAvailable: MakeAvailable,
     CancelTrade: CancelTrade,
+    Rent: Rent,
     ToDisposeProduct: ToDisposeProduct,
     DisposeProduct: DisposeProduct,
     Receive: Receive,

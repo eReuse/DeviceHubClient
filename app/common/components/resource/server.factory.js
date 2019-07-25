@@ -1,5 +1,4 @@
-const URI = require('urijs')
-
+const utils = require('./../utils')
 /**
  * @module server
  */
@@ -39,7 +38,7 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
       this.baseUrl = baseUrl
       /** @type {string} **/
       this.path = path
-      const url = new URI(path, baseUrl)
+      const url = new utils.URI(path, baseUrl)
       /** @type {string} **/
       this.url = url.toString()
       this._config = {
@@ -185,7 +184,7 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
      */
     setInventory (inventoryId) {
       if (CONSTANTS.inventories) {
-        const newUrl = new URI(this.baseUrl)
+        const newUrl = new utils.URI(this.baseUrl)
         this.url = newUrl.segment([inventoryId, this.path, '']).toString() // '' = trailing slash
       }
     }

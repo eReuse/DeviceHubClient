@@ -16,11 +16,9 @@ function resourceListConfig ($filter, table) {
 
   class Title extends table.Title {
     constructor (resource) {
-      let content
+      let content = resource.typeHuman
       if (resource.manufacturer || resource.model) {
-        content = `${resource.manufacturer || ''} ${resource.model || ''}`
-      } else {
-        content = '—'
+        content += ` ${resource.manufacturer || ''} ${resource.model || ''}`
       }
       super(resource, content)
     }

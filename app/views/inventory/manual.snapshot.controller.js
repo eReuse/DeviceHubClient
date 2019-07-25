@@ -15,10 +15,12 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
        * @param {typeof module:resources.Thing} keyResource
        * @return {function(): boolean}
        */
-      const showIfSubclassFactory = keyResource => {
+      const showIfSubclassFactory = (...keyResources) => {
         return () => {
           const r = resources[this.model.device.type]
-          return !(keyResource.isPrototypeOf(r) || r === keyResource)
+          return _.some(keyResources,
+            keyResource => !(keyResource.isPrototypeOf(r) || r === keyResource)
+          )
         }
       }
 
@@ -47,33 +49,61 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
         }),
         new fields.String('device.serialNumber', {
           required: true,
-          namespace: ns,
-          keyText: 'serialNumber',
+          namespace: 'r',
           addonRight: tag.addonRightScan('device.serialNumber')
         }),
         new fields.String('device.model', {
           required: true,
-          namespace: ns,
-          keyText: 'model',
+          namespace: 'r',
           addonRight: tag.addonRightScan('device.model')
         }),
         new fields.String('device.manufacturer', {
           required: true,
-          namespace: ns,
-          keyText: 'manufacturer',
+          namespace: 'r',
           addonRight: tag.addonRightScan('device.manufacturer')
         }),
         new fields.Radio('device.actions[0].appearanceRange', {
-          namespace: ns,
+          namespace: 'workbench.link',
           keyText: 'appearance',
           options: enums.AppearanceRange.options(fields),
           required: true
         }),
         new fields.Radio('device.actions[0].functionalityRange', {
-          namespace: ns,
-          keyText: 'appearance',
+          namespace: 'workbench.link',
+          keyText: 'functionality',
           options: enums.FunctionalityRange.options(fields),
           required: true
+        }),
+        new fields.String('device.brand', {
+          namespace: 'r'
+        }),
+        new fields.Number('device.generation', {
+          namespace: 'r'
+        }),
+        new fields.String('device.version', {
+          namespace: 'r'
+        }),
+        new fields.Number('device.weight', {
+          namespace: 'r',
+          addonRight: fields.Field.ADDON_RIGHT.Text
+        }),
+        new fields.Number('device.width', {
+          namespace: 'r',
+          addonRight: fields.Field.ADDON_RIGHT.Text
+        }),
+        new fields.Number('device.height', {
+          namespace: 'r',
+          addonRight: fields.Field.ADDON_RIGHT.Text
+        }),
+        new fields.String('device.depth', {
+          namespace: 'r',
+          addonRight: fields.Field.ADDON_RIGHT.Text
+        }),
+        new fields.String('device.variant', {
+          namespace: 'r'
+        }),
+        new fields.String('device.sku', {
+          namespace: 'r'
         }),
         new fields.Select('device.chassis', {
           namespace: ns,
@@ -93,6 +123,35 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
           namespace: 'r',
           options: enums.Layouts.options(fields),
           hide: showIfSubclassFactory(resources.Keyboard)
+        }),
+        new fields.String('device.maxDrillBitSize', {
+          namespace: 'r',
+          hide: showIfSubclassFactory(resources.Drill)
+        }),
+        new fields.Number('device.size', {
+          namespace: 'r',
+          hide: showIfSubclassFactory(resources.PackOfScrewdrivers, resources.Drill),
+          min: 0.1
+        }),
+        new fields.Number('device.maxAllowedWeight', {
+          namespace: 'r',
+          hide: showIfSubclassFactory(resources.Stairs),
+          min: 1,
+          addonRight: fields.Field.ADDON_RIGHT.Text
+        }),
+        new fields.Number('device.wheelSize', {
+          namespace: 'r',
+          hide: showIfSubclassFactory(resources.Bike),
+          addonRight: fields.Field.ADDON_RIGHT.Text,
+          min: 0.1
+        }),
+        new fields.Number('device.gears', {
+          namespace: 'r',
+          hide: showIfSubclassFactory(resources.Bike),
+          min: 1
+        }),
+        new fields.URL('device.image', {
+          namespace: 'r'
         })
       )
     }

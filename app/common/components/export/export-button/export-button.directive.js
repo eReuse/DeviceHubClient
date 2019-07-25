@@ -48,14 +48,13 @@ function exportButton (Notification, clipboard, $translate, CONSTANTS, session, 
         copy () {
           const urls = _($scope.devices).map('url').join()
           clipboard.copyText(urls)
-          Notification.primary($translate.instant('export.success'))
+          Notification.primary($translate.instant('export.clipboard.success'))
         }
       }
 
       $scope.clipboard = new Clipboard()
     }
   }
-
 }
 
 module.exports = exportButton

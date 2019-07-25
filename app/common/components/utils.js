@@ -164,7 +164,7 @@ function getEventDescription (event) {
       return 'OK'
     case 'devices:Price':
       return event.price
-    case 'devices:Available':
+    case 'devices:Ready':
       return 'OK'
     case 'devices:Prepare':
       return 'OK'
@@ -302,6 +302,15 @@ const unforgivingHandler = {
   }
 }
 
+/**
+ * A subclass of urijs that can stringify to json.
+ */
+class URI extends require('urijs') {
+  toJSON () {
+    return this.toString()
+  }
+}
+
 module.exports = {
   Naming: Naming,
   copy: copy,
@@ -315,5 +324,6 @@ module.exports = {
   getSetting: getSetting,
   perms: perms,
   DataFile: DataFile,
-  unforgivingHandler: unforgivingHandler
+  unforgivingHandler: unforgivingHandler,
+  URI: URI
 }

@@ -1,5 +1,4 @@
-const URI = require('urijs')
-
+const utils = require('./../utils')
 /**
  * @module android
  */
@@ -70,7 +69,7 @@ function androidFactory ($rootScope) {
      * value in case of unknown format.
      */
     static parseTag (fullTag) {
-      return (new URI(fullTag)).segment(-1)
+      return (new utils.URI(fullTag)).segment(-1)
     }
   }
 

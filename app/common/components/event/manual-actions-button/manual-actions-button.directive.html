@@ -7,10 +7,12 @@
     <i class="fa fa-plus fa-fw"></i>New action<span class="caret"></span>
   </button>
   <ul uib-dropdown-menu role="menu" aria-labelledby="action-button">
-    <li ng-repeat="Action in ::actions">
-      <a ng-click="open(Action)">
-        <i class="fa fa-fw {{::Action.icon}}"></i>
-        {{::Action.type | humanize}}
+    <li ng-repeat="element in ::elements"
+        ng-class="{'dropdown-header': $root._.isString(element)}">
+      <span ng-if="$root._.isString(element)">{{::element | translate}}</span>
+      <a ng-if="!$root._.isString(element)" ng-click="open(element)">
+        <i class="fa fa-fw {{::element.icon}}"></i>
+        {{::element.type}}
       </a>
     </li>
   </ul>

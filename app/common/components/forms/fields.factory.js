@@ -187,6 +187,19 @@ function fieldsFactory ($translate, Notification, $q) {
   }
 
   /**
+   * @alias module:fields.URL
+   * @extends module:fields.String
+   */
+  class URL extends String {
+    constructor (key, {maxLength = 256, ...rest}) {
+      rest.maxLength = maxLength
+      super(key, rest)
+      this.type = 'input'
+      this.templateOptions.type = 'url'
+    }
+  }
+
+  /**
    * @alias module:fields.Password
    * @extends module:fields.String
    */
@@ -573,6 +586,7 @@ function fieldsFactory ($translate, Notification, $q) {
     Input: Input,
     Form: Form,
     String: String,
+    URL: URL,
     Number: Number,
     Option: Option,
     Group: Group,
