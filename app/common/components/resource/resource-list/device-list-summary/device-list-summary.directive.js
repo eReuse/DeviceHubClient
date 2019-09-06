@@ -351,11 +351,11 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
         ['Rating', this.aggregatesOne('rate', undefined, 'ratingRangeHuman')],
         [
           'Appearance',
-          this._reAddRate(this.aggregatesOne('rate', undefined, 'appearanceRange'), enums.AppearanceRange)
+          this._reAddRate(this.aggregatesOne('rate', undefined, 'appearance'), enums.AppearanceRange)
         ],
         [
           'Functionality',
-          this._reAddRate(this.aggregatesOne('rate', undefined, 'functionalityRange'), enums.FunctionalityRange)
+          this._reAddRate(this.aggregatesOne('rate', undefined, 'functionality'), enums.FunctionalityRange)
         ],
         ['Processor', this.aggregatesOne('rate', undefined, 'processorRangeHuman')],
         ['RAM', this.aggregatesOne('rate', undefined, 'ramRangeHuman')],
