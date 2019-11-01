@@ -1117,15 +1117,21 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithOneDevice
    */
   class Rate extends ActionWithOneDevice {
-    define ({rating = null, software = null, version = null, appearance = null, functionality = null, ratingRange = null, ...rest}) {
-      super.define(rest)
-      this.rating = rating ? new enums.RatingRange(rating) : null
-      this.software = software
-      this.version = version
-      this.appearance = appearance
-      this.functionality = functionality
-      this.ratingRange = ratingRange
-      this.ratingRangeHuman = ratingRange ? utils.Naming.humanize(ratingRange) : null
+      define (d) {
+      super.define(d)
+      this.rating = d.rating ? new enums.RatingRange(d.rating) : null
+      this.software = d.software
+      this.version = d.version
+      this.appearance = d.appearance
+      this.appearanceRangeHuman = d.appearanceRange ? utils.Naming.humanize(d.appearanceRange) : null
+      this.functionality = d.functionality
+      this.functionalityRangeHuman = d.functionalityRange ? utils.Naming.humanize(d.functionalityRange) : null
+      this.processorRangeHuman = d.processorRange ? utils.Naming.humanize(d.processorRange) : null
+      this.ramRangeHuman = d.ramRange ? utils.Naming.humanize(d.ramRange) : null
+      this.dataStorageRangeHuman = d.dataStorageRange ? utils.Naming.humanize(d.dataStorageRange) : null
+      this.ratingRange = d.ratingRange
+      this.ratingRangeHuman = d.ratingRange ? utils.Naming.humanize(d.ratingRange) : null
+
     }
 
     get title () {
