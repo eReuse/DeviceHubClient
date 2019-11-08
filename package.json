@@ -66,7 +66,8 @@
     "run-sequence": "~1.1.5",
     "urijs": "~1.19.1",
     "vinyl-buffer": "~1.0.0",
-    "vinyl-source-stream": "~1.1.0"
+    "vinyl-source-stream": "~1.1.0",
+    "web3": "^1.2.2"
   },
   "devDependencies": {
     "angular-mocks": "~1.5.6",

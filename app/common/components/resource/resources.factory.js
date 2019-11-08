@@ -15,7 +15,7 @@ const isEmpty = require('is-empty')
  * @param {module:enums} enums
  * @param {URI} URL
  */
-function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
+function resourceFactory (server, CONSTANTS, $filter, enums, URL, web3) {
   /**
    * The models of Devicehub, mimicking Devicehub's `schema.Thing`.
    * Thing classes have generic methods that can communicate with
@@ -159,7 +159,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
      */
     post (uri, config) {
       console.assert(!this.id, '%s %s has already been posted.', this.type, this.id)
-      return this.server.post(this._post(), uri, config).then(obj => {
+      const dump = this._post()
+      web3.post(dump)
+      return this.server.post(dump, uri, config).then(obj => {
         this.define(obj)
         return this
       })
@@ -184,6 +186,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       // Probably will require refactor
       console.assert(this.id, '%s must exist on the DB before PATCHing it.', this.type)
       const obj = _.pick(this, fields)
+      web3.patch(obj)
       return this.server.patch(obj, this.id).then(() => this)
     }
 
@@ -1117,7 +1120,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithOneDevice
    */
   class Rate extends ActionWithOneDevice {
-      define (d) {
+    define (d) {
       super.define(d)
       this.rating = d.rating ? new enums.RatingRange(d.rating) : null
       this.software = d.software
