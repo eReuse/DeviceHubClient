@@ -73,6 +73,15 @@ module.exports = window.angular.module('deviceHub', [
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
         controller: 'printTagsCtrl as ptCl'
       }).state({
+        name: 'auth.createDeliveryNote',
+        url: '/deliverynote/new',
+        params: {
+          funs: {}
+        },
+        template: require('./views/deliverynotes/create-deliverynote.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
+        controller: 'createDeliveryCtrl as cdCl'
+      }).state({
         name: 'auth.workbench',
         url: '/workbench/',
         abstract: true
