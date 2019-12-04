@@ -14,5 +14,6 @@ module.exports = angular.module('auth.tags',
     'oc.lazyLoad'
   ])
   .controller('createDeliveryCtrl', require('./create-deliverynote.controller.js'))
-  
+  .controller('shareDeliverynoteCtrl', require('./share-deliverynote.controller.js'))
+
 

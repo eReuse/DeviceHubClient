@@ -22,6 +22,8 @@
         </button>
         <lot-children-button parent="lotsM.lots[0]" ng-if="lotsM.lots.length === 1">
         </lot-children-button>
+        <share-deliverynote-button deliverynote="lotsM.lots[0]" ng-if="lotsM.lots.length === 1">
+        </share-deliverynote-button>
       </div>
       <div ng-if="lotsM.lots.length === 1">
         <h2>

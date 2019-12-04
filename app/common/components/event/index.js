@@ -8,5 +8,6 @@ module.exports = angular.module('common.components.event',
   ])
   .directive('manualActionsButton', require('./manual-actions-button/manual-actions-button.directive'))
   .directive('createDeliverynoteButton', require('./create-deliverynote-button/create-deliverynote-button.directive'))
+  .directive('shareDeliverynoteButton', require('./share-deliverynote-button/share-deliverynote-button.directive'))  
   .factory('openEventModal', require('./open-event-modal.factory'))
   .directive('snapshotButton', require('./snapshot-button/snapshot-button.directive'))
