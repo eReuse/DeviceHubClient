@@ -350,7 +350,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL, web3) {
       /** @type {?string} */
       this.manufacturer = manufacturer ? inflection.titleize(manufacturer) : null
       /** @type {?string} */
-      this.serialNumber = serialNumber ? serialNumber.toUpperCase() : null
+      this.serialNumber = serialNumber ? serialNumber.toString().toUpperCase() : null
       /** @type {?string} */
       this.brand = brand
       /** @type {?number} */
@@ -921,7 +921,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL, web3) {
    * @extends module:resources.Thing
    */
   class Action extends Thing {
-    define ({id = null, name = null, closed = null, severity = null, description = null, startTime = null, endTime = null, snaphsot = null, agent = null, author = null, components = [], parent = null, url = null, ...rest}) {
+    define ({id = null, name = null, closed = null, severity = null, description = null, startTime = null, endTime = null, snapshot = null, agent = null, author = null, components = [], parent = null, url = null, ...rest}) {
       super.define(rest)
       /** @type {?string} */
       this.id = id
@@ -938,7 +938,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL, web3) {
       /** @type {?Date} */
       this.endTime = endTime ? new Date(endTime) : null
       /** @type {?Snapshot} */
-      this.snaphsot = snaphsot
+      this.snapshot = snapshot
       /** @type {?Agent} */
       this.agent = agent
       /** @type {?User} */
@@ -1431,6 +1431,28 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL, web3) {
    * @extends module:resources.BenchmarkWithRate
    */
   class BenchmarkRamSysbench extends BenchmarkWithRate {
+  }
+
+  /**
+   * @alias module:resources.DeliveryNote
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class DeliveryNote extends ActionWithMultipleDevices {
+    define ({supplierCode = null, date = null, deliveryNoteID = null, deposit = null, ...rest}) {
+      super.define(rest)
+      this.supplierCode = supplierCode
+      this.date = date
+      this.deliveryNoteID = deliveryNoteID
+      this.deposit = deposit
+    }
+
+    get title () {
+      return `${super.supplierCode} — ${this.deliveryNoteID} ${this.date}`
+    }
+
+    _post () {
+      return this.dump(false)
+    }
   }
 
   /**
@@ -1994,6 +2016,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL, web3) {
     BenchmarkProcessor: BenchmarkProcessor,
     BenchmarkProcessorSysbench: BenchmarkProcessorSysbench,
     BenchmarkRamSysbench: BenchmarkRamSysbench,
+    DeliveryNote: DeliveryNote,
     ToRepair: ToRepair,
     Repair: Repair,
     Ready: Ready,
