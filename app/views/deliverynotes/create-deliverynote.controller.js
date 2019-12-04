@@ -60,8 +60,7 @@ function createDeliveryCtrl ($scope, $window, fields, $state, enums, resources) 
 
       //Display the data from Excel file in Table.
       $scope.$apply(function () {
-          $scope.Customers = excelRows; 
-          $scope.IsVisible = true;
+          $scope.uploadedDevices = excelRows
 
           //TODO instead, here set to formly form
           //$scope.form.devices = excelRows
@@ -74,11 +73,17 @@ function createDeliveryCtrl ($scope, $window, fields, $state, enums, resources) 
         new fields.String('deliverynote.supplier', {
           namespace: 'r',
         }),
+        new fields.String('deliverynote.supplier', {
+          namespace: 'r',
+        }),
         new fields.Datepicker('deliverynote.date', {
           namespace: 'r',
         }),
         new fields.String('deliverynote.id', {
           namespace: 'r'
+        }),
+        new fields.String('deliverynote.depositPerDevice', {
+          namespace: 'r',
         })
       )
     }

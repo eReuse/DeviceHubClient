@@ -1,10 +1,31 @@
 <div class="container fill-height-bar">
   <h2>{{::'deliverynotes.create.title' | translate}}</h2>
-
   <div class="row">
-    <input type="text" ng-model="username">
     <input id="filename" type="file" name="file">
     <input type="button" value="Upload" ng-click="Upload()" />
     <hr />
+    <table class="table table-responsive table-striped table-condensed" ng-show="uploadedDevices && uploadedDevices.length > 0">
+      <thead>
+        <tr>
+          <th>Device ID by supplier</th>
+          <th>Serial number</th>
+          <th>Brand</th>
+          <th>Model</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="device in ::uploadedDevices">
+          <td>{{::device.deviceIDSupplier}}</td>
+          <td>{{::device.serialNumber}}</td>
+          <td>{{::device.brand}}</td>
+          <td>{{::device.model}}</td>
+        </tr>
+      </tbody>
+    <table>
+    <hr />
   </div>
+  <div class="row">
+    <dh-form form="form" submit cancel class="col-xs-12"></dh-form>
+  </div>
+
 </div>
