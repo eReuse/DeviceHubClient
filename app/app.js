@@ -82,6 +82,15 @@ module.exports = window.angular.module('deviceHub', [
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
         controller: 'createDeliveryCtrl as cdCl'
       }).state({
+        name: 'auth.shareDeliverynote',
+        url: '/deliverynote/share',
+        params: {
+          funs: {}
+        },
+        template: require('./views/deliverynotes/share-deliverynote.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
+        controller: 'shareDeliverynoteCtrl as cdCl'
+      }).state({
         name: 'auth.workbench',
         url: '/workbench/',
         abstract: true
