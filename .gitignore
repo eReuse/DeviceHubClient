@@ -8,5 +8,4 @@ tmp
 .idea
 .idea/**
 Thumbs.db
-/config.yml
 app/truffle/build/
