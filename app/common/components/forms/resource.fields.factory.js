@@ -129,6 +129,30 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
    */
   class CancelTrade extends EventWithMultipleDevices {
   }
+  
+  /**
+   * @alias module:resourceFields.InitTransfer
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class InitTransfer extends EventWithMultipleDevices {
+    constructor (model, ...fields) {
+      super(model, ...fields)
+      const receiver = new f.String('Receiver', {namespace: 'r.receiver'})
+      this.fields.splice(1, 0, receiver)
+    }
+  }
+
+  /**
+   * @alias module:resourceFields.AcceptTransfer
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class AcceptTransfer extends EventWithMultipleDevices {
+    constructor (model, ...fields) {
+      super(model, ...fields)
+      const deposit = new f.Number('deposit', {namespace: 'r.deposit'})
+      this.fields.splice(1, 0, deposit)
+    }
+  }
 
   return {
     ResourceForm: ResourceForm,
@@ -142,7 +166,9 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
     Receive: Receive,
     MakeAvailable: MakeAvailable,
     Rent: Rent,
-    CancelTrade: CancelTrade
+    CancelTrade: CancelTrade,
+    InitTransfer: InitTransfer,
+    AcceptTransfer: AcceptTransfer
   }
 }
 

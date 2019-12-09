@@ -266,7 +266,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL, web3) {
      */
     _rels (others) {
       console.assert(others instanceof Array)
-      const ret = others.map(other => this._rel(other))
+      const ret = others.map((other) => {
+        return this._rel(other)
+      })
       console.assert(ret !== undefined)
       return ret
     }
@@ -1536,6 +1538,36 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL, web3) {
   }
 
   /**
+   * @alias module:resources.Trade
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class InitTransfer extends ActionWithMultipleDevices {
+    define ({shippingDate = null, invoiceNumber = null, to = null, lot = null, ...rest}) {
+      super.define(rest)
+      this.shippingDate = shippingDate
+      this.invoiceNumber = invoiceNumber
+      this.to = to
+      this.lot = lot
+      
+    }
+  }
+  
+  /**
+   * @alias module:resources.Trade
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class AcceptTransfer extends ActionWithMultipleDevices {
+    define ({shippingDate = null, invoiceNumber = null, to = null, lot = null, deposit = null, ...rest}) {
+      super.define(rest)
+      this.shippingDate = shippingDate
+      this.invoiceNumber = invoiceNumber
+      this.to = to
+      this.lot = lot
+      this.deposit = deposit
+    }
+  }
+
+  /**
    * @alias module:resources.Sell
    * @extends module:resources.Trade
    */
@@ -2025,6 +2057,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL, web3) {
     Organize: Organize,
     Reserve: Reserve,
     CancelReservation: CancelReservation,
+    InitTransfer: InitTransfer,
+    AcceptTransfer: AcceptTransfer,
     Trade: Trade,
     Sell: Sell,
     Donate: Donate,
