@@ -1,4 +1,7 @@
-factoryArtifacts = require('../../../truffle/build/contracts/DeviceFactory');
+const factoryArtifacts = require('../../../truffle/build/contracts/DeviceFactory');
+const erc20Artifacts = require('../../../truffle/build/contracts/EIP20');
+const contractAddresses = require('../../../truffle/deployed_contracts.js');
+const deployments = require('../../../truffle/deployed_contracts');
 
 /**
  * Returns a global progressBar singleton.
@@ -9,50 +12,74 @@ factoryArtifacts = require('../../../truffle/build/contracts/DeviceFactory');
 function web3Service($window) {
   const provider = new $window.web3.providers.WebsocketProvider('ws://localhost:8545');
   const web3 = new $window.web3(provider);
-  web3.eth.defaultAccount = web3.eth.accounts[0];
 
-  factory = new web3.eth.Contract(factoryArtifacts.abi,
-    web3.utils.toChecksumAddress('0x6cD989672cb0AAf4E29680568980354dE7d39A6f'));
+  let [factory, erc20] = deployContracts(web3);
+
+  let accs = createAccounts(web3);
 
   const accounts = {
-    'notary': '0x58cfbed5b782128325324ddc45052509dacba170',
-    'repairer': '0x1ef6d246c3edd5be811f43518fded0b4661150fd',
-    'consumer': '0x2ae32a2e1bdecdafbd14f811aa175693c11b72ed'
+    'OwnerA': accs[0],
+    'OwnerB': accs[1]
   };
 
   const service = {
     post: (obj) => {
-      console.log(obj);
-      let devices_list = obj.devices;
-      for (let device of devices_list) {
-        factory.methods.createDevice(device.serialNumber, parseInt(obj.deposit),
-          web3.utils.toChecksumAddress(accounts.consumer)).send(
-            {
-              from: accounts.current
-            });
+      if (obj.type == 'DeliveryNote') {
+        createDeliveryNote(factory, obj, accounts.OwnerA,
+          web3.eth.defaultAccount, web3);
+      } else {
+        // sendDeliveryNote(obj);
       }
-      // factory.methods.getDeployedDevices().call({from: accounts.consumer}).then(i => {
-      //   console.log(i);
-      // });
-      // web3.eth.accounts.wallet.create(1);
-      // web3.eth.accounts.wallet.save('prueba');
 
       const response = "hello";
-      return response
+      return response;
     },
     patch: (obj) => {
-      console.log("web3 patch", obj)
+      console.log("web3 patch", obj);
       // TODO send request to web3
-      const response = "hello"
-      return response
+      const response = "hello";
+      return response;
     }
   }
-  return service
+  return service;
 }
 
-function deployContract() {
-
+function createDeliveryNote(factory, obj, owner, _from, web3) {
+  devices = obj.devices;
+  for (let d in devices) {
+    current = devices[d];
+    console.log(current);
+    factory.methods.createDevice(current.model, 0,
+      web3.utils.toChecksumAddress(owner)).send({
+        from: web3.utils.toChecksumAddress(_from)
+      }).then(i => {
+        console.log(`Contract created ${i}`);
+      });
+  }
+  console.log(`Listo socio, el address es ${owner}`);
 }
 
-module.exports = web3Service
+function sendDeliveryNote(obj) {
+  console.log(obj);
+}
 
+function deployContracts(web3) {
+  web3.eth.getAccounts().then(i => {
+    web3.eth.defaultAccount = i[0];
+  });
+
+  factory = new web3.eth.Contract(factoryArtifacts.abi,
+    web3.utils.toChecksumAddress(deployments.get('Factory')));
+
+  erc20 = new web3.eth.Contract(erc20Artifacts.abi,
+    web3.utils.toChecksumAddress(deployments.get('ERC20')));
+
+  return [factory, erc20];
+}
+
+function createAccounts(web3) {
+  let result = web3.eth.accounts.wallet.create(2);
+  return [result[0].address, result[1].address];
+}
+
+module.exports = web3Service;
