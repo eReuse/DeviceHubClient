@@ -1,4 +1,6 @@
 const factoryArtifacts = require('../../../truffle/build/contracts/DeviceFactory')
+const deliveryNoteArtifacts = require('../../../truffle/build/contracts/DeliveryNote')
+const daoArtifacts = require('../../../truffle/build/contracts/DAO')
 const erc20Artifacts = require('../../../truffle/build/contracts/EIP20')
 
 /**
@@ -11,26 +13,28 @@ function web3Service ($window) {
   const provider = new $window.web3.providers.WebsocketProvider('ws://localhost:8545')
   const web3 = new $window.web3(provider)
   const contract = $window.contract
-  let factory, erc20
+  let factory, erc20, dao
 
   deployContracts(web3, contract, provider).then(res => {
     factory = res[0]
     erc20 = res[1]
+    dao = res[2]
   })
+  const accounts = {}
 
-  let accs = createAccounts(web3)
-
-  const accounts = {
-    'OwnerA': accs[0],
-    'OwnerB': accs[1]
-  }
+  createAccounts(web3).then(accs => {
+    accounts['OwnerA'] = accs[0]
+    accounts['OwnerB'] = accs[1]
+  })
 
   const service = {
     post: (obj) => {
-      if (obj.type === 'DeliveryNote') {
-        deployDevices(factory, obj.devices, accounts.OwnerA, web3)
-        // let devices = getOwnerDevices(factory, owner, web3);
-        // createDeliveryNote(factory, obj.devices, accounts.OwnerA, web3)
+      if (obj.devices) {
+        deployDevices(factory, obj.devices, accounts.OwnerA, web3).then(result => {
+          factory.getDeployedDevices({from: accounts.OwnerA}).then(devices => {
+            createDeliveryNote(contract, provider, devices, accounts, dao, web3)
+          })
+        })
       } else {
         // sendDeliveryNote(obj)
       }
@@ -48,39 +52,90 @@ function web3Service ($window) {
   return service
 }
 
-function createDeliveryNote (factory, devices, nextOwner, web3) {
-  createDeliveryNote(factory, nextOwner, web3)
+/**
+ * Function to create the DeliveryNote that will be sent to the second owner
+ * inside the Blockchain.
+ * @param {Function} contract truffle-contract library.
+ * @param {Function} provider Blockchain provider configuration.
+ * @param {Array} devices List of devices to be added to the DeliveryNote.
+ * @param {Array} accounts List of owners' accounts.
+ * @param {Function} factory Instance of the DAO smart contract.
+ * @param {Function} web3 Web3 library.
+ */
+function createDeliveryNote (contract, provider, devices, accounts, dao, web3) {
+  let deliveryNoteContract = initializeContract(contract, provider, deliveryNoteArtifacts)
+  let sender = web3.utils.toChecksumAddress(accounts.OwnerA)
+  let receiver = web3.utils.toChecksumAddress(accounts.OwnerB)
+  unlockOwners(sender, receiver, web3)
+  createDeliveryNoteInstance(deliveryNoteContract, sender, receiver, dao)
+    .then(deliveryNote => {
+      console.log(deliveryNote)
+      // for (let d in devices) {
+      //   let current = devices[d]
+      //   deliveryNote.addDevice(current)
+      // }
+    })
 }
 
-function sendDeliveryNote (obj) {
-  console.log(obj)
-}
-
+/**
+ * Function to register into the Blockchain all the devices included in
+ * the received DeliveryNote.
+ * @param {Function} factory Instance of the DeviceFactory smart contract.
+ * @param {Array} devices List of the devices to be registered.
+ * @param {string} owner Address of the owner of the devices.
+ * @param {Function} web3 Web3 library.
+ * @returns {Promise} A promise which resolves to the list of
+ *                    deployed devices.
+ */
 function deployDevices (factory, devices, owner, web3) {
-  for (let d in devices) {
-    let current = devices[d]
-    factory.createDevice(current.model, 0,
-      web3.utils.toChecksumAddress(owner), {
-        from: web3.eth.defaultAccount
-      })
-  }
+  return new Promise(resolve => {
+    let deployedDevices = []
+    for (let d in devices) {
+      let current = devices[d]
+      factory.createDevice(current.model, 0,
+        web3.utils.toChecksumAddress(owner), { from: web3.eth.defaultAccount })
+        .then(d => {
+          deployedDevices.push(d)
+          resolve(deployDevices)
+        })
+    }
+  })
 }
 
+/**
+ * Function to get an instance of the already deployed contracts
+ * which will be needed throughout the execution of the different
+ * functionalities within this service (DeviceFactory, ERC20 and DAO).
+ * @param {Function} web3 Web3 library.
+ * @param {Function} contract truffle-contract library.
+ * @param {Function} provider Blockchain provider configuration.
+ * @returns {Promise} A promise which resolves to a list with the
+ *                    instances of the deployed contracts.
+ */
 function deployContracts (web3, contract, provider) {
   return new Promise((resolve) => {
     web3.eth.getAccounts().then(accounts => {
       web3.eth.defaultAccount = accounts[0]
       let factoryContract = initializeContract(contract, provider, factoryArtifacts)
       let erc20Contract = initializeContract(contract, provider, erc20Artifacts)
+      let daoContract = initializeContract(contract, provider, daoArtifacts)
       selectContractInstance(factoryContract).then(factory => {
         selectContractInstance(erc20Contract).then(erc20 => {
-          resolve([factory, erc20])
+          selectContractInstance(daoContract).then(dao => {
+            resolve([factory, erc20, dao])
+          })
         })
       })
     })
   })
 }
 
+/**
+ * Auxiliary function to obtain an instance of an already
+ * deployed contract
+ * @param {Function} contract Structure of the given smart contract.
+ * @returns {Promise} A promise which resolves to the selected contract.
+ */
 function selectContractInstance (contract) {
   return new Promise(resolve => {
     contract.deployed().then(instance => {
@@ -89,14 +144,32 @@ function selectContractInstance (contract) {
   })
 }
 
-function createContractInstance (contract, params) {
+/**
+ * Auxiliary function to create an instance of DeliveryNote
+ * smart contract as it has not been previously deployed.
+ * @param {Function} contract Structure of the DeliveryNote
+ *                            smart contract.
+ * @param {string} sender Address of the sender.
+ * @param {string} receiver Address of the sender.
+ * @param {Function} dao Structure of the DAO smart contract.
+ * @returns {Promise} A promise which resolves to the DeliveryNote
+ *                    smart contract instance.
+ */
+function createDeliveryNoteInstance (contract, sender, receiver, dao) {
   return new Promise(resolve => {
-    contract.new(params[0], params[1], params[2]).then(instance => {
+    contract.new(receiver, dao.address, {from: sender}).then(instance => {
       resolve(instance)
     })
   })
 }
 
+/**
+ * Initialize basic properties of smart contract instance.
+ * @param {Function} contract truffle-contract library.
+ * @param {Function} provider Blockchain provider configuration.
+ * @param {File} artifacts JSON representation of smart contract.
+ * @returns {Function} Structure of the smart contract.
+ */
 function initializeContract (contract, provider, artifacts) {
   let myContract = contract(artifacts)
   myContract.setProvider(provider)
@@ -106,9 +179,39 @@ function initializeContract (contract, provider, artifacts) {
   return myContract
 }
 
+/**
+ * To sign transactions, the accounts of the owners need to be unlocked.
+ * For this reason, this function will be executed every time we need an
+ * owner to send some transaction.
+ * @param {string} sender String representation of the Ethereum
+ *                        address of the sender.
+ * @param {string} receiver String representation of the Ethereum
+ *                     address of the receiver.
+ * @param {Function} web3 Web3 library.
+ * @param {Number} time Number of second that the accounts will be
+ *                      unlocked.
+ */
+function unlockOwners (sender, receiver, web3, time) {
+  // I'm assuming that I know the password for these accounts
+  // In future implementations this will be different of course.
+
+  web3.eth.personal.unlockAccount(sender, 'ownerA', time)
+  web3.eth.personal.unlockAccount(receiver, 'ownerB', time)
+}
+
+/**
+ * Create the accounts for the owners.
+ * @param {Function} web3 Web3 library
+ * @returns {Promise} A promise which resolves to the accounts.
+ */
 function createAccounts (web3) {
-  let result = web3.eth.accounts.wallet.create(2)
-  return [result[0].address, result[1].address]
+  return new Promise(resolve => {
+    web3.eth.personal.newAccount('ownerA').then(ownerA => {
+      web3.eth.personal.newAccount('ownerB').then(ownerB => {
+        resolve([ownerA, ownerB])
+      })
+    })
+  })
 }
 
 module.exports = web3Service
