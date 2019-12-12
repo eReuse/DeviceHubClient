@@ -31,7 +31,7 @@ function web3Service($window) {
     post: (obj) => {
       // console.log(factory)
       // console.log(erc20)
-      if (obj.type == 'DeliveryNote') {
+      if (obj.type === 'DeliveryNote') {
         createDeliveryNote(factory, obj.devices, accounts.OwnerA, web3)
       } else {
         // sendDeliveryNote(obj)
@@ -62,39 +62,41 @@ function sendDeliveryNote(obj) {
 function deploy_devices(factory, devices, owner, web3) {
   let deployed_devices = []
   for (let d in devices) {
-    current = devices[d]
+    const current = devices[d]
     factory.createDevice(current.model, 0,
       web3.utils.toChecksumAddress(owner), {
       from: web3.eth.defaultAccount
     }).then(i => {
-      console.log(i);
+      console.log(i)
       deployed_devices.push(i)
     })
   }
   return deployed_devices
 }
 
-async function deployContracts(web3, contract, provider) {
-  accounts = await web3.eth.getAccounts()
-  web3.eth.defaultAccount = accounts[0]
+function deployContracts(web3, contract, provider) {
+  web3.eth.getAccounts()
+  .then( accounts => {
+    web3.eth.defaultAccount = accounts[0]
 
-  let factory = await selectContractInstance(contract, provider,
-    factoryArtifacts)
-  let erc20 = await selectContractInstance(contract, provider,
-    erc20Artifacts)
-  return [factory, erc20]
+    selectContractInstance(contract, provider, factoryArtifacts)
+    .then(factory => {
+      selectContractInstance(contract, provider, erc20Artifacts)
+      .then(erc20 => {
+        return [factory, erc20]
+      })
+    })
+  })
 }
 
 function selectContractInstance(contract, provider, artifacts) {
-  return new Promise(async res => {
-    let myContract = await contract(artifacts)
+  contract(artifacts).then(myContract => {
     myContract.setProvider(provider)
     myContract.defaults({
       gasLimit: "6721975"
     })
-    myContract
-      .deployed()
-      .then(instance => res(instance))
+    myContract.deployed()
+    .then(instance => { return instance })
   })
 }
 
