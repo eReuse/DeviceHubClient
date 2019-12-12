@@ -19,9 +19,6 @@ module.exports = function (deployer, network, accounts) {
           console.log('ERC721: ' + erc721.address);
           await deployer.deploy(RoleManager, { from: accounts[0] }).then(async (manager) => {
             await dao.setRoleManager(manager.address);
-            // await manager.addNotary(accounts[0],{from:accounts[0]});
-            // await manager.addRepairer(accounts[1],{from:accounts[0]});
-            // await manager.addConsumer(accounts[2],{from:accounts[0]});
           });
         });
     });
