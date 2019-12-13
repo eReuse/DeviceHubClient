@@ -2,6 +2,7 @@ const factoryArtifacts = require('../../../truffle/build/contracts/DeviceFactory
 const deliveryNoteArtifacts = require('../../../truffle/build/contracts/DeliveryNote')
 const daoArtifacts = require('../../../truffle/build/contracts/DAO')
 const erc20Artifacts = require('../../../truffle/build/contracts/EIP20')
+const deviceArtifacts = require('../../../truffle/build/contracts/DepositDevice')
 
 /**
  * Returns a global progressBar singleton.
@@ -25,13 +26,14 @@ function web3Service ($window) {
   createAccounts(web3).then(accs => {
     accounts['OwnerA'] = accs[0]
     accounts['OwnerB'] = accs[1]
+    fundOwners(web3, accs[0], accs[1])
   })
 
   const service = {
     post: (obj) => {
       if (obj.devices) {
         deployDevices(factory, obj.devices, accounts.OwnerA, web3).then(result => {
-          factory.getDeployedDevices({from: accounts.OwnerA}).then(devices => {
+          factory.getDeployedDevices({ from: accounts.OwnerA }).then(devices => {
             createDeliveryNote(contract, provider, devices, accounts, dao, web3)
           })
         })
@@ -66,14 +68,20 @@ function createDeliveryNote (contract, provider, devices, accounts, dao, web3) {
   let deliveryNoteContract = initializeContract(contract, provider, deliveryNoteArtifacts)
   let sender = web3.utils.toChecksumAddress(accounts.OwnerA)
   let receiver = web3.utils.toChecksumAddress(accounts.OwnerB)
-  unlockOwners(sender, receiver, web3)
+  unlockOwners(sender, receiver, web3, 600)
   createDeliveryNoteInstance(deliveryNoteContract, sender, receiver, dao)
     .then(deliveryNote => {
-      console.log(deliveryNote)
-      // for (let d in devices) {
-      //   let current = devices[d]
-      //   deliveryNote.addDevice(current)
-      // }
+      for (let d in devices) {
+        let current = devices[d]
+        getDeviceInstance(contract, provider, current).then(instance => {
+          console.log(instance.address)
+          instance.addToDeliveryNote(deliveryNote.address, {from: sender})
+        })
+      }
+    //   return deliveryNote
+    // }).then(dNote => {
+    //   console.log(dNote)
+    //   dNote.emitDeliveryNote({ from: accounts.ownerA })
     })
 }
 
@@ -164,6 +172,25 @@ function createDeliveryNoteInstance (contract, sender, receiver, dao) {
 }
 
 /**
+ * Auxiliary function to create an instance of DepositDevice
+ * smart contract from the address which is known.
+ * @param {Function} contract Structure of the DepositDevice
+ *                            smart contract.
+ * @param {string} deviceAddress String representation of the Ethereum
+ *                          address of the device.
+ * @returns {Promise} A promise which resolves to the DepositDevice
+ *                    smart contract instance.
+ */
+function getDeviceInstance (contract, provider, deviceAddress) {
+  let deviceContract = initializeContract(contract, provider, deviceArtifacts)
+  return new Promise(resolve => {
+    deviceContract.at(deviceAddress).then(instance => {
+      resolve(instance)
+    })
+  })
+}
+
+/**
  * Initialize basic properties of smart contract instance.
  * @param {Function} contract truffle-contract library.
  * @param {Function} provider Blockchain provider configuration.
@@ -208,9 +235,28 @@ function createAccounts (web3) {
   return new Promise(resolve => {
     web3.eth.personal.newAccount('ownerA').then(ownerA => {
       web3.eth.personal.newAccount('ownerB').then(ownerB => {
+        // fundOwners(web3, ownerA, ownerB)
         resolve([ownerA, ownerB])
       })
     })
+  })
+}
+
+/**
+ * Transfer funds from the initial accounts to the owners.
+ * @param {Function} web3 Web3 library.
+ * @param {string} ownerA String representation of the Ethereum
+ *                        address of the OwnerA.
+ * @param {string} ownerB String representation of the Ethereum
+ *                        address of the OwnerB.
+ */
+function fundOwners (web3, ownerA, ownerB) {
+  const amountToSend = web3.utils.toWei('10', 'ether')
+  web3.eth.sendTransaction({
+    from: web3.eth.defaultAccount, to: ownerA, value: amountToSend, gasLimit: '6721975'
+  })
+  web3.eth.sendTransaction({
+    from: web3.eth.defaultAccount, to: ownerB, value: amountToSend, gasLimit: '6721975'
   })
 }
 

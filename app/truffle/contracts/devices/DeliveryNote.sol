@@ -42,6 +42,10 @@ contract DeliveryNote is Ownable {
         return num_devices;
     }
 
+    function getState() public view returns(uint state) {
+        return state;
+    }
+
     function addDevice(address _device, address _owner, uint256 _deposit)
     public
     {
