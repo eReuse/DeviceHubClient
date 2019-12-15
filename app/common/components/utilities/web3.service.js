@@ -41,8 +41,16 @@ function web3Service ($window) {
         // sendDeliveryNote(obj)
       }
 
-      const response = 'hello'
-      return response
+      // TODO return promise
+      return { 
+        then: () => {
+          return {
+            catch: () => {
+              
+            }
+          }
+        }
+      }
     },
     patch: (obj) => {
       console.log('web3 patch', obj)

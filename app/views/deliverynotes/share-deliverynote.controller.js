@@ -4,28 +4,43 @@
  * @param {module:fields} fields
  * @param {module:android} android
  */
-function shareDeliveryCtrl ($scope, $window, fields, $state, enums, resources) {
-  const XLSX = $window.XLSX
-  
+function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $stateParams) {
+  const devices = $scope.devices = $stateParams.devices
+  const lot = $scope.lot = $stateParams.lot
+ 
   class ShareDeliveryNoteForm extends fields.Form {
     constructor () {
       super(
-        {
-          id: "" //TODO set ID of deliveryNote
-        },
-        new fields.String('shareDeliveryNote.Email', {
+        {},
+        new fields.String('email', {
           namespace: 'r',
         })
       )
     }
 
     _submit () {
-      const devices = $scope.uploadedDevices && $scope.uploadedDevices.map((device) => {
-        return new resources.Device(device)
+      let receiver = this.model.email  
+     
+      let dataWEB3 = {
+        devices: devices, 
+        receiver: receiver
+      }
+      web3.post(dataWEB3).then(function () {
+        Notification.success('Info shared with web3')
+      }).catch(function (error) {
+        Notification.error('We could not share info with web')
+        throw error
       })
-      const model = _.assign({ devices : devices }, this.model.deliveryNote)
-      const deliveryNote = new resources.DeliveryNote(model, {_useCache: false})
-      return deliveryNote.post()
+
+      lot.transfer_state++
+      lot.receiver = receiver
+
+      return lot.patch('transfer_state', 'receiver').then(function () {
+        Notification.success('Lot  patched')
+      }).catch(function (error) {
+        Notification.error('We could not patch lot. Error:' + JSON.stringify(error))
+        throw error
+      })
     }
 
     _success (...args) {

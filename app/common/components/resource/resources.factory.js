@@ -15,7 +15,7 @@ const isEmpty = require('is-empty')
  * @param {module:enums} enums
  * @param {URI} URL
  */
-function resourceFactory (server, CONSTANTS, $filter, enums, URL, web3) {
+function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   /**
    * The models of Devicehub, mimicking Devicehub's `schema.Thing`.
    * Thing classes have generic methods that can communicate with
@@ -160,7 +160,6 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL, web3) {
     post (uri, config) {
       console.assert(!this.id, '%s %s has already been posted.', this.type, this.id)
       const dump = this._post()
-      web3.post(dump)
       return this.server.post(dump, uri, config).then(obj => {
         this.define(obj)
         return this
@@ -186,7 +185,6 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL, web3) {
       // Probably will require refactor
       console.assert(this.id, '%s must exist on the DB before PATCHing it.', this.type)
       const obj = _.pick(this, fields)
-      web3.patch(obj)
       return this.server.patch(obj, this.id).then(() => this)
     }
 
@@ -1704,7 +1702,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL, web3) {
    * @alias module:resources.Lot
    */
   class Lot extends Thing {
-    define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null, ...rest}) {
+    define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null, transfer_state = 0, receiver = null, ...rest}) {
       super.define(rest)
       this.id = id
       this.name = name
@@ -1714,6 +1712,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL, web3) {
       this.parents = parents
       this.children = children
       this.url = url
+      this.transfer_state = transfer_state
+      this.receiver = receiver
     }
 
     get children () {

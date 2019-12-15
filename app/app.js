@@ -85,7 +85,14 @@ module.exports = window.angular.module('deviceHub', [
         name: 'auth.shareDeliverynote',
         url: '/deliverynote/share',
         params: {
-          funs: {}
+          devices: {
+            type: 'any',
+            value: []
+          },
+          lot: {
+            type: 'any',
+            value: null
+          }
         },
         template: require('./views/deliverynotes/share-deliverynote.controller.html'),
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),

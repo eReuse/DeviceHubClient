@@ -8,12 +8,19 @@ function shareDeliverynoteButton ($state) {
   return {
     template: require('./share-deliverynote-button.directive.html'),
     restrict: 'E',
-    scope: {},
+    scope: {
+      getter: '=',
+      lot: '='
+    },
     /**
      */
     link: $scope => {
       $scope.open = () => {
-        $state.go('auth.shareDeliverynote')
+        const nonIterableDevices = $scope.getter.devices
+        const devices = []; 
+        for(let i=0; i<nonIterableDevices.length; i++) { devices.push(nonIterableDevices[i]); }
+
+        $state.go('auth.shareDeliverynote', { devices: devices, lot: $scope.lot })
      }
     }
   }
