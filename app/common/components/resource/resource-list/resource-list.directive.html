@@ -22,8 +22,10 @@
         </button>
         <lot-children-button parent="lotsM.lots[0]" ng-if="lotsM.lots.length === 1">
         </lot-children-button>
-        <share-deliverynote-button deliverynote="lotsM.lots[0]" ng-if="lotsM.lots.length === 1">
+        <share-deliverynote-button lot="lotsM.lots[0]" getter="getter" ng-if="lotsM.lots.length === 1">
         </share-deliverynote-button>
+        <accept-deliverynote-button lot="lotsM.lots[0]" getter="getter" ng-if="lotsM.lots.length === 1">
+        </accept-deliverynote-button>
         <lot-transfer-button lot="lotsM.lots[0]" getter="getter"></lot-transfer-button>
       </div>
       <div ng-if="lotsM.lots.length === 1">

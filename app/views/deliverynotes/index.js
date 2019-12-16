@@ -15,5 +15,6 @@ module.exports = angular.module('auth.tags',
   ])
   .controller('createDeliveryCtrl', require('./create-deliverynote.controller.js'))
   .controller('shareDeliverynoteCtrl', require('./share-deliverynote.controller.js'))
+  .controller('acceptDeliverynoteCtrl', require('./accept-deliverynote.controller.js'))
 
 

@@ -1,12 +1,12 @@
-function shareDeliverynoteButton ($state) {
+function acceptDeliverynoteButton ($state) {
   /**
    * @ngdoc directive
-   * @name share-deliverynoteButton
-   * @element share-deliverynote-button
+   * @name accept-deliverynoteButton
+   * @element accept-deliverynote-button
    * @restrict E
    */
   return {
-    template: require('./share-deliverynote-button.directive.html'),
+    template: require('./accept-deliverynote-button.directive.html'),
     restrict: 'E',
     scope: {
       getter: '=',
@@ -20,10 +20,10 @@ function shareDeliverynoteButton ($state) {
         const devices = []; 
         for(let i=0; i<nonIterableDevices.length; i++) { devices.push(nonIterableDevices[i]); }
 
-        $state.go('auth.shareDeliverynote', { devices: devices, lot: $scope.lot })
+        $state.go('auth.acceptDeliverynote', { devices: devices, lot: $scope.lot })
      }
     }
   }
 }
 
-module.exports = shareDeliverynoteButton
+module.exports = acceptDeliverynoteButton
