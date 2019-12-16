@@ -11,7 +11,8 @@
   "scripts": {
     "test": "node ./node_modules/gulp/bin/gulp.js unit-test-once",
     "build": "node ./node_modules/gulp/bin/gulp.js build",
-    "build-prod": "node ./node_modules/gulp/bin/gulp.js build-prod"
+    "build-prod": "node ./node_modules/gulp/bin/gulp.js build-prod",
+    "postinstall": "scripts/postinstall.sh"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.6.1",
