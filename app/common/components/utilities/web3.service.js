@@ -26,6 +26,7 @@ function web3Service ($window) {
   createAccounts(web3).then(accs => {
     accounts['OwnerA'] = accs[0]
     accounts['OwnerB'] = accs[1]
+    unlockOwners(accounts.OwnerA, accounts.OwnerA, web3, 600000)
     fundOwners(web3, accs[0], accs[1])
   })
 
@@ -35,10 +36,17 @@ function web3Service ($window) {
         deployDevices(factory, obj.devices, accounts.OwnerA, web3).then(result => {
           factory.getDeployedDevices({ from: accounts.OwnerA }).then(devices => {
             createDeliveryNote(contract, provider, devices, accounts, dao, web3)
+              .then(deliveryNote => {
+                return deliveryNote
+              })
           })
         })
       } else {
-        // sendDeliveryNote(obj)
+        let deliveryNote = obj.deliveryNote
+        erc20.approve(deliveryNote.address, obj.deposit, { from: accounts.ownerB })
+          .then(i => {
+            acceptDeliveryNote(obj.deposit, obj.deliveryNote, accounts)
+          })
       }
 
       const response = 'hello'
@@ -68,21 +76,29 @@ function createDeliveryNote (contract, provider, devices, accounts, dao, web3) {
   let deliveryNoteContract = initializeContract(contract, provider, deliveryNoteArtifacts)
   let sender = web3.utils.toChecksumAddress(accounts.OwnerA)
   let receiver = web3.utils.toChecksumAddress(accounts.OwnerB)
-  unlockOwners(sender, receiver, web3, 600)
-  createDeliveryNoteInstance(deliveryNoteContract, sender, receiver, dao)
-    .then(deliveryNote => {
-      for (let d in devices) {
-        let current = devices[d]
-        getDeviceInstance(contract, provider, current).then(instance => {
-          console.log(instance.address)
-          instance.addToDeliveryNote(deliveryNote.address, {from: sender})
-        })
-      }
-    //   return deliveryNote
-    // }).then(dNote => {
-    //   console.log(dNote)
-    //   dNote.emitDeliveryNote({ from: accounts.ownerA })
-    })
+  return new Promise(resolve => {
+    createDeliveryNoteInstance(deliveryNoteContract, sender, receiver, dao)
+      .then(deliveryNote => {
+        for (let d in devices) {
+          let current = devices[d]
+          getContractInstance(contract, provider, current, deviceArtifacts).then(instance => {
+            console.log(instance.address)
+            instance.addToDeliveryNote(deliveryNote.address, {from: sender})
+          })
+        }
+        resolve(deliveryNote)
+      })
+  })
+  //   return deliveryNote
+  // }).then(dNote => {
+  //   console.log(dNote)
+  //   dNote.emitDeliveryNote({ from: accounts.ownerA })
+}
+
+function acceptDeliveryNote (deposit, deliveryNoteAddress, accounts) {
+  getContractInstance(deliveryNoteAddress).then(instance => {
+    instance.acceptDeliveryNote(deposit, {from: accounts.OwnerB})
+  })
 }
 
 /**
@@ -172,19 +188,19 @@ function createDeliveryNoteInstance (contract, sender, receiver, dao) {
 }
 
 /**
- * Auxiliary function to create an instance of DepositDevice
- * smart contract from the address which is known.
- * @param {Function} contract Structure of the DepositDevice
- *                            smart contract.
- * @param {string} deviceAddress String representation of the Ethereum
- *                          address of the device.
- * @returns {Promise} A promise which resolves to the DepositDevice
- *                    smart contract instance.
+ * Auxiliary function to create an instance of some smart contract
+ * whose address is known.
+ * @param {Function} contract truffle-contract library.
+ * @param {Function} provider Blockchain provider configuration.
+ * @param {string} contractAddress String representation of the Ethereum
+ *                                 address of the contract.
+ * @param {File} artifacts JSON representation of smart contract.
+ * @returns {Promise} A promise which resolves to the the smart contract instance.
  */
-function getDeviceInstance (contract, provider, deviceAddress) {
-  let deviceContract = initializeContract(contract, provider, deviceArtifacts)
+function getContractInstance (contract, provider, contractAddress, artifacts) {
+  let deviceContract = initializeContract(contract, provider, artifacts)
   return new Promise(resolve => {
-    deviceContract.at(deviceAddress).then(instance => {
+    deviceContract.at(contractAddress).then(instance => {
       resolve(instance)
     })
   })
@@ -223,7 +239,9 @@ function unlockOwners (sender, receiver, web3, time) {
   // In future implementations this will be different of course.
 
   web3.eth.personal.unlockAccount(sender, 'ownerA', time)
+    .then(console.log('OwnerA unlocked'))
   web3.eth.personal.unlockAccount(receiver, 'ownerB', time)
+    .then(console.log('OwnerB unlocked'))
 }
 
 /**
@@ -253,10 +271,10 @@ function createAccounts (web3) {
 function fundOwners (web3, ownerA, ownerB) {
   const amountToSend = web3.utils.toWei('10', 'ether')
   web3.eth.sendTransaction({
-    from: web3.eth.defaultAccount, to: ownerA, value: amountToSend, gasLimit: '6721975'
+    from: web3.eth.defaultAccount, to: ownerA, value: amountToSend, gas: '6721975'
   })
   web3.eth.sendTransaction({
-    from: web3.eth.defaultAccount, to: ownerB, value: amountToSend, gasLimit: '6721975'
+    from: web3.eth.defaultAccount, to: ownerB, value: amountToSend, gas: '6721975'
   })
 }
 
