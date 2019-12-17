@@ -19,10 +19,10 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
     }
 
     _submit () {
-      let deposit = this.model.deposit  
-     
+      let deposit = this.model.deposit
+
       let dataWEB3 = {
-        devices: devices, 
+        devices: devices,
         deposit: deposit
       }
       web3.post(dataWEB3).then(function () {
@@ -32,7 +32,7 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
         throw error
       })
 
-      lot.transfer_state = 2
+      lot.transfer_state = 'Accepted'
       lot.deposit = deposit
 
       return lot.patch('transfer_state', 'deposit').then(function () {
