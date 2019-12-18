@@ -75,7 +75,9 @@ function web3Service ($window) {
       let sender = web3.utils.toChecksumAddress(obj.sender)
       let receiver = web3.utils.toChecksumAddress(obj.receiver)
       // console.log(initTransfer(sender, receiver, obj.devices, web3))
-      return initTransfer(sender, receiver, obj.devices, web3)
+      let a = initTransfer(sender, receiver, obj.devices, web3)
+      console.log(a)
+      return a
     }
   }
 
@@ -88,14 +90,16 @@ function web3Service ($window) {
   */
   function initTransfer (sender, receiver, devices, web3) {
     console.log('initTransfer')
-    return deployDevices(factory, devices, sender, web3).then(() => {
-      factory.getDeployedDevices({ from: sender }).then(devices => {
-        createDeliveryNote(contract, provider, devices, sender, receiver, dao)
-          .then(deliveryNote => {
-            deliveryNote.emitDeliveryNote({from: sender})
-            console.log(deliveryNote)
-            return deliveryNote.address
-          })
+    return new Promise(resolve => {
+      deployDevices(factory, devices, sender, web3).then(() => {
+        factory.getDeployedDevices({ from: sender }).then(devices => {
+          createDeliveryNote(contract, provider, devices, sender, receiver, dao)
+            .then(deliveryNote => {
+              deliveryNote.emitDeliveryNote({from: sender})
+              console.log(deliveryNote)
+              resolve(deliveryNote.address)
+            })
+        })
       })
     })
   }
