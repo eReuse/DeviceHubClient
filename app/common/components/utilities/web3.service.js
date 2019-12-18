@@ -15,50 +15,59 @@ function web3Service ($window) {
   const web3 = new $window.web3(provider)
   const contract = $window.contract
   let factory, erc20, dao
+  const accounts = {}
 
   deployContracts(web3, contract, provider).then(res => {
     factory = res[0]
     erc20 = res[1]
     dao = res[2]
   })
-  const accounts = {}
 
-  createAccounts(web3).then(accs => {
-    accounts['OwnerA'] = accs[0]
-    accounts['OwnerB'] = accs[1]
-    unlockOwners(accounts.OwnerA, accounts.OwnerA, web3, 600000)
-    fundOwners(web3, accs[0], accs[1])
+  // createAccounts(web3).then(accs => {
+  //   accounts['OwnerA'] = accs[0]
+  //   accounts['OwnerB'] = accs[1]
+  //   unlockOwners(accounts.OwnerA, accounts.OwnerA, web3, 600000)
+  //   fundOwners(web3, accs[0], accs[1])
+  // })
+
+  web3.eth.getAccounts().then(accs => {
+    accounts['OwnerA'] = accs[1]
+    accounts['OwnerB'] = accs[2]
   })
 
   const service = {
     post: (obj) => {
+      console.log(obj)
       if (obj.devices) {
         deployDevices(factory, obj.devices, accounts.OwnerA, web3).then(result => {
           factory.getDeployedDevices({ from: accounts.OwnerA }).then(devices => {
             createDeliveryNote(contract, provider, devices, accounts, dao, web3)
               .then(deliveryNote => {
-                return deliveryNote
+                deliveryNote.emitDeliveryNote({from: accounts.OwnerA})
+                // return deliveryNote
               })
           })
         })
       } else {
-        let deliveryNote = obj.deliveryNote
-        erc20.approve(deliveryNote.address, obj.deposit, { from: accounts.ownerB })
+        let dNoteContract = initializeContract(contract, provider, deliveryNoteArtifacts)
+        let deliveryNote = selectContractInstance(dNoteContract)
+        erc20.approve(deliveryNote.address, parseInt(obj.deposit),
+          { from: accounts.OwnerB,
+            gas: '6721975'})
           .then(i => {
-            acceptDeliveryNote(obj.deposit, obj.deliveryNote, accounts)
+            deliveryNote.acceptDeliveryNote(obj.deposit, {from: accounts.OwnerB})
           })
       }
 
       // TODO return promise
-      return { 
-        then: () => {
-          return {
-            catch: () => {
-              
-            }
-          }
-        }
-      }
+      // return {
+      //   then: () => {
+      //     return {
+      //       catch: () => {
+      //       }
+      //     }
+      //   }
+      // }
     },
     patch: (obj) => {
       console.log('web3 patch', obj)
@@ -89,10 +98,11 @@ function createDeliveryNote (contract, provider, devices, accounts, dao, web3) {
       .then(deliveryNote => {
         for (let d in devices) {
           let current = devices[d]
-          getContractInstance(contract, provider, current, deviceArtifacts).then(instance => {
-            console.log(instance.address)
-            instance.addToDeliveryNote(deliveryNote.address, {from: sender})
-          })
+          getContractInstance(contract, provider, current, deviceArtifacts)
+            .then(instance => {
+              console.log(instance.address)
+              instance.addToDeliveryNote(deliveryNote.address, {from: sender})
+            })
         }
         resolve(deliveryNote)
       })
@@ -100,13 +110,6 @@ function createDeliveryNote (contract, provider, devices, accounts, dao, web3) {
   //   return deliveryNote
   // }).then(dNote => {
   //   console.log(dNote)
-  //   dNote.emitDeliveryNote({ from: accounts.ownerA })
-}
-
-function acceptDeliveryNote (deposit, deliveryNoteAddress, accounts) {
-  getContractInstance(deliveryNoteAddress).then(instance => {
-    instance.acceptDeliveryNote(deposit, {from: accounts.OwnerB})
-  })
 }
 
 /**
