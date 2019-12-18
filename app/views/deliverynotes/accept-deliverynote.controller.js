@@ -4,7 +4,7 @@
  * @param {module:fields} fields
  * @param {module:android} android
  */
-function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $stateParams) {
+function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $stateParams, session) {
   const devices = $scope.devices = $stateParams.devices
   const lot = $scope.lot = $stateParams.lot
  
@@ -19,28 +19,36 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
     }
 
     _submit () {
-      let deposit = this.model.deposit
+      const deposit = this.model.deposit
 
-      let dataWEB3 = {
-        devices: devices,
-        deposit: deposit
+      const dataWEB3 = {
+        deliverynote_address: lot.deliverynote_address,
+        devices: devices, 
+        deposit: deposit,
+        receiver: session.user.ethereum_address
       }
-      web3.post(dataWEB3).then(function () {
-        Notification.success('Info shared with web3')
-      }).catch(function (error) {
-        Notification.error('We could not share info with web')
+      web3
+      .acceptTransfer(dataWEB3)
+      .then(function () {
+        lot.deposit = deposit
+        lot.transfer_state = 'Accepted'
+        lot.author_id = session.user.id
+
+        return lot.patch('transfer_state', 'deposit', 'author_id')
+      })
+      .then(function () {
+        const action = new resources.Trade({devices: $scope.devices})
+        return action.post()      
+      })
+      .then(function () {
+        return Notification.success('Successfully accepted transfer')
+      })
+      .catch(function (error) {
+        Notification.error('Transfer could not be accepted' + error.message)
         throw error
       })
 
-      lot.transfer_state = 'Accepted'
-      lot.deposit = deposit
-
-      return lot.patch('transfer_state', 'deposit').then(function () {
-        Notification.success('Lot  patched')
-      }).catch(function (error) {
-        Notification.error('We could not patch lot. Error:' + JSON.stringify(error))
-        throw error
-      })
+      
     }
 
     _success (...args) {

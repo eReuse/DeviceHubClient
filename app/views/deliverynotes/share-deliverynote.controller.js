@@ -4,7 +4,7 @@
  * @param {module:fields} fields
  * @param {module:android} android
  */
-function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $stateParams) {
+function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $stateParams, session) {
   const devices = $scope.devices = $stateParams.devices
   const lot = $scope.lot = $stateParams.lot
  
@@ -21,23 +21,22 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
     _submit () {
       let receiver = this.model.ethereumAddress
       let dataWEB3 = {
+        sender: session.user.ethereum_address,
         devices: devices,
         receiver: receiver
       }
-      web3.post(dataWEB3).then(function () {
-        Notification.success('Info shared with web3')
-      }).catch(function (error) {
-        Notification.error('We could not share info with web')
-        throw error
+      web3
+      .initTransfer(dataWEB3)
+      .then(function (deliverynote_address) {
+        lot.author_id = session.user.id
+        lot.transfer_state = 'Initiated'
+        lot.receiver = receiver
+        lot.deliverynote_address = deliverynote_address
+
+        return lot.patch('transfer_state', 'receiver', 'author_id', 'deliverynote_address')
       })
-
-      lot.transfer_state = 'Initiated'
-      lot.receiver_id = receiver
-
-      return lot.patch('transfer_state', 'receiver_id').then(function () {
-        Notification.success('Lot  patched')
-      }).catch(function (error) {
-        Notification.error('We could not patch lot. Error:' + JSON.stringify(error))
+      .catch(function (error) {
+        Notification.error('Transfer could not be initiated '+ JSON.stringify(error))
         throw error
       })
     }
