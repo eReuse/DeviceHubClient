@@ -12,17 +12,16 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
     constructor () {
       super(
         {},
-        new fields.String('email', {
+        new fields.String('ethereumAddress', {
           namespace: 'r',
         })
       )
     }
 
     _submit () {
-      let receiver = this.model.email  
-     
+      let receiver = this.model.ethereumAddress
       let dataWEB3 = {
-        devices: devices, 
+        devices: devices,
         receiver: receiver
       }
       web3.post(dataWEB3).then(function () {
@@ -32,10 +31,10 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
         throw error
       })
 
-      lot.transfer_state++
-      lot.receiver = receiver
+      lot.transfer_state = 'Initiated'
+      lot.receiver_id = receiver
 
-      return lot.patch('transfer_state', 'receiver').then(function () {
+      return lot.patch('transfer_state', 'receiver_id').then(function () {
         Notification.success('Lot  patched')
       }).catch(function (error) {
         Notification.error('We could not patch lot. Error:' + JSON.stringify(error))
