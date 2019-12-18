@@ -1702,7 +1702,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @alias module:resources.Lot
    */
   class Lot extends Thing {
-    define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null, transfer_state = 0, ...rest}) {
+    define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null, 
+      transfer_state = 0, author_id = null, receiver = null, deliverynote_address = null, ...rest}) {
       super.define(rest)
       this.id = id
       this.name = name
@@ -1713,6 +1714,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       this.children = children
       this.url = url
       this.transfer_state = transfer_state
+      this.author_id = author_id
+      this.receiver = receiver
+      this.deliverynote_address = deliverynote_address
     }
 
     get children () {
@@ -1814,10 +1818,11 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Thing
    */
   class User extends Thing {
-    define ({id = null, email = null, individuals = [], name = null, token = null, inventories = [], ...rest}) {
+    define ({id = null, email = null, ethereum_address = null, individuals = [], name = null, token = null, inventories = [], ...rest}) {
       super.define(rest)
       this.id = id
       this.email = email
+      this.ethereum_address = ethereum_address
       this.individuals = individuals
       this.name = name
       this.token = token
