@@ -3,7 +3,7 @@
     "standard",
     "plugin:jasmine/recommended"
   ],
-  "installedESLint": true,
+  // "installedESLint": true,
   "plugins": [
     "standard",
     "promise",

@@ -69,6 +69,13 @@ function web3Service ($window) {
       // TODO send request to web3
       const response = 'hello'
       return response
+    },
+    initTransfer: (obj) => {
+      console.log(obj)
+      let sender = web3.utils.toChecksumAddress(obj.sender)
+      let receiver = web3.utils.toChecksumAddress(obj.receiver)
+      // console.log(initTransfer(sender, receiver, obj.devices, web3))
+      return initTransfer(sender, receiver, obj.devices, web3)
     }
   }
 
@@ -79,7 +86,7 @@ function web3Service ($window) {
   * @param {Array} devices List of devices to be added to the DeliveryNote.
   * @returns {Promise} Promise which resolves to DeliveryNote address.
   */
-  function initTransfer (sender, receiver, devices) {
+  function initTransfer (sender, receiver, devices, web3) {
     console.log('initTransfer')
     return deployDevices(factory, devices, sender, web3).then(() => {
       factory.getDeployedDevices({ from: sender }).then(devices => {
