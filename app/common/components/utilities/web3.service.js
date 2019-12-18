@@ -32,11 +32,10 @@ function web3Service ($window) {
   const service = {
     post: (obj) => {
       if (obj.devices) {
-        deployDevices(factory, obj.devices, accounts.OwnerA, web3).then(result => {
-          factory.getDeployedDevices({ from: accounts.OwnerA }).then(devices => {
-            createDeliveryNote(contract, provider, devices, accounts, dao, web3)
-          })
-        })
+        console.log('POST')
+        let sender = web3.utils.toChecksumAddress(accounts.OwnerA)
+        let receiver = web3.utils.toChecksumAddress(accounts.OwnerB)
+        initTransfer(sender, receiver, obj.devices, web3)
       } else {
         // sendDeliveryNote(obj)
       }
@@ -59,6 +58,40 @@ function web3Service ($window) {
       return response
     }
   }
+
+  /** Function that implements the initialization of a DeliveryNote
+   *  transfer
+  * @param {string} sender Ethereum address of sender (and transaction emmitter).
+  * @param {string} receiver Ethereum address of receiver.
+  * @param {Array} devices List of devices to be added to the DeliveryNote.
+  */
+  function initTransfer (sender, receiver, devices) {
+    console.log('initTransfer')
+    // let sender = web3.utils.toChecksumAddress(accounts.OwnerA)
+    // let receiver = web3.utils.toChecksumAddress(accounts.OwnerB)
+    return deployDevices(factory, devices, sender, web3)
+      .then(() => {
+        factory.getDeployedDevices({ from: sender })
+      .then(devs => {
+        createDeliveryNote(contract, provider, devs, sender, receiver, dao, web3)
+      .then(deliverynoteAddress => {
+        return deliverynoteAddress
+      })
+      })
+      })
+  }
+
+  /** Function that implements the acceptance of a DeliveryNote
+  *  transfer
+  * @param {string} deliverynote_address Ethereum address of deliveryNote Contract
+  * @param {string} receiver Ethereum address of receiver.
+  * @param {Array} devices List of devices to be added to the DeliveryNote.
+  * @param {number} deposit
+  */
+  function acceptTransfer (deliverynote_address, receiver, devices, deposit) {
+    console.log('AcceptTransfer')
+  }
+
   return service
 }
 
@@ -72,18 +105,19 @@ function web3Service ($window) {
  * @param {Function} factory Instance of the DAO smart contract.
  * @param {Function} web3 Web3 library.
  */
-function createDeliveryNote (contract, provider, devices, accounts, dao, web3) {
+function createDeliveryNote (contract, provider, devices, sender, receiver, dao, web3) {
   let deliveryNoteContract = initializeContract(contract, provider, deliveryNoteArtifacts)
-  let sender = web3.utils.toChecksumAddress(accounts.OwnerA)
-  let receiver = web3.utils.toChecksumAddress(accounts.OwnerB)
+
   unlockOwners(sender, receiver, web3, 600)
   createDeliveryNoteInstance(deliveryNoteContract, sender, receiver, dao)
     .then(deliveryNote => {
+      console.log(`Delivery Note Address: ${deliveryNote.address}`)
       for (let d in devices) {
         let current = devices[d]
         getDeviceInstance(contract, provider, current).then(instance => {
-          console.log(instance.address)
+          console.log('', instance.address)
           instance.addToDeliveryNote(deliveryNote.address, {from: sender})
+          return deliveryNote.address
         })
       }
     //   return deliveryNote
