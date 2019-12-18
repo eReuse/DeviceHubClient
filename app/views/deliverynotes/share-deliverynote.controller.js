@@ -25,7 +25,7 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
         devices: devices,
         receiver: receiver
       }
-      web3
+      return web3
       .initTransfer(dataWEB3)
       .then(function (deliverynote_address) {
         lot.author_id = session.user.id

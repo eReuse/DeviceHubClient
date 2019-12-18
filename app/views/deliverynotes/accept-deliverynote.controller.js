@@ -27,7 +27,8 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
         deposit: deposit,
         receiver: session.user.ethereum_address
       }
-      web3
+      
+      return web3
       .acceptTransfer(dataWEB3)
       .then(function () {
         lot.deposit = deposit
@@ -47,8 +48,6 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
         Notification.error('Transfer could not be accepted' + error.message)
         throw error
       })
-
-      
     }
 
     _success (...args) {
