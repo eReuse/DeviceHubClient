@@ -19,21 +19,21 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
     }
 
     _submit () {
-      let receiver = this.model.ethereumAddress
+      let receiver_address = this.model.ethereumAddress
       let dataWEB3 = {
         sender: session.user.ethereum_address,
         devices: devices,
-        receiver: receiver
+        receiver_address: receiver_address
       }
       return web3
       .initTransfer(dataWEB3)
       .then(function (deliverynote_address) {
-        lot.author_id = session.user.id
+        lot.owner_address = session.user.ethereum_address
         lot.transfer_state = 'Initiated'
-        lot.receiver = receiver
+        lot.receiver_address = receiver_address
         lot.deliverynote_address = deliverynote_address
 
-        return lot.patch('transfer_state', 'receiver', 'author_id', 'deliverynote_address')
+        return lot.patch('transfer_state', 'receiver_address', 'owner_address', 'deliverynote_address')
       })
       .catch(function (error) {
         Notification.error('Transfer could not be initiated '+ JSON.stringify(error))

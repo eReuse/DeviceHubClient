@@ -1703,7 +1703,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    */
   class Lot extends Thing {
     define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null, 
-      transfer_state = 0, author_id = null, receiver = null, deliverynote_address = null, ...rest}) {
+      transfer_state = 'Initial', owner_address = null, receiver_address = null, deliverynote_address = null, ...rest}) {
       super.define(rest)
       this.id = id
       this.name = name
@@ -1714,8 +1714,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       this.children = children
       this.url = url
       this.transfer_state = transfer_state
-      this.author_id = author_id
-      this.receiver = receiver
+      this.owner_address = owner_address
+      this.receiver_address = receiver_address
       this.deliverynote_address = deliverynote_address
     }
 

@@ -37,22 +37,22 @@ function web3Service ($window) {
 
   const service = {
     post: (obj) => {
-      console.log(obj)
-      let sender = web3.utils.toChecksumAddress(accounts.OwnerA)
-      let receiver = web3.utils.toChecksumAddress(accounts.OwnerB)
-      if (obj.devices) {
-        console.log('POST')
-        return initTransfer(sender, receiver, obj.devices, web3)
-      } else {
-        let dNoteContract = initializeContract(contract, provider, deliveryNoteArtifacts)
-        let deliveryNote = selectContractInstance(dNoteContract)
-        erc20.approve(deliveryNote.address, parseInt(obj.deposit),
-          { from: receiver,
-            gas: '6721975'})
-          .then(() => {
-            deliveryNote.acceptDeliveryNote(obj.deposit, {from: receiver})
-          })
-      }
+      console.log('web3 post', obj)
+      // let sender = web3.utils.toChecksumAddress(accounts.OwnerA)
+      // let receiver = web3.utils.toChecksumAddress(accounts.OwnerB)
+      // if (obj.devices) {
+      //   console.log('POST')
+      //   return initTransfer(sender, receiver, obj.devices, web3)
+      // } else {
+      //   let dNoteContract = initializeContract(contract, provider, deliveryNoteArtifacts)
+      //   let deliveryNote = selectContractInstance(dNoteContract)
+      //   erc20.approve(deliveryNote.address, parseInt(obj.deposit),
+      //     { from: receiver,
+      //       gas: '6721975'})
+      //     .then(() => {
+      //       deliveryNote.acceptDeliveryNote(obj.deposit, {from: receiver})
+      //     })
+      // }
 
       // TODO return promise
       // return {
@@ -73,9 +73,15 @@ function web3Service ($window) {
     initTransfer: (obj) => {
       console.log(obj)
       let sender = web3.utils.toChecksumAddress(obj.sender)
-      let receiver = web3.utils.toChecksumAddress(obj.receiver)
-      // console.log(initTransfer(sender, receiver, obj.devices, web3))
-      let a = initTransfer(sender, receiver, obj.devices, web3)
+      let receiver = web3.utils.toChecksumAddress(obj.receiver_address)
+      return initTransfer(sender, receiver, obj.devices, web3)
+    },
+    acceptTransfer: (obj) => {
+      console.log(obj)
+      let receiver = web3.utils.toChecksumAddress(obj.receiver_address)
+      let deposit = obj.deposit
+      let deliverynoteAddress = obj.deliverynote_address
+      let a = acceptTransfer(deliverynoteAddress, receiver, deposit)
       console.log(a)
       return a
     }
@@ -108,11 +114,13 @@ function web3Service ($window) {
   *  transfer
   * @param {string} deliverynote_address Ethereum address of deliveryNote Contract
   * @param {string} receiver Ethereum address of receiver.
-  * @param {Array} devices List of devices to be added to the DeliveryNote.
-  * @param {number} deposit
+  * @param {number} deposit Deposit agreed
+  * @returns {Promise} Promise that resolves to boolean
   */
-  function acceptTransfer (deliverynote_address, receiver, devices, deposit) {
+  function acceptTransfer (deliverynoteAddress, receiver, deposit) {
     console.log('AcceptTransfer')
+    // TODO ERC20 Approve
+    return acceptDeliveryNote(contract, provider, deliverynoteAddress, receiver, deposit)
   }
 
   return service
@@ -147,9 +155,32 @@ function createDeliveryNote (contract, provider, devices, sender, receiver, dao)
         resolve(deliveryNote)
       })
   })
-  //   return deliveryNote
-  // }).then(dNote => {
-  //   console.log(dNote)
+}
+
+/**
+ * Function to create the DeliveryNote that will be sent to the second owner
+ * inside the Blockchain.
+ * @param {Function} contract truffle-contract library.
+ * @param {Function} provider Blockchain provider configuration.
+ * @param {Array} devices List of devices to be added to the DeliveryNote.
+ * @param {Array} accounts List of owners' accounts.
+ * @param {Function} factory Instance of the DAO smart contract.
+ * @param {Function} web3 Web3 library.
+ * @return {Promise} A promise which resolves to the DeliveryNote contract
+ */
+function acceptDeliveryNote (contract, provider, deliverynoteAddress, receiver, deposit) {
+  getContractInstance(contract, provider, deliverynoteAddress, deliveryNoteArtifacts)
+  // let sender = web3.utils.toChecksumAddress(accounts.OwnerA)
+  // let receiver = web3.utils.toChecksumAddress(accounts.OwnerB)
+  return new Promise(resolve => {
+    getContractInstance(contract, provider, deliverynoteAddress, deliveryNoteArtifacts)
+      .then(deliveryNote => {
+        deliveryNote.acceptDeliveryNote(deposit, {from: receiver})
+        .then(() => {
+          resolve(true)
+        })
+      })
+  })
 }
 
 /**

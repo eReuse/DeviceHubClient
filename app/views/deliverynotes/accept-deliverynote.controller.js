@@ -23,9 +23,9 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
 
       const dataWEB3 = {
         deliverynote_address: lot.deliverynote_address,
-        devices: devices, 
+        devices: devices,
         deposit: deposit,
-        receiver: session.user.ethereum_address
+        receiver_address: session.user.ethereum_address
       }
       
       return web3
@@ -33,9 +33,9 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
       .then(function () {
         lot.deposit = deposit
         lot.transfer_state = 'Accepted'
-        lot.author_id = session.user.id
+        lot.owner_address = session.user.ethereum_address
 
-        return lot.patch('transfer_state', 'deposit', 'author_id')
+        return lot.patch('transfer_state', 'deposit', 'owner_address')
       })
       .then(function () {
         const action = new resources.Trade({devices: $scope.devices})
