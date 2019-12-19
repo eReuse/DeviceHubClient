@@ -23,13 +23,6 @@ function web3Service ($window) {
     dao = res[2]
   })
 
-  // createAccounts(web3).then(accs => {
-  //   accounts['OwnerA'] = accs[0]
-  //   accounts['OwnerB'] = accs[1]
-  //   unlockOwners(accounts.OwnerA, accounts.OwnerA, web3, 600000)
-  //   fundOwners(web3, accs[0], accs[1])
-  // })
-
   web3.eth.getAccounts().then(accs => {
     accounts['OwnerA'] = accs[1]
     accounts['OwnerB'] = accs[2]
@@ -38,31 +31,6 @@ function web3Service ($window) {
   const service = {
     post: (obj) => {
       console.log('web3 post', obj)
-      // let sender = web3.utils.toChecksumAddress(accounts.OwnerA)
-      // let receiver = web3.utils.toChecksumAddress(accounts.OwnerB)
-      // if (obj.devices) {
-      //   console.log('POST')
-      //   return initTransfer(sender, receiver, obj.devices, web3)
-      // } else {
-      //   let dNoteContract = initializeContract(contract, provider, deliveryNoteArtifacts)
-      //   let deliveryNote = selectContractInstance(dNoteContract)
-      //   erc20.approve(deliveryNote.address, parseInt(obj.deposit),
-      //     { from: receiver,
-      //       gas: '6721975'})
-      //     .then(() => {
-      //       deliveryNote.acceptDeliveryNote(obj.deposit, {from: receiver})
-      //     })
-      // }
-
-      // TODO return promise
-      // return {
-      //   then: () => {
-      //     return {
-      //       catch: () => {
-      //       }
-      //     }
-      //   }
-      // }
     },
     patch: (obj) => {
       console.log('web3 patch', obj)
@@ -79,9 +47,9 @@ function web3Service ($window) {
     acceptTransfer: (obj) => {
       console.log(obj)
       let receiver = web3.utils.toChecksumAddress(obj.receiver_address)
-      let deposit = obj.deposit
+      let deposit = parseInt(obj.deposit)
       let deliverynoteAddress = obj.deliverynote_address
-      let a = acceptTransfer(deliverynoteAddress, receiver, deposit)
+      let a = acceptTransfer(deliverynoteAddress, accounts.OwnerB, deposit, erc20)
       console.log(a)
       return a
     }
@@ -92,6 +60,7 @@ function web3Service ($window) {
   * @param {string} sender Ethereum address of sender (and transaction emmitter).
   * @param {string} receiver Ethereum address of receiver.
   * @param {Array} devices List of devices to be added to the DeliveryNote.
+  * @param {Function} web3 Web3.js library
   * @returns {Promise} Promise which resolves to DeliveryNote address.
   */
   function initTransfer (sender, receiver, devices, web3) {
@@ -114,13 +83,18 @@ function web3Service ($window) {
   *  transfer
   * @param {string} deliverynote_address Ethereum address of deliveryNote Contract
   * @param {string} receiver Ethereum address of receiver.
-  * @param {number} deposit Deposit agreed
+  * @param {number} deposit Deposit agreed.
   * @returns {Promise} Promise that resolves to boolean
   */
-  function acceptTransfer (deliverynoteAddress, receiver, deposit) {
+  function acceptTransfer (deliveryNoteAddress, receiver, deposit, erc20) {
     console.log('AcceptTransfer')
-    // TODO ERC20 Approve
-    return acceptDeliveryNote(contract, provider, deliverynoteAddress, receiver, deposit)
+    return erc20.approve(deliveryNoteAddress, deposit,
+      { from: receiver,
+        gas: '6721975'})
+      .then(() => {
+        return acceptDeliveryNote(contract, provider, deliveryNoteAddress,
+          receiver, deposit)
+      })
   }
 
   return service
@@ -132,9 +106,9 @@ function web3Service ($window) {
  * @param {Function} contract truffle-contract library.
  * @param {Function} provider Blockchain provider configuration.
  * @param {Array} devices List of devices to be added to the DeliveryNote.
- * @param {Array} accounts List of owners' accounts.
- * @param {Function} factory Instance of the DAO smart contract.
- * @param {Function} web3 Web3 library.
+ * @param {String} sender String representation of the sender ethereum address.
+ * @param {String} receiver String representation of the receiver ethereum address.
+ * @param {Function} dao Instance of the DAO smart contract.
  * @return {Promise} A promise which resolves to the DeliveryNote contract
  */
 function createDeliveryNote (contract, provider, devices, sender, receiver, dao) {
@@ -158,27 +132,25 @@ function createDeliveryNote (contract, provider, devices, sender, receiver, dao)
 }
 
 /**
- * Function to create the DeliveryNote that will be sent to the second owner
- * inside the Blockchain.
+ * Function to accept the DeliveryNote sent by previous owner.
  * @param {Function} contract truffle-contract library.
  * @param {Function} provider Blockchain provider configuration.
- * @param {Array} devices List of devices to be added to the DeliveryNote.
- * @param {Array} accounts List of owners' accounts.
- * @param {Function} factory Instance of the DAO smart contract.
- * @param {Function} web3 Web3 library.
- * @return {Promise} A promise which resolves to the DeliveryNote contract
+ * @param {String} deliveryNoteAddress String representation of the Delivery
+ *                 Note ethereum address.
+ * @param {String} receiver String representation of the receiver ethereum address.
+ * @param {Number} deposit Value of the deposit to be paid.
+ * @return {Promise} A promise which resolves to true if the operation succeeded
  */
-function acceptDeliveryNote (contract, provider, deliverynoteAddress, receiver, deposit) {
-  getContractInstance(contract, provider, deliverynoteAddress, deliveryNoteArtifacts)
+function acceptDeliveryNote (contract, provider, deliveryNoteAddress, receiver, deposit) {
   // let sender = web3.utils.toChecksumAddress(accounts.OwnerA)
   // let receiver = web3.utils.toChecksumAddress(accounts.OwnerB)
   return new Promise(resolve => {
-    getContractInstance(contract, provider, deliverynoteAddress, deliveryNoteArtifacts)
+    getContractInstance(contract, provider, deliveryNoteAddress, deliveryNoteArtifacts)
       .then(deliveryNote => {
         deliveryNote.acceptDeliveryNote(deposit, {from: receiver})
-        .then(() => {
-          resolve(true)
-        })
+          .then(() => {
+            resolve(true)
+          })
       })
   })
 }
@@ -189,7 +161,7 @@ function acceptDeliveryNote (contract, provider, deliverynoteAddress, receiver, 
  * @param {Function} factory Instance of the DeviceFactory smart contract.
  * @param {Array} devices List of the devices to be registered.
  * @param {string} owner Address of the owner of the devices.
- * @param {Function} web3 Web3 library.
+ * @param {Function} web3 Web3.js library.
  * @returns {Promise} A promise which resolves to the list of
  *                    deployed devices.
  */
@@ -212,7 +184,7 @@ function deployDevices (factory, devices, owner, web3) {
  * Function to get an instance of the already deployed contracts
  * which will be needed throughout the execution of the different
  * functionalities within this service (DeviceFactory, ERC20 and DAO).
- * @param {Function} web3 Web3 library.
+ * @param {Function} web3 Web3.js library.
  * @param {Function} contract truffle-contract library.
  * @param {Function} provider Blockchain provider configuration.
  * @returns {Promise} A promise which resolves to a list with the
@@ -312,7 +284,7 @@ function initializeContract (contract, provider, artifacts) {
  *                        address of the sender.
  * @param {string} receiver String representation of the Ethereum
  *                     address of the receiver.
- * @param {Function} web3 Web3 library.
+ * @param {Function} web3 Web3.js library.
  * @param {Number} time Number of second that the accounts will be
  *                      unlocked.
  */
@@ -328,7 +300,7 @@ function unlockOwners (sender, receiver, web3, time) {
 
 /**
  * Create the accounts for the owners.
- * @param {Function} web3 Web3 library
+ * @param {Function} web3 Web3.js library
  * @returns {Promise} A promise which resolves to the accounts.
  */
 function createAccounts (web3) {
@@ -344,7 +316,7 @@ function createAccounts (web3) {
 
 /**
  * Transfer funds from the initial accounts to the owners.
- * @param {Function} web3 Web3 library.
+ * @param {Function} web3 Web3.js library.
  * @param {string} ownerA String representation of the Ethereum
  *                        address of the OwnerA.
  * @param {string} ownerB String representation of the Ethereum
