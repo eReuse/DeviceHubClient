@@ -15,17 +15,11 @@ function web3Service ($window) {
   const web3 = new $window.web3(provider)
   const contract = $window.contract
   let factory, erc20, dao
-  const accounts = {}
 
   deployContracts(web3, contract, provider).then(res => {
     factory = res[0]
     erc20 = res[1]
     dao = res[2]
-  })
-
-  web3.eth.getAccounts().then(accs => {
-    accounts['OwnerA'] = accs[1]
-    accounts['OwnerB'] = accs[2]
   })
 
   const service = {
@@ -113,8 +107,6 @@ function web3Service ($window) {
  */
 function createDeliveryNote (contract, provider, devices, sender, receiver, dao) {
   let deliveryNoteContract = initializeContract(contract, provider, deliveryNoteArtifacts)
-  // let sender = web3.utils.toChecksumAddress(accounts.OwnerA)
-  // let receiver = web3.utils.toChecksumAddress(accounts.OwnerB)
   return new Promise(resolve => {
     createDeliveryNoteInstance(deliveryNoteContract, sender, receiver, dao)
       .then(deliveryNote => {
@@ -142,8 +134,6 @@ function createDeliveryNote (contract, provider, devices, sender, receiver, dao)
  * @return {Promise} A promise which resolves to true if the operation succeeded
  */
 function acceptDeliveryNote (contract, provider, deliveryNoteAddress, receiver, deposit) {
-  // let sender = web3.utils.toChecksumAddress(accounts.OwnerA)
-  // let receiver = web3.utils.toChecksumAddress(accounts.OwnerB)
   return new Promise(resolve => {
     getContractInstance(contract, provider, deliveryNoteAddress, deliveryNoteArtifacts)
       .then(deliveryNote => {
@@ -274,62 +264,6 @@ function initializeContract (contract, provider, artifacts) {
     gasLimit: '6721975'
   })
   return myContract
-}
-
-/**
- * To sign transactions, the accounts of the owners need to be unlocked.
- * For this reason, this function will be executed every time we need an
- * owner to send some transaction.
- * @param {string} sender String representation of the Ethereum
- *                        address of the sender.
- * @param {string} receiver String representation of the Ethereum
- *                     address of the receiver.
- * @param {Function} web3 Web3.js library.
- * @param {Number} time Number of second that the accounts will be
- *                      unlocked.
- */
-function unlockOwners (sender, receiver, web3, time) {
-  // I'm assuming that I know the password for these accounts
-  // In future implementations this will be different of course.
-
-  web3.eth.personal.unlockAccount(sender, 'ownerA', time)
-    .then(console.log('OwnerA unlocked'))
-  web3.eth.personal.unlockAccount(receiver, 'ownerB', time)
-    .then(console.log('OwnerB unlocked'))
-}
-
-/**
- * Create the accounts for the owners.
- * @param {Function} web3 Web3.js library
- * @returns {Promise} A promise which resolves to the accounts.
- */
-function createAccounts (web3) {
-  return new Promise(resolve => {
-    web3.eth.personal.newAccount('ownerA').then(ownerA => {
-      web3.eth.personal.newAccount('ownerB').then(ownerB => {
-        // fundOwners(web3, ownerA, ownerB)
-        resolve([ownerA, ownerB])
-      })
-    })
-  })
-}
-
-/**
- * Transfer funds from the initial accounts to the owners.
- * @param {Function} web3 Web3.js library.
- * @param {string} ownerA String representation of the Ethereum
- *                        address of the OwnerA.
- * @param {string} ownerB String representation of the Ethereum
- *                        address of the OwnerB.
- */
-function fundOwners (web3, ownerA, ownerB) {
-  const amountToSend = web3.utils.toWei('10', 'ether')
-  web3.eth.sendTransaction({
-    from: web3.eth.defaultAccount, to: ownerA, value: amountToSend, gas: '6721975'
-  })
-  web3.eth.sendTransaction({
-    from: web3.eth.defaultAccount, to: ownerB, value: amountToSend, gas: '6721975'
-  })
 }
 
 module.exports = web3Service

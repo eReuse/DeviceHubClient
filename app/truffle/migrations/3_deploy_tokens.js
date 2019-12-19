@@ -17,8 +17,9 @@ module.exports = function (deployer, network, accounts) {
         .then(async function (erc721) {
           dao.setERC721(erc721.address);
           console.log('ERC721: ' + erc721.address);
-          await erc20.transfer(accounts[1], 1000)
-          await erc20.transfer(accounts[2], 1000)
+          for(i in accounts){
+            await erc20.transfer(accounts[i], 2000)
+          }
           await deployer.deploy(RoleManager, { from: accounts[0] }).then(async (manager) => {
             await dao.setRoleManager(manager.address);
           });
