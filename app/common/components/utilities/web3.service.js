@@ -49,7 +49,7 @@ function web3Service ($window) {
       let receiver = web3.utils.toChecksumAddress(obj.receiver_address)
       let deposit = parseInt(obj.deposit)
       let deliverynoteAddress = obj.deliverynote_address
-      let a = acceptTransfer(deliverynoteAddress, accounts.OwnerB, deposit, erc20)
+      let a = acceptTransfer(deliverynoteAddress, receiver, deposit, erc20)
       console.log(a)
       return a
     }
