@@ -4,7 +4,7 @@
  * @param {module:fields} fields
  * @param {module:android} android
  */
-function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $stateParams, session) {
+function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $stateParams, session, resources) {
   const devices = $scope.devices = $stateParams.devices
   const lot = $scope.lot = $stateParams.lot
  
@@ -27,7 +27,7 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
         deposit: deposit,
         receiver_address: session.user.ethereum_address
       }
-      
+    
       return web3
       .acceptTransfer(dataWEB3)
       .then(function () {
@@ -38,7 +38,7 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
         return lot.patch('transfer_state', 'deposit', 'owner_address')
       })
       .then(function () {
-        const action = new resources.Trade({devices: $scope.devices})
+        const action = new resources.Trade({devices: devices})
         return action.post()      
       })
       .then(function () {
