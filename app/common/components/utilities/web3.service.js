@@ -82,13 +82,18 @@ function web3Service ($window) {
   */
   function acceptTransfer (deliveryNoteAddress, receiver, deposit, erc20) {
     console.log('AcceptTransfer')
-    return erc20.approve(deliveryNoteAddress, deposit,
-      { from: receiver,
-        gas: '6721975'})
-      .then(() => {
-        return acceptDeliveryNote(contract, provider, deliveryNoteAddress,
-          receiver, deposit)
-      })
+    return new Promise(resolve => {
+      erc20.approve(deliveryNoteAddress, deposit,
+        { from: receiver,
+          gas: '6721975'})
+        .then(() => {
+          acceptDeliveryNote(contract, provider, deliveryNoteAddress,
+            receiver, deposit)
+        .then(result => {
+          resolve(result)
+        })
+        })
+    })
   }
 
   return service
