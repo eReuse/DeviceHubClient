@@ -11,7 +11,7 @@ const deviceArtifacts = require('../../../truffle/build/contracts/DepositDevice'
  * @returns {progressBar}
  */
 function web3Service ($window) {
-  const provider = new $window.web3.providers.WebsocketProvider('ws://localhost:8545')
+  const provider = new $window.web3.providers.WebsocketProvider('ws://' + $window.CONSTANTS.blockchain + ':8545')
   const web3 = new $window.web3(provider)
   const contract = $window.contract
   let factory, erc20, dao
