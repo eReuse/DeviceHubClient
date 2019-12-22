@@ -21,6 +21,8 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
     _submit () {
       const deposit = this.model.deposit
 
+      console.log('lot.id', lot.id, 'lot.deliverynote_address', lot.deliverynote_address)
+
       const dataWEB3 = {
         deliverynote_address: lot.deliverynote_address,
         devices: devices,
