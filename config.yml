@@ -45,7 +45,6 @@ e4:
   CONSTANTS:
     appName: Devicehub Beta
     html5mode: true
-    blockchain: ereuse04.ereuse.org
     url: https://api.dh.usody.net
     inventories: true
 devel:
