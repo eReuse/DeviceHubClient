@@ -9,7 +9,7 @@
 function resourceFields (fields, resources, $translate, Notification, enums) {
   const f = fields
 
-  /**
+  /** 
    * @alias module:resourceFields.ResourceForm
    * @extends module:fields.Form
    */
@@ -116,6 +116,13 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
   class MakeAvailable extends EventWithMultipleDevices {
   }
 
+    /**
+   * @alias module:resourceFields.Transferred
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class Transferred extends EventWithMultipleDevices {
+  }
+
   /**
    * @alias module:resourceFields.Rent
    * @extends module:resourceFields.EventWithMultipleDevices
@@ -137,7 +144,7 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
   class InitTransfer extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       super(model, ...fields)
-      const receiver = new f.String('Receiver', {namespace: 'r.receiver'})
+      const receiver = new f.String('receiver', {namespace: 'r.receiver'})
       this.fields.splice(1, 0, receiver)
     }
   }
@@ -149,6 +156,9 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
   class AcceptTransfer extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       super(model, ...fields)
+      // f.patch
+      // f.PATCH
+      fields.op = this.constructor.PATCH
       const deposit = new f.Number('deposit', {namespace: 'r.deposit'})
       this.fields.splice(1, 0, deposit)
     }
@@ -165,6 +175,7 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
     ToDisposeProduct: ToDisposeProduct,
     Receive: Receive,
     MakeAvailable: MakeAvailable,
+    Transferred: Transferred,
     Rent: Rent,
     CancelTrade: CancelTrade,
     InitTransfer: InitTransfer,

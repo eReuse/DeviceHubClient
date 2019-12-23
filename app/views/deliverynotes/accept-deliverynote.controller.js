@@ -40,7 +40,7 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
         return lot.patch('transfer_state', 'deposit', 'owner_address')
       })
       .then(function () {
-        const action = new resources.Trade({devices: devices})
+        const action = new resources.Transferred({devices: devices})
         return action.post()      
       })
       .then(function () {

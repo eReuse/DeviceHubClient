@@ -1596,6 +1596,16 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
+   * @alias module:resources.Transferred
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Transferred extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-check-circle'
+    }
+  }
+
+  /**
    * @alias module:resources.CancelTrade
    * @extends module:resources.Trade
    */
@@ -2067,6 +2077,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     Sell: Sell,
     Donate: Donate,
     MakeAvailable: MakeAvailable,
+    Transferred: Transferred,
     CancelTrade: CancelTrade,
     Rent: Rent,
     ToDisposeProduct: ToDisposeProduct,
