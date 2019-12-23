@@ -13,7 +13,7 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
       super(
         {},
         new fields.String('ethereumAddress', {
-          namespace: 'r',
+          namespace: 'shareLot.form',
         })
       )
     }
