@@ -7,6 +7,10 @@
 function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $stateParams, session, resources) {
   const devices = $scope.devices = $stateParams.devices
   const lot = $scope.lot = $stateParams.lot
+
+  function leave () {
+    return $state.go('auth.inventory')
+  }
  
   class ShareDeliveryNoteForm extends fields.Form {
     constructor () {
@@ -54,11 +58,11 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
 
     _success (...args) {
       super._success(...args)
-      this.reset()
+      return leave()
     }
 
     cancel () {
-      $state.go('^')
+      return leave()
     }
   }
 
