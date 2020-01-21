@@ -71,7 +71,7 @@ contract DepositDevice is Ownable{
         transferOwnership(_to);
     }
 
-    function returnDeposit() public{
+    function returnDeposit() internal{
         if (data.deposit > 0){
             erc20.transfer(data.owner, data.deposit);
             data.deposit = 0;
