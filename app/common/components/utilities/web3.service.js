@@ -1,7 +1,8 @@
-const deployments = require('./web3/deployment')
-const deliveryNoteUtils = require('./web3/deliverynote')
-const devicesUtils = require('./web3/devices')
-const accountsUtils = require('./web3/accounts')
+const deployments = require('./web3/deployment_utils')
+const deliveryNoteUtils = require('./web3/deliverynote_utils')
+const devicesUtils = require('./web3/device_utils')
+const proofUtils = require('./web3/proof_utils')
+const accountsUtils = require('./web3/account_utils')
 
 /**
  * Returns a global progressBar singleton.
@@ -45,6 +46,11 @@ function web3Service ($window) {
       let a = acceptTransfer(deliverynoteAddress, receiver, deposit, erc20)
       console.log(a)
       return a
+    },
+    generateProof: (type, data) => {
+      return new Promise(resolve => {
+        resolve(proofUtils.generateProof(web3, type, data))
+      })
     }
   }
 

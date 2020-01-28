@@ -1,4 +1,4 @@
-const deployments = require('./deployment')
+const deployments = require('./deployment_utils')
 const deliveryNoteArtifacts = require('../../../../truffle/build/contracts/DeliveryNote')
 const deviceArtifacts = require('../../../../truffle/build/contracts/DepositDevice')
 

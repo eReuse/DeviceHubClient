@@ -1,9 +1,9 @@
 const functions = {
-  unlockAccount: (address, password, web3, time) => {
-    unlockAccount(address, password, web3, time)
+  unlockAccount: (address, password, web3) => {
+    unlockAccount(address, password, web3, 2160000) // 10 hours
   },
   createAccount: (web3, password) => {
-    createAccount(web3, password)
+    return createAccount(web3, password)
   }
 }
 
@@ -43,7 +43,7 @@ function createAccount (web3, password) {
  *                        address of the user.
  */
 function fundUser (web3, owner) {
-  const amountToSend = web3.utils.toWei('10', 'ether')
+  const amountToSend = web3.utils.toWei('2', 'ether')
   web3.eth.sendTransaction({
     from: web3.eth.defaultAccount, to: owner, value: amountToSend, gas: '6721975'
   })
