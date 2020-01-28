@@ -1,4 +1,6 @@
 const Proof = require('./Proof')
+const deployments = require('../deployment_utils')
+const wipeArtifacts = require('../../../../truffle/build/contracts/DataWipeProof')
 
 class ProofDataWipe extends Proof {
   constructor (data) {

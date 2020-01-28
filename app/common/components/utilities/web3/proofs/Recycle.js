@@ -1,4 +1,6 @@
 const Proof = require('./Proof')
+const deployments = require('../deployment_utils')
+const recycleArtifacts = require('../../../../truffle/build/contracts/RecycleProof')
 
 class ProofRecycle extends Proof {
   constructor (data) {

@@ -1,4 +1,6 @@
 const Proof = require('./Proof')
+const deployments = require('../deployment_utils')
+const functionArtifacts = require('../../../../truffle/build/contracts/FunctionProof')
 
 class ProofFunction extends Proof {
   constructor (data) {
