@@ -1,22 +1,14 @@
 pragma solidity ^0.4.25;
 
-import "contracts/proofs/Proof.sol";
-
-contract RecycleProof is Proof {
+contract RecycleProof {
     string private collectPoint;
     string private timestamp;
     string private contact;
 
-    constructor(
-        address _device,
-        string _collectionPoint,
-        string _time,
-        string _contact
-    ) public Proof() {
+    constructor(string _collectionPoint, string _time, string _contact) public {
         collectPoint = _collectionPoint;
         timestamp = _time;
         contact = _contact;
-        addProof(_device, types.RECYCLE, this);
     }
 
     function getCollectionPoint() public view returns (string _collection) {

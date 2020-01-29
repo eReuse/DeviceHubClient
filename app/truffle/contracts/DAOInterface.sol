@@ -25,4 +25,8 @@ contract DAOInterface {
   function getRoleManager() public view returns(address);
 
   function getDeviceFactory() public view returns(address);
+
+  function getProofsFactory() public view returns(address);
+
+  function getProofs() public view returns(address);
 }

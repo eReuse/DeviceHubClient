@@ -1,6 +1,6 @@
 pragma solidity ^0.4.25;
 
-contract Proof {
+contract Proofs {
     struct proofTypes {
         uint256 WIPE;
         uint256 FUNCTION;

@@ -1,8 +1,8 @@
 const deployments = require('./deployment_utils')
-const proofDatawipe = require('./proofs/DataWipe')
-const proofFunction = require('./proofs/Function')
-const proofReuse = require('./proofs/Reuse')
-const proofRecycle = require('./proofs/Recycle')
+const proofDatawipe = require('./proofs/DataWipeProof')
+const proofFunction = require('./proofs/FunctionProof')
+const proofReuse = require('./proofs/ReuseProof')
+const proofRecycle = require('./proofs/RecycleProof')
 
 const proofs = {
   WIPE: 'wipe',
