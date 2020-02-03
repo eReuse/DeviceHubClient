@@ -27,22 +27,29 @@ contract("Basic test to generate proofs", function (accounts) {
             RECYCLE: 3
         }
 
-        device = await device_factory.createDevice("device", 0, accounts[0]);
+        await device_factory.createDevice("device", 0, accounts[0]);
+
+        device = await device_factory.getDeployedDevices(
+            { from: accounts[0] }).then(devices => {
+                return devices[0];
+            });
     });
 
     it("Generates proof of function", async function () {
-        let score = 20
+        let score = 20;
 
-        let f_proof = await proof_factory.generateFunction(score);
+        let f_proof = await proof_factory.generateFunction(score).then(result => {
+            return extractProofAddress(result);
+        });
 
         await proofs.addProof(web3.utils.toChecksumAddress(device)
-            , proof_types.FUNCTION, web3.utils.toChecksumAddress(f_proof))
+            , proof_types.FUNCTION, web3.utils.toChecksumAddress(f_proof));
 
-        proofs.getProof(web3.utils.toChecksumAddress(device.address)
+        proofs.getProof(web3.utils.toChecksumAddress(device)
             , proof_types.FUNCTION).then(result => {
-                console.log(result);
                 assert.notEqual(result, null);
-            })
+                assert.equal(result, f_proof);
+            });
     });
 
     it("Generates proof of recycling", async function () {
@@ -51,21 +58,33 @@ contract("Basic test to generate proofs", function (accounts) {
         let contact = 'John';
 
         let rec_proof = await proof_factory.generateRecycle(collection_point, timestamp
-            , contact);
-        proofs.addProof(web3.utils.toChecksumAddress(device.address), proof_types.RECYCLE
-            , web3.utils.toChecksumAddress(rec_proof.address)).then(result => {
-                console.log(result);
+            , contact).then(result => {
+                return extractProofAddress(result);
+            });
+
+        await proofs.addProof(web3.utils.toChecksumAddress(device),
+            proof_types.RECYCLE, web3.utils.toChecksumAddress(rec_proof));
+
+        proofs.getProof(web3.utils.toChecksumAddress(device)
+            , proof_types.RECYCLE).then(result => {
                 assert.notEqual(result, null);
-            })
+                assert.equal(result, rec_proof);
+            });
     });
 
     it("Generates proof of reuse", async function () {
-        let reu_proof = await proof_factory.generateReuse();
-        proofs.addProof(web3.utils.toChecksumAddress(device.address), proof_types.REUSE
-            , web3.utils.toChecksumAddress(reu_proof.address)).then(result => {
-                console.log(result);
+        let reu_proof = await proof_factory.generateReuse().then(result => {
+            return extractProofAddress(result);
+        });
+
+        await proofs.addProof(web3.utils.toChecksumAddress(device), proof_types.REUSE
+            , web3.utils.toChecksumAddress(reu_proof));
+
+        proofs.getProof(web3.utils.toChecksumAddress(device)
+            , proof_types.REUSE).then(result => {
                 assert.notEqual(result, null);
-            })
+                assert.equal(result, reu_proof);
+            });
     });
 
     it("Generates proof of data wipe", async function () {
@@ -74,13 +93,27 @@ contract("Basic test to generate proofs", function (accounts) {
         let timestamp = new Date().toLocaleString();
 
         let dw_proof = await proof_factory.generateDataWipe(erasure_type, result
-            , timestamp);
-        await proofs.addProof(web3.utils.toChecksumAddress(device.address)
+            , timestamp).then(result => {
+                return extractProofAddress(result);
+            });
+
+        await proofs.addProof(web3.utils.toChecksumAddress(device)
             , proof_types.WIPE
-            , web3.utils.toChecksumAddress(dw_proof.address)).then(result => {
-                console.log(result);
+            , web3.utils.toChecksumAddress(dw_proof));
+
+        proofs.getProof(web3.utils.toChecksumAddress(device)
+            , proof_types.WIPE).then(result => {
                 assert.notEqual(result, null);
-            })
+                assert.equal(result, dw_proof);
+            });
     });
 
 });
+
+function extractProofAddress(receipt) {
+    return receipt.logs[0].args.proof
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
