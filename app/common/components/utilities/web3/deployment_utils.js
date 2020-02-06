@@ -1,16 +1,24 @@
-const factoryArtifacts = require('../../../../truffle/build/contracts/DeviceFactory')
+const deviceFactoryArtifacts = require('../../../../truffle/build/contracts/DeviceFactory')
 const daoArtifacts = require('../../../../truffle/build/contracts/DAO')
 const erc20Artifacts = require('../../../../truffle/build/contracts/EIP20')
+const proofFactoryArtifacts = require('../../../../truffle/build/contracts/ProofFactory')
+const proofsArtifacts = require('../../../../truffle/build/contracts/Proofs')
 
 const functions = {
   deployContracts: (web3, contract, provider) => {
     return deployContracts(web3, contract, provider)
+  },
+  deployProofContracts: (web3, contract, provider) => {
+    return deployProofContracts(web3, contract, provider)
   },
   getContractInstance: (contract, provider, contractAddress, artifacts) => {
     return getContractInstance(contract, provider, contractAddress, artifacts)
   },
   initializeContract: (contract, provider, artifacts) => {
     return initializeContract(contract, provider, artifacts)
+  },
+  selectContractInstance: (contract) => {
+    return selectContractInstance(contract)
   }
 }
 
@@ -28,16 +36,42 @@ function deployContracts (web3, contract, provider) {
   return new Promise((resolve) => {
     web3.eth.getAccounts().then(accounts => {
       web3.eth.defaultAccount = accounts[0]
-      let factoryContract = initializeContract(contract, provider, factoryArtifacts)
+      let deviceFactoryContract = initializeContract(contract, provider, deviceFactoryArtifacts)
       let erc20Contract = initializeContract(contract, provider, erc20Artifacts)
       let daoContract = initializeContract(contract, provider, daoArtifacts)
-      selectContractInstance(factoryContract).then(factory => {
-        selectContractInstance(erc20Contract).then(erc20 => {
-          selectContractInstance(daoContract).then(dao => {
-            resolve([factory, erc20, dao])
-          })
+      Promise.all([selectContractInstance(deviceFactoryContract),
+        selectContractInstance(erc20Contract),
+        selectContractInstance(daoContract)])
+        .then(contracts => {
+          resolve(contracts)
         })
-      })
+    })
+  })
+}
+
+/**
+ * Function to get an instance of the already deployed contracts
+ * which will be needed throughout the execution of the different
+ * functionalities within this service (ProofFactory, Proofs).
+ * @param {Function} web3 Web3.js library.
+ * @param {Function} contract truffle-contract library.
+ * @param {Function} provider Blockchain provider configuration.
+ * @returns {Promise} A promise which resolves to a list with the
+ *                    instances of the deployed contracts.
+ */
+function deployProofContracts (web3, contractLib, provider) {
+  return new Promise((resolve) => {
+    web3.eth.getAccounts().then(accounts => {
+      web3.eth.defaultAccount = accounts[0]
+      let proofFactoryContract = initializeContract(contractLib, provider,
+        proofFactoryArtifacts)
+      let pfContract = initializeContract(contractLib, provider,
+        proofsArtifacts)
+      Promise.all([selectContractInstance(proofFactoryContract),
+        selectContractInstance(pfContract)])
+        .then(contracts => {
+          resolve(contracts)
+        })
     })
   })
 }

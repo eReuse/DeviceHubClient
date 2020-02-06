@@ -1,32 +1,20 @@
 const Proof = require('./Proof')
-const path = require('path')
-const artifactsPath = path.join(process.env.PWD, 'app', 'truffle', 'build', 'contracts',
-  'ReuseProof')
-const artifacts = require(artifactsPath)
 
-class ProofReuse extends Proof {
-  constructor (contract, provider, data) {
-    super(contract, provider, artifacts)
-    this.extractData(data)
+class ReuseProof extends Proof {
+  constructor (web3, data) {
+    super(web3, data)
+    this.extractData(web3, data)
   }
 
-  createProofContract () {
+  createProofContract (proofFactory) {
     return new Promise(resolve => {
-      this.factory.generateReuse(this.algo).then(instance => {
+      proofFactory.generateReuse(this.algo).then(instance => {
         resolve(instance)
       })
     })
   }
 
-  generateProof () {
-    this.createProofContract().then(result => {
-      this.proofsContract.addProof(this.device, this.proofTypes.REUSE, result)
-    })
-  }
-
-  extractData (data) {
-    this.algo = data.algo
-  }
+  extractData (web3, data) {}
 }
 
-module.exports = ProofReuse
+module.exports = ReuseProof

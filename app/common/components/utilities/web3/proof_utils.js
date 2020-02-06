@@ -1,41 +1,45 @@
-const deployments = require('./deployment_utils')
-const proofDatawipe = require('./proofs/DataWipeProof')
-const proofFunction = require('./proofs/FunctionProof')
-const proofReuse = require('./proofs/ReuseProof')
-const proofRecycle = require('./proofs/RecycleProof')
+const DatawipeProof = require('./proofs/DataWipeProof')
+const FunctionProof = require('./proofs/FunctionProof')
+const ReuseProof = require('./proofs/ReuseProof')
+const RecycleProof = require('./proofs/RecycleProof')
+const DisposalProof = require('./proofs/DisposalProof')
 
-const proofs = {
+const proofTypes = {
   WIPE: 'wipe',
   FUNCTION: 'function',
   REUSE: 'reuse',
-  RECYCLE: 'recycle'
+  RECYCLE: 'recycle',
+  DISPOSAL: 'disposal'
 }
 
 const functions = {
-  generateProof: (web3, type, data) => {
-    generateProof(web3, type, data)
+  generateProof: (web3, proofFactory, proofContract, type, data) => {
+    return generateProof(web3, proofFactory, proofContract, type, data)
   }
 }
 
-function generateProof (web3, type, data) {
+function generateProof (web3, proofFactory, proofContract, type, data) {
   let proof
   switch (type) {
-    case proofs.WIPE:
-      proof = proofDatawipe(data)
+    case proofTypes.WIPE:
+      proof = new DatawipeProof(web3, data)
       break
-    case proofs.FUNCTION:
-      proof = proofFunction(data)
+    case proofTypes.FUNCTION:
+      proof = new FunctionProof(web3, data)
       break
-    case proofs.REUSE:
-      proof = proofReuse(data)
+    case proofTypes.REUSE:
+      proof = new ReuseProof(web3, data)
       break
-    case proofs.RECYCLE:
-      proof = proofRecycle(data)
+    case proofTypes.RECYCLE:
+      proof = new RecycleProof(web3, data)
+      break
+    case proofTypes.DISPOSAL:
+      proof = new DisposalProof(web3, data)
       break
     default:
       break
   }
-  proof.generateProof(web3)
+  return proof.generateProof(proofFactory, proofContract, type)
 }
 
 module.exports = functions

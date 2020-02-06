@@ -14,12 +14,19 @@ function web3Service ($window) {
   const provider = new $window.web3.providers.WebsocketProvider('ws://' + $window.CONSTANTS.blockchain + ':8545')
   const web3 = new $window.web3(provider)
   const contract = $window.contract
-  let factory, erc20, dao
+  let deviceFactory, erc20, dao, proofFactory, proofContract
 
   deployments.deployContracts(web3, contract, provider).then(res => {
-    factory = res[0]
+    console.log(`Devices contracts: ${res}`)
+    deviceFactory = res[0]
     erc20 = res[1]
     dao = res[2]
+  })
+
+  deployments.deployProofContracts(web3, contract, provider).then(res => {
+    console.log(`Proofs contracts: ${res}`)
+    proofFactory = res[0]
+    proofContract = res[1]
   })
 
   const service = {
@@ -33,24 +40,23 @@ function web3Service ($window) {
       return response
     },
     initTransfer: (obj) => {
-      console.log(obj)
       let sender = web3.utils.toChecksumAddress(obj.sender)
       let receiver = web3.utils.toChecksumAddress(obj.receiver_address)
-      return initTransfer(sender, receiver, obj.devices, web3)
+      let transferResult = initTransfer(sender, receiver, obj.devices, web3)
+      return transferResult
     },
     acceptTransfer: (obj) => {
       console.log(obj)
       let receiver = web3.utils.toChecksumAddress(obj.receiver_address)
       let deposit = parseInt(obj.deposit)
       let deliverynoteAddress = obj.deliverynote_address
-      let a = acceptTransfer(deliverynoteAddress, receiver, deposit, erc20)
-      console.log(a)
-      return a
+      let transfer = acceptTransfer(deliverynoteAddress, receiver, deposit, erc20)
+      console.log(transfer)
+      return transfer
     },
-    generateProof: (type, data) => {
-      return new Promise(resolve => {
-        resolve(proofUtils.generateProof(web3, type, data))
-      })
+    generateProof: (obj) => {
+      return proofUtils.generateProof(web3, proofFactory, proofContract,
+        obj.type, obj.data)
     }
   }
 
@@ -65,8 +71,8 @@ function web3Service ($window) {
   function initTransfer (sender, receiver, devices, web3) {
     console.log('initTransfer')
     return new Promise(resolve => {
-      devicesUtils.deployDevices(factory, devices, sender, web3).then(() => {
-        factory.getDeployedDevices({ from: sender }).then(devices => {
+      devicesUtils.deployDevices(deviceFactory, devices, sender, web3).then(() => {
+        deviceFactory.getDeployedDevices({ from: sender }).then(devices => {
           deliveryNoteUtils.createDeliveryNote(contract, provider, devices, sender, receiver, dao)
             .then(deliveryNote => {
               deliveryNote.emitDeliveryNote({from: sender})

@@ -1,31 +1,21 @@
 const Proof = require('./Proof')
-const path = require('path')
-const artifactsPath = path.join(process.env.PWD, 'app', 'truffle', 'build', 'contracts',
-  'RecycleProof')
-const artifacts = require(artifactsPath)
 
-class ProofRecycle extends Proof {
-  constructor (web3, contract, provider, data) {
-    super(web3, contract, provider, artifacts)
-    this.extractData(data)
+class RecycleProof extends Proof {
+  constructor (web3, data) {
+    super(web3, data)
+    this.extractData(web3, data)
   }
 
-  createProofContract () {
+  createProofContract (proofFactory) {
     return new Promise(resolve => {
-      this.factory.generateRecycle(this.collectionPoint, this.timestamp,
+      proofFactory.generateRecycle(this.collectionPoint, this.timestamp,
         this.contact).then(instance => {
         resolve(instance)
       })
     })
   }
 
-  generateProof () {
-    this.createProofContract().then(result => {
-      this.proofsContract.addProof(this.device, this.proofTypes.RECYCLE, result)
-    })
-  }
-
-  extractData (data) {
+  extractData (web3, data) {
     this.collectionPoint = data.collectionPoint
     this.timestamp = data.time
     this.contact = data.contact
@@ -33,4 +23,4 @@ class ProofRecycle extends Proof {
   }
 }
 
-module.exports = ProofRecycle
+module.exports = RecycleProof

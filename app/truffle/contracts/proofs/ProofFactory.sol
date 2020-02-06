@@ -4,6 +4,7 @@ import "contracts/proofs/DataWipeProof.sol";
 import "contracts/proofs/ReuseProof.sol";
 import "contracts/proofs/RecycleProof.sol";
 import "contracts/proofs/FunctionProof.sol";
+import "contracts/proofs/DisposalProof.sol";
 
 contract ProofFactory {
     constructor() public {}
@@ -26,6 +27,16 @@ contract ProofFactory {
 
     function generateReuse() public returns (address _proof) {
         ReuseProof proof = new ReuseProof();
+        emit NewProof(proof);
+        return proof;
+    }
+
+    function generateDisposal(
+        address origin,
+        address destination,
+        uint256 deposit
+    ) public returns (address _proof) {
+        DisposalProof proof = new DisposalProof(origin, destination, deposit);
         emit NewProof(proof);
         return proof;
     }

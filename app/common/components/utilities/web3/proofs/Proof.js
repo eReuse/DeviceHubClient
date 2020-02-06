@@ -1,47 +1,38 @@
 /* eslint no-useless-constructor: "error" */
-const path = require('path')
-const deployments = require('../deployment_utils')
-
-const proofFactoryArtifacts = require(path.join(process.env.PWD, 'app', 'truffle',
-  'build', 'contracts', 'ProofFactory'))
-const proofsArtifacts = require(path.join(process.env.PWD, 'app', 'truffle',
-  'build', 'contracts', 'Proofs'))
-
 class Proof {
-  constructor (contractLib, provider, data) {
-    this.proofTypes = this.initializeProofEnum()
-    this.initializeContracts(contractLib, provider)
-    this.extractData(data)
+  constructor (web3, data) {
+    this.initializeProofEnum()
+    this.device = web3.utils.toChecksumAddress(data.device)
   }
 
   initializeProofEnum () {
-    return {
+    this.proofTypes = {
       WIPE: 0,
       FUNCTION: 1,
       REUSE: 2,
-      RECYCLE: 3
+      RECYCLE: 3,
+      DISPOSAL: 4
     }
   }
 
-  initializeContracts (contractLib, provider) {
-    let factoryContract = deployments.initializeContract(contractLib, provider,
-      proofFactoryArtifacts)
-    let pfContract = deployments.initializeContract(contractLib, provider,
-      proofsArtifacts)
-
-    this.factory = deployments.selectContractInstance(factoryContract)
-    this.proofsContract = deployments.selectContractInstance(pfContract)
+  generateProof (proofFactory, proofsContract, proofType) {
+    return new Promise(resolve => {
+      this.createProofContract(proofFactory).then(result => {
+        return result
+      }).then(resultingContract => {
+        return proofsContract.addProof(this.device, proofType,
+          resultingContract)
+      }).then(resultingProof => {
+        resolve(resultingProof)
+      })
+    })
   }
 
-  generateProof () {
+  extractData (web3, data) {
     throw Error('Not implemented function')
   }
 
-  extractData (data) {
-    this.device = data.device
-  }
-
-  createProofContract () {
+  createProofContract (proofFactory) {
     throw Error('Not implemented function')
   }
 }

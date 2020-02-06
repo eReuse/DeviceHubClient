@@ -6,6 +6,7 @@ contract Proofs {
         uint256 FUNCTION;
         uint256 REUSE;
         uint256 RECYCLE;
+        uint256 DISPOSAL;
     }
     proofTypes internal types;
 
@@ -20,12 +21,14 @@ contract Proofs {
         types.FUNCTION = 1;
         types.REUSE = 2;
         types.RECYCLE = 3;
+        types.DISPOSAL = 4;
     }
 
     function addProof(address _device, uint256 proof_type, address proof)
-        public
+        public returns(address _proof)
     {
         proofs_per_device[_device][proof_type] = proof;
+        return proof;
     }
 
     function getProof(address _device, uint256 proof_type)

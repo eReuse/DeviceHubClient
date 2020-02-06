@@ -1,34 +1,25 @@
 const Proof = require('./Proof')
-const path = require('path')
-const artifactsPath = path.join(process.env.PWD, 'app', 'truffle', 'build', 'contracts',
-  'DataWipeProof')
-const artifacts = require(artifactsPath)
 
-class ProofDataWipe extends Proof {
-  constructor (contract, provider, data) {
-    super(contract, provider, artifacts)
-    this.extractData(data)
+class DataWipeProof extends Proof {
+  constructor (web3, data) {
+    super(web3, data)
+    this.extractData(web3, data)
   }
 
-  createProofContract () {
+  createProofContract (proofFactory) {
     return new Promise(resolve => {
-      this.factory.generateDataWipe(this.erasureType, this.result, this.date).then(instance => {
-        resolve(instance)
-      })
+      proofFactory.generateDataWipe(this.erasureType, this.result, this.date)
+        .then(instance => {
+          resolve(instance)
+        })
     })
   }
 
-  generateProof () {
-    this.createProofContract().then(result => {
-      this.proofsContract.addProof(this.device, this.proofTypes.WIPE, result)
-    })
-  }
-
-  extractData (data) {
+  extractData (web3, data) {
     this.erasureType = data.erasure
     this.result = data.result
     this.date = data.date
   }
 }
 
-module.exports = ProofDataWipe
+module.exports = DataWipeProof
