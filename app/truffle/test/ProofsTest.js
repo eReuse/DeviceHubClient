@@ -24,7 +24,8 @@ contract("Basic test to generate proofs", function (accounts) {
             WIPE: 0,
             FUNCTION: 1,
             REUSE: 2,
-            RECYCLE: 3
+            RECYCLE: 3,
+            DISPOSAL: 4
         }
 
         await device_factory.createDevice("device", 0, accounts[0]);
@@ -84,6 +85,27 @@ contract("Basic test to generate proofs", function (accounts) {
             , proof_types.REUSE).then(result => {
                 assert.notEqual(result, null);
                 assert.equal(result, reu_proof);
+            });
+    });
+
+    it("Generates proof of disposal", async function () {
+        let origin = accounts[1];
+        let destination = accounts[2];
+        let deposit = 10;
+
+        let disp_proof = await proof_factory.generateDisposal(web3.utils.toChecksumAddress(origin),
+            web3.utils.toChecksumAddress(destination), deposit)
+            .then(result => {
+                return extractProofAddress(result);
+            });
+
+        await proofs.addProof(web3.utils.toChecksumAddress(device),
+            proof_types.DISPOSAL, web3.utils.toChecksumAddress(disp_proof));
+
+        proofs.getProof(web3.utils.toChecksumAddress(device)
+            , proof_types.DISPOSAL).then(result => {
+                assert.notEqual(result, null);
+                assert.equal(result, disp_proof);
             });
     });
 
