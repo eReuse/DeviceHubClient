@@ -13,7 +13,6 @@ const network = argv.network;
 contract("Basic test to generate proofs", function (accounts) {
     var device_factory, device, proof_factory, proofs, proof_types;
     console.log('');
-    // Object.keys(accs).map(a => { console.log(`${a}: ${accs[a]}`); });
 
     before(async function () {
         console.log('\t**BEFORE**');

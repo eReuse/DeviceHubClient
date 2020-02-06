@@ -6,9 +6,9 @@ class ReuseProof extends Proof {
     this.extractData(web3, data)
   }
 
-  createProofContract (proofFactory) {
+  createProofContract (proofFactory, account) {
     return new Promise(resolve => {
-      proofFactory.generateReuse(this.algo).then(instance => {
+      proofFactory.generateReuse({from: account}).then(instance => {
         resolve(instance)
       })
     })

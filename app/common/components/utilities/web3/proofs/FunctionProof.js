@@ -6,9 +6,9 @@ class FunctionProof extends Proof {
     this.extractData(data)
   }
 
-  createProofContract (proofFactory) {
+  createProofContract (proofFactory, account) {
     return new Promise(resolve => {
-      proofFactory.generateFunction(this.rating).then(instance => {
+      proofFactory.generateFunction(this.rating, {from: account}).then(instance => {
         resolve(instance)
       })
     })

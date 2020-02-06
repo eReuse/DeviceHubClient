@@ -6,9 +6,10 @@ class DataWipeProof extends Proof {
     this.extractData(web3, data)
   }
 
-  createProofContract (proofFactory) {
+  createProofContract (proofFactory, account) {
     return new Promise(resolve => {
-      proofFactory.generateDataWipe(this.erasureType, this.result, this.date)
+      proofFactory.generateDataWipe(this.erasureType, this.result, this.date,
+        {from: account})
         .then(instance => {
           resolve(instance)
         })

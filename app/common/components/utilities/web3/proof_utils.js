@@ -39,7 +39,8 @@ function generateProof (web3, proofFactory, proofContract, type, data) {
     default:
       break
   }
-  return proof.generateProof(proofFactory, proofContract, type)
+  return proof.generateProof(proofFactory, proofContract, type,
+    web3.eth.defaultAccount)
 }
 
 module.exports = functions

@@ -17,16 +17,11 @@ function web3Service ($window) {
   let deviceFactory, erc20, dao, proofFactory, proofContract
 
   deployments.deployContracts(web3, contract, provider).then(res => {
-    console.log(`Devices contracts: ${res}`)
     deviceFactory = res[0]
     erc20 = res[1]
     dao = res[2]
-  })
-
-  deployments.deployProofContracts(web3, contract, provider).then(res => {
-    console.log(`Proofs contracts: ${res}`)
-    proofFactory = res[0]
-    proofContract = res[1]
+    proofFactory = res[3]
+    proofContract = res[4]
   })
 
   const service = {
@@ -42,8 +37,7 @@ function web3Service ($window) {
     initTransfer: (obj) => {
       let sender = web3.utils.toChecksumAddress(obj.sender)
       let receiver = web3.utils.toChecksumAddress(obj.receiver_address)
-      let transferResult = initTransfer(sender, receiver, obj.devices, web3)
-      return transferResult
+      return initTransfer(sender, receiver, obj.devices, web3)
     },
     acceptTransfer: (obj) => {
       console.log(obj)
@@ -76,7 +70,6 @@ function web3Service ($window) {
           deliveryNoteUtils.createDeliveryNote(contract, provider, devices, sender, receiver, dao)
             .then(deliveryNote => {
               deliveryNote.emitDeliveryNote({from: sender})
-              console.log(deliveryNote)
               resolve(deliveryNote.address)
             })
         })

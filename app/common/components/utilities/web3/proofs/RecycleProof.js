@@ -6,12 +6,12 @@ class RecycleProof extends Proof {
     this.extractData(web3, data)
   }
 
-  createProofContract (proofFactory) {
+  createProofContract (proofFactory, account) {
     return new Promise(resolve => {
       proofFactory.generateRecycle(this.collectionPoint, this.timestamp,
-        this.contact).then(instance => {
-        resolve(instance)
-      })
+        this.contact, {from: account}).then(instance => {
+          resolve(instance)
+        })
     })
   }
 

@@ -7,21 +7,21 @@ class Proof {
 
   initializeProofEnum () {
     this.proofTypes = {
-      WIPE: 0,
-      FUNCTION: 1,
-      REUSE: 2,
-      RECYCLE: 3,
-      DISPOSAL: 4
+      'wipe': 0,
+      'function': 1,
+      'reuse': 2,
+      'recycle': 3,
+      'disposal': 4
     }
   }
 
-  generateProof (proofFactory, proofsContract, proofType) {
+  generateProof (proofFactory, proofsContract, proofType, account) {
     return new Promise(resolve => {
-      this.createProofContract(proofFactory).then(result => {
+      this.createProofContract(proofFactory, account).then(result => {
         return result
       }).then(resultingContract => {
-        return proofsContract.addProof(this.device, proofType,
-          resultingContract)
+        return proofsContract.addProof(this.device, this.proofTypes[proofType],
+          resultingContract, {from: account})
       }).then(resultingProof => {
         resolve(resultingProof)
       })
