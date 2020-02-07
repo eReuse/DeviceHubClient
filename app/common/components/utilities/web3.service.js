@@ -37,7 +37,8 @@ function web3Service ($window) {
     initTransfer: (obj) => {
       let sender = web3.utils.toChecksumAddress(obj.sender)
       let receiver = web3.utils.toChecksumAddress(obj.receiver_address)
-      return initTransfer(sender, receiver, obj.devices, web3)
+      let transferResult = initTransfer(sender, receiver, obj.devices, web3)
+      return transferResult
     },
     acceptTransfer: (obj) => {
       console.log(obj)

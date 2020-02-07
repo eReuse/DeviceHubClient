@@ -2,12 +2,12 @@ pragma solidity ^0.4.25;
 
 contract RecycleProof {
     string private collectPoint;
-    string private timestamp;
+    string private date;
     string private contact;
 
-    constructor(string _collectionPoint, string _time, string _contact) public {
+    constructor(string _collectionPoint, string _date, string _contact) public {
         collectPoint = _collectionPoint;
-        timestamp = _time;
+        date = _date;
         contact = _contact;
     }
 
@@ -15,8 +15,8 @@ contract RecycleProof {
         return collectPoint;
     }
 
-    function getTimestamp() public view returns (string _time) {
-        return timestamp;
+    function getDate() public view returns (string _timestamp) {
+        return date;
     }
 
     function getContact() public view returns (string _contact) {

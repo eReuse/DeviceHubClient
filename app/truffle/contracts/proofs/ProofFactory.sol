@@ -19,8 +19,8 @@ contract ProofFactory {
         return proof;
     }
 
-    function generateFunction(uint256 score) public returns (address _proof) {
-        FunctionProof proof = new FunctionProof(score);
+    function generateFunction(uint256 score, uint256 usage) public returns (address _proof) {
+        FunctionProof proof = new FunctionProof(score, usage);
         emit NewProof(proof);
         return proof;
     }

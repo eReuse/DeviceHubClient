@@ -2,15 +2,15 @@ pragma solidity ^0.4.25;
 
 contract DataWipeProof {
     string private erasure_type;
-    string private timestamp;
+    string private date;
     bool private result;
 
-    constructor(string erasure, bool _result, string time)
+    constructor(string erasure, bool _result, string _timestamp)
         public
     {
         erasure_type = erasure;
         result = _result;
-        timestamp = time;
+        date = _timestamp;
     }
 
     function getErasure() public view returns (string _erasure) {
@@ -21,7 +21,7 @@ contract DataWipeProof {
         return result;
     }
 
-    function getTimestamp() public view returns (string _time) {
-        return timestamp;
+    function getDate() public view returns (string _date) {
+        return date;
     }
 }

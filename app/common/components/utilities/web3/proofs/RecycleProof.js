@@ -8,7 +8,7 @@ class RecycleProof extends Proof {
 
   createProofContract (proofFactory, account) {
     return new Promise(resolve => {
-      proofFactory.generateRecycle(this.collectionPoint, this.timestamp,
+      proofFactory.generateRecycle(this.collectionPoint, this.date,
         this.contact, {from: account}).then(instance => {
           resolve(instance)
         })
@@ -17,7 +17,7 @@ class RecycleProof extends Proof {
 
   extractData (web3, data) {
     this.collectionPoint = data.collectionPoint
-    this.timestamp = data.time
+    this.date = data.date
     this.contact = data.contact
     // this.ticket = data.ticket
   }

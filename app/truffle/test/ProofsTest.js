@@ -36,9 +36,10 @@ contract("Basic test to generate proofs", function (accounts) {
     });
 
     it("Generates proof of function", async function () {
-        let score = 20;
+        let score = 10;
+        let usage = 20;
 
-        let f_proof = await proof_factory.generateFunction(score).then(result => {
+        let f_proof = await proof_factory.generateFunction(score, usage).then(result => {
             return extractProofAddress(result);
         });
 
@@ -54,11 +55,11 @@ contract("Basic test to generate proofs", function (accounts) {
 
     it("Generates proof of recycling", async function () {
         let collection_point = 'Recicla2';
-        let timestamp = new Date().toLocaleString();
+        let date = new Date().toLocaleString();
         let contact = 'John';
 
-        let rec_proof = await proof_factory.generateRecycle(collection_point, timestamp
-            , contact).then(result => {
+        let rec_proof = await proof_factory.generateRecycle(collection_point,
+            date, contact).then(result => {
                 return extractProofAddress(result);
             });
 
@@ -111,10 +112,10 @@ contract("Basic test to generate proofs", function (accounts) {
     it("Generates proof of data wipe", async function () {
         let erasure_type = 'QuickErase';
         let result = true;
-        let timestamp = new Date().toLocaleString();
+        let date = new Date().toLocaleString();
 
         let dw_proof = await proof_factory.generateDataWipe(erasure_type, result
-            , timestamp).then(result => {
+            , date).then(result => {
                 return extractProofAddress(result);
             });
 
@@ -133,8 +134,4 @@ contract("Basic test to generate proofs", function (accounts) {
 
 function extractProofAddress(receipt) {
     return receipt.logs[0].args.proof
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }

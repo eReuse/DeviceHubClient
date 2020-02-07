@@ -10,7 +10,7 @@ contract Proofs {
     }
     proofTypes internal types;
 
-    mapping(address => mapping(uint256 => address)) private proofs_per_device;
+    mapping(address => mapping(uint256 => address)) private proofsPerDevice;
 
     constructor() public {
         initializeTypes();
@@ -24,18 +24,18 @@ contract Proofs {
         types.DISPOSAL = 4;
     }
 
-    function addProof(address _device, uint256 proof_type, address proof)
+    function addProof(address device, uint256 proof_type, address proof)
         public returns(address _proof)
     {
-        proofs_per_device[_device][proof_type] = proof;
+        proofsPerDevice[device][proof_type] = proof;
         return proof;
     }
 
-    function getProof(address _device, uint256 proof_type)
+    function getProof(address device, uint256 proof_type)
         public
         view
         returns (address _proof)
     {
-        return proofs_per_device[_device][proof_type];
+        return proofsPerDevice[device][proof_type];
     }
 }
