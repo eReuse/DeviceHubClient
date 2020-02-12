@@ -9,3 +9,6 @@ tmp
 .idea/**
 Thumbs.db
 /config.yml
+package-lock.json
+pnpm-lock.yaml
+app/truffle/build/contracts/*
