@@ -1,0 +1,25 @@
+<div class="btn-group" uib-dropdown is-open="dropDownIsOpen">
+  <button type="button"
+          class="btn"
+          ng-class="{'btn-primary': resources.length > 0 && pcsOrHdds}"
+          uib-tooltip="Select either computers or hard drives"
+          tooltip-enable="!allComputers"
+          ng-click="openDropdown($event)"
+  >
+    <i class="fa fa-certificate fa-fw"></i>Certificate<span class="caret"></span>
+  </button>
+  <ul uib-dropdown-menu role="menu" class="dropdown-menu-right">
+    <li role="menuitem"
+        ng-repeat="certificate in ::certificates"
+        uib-tooltip-html="certificate.description"
+        tooltip-placement="left"
+        tooltip-append-to-body="true"
+        data-e2e="{{::certificate.title}}"
+    >
+      <a ng-click="openModal(certificate.title)">
+        <i class="fa fa-fw fa-lg {{::certificate.icon}}"></i>
+        {{::certificate.title}}
+      </a>
+    </li>
+  </ul>
+</div>
