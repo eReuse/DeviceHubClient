@@ -1,17 +1,17 @@
 <div>
-  <close-popover popover="popover" close-on-clickout="true"></close-popover>
-  <div ng-switch="popover.action">
-    <group-resource-remove ng-switch-when="remove"
-                         resources="resources"
-                         resource-type="{{resourceType}}"
-                         group-type="{{popover.group}}"
-                         success="_success()"
-    ></group-resource-remove>
-    <group-resource-add ng-switch-default
-                        resources="resources"
-                        resource-type="{{resourceType}}"
-                        group-type="{{popover.group}}"
-                        success="_success()"
-    ></group-resource-add>
-  </div>
+    <close-popover popover="popover" close-on-clickout="true"></close-popover>
+    <div ng-switch="popover.action">
+        <group-resource-remove ng-switch-when="remove"
+                               resources="resources"
+                               resource-type="{{resourceType}}"
+                               group-type="{{popover.group}}"
+                               success="_success()"
+        ></group-resource-remove>
+        <group-resource-add ng-switch-default
+                            resources="resources"
+                            resource-type="{{resourceType}}"
+                            group-type="{{popover.group}}"
+                            success="_success()"
+        ></group-resource-add>
+    </div>
 </div>

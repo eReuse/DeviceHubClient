@@ -1,4 +1,5 @@
 const utils = require('./../utils')
+
 /**
  * @module server
  */
@@ -28,11 +29,11 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
      * methods.
      */
     constructor (baseUrl,
-                 path,
-                 headers = {
-                   'Content-Type': 'application/json',
-                   Accept: 'application/json'
-                 }) {
+      path,
+      headers = {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }) {
       console.assert(_.last(path) === '/', 'path must finish with a slash')
       /** @type {string} **/
       this.baseUrl = baseUrl

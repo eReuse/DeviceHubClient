@@ -1,11 +1,11 @@
 <div ng-hide="editing" ng-click="edit()" class="field-edit-text">
-  <i class="fa fa-pen field-edit-icon pull-right"></i>
-  <span ng-transclude ng-show="!editing"></span>
-  <small ng-hide="resource[fieldName].length">
-    {{::'fieldEdit.edit' | translate}}
-  </small>
+    <i class="fa fa-pen field-edit-icon pull-right"></i>
+    <span ng-transclude ng-show="!editing"></span>
+    <small ng-hide="resource[fieldName].length">
+        {{::'fieldEdit.edit' | translate}}
+    </small>
 </div>
 <form ng-submit="form.submit()" novalidate ng-if="form">
-  <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
-  </formly-form>
+    <formly-form model="form.model" fields="form.fields" form="form.form" options="form.options">
+    </formly-form>
 </form>

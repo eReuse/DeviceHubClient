@@ -24,7 +24,9 @@ function closePopover () {
       }
       // When the user clicks out of the popup, we close it
       if ($scope.closeOnClickout) {
-        setTimeout(() => { $element.closest('.popover-inner').on('clickout', $scope.closePopover) }, 50)
+        setTimeout(() => {
+          $element.closest('.popover-inner').on('clickout', $scope.closePopover)
+        }, 50)
       }
     }
   }

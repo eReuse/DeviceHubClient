@@ -1,24 +1,24 @@
 <div class="btn btn-group no-padding">
-  <div class="btn-group btn-group-sm">
-    <button class="btn btn-primary btn-sm"
-            uib-popover-template="popover.templateUrl"
-            popover-title="{{popover.title}}"
-            popover-is-open="popover.isOpen"
-            popover-append-to-body="true"
-            popover-placement="auto bottom-left"
-    >
-      <i class="fa fa-filter"></i>
-      {{::'resourceList.filters.title' | translate}}
-      <span class="caret"></span>
-    </button>
-  </div>
-  <div class="btn-group btn-group-sm">
-    <button class="btn btn-primary"
-            ng-repeat="pill in form.pills | orderBy: 'label' track by pill.key"
-            ng-click="pill.remove()"
-    >
-      {{::pill.textPath + '.l' | translate}}: {{pill.text}}
-      <i class="fa fa-times"></i>
-    </button>
-  </div>
+    <div class="btn-group btn-group-sm">
+        <button class="btn btn-primary btn-sm"
+                uib-popover-template="popover.templateUrl"
+                popover-title="{{popover.title}}"
+                popover-is-open="popover.isOpen"
+                popover-append-to-body="true"
+                popover-placement="auto bottom-left"
+        >
+            <i class="fa fa-filter"></i>
+            {{::'resourceList.filters.title' | translate}}
+            <span class="caret"></span>
+        </button>
+    </div>
+    <div class="btn-group btn-group-sm">
+        <button class="btn btn-primary"
+                ng-repeat="pill in form.pills | orderBy: 'label' track by pill.key"
+                ng-click="pill.remove()"
+        >
+            {{::pill.textPath + '.l' | translate}}: {{pill.text}}
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
 </div>

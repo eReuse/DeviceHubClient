@@ -4,9 +4,11 @@ describe('Test GroupResourceSubmitterAction', () => {
   let GroupResourceSubmitter, group, resources
 
   class MockedSubmitForm {
-    prepare () {}
+    prepare () {
+    }
 
-    after () {}
+    after () {
+    }
   }
 
   beforeEach(angular.mock.module(require('./../../utilities').name))

@@ -1117,7 +1117,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithOneDevice
    */
   class Rate extends ActionWithOneDevice {
-      define (d) {
+    define (d) {
       super.define(d)
       this.rating = d.rating ? new enums.RatingRange(d.rating) : null
       this.software = d.software
@@ -1802,10 +1802,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
      * @param {?string} url
      */
     constructor (items = [],
-                 {
-                   pagination = {page: null, perPage: null, total: null, previous: null, next: 1},
-                   url = null
-                 } = {}) {
+      {
+        pagination = {page: null, perPage: null, total: null, previous: null, next: 1},
+        url = null
+      } = {}) {
       super(...items)
       this.pagination = pagination
       this.url = url

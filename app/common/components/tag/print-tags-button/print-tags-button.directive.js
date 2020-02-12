@@ -16,8 +16,11 @@ function printTagsButton ($state, Notification, $translate) {
           .flatMap('tags')
           .filter({'printable': true})
           .value()
-        if (tags.length) $state.go('auth.printTags', {tags: tags})
-        else Notification.warning($translate.instant('printTags.noTagsToPrint'))
+        if (tags.length) {
+          $state.go('auth.printTags', {tags: tags})
+        } else {
+          Notification.warning($translate.instant('printTags.noTagsToPrint'))
+        }
       }
     }
   }

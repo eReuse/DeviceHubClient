@@ -35,10 +35,10 @@ function printTags (fields, $q, $ocLazyLoad, box, Notification) {
         }
 
         define ({
-                  size = Spec.SIZES.smallTagPrinter,
-                  sizePreset = 'brotherSmall',
-                  fields = ['id']
-                } = {}) {
+          size = Spec.SIZES.smallTagPrinter,
+          sizePreset = 'brotherSmall',
+          fields = ['id']
+        } = {}) {
           this.size = size
           this.sizePreset = sizePreset
           this.fields = fields

@@ -10,4 +10,5 @@ function progressBarFactory (ngProgressFactory) {
   progressBar.setHeight('2px')
   return progressBar
 }
+
 module.exports = progressBarFactory

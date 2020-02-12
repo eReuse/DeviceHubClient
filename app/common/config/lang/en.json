@@ -256,7 +256,7 @@
         "d": "The width of the device in meters.",
         "aR": "m"
       },
-      "height":{
+      "height": {
         "l": "Height",
         "d": "The height of the device in meters.",
         "aR": "m"
@@ -288,7 +288,7 @@
         "d": "The maximum weight the device can hold, in Kg.",
         "aR": "Kg"
       },
-      "image":{
+      "image": {
         "l": "Image",
         "d": "An URL containing an image of the device."
       }
@@ -301,17 +301,14 @@
       "severity": {
         "l": "Severity",
         "d": "A flag evaluating the event execution. For example, failed events are set as \"Error\"."
-
       },
       "startTime": {
         "l": "Start time",
         "d": "When the action starts. For some actions like reservations the time when they are available, for others like renting when the renting starts."
-
       },
       "endTime": {
         "l": "Date",
         "d": "When the action ends. For some actions like reservations the time when they expire, for others like renting the time the end rents. For punctual actions it is the time they are performed; it differs with ``created`` in which created is the where the system received the action."
-
       },
       "description": {
         "l": "Description",
@@ -344,7 +341,6 @@
       "b": "B. There is a button difficult to press or a small scratch in an edge of a screen",
       "c": "C. A non-important button (or similar) doesn't work; screen has multiple scratches in edges",
       "d": "D. Multiple buttons don't work; screen has visual damage resulting in uncomfortable usage"
-
     },
     "biosRange": {
       "a": "A. If by pressing a key you could access a boot menu with the network boot",
@@ -624,7 +620,6 @@
         "d": "Are you going to link computers with tags?",
         "t": "Yes. Workbench does not upload a Snapshot until you link the computer with tags.",
         "f": "No, I don't want to link computers with tags. Workbench uploads Snapshots automatically, without any human interaction."
-
       },
       "notification": {
         "ok": "Settings saved."
@@ -650,7 +645,6 @@
       "erase": {
         "l": "Erasure type",
         "d": "Both types can generate a certificate, however only the Secure uses an official certified erasure process, as it guarantees all data has been erased."
-
       },
       "eraseBasic": "Normal: faster but without final verification.",
       "eraseSectors": "Secure: slower but verifies erasure for each disk sector.",

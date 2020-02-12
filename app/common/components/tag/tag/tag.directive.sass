@@ -10,9 +10,11 @@ tag
   display: table
   border: 1px solid $modal-header-border-color
   border-collapse: initial
+
   img
     max-width: 100%
     max-height: 100%
+
   > div
     display: table-cell
     vertical-align: middle
@@ -24,6 +26,7 @@ tag
     .tag-body
       margin-left: 1mm
       margin-right: 1mm
+
       > *
         display: inline-block
         vertical-align: middle
@@ -35,7 +38,8 @@ tag
         font-size: 19px
         font-weight: bold
         font-family: "Arial Black", sans-serif
-        width: calc(100% - 92px - 2mm) // qrcode size - 2mm for spacing
+        width: calc(100% - 92px - 2mm)
+        // qrcode size - 2mm for spacing
         tr
           &:not(:first-child) td:last-child
             border-top: 1px solid
@@ -46,7 +50,8 @@ tag
           > td:last-child
             text-align: right
             word-break: break-all
-            width: 100% // Needed to make this column bigger than the other when values are small
+            width: 100%
+  // Needed to make this column bigger than the other when values are small
 
   &.no-logo
     .tag-body

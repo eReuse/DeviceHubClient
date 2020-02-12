@@ -116,16 +116,22 @@ function deviceGetterFactory (resources, progressBar) {
     get (getNextPage = true, showProgressBar = true, query = {}) {
       console.assert(this.ready, 'Getter is not yet ready to get devices.')
       if (getNextPage) {
-        if (!this.nextPage) throw new NoMorePagesAvailable()
-        else this.q.page = this.nextPage
+        if (!this.nextPage) {
+          throw new NoMorePagesAvailable()
+        } else {
+          this.q.page = this.nextPage
+        }
       }
       if (!getNextPage) this.q.page = 1
       if (showProgressBar) progressBar.start()
       this.working = true
       return resources.Device.server.get('', {params: _.defaults(query, this.q)}).then(devices => {
         progressBar.complete()
-        if (getNextPage) this.devices.add(devices)
-        else this.devices.set(devices)
+        if (getNextPage) {
+          this.devices.add(devices)
+        } else {
+          this.devices.set(devices)
+        }
         return this.devices
       }).finally(() => {
         this.working = false

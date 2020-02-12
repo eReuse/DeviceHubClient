@@ -198,8 +198,11 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
     }
 
     rangeToString (min, max, filter = _.identity) {
-      if (min === max) return filter(min)
-      else return `${filter(min)} — ${filter(max)}`
+      if (min === max) {
+        return filter(min)
+      } else {
+        return `${filter(min)} — ${filter(max)}`
+      }
     }
 
     /**
