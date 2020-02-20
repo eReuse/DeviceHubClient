@@ -6,15 +6,18 @@ class ReuseProof extends Proof {
     this.extractData(web3, data)
   }
 
-  createProofContract (proofFactory, account) {
+  generateProof (device, account) {
     return new Promise(resolve => {
-      proofFactory.generateReuse({from: account}).then(instance => {
-        resolve(instance)
-      })
+      return device.generateReuseProof(this.price, { from: account })
+        .then(hash => {
+          resolve(hash)
+        })
     })
   }
 
-  extractData (web3, data) {}
+  extractData (web3, data) {
+    this.price = data.price
+  }
 }
 
 module.exports = ReuseProof

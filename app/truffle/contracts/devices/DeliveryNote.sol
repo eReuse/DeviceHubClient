@@ -2,8 +2,8 @@ pragma solidity ^0.4.25;
 
 import "contracts/devices/DepositDevice.sol";
 import "contracts/DAOInterface.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "contracts/tokens/EIP20Interface.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 contract DeliveryNote is Ownable {
     

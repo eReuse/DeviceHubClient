@@ -1,4 +1,4 @@
-const DatawipeProof = require('./proofs/DataWipeProof')
+const DataWipeProof = require('./proofs/DataWipeProof')
 const FunctionProof = require('./proofs/FunctionProof')
 const ReuseProof = require('./proofs/ReuseProof')
 const RecycleProof = require('./proofs/RecycleProof')
@@ -22,20 +22,19 @@ const functions = {
  * Generates the proof corresponding to the received type and maps it
  * to its corresponding device in the blockchain.
  * @param {Function} web3 Web3.js library.
- * @param {Function} proofFactory Blockchain smart contract object.
- * @param {Function} proofContract Blockchain smart contract object.
+ * @param {Function} device Blockchain smart contract object.
  * @param {string} type Type of the proof to be generated.
  * @param {JSON} data JSON structure with the information needed for the
  *                    proof to be generated.
  * @returns {Promise} A promise that resolves to the ethereum address of the
  *                    generated proof.
  */
-function generateProof (web3, proofFactory, proofContract, type, data) {
+function generateProof (web3, device, type, data) {
   let proof
   switch (type) {
     case proofTypes.WIPE:
-      proof = new DatawipeProof(web3, data)
-      break/** */
+      proof = new DataWipeProof(web3, data)
+      break
     case proofTypes.FUNCTION:
       proof = new FunctionProof(web3, data)
       break
@@ -51,8 +50,7 @@ function generateProof (web3, proofFactory, proofContract, type, data) {
     default:
       break
   }
-  return proof.generateProof(proofFactory, proofContract, type,
-    web3.eth.defaultAccount)
+  return proof.generateProof(device, web3.eth.defaultAccount)
 }
 
 module.exports = functions

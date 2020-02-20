@@ -6,12 +6,12 @@ class DisposalProof extends Proof {
     this.extractData(web3, data)
   }
 
-  createProofContract (proofFactory, account) {
+  generateProof (device, account) {
     return new Promise(resolve => {
-      proofFactory.generateDisposal(this.origin, this.destination, this.deposit,
-        {from: account})
-        .then(instance => {
-          resolve(instance)
+      return device.generateDisposalProof(this.origin, this.destination,
+        this.deposit, { from: account })
+        .then(hash => {
+          resolve(hash)
         })
     })
   }

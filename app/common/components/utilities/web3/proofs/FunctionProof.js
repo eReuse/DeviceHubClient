@@ -6,11 +6,12 @@ class FunctionProof extends Proof {
     this.extractData(data)
   }
 
-  createProofContract (proofFactory, account) {
+  generateProof (device, account) {
     return new Promise(resolve => {
-      proofFactory.generateFunction(this.rating, this.usage,
-        {from: account}).then(instance => {
-          resolve(instance)
+      return device.generateFunctionProof(this.rating, this.usage, this.version,
+        { from: account })
+        .then(hash => {
+          resolve(hash)
         })
     })
   }
@@ -18,6 +19,7 @@ class FunctionProof extends Proof {
   extractData (data) {
     this.rating = data.rating
     this.usage = data.usage
+    this.version = data.version
   }
 }
 

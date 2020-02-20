@@ -1,6 +1,5 @@
 const DeviceFactory = artifacts.require('DeviceFactory');
-const ProofFactory = artifacts.require('ProofFactory');
-const Proofs = artifacts.require('Proofs');
+const DepositDevice = artifacts.require('DepositDevice');
 const assert = require('assert');
 const web3 = require('web3');
 
@@ -11,25 +10,15 @@ const minimist = require('minimist'),
 const network = argv.network;
 
 contract("Basic test to generate proofs", function (accounts) {
-    var device_factory, device, proof_factory, proofs, proof_types;
+    var device_factory, device_address, device, proof_factory, proofs, proof_types;
     console.log('');
 
     before(async function () {
         console.log('\t**BEFORE**');
         device_factory = await DeviceFactory.deployed();
-        proof_factory = await ProofFactory.deployed();
-        proofs = await Proofs.deployed();
-        proof_types = {
-            WIPE: 0,
-            FUNCTION: 1,
-            REUSE: 2,
-            RECYCLE: 3,
-            DISPOSAL: 4
-        }
-
         await device_factory.createDevice("device", 0, accounts[0]);
 
-        device = await device_factory.getDeployedDevices(
+        device_address = await device_factory.getDeployedDevices(
             { from: accounts[0] }).then(devices => {
                 return devices[0];
             });
@@ -38,54 +27,56 @@ contract("Basic test to generate proofs", function (accounts) {
     it("Generates proof of function", async function () {
         let score = 10;
         let usage = 20;
+        let version = "v2.0"
 
-        let f_proof = await proof_factory.generateFunction(score, usage).then(result => {
-            return extractProofAddress(result);
-        });
+        device = await DepositDevice.at(device_address);
+        await device.generateFunctionProof(score, usage, version);
 
-        await proofs.addProof(web3.utils.toChecksumAddress(device)
-            , proof_types.FUNCTION, web3.utils.toChecksumAddress(f_proof));
+        let proofs = await device.getProofs("function");
 
-        proofs.getProof(web3.utils.toChecksumAddress(device)
-            , proof_types.FUNCTION).then(result => {
-                assert.notEqual(result, null);
-                assert.equal(result, f_proof);
-            });
+        assert.equal(proofs.length, 1);
+
+        await device.getFunctionProof.call(proofs[0]).then(result => {
+            assert.equal(score, result['0']);
+            assert.equal(usage, result['1']);
+            assert.equal(version, result['2']);
+        })
     });
 
     it("Generates proof of recycling", async function () {
-        let collection_point = 'Recicla2';
+        let collection_point = "Donalo";
         let date = new Date().toLocaleString();
-        let contact = 'John';
+        let contact = "John";
+        let ticket = "1276541765134875";
 
-        let rec_proof = await proof_factory.generateRecycle(collection_point,
-            date, contact).then(result => {
-                return extractProofAddress(result);
-            });
+        device = await DepositDevice.at(device_address);
+        await device.generateRecycleProof(collection_point, date, contact, ticket);
 
-        await proofs.addProof(web3.utils.toChecksumAddress(device),
-            proof_types.RECYCLE, web3.utils.toChecksumAddress(rec_proof));
+        let proofs = await device.getProofs("recycle");
 
-        proofs.getProof(web3.utils.toChecksumAddress(device)
-            , proof_types.RECYCLE).then(result => {
-                assert.notEqual(result, null);
-                assert.equal(result, rec_proof);
-            });
+        assert.equal(proofs.length, 1);
+
+        device.getRecycleProof.call(proofs[0]).then(result => {
+            assert.equal(collection_point, result['0']);
+            assert.equal(date, result['1']);
+            assert.equal(contact, result['2']);
+            assert.equal(ticket, result['3']);
+        })
     });
 
     it("Generates proof of reuse", async function () {
-        let reu_proof = await proof_factory.generateReuse().then(result => {
-            return extractProofAddress(result);
-        });
+        let price = 50;
 
-        await proofs.addProof(web3.utils.toChecksumAddress(device), proof_types.REUSE
-            , web3.utils.toChecksumAddress(reu_proof));
+        device = await DepositDevice.at(device_address);
+        await device.generateReuseProof(price);
 
-        proofs.getProof(web3.utils.toChecksumAddress(device)
-            , proof_types.REUSE).then(result => {
-                assert.notEqual(result, null);
-                assert.equal(result, reu_proof);
-            });
+        let proofs = await device.getProofs("reuse");
+
+        assert.equal(proofs.length, 1);
+
+        device.getReuseProof.call(proofs[0]).then(result => {
+            assert.equal(price, result);
+        })
     });
 
     it("Generates proof of disposal", async function () {
@@ -93,45 +84,38 @@ contract("Basic test to generate proofs", function (accounts) {
         let destination = accounts[2];
         let deposit = 10;
 
-        let disp_proof = await proof_factory.generateDisposal(web3.utils.toChecksumAddress(origin),
-            web3.utils.toChecksumAddress(destination), deposit)
-            .then(result => {
-                return extractProofAddress(result);
-            });
+        device = await DepositDevice.at(device_address);
+        await device.generateDisposalProof(web3.utils.toChecksumAddress(origin)
+            , web3.utils.toChecksumAddress(destination), deposit);
 
-        await proofs.addProof(web3.utils.toChecksumAddress(device),
-            proof_types.DISPOSAL, web3.utils.toChecksumAddress(disp_proof));
+        let proofs = await device.getProofs("disposal");
 
-        proofs.getProof(web3.utils.toChecksumAddress(device)
-            , proof_types.DISPOSAL).then(result => {
-                assert.notEqual(result, null);
-                assert.equal(result, disp_proof);
-            });
+        assert.equal(proofs.length, 1);
+
+        device.getDisposalProof.call(proofs[0]).then(result => {
+            assert.equal(origin, result['0']);
+            assert.equal(destination, result['1']);
+            assert.equal(deposit, result['2']);
+        })
     });
 
     it("Generates proof of data wipe", async function () {
-        let erasure_type = 'QuickErase';
-        let result = true;
+        let erasure_type = "QuickErase";
         let date = new Date().toLocaleString();
+        let result = true;
 
-        let dw_proof = await proof_factory.generateDataWipe(erasure_type, result
-            , date).then(result => {
-                return extractProofAddress(result);
-            });
+        device = await DepositDevice.at(device_address);
+        await device.generateDataWipeProof(erasure_type, date, result);
 
-        await proofs.addProof(web3.utils.toChecksumAddress(device)
-            , proof_types.WIPE
-            , web3.utils.toChecksumAddress(dw_proof));
+        let proofs = await device.getProofs("wipe");
 
-        proofs.getProof(web3.utils.toChecksumAddress(device)
-            , proof_types.WIPE).then(result => {
-                assert.notEqual(result, null);
-                assert.equal(result, dw_proof);
-            });
+        assert.equal(proofs.length, 1);
+
+        device.getDataWipeProof.call(proofs[0]).then(result => {
+            assert.equal(erasure_type, result['0']);
+            assert.equal(date, result['1']);
+            assert.equal(result, result['2']);
+        })
     });
 
-});
-
-function extractProofAddress(receipt) {
-    return receipt.logs[0].args.proof
-}
+})

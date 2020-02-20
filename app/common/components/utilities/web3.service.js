@@ -14,14 +14,12 @@ function web3Service ($window) {
   const provider = new $window.web3.providers.WebsocketProvider('ws://' + $window.CONSTANTS.blockchain + ':8545')
   const web3 = new $window.web3(provider)
   const contract = $window.contract
-  let deviceFactory, erc20, dao, proofFactory, proofContract
+  let deviceFactory, erc20, dao
 
   deployments.deployContracts(web3, contract, provider).then(res => {
     deviceFactory = res[0]
     erc20 = res[1]
     dao = res[2]
-    proofFactory = res[3]
-    proofContract = res[4]
   })
 
   const service = {
@@ -50,8 +48,10 @@ function web3Service ($window) {
       return transfer
     },
     generateProof: (obj) => {
-      return proofUtils.generateProof(web3, proofFactory, proofContract,
-        obj.type, obj.data)
+      return devicesUtils.getDeployedDevice(contract, provider, obj.deviceAddress)
+        .then(device => {
+          return proofUtils.generateProof(web3, device, obj.type, obj.data)
+        })
     }
   }
 
@@ -66,14 +66,16 @@ function web3Service ($window) {
   function initTransfer (sender, receiver, devices, web3) {
     console.log('initTransfer')
     return new Promise(resolve => {
-      devicesUtils.deployDevices(deviceFactory, devices, sender, web3).then(() => {
-        deviceFactory.getDeployedDevices({ from: sender }).then(devices => {
-          deliveryNoteUtils.createDeliveryNote(contract, provider, devices, sender, receiver, dao)
+      devicesUtils.deployDevices(deviceFactory, devices, sender, web3)
+      .then((deployedDevices) => {
+        // deviceFactory.getDeployedDevices({ from: sender }).then(devices => {
+          deliveryNoteUtils.createDeliveryNote(contract, provider, deployedDevices,
+            sender, receiver, dao)
             .then(deliveryNote => {
-              deliveryNote.emitDeliveryNote({from: sender})
+              deliveryNote.emitDeliveryNote({ from: sender })
               resolve(deliveryNote.address)
             })
-        })
+        // })
       })
     })
   }
@@ -89,8 +91,10 @@ function web3Service ($window) {
     console.log('AcceptTransfer')
     return new Promise(resolve => {
       erc20.approve(deliveryNoteAddress, deposit,
-        { from: receiver,
-          gas: '6721975'})
+        {
+          from: receiver,
+          gas: '6721975'
+        })
         .then(() => {
           deliveryNoteUtils.acceptDeliveryNote(contract, provider, deliveryNoteAddress,
             receiver, deposit)

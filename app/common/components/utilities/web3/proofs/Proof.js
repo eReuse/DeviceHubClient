@@ -2,7 +2,7 @@
 class Proof {
   constructor (web3, data) {
     this.initializeProofEnum()
-    this.device = web3.utils.toChecksumAddress(data.device)
+    this.deviceAddress = web3.utils.toChecksumAddress(data.device)
   }
 
   /**
@@ -22,27 +22,13 @@ class Proof {
 
   /**
    * Main function to create a proof and map it to its corresponding device.
-   * First of all we need to create the proof contract (each proof implements
-   * its own creation method). Once we have created the proof we map it to
-   * the corresponding device within the Blockchain.
-   * @param {Function} proofFactory Blockchain smart contract object.
-   * @param {Function} proofContract Blockchain smart contract object.
-   * @param {string} type Type of the proof to be generated.
+   * @param {Function} device Blockchain smart contract object.
    * @param {string} account Ethereum address needed for the execution.
-   * @returns {Promise} A promise that resolves to the ethereum address of the
-   *                    generated proof.
+   * @returns {Promise} A promise that resolves to the hash of the generated
+   *                    proof.
    */
-  generateProof (proofFactory, proofsContract, proofType, account) {
-    return new Promise(resolve => {
-      this.createProofContract(proofFactory, account).then(result => {
-        return result
-      }).then(resultingContract => {
-        return proofsContract.addProof(this.device, this.proofTypes[proofType],
-          resultingContract, {from: account})
-      }).then(resultingProof => {
-        resolve(resultingProof)
-      })
-    })
+  generateProof (device, account) {
+    throw Error('Not implemented function')
   }
 
   /**
@@ -53,17 +39,6 @@ class Proof {
    *                    proof to be generated.
    */
   extractData (web3, data) {
-    throw Error('Not implemented function')
-  }
-
-  /**
-   * Function implemented by each proof subclass that generates the proof
-   * smart contract and retrieves its address.
-   * @param {Function} proofFactory Blockchain smart contract object.
-   * @returns {Promise} A promise that resolves to the ethereum address of the
-   *                    generated proof.
-   */
-  createProofContract (proofFactory) {
     throw Error('Not implemented function')
   }
 }

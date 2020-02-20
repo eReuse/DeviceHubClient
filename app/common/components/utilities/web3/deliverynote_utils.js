@@ -51,10 +51,10 @@ function createDeliveryNote (contract, provider, devices, sender, receiver, dao)
           let current = devices[d]
           deployments.getContractInstance(contract, provider, current, deviceArtifacts)
             .then(instance => {
-              console.log(instance.address)
               instance.addToDeliveryNote(deliveryNote.address, { from: sender })
             })
         }
+        console.log(`DeliveryNote address ${deliveryNote.address}`)
         resolve(deliveryNote)
       })
   })
