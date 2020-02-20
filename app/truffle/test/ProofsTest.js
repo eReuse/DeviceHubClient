@@ -48,9 +48,10 @@ contract("Basic test to generate proofs", function (accounts) {
         let date = new Date().toLocaleString();
         let contact = "John";
         let ticket = "1276541765134875";
+        let gpsLocation = "(37.700421688980136, -81.84535319999998)";
 
         device = await DepositDevice.at(device_address);
-        await device.generateRecycleProof(collection_point, date, contact, ticket);
+        await device.generateRecycleProof(collection_point, date, contact, ticket, gpsLocation);
 
         let proofs = await device.getProofs("recycle");
 
@@ -61,6 +62,7 @@ contract("Basic test to generate proofs", function (accounts) {
             assert.equal(date, result['1']);
             assert.equal(contact, result['2']);
             assert.equal(ticket, result['3']);
+            assert.equal(gpsLocation, result['4']);
         })
     });
 
@@ -83,10 +85,11 @@ contract("Basic test to generate proofs", function (accounts) {
         let origin = accounts[1];
         let destination = accounts[2];
         let deposit = 10;
+        let isResidual = false;
 
         device = await DepositDevice.at(device_address);
         await device.generateDisposalProof(web3.utils.toChecksumAddress(origin)
-            , web3.utils.toChecksumAddress(destination), deposit);
+            , web3.utils.toChecksumAddress(destination), deposit, isResidual);
 
         let proofs = await device.getProofs("disposal");
 
@@ -96,6 +99,7 @@ contract("Basic test to generate proofs", function (accounts) {
             assert.equal(origin, result['0']);
             assert.equal(destination, result['1']);
             assert.equal(deposit, result['2']);
+            assert.equal(isResidual, result['3']);
         })
     });
 

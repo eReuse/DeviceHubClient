@@ -7,6 +7,7 @@ contract RecycleProofs is GenericProof {
         string date;
         string contact;
         string ticket;
+        string gpsLocation;
     }
     mapping(bytes32 => ProofData) dataProofs;
 
@@ -19,14 +20,16 @@ contract RecycleProofs is GenericProof {
             string _collectionPoint,
             string _date,
             string _contact,
-            string ticket
+            string ticket,
+            string gpsLocation
         )
     {
         return (
             dataProofs[_hash].collectionPoint,
             dataProofs[_hash].date,
             dataProofs[_hash].contact,
-            dataProofs[_hash].ticket
+            dataProofs[_hash].ticket,
+            dataProofs[_hash].gpsLocation
         );
     }
 
@@ -36,11 +39,18 @@ contract RecycleProofs is GenericProof {
         string collectionPoint,
         string date,
         string contact,
-        string ticket
+        string ticket,
+        string gpsLocation
     ) public returns (bytes32 _hash_) {
         bytes32 _hash = generateHash(device_addr);
         setProof(_hash, device_addr, owner);
-        dataProofs[_hash] = ProofData(collectionPoint, date, contact, ticket);
+        dataProofs[_hash] = ProofData(
+            collectionPoint,
+            date,
+            contact,
+            ticket,
+            gpsLocation
+        );
         return _hash;
     }
 

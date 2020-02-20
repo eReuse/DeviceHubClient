@@ -9,7 +9,7 @@ class DisposalProof extends Proof {
   generateProof (device, account) {
     return new Promise(resolve => {
       return device.generateDisposalProof(this.origin, this.destination,
-        this.deposit, { from: account })
+        this.deposit, this.isResidual, { from: account })
         .then(hash => {
           resolve(hash)
         })
@@ -20,6 +20,7 @@ class DisposalProof extends Proof {
     this.origin = web3.utils.toChecksumAddress(data.origin)
     this.destination = web3.utils.toChecksumAddress(data.destination)
     this.deposit = data.deposit
+    this.isResidual = data.residual
   }
 }
 

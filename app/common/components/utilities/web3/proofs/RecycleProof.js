@@ -9,7 +9,7 @@ class RecycleProof extends Proof {
   generateProof (device, account) {
     return new Promise(resolve => {
       return device.generateRecycleProof(this.collectionPoint, this.date,
-        this.contact, this.ticket, { from: account })
+        this.contact, this.ticket, this.gpsLocation, { from: account })
         .then(hash => {
           resolve(hash)
         })
@@ -21,6 +21,7 @@ class RecycleProof extends Proof {
     this.date = data.date
     this.contact = data.contact
     this.ticket = data.ticket
+    this.gpsLocation = data.gpsLocation
   }
 }
 
