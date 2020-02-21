@@ -1,4 +1,4 @@
-const deviceArtifacts = require('../../../../truffle/build/contracts/DepositDevice')
+const deviceArtifacts = require('../../../../eReuse-Blockchain/build/contracts/DepositDevice')
 const deployments = require('./deployment_utils')
 
 const functions = {

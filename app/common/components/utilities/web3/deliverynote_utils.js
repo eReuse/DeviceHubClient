@@ -1,6 +1,6 @@
 const deployments = require('./deployment_utils')
-const deliveryNoteArtifacts = require('../../../../truffle/build/contracts/DeliveryNote')
-const deviceArtifacts = require('../../../../truffle/build/contracts/DepositDevice')
+const deliveryNoteArtifacts = require('../../../../eReuse-Blockchain/build/contracts/DeliveryNote')
+const deviceArtifacts = require('../../../../eReuse-Blockchain/build/contracts/DepositDevice')
 
 const functions = {
   createDeliveryNote: (contract, provider, devices, sender, receiver, dao) => {

@@ -9,4 +9,5 @@ tmp
 .idea/**
 Thumbs.db
 app/truffle/build/
+app/eReuse-Blockchain/build/
 package-lock.json

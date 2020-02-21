@@ -1,6 +1,6 @@
-const deviceFactoryArtifacts = require('../../../../truffle/build/contracts/DeviceFactory')
-const daoArtifacts = require('../../../../truffle/build/contracts/DAO')
-const erc20Artifacts = require('../../../../truffle/build/contracts/EIP20')
+const deviceFactoryArtifacts = require('../../../../eReuse-Blockchain/build/contracts/DeviceFactory')
+const daoArtifacts = require('../../../../eReuse-Blockchain/build/contracts/DAO')
+const erc20Artifacts = require('../../../../eReuse-Blockchain/build/contracts/EIP20')
 
 const functions = {
   deployContracts: (web3, contract, provider) => {
