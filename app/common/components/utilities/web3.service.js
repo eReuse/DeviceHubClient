@@ -2,7 +2,7 @@ const deployments = require('./web3/deployment_utils')
 const deliveryNoteUtils = require('./web3/deliverynote_utils')
 const devicesUtils = require('./web3/device_utils')
 const proofUtils = require('./web3/proof_utils')
-const accountsUtils = require('./web3/account_utils')
+// const accountsUtils = require('./web3/account_utils')
 
 /**
  * Returns a global progressBar singleton.
@@ -23,15 +23,6 @@ function web3Service ($window) {
   })
 
   const service = {
-    post: (obj) => {
-      console.log('web3 post', obj)
-    },
-    patch: (obj) => {
-      console.log('web3 patch', obj)
-      // TODO send request to web3
-      const response = 'hello'
-      return response
-    },
     initTransfer: (obj) => {
       let sender = web3.utils.toChecksumAddress(obj.sender)
       let receiver = web3.utils.toChecksumAddress(obj.receiver_address)
@@ -39,12 +30,10 @@ function web3Service ($window) {
       return transferResult
     },
     acceptTransfer: (obj) => {
-      console.log(obj)
       let receiver = web3.utils.toChecksumAddress(obj.receiver_address)
       let deposit = parseInt(obj.deposit)
-      let deliverynoteAddress = obj.deliverynote_address
+      let deliverynoteAddress = web3.utils.toChecksumAddress(obj.deliverynote_address)
       let transfer = acceptTransfer(deliverynoteAddress, receiver, deposit, erc20)
-      console.log(transfer)
       return transfer
     },
     generateProof: (obj) => {
@@ -64,18 +53,14 @@ function web3Service ($window) {
   * @returns {Promise} Promise which resolves to DeliveryNote address.
   */
   function initTransfer (sender, receiver, devices, web3) {
-    console.log('initTransfer')
     return new Promise(resolve => {
       devicesUtils.deployDevices(deviceFactory, devices, sender, web3)
       .then((deployedDevices) => {
-        // deviceFactory.getDeployedDevices({ from: sender }).then(devices => {
-          deliveryNoteUtils.createDeliveryNote(contract, provider, deployedDevices,
-            sender, receiver, dao)
-            .then(deliveryNote => {
-              deliveryNote.emitDeliveryNote({ from: sender })
-              resolve(deliveryNote.address)
-            })
-        // })
+        deliveryNoteUtils.createDeliveryNote(contract, provider, deployedDevices,
+          sender, receiver, dao).then(deliveryNote => {
+            deliveryNote.emitDeliveryNote({ from: sender })
+            resolve(deliveryNote.address)
+          })
       })
     })
   }
@@ -94,11 +79,9 @@ function web3Service ($window) {
         {
           from: receiver,
           gas: '6721975'
-        })
-        .then(() => {
-          deliveryNoteUtils.acceptDeliveryNote(contract, provider, deliveryNoteAddress,
-            receiver, deposit)
-            .then(result => {
+        }).then(() => {
+          deliveryNoteUtils.acceptDeliveryNote(contract, provider,
+            deliveryNoteAddress, receiver, deposit).then(result => {
               resolve(result)
             })
         })

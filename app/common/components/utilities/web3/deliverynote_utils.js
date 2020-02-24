@@ -54,7 +54,6 @@ function createDeliveryNote (contract, provider, devices, sender, receiver, dao)
               instance.addToDeliveryNote(deliveryNote.address, { from: sender })
             })
         }
-        console.log(`DeliveryNote address ${deliveryNote.address}`)
         resolve(deliveryNote)
       })
   })

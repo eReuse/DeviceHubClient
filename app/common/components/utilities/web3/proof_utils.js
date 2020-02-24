@@ -4,14 +4,6 @@ const ReuseProof = require('./proofs/ReuseProof')
 const RecycleProof = require('./proofs/RecycleProof')
 const DisposalProof = require('./proofs/DisposalProof')
 
-const proofTypes = {
-  WIPE: 'wipe',
-  FUNCTION: 'function',
-  REUSE: 'reuse',
-  RECYCLE: 'recycle',
-  DISPOSAL: 'disposal'
-}
-
 const functions = {
   generateProof: (web3, proofFactory, proofContract, type, data) => {
     return generateProof(web3, proofFactory, proofContract, type, data)
@@ -32,19 +24,19 @@ const functions = {
 function generateProof (web3, device, type, data) {
   let proof
   switch (type) {
-    case proofTypes.WIPE:
+    case 'wipe':
       proof = new DataWipeProof(web3, data)
       break
-    case proofTypes.FUNCTION:
+    case 'function':
       proof = new FunctionProof(web3, data)
       break
-    case proofTypes.REUSE:
+    case 'reuse':
       proof = new ReuseProof(web3, data)
       break
-    case proofTypes.RECYCLE:
+    case 'recycle':
       proof = new RecycleProof(web3, data)
       break
-    case proofTypes.DISPOSAL:
+    case 'disposal':
       proof = new DisposalProof(web3, data)
       break
     default:

@@ -18,8 +18,7 @@ const functions = {
 }
 
 /**
- * Function to deploy both sets of contracts. Those related
- * with Devices and those with Proofs.
+ * Function to deploy both sets of contracts. Those related with Devices.
  * @param {Function} web3 Web3.js library.
  * @param {Function} contractLib truffle-contract library.
  * @param {Function} provider Blockchain provider configuration.
@@ -30,7 +29,7 @@ function deployContracts (web3, contractLib, provider) {
   return new Promise(resolve => {
     web3.eth.getAccounts().then(accounts => {
       web3.eth.defaultAccount = accounts[0]
-      deployDeviceContracts(web3, contractLib, provider)
+      deployDeviceContracts(contractLib, provider)
         .then(deviceContracts => {
           resolve(deviceContracts)
         })
@@ -48,7 +47,7 @@ function deployContracts (web3, contractLib, provider) {
  * @returns {Promise} A promise which resolves to a list with the
  *                    instances of the deployed contracts.
  */
-function deployDeviceContracts (web3, contract, provider) {
+function deployDeviceContracts (contract, provider) {
   return new Promise(resolve => {
     let deviceFactoryContract = initializeContract(contract, provider, deviceFactoryArtifacts)
     let erc20Contract = initializeContract(contract, provider, erc20Artifacts)
