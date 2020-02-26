@@ -8,7 +8,18 @@ const functions = {
   getDeployedDevice: (contract, provider, deviceAddress) => {
     return deployments.getContractInstance(contract, provider, deviceAddress,
       deviceArtifacts)
+  },
+  getDeployedDevicePerOwner: (factory, owner) => {
+    return getDeployedDevicePerOwner(factory, owner)
   }
+}
+
+function getDeployedDevicePerOwner (factory, owner) {
+  return new Promise(resolve => {
+    factory.getDeployedDevice({ from: owner }).then(devices => {
+      resolve(devices)
+    })
+  })
 }
 
 /**
@@ -19,7 +30,7 @@ const functions = {
  * @param {string} owner Address of the owner of the devices.
  * @param {Function} web3 Web3.js library.
  */
-function deployDevices (factory, devices, owner, web3) {
+function deployDevices(factory, devices, owner, web3) {
   return new Promise(resolve => {
     let deployedDevices = []
     for (let d of devices) {
@@ -41,7 +52,7 @@ function deployDevices (factory, devices, owner, web3) {
  * @param {JSON} receipt JSON representation of the transaction receipt.
  * @returns {string} Ethereum address of the device.
  */
-function extractDeviceAddress (web3, receipt) {
+function extractDeviceAddress(web3, receipt) {
   return web3.utils.toChecksumAddress(receipt.logs[0].args._deviceAddress)
 }
 

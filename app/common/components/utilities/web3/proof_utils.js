@@ -3,11 +3,63 @@ const FunctionProof = require('./proofs/FunctionProof')
 const ReuseProof = require('./proofs/ReuseProof')
 const RecycleProof = require('./proofs/RecycleProof')
 const DisposalProof = require('./proofs/DisposalProof')
+const deviceUtils = require('./device_utils')
 
 const functions = {
-  generateProof: (web3, proofFactory, proofContract, type, data) => {
-    return generateProof(web3, proofFactory, proofContract, type, data)
+  generateProof: (web3, device, type, data) => {
+    return generateProof(web3, device, type, data)
+  },
+  getAllOwnerProofs: (contract, provider, owner) => {
+    return getAllOwnerProofs(contract, provider, owner)
   }
+}
+
+let proofTypes = {
+  WIPE: 'wipe',
+  FUNCTION: 'function',
+  DISPOSAL: 'disposal',
+  RECYCLE: 'recycle',
+  REUSE: 'reuse'
+}
+
+/**
+ * Extracts all proofs from all the devices of a given owner.
+ * @param {Function} contract truffle-contract library.
+ * @param {Function} provider blockchain provider configuration.
+ * @param {string} owner ethereum address from owner.
+ */
+function getAllOwnerProofs (contract, provider, owner) {
+  let proofHashes = []
+  return new Promise(resolve => {
+    deviceUtils.getDeployedDevicePerOwner(owner).then(devices => {
+      devices.foreach((deviceAddress) => {
+        extractProofsFromDevice(contract, provider, deviceAddress).then(hashes => {
+          proofHashes += hashes
+        })
+      })
+      resolve(proofHashes)
+    })
+  })
+}
+
+/**
+ * Extracts all proofs from a given device.
+ * @param {Function} contract truffle-contract library.
+ * @param {Function} provider blockchain provider configuration.
+ * @param {string} deviceAddress ethereum address from device.
+ */
+function extractProofsFromDevice (contract, provider, deviceAddress) {
+  let proofs = []
+  return new Promise(resolve => {
+    functions.getDeployedDevice(contract, provider, deviceAddress).then(device => {
+      proofTypes.foreach(type => {
+        device.getProofs(type).then(hash => {
+          proofs.push({ 'type': proofTypes[type], 'hash': hash })
+        })
+      })
+      resolve(proofs)
+    })
+  })
 }
 
 /**
@@ -24,19 +76,19 @@ const functions = {
 function generateProof (web3, device, type, data) {
   let proof
   switch (type) {
-    case 'wipe':
+    case proofTypes.WIPE:
       proof = new DataWipeProof(web3, data)
       break
-    case 'function':
+    case proofTypes.FUNCTION:
       proof = new FunctionProof(web3, data)
       break
-    case 'reuse':
+    case proofTypes.REUSE:
       proof = new ReuseProof(web3, data)
       break
-    case 'recycle':
+    case proofTypes.RECYCLE:
       proof = new RecycleProof(web3, data)
       break
-    case 'disposal':
+    case proofTypes.DISPOSAL:
       proof = new DisposalProof(web3, data)
       break
     default:
