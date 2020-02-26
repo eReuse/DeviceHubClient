@@ -1435,19 +1435,26 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
 
   /**
    * @alias module:resources.DeliveryNote
-   * @extends module:resources.ActionWithMultipleDevices
    */
-  class DeliveryNote extends ActionWithMultipleDevices {
-    define ({supplierCode = null, date = null, deliveryNoteID = null, deposit = null, ...rest}) {
+  class DeliveryNote extends Thing {
+    define ({
+      id = null, creator = null, documentID = null, supplier = null, date = null, deposit = null, 
+      expectedDevices = null, transferredDevices = null, transfer_state = null, lot = null, ...rest }) {
       super.define(rest)
-      this.supplierCode = supplierCode
+      this.id = id
+      this.creator = creator
+      this.documentID = documentID
+      this.supplier = supplier
       this.date = date
-      this.deliveryNoteID = deliveryNoteID
       this.deposit = deposit
+      this.expectedDevices = expectedDevices
+      this.transferredDevices = transferredDevices
+      this.transfer_state = transfer_state
+      this.lot = lot
     }
 
     get title () {
-      return `${super.supplierCode} — ${this.deliveryNoteID} ${this.date}`
+      return `${super.supplier} — ${this.documentID} ${this.date}`
     }
 
     _post () {
@@ -1935,7 +1942,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
        * @type {boolean}
        * */
       this.isVisible = true
-    }
+    } 
 
     /**
      * @return {module:resources.Lot}
@@ -2106,6 +2113,11 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @type {module:server.DevicehubThing}
    */
   Lot.server = new server.DevicehubThing('/lots/', resources)
+  /**
+   * @memberOf {module:resources.DeliveryNote}
+   * @type {module:server.DevicehubThing}
+   */
+  DeliveryNote.server = new server.DevicehubThing('/deliverynote/', resources)
   /**
    * @alias {module:resources.Tag.server}
    * @type {module:server.DevicehubThing}
