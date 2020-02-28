@@ -1439,7 +1439,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   class DeliveryNote extends Thing {
     define ({
       id = null, creator = null, documentID = null, supplier = null, date = null, deposit = null, 
-      expectedDevices = null, transferredDevices = null, transfer_state = null, lot = null, ...rest }) {
+      expectedDevices = null, transferredDevices = null, transfer_state = "Initial", lot = null, 
+      ethereum_address = null, ...rest }) {
       super.define(rest)
       this.id = id
       this.creator = creator
@@ -1451,6 +1452,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       this.transferredDevices = transferredDevices
       this.transfer_state = transfer_state
       this.lot = lot
+      this.ethereum_address = ethereum_address
     }
 
     get title () {
@@ -1720,7 +1722,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    */
   class Lot extends Thing {
     define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null, 
-      transfer_state = 'Initial', owner_address = null, receiver_address = null, deliverynote_address = null, ...rest}) {
+      deliverynote = null, ...rest}) {
       super.define(rest)
       this.id = id
       this.name = name
@@ -1730,10 +1732,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       this.parents = parents
       this.children = children
       this.url = url
-      this.transfer_state = transfer_state
-      this.owner_address = owner_address
-      this.receiver_address = receiver_address
-      this.deliverynote_address = deliverynote_address
+      this.deliverynote = deliverynote ? new DeliveryNote(deliverynote) : deliverynote
     }
 
     get children () {
