@@ -1609,8 +1609,36 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   /**
    * @alias module:resources.Transferred
    * @extends module:resources.ActionWithMultipleDevices
+   * @deprecated 
    */
   class Transferred extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-check-circle'
+    }
+  }
+
+  /**
+   * @alias module:resources.Proof
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Proof extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-check-circle'
+    }
+  }
+
+  /**
+   * @alias module:resources.ProofTransfer
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class ProofTransfer extends Proof {
+    define ({supplier = null, receiver = null, deposit = null, ...rest}) {
+      super.define(rest)
+      this.supplier = supplier
+      this.receiver = receiver
+      this.deposit = deposit
+    }
+
     static get icon () {
       return 'fa-check-circle'
     }
@@ -1993,7 +2021,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @return {Thing}
    */
   function init (thingLike, useCache) {
-    console.assert(thingLike.type, 'thing obj requires a type.')
+    console.assert(typeof thingLike.type === "string", 'thing requires a type. type is set to %s', thingLike.type)
+    console.assert(!!resources[thingLike.type], 'thing type %s not set in resources', thingLike.type)
     return resources[thingLike.type].init(thingLike, useCache)
   }
 
@@ -2086,6 +2115,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     Donate: Donate,
     MakeAvailable: MakeAvailable,
     Transferred: Transferred,
+    ProofTransfer: ProofTransfer,
     CancelTrade: CancelTrade,
     Rent: Rent,
     ToDisposeProduct: ToDisposeProduct,

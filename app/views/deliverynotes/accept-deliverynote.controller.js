@@ -45,8 +45,14 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
         return deliverynote.patch('transfer_state', 'deposit', 'owner_address')
       })
       .then(function () {
-        const action = new resources.Transferred({devices: devices})
-        return action.post()      
+        const proofData = {
+          devices: devices,
+          supplier: deliverynote.supplier,
+          receiver: deliverynote.receiver,
+          deposit: deliverynote.deposit
+        }
+        const action = new resources.ProofTransfer(proofData)
+        return action.post()
       })
       .then(function () {
         return Notification.success('Successfully accepted transfer')
