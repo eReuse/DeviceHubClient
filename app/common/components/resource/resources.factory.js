@@ -1544,6 +1544,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
+  // DEPRECATED
   /**
    * @alias module:resources.Trade
    * @extends module:resources.ActionWithMultipleDevices
@@ -1559,6 +1560,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     }
   }
   
+  // DEPRECATED
   /**
    * @alias module:resources.Trade
    * @extends module:resources.ActionWithMultipleDevices
