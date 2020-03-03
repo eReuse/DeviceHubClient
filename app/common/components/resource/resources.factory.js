@@ -159,7 +159,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
      */
     post (uri, config) {
       console.assert(!this.id, '%s %s has already been posted.', this.type, this.id)
-      return this.server.post(this._post(), uri, config).then(obj => {
+      const dump = this._post()
+      return this.server.post(dump, uri, config).then(obj => {
         this.define(obj)
         return this
       })
@@ -263,7 +264,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
      */
     _rels (others) {
       console.assert(others instanceof Array)
-      const ret = others.map(other => this._rel(other))
+      const ret = others.map((other) => {
+        return this._rel(other)
+      })
       console.assert(ret !== undefined)
       return ret
     }
@@ -347,7 +350,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       /** @type {?string} */
       this.manufacturer = manufacturer ? inflection.titleize(manufacturer) : null
       /** @type {?string} */
-      this.serialNumber = serialNumber ? serialNumber.toUpperCase() : null
+      this.serialNumber = serialNumber ? serialNumber.toString().toUpperCase() : null
       /** @type {?string} */
       this.brand = brand
       /** @type {?number} */
@@ -918,7 +921,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Thing
    */
   class Action extends Thing {
-    define ({id = null, name = null, closed = null, severity = null, description = null, startTime = null, endTime = null, snaphsot = null, agent = null, author = null, components = [], parent = null, url = null, ...rest}) {
+    define ({id = null, name = null, closed = null, severity = null, description = null, startTime = null, endTime = null, snapshot = null, agent = null, author = null, components = [], parent = null, url = null, ...rest}) {
       super.define(rest)
       /** @type {?string} */
       this.id = id
@@ -935,7 +938,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       /** @type {?Date} */
       this.endTime = endTime ? new Date(endTime) : null
       /** @type {?Snapshot} */
-      this.snaphsot = snaphsot
+      this.snapshot = snapshot
       /** @type {?Agent} */
       this.agent = agent
       /** @type {?User} */
@@ -1431,6 +1434,37 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
+   * @alias module:resources.DeliveryNote
+   */
+  class DeliveryNote extends Thing {
+    define ({
+      id = null, creator = null, documentID = null, supplier = null, date = null, deposit = null, 
+      expectedDevices = null, transferredDevices = null, transfer_state = "Initial", lot = null, 
+      ethereum_address = null, ...rest }) {
+      super.define(rest)
+      this.id = id
+      this.creator = creator
+      this.documentID = documentID
+      this.supplier = supplier
+      this.date = date
+      this.deposit = deposit
+      this.expectedDevices = expectedDevices
+      this.transferredDevices = transferredDevices
+      this.transfer_state = transfer_state
+      this.lot = lot
+      this.ethereum_address = ethereum_address
+    }
+
+    get title () {
+      return `${super.supplier} — ${this.documentID} ${this.date}`
+    }
+
+    _post () {
+      return this.dump(false)
+    }
+  }
+
+  /**
    * @alias module:resources.ToRepair
    * @extends module:resources.ActionWithMultipleDevices
    */
@@ -1510,6 +1544,38 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
+  // DEPRECATED
+  /**
+   * @alias module:resources.Trade
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class InitTransfer extends ActionWithMultipleDevices {
+    define ({shippingDate = null, invoiceNumber = null, to = null, lot = null, ...rest}) {
+      super.define(rest)
+      this.shippingDate = shippingDate
+      this.invoiceNumber = invoiceNumber
+      this.to = to
+      this.lot = lot
+      
+    }
+  }
+  
+  // DEPRECATED
+  /**
+   * @alias module:resources.Trade
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class AcceptTransfer extends ActionWithMultipleDevices {
+    define ({shippingDate = null, invoiceNumber = null, to = null, lot = null, deposit = null, ...rest}) {
+      super.define(rest)
+      this.shippingDate = shippingDate
+      this.invoiceNumber = invoiceNumber
+      this.to = to
+      this.lot = lot
+      this.deposit = deposit
+    }
+  }
+
   /**
    * @alias module:resources.Sell
    * @extends module:resources.Trade
@@ -1535,6 +1601,44 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Trade
    */
   class MakeAvailable extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-check-circle'
+    }
+  }
+
+  /**
+   * @alias module:resources.Transferred
+   * @extends module:resources.ActionWithMultipleDevices
+   * @deprecated 
+   */
+  class Transferred extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-check-circle'
+    }
+  }
+
+  /**
+   * @alias module:resources.Proof
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Proof extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-check-circle'
+    }
+  }
+
+  /**
+   * @alias module:resources.ProofTransfer
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class ProofTransfer extends Proof {
+    define ({supplier = null, receiver = null, deposit = null, ...rest}) {
+      super.define(rest)
+      this.supplier = supplier
+      this.receiver = receiver
+      this.deposit = deposit
+    }
+
     static get icon () {
       return 'fa-check-circle'
     }
@@ -1647,7 +1751,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @alias module:resources.Lot
    */
   class Lot extends Thing {
-    define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null, ...rest}) {
+    define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null, 
+      deliverynote = null, ...rest}) {
       super.define(rest)
       this.id = id
       this.name = name
@@ -1657,6 +1762,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       this.parents = parents
       this.children = children
       this.url = url
+      this.deliverynote = deliverynote ? new DeliveryNote(deliverynote) : deliverynote
     }
 
     get children () {
@@ -1758,10 +1864,11 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Thing
    */
   class User extends Thing {
-    define ({id = null, email = null, individuals = [], name = null, token = null, inventories = [], ...rest}) {
+    define ({id = null, email = null, ethereum_address = null, individuals = [], name = null, token = null, inventories = [], ...rest}) {
       super.define(rest)
       this.id = id
       this.email = email
+      this.ethereum_address = ethereum_address
       this.individuals = individuals
       this.name = name
       this.token = token
@@ -1864,7 +1971,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
        * @type {boolean}
        * */
       this.isVisible = true
-    }
+    } 
 
     /**
      * @return {module:resources.Lot}
@@ -1914,7 +2021,8 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @return {Thing}
    */
   function init (thingLike, useCache) {
-    console.assert(thingLike.type, 'thing obj requires a type.')
+    console.assert(typeof thingLike.type === "string", 'thing requires a type. type is set to %s', thingLike.type)
+    console.assert(!!resources[thingLike.type], 'thing type %s not set in resources', thingLike.type)
     return resources[thingLike.type].init(thingLike, useCache)
   }
 
@@ -1991,6 +2099,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     BenchmarkProcessor: BenchmarkProcessor,
     BenchmarkProcessorSysbench: BenchmarkProcessorSysbench,
     BenchmarkRamSysbench: BenchmarkRamSysbench,
+    DeliveryNote: DeliveryNote,
     ToRepair: ToRepair,
     Repair: Repair,
     Ready: Ready,
@@ -1999,10 +2108,14 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     Organize: Organize,
     Reserve: Reserve,
     CancelReservation: CancelReservation,
+    InitTransfer: InitTransfer,
+    AcceptTransfer: AcceptTransfer,
     Trade: Trade,
     Sell: Sell,
     Donate: Donate,
     MakeAvailable: MakeAvailable,
+    Transferred: Transferred,
+    ProofTransfer: ProofTransfer,
     CancelTrade: CancelTrade,
     Rent: Rent,
     ToDisposeProduct: ToDisposeProduct,
@@ -2031,6 +2144,11 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @type {module:server.DevicehubThing}
    */
   Lot.server = new server.DevicehubThing('/lots/', resources)
+  /**
+   * @memberOf {module:resources.DeliveryNote}
+   * @type {module:server.DevicehubThing}
+   */
+  DeliveryNote.server = new server.DevicehubThing('/deliverynote/', resources)
   /**
    * @alias {module:resources.Tag.server}
    * @type {module:server.DevicehubThing}

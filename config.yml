@@ -1,0 +1,66 @@
+# Config file for devicehub-client
+# Copy this file to the root folder of the project and modify it according your needs
+# The root properties of this config file are the different environments (ex. 'development')
+# except the first property, 'default', which is the default config used
+# for all environments.
+# When executing build with gulp, select which environment you want
+# to build for by setting an environment variable:
+# `DH_ENV={environment}`, ex. `DH_ENV=development`
+# By default it uses `development`.
+
+# In the following case 'development' env adds 'url' setting and
+# overrides 'debug' setting from the default one.
+
+default:
+  CONSTANTS:
+    appName: DeviceHub
+    html5mode: false  # If true, uncomment the line in the header in index.html
+    siteLogo: common/assets/devicehub-logo.svg
+    eReuseLogo: common/assets/ereuse-logo.svg
+    defaultLabelLogo: common/assets/devicehub-logo-label.png
+    loginBackgroundImage: common/assets/login-background.jpg
+    currency: €
+    workbenchPollingDelay: 2650
+    workbench: localhost
+    androidWorkbench: 192.168.12.1
+    inventories: false
+    flags:
+      showWorkbench: false
+development:
+  CONSTANTS:
+    url: http://localhost:5000
+    flags:
+      showWorkbench: true
+e2:
+  CONSTANTS:
+    html5mode: true
+    url: https://api.app.usody.com
+    inventories: true
+e3:
+  CONSTANTS:
+    html5mode: true
+    url: https://api-beta.devicetag.io
+    inventories: true
+e4:
+  CONSTANTS:
+    appName: Devicehub Beta
+    blockchain: '127.0.0.1'
+    # blockchain: ereuse04.ereuse.org
+    html5mode: true
+    url: https://api.dh.usody.net
+    inventories: true
+devel:
+  CONSTANTS:
+    html5mode: true
+    url: http://devicehub.ereuse.net
+    inventories: true
+developmentApache:
+  CONSTANTS:
+    url: http://localhost:8080
+    inventories: true
+developmentBox:
+  CONSTANTS:
+      #url: http://bustawin.local:5000
+      url: http://192.168.1.41:5000
+      flags:
+        showWorkbench: true

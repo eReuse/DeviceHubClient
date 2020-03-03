@@ -1,107 +1,144 @@
 <!-- Listing -->
 <div class="row">
-    <nav id="lots"
-         class="col-xs-12 col-sm-2 col-md-2 col-lg-2 fill-height-bar"
-         ng-class="{'hidden-xs': !lotXs.visible}">
-        <button class="btn btn-sm btn-dark visible-xs pull-right" ng-click="lotXs.toggle()">
-            <i class="fa fa-times fa-fw fa-2x"></i>
+  <nav id="lots"
+       class="col-xs-12 col-sm-2 col-md-2 col-lg-2 fill-height-bar"
+       ng-class="{'hidden-xs': !lotXs.visible}">
+    <button class="btn btn-sm btn-dark visible-xs pull-right" ng-click="lotXs.toggle()">
+      <i class="fa fa-times fa-fw fa-2x"></i>
+    </button>
+    <lots-tree-navigation on-selection="lotsM.updateSelection(lots)">
+    </lots-tree-navigation>
+  </nav>
+  <div id="main-row"
+       class="col-xs-12 col-sm-6 col-md-6 col-lg-6"
+       ng-show="!lotXs.visible && !selectionXs.visible">
+    <div id="lot-row" ng-if="lotsM.lots.length">
+      <div class="pull-right">
+        <button type="button"
+                class="btn btn-link hidden-xs btn-xs"
+                ng-click="lotsM.deselectAll()"
+        >
+          Deselect all ({{lotsM.lots.length}})
         </button>
-        <lots-tree-navigation on-selection="lotsM.updateSelection(lots)">
-        </lots-tree-navigation>
-    </nav>
-    <div id="main-row"
-         class="col-xs-12 col-sm-6 col-md-6 col-lg-6"
-         ng-show="!lotXs.visible && !selectionXs.visible">
-        <div id="lot-row" ng-if="lotsM.lots.length">
-            <div class="pull-right">
-                <button type="button"
-                        class="btn btn-link hidden-xs btn-xs"
-                        ng-click="lotsM.deselectAll()"
-                >
-                    Deselect all ({{lotsM.lots.length}})
-                </button>
-                <lot-children-button parent="lotsM.lots[0]" ng-if="lotsM.lots.length === 1">
-                </lot-children-button>
-            </div>
-            <div ng-if="lotsM.lots.length === 1">
-                <h2>
-                    <field-edit field-name="name" field-type="String" resource="lotsM.lots[0]">
-                        {{lotsM.lots[0].name}}
-                    </field-edit>
-                </h2>
-                <field-edit field-name="description"
-                            field-type="Textarea"
-                            resource="lotsM.lots[0]"
-                            description="resourceList.lot">
-                    <div marked="lotsM.lots[0].description"></div>
-                </field-edit>
-            </div>
-            <h2 ng-show="lotsM.lots.length > 1">
-                {{lotsM.title}}
-            </h2>
-        </div>
-        <div class="col-xs-12 fill-height-bar">
-            <div ng-hide="lotsM.lots.length">
-                <button type="button"
-                        class="btn btn-dark visible-xs pull-right mini-margin-top"
-                        ng-click="lotXs.show()">
-                    <i class="fa fa-folder fa-fw"></i>Select lot
-                </button>
-                <!--<import-button class="pull-right"></import-button>-->
-                <snapshot-button class="pull-right"></snapshot-button>
-                <h2>{{::'resourceList.allDevices' | translate}}</h2>
-            </div>
-            <h3 ng-show="lotsM.lots.length">Devices in lots</h3>
-            <resource-search on-update="getter.setSearch(text)"></resource-search>
-            <resource-list-filters on-update="getter.setFilters(filters)"></resource-list-filters>
-            <div class="text-right">
-                <button type="button"
-                        class="btn btn-link btn-xs"
-                        ng-show="!selected.length"
-                        ng-click="selected.selectAll()"
-                >
-                    Select all devices ({{getter.devices.pagination.total}})
-                </button>
-                <button type="button"
-                        class="btn btn-link btn-xs"
-                        ng-show="selected.length"
-                        ng-click="selected.deselectAll()"
-                >
-                    Deselect all devices ({{selected.length}})
-                </button>
-            </div>
-            <div class="devices">
-                <table id="device-list-table"
-                       class="table table-striped table-hover unselectable table-condensed">
-                    <thead>
-                    <tr>
-                        <th ng-repeat="Field in ::config.table track by Field.type"
-                            class="{{::Field.cssClasses}}"
-                            field-sort
-                            sort-enabled="Field.sortable"
-                            sort="getter.setSort(key, order)"
-                            key="{{::Field.sortKey}}"
-                            name="{{::Field.name}}"
-                            group="_sort"
-                            sort-by-default="Field.type === 'Updated'"
-                        >
-                            {{::Field.name}}
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="device in getter.devices track by device.id"
-                        ng-class="{info: selected.isSelected(device)}"
-                        ng-click="selected.toggle(device, $index, $event)"
-                        on-long-press="selected.multi(device)"
-                    >
-                        <td ng-repeat="Field in ::config.table track by Field.name"
-                            class="{{::Field.cssClasses}}"
-                        >
+        <lot-children-button parent="lotsM.lots[0]" ng-if="lotsM.lots.length === 1">
+        </lot-children-button>
+        <share-deliverynote-button ng-if="lotsM.lots.length && lotsM.lots[0].deliverynote"
+        lot="lotsM.lots[0]" getter="getter" ng-if="lotsM.lots.length === 1">
+        </share-deliverynote-button>
+        <accept-deliverynote-button ng-if="lotsM.lots.length && lotsM.lots[0].deliverynote"
+        lot="lotsM.lots[0]" getter="getter" ng-if="lotsM.lots.length === 1">
+        </accept-deliverynote-button>
+        <lot-transfer-button lot="lotsM.lots[0]" getter="getter"></lot-transfer-button>
+      </div>
+      <div ng-if="lotsM.lots.length === 1">
+        <h2>
+          <field-edit field-name="name" field-type="String" resource="lotsM.lots[0]">
+            {{lotsM.lots[0].name}}
+          </field-edit>
+        </h2>
+        <field-edit field-name="description"
+                    field-type="Textarea"
+                    resource="lotsM.lots[0]"
+                    description="resourceList.lot">
+          <div marked="lotsM.lots[0].description"></div>
+        </field-edit>
+      </div>
+      <h2 ng-show="lotsM.lots.length > 1">
+        {{lotsM.title}}
+      </h2>
+    </div>
+    <div class="col-xs-12 fill-height-bar">
+      <div ng-hide="lotsM.lots.length">
+        <button type="button"
+                class="btn btn-dark visible-xs pull-right mini-margin-top"
+                ng-click="lotXs.show()">
+          <i class="fa fa-folder fa-fw"></i>Select lot
+        </button>
+        <!--<create-deliverynote-button class="pull-right"></create-deliverynote-button>-->
+        <!--<import-button class="pull-right"></import-button>-->
+        <snapshot-button class="pull-right"></snapshot-button>
+        <h2>{{::'resourceList.allDevices' | translate}}</h2>
+      </div>
+      <h3 ng-if="lotsM.lots.length && lotsM.lots[0].deliverynote">Expected devices</h3>
+      <div class="deliverynote-devices" ng-if="lotsM.lots.length && lotsM.lots[0].deliverynote">
+        <table id="deliverynote-device-list-table"
+               class="table table-striped table-hover unselectable table-condensed">
+          <thead>
+          <tr>
+            <th ng-repeat="Field in ::config.deliverynoteTable track by Field.type"
+                class="{{::Field.cssClasses}}"
+            >
+              {{::Field.name}}
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="device in lotsM.lots[0].deliverynote.expectedDevices track by device.id">
+            <td ng-repeat="Field in ::config.deliverynoteTable track by Field.name"
+                class="{{::Field.cssClasses}}"
+            >
               <span ng-if="::Field.html">
                 <span ng-bind-html="Field.init(device).content"></span>
               </span>
-                            <span ng-if="::!Field.html">
+              <span ng-if="::!Field.html">
+              {{::Field.init(device).content}}
+              </span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 ng-show="lotsM.lots.length">Devices in lots</h3>
+      <resource-search on-update="getter.setSearch(text)"></resource-search>
+      <resource-list-filters on-update="getter.setFilters(filters)"></resource-list-filters>
+      <div class="text-right">
+        <button type="button"
+                class="btn btn-link btn-xs"
+                ng-show="!selected.length"
+                ng-click="selected.selectAll()"
+        >
+          Select all devices ({{getter.devices.pagination.total}})
+        </button>
+        <button type="button"
+                class="btn btn-link btn-xs"
+                ng-show="selected.length"
+                ng-click="selected.deselectAll()"
+        >
+          Deselect all devices ({{selected.length}})
+        </button>
+      </div>
+      <div class="devices">
+        <table id="device-list-table"
+               class="table table-striped table-hover unselectable table-condensed">
+          <thead>
+          <tr>
+            <th ng-repeat="Field in ::config.table track by Field.type"
+                class="{{::Field.cssClasses}}"
+                field-sort
+                sort-enabled="Field.sortable"
+                sort="getter.setSort(key, order)"
+                key="{{::Field.sortKey}}"
+                name="{{::Field.name}}"
+                group="_sort"
+                sort-by-default="Field.type === 'Updated'"
+            >
+              {{::Field.name}}
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="device in getter.devices track by device.id"
+              ng-class="{info: selected.isSelected(device)}"
+              ng-click="selected.toggle(device, $index, $event)"
+              on-long-press="selected.multi(device)"
+          >
+            <td ng-repeat="Field in ::config.table track by Field.name"
+                class="{{::Field.cssClasses}}"
+            >
+              <span ng-if="::Field.html">
+                <span ng-bind-html="Field.init(device).content"></span>
+              </span>
+              <span ng-if="::!Field.html">
               {{::Field.init(device).content}}
               </span>
                         </td>

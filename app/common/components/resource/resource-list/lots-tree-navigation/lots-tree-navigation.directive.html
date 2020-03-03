@@ -1,9 +1,13 @@
 <div>
-    <button class="btn btn-link btn-sm pull-right" ng-click="newLot($event)">
-        <i class="fa fa-plus fa-fw"></i>
-        {{::'lots.new' | translate}}
-    </button>
-    <h3>Lots</h3>
+  <button class="btn btn-link btn-sm pull-right" ng-click="newIncomingLot($event)">
+    <i class="fa fa-plus fa-fw"></i>
+    {{::'lots.newIncoming' | translate}}
+  </button>
+  <button class="btn btn-link btn-sm pull-right" ng-click="newLot($event)">
+    <i class="fa fa-plus fa-fw"></i>
+    {{::'lots.new' | translate}}
+  </button>
+  <h3>Lots</h3>
 </div>
 <div ng-if="lots.tree.length">
     <div class="input-group">

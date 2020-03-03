@@ -16,7 +16,7 @@ function resourceListConfig ($filter, table) {
 
   class Title extends table.Title {
     constructor (resource) {
-      let content = resource.typeHuman
+      let content = resource.typeHuman || ''
       if (resource.manufacturer || resource.model) {
         content += ` ${resource.manufacturer || ''} ${resource.model || ''}`
       }
@@ -74,7 +74,21 @@ function resourceListConfig ($filter, table) {
 
   Updated.hide = true
 
+  class SerialNumber extends table.Field {
+    constructor (resource) {
+      super(resource, resource.serialNumber)
+    }
+  }
+
+  class HID extends table.Field {
+    constructor (resource) {
+      super(resource, resource.hid)
+    }
+  }
+
+
   return {
+    deliverynoteTable: [Title, SerialNumber, HID],
     table: [table.Icon, Title, table.Tags, Rate, Issues, Status, Price, Updated]
   }
 }

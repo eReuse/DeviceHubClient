@@ -119,6 +119,26 @@
       "url": "The URL is invalid."
     }
   },
+  "acceptSharedLot": {
+    "button": "Accept shared lot",
+    "form": {
+      "title": "Accept shared lot",
+      "deposit": {
+        "l": "Enter deposit",
+        "d": "Enter deposit"
+      }
+    }
+  },
+  "shareLot": {
+    "button": "Share lot",
+    "form": {
+      "title": "Share lot",
+      "ethereumAddress": {
+        "l": "Recipient's ethereum address",
+        "d": "Enter ethereum address of user you want to share this lot with"
+      }
+    }
+  },
   "r": {
     "l": {
       "device": "Device",

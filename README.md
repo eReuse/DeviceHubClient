@@ -1,9 +1,6 @@
 # DeviceHubClient
 AngularJS client for [DeviceHub](https://github.com/eReuse/DeviceHub).
 
-DeviceTag.io has [a nice quickstart guide 
-that showcases DeviceHubClient](https://www.devicetag.io/support/quick-start/).
-
 ## Building
 NodeJS >=7.4 with npm required.
 
