@@ -70,16 +70,14 @@ function createDeliveryCtrl ($scope, $window, fields, $state, enums, resources) 
   class CreateDeliveryNoteForm extends fields.Form {
     constructor () {
       super(
-        new fields.String('deliveryNote.supplierCode', {
-          namespace: 'r',
-        }),
-        new fields.String('deliveryNote.supplierCode', {
+        null,
+        new fields.String('deliveryNote.supplier', {
           namespace: 'r',
         }),
         new fields.Datepicker('deliveryNote.date', {
           namespace: 'r',
         }),
-        new fields.String('deliveryNote.deliveryNoteID', {
+        new fields.String('deliveryNote.documentID', {
           namespace: 'r'
         }),
         new fields.String('deliveryNote.deposit', {
@@ -90,9 +88,10 @@ function createDeliveryCtrl ($scope, $window, fields, $state, enums, resources) 
 
     _submit () {
       const devices = $scope.uploadedDevices && $scope.uploadedDevices.map((device) => {
-        return new resources.Device(device)
+        return device
+        // return new resources.Device(device)
       })
-      const model = _.assign({ devices : devices }, this.model.deliveryNote)
+      const model = _.assign({ expectedDevices : devices }, this.model.deliveryNote)
       const deliveryNote = new resources.DeliveryNote(model, {_useCache: false})
       return deliveryNote.post()
     }

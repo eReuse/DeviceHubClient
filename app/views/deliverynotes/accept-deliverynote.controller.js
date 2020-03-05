@@ -7,6 +7,7 @@
 function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $stateParams, session, resources) {
   const devices = $scope.devices = $stateParams.devices
   const lot = $scope.lot = $stateParams.lot
+  const deliverynote = lot.deliverynote
 
   function leave () {
     return $state.go('auth.inventory')
@@ -37,15 +38,21 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
       return web3
       .acceptTransfer(dataWEB3)
       .then(function () {
-        lot.deposit = deposit
-        lot.transfer_state = 'Accepted'
-        lot.owner_address = session.user.ethereum_address
+        deliverynote.deposit = deposit // TODO this should already be set when POSTing the deliverynote
+        deliverynote.transfer_state = 'Accepted'
+        deliverynote.owner_address = session.user.ethereum_address // TODO this should be done on the server
 
-        return lot.patch('transfer_state', 'deposit', 'owner_address')
+        return deliverynote.patch('transfer_state', 'deposit', 'owner_address')
       })
       .then(function () {
-        const action = new resources.Transferred({devices: devices})
-        return action.post()      
+        const proofData = {
+          devices: devices,
+          supplier: deliverynote.supplier,
+          receiver: deliverynote.receiver,
+          deposit: deliverynote.deposit
+        }
+        const action = new resources.ProofTransfer(proofData)
+        return action.post()
       })
       .then(function () {
         return Notification.success('Successfully accepted transfer')
