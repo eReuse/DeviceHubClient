@@ -8,18 +8,19 @@ class FunctionProof extends Proof {
 
   generateProof (device, account) {
     return new Promise(resolve => {
-      return device.generateFunctionProof(this.rating, this.usage, this.version,
-        { from: account })
+      return device.generateFunctionProof(this.score, this.diskUsage,
+        this.algorithmVersion, this.proofAuthor, { from: account })
         .then(hash => {
           resolve(hash)
         })
     })
   }
 
-  extractData (data) {
-    this.rating = data.rating
-    this.usage = data.usage
-    this.version = data.version
+  extractData (web3, data) {
+    this.score = data.score
+    this.diskUsage = data.diskUsage
+    this.algorithmVersion = data.algorithmVersion
+    this.proofAuthor = web3.utils.toChecksumAddress(data.author)
   }
 }
 

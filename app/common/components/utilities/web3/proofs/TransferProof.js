@@ -1,6 +1,6 @@
 const Proof = require('./Proof')
 
-class ReuseProof extends Proof {
+class TransferProof extends Proof {
   constructor (web3, data) {
     super(web3, data)
     this.extractData(web3, data)
@@ -8,8 +8,8 @@ class ReuseProof extends Proof {
 
   generateProof (device, account) {
     return new Promise(resolve => {
-      return device.generateReuseProof(this.segment, this.idReceipt,
-        this.supplier, this.receiver, this.price, { from: account })
+      return device.generateTransferProof(this.supplier, this.receiver,
+        this.deposit, this.isWaste, { from: account })
         .then(hash => {
           resolve(hash)
         })
@@ -17,12 +17,11 @@ class ReuseProof extends Proof {
   }
 
   extractData (web3, data) {
-    this.segment = data.segment
-    this.idReceipt = data.idReceipt
     this.supplier = web3.utils.toChecksumAddress(data.supplier)
     this.receiver = web3.utils.toChecksumAddress(data.receiver)
-    this.price = data.price
+    this.deposit = data.deposit
+    this.isWaste = data.isWaste
   }
 }
 
-module.exports = ReuseProof
+module.exports = TransferProof

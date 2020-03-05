@@ -9,7 +9,7 @@ class DataWipeProof extends Proof {
   generateProof (device, account) {
     return new Promise(resolve => {
       return device.generateDataWipeProof(this.erasureType, this.date,
-        this.result, { from: account })
+        this.result, this.author, { from: account })
         .then(hash => {
           resolve(hash)
         })
@@ -17,9 +17,10 @@ class DataWipeProof extends Proof {
   }
 
   extractData (web3, data) {
-    this.erasureType = data.erasure
+    this.erasureType = data.erasureType
     this.date = data.date
     this.result = data.result
+    this.proofAuthor = web3.utils.toChecksumAddress(data.author)
   }
 }
 

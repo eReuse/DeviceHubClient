@@ -2,7 +2,7 @@ const DataWipeProof = require('./proofs/DataWipeProof')
 const FunctionProof = require('./proofs/FunctionProof')
 const ReuseProof = require('./proofs/ReuseProof')
 const RecycleProof = require('./proofs/RecycleProof')
-const DisposalProof = require('./proofs/DisposalProof')
+const TransferProof = require('./proofs/TransferProof')
 const deviceUtils = require('./device_utils')
 
 const functions = {
@@ -17,7 +17,7 @@ const functions = {
 let proofTypes = {
   WIPE: 'wipe',
   FUNCTION: 'function',
-  DISPOSAL: 'disposal',
+  TRANSFER: 'transfer',
   RECYCLE: 'recycle',
   REUSE: 'reuse'
 }
@@ -88,8 +88,8 @@ function generateProof (web3, device, type, data) {
     case proofTypes.RECYCLE:
       proof = new RecycleProof(web3, data)
       break
-    case proofTypes.DISPOSAL:
-      proof = new DisposalProof(web3, data)
+    case proofTypes.TRANSFER:
+      proof = new TransferProof(web3, data)
       break
     default:
       break
