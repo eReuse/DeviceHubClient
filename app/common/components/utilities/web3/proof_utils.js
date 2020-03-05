@@ -7,7 +7,10 @@ const deviceUtils = require('./device_utils')
 
 const functions = {
   generateProof: (web3, device, type, data) => {
-    return generateProof(web3, device, type, data)
+    return getProof(web3, device, type).generateProof(web3, data)
+  },
+  getProofData: (device, type, hash, account) => {
+    return getProof(device, hash, type).getProofData(hash, account)
   },
   getAllOwnerProofs: (contract, provider, owner) => {
     return getAllOwnerProofs(contract, provider, owner)
@@ -63,8 +66,7 @@ function extractProofsFromDevice (contract, provider, deviceAddress) {
 }
 
 /**
- * Generates the proof corresponding to the received type and maps it
- * to its corresponding device in the blockchain.
+ * Returns the proof object corresponding to the received type.
  * @param {Function} web3 Web3.js library.
  * @param {Function} device Blockchain smart contract object.
  * @param {string} type Type of the proof to be generated.
@@ -73,28 +75,34 @@ function extractProofsFromDevice (contract, provider, deviceAddress) {
  * @returns {Promise} A promise that resolves to the ethereum address of the
  *                    generated proof.
  */
-function generateProof (web3, device, type, data) {
-  let proof
+function getProof (web3, device, type) {
   switch (type) {
     case proofTypes.WIPE:
-      proof = new DataWipeProof(web3, data)
-      break
+      return new DataWipeProof(web3, device)
     case proofTypes.FUNCTION:
-      proof = new FunctionProof(web3, data)
-      break
+      return new FunctionProof(web3, device)
     case proofTypes.REUSE:
-      proof = new ReuseProof(web3, data)
-      break
+      return new ReuseProof(web3, device)
     case proofTypes.RECYCLE:
-      proof = new RecycleProof(web3, data)
-      break
+      return new RecycleProof(web3, device)
     case proofTypes.TRANSFER:
-      proof = new TransferProof(web3, data)
-      break
+      return new TransferProof(web3, device)
     default:
       break
   }
-  return proof.generateProof(device, web3.eth.defaultAccount)
+}
+
+/**
+ * Returns the block information stored for a given proof. Used for the block
+ * explorer.
+ * @param {Function} device Blockchain smart contract object.
+ * @param {string} hash unique proof identifier.
+ * @param {string} type type of the proof.
+ * @returns {Promise} A promise that resolves to the block information related
+ *                    to some proof.
+ */
+function getProofBlockInfo (device, hash, type) {
+  return device.getProof(hash, type)
 }
 
 module.exports = functions

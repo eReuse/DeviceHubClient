@@ -1,27 +1,25 @@
-const Proof = require('./Proof')
-
-class RecycleProof extends Proof {
-  constructor (web3, data) {
-    super(web3, data)
-    this.extractData(web3, data)
+class RecycleProof {
+  constructor (device) {
+    this.device = device
   }
 
-  generateProof (device, account) {
+  generateProof (web3, data, account) {
     return new Promise(resolve => {
-      return device.generateRecycleProof(this.collectionPoint, this.date,
-        this.contact, this.ticket, this.gpsLocation, { from: account })
+      return this.device.generateRecycleProof(data.collectionPoint, data.date,
+        data.contact, data.ticket, data.gpsLocation, { from: account })
         .then(hash => {
           resolve(hash)
         })
     })
   }
 
-  extractData (web3, data) {
-    this.collectionPoint = data.collectionPoint
-    this.date = data.date
-    this.contact = data.contact
-    this.ticket = data.ticket
-    this.gpsLocation = data.gpsLocation
+  getProofData (hash, account) {
+    return new Promise(resolve => {
+      return this.device.getRecycleProof(hash, { from: account })
+        .then(data => {
+          resolve(data)
+        })
+    })
   }
 }
 

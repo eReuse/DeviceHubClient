@@ -1,26 +1,27 @@
-const Proof = require('./Proof')
-
-class TransferProof extends Proof {
-  constructor (web3, data) {
-    super(web3, data)
-    this.extractData(web3, data)
+class TransferProof {
+  constructor (device) {
+    this.device = device
   }
 
-  generateProof (device, account) {
+  generateProof (web3, data, account) {
     return new Promise(resolve => {
-      return device.generateTransferProof(this.supplier, this.receiver,
-        this.deposit, this.isWaste, { from: account })
+      return this.device.generateTransferProof(
+        web3.utils.toChecksumAddress(data.supplier),
+        web3.utils.toChecksumAddress(data.receiver),
+        data.deposit, data.isWaste, { from: account })
         .then(hash => {
           resolve(hash)
         })
     })
   }
 
-  extractData (web3, data) {
-    this.supplier = web3.utils.toChecksumAddress(data.supplier)
-    this.receiver = web3.utils.toChecksumAddress(data.receiver)
-    this.deposit = data.deposit
-    this.isWaste = data.isWaste
+  getProofData (hash, account) {
+    return new Promise(resolve => {
+      return this.device.getTransferProof(hash, { from: account })
+        .then(data => {
+          resolve(data)
+        })
+    })
   }
 }
 

@@ -41,6 +41,12 @@ function web3Service ($window) {
         .then(device => {
           return proofUtils.generateProof(web3, device, obj.type, obj.data)
         })
+    },
+    getProof: (obj) => {
+      return devicesUtils.getDeployedDevice(contract, provider, obj.deviceAddress)
+        .then(device => {
+          return proofUtils.getProofData(device, obj.type, obj.hash, web3.eth.defaultAccount)
+        })
     }
   }
 
@@ -88,6 +94,19 @@ function web3Service ($window) {
     })
   }
   return service
+}
+
+function getSampleInputProofs() {
+  return {
+    'deviceAddress': '0x758D0639aB9C4Cb9cCF4f99557ba33926f8eE1E3',
+    'proofType': 'wipe',
+    'data': {
+      'erasureType': 'Full',
+      'date': '05-03-2020',
+      'result': 'true',
+      'proofAuthor': '0x11891834542c32C509Aa1Eae38Dfccb5288EDa2b'
+    }
+  }
 }
 
 module.exports = web3Service

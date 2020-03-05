@@ -1,26 +1,26 @@
-const Proof = require('./Proof')
-
-class FunctionProof extends Proof {
-  constructor (data) {
-    super(data)
-    this.extractData(data)
+class FunctionProof {
+  constructor (device) {
+    this.device = device
   }
 
-  generateProof (device, account) {
+  generateProof (web3, data, account) {
     return new Promise(resolve => {
-      return device.generateFunctionProof(this.score, this.diskUsage,
-        this.algorithmVersion, this.proofAuthor, { from: account })
+      return this.device.generateFunctionProof(data.score, data.diskUsage,
+        data.algorithmVersion, web3.utils.toChecksumAddress(data.author),
+        { from: account })
         .then(hash => {
           resolve(hash)
         })
     })
   }
 
-  extractData (web3, data) {
-    this.score = data.score
-    this.diskUsage = data.diskUsage
-    this.algorithmVersion = data.algorithmVersion
-    this.proofAuthor = web3.utils.toChecksumAddress(data.author)
+  getProofData (hash, account) {
+    return new Promise(resolve => {
+      return this.device.getFunctionProof(hash, { from: account })
+        .then(data => {
+          resolve(data)
+        })
+    })
   }
 }
 

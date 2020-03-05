@@ -1,26 +1,27 @@
-const Proof = require('./Proof')
 
-class DataWipeProof extends Proof {
-  constructor (web3, data) {
-    super(web3, data)
-    this.extractData(web3, data)
+class DataWipeProof {
+  constructor (device) {
+    this.device = device
   }
 
-  generateProof (device, account) {
+  generateProof (web3, data, account) {
     return new Promise(resolve => {
-      return device.generateDataWipeProof(this.erasureType, this.date,
-        this.result, this.author, { from: account })
+      return this.device.generateDataWipeProof(data.erasureType, data.date,
+        JSON.parse(data.result), web3.utils.toChecksumAddress(this.author),
+        { from: account })
         .then(hash => {
           resolve(hash)
         })
     })
   }
 
-  extractData (web3, data) {
-    this.erasureType = data.erasureType
-    this.date = data.date
-    this.result = data.result
-    this.proofAuthor = web3.utils.toChecksumAddress(data.author)
+  getProofData (hash, account) {
+    return new Promise(resolve => {
+      return this.device.getDataWipeProof(hash, { from: account })
+        .then(data => {
+          resolve(data)
+        })
+    })
   }
 }
 
