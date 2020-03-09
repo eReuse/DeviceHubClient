@@ -15,5 +15,13 @@
         {{::element.type}}
       </a>
     </li>
+    <li ng-repeat="element in ::proofs"
+        ng-class="{'dropdown-header': $root._.isString(element)}">
+      <span ng-if="$root._.isString(element)">{{::element | translate}}</span>
+      <a ng-if="!$root._.isString(element)" ng-click="openProof(element)">
+        <i class="fa fa-fw {{::element.icon}}"></i>
+        {{::element.type}}
+      </a>
+    </li>
   </ul>
 </div>

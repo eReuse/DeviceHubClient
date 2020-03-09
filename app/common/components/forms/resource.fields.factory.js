@@ -164,6 +164,21 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
     }
   }
 
+  class BatchProof extends ResourceForm {
+    constructor (model, ... fields) {
+      super(model, ...fields)
+      const devices = new f.Resources('devices', {namespace: 'r.eventWithMultipleDevices'})
+      this.fields.splice(1, 0, devices)
+    }
+
+    _submit (op) { 
+      super._submit(op).then(() => {
+        console.log('POST proofs to Blockchain')
+      })
+    }
+  }
+  
+
   return {
     ResourceForm: ResourceForm,
     Event: Event,
@@ -176,6 +191,7 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
     Receive: Receive,
     MakeAvailable: MakeAvailable,
     Transferred: Transferred,
+    BatchProof: BatchProof,
     Rent: Rent,
     CancelTrade: CancelTrade,
     InitTransfer: InitTransfer,

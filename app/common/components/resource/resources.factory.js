@@ -1619,11 +1619,29 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
 
   /**
    * @alias module:resources.Proof
-   * @extends module:resources.ActionWithMultipleDevices
+   * @extends module:resources.Thing
    */
-  class Proof extends ActionWithMultipleDevices {
+  class Proof extends Thing {
+    define ({id = null, devices = null, ...rest}) {
+      super.define(rest)
+      this.id = id
+      this.devices = devices // most proof types only have one device
+    }
+
     static get icon () {
       return 'fa-check-circle'
+    }
+  }
+
+  class BatchProof extends Thing {
+    define ({proofs = [], devices = [], ...rest}) {
+      super.define(rest)
+      this.proofs = proofs
+      this.devices = devices // needed for displaying devices in the BatchProof form
+    }
+
+    _post () {
+      return _.pick(this.dump(false), ['proofs'])
     }
   }
 
@@ -1641,6 +1659,103 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
 
     static get icon () {
       return 'fa-check-circle'
+    }
+  }
+
+  /**
+   * @alias module:resources.ProofDataWipe
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class ProofDataWipe extends Proof {
+    define ({erasureType = null, date = null, result = null, proofAuthor = null, erasureID = null, ...rest}) {
+      super.define(rest)
+      
+      this.erasureType = erasureType
+      this.date = date
+      this.result = result
+      this.proofAuthor = proofAuthor
+      this.erasureID = erasureID
+    }
+
+    static get icon () {
+      return 'fa-check-circle'
+    }
+
+    static createFromDevice(device) {
+      if(device.privacy && device.privacy.length) {
+        const erasure = device.privacy[0]
+        let data = {
+          ethereumHashes: [], // TODO hash of device
+          erasureType: erasure.type,  // type of erasure
+          date: erasure.startTime,
+          result: true, // TODO check that all steps 
+          proofAuthor: null, // TODO
+          erasureID: erasure.id
+        }
+        return new ProofDataWipe(data)
+      }
+      
+      return null
+    }
+  }
+
+  /**
+   * @alias module:resources.ProofFunction
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class ProofFunction extends Proof {
+    define ({...rest}) {
+      super.define(rest)
+    }
+
+    static get icon () {
+      return 'fa-check-circle'
+    }
+
+    static createFromDevice(device) {
+      //TODO create from device
+      
+      return null
+    }
+  }
+
+  /**
+   * @alias module:resources.ProofReuse
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class ProofReuse extends Proof {
+    define ({...rest}) {
+      super.define(rest)
+    }
+
+    static get icon () {
+      return 'fa-check-circle'
+    }
+
+    static createFromDevice(device) {
+      //TODO create from device
+      
+      return null
+    }
+  }
+
+  /**
+   * @alias module:resources.ProofRecycling
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class ProofRecycling extends Proof {
+    define ({...rest}) {
+      super.define(rest)
+    }
+
+    static get icon () {
+      return 'fa-check-circle'
+    }
+
+    static createFromDevice(device) {
+      //TODO create from device
+      
+      return null
     }
   }
 
@@ -2115,7 +2230,12 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     Donate: Donate,
     MakeAvailable: MakeAvailable,
     Transferred: Transferred,
+    BatchProof: BatchProof,
     ProofTransfer: ProofTransfer,
+    ProofDataWipe: ProofDataWipe,
+    ProofFunction: ProofFunction,
+    ProofReuse: ProofReuse,
+    ProofRecycling: ProofRecycling,
     CancelTrade: CancelTrade,
     Rent: Rent,
     ToDisposeProduct: ToDisposeProduct,
@@ -2139,6 +2259,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @type {module:server.DevicehubThing}
    */
   Action.server = new server.DevicehubThing('/actions/', resources)
+
+  Proof.server = new server.DevicehubThing('/proofs/', resources)
+
+  BatchProof.server = new server.DevicehubThing('/proofs/batch/', resources)
   /**
    * @memberOf {module:resources.Lot}
    * @type {module:server.DevicehubThing}
