@@ -9,7 +9,7 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
   const lot = $scope.lot = $stateParams.lot
   const deliverynote = lot.deliverynote
   const receiver_address = deliverynote.receiver.ethereum_address
-  const deliverynote_ethereum_address = deliverynote.deliverynote.ethereum_address
+  const deliverynote_ethereum_address = deliverynote.ethereum_address
   const deposit = deliverynote.deposit
 
   function leave () {
