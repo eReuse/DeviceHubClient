@@ -2272,7 +2272,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @memberOf {module:resources.DeliveryNote}
    * @type {module:server.DevicehubThing}
    */
-  DeliveryNote.server = new server.DevicehubThing('/deliverynote/', resources)
+  DeliveryNote.server = new server.DevicehubThing('/deliverynotes/', resources)
   /**
    * @alias {module:resources.Tag.server}
    * @type {module:server.DevicehubThing}
