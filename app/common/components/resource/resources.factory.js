@@ -1438,12 +1438,14 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    */
   class DeliveryNote extends Thing {
     define ({
-      id = null, creator = null, documentID = null, supplierEmail = null, date = null, deposit = null, 
+      id = null, creator = null, receiver = null, supplier = null, documentID = null, supplierEmail = null, date = null, deposit = null, 
       expectedDevices = null, transferredDevices = null, transfer_state = "Initial", lot = null, 
       ethereum_address = null, ...rest }) {
       super.define(rest)
       this.id = id
       this.creator = creator
+      this.receiver = receiver
+      this.supplier = supplier
       this.documentID = documentID
       this.supplierEmail = supplierEmail
       this.date = date

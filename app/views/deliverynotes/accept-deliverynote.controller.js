@@ -18,7 +18,7 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
       super(
         {},
         new fields.String('deposit', {
-          namespace: 'acceptSharedLot.form',
+          namespace: 'acceptTransfer.form',
         })
       )
     }

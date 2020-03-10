@@ -119,20 +119,20 @@
       "url": "The URL is invalid."
     }
   },
-  "acceptSharedLot": {
-    "button": "Accept shared lot",
+  "acceptTransfer": {
+    "button": "Accept transfer",
     "form": {
-      "title": "Accept shared lot",
+      "title": "Accept transfer",
       "deposit": {
         "l": "Enter deposit",
         "d": "Enter deposit"
       }
     }
   },
-  "shareLot": {
-    "button": "Share lot",
+  "initiateTransfer": {
+    "button": "Initiate transfer",
     "form": {
-      "title": "Share lot",
+      "title": "Initiate transfer",
       "ethereumAddress": {
         "l": "Recipient's ethereum address",
         "d": "Enter ethereum address of user you want to share this lot with"

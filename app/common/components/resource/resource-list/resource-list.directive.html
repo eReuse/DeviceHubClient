@@ -20,15 +20,15 @@
         >
           Deselect all ({{lotsM.lots.length}})
         </button>
-        <lot-children-button parent="lotsM.lots[0]" ng-if="lotsM.lots.length === 1">
-        </lot-children-button>
+        <!--<lot-children-button parent="lotsM.lots[0]" ng-if="lotsM.lots.length === 1">
+        </lot-children-button>-->
         <share-deliverynote-button ng-if="lotsM.lots.length && lotsM.lots[0].deliverynote" 
         lot="lotsM.lots[0]" getter="getter" ng-if="lotsM.lots.length === 1">
         </share-deliverynote-button>
         <accept-deliverynote-button ng-if="lotsM.lots.length && lotsM.lots[0].deliverynote" 
         lot="lotsM.lots[0]" getter="getter" ng-if="lotsM.lots.length === 1">
         </accept-deliverynote-button>
-        <lot-transfer-button lot="lotsM.lots[0]" getter="getter"></lot-transfer-button>
+        <!--<lot-transfer-button lot="lotsM.lots[0]" getter="getter"></lot-transfer-button>-->
       </div>
       <div ng-if="lotsM.lots.length === 1">
         <h2>
