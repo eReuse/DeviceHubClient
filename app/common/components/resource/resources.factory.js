@@ -1438,14 +1438,14 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    */
   class DeliveryNote extends Thing {
     define ({
-      id = null, creator = null, documentID = null, supplier = null, date = null, deposit = null, 
+      id = null, creator = null, documentID = null, supplierEmail = null, date = null, deposit = null, 
       expectedDevices = null, transferredDevices = null, transfer_state = "Initial", lot = null, 
       ethereum_address = null, ...rest }) {
       super.define(rest)
       this.id = id
       this.creator = creator
       this.documentID = documentID
-      this.supplier = supplier
+      this.supplierEmail = supplierEmail
       this.date = date
       this.deposit = deposit
       this.expectedDevices = expectedDevices
@@ -1456,7 +1456,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     }
 
     get title () {
-      return `${super.supplier} — ${this.documentID} ${this.date}`
+      return `${super.supplierEmail} — ${this.documentID} ${this.date}`
     }
 
     _post () {

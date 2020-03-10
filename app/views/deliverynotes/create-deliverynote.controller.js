@@ -71,7 +71,7 @@ function createDeliveryCtrl ($scope, $window, fields, $state, enums, resources) 
     constructor () {
       super(
         null,
-        new fields.String('deliveryNote.supplier', {
+        new fields.String('deliveryNote.supplierEmail', {
           namespace: 'r',
         }),
         new fields.Datepicker('deliveryNote.date', {
@@ -88,7 +88,7 @@ function createDeliveryCtrl ($scope, $window, fields, $state, enums, resources) 
 
     _submit () {
       const devices = $scope.uploadedDevices && $scope.uploadedDevices.map((device) => {
-        return device
+        return device.hid
         // return new resources.Device(device)
       })
       const model = _.assign({ expectedDevices : devices }, this.model.deliveryNote)
