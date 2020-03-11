@@ -1624,10 +1624,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Thing
    */
   class Proof extends Thing {
-    define ({id = null, devices = null, ...rest}) {
+    define ({id = null, ethereumHashes = [], ...rest}) {
       super.define(rest)
       this.id = id
-      this.devices = devices // most proof types only have one device
+      this.ethereumHashes = ethereumHashes // hashes of devices. most proof types only have one device
     }
 
     static get icon () {
