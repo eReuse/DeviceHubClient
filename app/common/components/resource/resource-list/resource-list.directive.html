@@ -73,7 +73,8 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="device in lotsM.lots[0].deliverynote.expectedDevices track by device.id">
+          <!-- <tr ng-repeat="device in lotsM.lots[0].deliverynote.expectedDevices track by device.id"></tr> -->
+          <tr ng-repeat="device in lotsM.lots[0].deliverynote.expectedDevices track by device">
             <td ng-repeat="Field in ::config.deliverynoteTable track by Field.name"
                 class="{{::Field.cssClasses}}"
             >
@@ -81,7 +82,7 @@
                 <span ng-bind-html="Field.init(device).content"></span>
               </span>
               <span ng-if="::!Field.html">
-              {{::Field.init(device).content}}
+              {{::Field.init(device).content}} ID:{{device}}
               </span>
             </td>
           </tr>
