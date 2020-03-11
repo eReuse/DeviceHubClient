@@ -112,8 +112,16 @@ function resourceList (resources, resourceListConfig, progressBar, Notification,
            * @param {module:resources.Lot[]} lots
            */
           updateSelection (lots) {
+            console.log('update lots selection')
             this.lots = lots
             this.title = _.map(lots, 'name').join(', ')
+            if(lots.length === 1 && lots[0].deliverynote) {
+              $scope.deliverynote = lots[0].deliverynote
+              $scope.expectedDevices = lots[0].deliverynote.expectedDevices
+            } else {
+              $scope.deliverynote = null
+              $scope.expectedDevices = []
+            }
             // Update filter
             if (lots.length) {
               getter.setFilter('lot', {id: _.map(lots, 'id')})
