@@ -6,7 +6,7 @@ class FunctionProof {
   generateProof (web3, data, account) {
     return new Promise(resolve => {
       return this.device.generateFunctionProof(data.score, data.diskUsage,
-        data.algorithmVersion, web3.utils.toChecksumAddress(data.author),
+        data.algorithmVersion, web3.utils.toChecksumAddress(data.proofAuthor),
         { from: account })
         .then(hash => {
           resolve(hash)

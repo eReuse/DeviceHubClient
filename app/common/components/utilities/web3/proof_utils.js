@@ -7,7 +7,9 @@ const deviceUtils = require('./device_utils')
 
 const functions = {
   generateProof: (web3, device, type, data) => {
-    return getProof(web3, device, type).generateProof(web3, data)
+    let proof = getProof(device, type)
+    console.log(proof)
+    return proof.generateProof(web3, data, web3.eth.defaultAccount)
   },
   getProofData: (device, type, hash, account) => {
     return getProof(device, hash, type).getProofData(hash, account)
@@ -75,18 +77,18 @@ function extractProofsFromDevice (contract, provider, deviceAddress) {
  * @returns {Promise} A promise that resolves to the ethereum address of the
  *                    generated proof.
  */
-function getProof (web3, device, type) {
+function getProof (device, type) {
   switch (type) {
     case proofTypes.WIPE:
-      return new DataWipeProof(web3, device)
+      return new DataWipeProof(device)
     case proofTypes.FUNCTION:
-      return new FunctionProof(web3, device)
+      return new FunctionProof(device)
     case proofTypes.REUSE:
-      return new ReuseProof(web3, device)
+      return new ReuseProof(device)
     case proofTypes.RECYCLE:
-      return new RecycleProof(web3, device)
+      return new RecycleProof(device)
     case proofTypes.TRANSFER:
-      return new TransferProof(web3, device)
+      return new TransferProof(device)
     default:
       break
   }
