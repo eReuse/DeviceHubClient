@@ -20,15 +20,15 @@
         >
           Deselect all ({{lotsM.lots.length}})
         </button>
-        <lot-children-button parent="lotsM.lots[0]" ng-if="lotsM.lots.length === 1">
-        </lot-children-button>
+        <!--<lot-children-button parent="lotsM.lots[0]" ng-if="lotsM.lots.length === 1">
+        </lot-children-button>-->
         <share-deliverynote-button ng-if="lotsM.lots.length && lotsM.lots[0].deliverynote"
         lot="lotsM.lots[0]" getter="getter" ng-if="lotsM.lots.length === 1">
         </share-deliverynote-button>
         <accept-deliverynote-button ng-if="lotsM.lots.length && lotsM.lots[0].deliverynote"
         lot="lotsM.lots[0]" getter="getter" ng-if="lotsM.lots.length === 1">
         </accept-deliverynote-button>
-        <lot-transfer-button lot="lotsM.lots[0]" getter="getter"></lot-transfer-button>
+        <!--<lot-transfer-button lot="lotsM.lots[0]" getter="getter"></lot-transfer-button>-->
       </div>
       <div ng-if="lotsM.lots.length === 1">
         <h2>
@@ -73,7 +73,8 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="device in lotsM.lots[0].deliverynote.expectedDevices track by device.id">
+          <!-- <tr ng-repeat="device in lotsM.lots[0].deliverynote.expectedDevices track by device.id"></tr> -->
+          <tr ng-repeat="device in lotsM.lots[0].deliverynote.expectedDevices track by device">
             <td ng-repeat="Field in ::config.deliverynoteTable track by Field.name"
                 class="{{::Field.cssClasses}}"
             >
@@ -81,7 +82,7 @@
                 <span ng-bind-html="Field.init(device).content"></span>
               </span>
               <span ng-if="::!Field.html">
-              {{::Field.init(device).content}}
+              {{::Field.init(device).content}} ID:{{device}}
               </span>
             </td>
           </tr>
@@ -141,57 +142,57 @@
               <span ng-if="::!Field.html">
               {{::Field.init(device).content}}
               </span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="text-center">
-                    <i class="fa"
-                       ng-class="{
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="text-center">
+          <i class="fa"
+             ng-class="{
               'fa-spinner fa-pulse fa-lg': getter.working,
               'fa-ellipsis-h': !getter.working && !getter.nextPage
               }"></i>
-                </div>
-            </div>
-        </div> <!-- ./col-sm-6 -->
-    </div>
-    <!-- Selection -->
-    <aside class="selection col-xs-12 col-sm-4 col-md-4 col-lg-4 fill-height-bar"
-           ng-class="{'hidden-xs': !selectionXs.visible}"
-    >
-        <div ng-if="!selected.length" class="selection-empty">
-            <div>
-                <h4>{{::'resourceList.selectAll.t' | translate}}</h4>
-                <!--<p>{{::'resourceList.selectAll.d' | translate}}</p>-->
-            </div>
         </div>
-        <h3 ng-show="selected.length">
-            Selected devices — {{selected.length}}
-            <button type="button"
-                    class="btn btn-link btn-xs"
-                    ng-click="selected.deselectAll()">
-                Deselect all
-            </button>
-        </h3>
-        <div class="text-center" ng-if="selected.length">
-            <lot-device-button devices="selected" all-lots="lots"></lot-device-button>
-            <manual-actions-button devices="selected"></manual-actions-button>
-            <export-button devices="selected"></export-button>
-            <print-tags-button devices="selected"></print-tags-button>
-        </div>
-        <device-list-summary ng-if="selected.length" devices="selected"></device-list-summary>
-    </aside>
-    <!-- Selection button-->
-    <div class="selection-button visible-xs visible-sm"
-         ng-show="selected.length"
-         ng-click="selectionXs.toggle()">
-        <button ng-hide="selectionXs.visible" class="btn btn-primary btn-view-selected">
-            View selected devices
-            <span class="badge">{{selected.length}}</span>
-        </button>
-        <button ng-show="selectionXs.visible" class="btn btn-primary btn-view-list">
-            Back to device list
-        </button>
+      </div>
+    </div> <!-- ./col-sm-6 -->
+  </div>
+  <!-- Selection -->
+  <aside class="selection col-xs-12 col-sm-4 col-md-4 col-lg-4 fill-height-bar"
+         ng-class="{'hidden-xs': !selectionXs.visible}"
+  >
+    <div ng-if="!selected.length" class="selection-empty">
+      <div>
+        <h4>{{::'resourceList.selectAll.t' | translate}}</h4>
+        <!--<p>{{::'resourceList.selectAll.d' | translate}}</p>-->
+      </div>
     </div>
+    <h3 ng-show="selected.length">
+      Selected devices — {{selected.length}}
+      <button type="button"
+              class="btn btn-link btn-xs"
+              ng-click="selected.deselectAll()">
+        Deselect all
+      </button>
+    </h3>
+    <div class="text-center" ng-if="selected.length">
+      <lot-device-button devices="selected" all-lots="lots"></lot-device-button>
+      <manual-actions-button devices="selected"></manual-actions-button>
+      <export-button devices="selected"></export-button>
+      <print-tags-button devices="selected"></print-tags-button>
+    </div>
+    <device-list-summary ng-if="selected.length" devices="selected"></device-list-summary>
+  </aside>
+  <!-- Selection button-->
+  <div class="selection-button visible-xs visible-sm"
+       ng-show="selected.length"
+       ng-click="selectionXs.toggle()">
+    <button ng-hide="selectionXs.visible" class="btn btn-primary btn-view-selected">
+      View selected devices
+      <span class="badge">{{selected.length}}</span>
+    </button>
+    <button ng-show="selectionXs.visible" class="btn btn-primary btn-view-list">
+      Back to device list
+    </button>
+  </div>
 </div>
 

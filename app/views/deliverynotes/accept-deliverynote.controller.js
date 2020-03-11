@@ -8,6 +8,9 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
   const devices = $scope.devices = $stateParams.devices
   const lot = $scope.lot = $stateParams.lot
   const deliverynote = lot.deliverynote
+  const receiver_address = deliverynote.receiver.ethereum_address
+  const deliverynote_ethereum_address = deliverynote.ethereum_address
+  const deposit = deliverynote.deposit
 
   function leave () {
     return $state.go('auth.inventory')
@@ -16,37 +19,30 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
   class ShareDeliveryNoteForm extends fields.Form {
     constructor () {
       super(
-        {},
-        new fields.String('deposit', {
-          namespace: 'acceptSharedLot.form',
-        })
+        {}
       )
     }
 
     _submit () {
-      const deposit = this.model.deposit
-
       console.log('lot.id', lot.id, 'lot.deliverynote_address', lot.deliverynote_address)
 
       const dataWEB3 = {
-        deliverynote_address: lot.deliverynote_address,
+        deliverynote_address: deliverynote_ethereum_address,
         devices: devices,
         deposit: deposit,
-        receiver_address: session.user.ethereum_address
+        receiver_address: receiver_address
       }
     
       return web3
       .acceptTransfer(dataWEB3)
-      .then(function () {
-        deliverynote.deposit = deposit // TODO this should already be set when POSTing the deliverynote
+      .then(function (ethereumHashes) {
         deliverynote.transfer_state = 'Accepted'
-        deliverynote.owner_address = session.user.ethereum_address // TODO this should be done on the server
 
-        return deliverynote.patch('transfer_state', 'deposit', 'owner_address')
+        return deliverynote.patch('transfer_state')
       })
       .then(function () {
         const proofData = {
-          devices: devices,
+          ethereumHashes: [], //TODO get ethereum hashes from devices
           supplier: deliverynote.supplier,
           receiver: deliverynote.receiver,
           deposit: deliverynote.deposit
