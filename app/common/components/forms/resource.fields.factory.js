@@ -172,8 +172,8 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
     }
 
     _submit (op) { 
-      super._submit(op).then(() => {
-        console.log('POST proofs to Blockchain')
+      return super._submit(op).then(() => {
+        return web3.generateProofs(this.model.proofs)
       })
     }
   }

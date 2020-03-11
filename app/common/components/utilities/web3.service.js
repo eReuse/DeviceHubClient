@@ -36,6 +36,9 @@ function web3Service ($window) {
       let transfer = acceptTransfer(deliverynoteAddress, receiver, deposit, erc20)
       return transfer
     },
+    generateProofs: (proofs) => {
+      console.log('TODO generate proofs for given list of proofs')
+    },
     generateProof: (obj) => {
       return devicesUtils.getDeployedDevice(contract, provider, obj.deviceAddress)
         .then(device => {
