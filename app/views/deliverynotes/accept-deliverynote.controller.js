@@ -35,14 +35,14 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
     
       return web3
       .acceptTransfer(dataWEB3)
-      .then(function () {
+      .then(function (ethereumHashes) {
         deliverynote.transfer_state = 'Accepted'
 
         return deliverynote.patch('transfer_state')
       })
       .then(function () {
         const proofData = {
-          devices: devices,
+          ethereumHashes: [], //TODO get ethereum hashes from devices
           supplier: deliverynote.supplier,
           receiver: deliverynote.receiver,
           deposit: deliverynote.deposit

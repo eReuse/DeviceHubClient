@@ -1624,10 +1624,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Thing
    */
   class Proof extends Thing {
-    define ({id = null, devices = null, ...rest}) {
+    define ({id = null, ethereumHashes = [], ...rest}) {
       super.define(rest)
       this.id = id
-      this.devices = devices // most proof types only have one device
+      this.ethereumHashes = ethereumHashes // hashes of devices. most proof types only have one device
     }
 
     static get icon () {
@@ -1640,10 +1640,11 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       super.define(rest)
       this.proofs = proofs
       this.devices = devices // needed for displaying devices in the BatchProof form
+      this.batch = true
     }
 
     _post () {
-      return _.pick(this.dump(false), ['proofs'])
+      return _.pick(this.dump(false), ['proofs', 'batch'])
     }
   }
 
@@ -2264,7 +2265,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
 
   Proof.server = new server.DevicehubThing('/proofs/', resources)
 
-  BatchProof.server = new server.DevicehubThing('/proofs/batch/', resources)
+  BatchProof.server = new server.DevicehubThing('/proofs/', resources)
   /**
    * @memberOf {module:resources.Lot}
    * @type {module:server.DevicehubThing}
