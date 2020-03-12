@@ -397,12 +397,12 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
   class Traceability extends Property {
     constructor (devices) {
       super(devices, 'Traceability log')
-      this.events = this.set('events')
-      this.content = `${this.events.length} events`
+      this.actions = this.set('actions')
+      this.content = `${this.actions.length} actions`
     }
 
     full () {
-      return this.events
+      return this.actions
     }
   }
 

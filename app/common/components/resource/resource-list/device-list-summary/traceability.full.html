@@ -1,8 +1,9 @@
 <table class="table table-condensed table-striped">
   <tbody>
-    <tr ng-repeat="event in activeModel | orderBy:'created':true">
-      <td>{{::event.title}}</td>
-      <td>{{::event.device || (event.devices.length ? event.devices : 'Multiple devices.')}}</td>
+    <tr ng-repeat="action in activeModel | orderBy:'created':true">
+      <td>{{::action.title}}</td>
+      <td>{{::action.created ? action.created.toLocaleDateString() : '' }}</td>
+      <!--<td>{{::action.device || (action.devices.length ? action.devices : 'Multiple devices')}}</td>-->
     </tr>
   </tbody>
 </table>
