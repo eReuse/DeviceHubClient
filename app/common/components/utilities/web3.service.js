@@ -10,7 +10,7 @@ const proofUtils = require('./web3/proof_utils')
  * @param ngProgressFactory
  * @returns {progressBar}
  */
-function web3Service($window) {
+function web3Service ($window) {
   const provider = new $window.web3.providers.WebsocketProvider('ws://' + $window.CONSTANTS.blockchain + ':8545')
   const web3 = new $window.web3(provider)
   const contract = $window.contract
@@ -20,13 +20,6 @@ function web3Service($window) {
     deviceFactory = res[0]
     erc20 = res[1]
     dao = res[2]
-    // let data = getSampleReuseProofs()
-    // console.log(data)
-    // devicesUtils.getDeployedDevice(contract, provider, data.deviceAddress)
-    //   .then(device => {
-    //     console.log(device)
-    //     return proofUtils.generateProof(web3, device, data.proofType, data.data)
-    //   })
   })
 
   const service = {
@@ -47,10 +40,7 @@ function web3Service($window) {
       console.log('TODO generate proofs for given list of proofs')
     },
     generateProof: (obj) => {
-      return devicesUtils.getDeployedDevice(contract, provider, obj.deviceAddress)
-        .then(device => {
-          return proofUtils.generateProof(web3, device, obj.type, obj.data)
-        })
+      return generateProof(contract, provider, obj, web3)
     },
     getProof: (obj) => {
       return devicesUtils.getDeployedDevice(contract, provider, obj.deviceAddress)
@@ -74,9 +64,9 @@ function web3Service($window) {
         .then((deployedDevices) => {
           deliveryNoteUtils.createDeliveryNote(contract, provider, deployedDevices,
             sender, receiver, dao).then(deliveryNote => {
-              console.log("Created DeliveryNote")
+              console.log('Created DeliveryNote')
               deliveryNote.emitDeliveryNote({ from: sender, gas: '6721975' }).then(() => {
-                console.log("Emmited DeliveryNote")
+                console.log('Emmited DeliveryNote')
                 resolve(deliveryNote.address)
               })
             })
@@ -112,7 +102,22 @@ function web3Service($window) {
   return service
 }
 
-function getSampleWipeProofs() {
+  /**
+  * Function to generate a proof and return its associated hass.
+  * @param {JSON} data input information to generate proof.
+  * @param {Function} web3 web3 library.
+  * @returns {Promise} Promise which resolves to proof hash.
+  */
+function generateProof (contract, provider, data, web3) {
+  return new Promise(resolve => {
+    devicesUtils.getDeployedDevice(contract, provider, data.deviceAddress)
+      .then(device => {
+        resolve(proofUtils.generateProof(web3, device, data.proofType, data.data))
+      })
+  })
+}
+
+function getSampleWipeProofs () {
   return {
     'deviceAddress': '0x758D0639aB9C4Cb9cCF4f99557ba33926f8eE1E3',
     'proofType': 'wipe',
@@ -125,7 +130,7 @@ function getSampleWipeProofs() {
   }
 }
 
-function getSampleFunctionProofs() {
+function getSampleFunctionProofs () {
   return {
     'deviceAddress': '0x758D0639aB9C4Cb9cCF4f99557ba33926f8eE1E3',
     'proofType': 'function',
@@ -138,7 +143,7 @@ function getSampleFunctionProofs() {
   }
 }
 
-function getSampleRecycleProofs() {
+function getSampleRecycleProofs () {
   return {
     'deviceAddress': '0x758D0639aB9C4Cb9cCF4f99557ba33926f8eE1E3',
     'proofType': 'recycle',
@@ -152,7 +157,7 @@ function getSampleRecycleProofs() {
   }
 }
 
-function getSampleReuseProofs() {
+function getSampleReuseProofs () {
   return {
     'deviceAddress': '0x758D0639aB9C4Cb9cCF4f99557ba33926f8eE1E3',
     'proofType': 'reuse',

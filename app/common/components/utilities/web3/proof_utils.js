@@ -8,8 +8,8 @@ const deviceUtils = require('./device_utils')
 const functions = {
   generateProof: (web3, device, type, data) => {
     let proof = getProof(device, type)
-    console.log(proof)
-    return proof.generateProof(web3, data, web3.eth.defaultAccount)
+    let receipt = proof.generateProof(web3, data, web3.eth.defaultAccount)
+    return extractHashFromReceipt(receipt)
   },
   getProofData: (device, type, hash, account) => {
     return getProof(device, hash, type).getProofData(hash, account)
@@ -105,6 +105,18 @@ function getProof (device, type) {
  */
 function getProofBlockInfo (device, hash, type) {
   return device.getProof(hash, type)
+}
+
+/**
+ * Returns the hash of the generated proof, which is obtained from the events
+ * logged within the receipt of the transaction.
+ * @param transaction promise containing the result of the transaction.
+ * @returns the hash of the generated proof.
+ */
+function extractHashFromReceipt (transaction) {
+  return transaction.then(receipt => {
+    return receipt.logs[0].args.proofHash
+  })
 }
 
 module.exports = functions

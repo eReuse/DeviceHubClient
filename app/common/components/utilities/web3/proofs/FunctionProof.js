@@ -5,18 +5,18 @@ class FunctionProof {
 
   generateProof (web3, data, account) {
     return new Promise(resolve => {
-      return this.device.generateFunctionProof(data.score, data.diskUsage,
+      this.device.generateFunctionProof(data.score, data.diskUsage,
         data.algorithmVersion, web3.utils.toChecksumAddress(data.proofAuthor),
         { from: account })
-        .then(hash => {
-          resolve(hash)
+        .then(receipt => {
+          resolve(receipt)
         })
     })
   }
 
   getProofData (hash, account) {
     return new Promise(resolve => {
-      return this.device.getFunctionProof(hash, { from: account })
+      this.device.getFunctionProof(hash, { from: account })
         .then(data => {
           resolve(data)
         })
