@@ -4,6 +4,7 @@ class TransferProof {
   }
 
   generateProof (web3, data, account) {
+    console.log(data)
     return new Promise(resolve => {
       this.device.generateTransferProof(
         web3.utils.toChecksumAddress(data.supplier),

@@ -6,8 +6,9 @@ const functions = {
   createDeliveryNote: (contract, provider, devices, sender, receiver, dao) => {
     return createDeliveryNote(contract, provider, devices, sender, receiver, dao)
   },
-  acceptDeliveryNote: (contract, provider, deliveryNoteAddress, receiver, deposit) => {
-    return acceptDeliveryNote(contract, provider, deliveryNoteAddress, receiver, deposit)
+  getDeliveryNote: (contract, provider, deliveryNoteAddress) => {
+    return deployments.getContractInstance(contract, provider, deliveryNoteAddress,
+                                            deliveryNoteArtifacts)
   }
 }
 
@@ -55,29 +56,6 @@ function createDeliveryNote (contract, provider, devices, sender, receiver, dao)
             })
         }
         resolve(deliveryNote)
-      })
-  })
-}
-
-/**
- * Function to accept the DeliveryNote sent by previous owner.
- * @param {Function} contract truffle-contract library.
- * @param {Function} provider Blockchain provider configuration.
- * @param {String} deliveryNoteAddress String representation of the Delivery
- *                 Note ethereum address.
- * @param {String} receiver String representation of the receiver ethereum address.
- * @param {Number} deposit Value of the deposit to be paid.
- * @return {Promise} A promise which resolves to true if the operation succeeded
- */
-function acceptDeliveryNote (contract, provider, deliveryNoteAddress, receiver, deposit) {
-  return new Promise(resolve => {
-    deployments.getContractInstance(contract, provider, deliveryNoteAddress,
-      deliveryNoteArtifacts)
-      .then(deliveryNote => {
-        deliveryNote.acceptDeliveryNote(deposit, {from: receiver})
-          .then(() => {
-            resolve(true)
-          })
       })
   })
 }

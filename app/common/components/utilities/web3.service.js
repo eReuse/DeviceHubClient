@@ -27,14 +27,15 @@ function web3Service($window) {
       let sender = web3.utils.toChecksumAddress(obj.sender)
       let receiver = web3.utils.toChecksumAddress(obj.receiver_address)
       let transferResult = initTransfer(contract, provider, deviceFactory, dao,
-                                        sender, receiver, obj.devices, web3)
+        sender, receiver, obj.devices, web3)
       return transferResult
     },
     acceptTransfer: (obj) => {
       let receiver = web3.utils.toChecksumAddress(obj.receiver_address)
       let deposit = parseInt(obj.deposit)
       let deliverynoteAddress = web3.utils.toChecksumAddress(obj.deliverynote_address)
-      let transfer = acceptTransfer(contract, provider, erc20, deliverynoteAddress, receiver, deposit, erc20)
+      let transfer = acceptTransfer(web3, contract, provider, erc20,
+        deliverynoteAddress, receiver, deposit, erc20)
       return transfer
     },
     generateProofs: (proofs) => {
@@ -75,7 +76,7 @@ function initTransfer(contract, provider, deviceFactory, dao, sender, receiver, 
             resolve(deliveryNote.address)
           })
       }).catch(err => {
-        console.log(err)
+        console.error(err)
         reject(err)
       })
   })
@@ -83,6 +84,7 @@ function initTransfer(contract, provider, deviceFactory, dao, sender, receiver, 
 
 /** Function that implements the acceptance of a DeliveryNote
 * transfer
+* @param {Function} web3 Web3 library.
 * @param {Function} contract eth contract library.
 * @param {Function} provider blockchain provider.
 * @param {Function} erc20 smart contract for erc20.
@@ -91,29 +93,48 @@ function initTransfer(contract, provider, deviceFactory, dao, sender, receiver, 
 * @param {number} deposit Deposit agreed.
 * @returns {Promise} Promise that resolves to boolean
 */
-function acceptTransfer(contract, provider, erc20, deliveryNoteAddress, receiver, deposit, erc20) {
+function acceptTransfer(web3, contract, provider, erc20, deliveryNoteAddress,
+                        receiver, deposit, erc20) {
   console.log('AcceptTransfer')
-  erc20.approve(deliveryNoteAddress, deposit,
-    {
-      from: receiver,
-      gas: '6721975'
-    }).then(async function () {
-      await deliveryNoteUtils.acceptDeliveryNote(contract, provider,
-        deliveryNoteAddress, receiver, deposit)
-    })
+  return new Promise(async function (resolve) {
+    await erc20.approve(deliveryNoteAddress, deposit,
+      {
+        from: receiver,
+        gas: '6721975'
+      })
+    let deliveryNote = await deliveryNoteUtils.getDeliveryNote(contract,
+      provider, deliveryNoteAddress)
+    let owner = await deliveryNote.owner()
+    let devices = await deliveryNote.getDevices({ from: owner })
+    let data = {
+      'supplier': await deliveryNote.getSender({ from: owner }),
+      'receiver': receiver,
+      'deposit': deposit,
+      'isWaste': false
+    }
+    let hashes = []
+    for (d in devices) {
+      hashes[d] = await generateProof(web3, contract, provider, devices[d],
+        'transfer', data)
+    }
+    console.log(`Hashes: ${hashes}`)
+    await deliveryNote.acceptDeliveryNote(deposit, { from: receiver })
+    resolve(hashes)
+  })
 }
 
 /**
 * Function to generate a proof and return its associated hass.
-* @param {JSON} data input information to generate proof.
 * @param {Function} web3 web3 library.
+* @param {Function} contract eth-contract library.
+* @param {JSON} data input information to generate proof.
 * @returns {Promise} Promise which resolves to proof hash.
 */
-function generateProof(contract, provider, data, web3) {
+function generateProof(web3, contract, provider, deviceAddress, proofType, data) {
   return new Promise(resolve => {
-    devicesUtils.getDeployedDevice(contract, provider, data.deviceAddress)
+    devicesUtils.getDeployedDevice(contract, provider, deviceAddress)
       .then(device => {
-        resolve(proofUtils.generateProof(web3, device, data.proofType, data.data))
+        resolve(proofUtils.generateProof(web3, device, proofType, data))
       })
   })
 }
