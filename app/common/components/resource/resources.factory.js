@@ -1624,10 +1624,11 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Thing
    */
   class Proof extends Thing {
-    define ({id = null, ethereumHash = null, ...rest}) {
+    define ({id = null, ethereumHash = null, deviceIDs = [], ...rest}) {
       super.define(rest)
       this.id = id
-      this.ethereumHash = ethereumHash // hashes of devices. most proof types only have one device
+      this.ethereumHash = ethereumHash // hashes of proof address
+      this.deviceIDs = deviceIDs // most proofs are issued for one device
     }
 
     static get icon () {
@@ -1688,10 +1689,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       if(device.privacy && device.privacy.length) {
         const erasure = device.privacy[0]
         let data = {
-          ethereumHashes: [], // TODO hash of device
+          deviceIDs: [ device.id ], 
           erasureType: erasure.type,  // type of erasure
           date: erasure.startTime,
-          result: true, // TODO check that all steps 
+          result: true, // TODO check that all steps have run successful
           proofAuthor: null, // TODO
           erasureID: erasure.id
         }
