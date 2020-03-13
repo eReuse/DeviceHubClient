@@ -43,8 +43,14 @@ function web3Service($window) {
       let transfer = acceptTransfer(deliverynoteAddress, receiver, deposit, erc20)
       return transfer
     },
-    generateProofs: (proofs) => {
-      console.log('TODO generate proofs for given list of proofs')
+    // TODO remove this and replace calls with generateProof
+    generateProofTest: (proof) => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          console.log('proof resolved: ', proof)
+          resolve({ proof: proof, ethereumHash: 'Hash:'+proof.erasureID }); // TODO set ethereumHash
+        }, 2000);
+      });
     },
     generateProof: (obj) => {
       return devicesUtils.getDeployedDevice(contract, provider, obj.deviceAddress)

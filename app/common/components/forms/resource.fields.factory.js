@@ -6,7 +6,7 @@
  * @param {module:fields} fields
  * @param {module:enums} enums
  */
-function resourceFields (fields, resources, $translate, Notification, enums) {
+function resourceFields (fields, resources, enums, web3) {
   const f = fields
 
   /** 
@@ -171,9 +171,45 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
       this.fields.splice(1, 0, devices)
     }
 
+
     _submit (op) { 
+      function generateProof(proof) {
+        return web3.generateProofTest(proof).then(setEthereumHash)
+      }
+
+      function setEthereumHash(result) {
+        result.proof.ethereumHash = result.ethereumHash
+        return new Promise(resolve => {
+          resolve()
+        })
+      }
+
+      async function generateProofsSerial(proofs) {
+        for(const proof of proofs) {
+          await generateProof(proof)
+        }
+        return new Promise(resolve => {
+          resolve()
+        })
+      }
+
+      function generateProofsParallel(proofs) {
+        return Promise.all(proofs.map(generateProof))
+      }
+
+      switch (op) {
+        case this.constructor.POST:
+          return generateProofsParallel(this.model.proofs)
+          .then(() => {
+            return super._submit(op)
+          })
+
+          
+        default:
+          throw new Error(`Method ${op} not implemented.`)
+      }
       return super._submit(op).then(() => {
-        return web3.generateProofs(this.model.proofs)
+        
       })
     }
   }
