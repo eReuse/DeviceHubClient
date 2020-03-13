@@ -45,16 +45,13 @@ function createDeliveryNote (contract, provider, devices, sender, receiver, dao)
   let deliveryNoteContract = deployments.initializeContract(contract, provider,
     deliveryNoteArtifacts)
   return new Promise(resolve => {
-    console.log(`DeliveryNoteUtils.createDeliveryNote\n`)
-    console.log(`Sender: ${sender}; Receiver: ${receiver}`)
     createDeliveryNoteInstance(deliveryNoteContract, sender, receiver, dao)
-      .then(deliveryNote => {
+      .then(async function (deliveryNote) {
         for (let d in devices) {
           let current = devices[d]
-          console.log(`Device associated: ${current}`)
-          deployments.getContractInstance(contract, provider, current, deviceArtifacts)
-            .then(instance => {
-              instance.addToDeliveryNote(deliveryNote.address, { from: sender })
+          await deployments.getContractInstance(contract, provider, current, deviceArtifacts)
+            .then(async function (instance) {
+              await instance.addToDeliveryNote(deliveryNote.address, { from: sender })
             })
         }
         resolve(deliveryNote)
