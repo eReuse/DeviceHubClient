@@ -69,14 +69,20 @@ function web3Service($window) {
   * @returns {Promise} Promise which resolves to DeliveryNote address.
   */
   function initTransfer (sender, receiver, devices, web3) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       devicesUtils.deployDevices(deviceFactory, devices, sender, web3)
         .then((deployedDevices) => {
           deliveryNoteUtils.createDeliveryNote(contract, provider, deployedDevices,
             sender, receiver, dao).then(deliveryNote => {
-              deliveryNote.emitDeliveryNote({ from: sender })
-              resolve(deliveryNote.address)
+              console.log("Created DeliveryNote")
+              deliveryNote.emitDeliveryNote({ from: sender, gas: '6721975' }).then(() => {
+                console.log("Emmited DeliveryNote")
+                resolve(deliveryNote.address)
+              })
             })
+        }).catch(err => {
+          console.log(err)
+          reject(err)
         })
     })
   }
