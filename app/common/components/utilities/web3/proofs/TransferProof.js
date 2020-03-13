@@ -4,20 +4,21 @@ class TransferProof {
   }
 
   generateProof (web3, data, account) {
+    console.log(data)
     return new Promise(resolve => {
-      return this.device.generateTransferProof(
+      this.device.generateTransferProof(
         web3.utils.toChecksumAddress(data.supplier),
         web3.utils.toChecksumAddress(data.receiver),
         data.deposit, data.isWaste, { from: account })
-        .then(hash => {
-          resolve(hash)
+        .then(receipt => {
+          resolve(receipt)
         })
     })
   }
 
   getProofData (hash, account) {
     return new Promise(resolve => {
-      return this.device.getTransferProof(hash, { from: account })
+      this.device.getTransferProof(hash, { from: account })
         .then(data => {
           resolve(data)
         })
