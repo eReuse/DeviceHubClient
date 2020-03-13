@@ -38,15 +38,6 @@ function web3Service($window) {
         deliverynoteAddress, receiver, deposit, erc20)
       return transfer
     },
-    // TODO remove this and replace calls with generateProof
-    generateProofTest: (proof) => {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          console.log('proof resolved: ', proof)
-          resolve({ proof: proof, ethereumHash: 'Hash:'+proof.erasureID }); // TODO set ethereumHash
-        }, 2000);
-      });
-    },
     generateProof: (obj) => {
       return generateProof(contract, provider, obj, web3)
     },

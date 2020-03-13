@@ -174,13 +174,11 @@ function resourceFields (fields, resources, enums, web3) {
 
     _submit (op) { 
       function generateProof(proof) {
-        return web3.generateProofTest(proof).then(setEthereumHash)
-      }
-
-      function setEthereumHash(result) {
-        result.proof.ethereumHash = result.ethereumHash
-        return new Promise(resolve => {
-          resolve()
+        return web3.generateProof(proof).then((ethereumHash) => {
+          proof.ethereumHash = ethereumHash
+          return new Promise(resolve => {
+            resolve()
+          })
         })
       }
 
@@ -199,7 +197,7 @@ function resourceFields (fields, resources, enums, web3) {
 
       switch (op) {
         case this.constructor.POST:
-          return generateProofsParallel(this.model.proofs)
+          return generateProofsSerial(this.model.proofs)
           .then(() => {
             return super._submit(op)
           })
