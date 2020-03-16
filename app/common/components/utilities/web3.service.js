@@ -38,6 +38,9 @@ function web3Service($window) {
         deliverynoteAddress, receiver, deposit, erc20)
       return transfer
     },
+    generateProofs: (proofs) => {
+      console.log('TODO generate proofs for given list of proofs')
+    },
     generateProof: (obj) => {
       return generateProof(contract, provider, obj, web3)
     },
@@ -93,6 +96,7 @@ function initTransfer(contract, provider, deviceFactory, dao, sender, receiver, 
 function acceptTransfer(web3, contract, provider, erc20, deliveryNoteAddress,
                         receiver, deposit, erc20) {
   console.log('AcceptTransfer')
+  console.log(`Delivery Note: ${deliveryNoteAddress}`)
   return new Promise(async function (resolve) {
     await erc20.approve(deliveryNoteAddress, deposit,
       {
@@ -114,7 +118,10 @@ function acceptTransfer(web3, contract, provider, erc20, deliveryNoteAddress,
       hashes[d] = await generateProof(web3, contract, provider, devices[d],
         'transfer', data)
     }
-    console.log(`Hashes: ${hashes}`)
+    // console.log(`Hashes: ${hashes}`)
+    // deliveryNote.getReceiver({from: owner}).then(i => {
+    //   console.log(`DeliveryNote receiver: ${i}\nWeb3 receiver: ${receiver}`)
+    // })
     await deliveryNote.acceptDeliveryNote(deposit, { from: receiver })
     resolve(hashes)
   })
