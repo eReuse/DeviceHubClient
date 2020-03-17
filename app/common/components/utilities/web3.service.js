@@ -72,7 +72,7 @@ function initTransfer(contract, provider, deviceFactory, dao, sender, receiver, 
         await deliveryNoteUtils.createDeliveryNote(contract, provider, deployedDevices,
           sender, receiver, dao).then(async function (deliveryNote) {
             await deliveryNote.emitDeliveryNote({ from: sender, gas: '6721975' })
-            console.log(deliveryNote)
+            console.log(`Delivery note address in InitTransfer: ${deliveryNote.address}`)
             resolve(deliveryNote.address)
           })
       }).catch(err => {
