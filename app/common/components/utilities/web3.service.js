@@ -24,6 +24,7 @@ function web3Service($window) {
 
   const service = {
     initTransfer: (obj) => {
+      console.log(obj)
       let sender = web3.utils.toChecksumAddress(obj.sender)
       let receiver = web3.utils.toChecksumAddress(obj.receiver_address)
       let transferResult = initTransfer(contract, provider, deviceFactory, dao,
@@ -31,6 +32,7 @@ function web3Service($window) {
       return transferResult
     },
     acceptTransfer: (obj) => {
+      console.log(obj)
       let receiver = web3.utils.toChecksumAddress(obj.receiver_address)
       let deposit = parseInt(obj.deposit)
       let deliverynoteAddress = web3.utils.toChecksumAddress(obj.deliverynote_address)
@@ -66,6 +68,7 @@ function web3Service($window) {
   * @returns {Promise} Promise which resolves to DeliveryNote address.
   */
 function initTransfer(contract, provider, deviceFactory, dao, sender, receiver, devices, web3) {
+  console.log(devices)
   return new Promise((resolve, reject) => {
     devicesUtils.deployDevices(deviceFactory, devices, sender, web3)
       .then(async function (deployedDevices) {
@@ -94,15 +97,11 @@ function initTransfer(contract, provider, deviceFactory, dao, sender, receiver, 
 * @returns {Promise} Promise that resolves to boolean
 */
 function acceptTransfer(web3, contract, provider, erc20, deliveryNoteAddress,
-                        receiver, deposit, erc20) {
+  receiver, deposit, erc20) {
   console.log('AcceptTransfer')
   console.log(`Delivery Note: ${deliveryNoteAddress}`)
   return new Promise(async function (resolve) {
-    await erc20.approve(deliveryNoteAddress, deposit,
-      {
-        from: receiver,
-        gas: '6721975'
-      })
+    await erc20.approve(deliveryNoteAddress, deposit, { from: receiver, gas: '6721975' })
     let deliveryNote = await deliveryNoteUtils.getDeliveryNote(contract,
       provider, deliveryNoteAddress)
     let owner = await deliveryNote.owner()
@@ -113,16 +112,13 @@ function acceptTransfer(web3, contract, provider, erc20, deliveryNoteAddress,
       'deposit': deposit,
       'isWaste': false
     }
+    console.log(deposit)
     let hashes = []
     for (d in devices) {
       hashes[d] = await generateProof(web3, contract, provider, devices[d],
         'transfer', data)
     }
-    // console.log(`Hashes: ${hashes}`)
-    // deliveryNote.getReceiver({from: owner}).then(i => {
-    //   console.log(`DeliveryNote receiver: ${i}\nWeb3 receiver: ${receiver}`)
-    // })
-    await deliveryNote.acceptDeliveryNote(deposit, { from: receiver })
+    await deliveryNote.acceptDeliveryNote(deposit, { from: receiver, gas: '6721975' })
     resolve(hashes)
   })
 }
