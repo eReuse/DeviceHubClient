@@ -1624,15 +1624,23 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Thing
    */
   class Proof extends Thing {
-    define ({id = null, ethereumHash = null, deviceIDs = [], ...rest}) {
+    define ({id = null, ethereumHash = null, deviceAddress = null, deviceIDs = [], ...rest}) {
       super.define(rest)
       this.id = id
       this.ethereumHash = ethereumHash // hashes of proof address
-      this.deviceIDs = deviceIDs // most proofs are issued for one device
+      this.deviceAddress = deviceAddress // in web3, every proof has only one device
+      this.deviceIDs = deviceIDs // on server, some proofs still have more devices
     }
 
     static get icon () {
       return 'fa-check-circle'
+    }
+
+    static createFromDevice(device) {
+      return new Proof({
+        deviceAddress: device.ethereumAddress,
+        deviceIDs: [device.id]
+      })
     }
   }
 
@@ -1685,17 +1693,17 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       return 'fa-check-circle'
     }
 
-    static createFromDevice(device) {
+    static createFromDevice(device, userEthereumAddress) {
       if(device.privacy && device.privacy.length) {
         const erasure = device.privacy[0]
-        let data = {
-          deviceIDs: [ device.id ], 
+        const data = _.assign(Proof.createFromDevice(device), {
           erasureType: erasure.type,  // type of erasure
           date: erasure.startTime,
           result: true, // TODO check that all steps have run successful
-          proofAuthor: null, // TODO
+          proofAuthor: userEthereumAddress,
           erasureID: erasure.id
-        }
+        })
+
         return new ProofDataWipe(data)
       }
       
