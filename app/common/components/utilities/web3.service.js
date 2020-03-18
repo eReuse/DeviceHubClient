@@ -70,15 +70,14 @@ function web3Service($window) {
   */
 function initTransfer(contract, provider, deviceFactory, dao, sender, receiver, devices, web3) {
   console.log(devices)
-  return new Promise((resolve, reject) => {
-    devicesUtils.deployDevices(deviceFactory, devices, sender, web3)
-      .then(async function (deployedDevices) {
-        await deliveryNoteUtils.createDeliveryNote(contract, provider, deployedDevices,
-          sender, receiver, dao).then(async function (deliveryNote) {
-            await deliveryNote.emitDeliveryNote({ from: sender, gas: '6721975' })
-            console.log(`Delivery note address in InitTransfer: ${deliveryNote.address}`)
-            resolve(deliveryNote.address)
-          })
+  return new Promise(async function (resolve, reject) {
+    let deployedDevices = await devicesUtils.deployDevices(deviceFactory, devices, sender, web3)
+    let devicesAddresses = Object.keys(deployedDevices).map(function (key) { return deployedDevices[key] })
+    await deliveryNoteUtils.createDeliveryNote(contract, provider, devicesAddresses,
+      sender, receiver, dao).then(async function (deliveryNote) {
+        await deliveryNote.emitDeliveryNote({ from: sender, gas: '6721975' })
+        console.log(`Delivery note address in InitTransfer: ${deliveryNote.address}`)
+        resolve(deliveryNote.address, deployedDevices)
       }).catch(err => {
         console.error(err)
         reject(err)
@@ -113,11 +112,10 @@ function acceptTransfer(web3, contract, provider, erc20, deliveryNoteAddress,
       'deposit': deposit,
       'isWaste': false
     }
-    console.log(deposit)
     let hashes = []
     for (d in devices) {
       hashes[d] = await generateProof(web3, contract, provider, devices[d],
-        'transfer', data)
+        'ProofTransfer', data)
     }
     await deliveryNote.acceptDeliveryNote(deposit, { from: receiver, gas: '6721975' })
     resolve(hashes)
