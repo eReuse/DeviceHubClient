@@ -78,7 +78,7 @@ function initTransfer(contract, provider, deviceFactory, dao, sender, receiver, 
     await deliveryNote.emitDeliveryNote({ from: sender, gas: '6721975' })
     console.log(`Delivery note address in InitTransfer: ${deliveryNote.address}`)
     console.log(deployedDevices)
-    resolve([deliveryNote.address, deployedDevices])
+    resolve({deliverynote_address: deliveryNote.address, deviceIDToAddressHash: deployedDevices})
   })
 }
 
