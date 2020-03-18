@@ -20,11 +20,11 @@ const functions = {
 }
 
 let proofTypes = {
-  WIPE: 'wipe',
-  FUNCTION: 'function',
-  TRANSFER: 'transfer',
-  RECYCLE: 'recycle',
-  REUSE: 'reuse'
+  WIPE: 'ProofDataWipe',
+  FUNCTION: 'ProofFunction',
+  TRANSFER: 'ProofTransfer',
+  RECYCLE: 'ProofRecycling',
+  REUSE: 'ProofReuse'
 }
 
 /**

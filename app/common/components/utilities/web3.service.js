@@ -41,10 +41,11 @@ function web3Service($window) {
       return transfer
     },
     generateProofs: (proofs) => {
-      console.log('TODO generate proofs for given list of proofs')
+      // TODO
     },
     generateProof: (obj) => {
-      return generateProof(contract, provider, obj, web3)
+      console.log(obj)
+      return generateProof(contract, provider, obj.type, obj.device, obj.data, web3)
     },
     getProof: (obj) => {
       return devicesUtils.getDeployedDevice(contract, provider, obj.deviceAddress)
@@ -142,7 +143,7 @@ function generateProof(web3, contract, provider, deviceAddress, proofType, data)
 function getSampleWipeProofs() {
   return {
     'deviceAddress': '0x758D0639aB9C4Cb9cCF4f99557ba33926f8eE1E3',
-    'proofType': 'wipe',
+    'type': 'ProofDataWipe',
     'data': {
       'erasureType': 'Full',
       'date': '05-03-2020',
@@ -155,7 +156,7 @@ function getSampleWipeProofs() {
 function getSampleFunctionProofs() {
   return {
     'deviceAddress': '0x758D0639aB9C4Cb9cCF4f99557ba33926f8eE1E3',
-    'proofType': 'function',
+    'type': 'ProofDataFunction',
     'data': {
       'score': 5,
       'diskUsage': 24,
@@ -168,7 +169,7 @@ function getSampleFunctionProofs() {
 function getSampleRecycleProofs() {
   return {
     'deviceAddress': '0x758D0639aB9C4Cb9cCF4f99557ba33926f8eE1E3',
-    'proofType': 'recycle',
+    'type': 'ProofRecycling',
     'data': {
       'collectionPoint': 'Donalo',
       'date': '2014-10-23',
@@ -182,7 +183,7 @@ function getSampleRecycleProofs() {
 function getSampleReuseProofs() {
   return {
     'deviceAddress': '0x758D0639aB9C4Cb9cCF4f99557ba33926f8eE1E3',
-    'proofType': 'reuse',
+    'type': 'ProofReuse',
     'data': {
       'receiverSegment': 'segment_1',
       'idReceipt': 'aiub8d77hs98',
