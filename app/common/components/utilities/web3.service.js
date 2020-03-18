@@ -72,13 +72,13 @@ function initTransfer(contract, provider, deviceFactory, dao, sender, receiver, 
   console.log(devices)
   return new Promise(async function (resolve) {
     let deployedDevices = await devicesUtils.deployDevices(deviceFactory, devices, sender, web3)
-    console.log(deployedDevices)
     let devicesAddresses = Object.keys(deployedDevices).map(function (key) { return deployedDevices[key] })
     let deliveryNote = await deliveryNoteUtils.createDeliveryNote(contract, provider,
       devicesAddresses, sender, receiver, dao)
     await deliveryNote.emitDeliveryNote({ from: sender, gas: '6721975' })
     console.log(`Delivery note address in InitTransfer: ${deliveryNote.address}`)
-    resolve(deliveryNote.address, deployedDevices)
+    console.log(deployedDevices)
+    resolve([deliveryNote.address, deployedDevices])
   })
 }
 

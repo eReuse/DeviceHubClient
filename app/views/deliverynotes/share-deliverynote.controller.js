@@ -32,7 +32,10 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
 
       return web3
       .initTransfer(dataWEB3)
-      .then(function (deliverynote_address, deviceIDToAddressHash) {
+      .then(function (transfer_result) {
+        let deliverynote_address = transfer_result[0]
+        let deviceIDToAddressHash = transfer_result[1]
+        console.log(deliverynote_address)
         deliverynote.transfer_state = 'Initiated'
         deliverynote.ethereum_address = deliverynote_address
 
