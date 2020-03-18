@@ -36,20 +36,24 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
       return web3
       .acceptTransfer(dataWEB3)
       .then(function (ethereumHashes) {
+        const proofs = devices.map(device => {
+          const proofData = {
+            ethereumHash: ethereumHashes[device.id],
+            deviceID: device.id,
+            supplier: deliverynote.supplier,
+            receiver: deliverynote.receiver,
+            deposit: deliverynote.deposit
+          }
+          return new resources.ProofTransfer(proofData)
+        })
+        
+        const batch = new resources.BatchProof({ proofs: proofs })
+        return batch.post()
+      })
+      .then(function () {
         deliverynote.transfer_state = 'Accepted'
 
         return deliverynote.patch('transfer_state')
-      })
-      .then(function () {
-        const proofData = {
-          ethereumHashes: [], //TODO get ethereum hashes from devices
-          supplier: deliverynote.supplier,
-          receiver: deliverynote.receiver,
-          deposit: deliverynote.deposit
-        }
-        const proof = new resources.ProofTransfer(proofData)
-        const batch = new resources.BatchProof({ proofs: [proof] })
-        return batch.post()
       })
       .then(function () {
         return Notification.success('Successfully accepted transfer')

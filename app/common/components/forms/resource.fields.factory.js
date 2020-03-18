@@ -174,7 +174,12 @@ function resourceFields (fields, resources, enums, web3) {
 
     _submit (op) { 
       function generateProof(proof) {
-        return web3.generateProof(proof).then((ethereumHash) => {
+        const genericProps = [ 'type', 'deviceAddress' ]
+        const data = _.omit(proof, genericProps)
+        const web3Proof = _.pick(proof, genericProps)
+        web3Proof.data = data
+        
+        return web3.generateProof(web3Proof).then((ethereumHash) => {
           proof.ethereumHash = ethereumHash
           return new Promise(resolve => {
             resolve()
