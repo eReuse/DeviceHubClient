@@ -1624,12 +1624,12 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Thing
    */
   class Proof extends Thing {
-    define ({id = null, ethereumHash = null, deviceAddress = null, deviceIDs = [], ...rest}) {
+    define ({id = null, ethereumHash = null, deviceAddress = null, deviceID = null, ...rest}) {
       super.define(rest)
       this.id = id
-      this.ethereumHash = ethereumHash // hashes of proof address
-      this.deviceAddress = deviceAddress // in web3, every proof has only one device
-      this.deviceIDs = deviceIDs // on server, some proofs still have more devices
+      this.ethereumHash = ethereumHash // hash of proof address
+      this.deviceAddress = deviceAddress
+      this.deviceID = deviceID 
     }
 
     static get icon () {
@@ -1639,7 +1639,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     static createFromDevice(device) {
       return new Proof({
         deviceAddress: device.ethereumAddress,
-        deviceIDs: [device.id]
+        deviceID: device.id
       })
     }
   }

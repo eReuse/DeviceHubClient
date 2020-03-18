@@ -39,6 +39,7 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
         const proofs = devices.map(device => {
           const proofData = {
             ethereumHash: ethereumHashes[device.id],
+            deviceID: device.id,
             supplier: deliverynote.supplier,
             receiver: deliverynote.receiver,
             deposit: deliverynote.deposit
