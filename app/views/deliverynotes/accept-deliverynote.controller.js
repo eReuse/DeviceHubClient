@@ -47,8 +47,9 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
           receiver: deliverynote.receiver,
           deposit: deliverynote.deposit
         }
-        const action = new resources.ProofTransfer(proofData)
-        return action.post()
+        const proof = new resources.ProofTransfer(proofData)
+        const batch = new resources.BatchProof({ proofs: [proof] })
+        return batch.post()
       })
       .then(function () {
         return Notification.success('Successfully accepted transfer')
