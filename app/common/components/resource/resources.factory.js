@@ -331,6 +331,14 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   /** A cache for this resource and subresources to use */
   Thing.CACHE = null
 
+  class BatchDevice extends Thing {
+    define ({devices = [], ...rest}) {
+      super.define(rest)
+      this.devices = devices 
+      this.batch = true
+    }
+  }
+
   /**
    * Class representing a device
    * @memberOf module:resources
@@ -2242,6 +2250,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     Donate: Donate,
     MakeAvailable: MakeAvailable,
     Transferred: Transferred,
+    BatchDevice: BatchDevice,
     BatchProof: BatchProof,
     ProofTransfer: ProofTransfer,
     ProofDataWipe: ProofDataWipe,
