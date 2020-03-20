@@ -337,7 +337,12 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Thing
    */
   class Device extends Thing {
-    define ({id = null, hid = null, tags = [], model = null, manufacturer = null, serialNumber = null, weight = null, width = null, height = null, depth = null, actions = [], problems = [], url = null, rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, working = [], brand = null, generation = null, version = null, variant = null, sku = null, image = null, ...rest}) {
+    define ({id = null, hid = null, tags = [], model = null, manufacturer = null, serialNumber = null, 
+      weight = null, width = null, height = null, depth = null, actions = [], problems = [], url = null, 
+      rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, 
+      working = [], brand = null, generation = null, version = null, variant = null, sku = null, image = null, 
+      ethereum_address = null, deposit = null, 
+      ...rest}) {
       super.define(rest)
       /** @type {int} */
       this.id = id
@@ -391,6 +396,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       this.sku = sku
       /** @type {?URI} */
       this.image = image ? new utils.URI(image) : null
+
+      this.ethereum_address = ethereum_address
+      this.deposit = deposit
     }
 
     _props () {
@@ -1638,7 +1646,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
 
     static createFromDevice(device) {
       return new Proof({
-        deviceAddress: device.ethereumAddress,
+        deviceAddress: device.ethereum_address,
         deviceID: device.id
       })
     }
