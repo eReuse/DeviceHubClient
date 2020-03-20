@@ -34,7 +34,7 @@ function deployDevices (factory, devices, owner, web3) {
   return new Promise(async function (resolve) {
     let deployedDevices = {}
     for (let d of devices) {
-      let receipt = await factory.createDevice(d.model, 0, owner, d.id, {
+      let receipt = await factory.createDevice(d.id, 0, owner, {
         from: web3.eth.defaultAccount,
         gas: '6721975'
       })
