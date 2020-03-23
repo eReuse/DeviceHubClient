@@ -5,7 +5,7 @@ class RecycleProof {
 
   generateProof (web3, data, account) {
     return new Promise(resolve => {
-      this.device.generateRecycleProof(data.collectionPoint, data.date,
+      this.device.generateRecycleProof(data.collectionPoint, data.date.toString(),
         data.contact, data.ticket, data.gpsLocation, data.recyclerCode,
         { from: account })
         .then(receipt => {

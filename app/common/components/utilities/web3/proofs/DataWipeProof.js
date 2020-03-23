@@ -6,7 +6,7 @@ class DataWipeProof {
 
   generateProof (web3, data, account) {
     return new Promise(resolve => {
-      this.device.generateDataWipeProof(data.erasureType, data.date,
+      this.device.generateDataWipeProof(data.erasureType, data.date.toString(),
         JSON.parse(data.result), web3.utils.toChecksumAddress(data.proofAuthor),
         { from: account })
         .then(receipt => {
