@@ -1661,8 +1661,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     }
 
     _post () {
-      const payload = _.pick(this.dump(false), ['proofs', 'batch'])
+      const payload = _.pick(this, ['proofs', 'batch'])
       payload.proofs = payload.proofs.map((proof) => {
+        proof = proof.dump()
         return _.omit(proof, 'deviceAddress')
       })
       return payload
@@ -1699,6 +1700,11 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       this.result = result
       this.proofAuthor = proofAuthor
       this.erasureID = erasureID
+    }
+
+    dump (onlyIds = true) {
+      let dump = super.dump(onlyIds)
+      return _.omit(dump, 'erasureType')
     }
 
     static get icon () {
