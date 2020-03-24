@@ -115,6 +115,7 @@ function getProofBlockInfo (device, hash, type) {
  */
 function extractHashFromReceipt (transaction) {
   return transaction.then(receipt => {
+    console.log(receipt.logs[0].args.proofHash)
     return receipt.logs[0].args.proofHash
   })
 }

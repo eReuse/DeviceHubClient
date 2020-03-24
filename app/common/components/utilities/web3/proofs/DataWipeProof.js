@@ -10,7 +10,6 @@ class DataWipeProof {
         JSON.parse(data.result), web3.utils.toChecksumAddress(data.proofAuthor),
         { from: account })
         .then(receipt => {
-          console.log(`DataWipeProof class: ${receipt}`)
           resolve(receipt)
         })
     })
