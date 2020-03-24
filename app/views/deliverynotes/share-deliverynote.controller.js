@@ -39,9 +39,7 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
         // parallel PATCH
         let promises = devices.map((device) => {
           device.ethereum_address = deviceIDToAddressHash[device.id]
-          device.transfer_state = 'Initiated'
-          device.deliverynote_address = deliverynote_address
-          return device.patch('ethereum_address', 'transfer_state', 'deliverynote_address')
+          return device.patch('ethereum_address')
         })
         
         deliverynote.transfer_state = 'Initiated'
