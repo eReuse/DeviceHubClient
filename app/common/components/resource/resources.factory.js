@@ -1661,7 +1661,11 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     }
 
     _post () {
-      return _.pick(this.dump(false), ['proofs', 'batch'])
+      const payload = _.pick(this.dump(false), ['proofs', 'batch'])
+      payload.proofs = payload.proofs.map((proof) => {
+        return _.omit(proof, 'deviceAddress')
+      })
+      return payload
     }
   }
 
@@ -1670,10 +1674,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithMultipleDevices
    */
   class ProofTransfer extends Proof {
-    define ({supplier = null, receiver = null, deposit = null, ...rest}) {
+    define ({supplierID = null, receiverID = null, deposit = null, ...rest}) {
       super.define(rest)
-      this.supplier = supplier
-      this.receiver = receiver
+      this.supplierID = supplierID
+      this.receiverID = receiverID
       this.deposit = deposit
     }
 
