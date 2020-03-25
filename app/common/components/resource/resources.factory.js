@@ -1692,33 +1692,35 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithMultipleDevices
    */
   class ProofDataWipe extends Proof {
-    define ({erasureType = null, date = null, result = null, proofAuthor = null, erasureID = null, ...rest}) {
+    define ({erasureType = null, date = null, result = null, proofAuthor = null, proofAuthorID = null, erasureID = null, ...rest}) {
       super.define(rest)
       
       this.erasureType = erasureType
       this.date = date
       this.result = result
       this.proofAuthor = proofAuthor
+      this.proofAuthorID = proofAuthorID
       this.erasureID = erasureID
     }
 
     dump (onlyIds = true) {
       let dump = super.dump(onlyIds)
-      return _.omit(dump, 'erasureType')
+      return _.omit(dump, 'erasureType', 'proofAuthor')
     }
 
     static get icon () {
       return 'fa-check-circle'
     }
 
-    static createFromDevice(device, userEthereumAddress) {
+    static createFromDevice(device, author) {
       if(device.privacy && device.privacy.length) {
         const erasure = device.privacy[0]
         const data = _.assign(Proof.createFromDevice(device), {
           erasureType: erasure.type,  // type of erasure
           date: erasure.startTime,
           result: true, // TODO check that all steps have run successful
-          proofAuthor: userEthereumAddress,
+          proofAuthor: author.ethereum_address,
+          proofAuthorID: author.id,
           erasureID: erasure.id
         })
 
