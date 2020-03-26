@@ -1736,16 +1736,40 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithMultipleDevices
    */
   class ProofFunction extends Proof {
-    define ({...rest}) {
+    define ({diskUsage = null, proofAuthor = null, proofAuthorID = null,  rateID = null, score = null, algorithmVersion = null,  ...rest}) {
       super.define(rest)
+
+      this.diskUsage = diskUsage
+      this.proofAuthor = proofAuthor
+      this.proofAuthorID = proofAuthorID
+      this.rateID = rateID
+      this.score = score
+      this.algorithmVersion = algorithmVersion
     }
 
     static get icon () {
       return 'fa-check-circle'
     }
 
-    static createFromDevice(device) {
-      //TODO create from device
+    dump (onlyIds = true) {
+      let dump = super.dump(onlyIds)
+      return _.omit(dump, 'score', 'proofAuthor', 'algorithmVersion')
+    }
+
+    static createFromDevice(device, author) {
+      const rate = device.rate
+      if(rate) {
+        const data = _.assign(Proof.createFromDevice(device), {
+          diskUsage: 0,  // TODO server must return this prop
+          proofAuthor: author.ethereum_address,
+          proofAuthorID: author.id,
+          rateID: rate.id,
+          score: rate.rating.value,
+          algorithmVersion: 'v1' // TODO server must return this prop
+        })
+
+        return new ProofFunction(data)
+      }
       
       return null
     }
