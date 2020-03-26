@@ -168,7 +168,7 @@ function resourceFields (fields, resources, enums, web3) {
     constructor (model, ... fields) {
       super(model, ...fields)
       const devices = new f.Resources('devices', {namespace: 'r.eventWithMultipleDevices'})
-      this.fields.splice(1, 0, devices)
+      this.fields.splice(0, 0, devices)
     }
 
 
@@ -216,7 +216,52 @@ function resourceFields (fields, resources, enums, web3) {
       })
     }
   }
+
+  class ProofDataWipe extends BatchProof {
+  }
+
+  class ProofFunction extends BatchProof {
+  }
   
+  class ProofReuse extends BatchProof {
+    constructor (model, ...fields) {
+      const def = {namespace: 'r.proof.reuse'}
+      super(model,
+        new f.String('receiverSegment', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('idReceipt', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('supplierID', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('receiverID', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.Number('price', def),
+        ...fields
+      )
+    }
+
+    _submit(op) {
+      const model = this.model
+      model.proofs.forEach(proof => {
+        proof.receiverSegment = model.receiverSegment
+        proof.idReceipt = model.idReceipt
+        proof.supplierID = model.supplierID
+        proof.receiverID = model.receiverID
+        proof.price = model.price
+      })
+      return super._submit(op)
+    }
+  }
+
+  class ProofRecycling extends BatchProof {
+    constructor (model, ...fields) {
+      const def = {namespace: 'r.proof.recycling'}
+      super(model,
+        new f.String('collectionPoint', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('idReceipt', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('supplierID', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('receiverID', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.Number('price', def),
+        ...fields
+      )
+    }
+  }
 
   return {
     ResourceForm: ResourceForm,
@@ -231,6 +276,10 @@ function resourceFields (fields, resources, enums, web3) {
     MakeAvailable: MakeAvailable,
     Transferred: Transferred,
     BatchProof: BatchProof,
+    ProofDataWipe: ProofDataWipe,
+    ProofFunction: ProofFunction,
+    ProofReuse: ProofReuse,
+    ProofRecycling: ProofRecycling,
     Rent: Rent,
     CancelTrade: CancelTrade,
     InitTransfer: InitTransfer,

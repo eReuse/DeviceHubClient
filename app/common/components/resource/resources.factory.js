@@ -1653,11 +1653,12 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
   }
 
   class BatchProof extends Thing {
-    define ({proofs = [], devices = [], ...rest}) {
+    define ({proofs = [], devices = [], proofType = null, ...rest}) {
       super.define(rest)
       this.proofs = proofs
       this.devices = devices // needed for displaying devices in the BatchProof form
       this.batch = true
+      this.proofType = proofType
     }
 
     _post () {
@@ -1780,8 +1781,14 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithMultipleDevices
    */
   class ProofReuse extends Proof {
-    define ({...rest}) {
+    define ({receiverSegment = null, idReceipt = null, supplierID = null,  receiverID = null, price = null,  ...rest}) {
       super.define(rest)
+
+      this.receiverSegment = receiverSegment
+      this.idReceipt = idReceipt
+      this.supplierID = supplierID
+      this.receiverID = receiverID
+      this.price = price
     }
 
     static get icon () {
@@ -1789,9 +1796,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     }
 
     static createFromDevice(device) {
-      //TODO create from device
-      
-      return null
+      const data = Proof.createFromDevice(device)
+
+      return new ProofReuse(data)
     }
   }
 

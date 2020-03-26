@@ -3,7 +3,7 @@
  * @param {module:dh-modal-provider} dhModal
  * @param {module:resources} resources
  */
-function manualActionsButton (dhModal, resources, $state, session) {
+function manualActionsButton (dhModal, resources, $state, session, resourceFields) {
   return {
     template: require('./manual-actions-button.directive.html'),
     restrict: 'E',
@@ -56,7 +56,7 @@ function manualActionsButton (dhModal, resources, $state, session) {
           }
         })
 
-        const batch = new resources.BatchProof({ devices: devices, proofs: proofs })
+        const batch = new resources.BatchProof({ devices: devices, proofs: proofs, proofType: Proof.type })
         $state.go('.newAction', {action: batch})
       }
     }
