@@ -1807,8 +1807,15 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithMultipleDevices
    */
   class ProofRecycling extends Proof {
-    define ({...rest}) {
+    define ({collectionPoint = null, date = null, contact = null, ticket = null, gpsLocation = null, recyclerCode = null, ...rest}) {
       super.define(rest)
+
+      this.collectionPoint = collectionPoint
+      this.date = date
+      this.contact = contact
+      this.ticket = ticket
+      this.gpsLocation = gpsLocation
+      this.recyclerCode = recyclerCode
     }
 
     static get icon () {
@@ -1816,9 +1823,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     }
 
     static createFromDevice(device) {
-      //TODO create from device
-      
-      return null
+      const data = Proof.createFromDevice(device)
+
+      return new ProofRecycling(data)
     }
   }
 

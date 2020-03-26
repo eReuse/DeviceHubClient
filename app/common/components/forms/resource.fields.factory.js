@@ -254,12 +254,26 @@ function resourceFields (fields, resources, enums, web3) {
       const def = {namespace: 'r.proof.recycling'}
       super(model,
         new f.String('collectionPoint', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
-        new f.String('idReceipt', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
-        new f.String('supplierID', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
-        new f.String('receiverID', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
-        new f.Number('price', def),
+        new f.Datepicker('date', def),
+        new f.String('contact', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('ticket', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('gpsLocation', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('recyclerCode', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         ...fields
       )
+    }
+
+    _submit(op) {
+      const model = this.model
+      model.proofs.forEach(proof => {
+        proof.collectionPoint = model.collectionPoint
+        proof.date = model.date
+        proof.contact = model.contact
+        proof.ticket = model.ticket
+        proof.gpsLocation = model.gpsLocation
+        proof.recyclerCode = model.recyclerCode
+      })
+      return super._submit(op)
     }
   }
 
