@@ -47,7 +47,7 @@ function manualActionsButton (dhModal, resources, $state, session) {
         const proofs = []
         
         const devices = $scope.devices.filter((device) => {
-          const proof = Proof.createFromDevice(device, session.user.ethereum_address)
+          const proof = Proof.createFromDevice(device, session.user)
           if (proof) {
             proofs.push(proof)
             return true

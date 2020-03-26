@@ -40,8 +40,8 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
           const proofData = {
             ethereumHash: ethereumHashes[device.id],
             deviceID: device.id,
-            supplier: deliverynote.supplier,
-            receiver: deliverynote.receiver,
+            supplierID: deliverynote.supplier.id,
+            receiverID: deliverynote.receiver.id,
             deposit: deliverynote.deposit
           }
           return new resources.ProofTransfer(proofData)
