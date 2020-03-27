@@ -7,12 +7,13 @@
  */
 function newActionCtrl ($scope, $stateParams, resourceFields, $state) {
   const action = $scope.action = $stateParams.action
+  const type = action.proofType || action.type // TODO hacky: proofs should have their own controller
 
   function leave () {
     $state.go('^')
   }
 
-  class NewActionForm extends resourceFields[action.type] {
+  class NewActionForm extends resourceFields[type] {
     _submit (op) {
       return super._submit(op).then(leave)
     }
