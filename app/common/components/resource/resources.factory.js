@@ -15,7 +15,7 @@ const isEmpty = require('is-empty')
  * @param {module:enums} enums
  * @param {URI} URL
  */
-function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
+function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   /**
    * The models of Devicehub, mimicking Devicehub's `schema.Thing`.
    * Thing classes have generic methods that can communicate with
@@ -1759,14 +1759,16 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
 
     static createFromDevice(device, author) {
       const rate = device.rate
+      const testDataStorage = device.actions.find(a => a.lifetime)
+      const lifetime = testDataStorage ? testDataStorage.lifetime : 0
       if(rate) {
         const data = _.assign(Proof.createFromDevice(device), {
-          diskUsage: 0,  // TODO server must return this prop
+          diskUsage: lifetime, 
           proofAuthor: author.ethereum_address,
           proofAuthorID: author.id,
           rateID: rate.id,
           score: rate.rating.value,
-          algorithmVersion: 'v1' // TODO server must return this prop
+          algorithmVersion: 'v1'
         })
 
         return new ProofFunction(data)
@@ -1997,6 +1999,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     addDevices (ids) {
       return this.server.post({}, this.id + '/devices', {params: {id: ids}}).then(lot => {
         this.define(lot)
+        $rootScope.$broadcast('lots:reload')
       })
     }
 
