@@ -6,8 +6,7 @@ class ReuseProof {
   generateProof (web3, data, account) {
     return new Promise(resolve => {
       this.device.generateReuseProof(data.receiverSegment, data.idReceipt,
-        web3.utils.toChecksumAddress(data.receiver), data.price,
-        { from: account })
+        data.price, { from: account })
         .then(receipt => {
           resolve(receipt)
         })
