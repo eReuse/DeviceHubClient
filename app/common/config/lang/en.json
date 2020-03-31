@@ -76,8 +76,14 @@
       }
     }
   },
+  "deliverynotes": {
+    "new": "New delivery note"
+  },
   "lots": {
-    "new": "New lot"
+    "new": "New lot",
+    "delete": {
+      "button": "Delete lots"
+    }
   },
   "newAction": {
     "title": "Create a new {{type}}",
