@@ -188,6 +188,10 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       return this.server.patch(obj, this.id).then(() => this)
     }
 
+    delete () {
+      return this.server.delete(this.id)
+    }
+
     toString () {
       return this.title
     }

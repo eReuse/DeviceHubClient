@@ -6,7 +6,7 @@
  * @param {module:deviceGetter} deviceGetter
  * @param {module:selection} selection
  */
-function resourceList (resources, resourceListConfig, progressBar, Notification, deviceGetter, selection) {
+function resourceList ($rootScope, resources, resourceListConfig, progressBar, Notification, deviceGetter, selection) {
   return {
     template: require('./resource-list.directive.html'),
     restrict: 'E',
@@ -106,6 +106,22 @@ function resourceList (resources, resourceListConfig, progressBar, Notification,
              * @type {module:selection.Selected}
              */
             this.lots = []
+          }
+
+          deleteLots (lots) {
+            async function deleteLotsSerial(lots) {
+              for(const lot of lots) {
+                await lot.delete()
+              }
+              return new Promise(resolve => {
+                resolve()
+              })
+            }
+
+            deleteLotsSerial(lots)
+
+            this.deselectAll()
+            $rootScope.$broadcast('lots:reload')
           }
 
           /**

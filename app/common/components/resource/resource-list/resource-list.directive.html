@@ -22,6 +22,8 @@
         <accept-deliverynote-button ng-if="lotsM.lots.length && lotsM.lots[0].deliverynote" lot="lotsM.lots[0]"
           getter="getter" ng-if="lotsM.lots.length === 1">
         </accept-deliverynote-button>
+        <delete-lot-button lots="lotsM.lots" manager="lotsM">
+        </delete-lot-button>
         <button type="button" class="btn btn-link hidden-xs btn-xs" ng-click="lotsM.deselectAll()">
           Deselect all ({{lotsM.lots.length}})
         </button>
