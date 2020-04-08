@@ -24,26 +24,40 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
 
 
     _submit () {
-      const dataWEB3 = {
-        sender: supplier_address,
-        devices: devices,
-        receiver_address: receiver_address
+      
+      function initTransferWeb3() {
+        const submitToWeb3 = false // !!session.user.ethereum_address
+        if(!submitToWeb3) {
+          return new Promise(resolve => {
+            resolve(false)
+          })
+        }
+        const dataWEB3 = {
+          sender: supplier_address,
+          devices: devices,
+          receiver_address: receiver_address
+        }
+
+        return web3.initTransfer(dataWEB3)
       }
 
-      return web3
-      .initTransfer(dataWEB3)
+      return initTransferWeb3()
       .then(function (response) {
-        const deliverynote_address = response.deliverynote_address
-        const deviceIDToAddressHash = response.device_addresses
-        
-        // parallel PATCH
-        let promises = devices.map((device) => {
-          device.ethereum_address = deviceIDToAddressHash[device.id]
-          return device.patch('ethereum_address')
-        })
-        
+        let promises = []
+        if(response) {
+          const deliverynote_address = response.deliverynote_address
+          const deviceIDToAddressHash = response.device_addresses
+          
+          // parallel PATCH
+          promises = devices.map((device) => {
+            device.ethereum_address = deviceIDToAddressHash[device.id]
+            return device.patch('ethereum_address')
+          })
+          
+          deliverynote.ethereum_address = deliverynote_address
+        }
+    
         deliverynote.transfer_state = 'Initiated'
-        deliverynote.ethereum_address = deliverynote_address
         promises.push(deliverynote.patch('transfer_state', 'ethereum_address'))
 
         return Promise.all(promises)
