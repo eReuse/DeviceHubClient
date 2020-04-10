@@ -134,6 +134,7 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
       return _(this.devices)
         .map(pathToProp)
         .compact()
+        .filter((prop) => { return typeof prop[key] !== 'undefined' }) 
         .groupBy(key)
         // todo future version could use groupBy and hold
         //  an array of values instead of length
