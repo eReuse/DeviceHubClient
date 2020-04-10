@@ -459,7 +459,7 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
     full () {
       return [
         ['Processor', this.aggregateComponentType('Processor', 'model')],
-        ['RAM', this.aggregateComponentType('RamModule', 'size', { postfix: 'GB' })],
+        ['RAM', this.aggregateComponentType('RamModule', 'size', { postfix: 'MB' })],
         ['Data storage', this.aggregateComponentType('HardDrive', 'size', { postfix: 'GB' })],
         ['Graphic card', this.aggregateComponentType('GraphicCard', 'manufacturer')],
         ['Sound card', this.aggregateComponentType('SoundCard', 'manufacturer')],
