@@ -1,14 +1,14 @@
 <div ng-class="{'input-group': to.addons.length}">
-  <formly-transclude></formly-transclude>
-  <div class="input-group-btn">
-    <button type="button"
-            class="btn btn-primary"
-            ng-repeat="addon in to.addons"
-            ng-style="{cursor: addon.onClick ? 'pointer' : 'inherit'}"
-            ng-click="addon.onClick(options, this)"
-    >
-      <i class="{{addon.class}}" ng-if="addon.class"></i>
-      <span ng-if="addon.text">{{addon.text | translate}}</span>
-    </button>
-  </div>
+    <formly-transclude></formly-transclude>
+    <div class="input-group-btn">
+        <button type="button"
+                class="btn btn-primary"
+                ng-repeat="addon in to.addons"
+                ng-style="{cursor: addon.onClick ? 'pointer' : 'inherit'}"
+                ng-click="addon.onClick(options, this)"
+        >
+            <i class="{{addon.class}}" ng-if="addon.class"></i>
+            <span ng-if="addon.text">{{addon.text | translate}}</span>
+        </button>
+    </div>
 </div>

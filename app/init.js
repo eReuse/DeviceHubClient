@@ -1,13 +1,16 @@
+
 /**
  * Common initialisations for the App and tests. Just require this file.
  */
-
 window.COMMON = 'common'
 window.COMPONENTS = 'common/components'
 window.VIEWS = 'views'
 
 window.$ = window.jQuery = require('jquery') // We globally load jQuery
 window._ = require('lodash')
+window.web3 = require('web3')
+window.contract = require('truffle-contract')
+window.XLSX = require('xlsx')
 
 const apiCheck = require('api-check')
 apiCheck.globalConfig.disabled = true

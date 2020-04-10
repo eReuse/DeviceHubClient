@@ -1,48 +1,48 @@
 <div class="selection-details-content">
-  <button
-          type="button"
-          class="btn ng-scope btn-hide-details"
-          ng-click="selection.details[row.title] = false">
-    <i class="fa fa-chevron-left fa-fw"></i>
-  </button>
-  <h3>Price</h3>
-  <div class="text-center">
-    <div class="btn-group btn-group-sm">
-      <h4 class="text-left">Warranty</h4>
-      <label class="btn btn-primary" ng-model="currencyOptions.val" uib-btn-radio="'standard'">
-        Standard
-      </label>
-      <!--<label class="btn btn-primary"-->
-             <!--ng-disabled="::!selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing.refurbisher.warranty2')"-->
-             <!--uib-tooltip="No 2 year warranty option for this device."-->
-             <!--tooltip-enable="::!selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing.refurbisher.warranty2')"-->
-             <!--ng-model="currencyOptions.val"-->
-             <!--uib-btn-radio="'warranty2'"-->
-      <!--&gt;-->
-        <!--2 year warranty-->
-      <!--</label>-->
+    <button
+            type="button"
+            class="btn ng-scope btn-hide-details"
+            ng-click="selection.details[row.title] = false">
+        <i class="fa fa-chevron-left fa-fw"></i>
+    </button>
+    <h3>Price</h3>
+    <div class="text-center">
+        <div class="btn-group btn-group-sm">
+            <h4 class="text-left">Warranty</h4>
+            <label class="btn btn-primary" ng-model="currencyOptions.val" uib-btn-radio="'standard'">
+                Standard
+            </label>
+            <!--<label class="btn btn-primary"-->
+            <!--ng-disabled="::!selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing.refurbisher.warranty2')"-->
+            <!--uib-tooltip="No 2 year warranty option for this device."-->
+            <!--tooltip-enable="::!selector.getAggregatedPropertyOfSelected(allSelectedDevices, 'pricing.refurbisher.warranty2')"-->
+            <!--ng-model="currencyOptions.val"-->
+            <!--uib-btn-radio="'warranty2'"-->
+            <!--&gt;-->
+            <!--2 year warranty-->
+            <!--</label>-->
+        </div>
     </div>
-  </div>
-  <table class="table">
-    <thead>
-    <tr>
-      <th></th>
-      <th>%</th>
-      <th>Amount</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="roleName in currencyOptions.roles">
-      <td>{{::roleName | humanize}}</td>
-      <td>{{ selection.props.pricing[roleName][currencyOptions.val].percentage }}</td>
-      <td>{{ selection.props.pricing[roleName][currencyOptions.val].amount }}</td>
-    </tr>
-    <tr class="active">
-      <td>Total</td>
-      <td></td>
-      <td>{{selection.props.pricing.total[currencyOptions.val] }}
-      </td>
-    </tr>
-    </tbody>
-  </table>
+    <table class="table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>%</th>
+            <th>Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="roleName in currencyOptions.roles">
+            <td>{{::roleName | humanize}}</td>
+            <td>{{ selection.props.pricing[roleName][currencyOptions.val].percentage }}</td>
+            <td>{{ selection.props.pricing[roleName][currencyOptions.val].amount }}</td>
+        </tr>
+        <tr class="active">
+            <td>Total</td>
+            <td></td>
+            <td>{{selection.props.pricing.total[currencyOptions.val] }}
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>

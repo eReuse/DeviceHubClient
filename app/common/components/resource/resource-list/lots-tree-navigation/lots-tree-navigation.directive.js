@@ -5,7 +5,7 @@
  * @param {module:selection} selection
  * @param {module:resources} resources
  */
-function lotsTreeNavigation (progressBar, $rootScope, selection, resources) {
+function lotsTreeNavigation (progressBar, $rootScope, $state, selection, resources) {
   const PATH = require('./__init__').PATH
   // const PATH = 'common/components/resource/resource-list/lots-tree-navigation'
 
@@ -59,6 +59,12 @@ function lotsTreeNavigation (progressBar, $rootScope, selection, resources) {
 
         $scope.selected = new LotsSelector()
 
+        function newIncomingLot (parentLotId = null) {
+          $state.go('auth.createDeliveryNote')
+        }
+
+        $scope.newIncomingLot = newIncomingLot
+
         /**
          * Creates a new lot.
          * @param {?string} parentLotId
@@ -69,8 +75,11 @@ function lotsTreeNavigation (progressBar, $rootScope, selection, resources) {
             parents: parentLotId ? [parentLotId] : undefined
           })
           lot.post().then(() => {
-            if (parentLotId) reload()
-            else $scope.lots.addToTree(lot.id)
+            if (parentLotId) {
+              reload()
+            } else {
+              $scope.lots.addToTree(lot.id)
+            }
           })
         }
 

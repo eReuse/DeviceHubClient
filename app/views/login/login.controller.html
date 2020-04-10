@@ -1,8 +1,8 @@
 <div id="login">
-  <div id="login-form" uib-collapse="isCollapsed">
-    <img ng-src="{{::$root.CONSTANTS.siteLogo}}" title="{{::$root.CONSTANTS.appName}}"/>
-    <dh-form form="form" submit="login.login"></dh-form>
-    <div ng-show="submissionError" class="alert alert-danger ani-show">
+    <div id="login-form" uib-collapse="isCollapsed">
+        <img ng-src="{{::$root.CONSTANTS.siteLogo}}" title="{{::$root.CONSTANTS.appName}}"/>
+        <dh-form form="form" submit="login.login"></dh-form>
+        <div ng-show="submissionError" class="alert alert-danger ani-show">
       <span ng-switch="status">
         <span ng-switch-when="-1">
           <span translate="login.error.1"></span>
@@ -14,9 +14,9 @@
           <span translate="login.error.def"></span>
         </span>
       </span>
+        </div>
     </div>
-  </div>
-  <footer class="row">
-    <img ng-src="{{::$root.CONSTANTS.eReuseLogo}}"/>
-  </footer>
+    <footer class="row">
+        <img ng-src="{{::$root.CONSTANTS.eReuseLogo}}"/>
+    </footer>
 </div>

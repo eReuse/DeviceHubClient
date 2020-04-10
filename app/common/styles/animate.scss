@@ -1,11 +1,14 @@
 .ani-default {
   animation-duration: 0.5s;
+
   &.ng-enter {
     animation-name: fadeIn;
   }
+
   &.ng-leave {
     animation-name: fadeOut;
   }
+
   &.ng-move {
     animation-name: fadeIn;
   }
@@ -13,9 +16,11 @@
 
 .ani-show {
   opacity: 1;
+
   &.ng-hide-add, &.ng-hide-remove {
     transition: all linear 0.25s;
   }
+
   &.ng-hide {
     opacity: 0;
   }
@@ -23,9 +28,11 @@
 
 .ani-show-no-hide {
   opacity: 1;
+
   &.ng-hide-remove {
     transition: all linear 0.25s;
   }
+
   &.ng-hide {
     opacity: 0;
   }

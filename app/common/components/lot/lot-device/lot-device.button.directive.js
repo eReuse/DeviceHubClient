@@ -64,10 +64,10 @@ function lotDeviceButton ($translate, fields, resources) {
       class LotDeviceAddForm extends LotDeviceForm {
         constructor () {
           super(true, {}, new fields.Typeahead('lotId', {
-              resources: resources.cache.lots,
-              namespace: 'lot.device',
-              required: true
-            })
+            resources: _.values(resources.Lot.CACHE),
+            namespace: 'lot.device',
+            required: true
+          })
           )
         }
       }

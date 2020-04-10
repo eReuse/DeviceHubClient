@@ -74,8 +74,11 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
 
         /** Goes back to the parent panel. */
         back () {
-          if (this.parent) this.parent.open()
-          else $scope.popover.isOpen = false
+          if (this.parent) {
+            this.parent.open()
+          } else {
+            $scope.popover.isOpen = false
+          }
         }
 
         /** Sets this panel as the visible one. */
@@ -183,8 +186,11 @@ function resourceListFilters (Notification, $uibModal, clipboard, fields, resour
           // If the value is an array we want to return to an
           // empty array or Formly won't like it
           const value = _.get($scope.form.model, this.key)
-          if (_.isArray(value)) _.set($scope.form.model, this.key, [])
-          else _.unset($scope.form.model, this.key)
+          if (_.isArray(value)) {
+            _.set($scope.form.model, this.key, [])
+          } else {
+            _.unset($scope.form.model, this.key)
+          }
           $scope.form.submit()
         }
       }

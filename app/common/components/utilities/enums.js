@@ -237,10 +237,15 @@ function enumsFactory ($translate) {
     constructor (value) {
       this.value = value
       console.assert(value >= this.constructor.MIN && value <= this.constructor.MAX)
-      if (value <= this.constructor.VERY_LOW) this.range = this.constructor.VERY_LOW
-      else if (value <= this.constructor.LOW) this.range = this.constructor.LOW
-      else if (value <= this.constructor.MEDIUM) this.range = this.constructor.MEDIUM
-      else this.range = this.constructor.HIGH
+      if (value <= this.constructor.VERY_LOW) {
+        this.range = this.constructor.VERY_LOW
+      } else if (value <= this.constructor.LOW) {
+        this.range = this.constructor.LOW
+      } else if (value <= this.constructor.MEDIUM) {
+        this.range = this.constructor.MEDIUM
+      } else {
+        this.range = this.constructor.HIGH
+      }
     }
 
     valueOf () {

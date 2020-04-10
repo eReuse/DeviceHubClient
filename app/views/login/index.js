@@ -9,5 +9,5 @@ module.exports = angular.module('views.login',
     require('./../../common/constants').name,
     require('./../../common/components/utilities').name
   ])
-.controller('loginCtrl', require('./login.controller.js'))
+  .controller('loginCtrl', require('./login.controller.js'))
 

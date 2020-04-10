@@ -68,6 +68,7 @@ function groupResourceSubmitterFactory (SubmitForm, ResourceSettings) {
       }
     }
   }
+
   return GroupResourceSubmitter
 }
 

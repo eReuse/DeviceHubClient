@@ -4,6 +4,7 @@
 function CannotSubmit (message) {
   this.message = message
 }
+
 CannotSubmit.prototype = Object.create(Error.prototype)
 
 module.exports = CannotSubmit

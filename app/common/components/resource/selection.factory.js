@@ -78,8 +78,11 @@ function selection () {
     }
 
     _toggle (item) {
-      if (this.isSelected(item)) this.deselect(item)
-      else this.select(item)
+      if (this.isSelected(item)) {
+        this.deselect(item)
+      } else {
+        this.select(item)
+      }
     }
 
     /**

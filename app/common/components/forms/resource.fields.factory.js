@@ -9,7 +9,7 @@
 function resourceFields (fields, resources, $translate, Notification, enums) {
   const f = fields
 
-  /**
+  /** 
    * @alias module:resourceFields.ResourceForm
    * @extends module:fields.Form
    */
@@ -116,6 +116,13 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
   class MakeAvailable extends EventWithMultipleDevices {
   }
 
+    /**
+   * @alias module:resourceFields.Transferred
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class Transferred extends EventWithMultipleDevices {
+  }
+
   /**
    * @alias module:resourceFields.Rent
    * @extends module:resourceFields.EventWithMultipleDevices
@@ -129,6 +136,48 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
    */
   class CancelTrade extends EventWithMultipleDevices {
   }
+  
+  /**
+   * @alias module:resourceFields.InitTransfer
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class InitTransfer extends EventWithMultipleDevices {
+    constructor (model, ...fields) {
+      super(model, ...fields)
+      const receiver = new f.String('receiver', {namespace: 'r.receiver'})
+      this.fields.splice(1, 0, receiver)
+    }
+  }
+
+  /**
+   * @alias module:resourceFields.AcceptTransfer
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class AcceptTransfer extends EventWithMultipleDevices {
+    constructor (model, ...fields) {
+      super(model, ...fields)
+      // f.patch
+      // f.PATCH
+      fields.op = this.constructor.PATCH
+      const deposit = new f.Number('deposit', {namespace: 'r.deposit'})
+      this.fields.splice(1, 0, deposit)
+    }
+  }
+
+  class BatchProof extends ResourceForm {
+    constructor (model, ... fields) {
+      super(model, ...fields)
+      const devices = new f.Resources('devices', {namespace: 'r.eventWithMultipleDevices'})
+      this.fields.splice(1, 0, devices)
+    }
+
+    _submit (op) { 
+      return super._submit(op).then(() => {
+        return web3.generateProofs(this.model.proofs)
+      })
+    }
+  }
+  
 
   return {
     ResourceForm: ResourceForm,
@@ -141,8 +190,12 @@ function resourceFields (fields, resources, $translate, Notification, enums) {
     ToDisposeProduct: ToDisposeProduct,
     Receive: Receive,
     MakeAvailable: MakeAvailable,
+    Transferred: Transferred,
+    BatchProof: BatchProof,
     Rent: Rent,
-    CancelTrade: CancelTrade
+    CancelTrade: CancelTrade,
+    InitTransfer: InitTransfer,
+    AcceptTransfer: AcceptTransfer
   }
 }
 
