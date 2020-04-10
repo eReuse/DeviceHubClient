@@ -1,7 +1,10 @@
 <div>
-   <ul ng-repeat="cAggr in prop.components | orderBy:'count'" class="list-unstyled">
-    <li>
-      {{::cAggr.value}} — {{::cAggr.count}}
-    </li>
+   <ul ng-repeat="componentType in Object.keys(prop.components)" class="list-unstyled">
+    <h3>{{ componentType }}</h3>
+    <ul ng-repeat="cAggr in prop.components[componentType] | orderBy:'count'" class="list-unstyled">
+      <li>
+        {{::cAggr.value}} — {{::cAggr.count}}
+      </li>
+    </ul>
   </ul>
 </div>

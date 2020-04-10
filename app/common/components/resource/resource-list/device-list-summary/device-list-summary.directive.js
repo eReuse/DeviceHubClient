@@ -421,19 +421,41 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
   class Components extends Property {
     constructor (devices) {
       super(devices, 'Components')
-      this.components = this.aggregatesOne('components')
-      if (!this.components.length) throw new NoValuesForProperty()
-      this.content = require('./components.summary.html')
+      
+      this.components = _(devices)
+                        .map('components')
+                        .flatten()
+                        .value()
+    
+      this.content = `${this.components.length} components`
     }
 
-    aggregatesOne (pathToProp, options = {}) {
-      return _(this.devices)
-        .map(pathToProp)
-        .flatten()
+    aggregateComponentType (componentType, pathToProp, options = {}) {
+      return _(this.components)
+        .filter((component) => { 
+          const type = component.type
+          if (type === componentType) {
+            return true
+          }
+        })
+        .map((component) => {
+          return component[pathToProp]
+        })
         .compact()
         .groupBy()
         .map((values, key) => new AggregateEntry(values, key, pathToProp, options))
         .value()
+    }
+
+    full () {
+      return [
+        ['Processor', this.aggregateComponentType('Processor', 'model')],
+        ['RAM', this.aggregateComponentType('RamModule', 'size', { postfix: 'GB' })],
+        ['Data storage', this.aggregateComponentType('HardDrive', 'size', { postfix: 'GB' })],
+        ['Graphic card', this.aggregateComponentType('GraphicCard', 'manufacturer')],
+        ['Sound card', this.aggregateComponentType('SoundCard', 'manufacturer')],
+        ['Motherboard', this.aggregateComponentType('Motherboard', 'manufacturer')]
+      ]
     }
   }
 
