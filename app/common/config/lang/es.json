@@ -98,7 +98,6 @@
     "notification": {
       "success": "🙂 Hecho.",
       "error": "No hemos podido hacer-lo debido a un error. Por favor intentalo más tarde o contactanos."
-
     },
     "fields": {
       "optionYes": "Si.",
@@ -214,17 +213,14 @@
       "severity": {
         "l": "Severidad",
         "d": "Un indicador que evalúa la ejecución del evento. Por ejemplo, los eventos fallidos se configuran como \"Error\"."
-
       },
       "startTime": {
         "l": "Tiempo de inicio",
         "d": "Cuando la acción comienza. Para algunas acciones como las reservas en el momento en que están disponibles, para otras como el alquiler cuando comienza el alquiler."
-
       },
       "endTime": {
         "l": "Fecha",
         "d": "Cuando la acción termina. Para algunas acciones como reservas el tiempo cuando expiran, para otras como alquilar el tiempo que el final renta. Para las acciones puntuales es el tiempo en que se realizan; difiere de lo \"creado\" en que \"creado\" es el lugar donde el sistema recibe la acción."
-
       },
       "description": {
         "l": "Descripción",
@@ -257,7 +253,6 @@
       "b": "B. Hay un botón difícil de presionar or pequeños arañazos en las esquinas de la pantalla",
       "c": "C. Un botón no esencial no funciona; la pantalla tiene múltiples arañazos en las esquinas",
       "d": "D. Múltiples botones no funcionan correctamente; la pantalla tiene daños severos que pueden afectar en el uso"
-
     },
     "biosRange": {
       "a": "A. Si al pulsar una tecla puedes acceder a un menú de arranque con el arranque por red.",
@@ -345,7 +340,6 @@
       "sizePreset": {
         "l": "Tamaño predefinido",
         "d": "Un tamaño predefinido de la etiqueta. Puede cambiar manualmente el tamaño a continuación."
-
       }
     }
   },
@@ -394,7 +388,6 @@
       "appearance": {
         "l": "Apariencia",
         "d": "Califica las imperfecciones que afectan estéticamente al dispositivo, pero no a su uso."
-
       },
       "functionality": {
         "l": "Functionalidad",

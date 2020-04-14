@@ -20,11 +20,12 @@ function groupResourceButton () {
       function setView () {
         $scope.resources = $scope.getResources()
       }
+
       if ($scope.resource) {
-        $scope.resources = [ $scope.resource ]
+        $scope.resources = [$scope.resource]
       } else {
         setView()
-        $scope.registerToResourcesUpdate({ callback: setView })
+        $scope.registerToResourcesUpdate({callback: setView})
       }
       $scope.menu = [
         // {title: 'Lot', group: 'Lot', resourceTypes: ['Package', 'Device', 'Lot', 'Pallet']},
@@ -69,7 +70,9 @@ function groupResourceButton () {
         $scope.popover.isOpen = true
       }
 
-      $scope.closePopover = () => { $scope.popover.isOpen = false }
+      $scope.closePopover = () => {
+        $scope.popover.isOpen = false
+      }
 
       $scope._success = () => {
         $scope.success()

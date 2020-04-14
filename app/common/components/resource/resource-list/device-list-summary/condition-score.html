@@ -1,52 +1,52 @@
 <div class="selection-details-content">
-  <button
-      type="button"
-      class="btn ng-scope btn-hide-details"
-      ng-click="selection.details[row.title] = false">
-    <i class="fa fa-chevron-left fa-fw"></i>
-  </button>
-  <h3>Condition score</h3>
-  <table class="table" id="device-dashboard-condition">
-    <thead>
-    <tr>
-      <th></th>
-      <th></th>
-      <th>Condition</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="entry in selection.props.condition.appearance.general">
-      <td>
-        <i class="fa fa-fw fa-eye"></i>
-      </td>
-      <td>Appearance</td>
-      <td class="text-right"
-          ng-click="addFilter('condition.appearance', entry.value, 'Appearance')"
-          uib-tooltip="{{::appearance[entry.value]}}">
-        <span class="label label-primary">{{::entry.value}}</span>
-      </td>
-    </tr>
-    <tr ng-repeat="entry in selection.props.condition.functionality.general">
-      <td>
-        <i class="fa fa-fw fa-wrench"></i>
-      </td>
-      <td>Functionality</td>
-      <td class="text-right"
-          ng-click="addFilter('condition.functionality', entry.value, 'Functionality')"
-          uib-tooltip="{{::functionality[entry.value]}}">
-        <span class="label label-primary">{{::entry.value}}</span>
-      </td>
-    </tr>
-    <tr ng-repeat="entry in selection.props.condition.general.range">
-      <td><i class="fa fa-fw fa-line-chart"></i></td>
-      <td>Total condition</td>
-      <td>
-        <selection-property entry="entry"
-                            title="'Total condition'"
-                            add-filter="addFilter(path, value, title)">
-        </selection-property>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+    <button
+            type="button"
+            class="btn ng-scope btn-hide-details"
+            ng-click="selection.details[row.title] = false">
+        <i class="fa fa-chevron-left fa-fw"></i>
+    </button>
+    <h3>Condition score</h3>
+    <table class="table" id="device-dashboard-condition">
+        <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>Condition</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="entry in selection.props.condition.appearance.general">
+            <td>
+                <i class="fa fa-fw fa-eye"></i>
+            </td>
+            <td>Appearance</td>
+            <td class="text-right"
+                ng-click="addFilter('condition.appearance', entry.value, 'Appearance')"
+                uib-tooltip="{{::appearance[entry.value]}}">
+                <span class="label label-primary">{{::entry.value}}</span>
+            </td>
+        </tr>
+        <tr ng-repeat="entry in selection.props.condition.functionality.general">
+            <td>
+                <i class="fa fa-fw fa-wrench"></i>
+            </td>
+            <td>Functionality</td>
+            <td class="text-right"
+                ng-click="addFilter('condition.functionality', entry.value, 'Functionality')"
+                uib-tooltip="{{::functionality[entry.value]}}">
+                <span class="label label-primary">{{::entry.value}}</span>
+            </td>
+        </tr>
+        <tr ng-repeat="entry in selection.props.condition.general.range">
+            <td><i class="fa fa-fw fa-line-chart"></i></td>
+            <td>Total condition</td>
+            <td>
+                <selection-property entry="entry"
+                                    title="'Total condition'"
+                                    add-filter="addFilter(path, value, title)">
+                </selection-property>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>

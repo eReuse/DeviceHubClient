@@ -26,4 +26,4 @@ module.exports = angular.module('common.components.authentication',
        */
       this.loaded = this._defer.promise
     }
-})
+  })

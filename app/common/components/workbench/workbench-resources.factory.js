@@ -44,10 +44,10 @@ function workbenchResourcesFactory (resources, enums, server) {
    */
   class WorkbenchResponse extends Array {
     constructor (things = [],
-                 {
-                   ip = null,
-                   attempts = null
-                 } = {}) {
+      {
+        ip = null,
+        attempts = null
+      } = {}) {
       super(...things)
       this.ip = ip
       this.attempts = attempts

@@ -1,27 +1,27 @@
 <div class="row">
-  <article class="col-sm-4 col-lg-2">
-    <dh-form form="form" submit="printTags.save" reset="printTags.reset"></dh-form>
-    <hr>
-    <button type="button"
-            class="btn btn-success btn-block"
-            ng-click="pdf.print(true)"
-            ng-class="{disabled: !tags.length}"
-            dh-submit-button="pdf.printing">
-      <i class="fa fa-file-pdf fa-fw"></i>
-      {{:: 'printTags.toPdf' | translate}}
-    </button>
-    <button type="button"
-            class="btn btn-success btn-block"
-            ng-click="pdf.print(false)"
-            dh-submit-button="pdf.printing"
-            ng-show="::pdf.canPrintBox"
-            ng-class="{disabled: !tags.length}"
-    >
-      <i class="fa fa-print fa-fw"></i>
-      {{:: 'printTags.printBox' | translate }}
-    </button>
-  </article>
-  <article class="col-sm-8 col-lg-10 tags fill-height-bar">
-    <tag ng-repeat="tag in tags track by tag.id" tag="tag" spec="form.model"></tag>
-  </article>
+    <article class="col-sm-4 col-lg-2">
+        <dh-form form="form" submit="printTags.save" reset="printTags.reset"></dh-form>
+        <hr>
+        <button type="button"
+                class="btn btn-success btn-block"
+                ng-click="pdf.print(true)"
+                ng-class="{disabled: !tags.length}"
+                dh-submit-button="pdf.printing">
+            <i class="fa fa-file-pdf fa-fw"></i>
+            {{:: 'printTags.toPdf' | translate}}
+        </button>
+        <button type="button"
+                class="btn btn-success btn-block"
+                ng-click="pdf.print(false)"
+                dh-submit-button="pdf.printing"
+                ng-show="::pdf.canPrintBox"
+                ng-class="{disabled: !tags.length}"
+        >
+            <i class="fa fa-print fa-fw"></i>
+            {{:: 'printTags.printBox' | translate }}
+        </button>
+    </article>
+    <article class="col-sm-8 col-lg-10 tags fill-height-bar">
+        <tag ng-repeat="tag in tags track by tag.id" tag="tag" spec="form.model"></tag>
+    </article>
 </div>

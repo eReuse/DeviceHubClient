@@ -15,6 +15,7 @@ module.exports = function (ResourceListSelector) {
         function updateDeviceSelection () {
           $scope.multiSelection = deviceSelector.getAllSelectedDevices().length > 1
         }
+
         deviceSelector.callbackOnSelection(updateDeviceSelection)
         updateDeviceSelection()
       }

@@ -1,16 +1,16 @@
 <div class="input-group">
-  <input type="text"
-         class="form-control"
-         placeholder="{{::placeholder}}"
-         ng-model="searchQuery"
-         ng-change="onUpdate({text: searchQuery})"
-         ng-model-options="{debounce: 500}"
-  >
-  <div class="input-group-addon">
-    <i class="fa fa-search"></i>
-  </div>
-  <div class="input-group-addon" ng-if="::scanner.isAndroid" ng-click="scanner.scanQR()">
-    {{::'resourceSearch.scan' | translate}}
-    <i class="fa fa-fw fa-camera"></i>
-  </div>
+    <input type="text"
+           class="form-control"
+           placeholder="{{::placeholder}}"
+           ng-model="searchQuery"
+           ng-change="onUpdate({text: searchQuery})"
+           ng-model-options="{debounce: 500}"
+    >
+    <div class="input-group-addon">
+        <i class="fa fa-search"></i>
+    </div>
+    <div class="input-group-addon" ng-if="::scanner.isAndroid" ng-click="scanner.scanQR()">
+        {{::'resourceSearch.scan' | translate}}
+        <i class="fa fa-fw fa-camera"></i>
+    </div>
 </div>

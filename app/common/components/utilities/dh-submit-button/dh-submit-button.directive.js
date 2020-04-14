@@ -18,8 +18,11 @@ function dhSubmitButton () {
       $scope.$watch('loading', newV => {
         if (_.isBoolean(newV)) {
           $element.prop('disabled', newV)
-          if (newV) $body.addClass('dh-progress')
-          else $body.removeClass('dh-progress')
+          if (newV) {
+            $body.addClass('dh-progress')
+          } else {
+            $body.removeClass('dh-progress')
+          }
         }
       })
     }

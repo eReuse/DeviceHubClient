@@ -1,38 +1,38 @@
 <div class="container fill-height-bar">
-  <h2 translate="newAction.title" translate-value-type="{{::event.typeHuman}}"></h2>
-  <div class="row">
-    <dh-form form="form" submit cancel class="col-xs-12"></dh-form>
-    <div class="col-xs-12"
-         uib-collapse="!form.status.done && !form.status.loading"
-    >
-      <hr>
-      <uib-progress max="form.model.files.length">
-        <uib-bar ng-repeat="result in form.results track by $index"
-                 type="{{::result.constructor.TYPE}}"
-                 value="1"
-        ></uib-bar>
-      </uib-progress>
-      <table class="table table-striped table-condensed table-responsive">
-        <thead>
-        <tr>
-          <th>{{::'snapshot.upload.title' | translate}}</th>
-          <th>{{::'snapshot.upload.fileNameHeader' | translate}}</th>
-          <th>{{::'snapshot.upload.description' | translate}}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="r in form.results"
-            ng-class="
+    <h2 translate="newAction.title" translate-value-type="{{::event.typeHuman}}"></h2>
+    <div class="row">
+        <dh-form form="form" submit cancel class="col-xs-12"></dh-form>
+        <div class="col-xs-12"
+             uib-collapse="!form.status.done && !form.status.loading"
+        >
+            <hr>
+            <uib-progress max="form.model.files.length">
+                <uib-bar ng-repeat="result in form.results track by $index"
+                         type="{{::result.constructor.TYPE}}"
+                         value="1"
+                ></uib-bar>
+            </uib-progress>
+            <table class="table table-striped table-condensed table-responsive">
+                <thead>
+                <tr>
+                    <th>{{::'snapshot.upload.title' | translate}}</th>
+                    <th>{{::'snapshot.upload.fileNameHeader' | translate}}</th>
+                    <th>{{::'snapshot.upload.description' | translate}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="r in form.results"
+                    ng-class="
           {
             'danger': r.constructor.TYPE == 'danger',
             'success': r.constructor.TYPE == 'success'
           }">
-          <td>{{::r}}
-          <td>{{::r.file}}
-          <td>{{::r.description}}
-        </tr>
-        </tbody>
-      </table>
+                    <td>{{::r}}
+                    <td>{{::r.file}}
+                    <td>{{::r.description}}
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-  </div>
 </div>

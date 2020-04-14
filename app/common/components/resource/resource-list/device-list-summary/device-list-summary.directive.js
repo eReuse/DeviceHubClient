@@ -134,6 +134,12 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
       return _(this.devices)
         .map(pathToProp)
         .compact()
+        .filter((prop) => { 
+          if (!key) {
+            return true
+          }
+          return typeof prop[key] !== 'undefined' 
+        }) 
         .groupBy(key)
         // todo future version could use groupBy and hold
         //  an array of values instead of length
@@ -198,8 +204,11 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
     }
 
     rangeToString (min, max, filter = _.identity) {
-      if (min === max) return filter(min)
-      else return `${filter(min)} — ${filter(max)}`
+      if (min === max) {
+        return filter(min)
+      } else {
+        return `${filter(min)} — ${filter(max)}`
+      }
     }
 
     /**
@@ -421,19 +430,41 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
   class Components extends Property {
     constructor (devices) {
       super(devices, 'Components')
-      this.components = this.aggregatesOne('components')
-      if (!this.components.length) throw new NoValuesForProperty()
-      this.content = require('./components.summary.html')
+      
+      this.components = _(devices)
+                        .map('components')
+                        .flatten()
+                        .value()
+    
+      this.content = `${this.components.length} components`
     }
 
-    aggregatesOne (pathToProp, options = {}) {
-      return _(this.devices)
-        .map(pathToProp)
-        .flatten()
+    aggregateComponentType (componentType, pathToProp, options = {}) {
+      return _(this.components)
+        .filter((component) => { 
+          const type = component.type
+          if (type === componentType) {
+            return true
+          }
+        })
+        .map((component) => {
+          return component[pathToProp]
+        })
         .compact()
         .groupBy()
         .map((values, key) => new AggregateEntry(values, key, pathToProp, options))
         .value()
+    }
+
+    full () {
+      return [
+        ['Processor', this.aggregateComponentType('Processor', 'model')],
+        ['RAM', this.aggregateComponentType('RamModule', 'size', { postfix: 'MB' })],
+        ['Data storage', this.aggregateComponentType('HardDrive', 'size', { postfix: 'GB' })],
+        ['Graphic card', this.aggregateComponentType('GraphicCard', 'manufacturer')],
+        ['Sound card', this.aggregateComponentType('SoundCard', 'manufacturer')],
+        ['Motherboard', this.aggregateComponentType('Motherboard', 'manufacturer')]
+      ]
     }
   }
 

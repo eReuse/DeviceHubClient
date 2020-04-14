@@ -10,25 +10,25 @@
   <h3>Lots</h3>
 </div>
 <div ng-if="lots.tree.length">
-  <div class="input-group">
-    <div class="input-group-addon">
-      <i class="fa fa-search"></i>
+    <div class="input-group">
+        <div class="input-group-addon">
+            <i class="fa fa-search"></i>
+        </div>
+        <input class="form-control"
+               placeholder="Enter lot name"
+               ng-model="filter"
+               ng-change="makeNodesWithTextVisible(filter)">
     </div>
-    <input class="form-control"
-           placeholder="Enter lot name"
-           ng-model="filter"
-           ng-change="makeNodesWithTextVisible(filter)">
-  </div>
-  <div data-ui-tree data-nodrop-enabled="true" data-drag-enabled="false">
-    <ol ui-tree-nodes="" ng-model="lots.tree" id="tree-root">
-      <li ng-repeat="node in lots.tree"
-          ui-tree-node
-          ng-include="treeTemplateURL"
-          ng-show="node.isVisible"
-      ></li>
-    </ol>
-  </div>
+    <div data-ui-tree data-nodrop-enabled="true" data-drag-enabled="false">
+        <ol ui-tree-nodes="" ng-model="lots.tree" id="tree-root">
+            <li ng-repeat="node in lots.tree"
+                ui-tree-node
+                ng-include="treeTemplateURL"
+                ng-show="node.isVisible"
+            ></li>
+        </ol>
+    </div>
 </div>
 <div ng-hide="lots.length">
-  <p>Just 0 lots in here...</p>
+    <p>Just 0 lots in here...</p>
 </div>

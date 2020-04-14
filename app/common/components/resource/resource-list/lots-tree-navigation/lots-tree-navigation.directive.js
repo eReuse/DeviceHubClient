@@ -75,8 +75,11 @@ function lotsTreeNavigation (progressBar, $rootScope, $state, selection, resourc
             parents: parentLotId ? [parentLotId] : undefined
           })
           lot.post().then(() => {
-            if (parentLotId) reload()
-            else $scope.lots.addToTree(lot.id)
+            if (parentLotId) {
+              reload()
+            } else {
+              $scope.lots.addToTree(lot.id)
+            }
           })
         }
 

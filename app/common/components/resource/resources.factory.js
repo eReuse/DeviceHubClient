@@ -526,7 +526,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Device
    */
   class Mobile extends Device {
-    define ({imei = null, meid = null, processorModel = null, processorCores = null, processorBoard = null, processorAbi = null, ramSize = null, dataStorageSize = null, graphicCardManufacturer = null, graphicCardModel = null, macs = null, bluetoothMac = null, components = [], ...rest}) {
+    define ({imei = null, meid = null, processorModel = null, processorCores = null, processorBoard = null, processorAbi = null, ramSize = null, dataStorageSize = null, displaySize = null, graphicCardManufacturer = null, graphicCardModel = null, macs = null, bluetoothMac = null, components = [], ...rest}) {
       super.define(rest)
       this.imei = imei
       this.meid = meid
@@ -536,6 +536,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.processorAbi = processorAbi
       this.ramSize = ramSize
       this.dataStorageSize = dataStorageSize
+      this.displaySize = displaySize
       this.graphicCardManufacturer = graphicCardManufacturer
       this.graphicCardModel = graphicCardModel
       this.macs = macs
@@ -1146,7 +1147,6 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.dataStorageRangeHuman = d.dataStorageRange ? utils.Naming.humanize(d.dataStorageRange) : null
       this.ratingRange = d.ratingRange
       this.ratingRangeHuman = d.ratingRange ? utils.Naming.humanize(d.ratingRange) : null
-
     }
 
     get title () {
@@ -1450,8 +1450,8 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    */
   class DeliveryNote extends Thing {
     define ({
-      id = null, creator = null, receiver = null, supplier = null, documentID = null, supplierEmail = null, date = null, deposit = null, 
-      expectedDevices = null, transferredDevices = null, transfer_state = "Initial", lot = null, 
+      id = null, creator = null, receiver = null, supplier = null, documentID = null, supplierEmail = null, date = null, deposit = null,
+      expectedDevices = null, transferredDevices = null, transfer_state = "Initial", lot = null,
       ethereum_address = null, ...rest }) {
       super.define(rest)
       this.id = id
@@ -1570,10 +1570,9 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.invoiceNumber = invoiceNumber
       this.to = to
       this.lot = lot
-      
     }
   }
-  
+
   // DEPRECATED
   /**
    * @alias module:resources.Trade
@@ -1623,7 +1622,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   /**
    * @alias module:resources.Transferred
    * @extends module:resources.ActionWithMultipleDevices
-   * @deprecated 
+   * @deprecated
    */
   class Transferred extends ActionWithMultipleDevices {
     static get icon () {
@@ -1699,7 +1698,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   class ProofDataWipe extends Proof {
     define ({erasureType = null, date = null, result = null, proofAuthor = null, proofAuthorID = null, erasureID = null, ...rest}) {
       super.define(rest)
-      
+
       this.erasureType = erasureType
       this.date = date
       this.result = result
@@ -1731,7 +1730,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
 
         return new ProofDataWipe(data)
       }
-      
+
       return null
     }
   }
@@ -1942,7 +1941,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    * @alias module:resources.Lot
    */
   class Lot extends Thing {
-    define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null, 
+    define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null,
       deliverynote = null, ...rest}) {
       super.define(rest)
       this.id = id
@@ -2101,10 +2100,10 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
      * @param {?string} url
      */
     constructor (items = [],
-                 {
-                   pagination = {page: null, perPage: null, total: null, previous: null, next: 1},
-                   url = null
-                 } = {}) {
+      {
+        pagination = {page: null, perPage: null, total: null, previous: null, next: 1},
+        url = null
+      } = {}) {
       super(...items)
       this.pagination = pagination
       this.url = url
@@ -2163,7 +2162,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
        * @type {boolean}
        * */
       this.isVisible = true
-    } 
+    }
 
     /**
      * @return {module:resources.Lot}
