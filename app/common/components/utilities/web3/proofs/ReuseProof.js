@@ -5,19 +5,17 @@ class ReuseProof {
 
   generateProof (web3, data, account) {
     return new Promise(resolve => {
-      return this.device.generateReuseProof(data.receiverSegment, data.idReceipt,
-        web3.utils.toChecksumAddress(data.supplier),
-        web3.utils.toChecksumAddress(data.receiver), data.price,
-        { from: account })
-        .then(hash => {
-          resolve(hash)
+      this.device.generateReuseProof(data.receiverSegment, data.idReceipt,
+        data.price, { from: account })
+        .then(receipt => {
+          resolve(receipt)
         })
     })
   }
 
   getProofData (hash, account) {
     return new Promise(resolve => {
-      return this.device.getReuseProof(hash, { from: account })
+      this.device.getReuseProof(hash, { from: account })
         .then(data => {
           resolve(data)
         })

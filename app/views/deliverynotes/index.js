@@ -6,7 +6,7 @@ require('oclazyload')
  * Tags
  *
  */
-module.exports = angular.module('auth.tags',
+module.exports = angular.module('views.deliverynotes',
   [
     require('./../../common/components/resource').name,
     require('./../../common/components/resource').name,

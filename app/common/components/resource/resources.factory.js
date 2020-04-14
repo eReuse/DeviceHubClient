@@ -15,7 +15,7 @@ const isEmpty = require('is-empty')
  * @param {module:enums} enums
  * @param {URI} URL
  */
-function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
+function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   /**
    * The models of Devicehub, mimicking Devicehub's `schema.Thing`.
    * Thing classes have generic methods that can communicate with
@@ -188,6 +188,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       return this.server.patch(obj, this.id).then(() => this)
     }
 
+    delete () {
+      return this.server.delete(this.id)
+    }
+
     toString () {
       return this.title
     }
@@ -337,7 +341,12 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Thing
    */
   class Device extends Thing {
-    define ({id = null, hid = null, tags = [], model = null, manufacturer = null, serialNumber = null, weight = null, width = null, height = null, depth = null, actions = [], problems = [], url = null, rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, working = [], brand = null, generation = null, version = null, variant = null, sku = null, image = null, ...rest}) {
+    define ({id = null, hid = null, tags = [], model = null, manufacturer = null, serialNumber = null, 
+      weight = null, width = null, height = null, depth = null, actions = [], problems = [], url = null, 
+      rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, 
+      working = [], brand = null, generation = null, version = null, variant = null, sku = null, image = null, 
+      ethereum_address = null, deposit = null, 
+      ...rest}) {
       super.define(rest)
       /** @type {int} */
       this.id = id
@@ -391,6 +400,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
       this.sku = sku
       /** @type {?URI} */
       this.image = image ? new utils.URI(image) : null
+
+      this.ethereum_address = ethereum_address
+      this.deposit = deposit
     }
 
     _props () {
@@ -1623,27 +1635,42 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Thing
    */
   class Proof extends Thing {
-    define ({id = null, ethereumHashes = [], ...rest}) {
+    define ({id = null, ethereumHash = null, deviceAddress = null, deviceID = null, ...rest}) {
       super.define(rest)
       this.id = id
-      this.ethereumHashes = ethereumHashes // hashes of devices. most proof types only have one device
+      this.ethereumHash = ethereumHash // hash of proof address
+      this.deviceAddress = deviceAddress
+      this.deviceID = deviceID 
     }
 
     static get icon () {
       return 'fa-check-circle'
     }
+
+    static createFromDevice(device) {
+      return new Proof({
+        deviceAddress: device.ethereum_address,
+        deviceID: device.id
+      })
+    }
   }
 
   class BatchProof extends Thing {
-    define ({proofs = [], devices = [], ...rest}) {
+    define ({proofs = [], devices = [], proofType = null, ...rest}) {
       super.define(rest)
       this.proofs = proofs
       this.devices = devices // needed for displaying devices in the BatchProof form
       this.batch = true
+      this.proofType = proofType
     }
 
     _post () {
-      return _.pick(this.dump(false), ['proofs', 'batch'])
+      const payload = _.pick(this, ['proofs', 'batch'])
+      payload.proofs = payload.proofs.map((proof) => {
+        proof = proof.dump()
+        return _.omit(proof, 'deviceAddress')
+      })
+      return payload
     }
   }
 
@@ -1652,10 +1679,10 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithMultipleDevices
    */
   class ProofTransfer extends Proof {
-    define ({supplier = null, receiver = null, deposit = null, ...rest}) {
+    define ({supplierID = null, receiverID = null, deposit = null, ...rest}) {
       super.define(rest)
-      this.supplier = supplier
-      this.receiver = receiver
+      this.supplierID = supplierID
+      this.receiverID = receiverID
       this.deposit = deposit
     }
 
@@ -1669,31 +1696,38 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithMultipleDevices
    */
   class ProofDataWipe extends Proof {
-    define ({erasureType = null, date = null, result = null, proofAuthor = null, erasureID = null, ...rest}) {
+    define ({erasureType = null, date = null, result = null, proofAuthor = null, proofAuthorID = null, erasureID = null, ...rest}) {
       super.define(rest)
 
       this.erasureType = erasureType
       this.date = date
       this.result = result
       this.proofAuthor = proofAuthor
+      this.proofAuthorID = proofAuthorID
       this.erasureID = erasureID
+    }
+
+    dump (onlyIds = true) {
+      let dump = super.dump(onlyIds)
+      return _.omit(dump, 'erasureType', 'proofAuthor')
     }
 
     static get icon () {
       return 'fa-check-circle'
     }
 
-    static createFromDevice(device) {
+    static createFromDevice(device, author) {
       if(device.privacy && device.privacy.length) {
         const erasure = device.privacy[0]
-        let data = {
-          ethereumHashes: [], // TODO hash of device
+        const data = _.assign(Proof.createFromDevice(device), {
           erasureType: erasure.type,  // type of erasure
           date: erasure.startTime,
-          result: true, // TODO check that all steps
-          proofAuthor: null, // TODO
+          result: true, // TODO check that all steps have run successful
+          proofAuthor: author.ethereum_address,
+          proofAuthorID: author.id,
           erasureID: erasure.id
-        }
+        })
+
         return new ProofDataWipe(data)
       }
 
@@ -1706,17 +1740,43 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithMultipleDevices
    */
   class ProofFunction extends Proof {
-    define ({...rest}) {
+    define ({diskUsage = null, proofAuthor = null, proofAuthorID = null,  rateID = null, score = null, algorithmVersion = null,  ...rest}) {
       super.define(rest)
+
+      this.diskUsage = diskUsage
+      this.proofAuthor = proofAuthor
+      this.proofAuthorID = proofAuthorID
+      this.rateID = rateID
+      this.score = score
+      this.algorithmVersion = algorithmVersion
     }
 
     static get icon () {
       return 'fa-check-circle'
     }
 
-    static createFromDevice(device) {
-      //TODO create from device
+    dump (onlyIds = true) {
+      let dump = super.dump(onlyIds)
+      return _.omit(dump, 'score', 'proofAuthor', 'algorithmVersion')
+    }
 
+    static createFromDevice(device, author) {
+      const rate = device.rate
+      const testDataStorage = device.actions.find(a => a.lifetime)
+      const lifetime = testDataStorage ? testDataStorage.lifetime : 0
+      if(rate) {
+        const data = _.assign(Proof.createFromDevice(device), {
+          diskUsage: lifetime, 
+          proofAuthor: author.ethereum_address,
+          proofAuthorID: author.id,
+          rateID: rate.id,
+          score: rate.rating.value,
+          algorithmVersion: 'v1'
+        })
+
+        return new ProofFunction(data)
+      }
+      
       return null
     }
   }
@@ -1726,8 +1786,14 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithMultipleDevices
    */
   class ProofReuse extends Proof {
-    define ({...rest}) {
+    define ({receiverSegment = null, idReceipt = null, supplierID = null,  receiverID = null, price = null,  ...rest}) {
       super.define(rest)
+
+      this.receiverSegment = receiverSegment
+      this.idReceipt = idReceipt
+      this.supplierID = supplierID
+      this.receiverID = receiverID
+      this.price = price
     }
 
     static get icon () {
@@ -1735,9 +1801,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     }
 
     static createFromDevice(device) {
-      //TODO create from device
+      const data = Proof.createFromDevice(device)
 
-      return null
+      return new ProofReuse(data)
     }
   }
 
@@ -1746,8 +1812,15 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithMultipleDevices
    */
   class ProofRecycling extends Proof {
-    define ({...rest}) {
+    define ({collectionPoint = null, date = null, contact = null, ticket = null, gpsLocation = null, recyclerCode = null, ...rest}) {
       super.define(rest)
+
+      this.collectionPoint = collectionPoint
+      this.date = date
+      this.contact = contact
+      this.ticket = ticket
+      this.gpsLocation = gpsLocation
+      this.recyclerCode = recyclerCode
     }
 
     static get icon () {
@@ -1755,9 +1828,9 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     }
 
     static createFromDevice(device) {
-      //TODO create from device
+      const data = Proof.createFromDevice(device)
 
-      return null
+      return new ProofRecycling(data)
     }
   }
 
@@ -1929,6 +2002,7 @@ function resourceFactory (server, CONSTANTS, $filter, enums, URL) {
     addDevices (ids) {
       return this.server.post({}, this.id + '/devices', {params: {id: ids}}).then(lot => {
         this.define(lot)
+        $rootScope.$broadcast('lots:reload')
       })
     }
 

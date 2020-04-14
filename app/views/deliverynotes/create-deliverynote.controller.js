@@ -7,7 +7,9 @@
 function createDeliveryCtrl ($scope, $window, fields, $state, enums, resources) {
   const XLSX = $window.XLSX
   
-  $scope.username = 'Hello Stephan'
+  function leave () {
+    return $state.go('auth.inventory')
+  }
 
   $scope.SelectFile = function (file) {
     console.log('selected file', file)
@@ -88,8 +90,8 @@ function createDeliveryCtrl ($scope, $window, fields, $state, enums, resources) 
 
     _submit () {
       const devices = $scope.uploadedDevices && $scope.uploadedDevices.map((device) => {
-        return device.hid
-        // return new resources.Device(device)
+        // return device.hid
+        return new resources.Device(device)
       })
       const model = _.assign({ expectedDevices : devices }, this.model.deliveryNote)
       const deliveryNote = new resources.DeliveryNote(model, {_useCache: false})
@@ -98,12 +100,13 @@ function createDeliveryCtrl ($scope, $window, fields, $state, enums, resources) 
 
     _success (...args) {
       super._success(...args)
-      this.reset()
+      return leave()
     }
 
     cancel () {
-      $state.go('^')
+      return leave()
     }
+    
   }
 
   $scope.form = new CreateDeliveryNoteForm()

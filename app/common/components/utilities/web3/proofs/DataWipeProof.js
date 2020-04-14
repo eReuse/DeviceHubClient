@@ -6,19 +6,18 @@ class DataWipeProof {
 
   generateProof (web3, data, account) {
     return new Promise(resolve => {
-      console.log(this.device)
-      return this.device.generateDataWipeProof(data.erasureType, data.date,
+      this.device.generateDataWipeProof(data.erasureType, data.date.toString(),
         JSON.parse(data.result), web3.utils.toChecksumAddress(data.proofAuthor),
         { from: account })
-        .then(hash => {
-          resolve(hash)
+        .then(receipt => {
+          resolve(receipt)
         })
     })
   }
 
   getProofData (hash, account) {
     return new Promise(resolve => {
-      return this.device.getDataWipeProof(hash, { from: account })
+      this.device.getDataWipeProof(hash, { from: account })
         .then(data => {
           resolve(data)
         })
