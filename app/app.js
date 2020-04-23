@@ -14,6 +14,7 @@ module.exports = window.angular.module('deviceHub', [
   require('./common/components').name, // Only adds close-popover
   require('dist/templates.js').name,
   require('angular-animate'),
+  require('angular-route'),
   'ngSanitize'  // angular-sanitize
 ])
   .config(
