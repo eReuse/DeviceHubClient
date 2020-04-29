@@ -17,11 +17,13 @@
         <input class="form-control"
                placeholder="Enter lot name"
                ng-model="filter"
-               ng-change="makeNodesWithTextVisible(filter)">
+               ng-change="filterLots(filter)">
     </div>
     <div>
         <ol id="tree-root">
-            <li class="tree-node tree-node-content" ng-repeat="lot in lots">
+            <li class="tree-node tree-node-content" 
+                ng-repeat="lot in lots"
+                ng-show="lot.isVisible">
                 <button class="btn btn-xs btn-normal"
                     ng-class="{selected: selected.isSelected(lot)}"
                     ng-click="selected.toggle(lot, $event)">

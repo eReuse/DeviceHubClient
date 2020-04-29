@@ -219,9 +219,7 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
       return super.get(uri, config).then(response => {
         const data = response.data
         let things
-        if ('tree' in data) {
-          things = new this.r.Lots(data.items, data.tree, data.url)
-        } else if ('items' in data) {
+        if ('items' in data) {
           things = this.r.ResourceList.fromServer(data, true)
         } else {
           things = this.r.init(data, true)
