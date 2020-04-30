@@ -63,9 +63,10 @@ function lotsTreeNavigation (progressBar, $rootScope, $state, selection, resourc
 
         function reload () {
           resources.Lot.server.get('').then(lots => {
+            const arrayLots = new Array(...lots)
             $scope.lots = lots
-            $scope.deliverynotes = lots.filter(l => l.deliverynote)
-            $scope.temporary = lots.filter(l => !l.deliverynote)
+            $scope.deliverynotes = arrayLots.filter(l => l.deliverynote)
+            $scope.temporary = arrayLots.filter(l => !l.deliverynote)
           })
         }
 
