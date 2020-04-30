@@ -45,7 +45,7 @@ function lotsTreeNavigation (progressBar, $rootScope, $state, selection, resourc
 
         $scope.selected = new LotsSelector()
 
-        $scope.newIncomingLot = () => {
+        $scope.newDeliverynote = () => {
           $state.go('auth.createDeliveryNote')
         }
 
@@ -58,13 +58,15 @@ function lotsTreeNavigation (progressBar, $rootScope, $state, selection, resourc
           })
           lot.post().then(() => {
             reload()
-            $scope.lots.push(lot.id)
           })
         }
 
         function reload () {
           resources.Lot.server.get('').then(lots => {
+            const arrayLots = new Array(...lots)
             $scope.lots = lots
+            $scope.deliverynotes = arrayLots.filter(l => l.deliverynote)
+            $scope.temporary = arrayLots.filter(l => !l.deliverynote)
           })
         }
 

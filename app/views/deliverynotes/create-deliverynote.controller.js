@@ -73,16 +73,16 @@ function createDeliveryCtrl ($scope, $window, fields, $state, enums, resources) 
     constructor () {
       super(
         null,
-        new fields.String('deliveryNote.supplierEmail', {
+        new fields.String('deliverynote.supplierEmail', {
           namespace: 'r',
         }),
-        new fields.Datepicker('deliveryNote.date', {
+        new fields.Datepicker('deliverynote.date', {
           namespace: 'r',
         }),
-        new fields.String('deliveryNote.documentID', {
+        new fields.String('deliverynote.documentID', {
           namespace: 'r'
         }),
-        new fields.String('deliveryNote.deposit', {
+        new fields.String('deliverynote.deposit', {
           namespace: 'r',
         })
       )

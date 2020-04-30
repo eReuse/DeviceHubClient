@@ -77,12 +77,17 @@
     }
   },
   "deliverynotes": {
-    "new": "New delivery note"
+    "new": "New incoming lot",
+    "title": "Incoming lots",
+    "create": {
+      "title": "New incoming lot"
+    }
   },
   "lots": {
-    "new": "New lot",
+    "new": "New temporary lot",
+    "title": "Temporary lots",
     "delete": {
-      "button": "Delete lots"
+      "button": "Delete lot"
     }
   },
   "newAction": {
@@ -240,7 +245,7 @@
         "l": "Model",
         "d": "The name of the model or brand."
       },
-      "serialNumber": {
+        "serialNumber": {
         "l": "Serial number",
         "d": "The serial number of the device."
       },
@@ -317,6 +322,24 @@
       "image": {
         "l": "Image",
         "d": "An URL containing an image of the device."
+      }
+    },
+    "deliverynote": {
+      "supplierEmail": {
+        "l": "Supplier email",
+        "d": "Enter the email of the supplier's account"
+      },
+      "date": {
+        "l": "Date",
+        "d": "Enter the date as specified in the delivery note"
+      },
+      "documentID": {
+        "l": "Document ID",
+        "d": "Enter the document ID of the delivery note"
+      },
+      "deposit": {
+        "l": "Deposit",
+        "d": "Optionally enter a deposit charged for each device"
       }
     },
     "event": {
