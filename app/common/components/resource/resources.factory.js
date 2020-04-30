@@ -1942,7 +1942,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    */
   class Lot extends Thing {
     define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null,
-      deliverynote = null, ...rest}) {
+      deliverynote = null, isVisible = true, ...rest}) {
       super.define(rest)
       this.id = id
       this.name = name
@@ -1953,6 +1953,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.children = children
       this.url = url
       this.deliverynote = deliverynote ? new DeliveryNote(deliverynote) : deliverynote
+      this.isVisible = isVisible
     }
 
     get children () {
@@ -2149,60 +2150,6 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
-   * @alias module:resources.LotNode
-   */
-  class LotNode {
-    constructor (id = null, nodes = []) {
-      /** @type {string} */
-      this.id = id
-      /** @type {module:resources.LotNode[]} */
-      this.nodes = nodes
-      /**
-       * Is the node visible
-       * @type {boolean}
-       * */
-      this.isVisible = true
-    }
-
-    /**
-     * @return {module:resources.Lot}
-     */
-    get lot () {
-      const lot = Lot.CACHE[this.id]
-      console.assert(lot, '%s lot is not in cache.', this.id)
-      return lot
-    }
-
-    hasText (text) {
-      return this.lot.hasText(text)
-    }
-  }
-
-  class Lots extends Array {
-    /**
-     *
-     * @param {Object.<string, object>} items
-     * @param {LotNode[]} tree
-     * @param {string} url
-     */
-    constructor (items, tree, url) {
-      items = _.mapValues(items, x => init(x, true))
-      super(..._.values(items))
-      this.tree = this._trees(tree)
-      this.url = url
-    }
-
-    _trees (objs) {
-      return objs.map(obj => new LotNode(obj.id, this._trees(obj.nodes)))
-    }
-
-    addToTree (lotId) {
-      console.assert(lotId)
-      this.tree.push(new LotNode(lotId))
-    }
-  }
-
-  /**
    * Instantiates Things from a plain object.
    * @alias module:resources.init
    * @param {object} thingLike - The plain object.
@@ -2320,9 +2267,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     Tag: Tag,
     Lot: Lot,
     User: User,
-    LotNode: LotNode,
     ResourceList: ResourceList,
-    Lots: Lots,
     init: init
   }, utils.unforgivingHandler)
   // Init servers

@@ -6,9 +6,6 @@
  * @param {module:resources} resources
  */
 function lotsTreeNavigation (progressBar, $rootScope, $state, selection, resources) {
-  const PATH = require('./__init__').PATH
-  // const PATH = 'common/components/resource/resource-list/lots-tree-navigation'
-
   /**
    * @ngdoc directive
    * @name lotsTreeNavigation
@@ -25,25 +22,14 @@ function lotsTreeNavigation (progressBar, $rootScope, $state, selection, resourc
     },
     link: {
       pre: $scope => {
-        $scope.treeTemplateURL = PATH + '/lots-tree.html'
-
         /**
-         * Finds nodes containing text and makes them visible
+         * Finds lots containing text and makes them visible
          * @param {string} text
          */
-        $scope.makeNodesWithTextVisible = text => {
-          /** @param {module:resources.LotNode} node */
-          function visibleIfHasText (node) {
-            let atLeastOneChildVisible = false
-            node.nodes.forEach(child => {
-              let childIsVisible = visibleIfHasText(child)
-              if (childIsVisible) atLeastOneChildVisible = true
-            })
-            node.isVisible = !text || node.hasText(text) || atLeastOneChildVisible
-            return node.isVisible
-          }
-
-          $scope.lots.tree.forEach(visibleIfHasText)
+        $scope.filterLots = text => {
+          $scope.lots.forEach((lot) => {
+            lot.isVisible = !text || lot.hasText(text)
+          })
         }
 
         class LotsSelector extends selection.Selected {
@@ -59,45 +45,28 @@ function lotsTreeNavigation (progressBar, $rootScope, $state, selection, resourc
 
         $scope.selected = new LotsSelector()
 
-        function newIncomingLot (parentLotId = null) {
+        $scope.newDeliverynote = () => {
           $state.go('auth.createDeliveryNote')
-        }
-
-        $scope.newIncomingLot = newIncomingLot
-
-        /**
-         * Creates a new lot.
-         * @param {?string} parentLotId
-         */
-        function newLot (parentLotId = null) {
-          const lot = new resources.Lot({
-            name: 'New lot',
-            parents: parentLotId ? [parentLotId] : undefined
-          })
-          lot.post().then(() => {
-            if (parentLotId) {
-              reload()
-            } else {
-              $scope.lots.addToTree(lot.id)
-            }
-          })
-        }
-
-        $scope.newLot = newLot
-
-        $scope.newChildLot = parentLotId => {
-          newLot(parentLotId)
         }
 
         $scope.newLot = $event => {
           $event && $event.preventDefault()
           $event && $event.stopPropagation()
-          newLot()
+
+          const lot = new resources.Lot({
+            name: 'New lot'
+          })
+          lot.post().then(() => {
+            reload()
+          })
         }
 
         function reload () {
-          resources.Lot.server.get('', {params: {format: 'UiTree'}}).then(lots => {
+          resources.Lot.server.get('').then(lots => {
+            const arrayLots = new Array(...lots)
             $scope.lots = lots
+            $scope.deliverynotes = arrayLots.filter(l => l.deliverynote)
+            $scope.temporary = arrayLots.filter(l => !l.deliverynote)
           })
         }
 
