@@ -61,7 +61,9 @@
       </div>
       <div ng-if="lotsM.lots.length === 1 && lotsM.lots[0].deliverynote">
         <h3>Deliverynote</h3>
-        <span>DocumentID: {{deliverynote.documentID}}</span>
+        <p>DocumentID: {{deliverynote.documentID}}</p>
+        <p>Date: {{deliverynote.date}}</p>
+        <p>Transfer state: {{deliverynote.transfer_state}}</p>
         <h4 ng-if="lotsM.lots.length === 1 && lotsM.lots[0].deliverynote">Expected devices ({{expectedDevices.length}}) </h4>
         <div class="deliverynote-devices" ng-if="lotsM.lots.length === 1 && lotsM.lots[0].deliverynote">
           <table id="deliverynote-device-list-table"
