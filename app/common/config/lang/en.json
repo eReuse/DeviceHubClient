@@ -84,7 +84,7 @@
     }
   },
   "lots": {
-    "new": "New lot",
+    "new": "New temporary lot",
     "title": "Temporary lots",
     "delete": {
       "button": "Delete lot"

@@ -77,10 +77,15 @@
     }
   },
   "deliverynotes": {
-    "new": "Nuevo albarán"
+    "new": "Nuevo albarán",
+    "title": "Albaranes",
+    "create": {
+      "title": "Nuevo albarán"
+    }
   },
   "lots": {
-    "new": "Nuevo lote",
+    "new": "Nuevo lote temporal",
+    "title": "Lotes temporales",
     "delete": {
       "button": "Borrar lote"
     }
@@ -242,7 +247,7 @@
     "deliverynote": {
       "supplierEmail": {
         "l": "Supplier email",
-        "d": "Enter the "
+        "d": "Enter the email of the supplier's account"
       },
       "date": {
         "l": "Date",
@@ -254,7 +259,7 @@
       },
       "deposit": {
         "l": "Deposit",
-        "d": "Optionally enter a deposit"
+        "d": "Optionally enter a deposit charged for each device"
       }
     },
     "event": {
