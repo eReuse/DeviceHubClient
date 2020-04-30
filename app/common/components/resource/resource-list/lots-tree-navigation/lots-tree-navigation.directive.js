@@ -58,7 +58,6 @@ function lotsTreeNavigation (progressBar, $rootScope, $state, selection, resourc
           })
           lot.post().then(() => {
             reload()
-            $scope.lots.push(lot.id)
           })
         }
 
