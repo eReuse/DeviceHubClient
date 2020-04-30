@@ -1,12 +1,6 @@
 <div>
-  <button class="btn btn-link btn-sm pull-right" ng-click="newIncomingLot($event)">
-    <i class="fa fa-plus fa-fw"></i>
-    {{::'deliverynotes.new' | translate}}
-  </button>
-  <button class="btn btn-link btn-sm pull-right" ng-click="newLot($event)">
-    <i class="fa fa-plus fa-fw"></i>
-    {{::'lots.new' | translate}}
-  </button>
+  
+  
   <h3>Lots</h3>
 </div>
 <div ng-if="lots.length">
@@ -20,9 +14,30 @@
                ng-change="filterLots(filter)">
     </div>
     <div>
-        <ol id="tree-root">
-            <li class="tree-node tree-node-content" 
-                ng-repeat="lot in lots"
+        <ol class="lots-list">
+            <h4>{{::'deliverynotes.title' | translate}}</h4>
+            <button class="btn btn-link btn-sm" ng-click="newDeliverynote($event)">
+                <i class="fa fa-plus fa-fw"></i>
+                {{::'deliverynotes.new' | translate}}
+            </button>
+            <li class="lot-content" 
+                ng-repeat="lot in deliverynotes"
+                ng-show="lot.isVisible">
+                <button class="btn btn-xs btn-normal"
+                    ng-class="{selected: selected.isSelected(lot)}"
+                    ng-click="selected.toggle(lot, $event)">
+                    {{lot.name}}
+                </button>
+            </li>
+        </ol>
+        <ol id="lots-list">
+            <h4>{{::'lots.title' | translate}}</h4>
+            <button class="btn btn-link btn-sm" ng-click="newLot($event)">
+                <i class="fa fa-plus fa-fw"></i>
+                {{::'lots.new' | translate}}
+            </button>
+            <li class="lot-content" 
+                ng-repeat="lot in temporary"
                 ng-show="lot.isVisible">
                 <button class="btn btn-xs btn-normal"
                     ng-class="{selected: selected.isSelected(lot)}"
