@@ -28,6 +28,7 @@
       }
     },
     "filters": {
+      "title": "Filtros",
       "type": {
         "l": "@:r.thing.type.l",
         "d": "El tipo de dispositivo."
@@ -75,13 +76,24 @@
       }
     }
   },
+  "deliverynotes": {
+    "new": "Nuevo albarán"
+  },
   "lots": {
-    "new": "Lote nuevo"
+    "new": "Nuevo lote",
+    "delete": {
+      "button": "Borrar lote"
+    }
   },
   "newAction": {
     "title": "Crear un nuevo {{type}}",
     "submit": "@:forms.submit",
-    "cancel": "@:forms.cancel"
+    "cancel": "@:forms.cancel",
+    "button": {
+      "physical": "Acciones fisicos",
+      "political": "Acciones politicos",
+      "other": "Otros acciones"
+    }
   },
   "forms": {
     "submit": "Enviar",
@@ -107,8 +119,30 @@
       "required": "Este campo es obligatorio.",
       "email": "Este no es un correo básico.",
       "minlength": "Demasiado corto. El mínimo de caracteres son {{to}}.",
+      "maxlength": "Demasiado largo. El maximo de caracteres son {{to}}.",
       "parse": "Formato erróneo. Revise que el formato sea correcto.",
-      "number": "El número es incorrecto."
+      "number": "El número es incorrecto.",
+      "url": "El URL no es valido."
+    }
+  },
+  "acceptTransfer": {
+    "button": "Aceptar la transferencía",
+    "form": {
+      "title": "Aceptar la transferencía",
+      "deposit": {
+        "l": "Introducir el depósito",
+        "d": "Introducir el depósito"
+      }
+    }
+  },
+  "initiateTransfer": {
+    "button": "Iniciar la transferencía",
+    "form": {
+      "title": "Iniciar la transferencía",
+      "ethereumAddress": {
+        "l": "La dirección de ethereum del receptor",
+        "d": "Introduce la dirección de ethereum del usuario con quien quieres compartir este lote"
+      }
     }
   },
   "r": {

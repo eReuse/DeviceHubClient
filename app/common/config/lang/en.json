@@ -82,7 +82,7 @@
   "lots": {
     "new": "New lot",
     "delete": {
-      "button": "Delete lots"
+      "button": "Delete lot"
     }
   },
   "newAction": {
