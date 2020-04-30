@@ -1,9 +1,7 @@
 <div>
-  
-  
-  <h3>Lots</h3>
+    <h3>Lots</h3>
 </div>
-<div ng-if="lots.length">
+<div>
     <div class="input-group">
         <div class="input-group-addon">
             <i class="fa fa-search"></i>
@@ -30,7 +28,7 @@
                 </button>
             </li>
         </ol>
-        <ol id="lots-list">
+        <ol class="lots-list">
             <h4>{{::'lots.title' | translate}}</h4>
             <button class="btn btn-link btn-sm" ng-click="newLot($event)">
                 <i class="fa fa-plus fa-fw"></i>
@@ -47,7 +45,4 @@
             </li>
         </ol>
     </div>
-</div>
-<div ng-hide="lots.length">
-    <p>Just 0 lots in here...</p>
 </div>
