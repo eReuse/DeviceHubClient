@@ -239,6 +239,24 @@
         "d": "El número de serie del dispositivo."
       }
     },
+    "deliverynote": {
+      "supplierEmail": {
+        "l": "Supplier email",
+        "d": "Enter the "
+      },
+      "date": {
+        "l": "Date",
+        "d": "Enter the date as specified in the delivery note"
+      },
+      "documentID": {
+        "l": "Document ID",
+        "d": "Enter the document ID of the delivery note"
+      },
+      "deposit": {
+        "l": "Deposit",
+        "d": "Optionally enter a deposit"
+      }
+    },
     "event": {
       "name": {
         "l": "Nombre",
