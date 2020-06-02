@@ -1,0 +1,44 @@
+on: push
+name: Build Angular JS
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: build eReuse-Blockchain
+        run: |
+          cd $GITHUB_WORKSPACE/app/eReuse-Blockchain
+          rm -rf node_modules && npm install
+          npm run-script compile
+
+      - name: npm install and npm run build
+        run: |
+          cd $GITHUB_WORKSPACE
+          rm -rf node_modules && npm install
+          rm -rf dist; npm run-script build-prod
+        env:
+          DH_ENV: e4
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: ${{ github.workspace }}/dist/
