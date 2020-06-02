@@ -2,19 +2,41 @@
 AngularJS client for [DeviceHub](https://github.com/eReuse/DeviceHub).
 
 ## Building
-NodeJS >=7.4 with npm required.
+NodeJS >=9.10 (recommended **10.16.1**) with npm required.
 
 1. Download or clone this project.
-2. In the folder of the project, execute `npm install`. This installs
-   both npm and bower dependencies.
-3. Copy [the config file](examples/config.yml) to the root of the 
-   project; default values are already suited for development.
-   Read the config for more info.
-4. Build the project by executing `npm run-script build` in the
-   project folder. After a while it generates an inner folder
-   called `dist` containing the built website.
+  ```bash
+  git clone https://github.com/eReuse/DeviceHubClient.git
+  ```
+2. Go to the folder of the project, get and build eReuse-Blockchain submodule:
+  ```bash
+  cd DeviceHubClient
+  git submodule update --init --recursive
 
-Execute `npm run-script build-dev` for auto-building when there
+  # DeviceHub/app/eReuse-Blockchain
+  cd app/eReuse-Blockchain
+  rm -rf node_modules && npm install
+  npm run-script compile
+  ```
+3. In the folder of the project, execute `npm install`. This installs
+   both npm and bower dependencies.
+  ```bash
+  # DeviceHub
+  cd ../../
+  rm -rf node_modules && npm install
+  ```
+4. Update [the config file](config.yml) according to your own requirements.
+   Default values are already suited for development.
+   Read the config for more info.
+5. Build the project (set `DH_ENV` environment variable to select desired
+   environment to build the package). After a while it generates an inner
+   folder called `dist` containing the built website.
+  ```bash
+  # DeviceHub
+  rm -rf dist; export DH_ENV=e4; npm run-script build-prod
+  ```
+
+Execute `npm run-script build` for auto-building when there
 are changes in code, and `npm run-script build-prod` for building
 a *compressed* version of the website suitable to use in production
 environments. `build-dev` and `build` generate sourcemaps.
@@ -26,7 +48,7 @@ execute `node ./node_modules/gulp/bin/gulp.js unit-test`.
 
 To run the **E2E** tests you will require access to a DeviceHub, so your DeviceHubClient will
 need to be configured to connect to a DeviceHub. Moreover, this DeviceHub will need to have
-populated the database with the **dummy** values. 
+populated the database with the **dummy** values.
 1. Execute `node ./node_modules/gulp/bin/gulp.js run-selenium`. This will install and run
    Selenium, which is a server specialized in E2E tests.
 2. Run `node ./node_modules/protractor/bin/protractor protractor.conf.js` in another terminal.
