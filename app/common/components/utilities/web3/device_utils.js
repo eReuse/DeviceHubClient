@@ -30,17 +30,16 @@ function getDeployedDevicePerOwner (factory, owner) {
  * @param {string} owner Address of the owner of the devices.
  * @param {Function} web3 Web3.js library.
  */
-function deployDevices(factory, devices, owner, web3) {
-  return new Promise(resolve => {
-    let deployedDevices = []
+function deployDevices (factory, devices, owner, web3) {
+  return new Promise(async function (resolve) {
+    let deployedDevices = {}
     for (let d of devices) {
-      factory.createDevice(d.model, 0, owner, {
+      let receipt = await factory.createDevice(d.id, 0, owner, {
         from: web3.eth.defaultAccount,
         gas: '6721975'
-      }).then(receipt => {
-        let deviceAddress = extractDeviceAddress(web3, receipt)
-        deployedDevices.push(deviceAddress)
       })
+      let deviceAddress = extractDeviceAddress(web3, receipt)
+      deployedDevices[d.id] = deviceAddress
     }
     resolve(deployedDevices)
   })
@@ -52,7 +51,7 @@ function deployDevices(factory, devices, owner, web3) {
  * @param {JSON} receipt JSON representation of the transaction receipt.
  * @returns {string} Ethereum address of the device.
  */
-function extractDeviceAddress(web3, receipt) {
+function extractDeviceAddress (web3, receipt) {
   return web3.utils.toChecksumAddress(receipt.logs[0].args._deviceAddress)
 }
 

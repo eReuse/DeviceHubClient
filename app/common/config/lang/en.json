@@ -76,8 +76,19 @@
       }
     }
   },
+  "deliverynotes": {
+    "new": "New incoming lot",
+    "title": "Incoming lots",
+    "create": {
+      "title": "New incoming lot"
+    }
+  },
   "lots": {
-    "new": "New lot"
+    "new": "New temporary lot",
+    "title": "Temporary lots",
+    "delete": {
+      "button": "Delete lot"
+    }
   },
   "newAction": {
     "title": "Create a new {{type}}",
@@ -119,20 +130,20 @@
       "url": "The URL is invalid."
     }
   },
-  "acceptSharedLot": {
-    "button": "Accept shared lot",
+  "acceptTransfer": {
+    "button": "Accept transfer",
     "form": {
-      "title": "Accept shared lot",
+      "title": "Accept transfer",
       "deposit": {
         "l": "Enter deposit",
         "d": "Enter deposit"
       }
     }
   },
-  "shareLot": {
-    "button": "Share lot",
+  "initiateTransfer": {
+    "button": "Initiate transfer",
     "form": {
-      "title": "Share lot",
+      "title": "Initiate transfer",
       "ethereumAddress": {
         "l": "Recipient's ethereum address",
         "d": "Enter ethereum address of user you want to share this lot with"
@@ -234,7 +245,7 @@
         "l": "Model",
         "d": "The name of the model or brand."
       },
-      "serialNumber": {
+        "serialNumber": {
         "l": "Serial number",
         "d": "The serial number of the device."
       },
@@ -311,6 +322,24 @@
       "image": {
         "l": "Image",
         "d": "An URL containing an image of the device."
+      }
+    },
+    "deliverynote": {
+      "supplierEmail": {
+        "l": "Supplier email",
+        "d": "Enter the email of the supplier's account"
+      },
+      "date": {
+        "l": "Date",
+        "d": "Enter the date as specified in the delivery note"
+      },
+      "documentID": {
+        "l": "Document ID",
+        "d": "Enter the document ID of the delivery note"
+      },
+      "deposit": {
+        "l": "Deposit",
+        "d": "Optionally enter a deposit charged for each device"
       }
     },
     "event": {

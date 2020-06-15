@@ -8,7 +8,7 @@
  * @param {module:session} session
  * @param {module:fields} fields
  */
-function loginController ($scope, $state, CONSTANTS, SubmitForm, $timeout, session, fields) {
+function loginController ($scope, $state, CONSTANTS, SubmitForm, $timeout, session, fields, $location) {
   class LoginForm extends fields.Form {
     constructor (...args) {
       super(...args)
@@ -44,8 +44,14 @@ function loginController ($scope, $state, CONSTANTS, SubmitForm, $timeout, sessi
   }
 
   const ns = 'login'
+  const params = $location.search()
+  const model = {
+    email: params.email || '', 
+    password: params.password || '', 
+    saveInBrowser: false
+  }
   $scope.form = new LoginForm(
-    {email: '', password: '', saveInBrowser: false},
+    model,
     new fields.Email('email', {
       namespace: ns,
       required: true,

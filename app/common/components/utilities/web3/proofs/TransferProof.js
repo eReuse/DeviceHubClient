@@ -1,13 +1,14 @@
-class FunctionProof {
+class TransferProof {
   constructor (device) {
     this.device = device
   }
 
   generateProof (web3, data, account) {
     return new Promise(resolve => {
-      this.device.generateFunctionProof(data.score, data.diskUsage,
-        data.algorithmVersion, web3.utils.toChecksumAddress(data.proofAuthor),
-        { from: account })
+      this.device.generateTransferProof(
+        web3.utils.toChecksumAddress(data.supplier),
+        web3.utils.toChecksumAddress(data.receiver),
+        data.deposit, data.isWaste, { from: account })
         .then(receipt => {
           resolve(receipt)
         })
@@ -16,7 +17,7 @@ class FunctionProof {
 
   getProofData (hash, account) {
     return new Promise(resolve => {
-      this.device.getFunctionProof(hash, { from: account })
+      this.device.getTransferProof(hash, { from: account })
         .then(data => {
           resolve(data)
         })
@@ -24,4 +25,4 @@ class FunctionProof {
   }
 }
 
-module.exports = FunctionProof
+module.exports = TransferProof

@@ -8,6 +8,9 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
   const devices = $scope.devices = $stateParams.devices
   const lot = $scope.lot = $stateParams.lot
   const deliverynote = lot.deliverynote
+  const receiver_address = deliverynote.receiver.ethereum_address
+  const deliverynote_ethereum_address = deliverynote.ethereum_address
+  const deposit = deliverynote.deposit
 
   function leave () {
     return $state.go('auth.inventory')
@@ -16,43 +19,57 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
   class ShareDeliveryNoteForm extends fields.Form {
     constructor () {
       super(
-        {},
-        new fields.String('deposit', {
-          namespace: 'acceptSharedLot.form',
-        })
+        {}
       )
     }
 
     _submit () {
-      const deposit = this.model.deposit
+      
+      function acceptTransferWeb3() {
+        const submitToWeb3 = false // !!session.user.ethereum_address
+        if(!submitToWeb3) {
+          return new Promise(resolve => {
+            resolve(false)
+          })
+        }
+        const dataWEB3 = {
+          deliverynote_address: deliverynote_ethereum_address,
+          devices: devices,
+          deposit: deposit,
+          receiver_address: receiver_address
+        }
 
-      console.log('lot.id', lot.id, 'lot.deliverynote_address', lot.deliverynote_address)
-
-      const dataWEB3 = {
-        deliverynote_address: lot.deliverynote_address,
-        devices: devices,
-        deposit: deposit,
-        receiver_address: session.user.ethereum_address
+        return web3.initTransfer(dataWEB3)
       }
-    
-      return web3
-      .acceptTransfer(dataWEB3)
-      .then(function () {
-        deliverynote.deposit = deposit // TODO this should already be set when POSTing the deliverynote
-        deliverynote.transfer_state = 'Accepted'
-        deliverynote.owner_address = session.user.ethereum_address // TODO this should be done on the server
 
-        return deliverynote.patch('transfer_state', 'deposit', 'owner_address')
+    
+      return acceptTransferWeb3()
+      .then(function (ethereumHashes) {
+        if (!ethereumHashes) {
+          //TODO submit transfer action instead
+          return new Promise(resolve => {
+            resolve()
+          })
+        }
+
+        const proofs = devices.map(device => {
+          const proofData = {
+            ethereumHash: ethereumHashes[device.id],
+            deviceID: device.id,
+            supplierID: deliverynote.supplier.id,
+            receiverID: deliverynote.receiver.id,
+            deposit: deliverynote.deposit
+          }
+          return new resources.ProofTransfer(proofData)
+        })
+        
+        const batch = new resources.BatchProof({ proofs: proofs })
+        return batch.post()
       })
       .then(function () {
-        const proofData = {
-          devices: devices,
-          supplier: deliverynote.supplier,
-          receiver: deliverynote.receiver,
-          deposit: deliverynote.deposit
-        }
-        const action = new resources.ProofTransfer(proofData)
-        return action.post()
+        deliverynote.transfer_state = 'Accepted'
+
+        return deliverynote.patch('transfer_state')
       })
       .then(function () {
         return Notification.success('Successfully accepted transfer')
