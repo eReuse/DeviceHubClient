@@ -80,9 +80,9 @@ function resourceListConfig ($filter, table) {
     }
   }
 
-  class HID extends table.Field {
+  class SupplierID extends table.Field {
     constructor (resource) {
-      super(resource, resource.hid)
+      super(resource, resource.supplierID)
     }
   }
 
@@ -108,7 +108,7 @@ function resourceListConfig ($filter, table) {
 
   return {
     deliverynote: [DocumentID, Date, TransferState],
-    deliverynoteTable: [Title, SerialNumber, HID],
+    deliverynoteTable: [Title, SerialNumber, SupplierID],
     table: [table.Icon, Title, table.Tags, Rate, Issues, Status, Price, Updated]
   }
 }

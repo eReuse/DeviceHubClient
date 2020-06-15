@@ -89,10 +89,7 @@ function createDeliveryCtrl ($scope, $window, fields, $state, enums, resources) 
     }
 
     _submit () {
-      const devices = $scope.uploadedDevices && $scope.uploadedDevices.map((device) => {
-        // return device.hid
-        return new resources.Device(device)
-      })
+      const devices = $scope.uploadedDevices
       const model = _.assign({ expectedDevices : devices }, this.model.deliverynote)
       const deliveryNote = new resources.DeliveryNote(model, {_useCache: false})
       return deliveryNote.post()
