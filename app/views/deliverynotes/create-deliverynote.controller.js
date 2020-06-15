@@ -93,7 +93,7 @@ function createDeliveryCtrl ($scope, $window, fields, $state, enums, resources) 
         // return device.hid
         return new resources.Device(device)
       })
-      const model = _.assign({ expectedDevices : devices }, this.model.deliveryNote)
+      const model = _.assign({ expectedDevices : devices }, this.model.deliverynote)
       const deliveryNote = new resources.DeliveryNote(model, {_useCache: false})
       return deliveryNote.post()
     }
