@@ -77,10 +77,12 @@
     }
   },
   "deliverynotes": {
-    "new": "Nuevo albarán",
-    "title": "Albaranes",
-    "create": {
-      "title": "Nuevo albarán"
+    "incoming": {
+      "title": "Incoming lots",
+      "new": "New incoming lot"
+    },
+    "outgoing": {
+      "title": "Outgoing lots"
     }
   },
   "lots": {

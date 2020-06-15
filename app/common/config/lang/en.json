@@ -77,10 +77,12 @@
     }
   },
   "deliverynotes": {
-    "new": "New incoming lot",
-    "title": "Incoming lots",
-    "create": {
-      "title": "New incoming lot"
+    "incoming": {
+      "title": "Incoming lots",
+      "new": "New incoming lot"
+    },
+    "outgoing": {
+      "title": "Outgoing lots"
     }
   },
   "lots": {

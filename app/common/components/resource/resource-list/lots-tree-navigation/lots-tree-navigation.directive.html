@@ -13,13 +13,25 @@
     </div>
     <div>
         <ol class="lots-list">
-            <h4>{{::'deliverynotes.title' | translate}}</h4>
+            <h4>{{::'deliverynotes.incoming.title' | translate}}</h4>
             <button class="btn btn-link btn-sm" ng-click="newDeliverynote($event)">
                 <i class="fa fa-plus fa-fw"></i>
-                {{::'deliverynotes.new' | translate}}
+                {{::'deliverynotes.incoming.new' | translate}}
             </button>
             <li class="lot-content" 
-                ng-repeat="lot in deliverynotes"
+                ng-repeat="lot in incoming"
+                ng-show="lot.isVisible">
+                <button class="btn btn-xs btn-normal"
+                    ng-class="{selected: selected.isSelected(lot)}"
+                    ng-click="selected.toggle(lot, $event)">
+                    {{lot.name}}
+                </button>
+            </li>
+        </ol>
+        <ol class="lots-list" style="border-top: 1px dotted #b5b5b5;">
+            <h4>{{::'deliverynotes.outgoing.title' | translate}}</h4>
+            <li class="lot-content" 
+                ng-repeat="lot in outgoing"
                 ng-show="lot.isVisible">
                 <button class="btn btn-xs btn-normal"
                     ng-class="{selected: selected.isSelected(lot)}"

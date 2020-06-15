@@ -5,7 +5,7 @@
  * @param {module:selection} selection
  * @param {module:resources} resources
  */
-function lotsTreeNavigation (progressBar, $rootScope, $state, selection, resources) {
+function lotsTreeNavigation (progressBar, $rootScope, $state, selection, resources, session) {
   /**
    * @ngdoc directive
    * @name lotsTreeNavigation
@@ -65,7 +65,8 @@ function lotsTreeNavigation (progressBar, $rootScope, $state, selection, resourc
           resources.Lot.server.get('').then(lots => {
             const arrayLots = new Array(...lots)
             $scope.lots = lots
-            $scope.deliverynotes = arrayLots.filter(l => l.deliverynote)
+            $scope.incoming = arrayLots.filter(l => l.deliverynote && l.deliverynote.receiver.id === session.user.id)
+            $scope.outgoing = arrayLots.filter(l => l.deliverynote && l.deliverynote.supplier.id === session.user.id)
             $scope.temporary = arrayLots.filter(l => !l.deliverynote)
           })
         }
