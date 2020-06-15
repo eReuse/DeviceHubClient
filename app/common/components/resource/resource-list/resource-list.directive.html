@@ -17,11 +17,21 @@
         <!--
           <lot-children-button parent="lotsM.lots[0]" ng-if="lotsM.lots.length === 1"></lot-children-button>
         -->
-        <share-deliverynote-button ng-if="lotsM.lots.length && lotsM.lots[0].deliverynote" lot="lotsM.lots[0]" getter="getter"
-          ng-if="lotsM.lots.length === 1">
+        <share-deliverynote-button 
+          ng-if="lotsM.lots.length === 1 && lotsM.lots.length 
+          && lotsM.lots[0].deliverynote
+          && (lotsM.lots[0].deliverynote.supplier.id === user.id)
+          && (lotsM.lots[0].deliverynote.transfer_state === 'Initial')"
+          lot="lotsM.lots[0]" 
+          getter="getter"
+          ng-if="">
         </share-deliverynote-button>
-        <accept-deliverynote-button ng-if="lotsM.lots.length && lotsM.lots[0].deliverynote" lot="lotsM.lots[0]"
-          getter="getter" ng-if="lotsM.lots.length === 1">
+        <accept-deliverynote-button 
+          ng-if="lotsM.lots.length === 1 && lotsM.lots.length && lotsM.lots[0].deliverynote 
+          && (lotsM.lots[0].deliverynote.creator.id === user.id)
+          && (lotsM.lots[0].deliverynote.transfer_state === 'Initiated')" 
+          lot="lotsM.lots[0]"
+          getter="getter">
         </accept-deliverynote-button>
         <delete-lot-button lots="lotsM.lots" manager="lotsM">
         </delete-lot-button>

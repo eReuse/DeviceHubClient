@@ -6,7 +6,7 @@
  * @param {module:deviceGetter} deviceGetter
  * @param {module:selection} selection
  */
-function resourceList ($rootScope, resources, resourceListConfig, progressBar, Notification, deviceGetter, selection) {
+function resourceList ($rootScope, session, resourceListConfig, Notification, deviceGetter, selection) {
   return {
     template: require('./resource-list.directive.html'),
     restrict: 'E',
@@ -31,6 +31,8 @@ function resourceList ($rootScope, resources, resourceListConfig, progressBar, N
         const $topElem = $element.find('.fill-height-bar')
 
         $scope._sort = {} // Sort directive uses this internally
+
+        $scope.user = session.user
 
         /**
          * State of the selection panel (shown/hidden) when in xs or

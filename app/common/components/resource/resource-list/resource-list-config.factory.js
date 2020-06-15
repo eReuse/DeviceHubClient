@@ -105,9 +105,21 @@ function resourceListConfig ($filter, table) {
     }
   }
 
+  class Creator extends table.Field {
+    constructor (resource) {
+      super(resource, resource.creator.email)
+    }
+  }
+
+  class Supplier extends table.Field {
+    constructor (resource) {
+      super(resource, resource.supplier.email)
+    }
+  }
+
 
   return {
-    deliverynote: [DocumentID, Date, TransferState],
+    deliverynote: [DocumentID, Date, TransferState, Creator, Supplier],
     deliverynoteTable: [Title, SerialNumber, SupplierID],
     table: [table.Icon, Title, table.Tags, Rate, Issues, Status, Price, Updated]
   }
