@@ -13,11 +13,9 @@
 
 default:
   CONSTANTS:
-    appName: DeviceHub
+    appName: USOdy
     html5mode: false  # If true, uncomment the line in the header in index.html
-    siteLogo: common/assets/devicehub-logo.svg
-    eReuseLogo: common/assets/ereuse-logo.svg
-    defaultLabelLogo: common/assets/devicehub-logo-label.png
+    siteLogo: common/assets/logo-USODY-black.svg
     loginBackgroundImage: common/assets/login-background.jpg
     currency: €
     workbenchPollingDelay: 2650
