@@ -61,9 +61,21 @@
       </div>
       <div ng-if="lotsM.lots.length === 1 && lotsM.lots[0].deliverynote">
         <h3>Deliverynote</h3>
-        <p>DocumentID: {{deliverynote.documentID}}</p>
-        <p>Date: {{deliverynote.date}}</p>
-        <p>Transfer state: {{deliverynote.transfer_state}}</p>
+        <ul>
+          <li ng-repeat="Field in ::config.deliverynote"
+          class="{{::Field.cssClasses}}">
+            <span>{{::Field.name}}: </span>
+            <span ng-if="::Field.html">
+              <span ng-bind-html="Field.init(deliverynote).content"></span>
+            </span>
+            <span ng-if="::!Field.html">
+            {{Field.init(deliverynote).content}}
+            </span>
+            <span>
+              {{JSON.stringify(deliverynote)}}
+            </span>
+          </li>
+        </ul>
         <h4 ng-if="lotsM.lots.length === 1 && lotsM.lots[0].deliverynote">Expected devices ({{expectedDevices.length}}) </h4>
         <div class="deliverynote-devices" ng-if="lotsM.lots.length === 1 && lotsM.lots[0].deliverynote">
           <table id="deliverynote-device-list-table"

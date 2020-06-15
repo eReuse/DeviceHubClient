@@ -86,8 +86,28 @@ function resourceListConfig ($filter, table) {
     }
   }
 
+  class DocumentID extends table.Field {
+    constructor (resource) {
+      super(resource, resource.documentID)
+    }
+  }
+
+  class Date extends table.Field {
+    constructor (resource) {
+      const content = $filter('date')(resource.date, 'shortDate')
+      super(resource, content)
+    }
+  }
+
+  class TransferState extends table.Field {
+    constructor (resource) {
+      super(resource, resource.transfer_state)
+    }
+  }
+
 
   return {
+    deliverynote: [DocumentID, Date, TransferState],
     deliverynoteTable: [Title, SerialNumber, HID],
     table: [table.Icon, Title, table.Tags, Rate, Issues, Status, Price, Updated]
   }
