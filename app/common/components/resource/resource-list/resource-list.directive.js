@@ -155,6 +155,7 @@ function resourceList ($rootScope, session, resourceListConfig, Notification, de
         $scope.lotsM = new LotsManager()
 
         $scope.$on('devices:reload', () => {
+          selected.deselectAll()
           getter.reload()
         })
       },

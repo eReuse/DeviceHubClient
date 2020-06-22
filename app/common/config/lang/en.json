@@ -92,6 +92,13 @@
       "button": "Delete lot"
     }
   },
+  "mergeDevices": {
+    "button": "Merge devices",
+    "wrongNumberDevices": "Select exactly two devices to merge them",
+    "confirmMerge": "Do you want to move all actions of device \"{{mergedDevice}}\" into the device \"{{baseDevice}}\"? The device \"{{mergedDevice}}\" will be deleted as a result.",
+    "mergeCancelled": "Merge cancelled",
+    "mergeSuccessfull": "Devices have been merged successfully"
+  },
   "newAction": {
     "title": "Create a new {{type}}",
     "submit": "@:forms.submit",
