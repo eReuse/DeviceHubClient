@@ -11,9 +11,7 @@ tmp
 Thumbs.db
 app/truffle/build/
 app/eReuse-Blockchain/build/
-package-lock.json
 
 config.yml
-package-lock.json
 pnpm-lock.yaml
 app/truffle/build/contracts/*
