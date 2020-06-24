@@ -32,3 +32,10 @@ development:
   CONSTANTS:
     url: http://localhost:5000
     debug: true
+tutorial:
+    CONSTANTS:
+      appName: Devicehub Beta
+      blockchain: '127.0.0.1'
+      html5mode: true
+      url: https://localhost:5000
+      inventories: true

@@ -1,5 +1,5 @@
 #!/bin/bash
 
 cd app/eReuse-Blockchain
-rm -r build/
+rm -rf build/
 ../../node_modules/.bin/truffle migrate  --reset --all
