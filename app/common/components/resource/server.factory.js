@@ -64,6 +64,11 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
         .catch(this.constructor._initException)
     }
 
+    put (model, uri = '', config = this.constructor.c) {
+      return $http.put(this.url + uri, angular.toJson(model), this.config(config))
+        .catch(this.constructor._initException)
+    }
+
     delete (uri = '', config = this.constructor.c) {
       return $http.delete(this.url + uri, this.config(config))
         .catch(this.constructor._initException)
@@ -144,6 +149,12 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
     patch (model, uri, config) {
       return this.tokenPromise.then(headerWithAuth => {
         return super.patch(model, uri, _.defaultsDeep(config, headerWithAuth))
+      })
+    }
+
+    put (model, uri, config) {
+      return this.tokenPromise.then(headerWithAuth => {
+        return super.put(model, uri, _.defaultsDeep(config, headerWithAuth))
       })
     }
 

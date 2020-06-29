@@ -551,6 +551,28 @@
     }
   },
   "tags": {
+    "button": {
+      "title": "Tags",
+      "add": {
+        "title": "Add a new tag",
+        "form": {
+          "tagID": {
+            "l": "Enter a tag ID",
+            "d": "Selected device will be added"
+          }
+        }
+      },
+      "remove": {
+        "title": "Remove a tag",
+        "form": {
+          "tagID": {
+            "l": "Enter a tag ID",
+            "d": "Selected device will be removed"
+          }
+        }
+      }
+    },
+
     "title": "Tags",
     "description": "Showing the last 200 tags created.",
     "create": {
