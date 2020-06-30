@@ -15,13 +15,18 @@ function tagsCtrl ($scope, resources, selection, $translate, fields, server) {
   }
 
   $scope.selected = new selection.Selected()
-  $scope.popover = {
-    templateUrl: `${window.VIEWS}/tags/create.tags.popover.html`,
+  $scope.unnamedPopover = {
+    templateUrl: `${window.VIEWS}/tags/create.tags.unnamed.popover.html`,
+    isOpen: false,
+    title: $translate.instant('tags.create.title')
+  }
+  $scope.namedPopover = {
+    templateUrl: `${window.VIEWS}/tags/create.tags.named.popover.html`,
     isOpen: false,
     title: $translate.instant('tags.create.title')
   }
 
-  class CreateTagsForm extends fields.Form {
+  class UnnamedCreateTagsForm extends fields.Form {
     constructor (...args) {
       super(...args)
       // We don't use DevicehubThing to avoid Thing parsing
@@ -30,22 +35,49 @@ function tagsCtrl ($scope, resources, selection, $translate, fields, server) {
 
     _submit () {
       return this.server.post({}, undefined, {params: {num: this.model.num}})
-    }
+    }  
 
     cancel () {
-      $scope.popover.isOpen = false
+      $scope.unnamedPopover.isOpen = false
     }
 
     _success (...args) {
       super._success(...args)
-      $scope.popover.isOpen = false
+      $scope.unnamedPopover.isOpen = false
       getTags()
     }
   }
 
-  $scope.form = new CreateTagsForm(
+  $scope.unnamedForm = new UnnamedCreateTagsForm(
     {num: 1},
     new fields.Number('num', {min: 1, max: 50, namespace: 'tags.create'})
+  )
+
+  class NamedCreateTagsForm extends fields.Form {
+    constructor (...args) {
+      super(...args)
+      // We don't use DevicehubThing to avoid Thing parsing
+      this.server = new server.Devicehub('/tags/')
+    }
+
+    _submit () {
+      return this.server.post({ id: this.model.tagID })
+    }  
+
+    cancel () {
+      $scope.namedPopover.isOpen = false
+    }
+
+    _success (...args) {
+      super._success(...args)
+      $scope.namedPopover.isOpen = false
+      getTags()
+    }
+  }
+
+  $scope.namedForm = new NamedCreateTagsForm(
+    { tagID: '' },
+    new fields.String('tagID', { namespace: 'tags.create.named' })
   )
 
   getTags()

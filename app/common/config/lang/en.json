@@ -579,11 +579,20 @@
     "title": "Tags",
     "description": "Showing the last 200 tags created.",
     "create": {
-      "title": "Create empty tags",
-      "num": {
-        "l": "Quantity",
-        "d": "Number of tags to create."
-      }
+      "unnamed": {
+        "title": "Create unnamed empty tags",
+        "num": {
+          "l": "Quantity",
+          "d": "Number of tags to create."
+        }
+      },
+      "named": {
+        "title": "Create named tags",
+        "tagID": {
+          "l": "Enter tag name",
+          "d": "This will also be the ID of the tag."
+        }
+      }      
     }
   },
   "nav": {
