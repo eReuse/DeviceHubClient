@@ -12,7 +12,7 @@
 
             ng-click="closePopover()"
     >
-        <i class="fa fa-folder fa-fw"></i>
+        <i class="fa fa-tag fa-fw"></i>
         {{'tags.button.title' | translate}}
         <span class="caret"></span>
     </button>
@@ -27,6 +27,12 @@
             <a ng-click="openRemove()">
                 <i class="fa fa-fw fa-minus"></i>
                 {{'tags.button.remove.title  ' | translate}}
+            </a>
+        </li>
+        <li>
+            <a ng-click="openPrint()">
+                <i class="fa fa-fw fa-share"></i>
+                {{'tags.button.print.title  ' | translate}}
             </a>
         </li>
     </ul>

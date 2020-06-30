@@ -6,7 +6,7 @@ const PATH = require('./__init__').PATH
  * @param {module:fields} fields
  * @param {module:resources} resources
  */
-function tagsButton ($translate, fields, resources) {
+function tagsButton ($translate, $state, fields, resources) {
   /**
    * @ngdoc directive
    * @name lotDeviceButton
@@ -42,6 +42,18 @@ function tagsButton ($translate, fields, resources) {
         $scope.popover.isOpen = true
         $scope.popover.title = $translate.instant('tags.button.remove.title')
         $scope.form = new RemoveTagForm(false)
+      }
+
+      $scope.openPrint = () => {
+        const tags = _($scope.devices)
+          .flatMap('tags')
+          .filter({'printable': true})
+          .value()
+        if (tags.length) {
+          $state.go('auth.printTags', {tags: tags})
+        } else {
+          Notification.warning($translate.instant('printTags.noTagsToPrint'))
+        }
       }
 
       class TagForm extends fields.Form {

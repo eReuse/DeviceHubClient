@@ -570,6 +570,9 @@
             "d": "Selected device will be removed"
           }
         }
+      },
+      "print": {
+        "title": "Print tags"
       }
     },
 
