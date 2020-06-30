@@ -25,7 +25,7 @@ function tagsButton ($translate, $state, fields, resources) {
     link: $scope => {
       let tags = []
       resources.Tag.server.get().then(_tags => {
-        tags = _tags
+        tags = _.filter(_tags, (t) => { return !t._device })
       })
 
       $scope.popover = {
