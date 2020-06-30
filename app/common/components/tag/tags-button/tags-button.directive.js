@@ -76,6 +76,7 @@ function tagsButton ($translate, $state, fields, resources) {
         _success (op, response, namespace) {
           super._success(op, response, namespace)
           $scope.popover.isOpen = false
+          $scope.$emit('devices:reload')
         }
       }
 
