@@ -38,4 +38,3 @@ tutorial:
       blockchain: '127.0.0.1'
       html5mode: true
       url: http://localhost:5000
-      inventories: true
