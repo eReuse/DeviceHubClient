@@ -37,5 +37,5 @@ tutorial:
       appName: Devicehub Beta
       blockchain: '127.0.0.1'
       html5mode: true
-      url: https://localhost:5000
+      url: http://localhost:5000
       inventories: true

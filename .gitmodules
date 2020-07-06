@@ -1,3 +1,3 @@
 [submodule "app/eReuse-Blockchain"]
 	path = app/eReuse-Blockchain
-	url = git@github.com:DSG-UPC/eReuse-Blockchain.git
+	url = https://github.com/DSG-UPC/eReuse-Blockchain.git
