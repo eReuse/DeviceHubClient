@@ -1,0 +1,60 @@
+on: push
+name: Build Angular JS
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: build eReuse-Blockchain
+        run: |
+          cd $GITHUB_WORKSPACE/app/eReuse-Blockchain
+          rm -rf node_modules && npm install
+          npm run-script compile
+
+      - name: Extract environment based on git branch name
+        shell: bash
+        run: |
+          case ${GITHUB_REF#refs/heads/} in
+            "master")
+              echo "##[set-output name=branch;]$(echo "production")"
+              ;;
+            "testing")
+              echo "##[set-output name=branch;]$(echo "testing")"
+              ;;
+            *)
+              echo "##[set-output name=branch;]$(echo "development")"
+              ;;
+          esac
+        id: extract_branch
+
+      - name: npm install and npm run build
+        run: |
+          cd $GITHUB_WORKSPACE
+          rm -rf node_modules && npm install
+          rm -rf dist; npm run-script build-prod
+        env:
+          DH_ENV: ${{ steps.extract_branch.outputs.branch }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: ${{ github.workspace }}/dist/
