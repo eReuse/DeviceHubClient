@@ -31,13 +31,18 @@ jobs:
           rm -rf node_modules && npm install
           npm run-script compile
 
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
       - name: npm install and npm run build
         run: |
           cd $GITHUB_WORKSPACE
           rm -rf node_modules && npm install
           rm -rf dist; npm run-script build-prod
         env:
-          DH_ENV: e4
+          DH_ENV: ${{ steps.extract_branch.outputs.branch }}
       - uses: actions/upload-artifact@v2
         with:
           name: build
