@@ -9,15 +9,15 @@
         <tr>
           <th>Device ID by supplier</th>
           <th>Serial number</th>
-          <th>Brand</th>
+          <th>Manufacturer</th>
           <th>Model</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="device in ::uploadedDevices">
-          <td>{{::device.hid}}</td>
+          <td>{{::device.supplierID}}</td>
           <td>{{::device.serialNumber}}</td>
-          <td>{{::device.brand}}</td>
+          <td>{{::device.manufacturer}}</td>
           <td>{{::device.model}}</td>
         </tr>
       </tbody>

@@ -80,15 +80,47 @@ function resourceListConfig ($filter, table) {
     }
   }
 
-  class HID extends table.Field {
+  class SupplierID extends table.Field {
     constructor (resource) {
-      super(resource, resource.hid)
+      super(resource, resource.supplierID)
+    }
+  }
+
+  class DocumentID extends table.Field {
+    constructor (resource) {
+      super(resource, resource.documentID)
+    }
+  }
+
+  class Date extends table.Field {
+    constructor (resource) {
+      const content = $filter('date')(resource.date, 'shortDate')
+      super(resource, content)
+    }
+  }
+
+  class TransferState extends table.Field {
+    constructor (resource) {
+      super(resource, resource.transfer_state)
+    }
+  }
+
+  class Creator extends table.Field {
+    constructor (resource) {
+      super(resource, resource.creator.email)
+    }
+  }
+
+  class Supplier extends table.Field {
+    constructor (resource) {
+      super(resource, resource.supplier.email)
     }
   }
 
 
   return {
-    deliverynoteTable: [Title, SerialNumber, HID],
+    deliverynote: [DocumentID, Date, TransferState, Creator, Supplier],
+    deliverynoteTable: [Title, SerialNumber, SupplierID],
     table: [table.Icon, Title, table.Tags, Rate, Issues, Status, Price, Updated]
   }
 }

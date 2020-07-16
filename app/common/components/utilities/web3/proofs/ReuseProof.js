@@ -1,22 +1,25 @@
-const Proof = require('./Proof')
-
-class ReuseProof extends Proof {
-  constructor (web3, data) {
-    super(web3, data)
-    this.extractData(web3, data)
+class ReuseProof {
+  constructor (device) {
+    this.device = device
   }
 
-  generateProof (device, account) {
+  generateProof (web3, data, account) {
     return new Promise(resolve => {
-      return device.generateReuseProof(this.price, { from: account })
-        .then(hash => {
-          resolve(hash)
+      this.device.generateReuseProof(data.receiverSegment, data.idReceipt,
+        data.price, { from: account })
+        .then(receipt => {
+          resolve(receipt)
         })
     })
   }
 
-  extractData (web3, data) {
-    this.price = data.price
+  getProofData (hash, account) {
+    return new Promise(resolve => {
+      this.device.getReuseProof(hash, { from: account })
+        .then(data => {
+          resolve(data)
+        })
+    })
   }
 }
 

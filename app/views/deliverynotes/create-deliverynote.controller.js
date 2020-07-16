@@ -7,7 +7,9 @@
 function createDeliveryCtrl ($scope, $window, fields, $state, enums, resources) {
   const XLSX = $window.XLSX
   
-  $scope.username = 'Hello Stephan'
+  function leave () {
+    return $state.go('auth.inventory')
+  }
 
   $scope.SelectFile = function (file) {
     console.log('selected file', file)
@@ -71,39 +73,37 @@ function createDeliveryCtrl ($scope, $window, fields, $state, enums, resources) 
     constructor () {
       super(
         null,
-        new fields.String('deliveryNote.supplier', {
+        new fields.String('deliverynote.supplierEmail', {
           namespace: 'r',
         }),
-        new fields.Datepicker('deliveryNote.date', {
+        new fields.Datepicker('deliverynote.date', {
           namespace: 'r',
         }),
-        new fields.String('deliveryNote.documentID', {
+        new fields.String('deliverynote.documentID', {
           namespace: 'r'
         }),
-        new fields.String('deliveryNote.deposit', {
+        new fields.String('deliverynote.deposit', {
           namespace: 'r',
         })
       )
     }
 
     _submit () {
-      const devices = $scope.uploadedDevices && $scope.uploadedDevices.map((device) => {
-        return device
-        // return new resources.Device(device)
-      })
-      const model = _.assign({ expectedDevices : devices }, this.model.deliveryNote)
+      const devices = $scope.uploadedDevices
+      const model = _.assign({ expectedDevices : devices }, this.model.deliverynote)
       const deliveryNote = new resources.DeliveryNote(model, {_useCache: false})
       return deliveryNote.post()
     }
 
     _success (...args) {
       super._success(...args)
-      this.reset()
+      return leave()
     }
 
     cancel () {
-      $state.go('^')
+      return leave()
     }
+    
   }
 
   $scope.form = new CreateDeliveryNoteForm()

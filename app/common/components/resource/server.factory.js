@@ -64,6 +64,11 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
         .catch(this.constructor._initException)
     }
 
+    put (model, uri = '', config = this.constructor.c) {
+      return $http.put(this.url + uri, angular.toJson(model), this.config(config))
+        .catch(this.constructor._initException)
+    }
+
     delete (uri = '', config = this.constructor.c) {
       return $http.delete(this.url + uri, this.config(config))
         .catch(this.constructor._initException)
@@ -147,6 +152,12 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
       })
     }
 
+    put (model, uri, config) {
+      return this.tokenPromise.then(headerWithAuth => {
+        return super.put(model, uri, _.defaultsDeep(config, headerWithAuth))
+      })
+    }
+
     delete (uri, config) {
       return this.tokenPromise.then(headerWithAuth => {
         return super.delete(uri, _.defaultsDeep(config, headerWithAuth))
@@ -219,9 +230,7 @@ function serverFactory ($http, CONSTANTS, $q, poller, android, sessionLoaded, bo
       return super.get(uri, config).then(response => {
         const data = response.data
         let things
-        if ('tree' in data) {
-          things = new this.r.Lots(data.items, data.tree, data.url)
-        } else if ('items' in data) {
+        if ('items' in data) {
           things = this.r.ResourceList.fromServer(data, true)
         } else {
           things = this.r.init(data, true)

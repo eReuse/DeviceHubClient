@@ -6,7 +6,7 @@
  * @param {module:deviceGetter} deviceGetter
  * @param {module:selection} selection
  */
-function resourceList (resources, resourceListConfig, progressBar, Notification, deviceGetter, selection) {
+function resourceList ($rootScope, session, resourceListConfig, Notification, deviceGetter, selection) {
   return {
     template: require('./resource-list.directive.html'),
     restrict: 'E',
@@ -31,6 +31,8 @@ function resourceList (resources, resourceListConfig, progressBar, Notification,
         const $topElem = $element.find('.fill-height-bar')
 
         $scope._sort = {} // Sort directive uses this internally
+
+        $scope.user = session.user
 
         /**
          * State of the selection panel (shown/hidden) when in xs or
@@ -108,12 +110,35 @@ function resourceList (resources, resourceListConfig, progressBar, Notification,
             this.lots = []
           }
 
+          deleteLots (lots) {
+            async function deleteLotsSerial(lots) {
+              for(const lot of lots) {
+                await lot.delete()
+              }
+              return new Promise(resolve => {
+                resolve()
+              })
+            }
+
+            deleteLotsSerial(lots)
+
+            this.deselectAll()
+            $rootScope.$broadcast('lots:reload')
+          }
+
           /**
            * @param {module:resources.Lot[]} lots
            */
           updateSelection (lots) {
             this.lots = lots
             this.title = _.map(lots, 'name').join(', ')
+            if(lots.length === 1 && lots[0].deliverynote) {
+              $scope.deliverynote = lots[0].deliverynote
+              $scope.expectedDevices = lots[0].deliverynote.expectedDevices
+            } else {
+              $scope.deliverynote = null
+              $scope.expectedDevices = []
+            }
             // Update filter
             if (lots.length) {
               getter.setFilter('lot', {id: _.map(lots, 'id')})
@@ -130,6 +155,7 @@ function resourceList (resources, resourceListConfig, progressBar, Notification,
         $scope.lotsM = new LotsManager()
 
         $scope.$on('devices:reload', () => {
+          selected.deselectAll()
           getter.reload()
         })
       },

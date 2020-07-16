@@ -1,35 +1,17 @@
-<div class="selection-details-content">
-    <button
-            type="button"
-            class="btn ng-scope btn-hide-details"
-            ng-click="selection.details[row.title] = false">
-        <i class="fa fa-chevron-left fa-fw"></i>
-    </button>
-    <h3>Components</h3>
-    <table class="table" id="device-dashboard-components">
-        <thead>
-        <tr>
-            <th></th>
-            <th>Range</th>
-        </tr>
-        </thead>
-        <tbody ng-repeat="prop in [{ name: 'processorModel', title: 'Processor', conditionRangeName: 'processorsRange', conditionName: 'processors'}, { name: 'totalHardDriveSize', title: 'Hard drive', conditionRangeName: 'hardDrivesRange', conditionName: 'hardDrives'}, { name: 'totalRamSize', title: 'RAM', conditionRangeName: 'ramRange', conditionName: 'ram'}, { name: 'graphicCardModel', title: 'Graphics'}, { name: 'networkSpeedsEthernet', title: 'Network Ethernet' }, { name: 'networkSpeedsWifi', title: 'Wireless' }]">
-        <tr>
-            <td><span style="font-style: italic;">{{ prop.title }}</span></td>
-        </tr>
-        <tr ng-repeat="entry in selection.props[prop.name]">
-            <td>
-                <selection-property entry="entry" title="prop.title"
-                                    add-filter="addFilter(path, value, title)"></selection-property>
-            </td>
-            <td>
-          <span class="resource-range"
-                ng-show="prop.conditionName && selection.props.condition.components[prop.conditionName][$index]">
-            <span>{{selection.props.condition.components[prop.conditionRangeName][$index].value}}</span>
-            <span>({{selection.props.condition.components[prop.conditionName][$index].value}})</span>
-          </span>
-            </td>
-        </tr>
-        </tbody>
+<ul class="list-group">
+  <li ng-repeat="fieldType in activeModel"
+      ng-init="title=fieldType[0]; aggregates=fieldType[1]"
+      class="list-group-item">
+    <h4 class="list-group-item-heading">{{::title}}</h4>
+    <table class="table table-responsive table-striped table-condensed">
+      <tbody>
+      <tr ng-repeat="aggr in aggregates | orderBy:'value'"
+          uib-tooltip="{{::aggr.value.name}}"
+          tooltip-append-to-body="true">
+        <td>{{::aggr.value}} {{ aggr.postfix }}</td>
+        <td class="text-right">{{::aggr.count}}</td>
+      </tr>
+      </tbody>
     </table>
-</div>
+  </li>
+</ul>

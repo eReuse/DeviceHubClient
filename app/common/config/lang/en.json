@@ -76,8 +76,28 @@
       }
     }
   },
+  "deliverynotes": {
+    "incoming": {
+      "title": "Incoming lots",
+      "new": "New incoming lot"
+    },
+    "outgoing": {
+      "title": "Outgoing lots"
+    }
+  },
   "lots": {
-    "new": "New lot"
+    "new": "New temporary lot",
+    "title": "Temporary lots",
+    "delete": {
+      "button": "Delete lot"
+    }
+  },
+  "mergeDevices": {
+    "button": "Merge devices",
+    "wrongNumberDevices": "Select exactly two devices to merge them",
+    "confirmMerge": "Do you want to move all actions of device \"{{mergedDevice}}\" into the device \"{{baseDevice}}\"? The device \"{{mergedDevice}}\" will be deleted as a result.",
+    "mergeCancelled": "Merge cancelled",
+    "mergeSuccessfull": "Devices have been merged successfully"
   },
   "newAction": {
     "title": "Create a new {{type}}",
@@ -119,20 +139,20 @@
       "url": "The URL is invalid."
     }
   },
-  "acceptSharedLot": {
-    "button": "Accept shared lot",
+  "acceptTransfer": {
+    "button": "Accept transfer",
     "form": {
-      "title": "Accept shared lot",
+      "title": "Accept transfer",
       "deposit": {
         "l": "Enter deposit",
         "d": "Enter deposit"
       }
     }
   },
-  "shareLot": {
-    "button": "Share lot",
+  "initiateTransfer": {
+    "button": "Initiate transfer",
     "form": {
-      "title": "Share lot",
+      "title": "Initiate transfer",
       "ethereumAddress": {
         "l": "Recipient's ethereum address",
         "d": "Enter ethereum address of user you want to share this lot with"
@@ -234,7 +254,7 @@
         "l": "Model",
         "d": "The name of the model or brand."
       },
-      "serialNumber": {
+        "serialNumber": {
         "l": "Serial number",
         "d": "The serial number of the device."
       },
@@ -311,6 +331,24 @@
       "image": {
         "l": "Image",
         "d": "An URL containing an image of the device."
+      }
+    },
+    "deliverynote": {
+      "supplierEmail": {
+        "l": "Supplier email",
+        "d": "Enter the email of the supplier's account"
+      },
+      "date": {
+        "l": "Date",
+        "d": "Enter the date as specified in the delivery note"
+      },
+      "documentID": {
+        "l": "Document ID",
+        "d": "Enter the document ID of the delivery note"
+      },
+      "deposit": {
+        "l": "Deposit",
+        "d": "Optionally enter a deposit charged for each device"
       }
     },
     "event": {
@@ -520,14 +558,48 @@
     }
   },
   "tags": {
+    "button": {
+      "title": "Tags",
+      "add": {
+        "title": "Add a new tag",
+        "form": {
+          "tagID": {
+            "l": "Enter a tag ID",
+            "d": "Selected device will be added"
+          }
+        }
+      },
+      "remove": {
+        "title": "Remove a tag",
+        "form": {
+          "tagID": {
+            "l": "Enter a tag ID",
+            "d": "Selected device will be removed"
+          }
+        }
+      },
+      "print": {
+        "title": "Print tags"
+      }
+    },
+
     "title": "Tags",
     "description": "Showing the last 200 tags created.",
     "create": {
-      "title": "Create empty tags",
-      "num": {
-        "l": "Quantity",
-        "d": "Number of tags to create."
-      }
+      "unnamed": {
+        "title": "Create unnamed empty tags",
+        "num": {
+          "l": "Quantity",
+          "d": "Number of tags to create."
+        }
+      },
+      "named": {
+        "title": "Create named tags",
+        "tagID": {
+          "l": "Enter tag name",
+          "d": "This will also be the ID of the tag."
+        }
+      }      
     }
   },
   "nav": {

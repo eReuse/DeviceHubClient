@@ -14,8 +14,6 @@ module.exports.factory('URL', CONSTANTS => new utils.URI(CONSTANTS.url))
  * @property {string} appName
  * @property {boolean} html5mode
  * @property {string} siteLogo
- * @property {string} eReuseLogo
- * @property {string} defaultLabelLogo
  * @property {string} loginBackgroundImage
  * @property {string} androidWorkbench
  * @property {string} workbench

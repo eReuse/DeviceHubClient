@@ -23,6 +23,7 @@ module.exports = angular.module('views.inventory',
     require('./../../common/components/resource').name,
     require('./../../common/components/utilities').name,
     require('./../../common/components/lot').name, // the button in resource-list
+    require('./../../common/components/device').name,
     require('angular-ui-bootstrap')
   ])
   .controller('inventoryCtrl', require('./inventory.controller.js'))
