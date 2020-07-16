@@ -69,7 +69,7 @@ testing:
     html5mode: true
     url: https://api.testing.usody.com
     inventories: true
-master:   # production
+production:
   CONSTANTS:
     blockchain: '127.0.0.1'
     html5mode: true

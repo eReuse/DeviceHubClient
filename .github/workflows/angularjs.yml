@@ -31,9 +31,20 @@ jobs:
           rm -rf node_modules && npm install
           npm run-script compile
 
-      - name: Extract branch name
+      - name: Extract environment based on git branch name
         shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        run: |
+          case ${GITHUB_REF#refs/heads/} in
+            "master")
+              echo "##[set-output name=branch;]$(echo "production")"
+              ;;
+            "testing")
+              echo "##[set-output name=branch;]$(echo "testing")"
+              ;;
+            *)
+              echo "##[set-output name=branch;]$(echo "development")"
+              ;;
+          esac
         id: extract_branch
 
       - name: npm install and npm run build
