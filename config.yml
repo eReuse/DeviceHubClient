@@ -45,7 +45,7 @@ e4:
     blockchain: '127.0.0.1'
     # blockchain: ereuse04.ereuse.org
     html5mode: true
-    url: https://api.dh.usody.net
+    url: https://api.testing.usody.com
     inventories: true
 devel:
   CONSTANTS:
