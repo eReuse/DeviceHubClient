@@ -14,11 +14,23 @@
             </a>
         </li>
         <li class="divider"></li>
+        <li role="menuitem" class="dropdown-header">Versions</li>
+        <li role="menuitem">
+            <a>Client: {{ appVersions && appVersions.client }}</a>
+        </li>
+        <li role="menuitem">
+            <a>Server: {{ appVersions && appVersions.server }}</a>
+        </li>
+        <li role="menuitem">
+            <a>Tags: {{ appVersions && appVersions.tags }}</a>
+        </li>
+        <li class="divider"></li>
         <li role="menuitem" class="dropdown-header">{{::user}}</li>
         <li role="menuitem">
             <a class="text-danger-important" ng-click="logout()">
                 <i class="fa fa-fw fa-sign-out-alt"></i>
                 Logout
-            </a></li>
+            </a>
+        </li>
     </ul>
 </li>

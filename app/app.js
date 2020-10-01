@@ -207,6 +207,9 @@ module.exports = window.angular.module('deviceHub', [
     $rootScope.COMMON = window.COMMON
     $rootScope.COMPONENTS = window.COMPONENTS
     $rootScope.CONSTANTS = CONSTANTS
+    $rootScope.appVersions = {
+      client: window.appClientVersion 
+    }
     window.document.title = CONSTANTS.appName
     window.CONSTANTS = CONSTANTS // todo are we sure this is ok?
   })

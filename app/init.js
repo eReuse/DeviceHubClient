@@ -11,6 +11,7 @@ window._ = require('lodash')
 window.web3 = require('web3')
 window.contract = require('truffle-contract')
 window.XLSX = require('xlsx')
+window.appClientVersion = require('../package.json').version
 
 const apiCheck = require('api-check')
 apiCheck.globalConfig.disabled = true

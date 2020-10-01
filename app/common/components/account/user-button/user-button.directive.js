@@ -1,4 +1,4 @@
-function userButton (session) {
+function userButton (session, server, $rootScope) {
   return {
     template: require('./user-button.directive.html'),
     restrict: 'E',
@@ -7,6 +7,11 @@ function userButton (session) {
     link: $scope => {
       $scope.user = session.user
       $scope.logout = () => session.logout()
+      new server.Endpoint(server.Devicehub.url, '/usodybeta/versions/').get('').then(result => {
+        $scope.appVersions = $rootScope.appVersions
+        $rootScope.appVersions.server = result.data.devicehub
+        $rootScope.appVersions.tags = result.data.ereuse_tag
+      })  
     }
   }
 }
