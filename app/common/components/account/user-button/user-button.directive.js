@@ -7,7 +7,7 @@ function userButton (session, server, $rootScope) {
     link: $scope => {
       $scope.user = session.user
       $scope.logout = () => session.logout()
-      new server.Endpoint(server.Devicehub.url, '/usodybeta/versions/').get('').then(result => {
+      new server.DevicehubThing('/versions/').get('').then(result => {
         $scope.appVersions = $rootScope.appVersions
         $rootScope.appVersions.server = result.data.devicehub
         $rootScope.appVersions.tags = result.data.ereuse_tag
