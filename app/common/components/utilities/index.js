@@ -17,7 +17,7 @@ module.exports = angular.module('common.components.utilities',
   .directive('dhSubmitButton', require('./dh-submit-button/dh-submit-button.directive'))
   .factory('SubmitForm', require('./submit-form'))
   .service('progressBar', require('./progress-bar.factory'))
-  .service('web3', require('./web3.service'))
+  .service('web3', require('./web3.service.stub'))
   .filter('toInches', require('./to-inches.filter'))
   .filter('resourceTitle', require('./resource-title.filter'))
   .filter('humanize', require('./humanize'))
