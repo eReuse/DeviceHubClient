@@ -32,7 +32,7 @@ module.exports = angular.module('common.components.device', [])
           } 
 
           const server = baseDevice.server
-          const uri = baseDevice.id + '/merge/id=' + mergedDevice.id
+          const uri = baseDevice.id + '/merge/' + mergedDevice.id
 
           return server.post({}, uri).then(() => {
             Notification.success($translate.instant('mergeDevices.mergeSuccessfull'))
