@@ -16,6 +16,9 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
      */
     link: $scope => {
       $scope.elements = [
+        'newAction.button.using',
+        resources.Allocate,
+        resources.Deallocate,
         'newAction.button.physical',
         resources.ToPrepare,
         resources.Prepare,

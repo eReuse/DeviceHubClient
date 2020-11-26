@@ -1479,6 +1479,30 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
+   */
+  class Allocate extends ActionWithMultipleDevices {
+    define ({transaction = null, /* name = null,*/ endUsers = null, /* description = null, */ startTime = null, ...rest}) {
+      super.define(rest)
+      this.transaction = transaction
+      /* this.name = name */
+      this.endUsers = endUsers
+      /* this.description = description */
+      this.startTime = startTime
+    }
+  }
+
+  class Deallocate extends ActionWithMultipleDevices {
+    define ({transaction = null, /* name = null,*/ endUsers = null, /* description = null, */ startTime = null, ...rest}) {
+      super.define(rest)
+      this.transaction = transaction
+      /* this.name = name */
+      this.endUsers = endUsers
+      /* this.description = description */
+      this.startTime = startTime
+    }
+  }
+
+  /**
    * @alias module:resources.ToRepair
    * @extends module:resources.ActionWithMultipleDevices
    */
@@ -2238,6 +2262,8 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     BenchmarkProcessorSysbench: BenchmarkProcessorSysbench,
     BenchmarkRamSysbench: BenchmarkRamSysbench,
     DeliveryNote: DeliveryNote,
+    Allocate: Allocate,
+    Deallocate: Deallocate,    
     ToRepair: ToRepair,
     Repair: Repair,
     Ready: Ready,

@@ -82,6 +82,35 @@ function resourceFields (fields, resources, enums, web3) {
   }
 
   /**
+   */
+  class Allocate extends EventWithMultipleDevices {
+    constructor (model) {
+      const def = {namespace: 'r.allocate'}
+      super(model, 
+        new f.String('transaction', def),
+        /* new f.String('name', def), */
+        new f.Number('endUsers', def),
+        /* new f.String('description', def), */
+        new f.Datepicker('startTime', def),
+      )
+    }
+  }
+
+  /**
+   */
+  class Deallocate extends EventWithMultipleDevices {
+    constructor (model) {
+      const def = {namespace: 'r.deallocate'}
+      super(model, 
+        new f.String('transaction', def),
+        /* new f.String('name', def), */
+        /* new f.String('description', def), */
+        new f.Datepicker('startTime', def),
+      )
+    }
+  }
+
+  /**
    * @alias module:resourceFields.ToRepair
    * @extends module:resourceFields.EventWithMultipleDevices
    */
@@ -283,6 +312,8 @@ function resourceFields (fields, resources, enums, web3) {
     EventWithMultipleDevices: EventWithMultipleDevices,
     ToPrepare: ToPrepare,
     Prepare: Prepare,
+    Allocate: Allocate,
+    Deallocate: Deallocate,
     ToRepair: ToRepair,
     Ready: Ready,
     ToDisposeProduct: ToDisposeProduct,
