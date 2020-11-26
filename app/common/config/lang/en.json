@@ -104,7 +104,7 @@
     "submit": "@:forms.submit",
     "cancel": "@:forms.cancel",
     "button": {
-      "using": "Allocation & Deallocation",
+      "using": "Allocation",
       "physical": "Physical actions",
       "political": "Political actions",
       "other": "Other actions"
