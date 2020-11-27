@@ -84,29 +84,27 @@ function resourceFields (fields, resources, enums, web3) {
   /**
    */
   class Allocate extends EventWithMultipleDevices {
-    constructor (model) {
+    constructor (model, ...fields) {
+      super(model, ...fields)
       const def = {namespace: 'r.allocate'}
-      super(model, 
-        new f.String('transaction', def),
-        /* new f.String('name', def), */
-        new f.Number('endUsers', def),
-        /* new f.String('description', def), */
-        new f.Datepicker('startTime', def),
-      )
+      
+      
+      this.fields.splice(2, 0, new f.Datepicker('startTime', def))
+      this.fields.push(new f.String('transaction', def))
+      this.fields.push(new f.Number('endUsers', def))
     }
   }
 
   /**
    */
   class Deallocate extends EventWithMultipleDevices {
-    constructor (model) {
-      const def = {namespace: 'r.deallocate'}
-      super(model, 
-        new f.String('transaction', def),
-        /* new f.String('name', def), */
-        /* new f.String('description', def), */
-        new f.Datepicker('startTime', def),
-      )
+    constructor (model, ...fields) {
+      super(model, ...fields)
+      const def = {namespace: 'r.allocate'}
+      
+      
+      this.fields.splice(2, 0, new f.Datepicker('startTime', def))
+      this.fields.push(new f.String('transaction', def))
     }
   }
 

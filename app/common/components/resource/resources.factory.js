@@ -1481,23 +1481,19 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   /**
    */
   class Allocate extends ActionWithMultipleDevices {
-    define ({transaction = null, /* name = null,*/ endUsers = null, /* description = null, */ startTime = null, ...rest}) {
+    define ({transaction = null, endUsers = null, startTime = null, ...rest}) {
       super.define(rest)
       this.transaction = transaction
-      /* this.name = name */
       this.endUsers = endUsers
-      /* this.description = description */
       this.startTime = startTime
     }
   }
 
   class Deallocate extends ActionWithMultipleDevices {
-    define ({transaction = null, /* name = null,*/ endUsers = null, /* description = null, */ startTime = null, ...rest}) {
+    define ({transaction = null, endUsers = null, startTime = null, ...rest}) {
       super.define(rest)
       this.transaction = transaction
-      /* this.name = name */
       this.endUsers = endUsers
-      /* this.description = description */
       this.startTime = startTime
     }
   }
