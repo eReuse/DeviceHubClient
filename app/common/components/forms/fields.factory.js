@@ -498,7 +498,8 @@ function fieldsFactory ($translate, Notification, $q) {
         .catch(response => {
           this.form.triedSubmission = true
           this.status.errorFromServer = _.get(response, 'data', response)
-          console.warn('Erorr in submitting:', response)
+          console.warn('Error in submitting:', response)
+
           return this._error(op, response)
         })
         .finally(() => {
@@ -552,12 +553,21 @@ function fieldsFactory ($translate, Notification, $q) {
       Notification.success(text)
     }
 
-    _error (op, response, namespace = this.constructor.NS) {
-      const text = $translate.instant(`${namespace}.error`,
+    _error (op, response, namespace = this.constructor.NS) {               
+      const issues = response.message && Object.keys(response.message)
+      let text
+      if(issues.length === 0) {
+        text = $translate.instant(`${namespace}.error`,
         {
           title: this.model,
           op: $translate.instant(`${namespace}.${op.toLowerCase()}`)
         })
+      } else {
+        text = issues.map(issue => {
+          return issue + ': ' + response.message[issue]
+        }).join(', '); 
+      }
+      
       Notification.error(text)
     }
 
