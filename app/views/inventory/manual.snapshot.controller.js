@@ -40,7 +40,8 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
           namespace: ns,
           keyText: 'type',
           required: true,
-          options: resources.Device.options(fields.Option, true, false)
+          options: resources.Device.options(fields.Option, true, false),
+          required: true
         }),
         new fields.String('device.tags[0].id', {
           namespace: ns,
@@ -50,29 +51,30 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
         new fields.String('device.serialNumber', {
           required: true,
           namespace: 'r',
-          addonRight: tag.addonRightScan('device.serialNumber')
+          addonRight: tag.addonRightScan('device.serialNumber'),
+          required: true
         }),
         new fields.String('device.model', {
           required: true,
           namespace: 'r',
-          addonRight: tag.addonRightScan('device.model')
+          addonRight: tag.addonRightScan('device.model'),
+          required: true
         }),
         new fields.String('device.manufacturer', {
           required: true,
           namespace: 'r',
-          addonRight: tag.addonRightScan('device.manufacturer')
+          addonRight: tag.addonRightScan('device.manufacturer'),
+          required: true
         }),
         new fields.Radio('device.actions[0].appearanceRange', {
           namespace: 'workbench.link',
           keyText: 'appearance',
-          options: enums.AppearanceRange.options(fields),
-          required: true
+          options: enums.AppearanceRange.options(fields)
         }),
         new fields.Radio('device.actions[0].functionalityRange', {
           namespace: 'workbench.link',
           keyText: 'functionality',
-          options: enums.FunctionalityRange.options(fields),
-          required: true
+          options: enums.FunctionalityRange.options(fields)
         }),
         new fields.String('device.brand', {
           namespace: 'r'
