@@ -39,7 +39,6 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
         new fields.Select('device.type', {
           namespace: ns,
           keyText: 'type',
-          required: true,
           options: resources.Device.options(fields.Option, true, false),
           required: true
         }),
@@ -49,19 +48,16 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
           addonRight: tag.addonRightScan('device.tags[0].id')
         }),
         new fields.String('device.serialNumber', {
-          required: true,
           namespace: 'r',
           addonRight: tag.addonRightScan('device.serialNumber'),
           required: true
         }),
         new fields.String('device.model', {
-          required: true,
           namespace: 'r',
           addonRight: tag.addonRightScan('device.model'),
           required: true
         }),
         new fields.String('device.manufacturer', {
-          required: true,
           namespace: 'r',
           addonRight: tag.addonRightScan('device.manufacturer'),
           required: true
