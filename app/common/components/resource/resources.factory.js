@@ -345,7 +345,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       weight = null, width = null, height = null, depth = null, actions = [], problems = [], url = null, 
       rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, 
       working = [], brand = null, generation = null, version = null, variant = null, sku = null, image = null, 
-      ethereum_address = null, deposit = null, allocated = null,
+      ethereum_address = null, deposit = null, allocated = null, usage = null,
       ...rest}) {
       super.define(rest)
       /** @type {int} */
@@ -388,6 +388,8 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.trading = trading
       /** @type {string} */
       this.physical = physical
+      /** @type {string} */
+      this.usage = usage
       /** @type {string} */
       this.physicalPossessor = physicalPossessor
       /** @type {string} */
@@ -435,9 +437,9 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
      * @returns {string}
      */
     get status () {
-      let status = this.physical || this.trading || 'Registered'
-      if (this.physical && this.trading) {
-        status = `${this.trading} / ${this.physical}`
+      let status = this.physical || this.trading || this.usage || 'Registered'
+      if (this.physical && this.trading && this.usage) {
+        status = `${this.trading} / ${this.physical} / ${this.usage}`
       }
       return utils.Naming.humanize(status)
     }
