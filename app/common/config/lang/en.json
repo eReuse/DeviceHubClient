@@ -305,7 +305,7 @@
         "aR": "Kg"
       },
       "width": {
-        "l": "width",
+        "l": "Width",
         "d": "The width of the device in meters.",
         "aR": "m"
       },
