@@ -295,6 +295,10 @@
         "l": "Screen size",
         "d": "The size of the screen."
       },
+      "chassis": {
+        "l": "Chassis",
+        "d": "Chassis of the computer."
+      },
       "version": {
         "l": "Version",
         "d": "The version code o fthis device, like 'v1' or 'A001'."
