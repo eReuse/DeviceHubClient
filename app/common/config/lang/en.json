@@ -390,6 +390,10 @@
         "l": "Transaction",
         "d": ""
       },
+      "finalUserCode": {
+        "l": "Final User Code",
+        "d": ""
+      },
       "name": {
         "l": "Name",
         "d": ""

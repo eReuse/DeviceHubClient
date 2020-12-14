@@ -91,6 +91,7 @@ function resourceFields (fields, resources, enums, web3) {
       
       this.fields.splice(2, 0, new f.Datepicker('startTime', def))
       this.fields.push(new f.String('transaction', def))
+      this.fields.push(new f.String('finalUserCode', def))
       this.fields.push(new f.Number('endUsers', def))
     }
   }
