@@ -283,6 +283,18 @@
         "l": "Generation",
         "d": "The generation of the device."
       },
+      "resolutionHeight": {
+        "l": "Resolution height",
+        "d": "The resolution height of the screen."
+      },
+      "resolutionWidth": {
+        "l": "Resolution width",
+        "d": "The resolution width of the screen."
+      },
+      "screensize": {
+        "l": "Screen size",
+        "d": "The size of the screen."
+      },
       "version": {
         "l": "Version",
         "d": "The version code o fthis device, like 'v1' or 'A001'."

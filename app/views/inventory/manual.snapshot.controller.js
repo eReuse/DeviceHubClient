@@ -115,6 +115,18 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
           namespace: 'r',
           hide: showIfSubclassFactory(resources.Mobile)
         }),
+        new fields.Number('device.resolutionHeight', {
+          namespace: 'r',
+          hide: showIfSubclassFactory(resources.ComputerMonitor)
+        }),
+        new fields.Number('device.resolutionWidth', {
+          namespace: 'r',
+          hide: showIfSubclassFactory(resources.ComputerMonitor)
+        }),
+        new fields.Number('device.screensize', {
+          namespace: 'r',
+          hide: showIfSubclassFactory(resources.ComputerMonitor)
+        }),
         new fields.String('device.meid', {
           namespace: 'r',
           hide: showIfSubclassFactory(resources.Mobile)
