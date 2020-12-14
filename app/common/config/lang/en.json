@@ -871,6 +871,12 @@
       "tag0": {
         "l": "@:workbench.link.tag0.l",
         "d": "@:workbench.link.tag0.d"
+      },
+      "device": {
+        "chassis": {
+          "l": "Chassis",
+          "d": "The shape or subtype of computer."
+        }
       }
     }
   }
