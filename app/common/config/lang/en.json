@@ -137,7 +137,9 @@
       "maxlength": "Too long. Maximum characters are {{to}}.",
       "parse": "Wrong format. Review that the format is correct.",
       "number": "The number is incorrect.",
-      "url": "The URL is invalid."
+      "url": "The URL is invalid.",
+      "min": "The number is too low.",
+      "max": "The number is too high."
     }
   },
   "acceptTransfer": {

@@ -76,7 +76,9 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
           namespace: 'r'
         }),
         new fields.Number('device.generation', {
-          namespace: 'r'
+          namespace: 'r',
+          min: 1,
+          max: 100
         }),
         new fields.String('device.version', {
           namespace: 'r'
