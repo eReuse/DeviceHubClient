@@ -39,8 +39,8 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
         new fields.Select('device.type', {
           namespace: ns,
           keyText: 'type',
-          required: true,
-          options: resources.Device.options(fields.Option, true, false)
+          options: resources.Device.options(fields.Option, true, false),
+          required: true
         }),
         new fields.String('device.tags[0].id', {
           namespace: ns,
@@ -48,19 +48,19 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
           addonRight: tag.addonRightScan('device.tags[0].id')
         }),
         new fields.String('device.serialNumber', {
-          required: true,
           namespace: 'r',
-          addonRight: tag.addonRightScan('device.serialNumber')
+          addonRight: tag.addonRightScan('device.serialNumber'),
+          required: true
         }),
         new fields.String('device.model', {
-          required: true,
           namespace: 'r',
-          addonRight: tag.addonRightScan('device.model')
+          addonRight: tag.addonRightScan('device.model'),
+          required: true
         }),
         new fields.String('device.manufacturer', {
-          required: true,
           namespace: 'r',
-          addonRight: tag.addonRightScan('device.manufacturer')
+          addonRight: tag.addonRightScan('device.manufacturer'),
+          required: true
         }),
         new fields.Radio('device.actions[0].appearanceRange', {
           namespace: 'workbench.link',
@@ -78,7 +78,9 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
           namespace: 'r'
         }),
         new fields.Number('device.generation', {
-          namespace: 'r'
+          namespace: 'r',
+          min: 1,
+          max: 100
         }),
         new fields.String('device.version', {
           namespace: 'r'
@@ -108,12 +110,27 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
         new fields.Select('device.chassis', {
           namespace: ns,
           options: enums.Chassis.options(fields),
-          required: true,
-          hide: showIfSubclassFactory(resources.Computer)
+          hide: showIfSubclassFactory(resources.Computer),
+          required: true
         }),
         new fields.Number('device.imei', {
           namespace: 'r',
           hide: showIfSubclassFactory(resources.Mobile)
+        }),
+        new fields.Number('device.resolutionHeight', {
+          namespace: 'r',
+          hide: showIfSubclassFactory(resources.ComputerMonitor),
+          required: true
+        }),
+        new fields.Number('device.resolutionWidth', {
+          namespace: 'r',
+          hide: showIfSubclassFactory(resources.ComputerMonitor),
+          required: true
+        }),
+        new fields.Number('device.screensize', {
+          namespace: 'r',
+          hide: showIfSubclassFactory(resources.ComputerMonitor),
+          required: true
         }),
         new fields.String('device.meid', {
           namespace: 'r',

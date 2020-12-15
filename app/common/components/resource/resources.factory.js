@@ -493,8 +493,15 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Device
    */
   class ComputerMonitor extends Device {
+    define ({resolutionHeight = null, resolutionWidth = null, screensize= null, ...rest}) {
+      super.define(rest)
+	this.resolutionHeight = resolutionHeight
+	this.resolutionWidth = resolutionWidth
+	this.size = screensize
+    }
     static get icon () {
       return 'fa-desktop'
+      // return 'fa-computermonitor'
     }
   }
 
