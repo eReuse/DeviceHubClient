@@ -65,12 +65,14 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
         new fields.Radio('device.actions[0].appearanceRange', {
           namespace: 'workbench.link',
           keyText: 'appearance',
-          options: enums.AppearanceRange.options(fields)
+          options: enums.AppearanceRange.options(fields),
+          required: true
         }),
         new fields.Radio('device.actions[0].functionalityRange', {
           namespace: 'workbench.link',
           keyText: 'functionality',
-          options: enums.FunctionalityRange.options(fields)
+          options: enums.FunctionalityRange.options(fields),
+          required: true
         }),
         new fields.String('device.brand', {
           namespace: 'r'
@@ -108,7 +110,8 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
         new fields.Select('device.chassis', {
           namespace: ns,
           options: enums.Chassis.options(fields),
-          hide: showIfSubclassFactory(resources.Computer)
+          hide: showIfSubclassFactory(resources.Computer),
+          required: true
         }),
         new fields.Number('device.imei', {
           namespace: 'r',
@@ -116,15 +119,18 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
         }),
         new fields.Number('device.resolutionHeight', {
           namespace: 'r',
-          hide: showIfSubclassFactory(resources.ComputerMonitor)
+          hide: showIfSubclassFactory(resources.ComputerMonitor),
+          required: true
         }),
         new fields.Number('device.resolutionWidth', {
           namespace: 'r',
-          hide: showIfSubclassFactory(resources.ComputerMonitor)
+          hide: showIfSubclassFactory(resources.ComputerMonitor),
+          required: true
         }),
         new fields.Number('device.screensize', {
           namespace: 'r',
-          hide: showIfSubclassFactory(resources.ComputerMonitor)
+          hide: showIfSubclassFactory(resources.ComputerMonitor),
+          required: true
         }),
         new fields.String('device.meid', {
           namespace: 'r',
