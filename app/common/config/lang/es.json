@@ -129,7 +129,9 @@
       "maxlength": "Demasiado largo. El maximo de caracteres son {{to}}.",
       "parse": "Formato erróneo. Revise que el formato sea correcto.",
       "number": "El número es incorrecto.",
-      "url": "El URL no es valido."
+      "url": "El URL no es valido.",
+      "min": "El número es demasiado bajo",
+      "max": "El número es demasiado alto"
     }
   },
   "acceptTransfer": {

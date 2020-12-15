@@ -137,7 +137,9 @@
       "maxlength": "Too long. Maximum characters are {{to}}.",
       "parse": "Wrong format. Review that the format is correct.",
       "number": "The number is incorrect.",
-      "url": "The URL is invalid."
+      "url": "The URL is invalid.",
+      "min": "The number is too low.",
+      "max": "The number is too high."
     }
   },
   "acceptTransfer": {
@@ -283,6 +285,22 @@
         "l": "Generation",
         "d": "The generation of the device."
       },
+      "resolutionHeight": {
+        "l": "Resolution height",
+        "d": "The resolution height of the screen."
+      },
+      "resolutionWidth": {
+        "l": "Resolution width",
+        "d": "The resolution width of the screen."
+      },
+      "screensize": {
+        "l": "Screen size",
+        "d": "The size of the screen."
+      },
+      "chassis": {
+        "l": "Chassis",
+        "d": "Chassis of the computer."
+      },
       "version": {
         "l": "Version",
         "d": "The version code o fthis device, like 'v1' or 'A001'."
@@ -293,7 +311,7 @@
         "aR": "Kg"
       },
       "width": {
-        "l": "width",
+        "l": "Width",
         "d": "The width of the device in meters.",
         "aR": "m"
       },
@@ -853,6 +871,12 @@
       "tag0": {
         "l": "@:workbench.link.tag0.l",
         "d": "@:workbench.link.tag0.d"
+      },
+      "device": {
+        "chassis": {
+          "l": "Chassis",
+          "d": "The shape or subtype of computer."
+        }
       }
     }
   }
