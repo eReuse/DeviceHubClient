@@ -110,8 +110,7 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
         new fields.Select('device.chassis', {
           namespace: ns,
           options: enums.Chassis.options(fields),
-          hide: showIfSubclassFactory(resources.Computer),
-          required: true
+          hide: showIfSubclassFactory(resources.Computer)
         }),
         new fields.Number('device.imei', {
           namespace: 'r',
