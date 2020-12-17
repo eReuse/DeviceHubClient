@@ -298,20 +298,23 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
       super(devices, 'Status')
       this.physicals = this.aggregatesOne('physical')
       this.tradings = this.aggregatesOne('trading')
+      this.usages = this.aggregatesOne('usage')
       this.content = 'Registered'
-      if (this.physicals.length || this.tradings.length) {
+      if (this.physicals.length || this.tradings.length || this.usages.length) {
         const textTrading = this.aggregateToString(this.tradings)
         const textPhysical = this.aggregateToString(this.physicals)
-        this.content = this.physicals.length && this.tradings.length
-          ? `${textTrading} / ${textPhysical}`
-          : textTrading || textPhysical
+        const textUsage = this.aggregateToString(this.usages)
+        this.content = this.physicals.length && this.tradings.length && this.usages.length
+          ? `${textTrading} / ${textPhysical} / ${textUsage}`
+          : textTrading || textPhysical || textUsage
       }
     }
 
     full () {
       return [
         ['Physical states', this.physicals],
-        ['Trading states', this.tradings]
+        ['Trading states', this.tradings],
+        ['Usage states', this.usages]
       ]
     }
   }

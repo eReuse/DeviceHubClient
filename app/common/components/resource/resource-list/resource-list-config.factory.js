@@ -46,9 +46,9 @@ function resourceListConfig ($filter, table) {
     constructor (resource) {
       const textPhysical = utils.Naming.humanize(resource.physical || '')
       const textTrading = utils.Naming.humanize(resource.trading || '')
-      const textAllocated = resource.allocated ? utils.Naming.humanize('allocated') : null
+      const textUsage = utils.Naming.humanize(resource.usage || '')
      
-      const content = [textPhysical, textTrading, textAllocated].filter(a => a).join(' / ')
+      const content = [textPhysical, textTrading, textUsage].filter(a => a).join(' / ')
       
       super(resource, content)
     }

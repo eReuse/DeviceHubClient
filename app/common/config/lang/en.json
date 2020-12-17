@@ -408,12 +408,16 @@
         "l": "Transaction",
         "d": ""
       },
+      "finalUserCode": {
+        "l": "Final User Code",
+        "d": ""
+      },
       "name": {
         "l": "Name",
         "d": ""
       },
       "endUsers": {
-        "l": "End users",
+        "l": "Number Final Users",
         "d": ""
       },
       "description": {
