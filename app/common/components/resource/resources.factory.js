@@ -2198,11 +2198,11 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   const resources = new Proxy({
     Thing: Thing,
     Device: Device,
-    Computer: Computer,
     ComputerMonitor: ComputerMonitor,
+    Computer: Computer,
     Desktop: Desktop,
     Laptop: Laptop,
-    Server: Server,
+    Server: Server, 
     Mobile: Mobile,
     Smartphone: Smartphone,
     Tablet: Tablet,

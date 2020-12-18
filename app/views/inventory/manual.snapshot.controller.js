@@ -9,6 +9,8 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
     constructor () {
       const tag = new android.Tag($scope, 'device.tags[0].id')
       const ns = 'snapshot.manual'
+      const str_types_resources = ["ComputerMonitor", "Smartphone", "Tablet", "Cellphone", "Mouse", "Keyboard", "MemoryCardReader", "SAI"]
+      const resources_types = resources.Device.options(fields.Option, true, false).filter(x => str_types_resources.includes(x.value))
       /**
        * A factory for formly hide that shows the resource if it is
        * a subclass of 'type'.
@@ -39,7 +41,7 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
         new fields.Select('device.type', {
           namespace: ns,
           keyText: 'type',
-          options: resources.Device.options(fields.Option, true, false),
+          options: resources_types,
           required: true
         }),
         new fields.String('device.tags[0].id', {
@@ -65,14 +67,12 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
         new fields.Radio('device.actions[0].appearanceRange', {
           namespace: 'workbench.link',
           keyText: 'appearance',
-          options: enums.AppearanceRange.options(fields),
-          required: true
+          options: enums.AppearanceRange.options(fields)
         }),
         new fields.Radio('device.actions[0].functionalityRange', {
           namespace: 'workbench.link',
           keyText: 'functionality',
-          options: enums.FunctionalityRange.options(fields),
-          required: true
+          options: enums.FunctionalityRange.options(fields)
         }),
         new fields.String('device.brand', {
           namespace: 'r'
@@ -110,8 +110,7 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
         new fields.Select('device.chassis', {
           namespace: ns,
           options: enums.Chassis.options(fields),
-          hide: showIfSubclassFactory(resources.Computer),
-          required: true
+          hide: showIfSubclassFactory(resources.Computer)
         }),
         new fields.Number('device.imei', {
           namespace: 'r',
@@ -119,18 +118,15 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
         }),
         new fields.Number('device.resolutionHeight', {
           namespace: 'r',
-          hide: showIfSubclassFactory(resources.ComputerMonitor),
-          required: true
+          hide: showIfSubclassFactory(resources.ComputerMonitor)
         }),
         new fields.Number('device.resolutionWidth', {
           namespace: 'r',
-          hide: showIfSubclassFactory(resources.ComputerMonitor),
-          required: true
+          hide: showIfSubclassFactory(resources.ComputerMonitor)
         }),
         new fields.Number('device.screensize', {
           namespace: 'r',
-          hide: showIfSubclassFactory(resources.ComputerMonitor),
-          required: true
+          hide: showIfSubclassFactory(resources.ComputerMonitor)
         }),
         new fields.String('device.meid', {
           namespace: 'r',
