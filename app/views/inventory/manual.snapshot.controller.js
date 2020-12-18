@@ -9,6 +9,8 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
     constructor () {
       const tag = new android.Tag($scope, 'device.tags[0].id')
       const ns = 'snapshot.manual'
+      const str_types_resources = ["ComputerMonitor", "Smartphone", "Tablet", "Cellphone", "Mouse", "MemoryCardReader", "SAI", "Keyboa    rd"]
+      const resources_types = resources.Device.options(fields.Option, true, false).filter(x => str_types_resources.includes(x.value))
       /**
        * A factory for formly hide that shows the resource if it is
        * a subclass of 'type'.
@@ -39,7 +41,7 @@ function snapshotManualCtrl ($scope, android, fields, $state, enums, resources) 
         new fields.Select('device.type', {
           namespace: ns,
           keyText: 'type',
-          options: resources.Device.options(fields.Option, true, false),
+          options: resources_types,
           required: true
         }),
         new fields.String('device.tags[0].id', {
