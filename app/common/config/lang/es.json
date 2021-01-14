@@ -410,8 +410,12 @@
       "button": "Copiar enlaces públicos."
     },
     "spreadsheet": {
-      "button": "Hoja de cálculo",
+      "button": "Devices Hoja de cálculo",
       "fileName": "@:export.spreadsheet.button"
+    },
+    "actionspreadsheet": {
+      "button": "Acciones Hoja de cálculo",
+      "fileName": "@:export.actionspreadsheet.button"
     },
     "erasure": {
       "button": "Certificado de borrado",
