@@ -414,7 +414,7 @@
       "fileName": "@:export.spreadsheet.button"
     },
     "actionspreadsheet": {
-      "button": "Acciones Hoja de cálculo",
+      "button": "Métricas Hoja de cálculo",
       "fileName": "@:export.actionspreadsheet.button"
     },
     "erasure": {

@@ -713,7 +713,7 @@
       "fileName": "@:export.spreadsheet.button"
     },
     "actionspreadsheet": {
-      "button": "Actions Spreadsheet",
+      "button": "Metrics Spreadsheet",
       "fileName": "@:export.actionspreadsheet.button"
     },
     "erasure": {
