@@ -709,8 +709,12 @@
       "button": "Copy public links"
     },
     "spreadsheet": {
-      "button": "Spreadsheet",
+      "button": "Devices Spreadsheet",
       "fileName": "@:export.spreadsheet.button"
+    },
+    "actionspreadsheet": {
+      "button": "Metrics Spreadsheet",
+      "fileName": "@:export.actionspreadsheet.button"
     },
     "erasure": {
       "button": "Erasure certificate",

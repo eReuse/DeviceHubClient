@@ -16,6 +16,11 @@
                 <span translate="export.spreadsheet.button"></span>
                 <small class="text-muted">CSV</small>
             </a>
+            <a ng-click="actionsSpreadsheet()">
+                <i class="fa fa-fw fa-table"></i>
+                <span translate="export.actionspreadsheet.button"></span>
+                <small class="text-muted">CSV</small>
+            </a>
             <a ng-class="{disabled: clipboard.canCopy}" ng-click="clipboard.copy()">
                 <i class="fa fa-fw fa-link"></i>
                 <span translate="export.clipboard.button"></span>
