@@ -10,6 +10,7 @@ function headerNav ($state, server) {
     link: $scope => {
       $scope.$state = $state
       $scope.showWorkbench = server.Workbench.exists
+      $scope.stampUrl = new server.DevicehubThing('/documents/stamps/')
 
       class Element {
         constructor (key, icon, sref) {
