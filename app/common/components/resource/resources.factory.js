@@ -945,7 +945,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Thing
    */
   class Action extends Thing {
-    define ({id = null, name = null, closed = null, severity = null, description = null, startTime = null, endTime = null, snapshot = null, agent = null, author = null, components = [], parent = null, url = null, ...rest}) {
+    define ({id = null, name = null, closed = null, severity = null, description = null, startTime = null, endTime = null, snapshot = null, live= null, agent = null, author = null, components = [], parent = null, url = null, ...rest}) {
       super.define(rest)
       /** @type {?string} */
       this.id = id
@@ -963,6 +963,8 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.endTime = endTime ? new Date(endTime) : null
       /** @type {?Snapshot} */
       this.snapshot = snapshot
+      /** @type {?Live} */
+      this.live = live
       /** @type {?Agent} */
       this.agent = agent
       /** @type {?User} */
@@ -1237,6 +1239,32 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.actions = actions
       this.expectedEvents = expectedEvents
       this.elapsed = elapsed
+    }
+
+    get title () {
+      return `${super.title} — ${this.software} ${this.version}`
+    }
+
+    _post () {
+      return this.dump(false)
+    }
+  }
+
+  /**
+   * @alias module:resources.Live
+   * @extends module:resources.ActionWithOneDevice
+   */
+  class Live extends ActionWithOneDevice {
+    define ({uuid = null, software = null, version = null, actions = null, expectedEvents = null, licence_version = null, final_user_code = null, usage_time_allocate = null, ...rest}) {
+      super.define(rest)
+      this.uuid = uuid
+      this.software = software
+      this.version = version
+      this.actions = actions
+      this.expectedEvents = expectedEvents
+      this.licence_version = licence_version
+      this.final_user_code = final_user_code
+      this.usage_time_allocate = usage_time_allocate
     }
 
     get title () {
@@ -2251,6 +2279,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     EreusePrice: EreusePrice,
     Install: Install,
     Snapshot: Snapshot,
+    Live: Live,
     Test: Test,
     TestDataStorage: TestDataStorage,
     StressTest: StressTest,
