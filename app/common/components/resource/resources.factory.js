@@ -345,7 +345,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       weight = null, width = null, height = null, depth = null, actions = [], problems = [], url = null, 
       rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, 
       working = [], brand = null, generation = null, version = null, variant = null, sku = null, image = null, 
-      ethereum_address = null, deposit = null, allocated = null, usage = null,
+      ethereum_address = null, deposit = null, allocated = null, usage = null, lots = null,
       ...rest}) {
       super.define(rest)
       /** @type {int} */
@@ -402,6 +402,8 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.sku = sku
       /** @type {?URI} */
       this.image = image ? new utils.URI(image) : null
+      /** @type {?lots} */
+      this.lots = lots
 
       this.ethereum_address = ethereum_address
       this.deposit = deposit
