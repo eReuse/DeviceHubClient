@@ -46,7 +46,7 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
         pushIfValues($scope.props, Issues, devices)
         /* pushIfValues($scope.props, Price, devices, currency) */
         pushIfValues($scope.props, Rate, devices)
-        pushIfValues($scope.props, Privacy, devices)
+	//pushIfValues($scope.props, Privacy, devices)
         $scope.props.push(new Traceability(devices))
         /* $scope.props.push(new Lots(devices)) */
         pushIfValues($scope.props, Components, devices)
@@ -390,21 +390,21 @@ function deviceListSummary ($filter, CONSTANTS, enums) {
     }
   }
 
-  class Privacy extends Property {
-    constructor (devices) {
-      super(devices, 'Disk erasure')
-      const privacies = this.set('privacy')
-      if (!privacies.length) throw new NoValuesForProperty()
-      this.content = this.numberOf(privacies)
-    }
+  //class Privacy extends Property {
+    //constructor (devices) {
+      //super(devices, 'Disk erasure')
+      //const privacies = this.set('privacy')
+      //if (!privacies.length) throw new NoValuesForProperty()
+      //this.content = this.numberOf(privacies)
+    //}
 
-    full () {
-      // todo is this going to work directly with hdds?
-      return this.aggregates('privacy', undefined, 'severity')
-    }
-  }
+    //full () {
+      //// todo is this going to work directly with hdds?
+      //return this.aggregates('privacy', undefined, 'severity')
+    //}
+  //}
 
-  Privacy.fullBig = true
+  //Privacy.fullBig = true
 
   class Traceability extends Property {
     constructor (devices) {
