@@ -13,13 +13,18 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, $stateParams) 
     return $state.go('auth.inventory')
   }
  
-  class ShareDeliveryNoteForm extends fields.Form {
+  class AcceptDeliveryNoteForm extends fields.Form {
     constructor () {
       super({})
     }
 
-    _submit () {    
-      deliverynote.transfer_state = 'Accepted'
+    _submit () {
+      // TODO here Transfer Action should be POSTed for all registered devices in the lot of the deliverynote
+      // example:
+      // devices = deliverynote.lot.devices
+      // new Transfer({ devices: devices, supplier: deliverynote.supplier, receiver: deliverynote.receiver).post()
+
+      deliverynote.transfer_state = 'Accepted '
       return deliverynote.patch('transfer_state').then(function () {
         return Notification.success('Successfully accepted transfer')
       })
@@ -39,7 +44,7 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, $stateParams) 
     }
   }
 
-  $scope.form = new ShareDeliveryNoteForm()
+  $scope.form = new AcceptDeliveryNoteForm()
 }
 
 module.exports = shareDeliveryCtrl
