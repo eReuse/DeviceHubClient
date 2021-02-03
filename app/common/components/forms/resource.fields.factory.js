@@ -6,7 +6,7 @@
  * @param {module:fields} fields
  * @param {module:enums} enums
  */
-function resourceFields (fields, resources, enums, web3) {
+function resourceFields (fields, resources, enums) {
   const f = fields
 
   /** 
@@ -184,124 +184,7 @@ function resourceFields (fields, resources, enums, web3) {
   class AcceptTransfer extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       super(model, ...fields)
-      // f.patch
-      // f.PATCH
       fields.op = this.constructor.PATCH
-      const deposit = new f.Number('deposit', {namespace: 'r.deposit'})
-      this.fields.splice(1, 0, deposit)
-    }
-  }
-
-  class BatchProof extends ResourceForm {
-    constructor (model, ... fields) {
-      super(model, ...fields)
-      const devices = new f.Resources('devices', {namespace: 'r.eventWithMultipleDevices'})
-      this.fields.splice(0, 0, devices)
-    }
-
-
-    _submit (op) { 
-      function generateProof(proof) {
-        const genericProps = [ 'type', 'deviceAddress' ]
-        const data = _.omit(proof, genericProps)
-        const web3Proof = _.pick(proof, genericProps)
-        web3Proof.data = data
-        
-        return web3.generateProof(web3Proof).then((ethereumHash) => {
-          proof.ethereumHash = ethereumHash
-          return new Promise(resolve => {
-            resolve()
-          })
-        })
-      }
-
-      async function generateProofsSerial(proofs) {
-        for(const proof of proofs) {
-          await generateProof(proof)
-        }
-        return new Promise(resolve => {
-          resolve()
-        })
-      }
-
-      function generateProofsParallel(proofs) {
-        return Promise.all(proofs.map(generateProof))
-      }
-
-      switch (op) {
-        case this.constructor.POST:
-          return generateProofsSerial(this.model.proofs)
-          .then(() => {
-            return super._submit(op)
-          })
-
-          
-        default:
-          throw new Error(`Method ${op} not implemented.`)
-      }
-      return super._submit(op).then(() => {
-        
-      })
-    }
-  }
-
-  class ProofDataWipe extends BatchProof {
-  }
-
-  class ProofFunction extends BatchProof {
-  }
-  
-  class ProofReuse extends BatchProof {
-    constructor (model, ...fields) {
-      const def = {namespace: 'r.proof.reuse'}
-      super(model,
-        new f.String('receiverSegment', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
-        new f.String('idReceipt', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
-        // new f.String('supplierID', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
-        // new f.String('receiverID', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
-        new f.Number('price', def),
-        ...fields
-      )
-    }
-
-    _submit(op) {
-      const model = this.model
-      model.proofs.forEach(proof => {
-        proof.receiverSegment = model.receiverSegment
-        proof.idReceipt = model.idReceipt
-        proof.supplierID = model.supplierID
-        proof.receiverID = model.receiverID
-        proof.price = model.price
-      })
-      return super._submit(op)
-    }
-  }
-
-  class ProofRecycling extends BatchProof {
-    constructor (model, ...fields) {
-      const def = {namespace: 'r.proof.recycling'}
-      super(model,
-        new f.String('collectionPoint', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
-        new f.Datepicker('date', def),
-        new f.String('contact', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
-        new f.String('ticket', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
-        new f.String('gpsLocation', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
-        new f.String('recyclerCode', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
-        ...fields
-      )
-    }
-
-    _submit(op) {
-      const model = this.model
-      model.proofs.forEach(proof => {
-        proof.collectionPoint = model.collectionPoint
-        proof.date = model.date
-        proof.contact = model.contact
-        proof.ticket = model.ticket
-        proof.gpsLocation = model.gpsLocation
-        proof.recyclerCode = model.recyclerCode
-      })
-      return super._submit(op)
     }
   }
 
@@ -319,11 +202,6 @@ function resourceFields (fields, resources, enums, web3) {
     Receive: Receive,
     MakeAvailable: MakeAvailable,
     Transferred: Transferred,
-    BatchProof: BatchProof,
-    ProofDataWipe: ProofDataWipe,
-    ProofFunction: ProofFunction,
-    ProofReuse: ProofReuse,
-    ProofRecycling: ProofRecycling,
     Rent: Rent,
     CancelTrade: CancelTrade,
     InitTransfer: InitTransfer,

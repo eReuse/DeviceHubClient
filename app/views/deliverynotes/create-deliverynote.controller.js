@@ -81,9 +81,6 @@ function createDeliveryCtrl ($scope, $window, fields, $state, enums, resources) 
         }),
         new fields.String('deliverynote.documentID', {
           namespace: 'r'
-        }),
-        new fields.String('deliverynote.deposit', {
-          namespace: 'r',
         })
       )
     }

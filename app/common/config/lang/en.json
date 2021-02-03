@@ -145,21 +145,13 @@
   "acceptTransfer": {
     "button": "Accept transfer",
     "form": {
-      "title": "Accept transfer",
-      "deposit": {
-        "l": "Enter deposit",
-        "d": "Enter deposit"
-      }
+      "title": "Accept transfer"
     }
   },
   "initiateTransfer": {
     "button": "Initiate transfer",
     "form": {
-      "title": "Initiate transfer",
-      "ethereumAddress": {
-        "l": "Recipient's ethereum address",
-        "d": "Enter ethereum address of user you want to share this lot with"
-      }
+      "title": "Initiate transfer"
     }
   },
   "r": {
@@ -364,10 +356,6 @@
       "documentID": {
         "l": "Document ID",
         "d": "Enter the document ID of the delivery note"
-      },
-      "deposit": {
-        "l": "Deposit",
-        "d": "Optionally enter a deposit charged for each device"
       }
     },
     "event": {

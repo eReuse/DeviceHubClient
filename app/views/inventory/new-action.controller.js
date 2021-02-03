@@ -7,7 +7,7 @@
  */
 function newActionCtrl ($scope, $stateParams, resourceFields, $state) {
   const action = $scope.action = $stateParams.action
-  const type = action.proofType || action.type // TODO hacky: proofs should have their own controller
+  const type = action.type
 
   function leave () {
     $state.go('^')

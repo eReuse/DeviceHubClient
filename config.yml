@@ -42,7 +42,7 @@ e3:
 e4:
   CONSTANTS:
     appName: Devicehub Beta
-    blockchain: '127.0.0.1'
+    blockchain: false
     # blockchain: ereuse04.ereuse.org
     html5mode: true
     url: https://api.testing.usody.com

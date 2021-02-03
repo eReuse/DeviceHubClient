@@ -34,33 +34,9 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         resources.Receive
         */
       ]
-      $scope.proofs = [
-        'newAction.button.proofs',
-        resources.ProofDataWipe,
-        resources.ProofFunction,
-        resources.ProofReuse,
-        resources.ProofRecycling,
-      ]
       $scope.open = Action => {
         const action = new Action({devices: $scope.devices})
         $state.go('.newAction', {action: action})
-      }
-
-      $scope.openProof = Proof => {
-        const proofs = []
-        
-        const devices = $scope.devices.filter((device) => {
-          const proof = Proof.createFromDevice(device, session.user)
-          if (proof) {
-            proofs.push(proof)
-            return true
-          } else {
-            return false
-          }
-        })
-
-        const batch = new resources.BatchProof({ devices: devices, proofs: proofs, proofType: Proof.type })
-        $state.go('.newAction', {action: batch})
       }
     }
   }

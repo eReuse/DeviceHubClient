@@ -137,21 +137,13 @@
   "acceptTransfer": {
     "button": "Aceptar la transferencía",
     "form": {
-      "title": "Aceptar la transferencía",
-      "deposit": {
-        "l": "Introducir el depósito",
-        "d": "Introducir el depósito"
-      }
+      "title": "Aceptar la transferencía"
     }
   },
   "initiateTransfer": {
     "button": "Iniciar la transferencía",
     "form": {
-      "title": "Iniciar la transferencía",
-      "ethereumAddress": {
-        "l": "La dirección de ethereum del receptor",
-        "d": "Introduce la dirección de ethereum del usuario con quien quieres compartir este lote"
-      }
+      "title": "Iniciar la transferencía"
     }
   },
   "r": {
@@ -260,10 +252,6 @@
       "documentID": {
         "l": "Document ID",
         "d": "Enter the document ID of the delivery note"
-      },
-      "deposit": {
-        "l": "Deposit",
-        "d": "Optionally enter a deposit charged for each device"
       }
     },
     "event": {

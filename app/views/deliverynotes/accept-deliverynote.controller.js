@@ -4,13 +4,10 @@
  * @param {module:fields} fields
  * @param {module:android} android
  */
-function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $stateParams, session, resources) {
+function shareDeliveryCtrl (Notification, $scope, fields, $state, $stateParams) {
   const devices = $scope.devices = $stateParams.devices
   const lot = $scope.lot = $stateParams.lot
   const deliverynote = lot.deliverynote
-  const receiver_address = deliverynote.receiver.ethereum_address
-  const deliverynote_ethereum_address = deliverynote.ethereum_address
-  const deposit = deliverynote.deposit
 
   function leave () {
     return $state.go('auth.inventory')
@@ -18,60 +15,12 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, web3, $statePa
  
   class ShareDeliveryNoteForm extends fields.Form {
     constructor () {
-      super(
-        {}
-      )
+      super({})
     }
 
-    _submit () {
-      
-      function acceptTransferWeb3() {
-        const submitToWeb3 = false // !!session.user.ethereum_address
-        if(!submitToWeb3) {
-          return new Promise(resolve => {
-            resolve(false)
-          })
-        }
-        const dataWEB3 = {
-          deliverynote_address: deliverynote_ethereum_address,
-          devices: devices,
-          deposit: deposit,
-          receiver_address: receiver_address
-        }
-
-        return web3.initTransfer(dataWEB3)
-      }
-
-    
-      return acceptTransferWeb3()
-      .then(function (ethereumHashes) {
-        if (!ethereumHashes) {
-          //TODO submit transfer action instead
-          return new Promise(resolve => {
-            resolve()
-          })
-        }
-
-        const proofs = devices.map(device => {
-          const proofData = {
-            ethereumHash: ethereumHashes[device.id],
-            deviceID: device.id,
-            supplierID: deliverynote.supplier.id,
-            receiverID: deliverynote.receiver.id,
-            deposit: deliverynote.deposit
-          }
-          return new resources.ProofTransfer(proofData)
-        })
-        
-        const batch = new resources.BatchProof({ proofs: proofs })
-        return batch.post()
-      })
-      .then(function () {
-        deliverynote.transfer_state = 'Accepted'
-
-        return deliverynote.patch('transfer_state')
-      })
-      .then(function () {
+    _submit () {    
+      deliverynote.transfer_state = 'Accepted'
+      return deliverynote.patch('transfer_state').then(function () {
         return Notification.success('Successfully accepted transfer')
       })
       .catch(function (error) {
