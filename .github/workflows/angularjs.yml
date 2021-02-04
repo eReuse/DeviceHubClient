@@ -25,12 +25,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: build eReuse-Blockchain
-        run: |
-          cd $GITHUB_WORKSPACE/app/eReuse-Blockchain
-          rm -rf node_modules && npm install
-          npm run-script compile
-
       - name: Extract environment based on git branch name
         shell: bash
         run: |
