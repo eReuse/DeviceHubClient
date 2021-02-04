@@ -19,10 +19,10 @@ function shareDeliveryCtrl (Notification, $scope, fields, $state, $stateParams) 
     }
 
     _submit () {
-      // TODO here Transfer Action should be POSTed for all registered devices in the lot of the deliverynote
+      // TODO here Trade Action should be POSTed for all registered devices in the lot of the deliverynote
       // example:
       // devices = deliverynote.lot.devices
-      // new Transfer({ devices: devices, supplier: deliverynote.supplier, receiver: deliverynote.receiver).post()
+      // new Trade({ devices: devices, supplier: deliverynote.supplier, receiver: deliverynote.receiver).post()
 
       deliverynote.transfer_state = 'Accepted '
       return deliverynote.patch('transfer_state').then(function () {
