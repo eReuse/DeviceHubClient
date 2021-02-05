@@ -8,17 +8,7 @@ NodeJS >=9.10 (recommended **10.16.1**) with npm required.
   ```bash
   git clone https://github.com/eReuse/DeviceHubClient.git
   ```
-2. Go to the folder of the project, get and build eReuse-Blockchain submodule:
-  ```bash
-  cd DeviceHubClient
-  git submodule update --init --recursive
-
-  # DeviceHub/app/eReuse-Blockchain
-  cd app/eReuse-Blockchain
-  rm -rf node_modules && npm install
-  npm run-script compile
-  ```
-3. In the folder of the project, execute `npm install`. This installs
+2. In the folder of the project, execute `npm install`. This installs
    both npm and bower dependencies.
   ```bash
   # DeviceHub
