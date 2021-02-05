@@ -1502,7 +1502,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.transferredDevices = transferredDevices
       this.transfer_state = transfer_state
       this.lot = lot
-      this.deposit = 0
+      this.amount= 0
     }
 
     get title () {
