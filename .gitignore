@@ -9,9 +9,7 @@ tmp
 .idea/**
 .vscode/*
 Thumbs.db
-app/truffle/build/
-app/eReuse-Blockchain/build/
 
 config.yml
 pnpm-lock.yaml
-app/truffle/build/contracts/*
+
