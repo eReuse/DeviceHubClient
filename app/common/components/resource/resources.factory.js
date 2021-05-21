@@ -1606,6 +1606,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   class Trade extends ActionWithMultipleDevices {
     define ({shippingDate = null, invoiceNumber = null, price = null, to = null, confirms = null, ...rest}) {
       super.define(rest)
+      /** TODO change properties of Trade */
       this.shippingDate = shippingDate
       this.invoiceNumber = invoiceNumber
       this.price = price
@@ -1614,8 +1615,9 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
+  /** TODO change to ConfirmTrade */
   /**
-   * @alias module:resources.Trade
+   * @alias module:resources.InitTransfer
    * @extends module:resources.ActionWithMultipleDevices
    * @deprecated
    */
@@ -1629,6 +1631,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
+  /** TODO remove this Action */
   /**
    * @alias module:resources.Trade
    * @extends module:resources.ActionWithMultipleDevices
@@ -1644,6 +1647,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
+  /** TODO remove? */
   /**
    * @alias module:resources.Sell
    * @extends module:resources.Trade
@@ -1654,6 +1658,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
+  /** TODO remove? */
   /**
    * @alias module:resources.Donate
    * @extends module:resources.Trade
@@ -1674,6 +1679,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
+  /** TODO remove? */
   /**
    * @alias module:resources.Transferred
    * @extends module:resources.ActionWithMultipleDevices
@@ -1685,6 +1691,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
+  /** TODO remove? */
   /**
    * @alias module:resources.CancelTrade
    * @extends module:resources.Trade
@@ -1692,6 +1699,9 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   class CancelTrade extends Trade {
 
   }
+
+  /** TODO add RevokeTrade */
+  /** TODO add ConfirmRevokeTrade */
 
   /**
    * @alias module:resources.ToDisposeProduct

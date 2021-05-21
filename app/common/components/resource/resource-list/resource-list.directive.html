@@ -35,6 +35,14 @@
         </accept-deliverynote-button>
         <delete-lot-button lots="lotsM.lots" manager="lotsM">
         </delete-lot-button>
+        <!-- TODO 
+          if single temporary lot is selected, add supplier button here 
+          adding supplier Converts the temporary lot to an incoming lot
+        -->
+        <!-- TODO
+          if single temporary lot is selected, add receiver button here
+          adding receiver Converts the temporary lot to an outgoing lot
+        -->
         <button type="button" class="btn btn-link hidden-xs btn-xs" ng-click="lotsM.deselectAll()">
           Deselect all ({{lotsM.lots.length}})
         </button>
