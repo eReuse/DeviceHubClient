@@ -1485,6 +1485,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
 
   /**
    * @alias module:resources.DeliveryNote
+   * TODO new-trade: reuse or remove this class and occurences
    */
   class DeliveryNote extends Thing {
     define ({
@@ -1551,6 +1552,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   /**
    * @alias module:resources.Ready
    * @extends module:resources.ActionWithMultipleDevices
+   * @deprecated
    */
   class Ready extends ActionWithMultipleDevices {
     static get icon () {
@@ -1581,6 +1583,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   /**
    * @alias module:resources.Organize
    * @extends module:resources.ActionWithMultipleDevices
+   * @deprecated
    */
   class Organize extends ActionWithMultipleDevices {
   }
@@ -1588,6 +1591,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   /**
    * @alias module:resources.Reserve
    * @extends module:resources.Organize
+   * @deprecated
    */
   class Reserve extends Organize {
   }
@@ -1595,6 +1599,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   /**
    * @alias module:resources.CancelReservation
    * @extends module:resources.Organize
+   * @deprecated
    */
   class CancelReservation extends Organize {
   }
@@ -1606,7 +1611,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   class Trade extends ActionWithMultipleDevices {
     define ({shippingDate = null, invoiceNumber = null, price = null, to = null, confirms = null, ...rest}) {
       super.define(rest)
-      /** TODO change properties of Trade */
+      /** TODO new-trade: change properties of Trade */
       this.shippingDate = shippingDate
       this.invoiceNumber = invoiceNumber
       this.price = price
@@ -1615,7 +1620,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
-  /** TODO change to ConfirmTrade */
+  /** TODO new-trade: change to ConfirmTrade */
   /**
    * @alias module:resources.InitTransfer
    * @extends module:resources.ActionWithMultipleDevices
@@ -1631,7 +1636,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
-  /** TODO remove this Action */
+  /** TODO new-trade: remove this Action */
   /**
    * @alias module:resources.Trade
    * @extends module:resources.ActionWithMultipleDevices
@@ -1647,7 +1652,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
-  /** TODO remove? */
+  /** TODO new-trade: remove? */
   /**
    * @alias module:resources.Sell
    * @extends module:resources.Trade
@@ -1658,7 +1663,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
-  /** TODO remove? */
+  /** TODO new-trade: remove? */
   /**
    * @alias module:resources.Donate
    * @extends module:resources.Trade
@@ -1679,7 +1684,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
-  /** TODO remove? */
+  /** TODO new-trade: remove? */
   /**
    * @alias module:resources.Transferred
    * @extends module:resources.ActionWithMultipleDevices
@@ -1691,7 +1696,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
-  /** TODO remove? */
+  /** TODO new-trade: remove? */
   /**
    * @alias module:resources.CancelTrade
    * @extends module:resources.Trade
@@ -1700,8 +1705,8 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
 
   }
 
-  /** TODO add RevokeTrade */
-  /** TODO add ConfirmRevokeTrade */
+  /** TODO new-trade: add RevokeTrade */
+  /** TODO new-trade: add ConfirmRevokeTrade */
 
   /**
    * @alias module:resources.ToDisposeProduct

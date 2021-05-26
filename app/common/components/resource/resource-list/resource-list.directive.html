@@ -17,6 +17,7 @@
         <!--
           <lot-children-button parent="lotsM.lots[0]" ng-if="lotsM.lots.length === 1"></lot-children-button>
         -->
+        <!-- TODO new-trade: remove this button -->
         <share-deliverynote-button 
           ng-if="lotsM.lots.length === 1 && lotsM.lots.length 
           && lotsM.lots[0].deliverynote
@@ -26,6 +27,7 @@
           getter="getter"
           ng-if="">
         </share-deliverynote-button>
+        <!-- TODO new-trade: remove this button -->
         <accept-deliverynote-button 
           ng-if="lotsM.lots.length === 1 && lotsM.lots.length && lotsM.lots[0].deliverynote 
           && (lotsM.lots[0].deliverynote.creator.id === user.id)
@@ -35,12 +37,12 @@
         </accept-deliverynote-button>
         <delete-lot-button lots="lotsM.lots" manager="lotsM">
         </delete-lot-button>
-        <!-- TODO 
-          if single temporary lot is selected, add supplier button here 
+        <!-- TODO new-trade: 
+          if single temporary lot is selected, show "add supplier button" 
           adding supplier Converts the temporary lot to an incoming lot
         -->
-        <!-- TODO
-          if single temporary lot is selected, add receiver button here
+        <!-- TODO new-trade: 
+          if single temporary lot is selected, show "add receiver button"
           adding receiver Converts the temporary lot to an outgoing lot
         -->
         <button type="button" class="btn btn-link hidden-xs btn-xs" ng-click="lotsM.deselectAll()">
@@ -105,7 +107,7 @@
               >
                 {{::Field.name}}
               </th>
-            </tr>
+            </tr> 
             </thead>
             <tbody>
               <tr ng-repeat="expectedDevice in expectedDevices track by expectedDevice.serialNumber">
