@@ -17,34 +17,26 @@
         <!--
           <lot-children-button parent="lotsM.lots[0]" ng-if="lotsM.lots.length === 1"></lot-children-button>
         -->
-        <!-- TODO new-trade: remove this button -->
-        <share-deliverynote-button 
-          ng-if="lotsM.lots.length === 1 && lotsM.lots.length 
-          && lotsM.lots[0].deliverynote
-          && (lotsM.lots[0].deliverynote.supplier.id === user.id)
-          && (lotsM.lots[0].deliverynote.transfer_state === 'Initial')"
-          lot="lotsM.lots[0]" 
-          getter="getter"
-          ng-if="">
-        </share-deliverynote-button>
-        <!-- TODO new-trade: remove this button -->
-        <accept-deliverynote-button 
-          ng-if="lotsM.lots.length === 1 && lotsM.lots.length && lotsM.lots[0].deliverynote 
-          && (lotsM.lots[0].deliverynote.creator.id === user.id)
-          && (lotsM.lots[0].deliverynote.transfer_state === 'Initiated')" 
-          lot="lotsM.lots[0]"
-          getter="getter">
-        </accept-deliverynote-button>
         <delete-lot-button lots="lotsM.lots" manager="lotsM">
         </delete-lot-button>
         <!-- TODO new-trade: 
           if single temporary lot is selected, show "add supplier button" 
           adding supplier Converts the temporary lot to an incoming lot
         -->
+        <add-supplier-button 
+          ng-if="lotsM.lots.length === 1 && !lotsM.lots[0].trade"
+          lot="lotsM.lots[0]"
+          getter="getter">
+        </add-supplier-button>
         <!-- TODO new-trade: 
           if single temporary lot is selected, show "add receiver button"
           adding receiver Converts the temporary lot to an outgoing lot
         -->
+        <add-receiver-button 
+          ng-if="lotsM.lots.length === 1 && !lotsM.lots[0].trade"
+          lot="lotsM.lots[0]"
+          getter="getter">
+        </add-receiver-button>
         <button type="button" class="btn btn-link hidden-xs btn-xs" ng-click="lotsM.deselectAll()">
           Deselect all ({{lotsM.lots.length}})
         </button>

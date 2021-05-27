@@ -48,8 +48,9 @@ function resourceListConfig ($filter, table) {
       const textTrading = utils.Naming.humanize(resource.trading || '')
       const textUsage = utils.Naming.humanize(resource.usage || '')
       /** TODO new-trade: add display of confirmation status */
+      const textConfirm = utils.Naming.humanize(resource.confirm_status || '')
      
-      const content = [textPhysical, textTrading, textUsage].filter(a => a).join(' / ')
+      const content = [textPhysical, textTrading, textUsage, textConfirm].filter(a => a).join(' / ')
       
       super(resource, content)
     }

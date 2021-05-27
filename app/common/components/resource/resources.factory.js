@@ -1609,14 +1609,15 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithMultipleDevices
    */
   class Trade extends ActionWithMultipleDevices {
-    define ({shippingDate = null, invoiceNumber = null, price = null, to = null, confirms = null, ...rest}) {
+    define ({date = null, price = null, to = null, from = null, confirms = null, lot = null, ...rest}) {
       super.define(rest)
       /** TODO new-trade: change properties of Trade */
-      this.shippingDate = shippingDate
-      this.invoiceNumber = invoiceNumber
+      this.date = date
       this.price = price
-      this.to = to
+      this.userTo = to
+      this.userFrom = from
       this.confirms = confirms
+      this.lot = lot
     }
   }
 
@@ -1808,7 +1809,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    */
   class Lot extends Thing {
     define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null,
-      deliverynote = null, isVisible = true, ...rest}) {
+      deliverynote = null, isVisible = true, trade = null, ...rest}) {
       super.define(rest)
       this.id = id
       this.name = name
@@ -1818,6 +1819,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.parents = parents
       this.children = children
       this.url = url
+      this.trade = trade
       this.deliverynote = deliverynote ? new DeliveryNote(deliverynote) : deliverynote
       this.isVisible = isVisible
     }

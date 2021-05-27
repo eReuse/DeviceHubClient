@@ -25,6 +25,7 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         resources.ToRepair,
         resources.Ready,
         /** TODO new-trade: add new device Actions here */
+	resoureces.Trade,
         
         /*
         'newAction.button.political',
