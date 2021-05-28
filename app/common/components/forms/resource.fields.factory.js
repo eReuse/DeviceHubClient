@@ -144,11 +144,17 @@ function resourceFields (fields, resources, enums) {
   class MakeAvailable extends EventWithMultipleDevices {
   }
 
-    /**
+  /**
+   * TODO new-trade: remove? 
    * @alias module:resourceFields.Transferred
    * @extends module:resourceFields.EventWithMultipleDevices
    */
   class Transferred extends EventWithMultipleDevices {
+  }
+
+  /** TODO new-trade: add fields for trade here */
+  class Trade extends EventWithMultipleDevices {
+
   }
 
   /**
@@ -159,13 +165,16 @@ function resourceFields (fields, resources, enums) {
   }
 
   /**
+   * TODO new-trade: remove? 
    * @alias module:resourceFields.CancelTrade
    * @extends module:resourceFields.EventWithMultipleDevices
+   * @deprecated
    */
   class CancelTrade extends EventWithMultipleDevices {
   }
   
   /**
+   * TODO new-trade: change to ConfirmTrade
    * @alias module:resourceFields.InitTransfer
    * @extends module:resourceFields.EventWithMultipleDevices
    */
@@ -178,6 +187,7 @@ function resourceFields (fields, resources, enums) {
   }
 
   /**
+   * TODO new-trade: remove this form
    * @alias module:resourceFields.AcceptTransfer
    * @extends module:resourceFields.EventWithMultipleDevices
    */
@@ -187,6 +197,9 @@ function resourceFields (fields, resources, enums) {
       fields.op = this.constructor.PATCH
     }
   }
+
+  /** TODO new-trade: add RevokeTrade */
+  /** TODO new-trade: add ConfirmRevokeTrade */
 
   return {
     ResourceForm: ResourceForm,
@@ -203,6 +216,7 @@ function resourceFields (fields, resources, enums) {
     MakeAvailable: MakeAvailable,
     Transferred: Transferred,
     Rent: Rent,
+    Trade: Trade,
     CancelTrade: CancelTrade,
     InitTransfer: InitTransfer,
     AcceptTransfer: AcceptTransfer
