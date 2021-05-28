@@ -26,7 +26,7 @@
         <add-supplier-button 
           ng-if="lotsM.lots.length === 1 && !lotsM.lots[0].trade"
           lot="lotsM.lots[0]"
-          getter="getter">
+	  manager="lotsM">
         </add-supplier-button>
         <!-- TODO new-trade: 
           if single temporary lot is selected, show "add receiver button"
@@ -35,7 +35,7 @@
         <add-receiver-button 
           ng-if="lotsM.lots.length === 1 && !lotsM.lots[0].trade"
           lot="lotsM.lots[0]"
-          getter="getter">
+	  manager="lotsM">
         </add-receiver-button>
         <button type="button" class="btn btn-link hidden-xs btn-xs" ng-click="lotsM.deselectAll()">
           Deselect all ({{lotsM.lots.length}})

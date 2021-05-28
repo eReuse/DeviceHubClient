@@ -7,16 +7,16 @@ function addSupplierButton ($state) {
     template: require('./add-supplier-button.directive.html'),
     restrict: 'E',
     scope: {
-      lots: '=',
+      lot: '=',
       manager: '='
     },
     /**
      */
     link: $scope => {
-      const lots = $scope.lots
+      const lot = $scope.lot
 
       $scope.lotTrade = () => {
-        $scope.manager.lotTrade(lots)
+	$scope.manager.lotTrade(lot)
       }
     }
   }
