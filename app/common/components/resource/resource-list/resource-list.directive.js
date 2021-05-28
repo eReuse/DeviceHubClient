@@ -126,11 +126,9 @@ function resourceList ($rootScope, session, resourceListConfig, Notification, de
             $rootScope.$broadcast('lots:reload')
           }
 
-          lotTrade (lot) {
-            console.log(lot)
-
-            $rootScope.$broadcast('lots:reload')
-          }
+	  lotTrade (lot) {
+	    console.log(lot)
+	  }
 
           /**
            * @param {module:resources.Lot[]} lots

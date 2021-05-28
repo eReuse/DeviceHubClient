@@ -98,9 +98,32 @@ module.exports = window.angular.module('deviceHub', [
         template: require('./views/deliverynotes/share-deliverynote.controller.html'),
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
         controller: 'shareDeliverynoteCtrl as cdCl'
+//===
       }).state({
-        name: 'auth.acceptDeliverynote',
-        url: '/deliverynote/accept',
+        name: 'auth.createTrade',
+        url: '/trade/new',
+        params: {
+          lot: {
+            type: 'any',
+            value: null
+          }
+        },
+	template: require('./views/trades/create-trade.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
+	controller: 'createTradeCtrl as cdTr'
+	      /*
+      }).state({
+        name: 'auth.createTrade',
+        url: '/trade/new',
+        params: {
+          funs: {}
+        },
+        template: require('./views/trades/create-trade.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
+        controller: 'createTradeCtrl as cdCl'
+      }).state({
+        name: 'auth.acceptTrade',
+        url: '/trade/accept',
         params: {
           devices: {
             type: 'any',
@@ -111,9 +134,42 @@ module.exports = window.angular.module('deviceHub', [
             value: null
           }
         },
-        template: require('./views/deliverynotes/accept-deliverynote.controller.html'),
+        template: require('./views/trades/accept-trade.controller.html'),
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
-        controller: 'acceptDeliverynoteCtrl as cdCl'
+        controller: 'acceptTradeCtrl as cdTr'
+      }).state({
+        name: 'auth.shareTrade',
+        url: '/trade/share',
+        params: {
+          devices: {
+            type: 'any',
+            value: []
+          },
+          lot: {
+            type: 'any',
+            value: null
+          }
+        },
+        template: require('./views/trades/share-trade.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
+        controller: 'shareTradeCtrl as cdTr'
+      }).state({
+        name: 'auth.acceptTrade',
+        url: '/trade/accept',
+        params: {
+          devices: {
+            type: 'any',
+            value: []
+          },
+          lot: {
+            type: 'any',
+            value: null
+          }
+        },
+        template: require('./views/trades/accept-trade.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
+        controller: 'acceptTradeCtrl as cdTr'
+	*/
       }).state({
         name: 'auth.workbench',
         url: '/workbench/',
