@@ -1,4 +1,4 @@
-function addSupplierButton ($state) {
+function addSupplierButton ($state, session) {
   /**
    * @ngdoc directive
    * @restrict E
@@ -16,7 +16,7 @@ function addSupplierButton ($state) {
       const lot = $scope.lot
 
       $scope.lotTrade = () => {
-	$scope.manager.lotTrade(lot)
+	      $scope.manager.createTradeForLot(lot, { to: session.user})
       }
     }
   }

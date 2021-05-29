@@ -6,7 +6,7 @@
  * @param {module:deviceGetter} deviceGetter
  * @param {module:selection} selection
  */
-function resourceList ($rootScope, session, resourceListConfig, Notification, deviceGetter, selection) {
+function resourceList ($rootScope, $state, session, resourceListConfig, Notification, deviceGetter, selection, resources) {
   return {
     template: require('./resource-list.directive.html'),
     restrict: 'E',
@@ -126,9 +126,11 @@ function resourceList ($rootScope, session, resourceListConfig, Notification, de
             $rootScope.$broadcast('lots:reload')
           }
 
-	  lotTrade (lot) {
-	    console.log(lot)
-	  }
+          createTradeForLot(lot, participants = {}) {
+            console.log('creating trade for lot', lot, ', participants', participants)
+            const action = new resources.Trade({devices: lot.devices, lot: lot, to: participants.to, from: participants.from})
+            $state.go('.newAction', {action: action})
+          }
 
           /**
            * @param {module:resources.Lot[]} lots

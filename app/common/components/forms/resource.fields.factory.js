@@ -1,5 +1,6 @@
 /**
  * @module resourceFields
+ * IMPORTANT: we are using the formly library for creating forms http://angular-formly.com/
  */
 
 /**
@@ -48,7 +49,7 @@ function resourceFields (fields, resources, enums) {
         new f.String('name', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.Datepicker('endTime', def),
         new f.Select('severity',
-          _.defaults({options: enums.Severity.options(f)}, def)),
+          _.defaults({options: enums.Severity .options(f)}, def)),
         new f.Textarea('description', def),
         ...fields
       )
@@ -154,7 +155,19 @@ function resourceFields (fields, resources, enums) {
 
   /** TODO new-trade: add fields for trade here */
   class Trade extends EventWithMultipleDevices {
+    constructor (model, ...fields) {
+      super(model, ...fields)
+      const to = model.userTo ? 
+        new f.StringReadOnly('to', {defaultValue: model.userTo.id, namespace: 'r.to'})
+        : new f.String('to', {namespace: 'r.to'})
 
+      const from = model.userFrom ? 
+        new f.StringReadOnly('from', {defaultValue: model.userfrom.id, namespace: 'r.from'})
+        : new f.String('from', {namespace: 'r.from'})
+     
+      this.fields.splice(1, 0, to)
+      this.fields.splice(1, 0, from)
+    }
   }
 
   /**
