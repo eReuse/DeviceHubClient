@@ -1572,14 +1572,13 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   class CancelReservation extends Organize {
   }
 
-  /**
+  /** TODO new-trade: remove this Action
    * @alias module:resources.Trade
    * @extends module:resources.ActionWithMultipleDevices
    */
   class Trade extends ActionWithMultipleDevices {
     define ({date = null, price = null, to = null, from = null, confirms = null, lot = null, ...rest}) {
       super.define(rest)
-      /** TODO new-trade: change properties of Trade */
       this.date = date
       this.price = price
       this.userTo = to
@@ -1593,35 +1592,35 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   /**
    * @alias module:resources.ConfirmTrade
    * @extends module:resources.ActionWithMultipleDevices
-   * @deprecated
    */
-
-  /** TODO new-trade: remove this Action */
-  /**
-   * @alias module:resources.Trade
-   * @extends module:resources.ActionWithMultipleDevices
-   * @deprecated
-   */
-
-  /** TODO new-trade: remove? */
-  /**
-   * @alias module:resources.Sell
-   * @extends module:resources.Trade
-   */
-  class Sell extends Trade {
-    static get icon () {
-      return 'money-bill-alt'
+  class Confirm extends ActionWithMultipleDevices {
+    define ({action = null, ...rest}) {
+      super.define(rest)
+      this.action = action
     }
   }
 
-  /** TODO new-trade: remove? */
+  /** TODO new-trade: change to Revoke */
   /**
-   * @alias module:resources.Donate
-   * @extends module:resources.Trade
+   * @alias module:resources.Revoke
+   * @extends module:resources.ActionWithMultipleDevices
    */
-  class Donate extends Trade {
-    static get icon () {
-      return 'money-bill'
+  class Revoke extends ActionWithMultipleDevices {
+    define ({action = null, ...rest}) {
+      super.define(rest)
+      this.action = action
+    }
+  }
+
+  /** TODO new-trade: change to ConfirmRevokeTrade */
+  /**
+   * @alias module:resources.ConfirmRevokeTrade
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class ConfirmRevoke extends ActionWithMultipleDevices {
+    define ({revoke = null, ...rest}) {
+      super.define(rest)
+      this.action = revoke
     }
   }
 
@@ -1634,9 +1633,6 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       return 'fa-check-circle'
     }
   }
-
-  /** TODO new-trade: add RevokeTrade */
-  /** TODO new-trade: add ConfirmRevokeTrade */
 
   /**
    * @alias module:resources.ToDisposeProduct
@@ -2045,8 +2041,9 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     Reserve: Reserve,
     CancelReservation: CancelReservation,
     Trade: Trade,
-    Sell: Sell,
-    Donate: Donate,
+    Confirm: Confirm,
+    Revoke: Revoke,
+    ConfirmRevoke: ConfirmRevoke,
     MakeAvailable: MakeAvailable,
     Rent: Rent,
     ToDisposeProduct: ToDisposeProduct,

@@ -145,6 +145,17 @@ function resourceFields (fields, resources, enums) {
   class MakeAvailable extends EventWithMultipleDevices {
   }
 
+  /**
+   * @alias module:resourceFields.Rent
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class Rent extends EventWithMultipleDevices {
+  }
+
+  /**
+   * TODO new-trade: change to Trade
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
   class Trade extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       super(model, ...fields)
@@ -162,19 +173,47 @@ function resourceFields (fields, resources, enums) {
   }
 
   /**
-   * @alias module:resourceFields.Rent
-   * @extends module:resourceFields.EventWithMultipleDevices
-   */
-  class Rent extends EventWithMultipleDevices {
-  }
-
-  /**
    * TODO new-trade: change to ConfirmTrade
    * @extends module:resourceFields.EventWithMultipleDevices
    */
+  class Confirm extends EventWithMultipleDevices {
+    constructor (model, ...fields) {
+      super(model, ...fields)
+      const action = model.trade ? 
+        new f.StringReadOnly('action', {defaultValue: model.trade.id, namespace: 'r.trade'})
+        : new f.String('action', {namespace: 'r.trade'})
 
-  /** TODO new-trade: add RevokeTrade */
-  /** TODO new-trade: add ConfirmRevokeTrade */
+      this.fields.splice(1, 0, action)
+    }
+  }
+
+  /** TODO new-trade: add RevokeTrade 
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class Revoke extends EventWithMultipleDevices {
+    constructor (model, ...fields) {
+      super(model, ...fields)
+      const action = model.trade ? 
+        new f.StringReadOnly('action', {defaultValue: model.trade.id, namespace: 'r.trade'})
+        : new f.String('action', {namespace: 'r.trade'})
+
+      this.fields.splice(1, 0, action)
+    }
+  }
+
+  /** TODO new-trade: add ConfirmRevokeTrade 
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class ConfirmRevoke extends EventWithMultipleDevices {
+    constructor (model, ...fields) {
+      super(model, ...fields)
+      const action = model.revoke ? 
+        new f.StringReadOnly('action', {defaultValue: model.revoke.id, namespace: 'r.revoke'})
+        : new f.String('action', {namespace: 'r.revoke'})
+
+      this.fields.splice(1, 0, action)
+    }
+  }
 
   return {
     ResourceForm: ResourceForm,
@@ -191,6 +230,9 @@ function resourceFields (fields, resources, enums) {
     MakeAvailable: MakeAvailable,
     Rent: Rent,
     Trade: Trade,
+    Confirm: Confirm,
+    Revoke: Revoke,
+    ConfirmRevoke: ConfirmRevoke,
   }
 }
 
