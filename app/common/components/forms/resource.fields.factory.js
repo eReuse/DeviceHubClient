@@ -153,27 +153,27 @@ function resourceFields (fields, resources, enums) {
   }
 
   /**
-   * TODO new-trade: change to Trade
+   * TODO new-trade: change userTo Trade
    * @extends module:resourceFields.EventWithMultipleDevices
    */
   class Trade extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       super(model, ...fields)
-      const to = model.userTo ? 
-        new f.StringReadOnly('to', {defaultValue: model.userTo.id, namespace: 'r.to'})
-        : new f.String('to', {namespace: 'r.to'})
+      const userTo = model.userTo ? 
+        new f.StringReadOnly('userTo', {defaultValue: model.userTo, namespace: 'r.userTo'})
+        : new f.String('userTo', {namespace: 'r.userTo'})
 
-      const from = model.userFrom ? 
-        new f.StringReadOnly('from', {defaultValue: model.userfrom.id, namespace: 'r.from'})
-        : new f.String('from', {namespace: 'r.from'})
+      const userFrom = model.userFrom ? 
+        new f.StringReadOnly('userFrom', {defaultValue: model.userFrom, namespace: 'r.userFrom'})
+        : new f.String('userFrom', {namespace: 'r.userFrom'})
      
-      this.fields.splice(1, 0, to)
-      this.fields.splice(1, 0, from)
+      this.fields.splice(1, 0, userTo)
+      this.fields.splice(2, 0, userFrom)
     }
   }
 
   /**
-   * TODO new-trade: change to ConfirmTrade
+   * TODO new-trade: change userTo ConfirmTrade
    * @extends module:resourceFields.EventWithMultipleDevices
    */
   class Confirm extends EventWithMultipleDevices {

@@ -128,7 +128,7 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
 
           createTradeForLot(lot, participants = {}) {
             console.log('creating trade for lot', lot, ', participants', participants)
-            const action = new resources.Trade({devices: lot.devices, lot: lot, to: participants.to, from: participants.from})
+            const action = new resources.Trade({devices: lot.devices, lot: lot, userTo: participants.to, userFrom: participants.from})
             $state.go('.newAction', {action: action})
           }
 
