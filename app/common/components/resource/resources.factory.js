@@ -1591,19 +1591,10 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
 
   /** TODO new-trade: change to ConfirmTrade */
   /**
-   * @alias module:resources.InitTransfer
+   * @alias module:resources.ConfirmTrade
    * @extends module:resources.ActionWithMultipleDevices
    * @deprecated
    */
-  class InitTransfer extends ActionWithMultipleDevices {
-    define ({shippingDate = null, invoiceNumber = null, to = null, lot = null, ...rest}) {
-      super.define(rest)
-      this.shippingDate = shippingDate
-      this.invoiceNumber = invoiceNumber
-      this.to = to
-      this.lot = lot
-    }
-  }
 
   /** TODO new-trade: remove this Action */
   /**
@@ -1611,15 +1602,6 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithMultipleDevices
    * @deprecated
    */
-  class AcceptTransfer extends ActionWithMultipleDevices {
-    define ({shippingDate = null, invoiceNumber = null, to = null, lot = null, ...rest}) {
-      super.define(rest)
-      this.shippingDate = shippingDate
-      this.invoiceNumber = invoiceNumber
-      this.to = to
-      this.lot = lot
-    }
-  }
 
   /** TODO new-trade: remove? */
   /**
@@ -1651,27 +1633,6 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     static get icon () {
       return 'fa-check-circle'
     }
-  }
-
-  /** TODO new-trade: remove? */
-  /**
-   * @alias module:resources.Transferred
-   * @extends module:resources.ActionWithMultipleDevices
-   * @deprecated
-   */
-  class Transferred extends ActionWithMultipleDevices {
-    static get icon () {
-      return 'fa-check-circle'
-    }
-  }
-
-  /** TODO new-trade: remove? */
-  /**
-   * @alias module:resources.CancelTrade
-   * @extends module:resources.Trade
-   */
-  class CancelTrade extends Trade {
-
   }
 
   /** TODO new-trade: add RevokeTrade */
@@ -2083,14 +2044,10 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     Organize: Organize,
     Reserve: Reserve,
     CancelReservation: CancelReservation,
-    InitTransfer: InitTransfer,
-    AcceptTransfer: AcceptTransfer,
     Trade: Trade,
     Sell: Sell,
     Donate: Donate,
     MakeAvailable: MakeAvailable,
-    Transferred: Transferred,
-    CancelTrade: CancelTrade,
     Rent: Rent,
     ToDisposeProduct: ToDisposeProduct,
     DisposeProduct: DisposeProduct,

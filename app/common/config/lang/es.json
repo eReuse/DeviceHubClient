@@ -137,18 +137,6 @@
       "max": "El número es demasiado alto"
     }
   },
-  "acceptTransfer": {
-    "button": "Aceptar la transferencía",
-    "form": {
-      "title": "Aceptar la transferencía"
-    }
-  },
-  "initiateTransfer": {
-    "button": "Iniciar la transferencía",
-    "form": {
-      "title": "Iniciar la transferencía"
-    }
-  },
   "r": {
     "l": {
       "device": "Dispositivo",

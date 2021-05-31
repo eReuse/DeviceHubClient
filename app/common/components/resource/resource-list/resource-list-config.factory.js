@@ -101,12 +101,6 @@ function resourceListConfig ($filter, table) {
     }
   }
 
-  class TransferState extends table.Field {
-    constructor (resource) {
-      super(resource, resource.transfer_state)
-    }
-  }
-
   class Creator extends table.Field {
     constructor (resource) {
       super(resource, resource.creator.email)

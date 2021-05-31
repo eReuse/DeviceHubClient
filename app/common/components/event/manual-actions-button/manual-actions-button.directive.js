@@ -31,7 +31,6 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         'newAction.button.political',
         resources.MakeAvailable,
         resources.Rent,
-        resources.CancelTrade,
         'newAction.button.other',
         resources.Receive
         */

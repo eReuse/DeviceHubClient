@@ -170,16 +170,8 @@ function resourceFields (fields, resources, enums) {
 
   /**
    * TODO new-trade: change to ConfirmTrade
-   * @alias module:resourceFields.InitTransfer
    * @extends module:resourceFields.EventWithMultipleDevices
    */
-  class InitTransfer extends EventWithMultipleDevices {
-    constructor (model, ...fields) {
-      super(model, ...fields)
-      const receiver = new f.String('receiver', {namespace: 'r.receiver'})
-      this.fields.splice(1, 0, receiver)
-    }
-  }
 
   /** TODO new-trade: add RevokeTrade */
   /** TODO new-trade: add ConfirmRevokeTrade */
@@ -199,8 +191,6 @@ function resourceFields (fields, resources, enums) {
     MakeAvailable: MakeAvailable,
     Rent: Rent,
     Trade: Trade,
-    CancelTrade: CancelTrade,
-    InitTransfer: InitTransfer,
   }
 }
 

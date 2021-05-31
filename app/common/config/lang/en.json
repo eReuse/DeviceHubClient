@@ -145,18 +145,6 @@
       "max": "The number is too high."
     }
   },
-  "acceptTransfer": {
-    "button": "Accept transfer",
-    "form": {
-      "title": "Accept transfer"
-    }
-  },
-  "initiateTransfer": {
-    "button": "Initiate transfer",
-    "form": {
-      "title": "Initiate transfer"
-    }
-  },
   "r": {
     "l": {
       "device": "Device",
