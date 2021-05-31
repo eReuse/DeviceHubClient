@@ -63,6 +63,7 @@ function lotsTreeNavigation (progressBar, $rootScope, $state, selection, resourc
             $scope.lots = lots
             $scope.incoming = arrayLots.filter(l => l.trade && l.trade.userTo.id === session.user.id)
             $scope.outgoing = arrayLots.filter(l => l.trade && l.trade.userFrom.id === session.user.id)
+            /* TODO new-trade: check for property 'isTemporary' here */
             $scope.temporary = arrayLots.filter(l => !l.trade)
           })
         }
