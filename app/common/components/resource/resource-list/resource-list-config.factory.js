@@ -47,7 +47,6 @@ function resourceListConfig ($filter, table) {
       const textPhysical = utils.Naming.humanize(resource.physical || '')
       const textTrading = utils.Naming.humanize(resource.trading || '')
       const textUsage = utils.Naming.humanize(resource.usage || '')
-      /** TODO new-trade: add display of confirmation status */
       const textConfirm = utils.Naming.humanize(resource.confirm_status || '')
      
       const content = [textPhysical, textTrading, textUsage, textConfirm].filter(a => a).join(' / ')
@@ -122,8 +121,6 @@ function resourceListConfig ($filter, table) {
 
 
   return {
-    deliverynote: [DocumentID, Date, TransferState, Creator, Supplier],
-    deliverynoteTable: [Title, SerialNumber, SupplierID],
     table: [table.Icon, Title, table.Tags, Rate, Issues, Status, Price, Updated]
   }
 }

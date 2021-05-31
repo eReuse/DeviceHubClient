@@ -145,15 +145,6 @@ function resourceFields (fields, resources, enums) {
   class MakeAvailable extends EventWithMultipleDevices {
   }
 
-  /**
-   * TODO new-trade: remove? 
-   * @alias module:resourceFields.Transferred
-   * @extends module:resourceFields.EventWithMultipleDevices
-   */
-  class Transferred extends EventWithMultipleDevices {
-  }
-
-  /** TODO new-trade: add fields for trade here */
   class Trade extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       super(model, ...fields)
@@ -178,15 +169,6 @@ function resourceFields (fields, resources, enums) {
   }
 
   /**
-   * TODO new-trade: remove? 
-   * @alias module:resourceFields.CancelTrade
-   * @extends module:resourceFields.EventWithMultipleDevices
-   * @deprecated
-   */
-  class CancelTrade extends EventWithMultipleDevices {
-  }
-  
-  /**
    * TODO new-trade: change to ConfirmTrade
    * @alias module:resourceFields.InitTransfer
    * @extends module:resourceFields.EventWithMultipleDevices
@@ -196,18 +178,6 @@ function resourceFields (fields, resources, enums) {
       super(model, ...fields)
       const receiver = new f.String('receiver', {namespace: 'r.receiver'})
       this.fields.splice(1, 0, receiver)
-    }
-  }
-
-  /**
-   * TODO new-trade: remove this form
-   * @alias module:resourceFields.AcceptTransfer
-   * @extends module:resourceFields.EventWithMultipleDevices
-   */
-  class AcceptTransfer extends EventWithMultipleDevices {
-    constructor (model, ...fields) {
-      super(model, ...fields)
-      fields.op = this.constructor.PATCH
     }
   }
 
@@ -227,12 +197,10 @@ function resourceFields (fields, resources, enums) {
     ToDisposeProduct: ToDisposeProduct,
     Receive: Receive,
     MakeAvailable: MakeAvailable,
-    Transferred: Transferred,
     Rent: Rent,
     Trade: Trade,
     CancelTrade: CancelTrade,
     InitTransfer: InitTransfer,
-    AcceptTransfer: AcceptTransfer
   }
 }
 

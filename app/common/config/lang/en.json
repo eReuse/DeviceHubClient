@@ -76,9 +76,9 @@
       }
     }
   },
-  "deliverynotes": {
+  "trade": {
     "create": {
-      "title": "Create new Deliverynote"
+      "title": "Create new Trade"
     },
     "incoming": {
       "title": "Incoming lots",
@@ -347,18 +347,18 @@
         "d": "An URL containing an image of the device."
       }
     },
-    "deliverynote": {
+    "Trade": {
       "supplierEmail": {
         "l": "Supplier email",
         "d": "Enter the email of the supplier's account"
       },
       "date": {
         "l": "Date",
-        "d": "Enter the date as specified in the delivery note"
+        "d": "Enter the date as specified in the trade"
       },
       "documentID": {
         "l": "Document ID",
-        "d": "Enter the document ID of the delivery note"
+        "d": "Enter the document ID of the trade"
       }
     },
     "event": {

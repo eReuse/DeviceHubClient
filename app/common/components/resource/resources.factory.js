@@ -1484,38 +1484,6 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
-   * @alias module:resources.DeliveryNote
-   * TODO new-trade: reuse or remove this class and occurences
-   */
-  class DeliveryNote extends Thing {
-    define ({
-      id = null, creator = null, receiver = null, supplier = null, documentID = null, supplierEmail = null, date = null,
-      expectedDevices = null, transferredDevices = null, transfer_state = "Initial", lot = null, ...rest }) {
-      super.define(rest)
-      this.id = id
-      this.creator = creator
-      this.receiver = receiver
-      this.supplier = supplier
-      this.documentID = documentID
-      this.supplierEmail = supplierEmail
-      this.date = date
-      this.expectedDevices = expectedDevices
-      this.transferredDevices = transferredDevices
-      this.transfer_state = transfer_state
-      this.lot = lot
-      this.amount= 0
-    }
-
-    get title () {
-      return `${super.supplierEmail} — ${this.documentID} ${this.date}`
-    }
-
-    _post () {
-      return this.dump(false)
-    }
-  }
-
-  /**
    */
   class Allocate extends ActionWithMultipleDevices {
     define ({transaction = null, endUsers = null, startTime = null, ...rest}) {
@@ -1809,7 +1777,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    */
   class Lot extends Thing {
     define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null,
-      deliverynote = null, isVisible = true, trade = null, ...rest}) {
+      isTemporary = null, isVisible = true, trade = null, ...rest}) {
       super.define(rest)
       this.id = id
       this.name = name
@@ -1820,7 +1788,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.children = children
       this.url = url
       this.trade = trade
-      this.deliverynote = deliverynote ? new DeliveryNote(deliverynote) : deliverynote
+      this.isTemporary = isTemporary
       this.isVisible = isVisible
     }
 
@@ -2105,7 +2073,6 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     BenchmarkProcessor: BenchmarkProcessor,
     BenchmarkProcessorSysbench: BenchmarkProcessorSysbench,
     BenchmarkRamSysbench: BenchmarkRamSysbench,
-    DeliveryNote: DeliveryNote,
     Allocate: Allocate,
     Deallocate: Deallocate,    
     ToRepair: ToRepair,
@@ -2150,11 +2117,6 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    * @type {module:server.DevicehubThing}
    */
   Lot.server = new server.DevicehubThing('/lots/', resources)
-  /**
-   * @memberOf {module:resources.DeliveryNote}
-   * @type {module:server.DevicehubThing}
-   */
-  DeliveryNote.server = new server.DevicehubThing('/deliverynotes/', resources)
   /**
    * @alias {module:resources.Tag.server}
    * @type {module:server.DevicehubThing}
