@@ -159,16 +159,16 @@ function resourceFields (fields, resources, enums) {
   class Trade extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       super(model, ...fields)
-      const userTo = model.userTo ? 
-        new f.StringReadOnly('userTo', {defaultValue: model.userTo, namespace: 'r.userTo'})
-        : new f.String('userTo', {namespace: 'r.userTo'})
+      const userToEmail = model.userToEmail ? 
+        new f.StringReadOnly('userToEmail', {defaultValue: model.userToEmail, namespace: 'r.userTo'})
+        : new f.String('userToEmail', {namespace: 'r.userToEmail'})
 
-      const userFrom = model.userFrom ? 
-        new f.StringReadOnly('userFrom', {defaultValue: model.userFrom, namespace: 'r.userFrom'})
-        : new f.String('userFrom', {namespace: 'r.userFrom'})
+      const userFromEmail = model.userFromEmail ? 
+        new f.StringReadOnly('userFromEmail', {defaultValue: model.userFromEmail, namespace: 'r.userFromEmail'})
+        : new f.String('userFromEmail', {namespace: 'r.userFromEmail'})
      
-      this.fields.splice(1, 0, userTo)
-      this.fields.splice(2, 0, userFrom)
+      this.fields.splice(1, 0, userToEmail)
+      this.fields.splice(2, 0, userFromEmail)
     }
   }
 

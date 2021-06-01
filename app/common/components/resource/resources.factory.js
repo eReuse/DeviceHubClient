@@ -1577,12 +1577,12 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithMultipleDevices
    */
   class Trade extends ActionWithMultipleDevices {
-    define ({date = null, price = null, userTo = null, userFrom = null, confirms = null, lot = null, ...rest}) {
+    define ({date = null, price = null, userToEmail = null, userFromEmail = null, confirms = null, lot = null, ...rest}) {
       super.define(rest)
       this.date = date
       this.price = price
-      this.userTo = userTo
-      this.userFrom = userFrom
+      this.userToEmail = userToEmail
+      this.userFromEmail = userFromEmail
       this.confirms = confirms
       this.lot = lot
     }
