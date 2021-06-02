@@ -8,6 +8,7 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
     template: require('./manual-actions-button.directive.html'),
     restrict: 'E',
     scope: {
+      lot: '=',
       devices: '='
     },
     /**
@@ -16,20 +17,20 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
      */
     link: $scope => {
       $scope.elements = [
-        'newAction.button.using',
-        resources.Allocate,
-        resources.Deallocate,
-        'newAction.button.physical',
-        resources.ToPrepare,
-        resources.Prepare,
-        resources.ToRepair,
-        resources.Ready,
-        /** TODO new-trade: add new device Actions here */
-	resources.Trade,
-	resources.Confirm,
-	resources.Revoke,
-	resources.ConfirmRevoke,
-        
+        'newaction.button.using',
+        resources.allocate,
+        resources.deallocate,
+        'newaction.button.physical',
+        resources.toprepare,
+        resources.prepare,
+        resources.torepair,
+        resources.ready,
+        /** todo new-trade: add new device actions here */
+        'newaction.button.trade',
+	resources.trade,
+	resources.confirm,
+	resources.revoke,
+	resources.confirmrevoke,
         /*
         'newAction.button.political',
         resources.MakeAvailable,
@@ -39,7 +40,7 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         */
       ]
       $scope.open = Action => {
-        const action = new Action({devices: $scope.devices})
+        const action = new Action({devices: $scope.devices, lot: $scope.lot})
         $state.go('.newAction', {action: action})
       }
     }

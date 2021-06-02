@@ -179,8 +179,8 @@ function resourceFields (fields, resources, enums) {
   class Confirm extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       super(model, ...fields)
-      const action = model.trade ? 
-        new f.StringReadOnly('action', {defaultValue: model.trade.id, namespace: 'r.trade'})
+      const action = model.lot.trade ? 
+        new f.StringReadOnly('action', {defaultValue: model.lot.trade.id, namespace: 'r.trade'})
         : new f.String('action', {namespace: 'r.trade'})
 
       this.fields.splice(1, 0, action)
