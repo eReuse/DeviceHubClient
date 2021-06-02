@@ -64,6 +64,7 @@ function resourceFields (fields, resources, enums) {
     constructor (model, ...fields) {
       super(model, ...fields)
       const devices = new f.Resources('devices', {namespace: 'r.eventWithMultipleDevices'})
+      /** TODO new-trade: show selected documents as well */
       this.fields.splice(1, 0, devices)
     }
   }
@@ -214,6 +215,9 @@ function resourceFields (fields, resources, enums) {
       this.fields.splice(1, 0, action)
     }
   }
+
+  /** TODO new-trade: new model ConfirmDocument */
+  /** TODO new-trade: new model RevokeConfirmDocument */
 
   return {
     ResourceForm: ResourceForm,
