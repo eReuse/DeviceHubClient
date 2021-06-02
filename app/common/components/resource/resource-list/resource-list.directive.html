@@ -156,7 +156,7 @@
     </h3>
     <div class="text-center" ng-if="selected.length">
       <lot-device-button devices="selected" all-lots="lots"></lot-device-button>
-      <manual-actions-button devices="selected" lot="lotsM[0]"></manual-actions-button>
+      <manual-actions-button devices="selected" trade="lotsM.lots[0].trade"></manual-actions-button>
       <export-button devices="selected"></export-button>
       <tags-button devices="selected"></tags-button>
      <!-- <merge-devices-button devices="selected"></merge-devices-button> -->
