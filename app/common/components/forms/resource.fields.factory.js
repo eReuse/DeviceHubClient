@@ -179,8 +179,8 @@ function resourceFields (fields, resources, enums) {
   class Confirm extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       super(model, ...fields)
-      const action = model.trade ? 
-        new f.StringReadOnly('action', {defaultValue: model.trade.id, namespace: 'r.trade'})
+      const action = model.action ? 
+        new f.StringReadOnly('action', {defaultValue: model.action.id, namespace: 'r.trade'})
         : new f.String('action', {namespace: 'r.trade'})
 
       this.fields.splice(1, 0, action)
@@ -193,8 +193,8 @@ function resourceFields (fields, resources, enums) {
   class Revoke extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       super(model, ...fields)
-      const action = model.trade ? 
-        new f.StringReadOnly('action', {defaultValue: model.trade.id, namespace: 'r.trade'})
+      const action = model.action ? 
+        new f.StringReadOnly('action', {defaultValue: model.action.id, namespace: 'r.trade'})
         : new f.String('action', {namespace: 'r.trade'})
 
       this.fields.splice(1, 0, action)

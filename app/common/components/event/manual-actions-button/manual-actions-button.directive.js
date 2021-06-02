@@ -27,7 +27,6 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         resources.Ready,
         /** todo new-trade: add new device actions here */
         'newAction.button.trade',
-	resources.Trade,
 	resources.Confirm,
 	resources.Revoke,
 	resources.ConfirmRevoke,
@@ -40,7 +39,7 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         */
       ]
       $scope.open = Action => {
-        const action = new Action({devices: $scope.devices, trade: $scope.trade})
+        const action = new Action({devices: $scope.devices, action: $scope.trade.id})
         $state.go('.newAction', {action: action})
       }
     }
