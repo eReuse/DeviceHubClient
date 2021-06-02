@@ -34,7 +34,10 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         resources.Receive
         */
       ]
-      /** todo new-trade: add new device actions here */
+      
+      /** TODO new-trade: add new device actions here 
+       *  note that this logic should probably be on the server instead, so that here we only check "showTradeButton", etc.
+        */
       if(!$scope.elements.unconfirmedTrade) {
         $scope.elements.push(resources.Trade)
       }
