@@ -191,29 +191,13 @@ function resourceFields (fields, resources, enums) {
   /** TODO new-trade: add RevokeTrade 
    * @extends module:resourceFields.EventWithMultipleDevices
    */
-  class Revoke extends EventWithMultipleDevices {
-    constructor (model, ...fields) {
-      super(model, ...fields)
-      const action = model.action ? 
-        new f.StringReadOnly('action', {defaultValue: model.action.id, namespace: 'r.trade'})
-        : new f.String('action', {namespace: 'r.trade'})
-
-      this.fields.splice(1, 0, action)
-    }
+  class Revoke extends Confirm {
   }
 
   /** TODO new-trade: add ConfirmRevokeTrade 
    * @extends module:resourceFields.EventWithMultipleDevices
    */
-  class ConfirmRevoke extends EventWithMultipleDevices {
-    constructor (model, ...fields) {
-      super(model, ...fields)
-      const action = model.revoke ? 
-        new f.StringReadOnly('action', {defaultValue: model.revoke.id, namespace: 'r.revoke'})
-        : new f.String('action', {namespace: 'r.revoke'})
-
-      this.fields.splice(1, 0, action)
-    }
+  class ConfirmRevoke extends Confirm {
   }
 
   /** TODO new-trade: new model ConfirmDocument */

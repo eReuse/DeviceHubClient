@@ -345,7 +345,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       weight = null, width = null, height = null, depth = null, actions = [], problems = [], url = null, 
       rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, 
       working = [], brand = null, generation = null, version = null, variant = null, sku = null, image = null, 
-      allocated = null, usage = null, lots = null,
+      allocated = null, usage = null, lots = null, revoke = null,
       ...rest}) {
       super.define(rest)
       /** @type {int} */
@@ -386,6 +386,8 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.price = this._rel(price)
       /** @type {string} */
       this.trading = trading
+      /** @type {string} */
+      this.revoke = revoke
       /** @type {string} */
       this.physical = physical
       /** @type {string} */
@@ -1627,9 +1629,9 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithMultipleDevices
    */
   class ConfirmRevoke extends ActionWithMultipleDevices {
-    define ({revoke = null, ...rest}) {
+    define ({action = null, ...rest}) {
       super.define(rest)
-      this.action = revoke
+      this.action = action
     }
   }
 

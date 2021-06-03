@@ -25,8 +25,13 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         resources.Prepare,
         resources.ToRepair,
         resources.Ready,
-        'newAction.button.trade',
+        /** todo new-trade: add new device actions here */
         /*
+        'newAction.button.trade',
+	resources.Confirm,
+	resources.Revoke,
+	resources.ConfirmRevoke,
+	 *
         'newAction.button.political',
         resources.MakeAvailable,
         resources.Rent,
@@ -34,30 +39,46 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         resources.Receive
         */
       ]
-      
-      /** TODO new-trade: add new device actions here 
-       *  note that this logic should probably be on the server instead, so that here we only check "showTradeButton", etc.
-        */
-      if(!$scope.elements.unconfirmedTrade) {
-        $scope.elements.push(resources.Trade)
-      }
-      if($scope.elements.unconfirmedTrade) {
-        $scope.elements.push(resources.Confirm)
-      }
-      /* TODO new-trade: do like above for 
-      confirmedTrade && unrevokedConfirm => resources.Revoke
-      unconfirmedRevoke => resources.ConfirmRevoke
-      */
-      
-      $scope.open = Action => {
-        const action = new Action({
-          devices: $scope.devices, 
-          tradeOfCurrentLot: $scope.trade
-        })
-        /* TODO new-trade: 
-          instead of action pass 
-          unconfirmedTrade, confirmedTrade, unrevokedConfirm, unconfirmedRevoke */
-        $state.go('.newAction', {action: action})
+      const ids_revoke = new Set($scope.devices.map(d => {
+	return d.revoke
+      }))
+
+      const state_trade = new Set($scope.devices.map(d => {
+	return d.trading
+      }))
+
+      console.log($scope.devices[0].trading)
+      console.log($scope.devices[0].revoke)
+      if ($scope.trade != null && state_trade.size == 1) {
+        $scope.elements.push('newAction.button.trade')
+
+        if (state_trade.has('Trade')) {
+          $scope.elements.push(resources.Confirm)
+	}
+
+        if (state_trade.has('Confirm')) {
+          $scope.elements.push(resources.Revoke)
+	}
+
+
+        if (state_trade.has('Revoke') && !ids_revoke.has(null) && ids_revoke.size == 1) {
+          $scope.elements.push(resources.ConfirmRevoke)
+  	  $scope.open = Action => {
+	    const action = new Action({
+		devices: $scope.devices, 
+		action: $scope.devices[0].revoke
+	    })
+	    $state.go('.newAction', {action: action})
+ 	  }
+        } else {
+          $scope.open = Action => {
+            const action = new Action({
+		devices: $scope.devices,
+		action: $scope.trade.id
+	    })
+            $state.go('.newAction', {action: action})
+	  }
+        }
       }
     }
   }
