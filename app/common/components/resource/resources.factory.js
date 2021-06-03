@@ -938,6 +938,15 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
 
   }
 
+  /** TODO new-trade: new model Document */
+  class Document extends Thing {
+
+  }
+
+  /** TODO new-trade: new model DocumentAction */
+  /** TODO new-trade: new model ConfirmDocument */
+  /** TODO new-trade: new model RevokeConfirmDocument */
+
   /**
    * Class representing an event.
    * @alias module:resources.Action

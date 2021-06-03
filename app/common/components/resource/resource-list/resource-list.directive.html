@@ -148,6 +148,7 @@
     </div>
     <h3 ng-show="selected.length">
       Selected devices — {{selected.length}}
+      <!-- TODO new-trade: show number of selected documents here like selectedDocuments.length -->
       <button type="button"
               class="btn btn-link btn-xs"
               ng-click="selected.deselectAll()">
@@ -156,12 +157,23 @@
     </h3>
     <div class="text-center" ng-if="selected.length">
       <lot-device-button devices="selected" all-lots="lots"></lot-device-button>
-      <manual-actions-button devices="selected" trade="lotsM.lots[0].trade"></manual-actions-button>
+      <!-- TODO new-trade: pass selected documents to manual-actions button
+          such as documents="selectedDocuments"
+       -->
+      <manual-actions-button 
+        devices="selected" 
+        unconfirmedTrade="lotsM.lots[0].unconfirmedTrade"
+        confirmedTrade="lotsM.lots[0].confirmedTrade"
+        unrevokedConfirm="lotsM.lots[0].unrevokedConfirm"
+        unconfirmedRevoke="lotsM.lots[0].unconfirmedRevoke"
+        >
+      </manual-actions-button>
       <export-button devices="selected"></export-button>
       <tags-button devices="selected"></tags-button>
      <!-- <merge-devices-button devices="selected"></merge-devices-button> -->
     </div>
     <device-list-summary ng-if="selected.length" devices="selected"></device-list-summary>
+    <!-- TODO create and show documents-list-summary -->
   </aside>
   <!-- Selection button-->
   <div class="selection-button visible-xs visible-sm"

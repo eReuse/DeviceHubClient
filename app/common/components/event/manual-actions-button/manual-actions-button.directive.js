@@ -25,11 +25,7 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         resources.Prepare,
         resources.ToRepair,
         resources.Ready,
-        /** todo new-trade: add new device actions here */
         'newAction.button.trade',
-	resources.Confirm,
-	resources.Revoke,
-	resources.ConfirmRevoke,
         /*
         'newAction.button.political',
         resources.MakeAvailable,
@@ -38,8 +34,29 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         resources.Receive
         */
       ]
+      
+      /** TODO new-trade: add new device actions here 
+       *  note that this logic should probably be on the server instead, so that here we only check "showTradeButton", etc.
+        */
+      if(!$scope.elements.unconfirmedTrade) {
+        $scope.elements.push(resources.Trade)
+      }
+      if($scope.elements.unconfirmedTrade) {
+        $scope.elements.push(resources.Confirm)
+      }
+      /* TODO new-trade: do like above for 
+      confirmedTrade && unrevokedConfirm => resources.Revoke
+      unconfirmedRevoke => resources.ConfirmRevoke
+      */
+      
       $scope.open = Action => {
-        const action = new Action({devices: $scope.devices, action: $scope.trade.id})
+        const action = new Action({
+          devices: $scope.devices, 
+          tradeOfCurrentLot: $scope.trade
+        })
+        /* TODO new-trade: 
+          instead of action pass 
+          unconfirmedTrade, confirmedTrade, unrevokedConfirm, unconfirmedRevoke */
         $state.go('.newAction', {action: action})
       }
     }
