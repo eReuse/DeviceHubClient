@@ -160,16 +160,14 @@ function resourceFields (fields, resources, enums) {
   class Trade extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       super(model, ...fields)
-      const userToEmail = model.userToEmail ? 
-        new f.StringReadOnly('userToEmail', {defaultValue: model.userToEmail, namespace: 'r.userTo'})
-        : new f.String('userToEmail', {namespace: 'r.userToEmail'})
-
-      const userFromEmail = model.userFromEmail ? 
-        new f.StringReadOnly('userFromEmail', {defaultValue: model.userFromEmail, namespace: 'r.userFromEmail'})
-        : new f.String('userFromEmail', {namespace: 'r.userFromEmail'})
-     
-      this.fields.splice(1, 0, userToEmail)
-      this.fields.splice(2, 0, userFromEmail)
+      function createField(fields, position, model, propName, namespace) {
+        const newField = model[propName] ? 
+          new f.StringReadOnly(propName, {defaultValue: model[propName], namespace: namespace})
+          : new f.String(propName, {namespace: namespace})  
+        fields.splice(position, 0, newField)
+      }
+      createField(this.fields, 1, model, 'userFromEmail', 'userFrom')
+      createField(this.fields, 2, model, 'userToEmail', 'userTo')
     }
   }
 
