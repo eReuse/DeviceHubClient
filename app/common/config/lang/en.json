@@ -93,6 +93,14 @@
     "title": "Temporary lots",
     "delete": {
       "button": "Delete lot"
+    },
+    "trade": {
+      "supplier": {
+        "button": "Trade as receiver"
+      },
+      "receiver": {
+        "button": "Trade as supplier"
+      }
     }
   },
   "mergeDevices": {
@@ -425,6 +433,18 @@
       "startTime": {
         "l": "Start date",
         "d": ""
+      }
+    },
+    "userToEmail": {
+      "userToEmail": {
+        "l": "Email of the Supplier",
+        "d": "You need put the email of the supplier"
+      }
+    },
+    "userFromEmail": {
+      "userFromEmail": {
+        "l": "Email of the Receiver",
+        "d": "You need put the email of the receiver"
       }
     }
   },

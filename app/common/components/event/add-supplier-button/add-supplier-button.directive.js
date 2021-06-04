@@ -15,7 +15,7 @@ function addSupplierButton ($state, session) {
     link: $scope => {
       const lot = $scope.lot
 
-      $scope.lotTrade = () => {
+      $scope.lotTradeSupplier = () => {
 	      $scope.manager.createTradeForLot(lot, { to: session.user.email })
       }
     }
