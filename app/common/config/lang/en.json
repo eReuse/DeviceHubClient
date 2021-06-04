@@ -96,10 +96,10 @@
     },
     "trade": {
       "supplier": {
-        "button": "Trade as receiver"
+        "button": "Add receiver"
       },
       "receiver": {
-        "button": "Trade as supplier"
+        "button": "Add supplier"
       }
     }
   },
@@ -437,14 +437,14 @@
     },
     "userToEmail": {
       "userToEmail": {
-        "l": "Email of the Supplier",
-        "d": "You need put the email of the supplier"
+        "l": "Receiver email",
+        "d": "Please enter the receiver's email address"
       }
     },
     "userFromEmail": {
       "userFromEmail": {
-        "l": "Email of the Receiver",
-        "d": "You need put the email of the receiver"
+        "l": "Supplier email",
+        "d": "Please enter the supplier's email address"
       }
     }
   },
