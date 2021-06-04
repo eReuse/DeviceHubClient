@@ -27,11 +27,6 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         resources.Ready,
         /** todo new-trade: add new device actions here */
         /*
-        'newAction.button.trade',
-	resources.Confirm,
-	resources.Revoke,
-	resources.ConfirmRevoke,
-	 *
         'newAction.button.political',
         resources.MakeAvailable,
         resources.Rent,
@@ -47,8 +42,6 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
 	return d.trading
       }))
 
-      console.log($scope.devices[0].trading)
-      console.log($scope.devices[0].revoke)
       if ($scope.trade != null && state_trade.size == 1) {
         $scope.elements.push('newAction.button.trade')
 
@@ -59,7 +52,6 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         if (state_trade.has('Confirm')) {
           $scope.elements.push(resources.Revoke)
 	}
-
 
         if (state_trade.has('Revoke') && !ids_revoke.has(null) && ids_revoke.size == 1) {
           $scope.elements.push(resources.ConfirmRevoke)
