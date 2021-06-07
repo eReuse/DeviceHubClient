@@ -942,12 +942,56 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
 
   /** TODO new-trade: new model Document */
   class Document extends Thing {
-
+    define ({document_id = null, date = null, description = null, filename = null, file = null, lot = null, ...rest}) {
+      super.define(rest)
+      this.document_id = document_id
+      this.date = date
+      this.date  = date ? new Date(date) : null
+      this.filename = filename
+      this.file = file
+      this.lot = lot 
+    }
   }
 
   /** TODO new-trade: new model DocumentAction */
+  /**
+   * @alias module:resources.ActionWithOneDocument
+   * @extends module:resources.Action
+   */
+  class ActionWithOneDocument extends DocumentAction {
+    define ({doc = null, ...rest}) {
+      super.define(rest)
+      this.doc = doc
+    }
+
+    _props () {
+      const props = super._props()
+      props.doc = {
+        get: () => this._getRel(Document, this._doc),
+        set: v => {
+          this._device = this._rel(v)
+        },
+        enumerable: true
+      }
+      return props
+    }
+  }
+
   /** TODO new-trade: new model ConfirmDocument */
+  class ConfirmDocument extends ActionWithOneDocument {
+    define ({action = null, ...rest}) {
+      super.define(rest)
+      this.action = action
+    }
+  }
+
   /** TODO new-trade: new model RevokeConfirmDocument */
+  class RevokeConfirmDocument extends ActionWithOneDocument {
+    define ({action = null, ...rest}) {
+      super.define(rest)
+      this.action = action
+    }
+  }
 
   /**
    * Class representing an event.

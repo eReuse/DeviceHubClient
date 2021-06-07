@@ -198,8 +198,29 @@ function resourceFields (fields, resources, enums) {
   class ConfirmRevoke extends Confirm {
   }
 
-  /** TODO new-trade: new model ConfirmDocument */
-  /** TODO new-trade: new model RevokeConfirmDocument */
+  /** TODO new-trade: new model ConfirmDocument 
+   * @alias module:resourceFields.ConfirmDocument
+   * @extends module:resourceFields.Event
+   */
+  class ConfirmDocument extends Event {
+    constructor (model, ...fields) {
+      super(model, ...fields)
+      const doc = new f.Resources('document', {namespace: 'r.eventWithOneDocument'})
+      const action = model.action ? 
+        new f.StringReadOnly('action', {defaultValue: model.action.id, namespace: 'r.trade'})
+        : new f.String('action', {namespace: 'r.trade'})
+
+      this.fields.splice(1, 0, doc)
+      this.fields.splice(2, 0, action)
+    }
+  }
+
+  /** TODO new-trade: new model RevokeConfirmDocument 
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class RevokeConfirmDocument extends ConfirmDocument {
+  }
+
 
   return {
     ResourceForm: ResourceForm,
@@ -219,6 +240,8 @@ function resourceFields (fields, resources, enums) {
     Confirm: Confirm,
     Revoke: Revoke,
     ConfirmRevoke: ConfirmRevoke,
+    ConfirmDocument: ConfirmDocument,
+    RevokeConfirmDocument: RevokeConfirmDocument,
   }
 }
 
