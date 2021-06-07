@@ -45,11 +45,11 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
       if ($scope.trade != null && state_trade.size == 1) {
         $scope.elements.push('newAction.button.trade')
 
-        if (state_trade.has('Trade')) {
+        if (state_trade.has('NeedConfirmation')) {
           $scope.elements.push(resources.Confirm)
 	}
 
-        if (state_trade.has('Confirm')) {
+        if (state_trade.has('Confirm') | state_trade.has('TradeConfirmed')) {
           $scope.elements.push(resources.Revoke)
 	}
 
