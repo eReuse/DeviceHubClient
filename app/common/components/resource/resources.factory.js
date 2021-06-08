@@ -953,46 +953,6 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
-  /** TODO new-trade: new model DocumentAction */
-  /**
-   * @alias module:resources.ActionWithOneDocument
-   * @extends module:resources.Action
-   */
-  class ActionWithOneDocument extends DocumentAction {
-    define ({doc = null, ...rest}) {
-      super.define(rest)
-      this.doc = doc
-    }
-
-    _props () {
-      const props = super._props()
-      props.doc = {
-        get: () => this._getRel(Document, this._doc),
-        set: v => {
-          this._device = this._rel(v)
-        },
-        enumerable: true
-      }
-      return props
-    }
-  }
-
-  /** TODO new-trade: new model ConfirmDocument */
-  class ConfirmDocument extends ActionWithOneDocument {
-    define ({action = null, ...rest}) {
-      super.define(rest)
-      this.action = action
-    }
-  }
-
-  /** TODO new-trade: new model RevokeConfirmDocument */
-  class RevokeConfirmDocument extends ActionWithOneDocument {
-    define ({action = null, ...rest}) {
-      super.define(rest)
-      this.action = action
-    }
-  }
-
   /**
    * Class representing an event.
    * @alias module:resources.Action
@@ -1110,6 +1070,47 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       return props
     }
   }
+
+  /** TODO new-trade: new model DocumentAction */
+  /**
+   * @alias module:resources.ActionWithOneDocument
+   * @extends module:resources.Action
+   */
+  class ActionWithOneDocument extends Action {
+    define ({doc = null, ...rest}) {
+      super.define(rest)
+      this.doc = doc
+    }
+
+    _props () {
+      const props = super._props()
+      props.doc = {
+        get: () => this._getRel(Document, this._doc),
+        set: v => {
+          this._device = this._rel(v)
+        },
+        enumerable: true
+      }
+      return props
+    }
+  }
+
+  /** TODO new-trade: new model ConfirmDocument */
+  class ConfirmDocument extends ActionWithOneDocument {
+    define ({action = null, ...rest}) {
+      super.define(rest)
+      this.action = action
+    }
+  }
+
+  /** TODO new-trade: new model RevokeDocument */
+  class RevokeDocument extends ConfirmDocument {
+  }
+
+  /** TODO new-trade: new model RevokeConfirmDocument */
+  class RevokeConfirmDocument extends ConfirmDocument {
+  }
+
 
   /**
    * @alias module:resources.Add
