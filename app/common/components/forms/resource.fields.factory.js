@@ -160,6 +160,7 @@ function resourceFields (fields, resources, enums) {
   class Trade extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       super(model, ...fields)
+      const def = {namespace: 'r.trade'}
       function createField(fields, position, model, propName, namespace) {
         const newField = model[propName] ? 
           new f.StringReadOnly(propName, {defaultValue: model[propName], namespace: namespace})
@@ -168,6 +169,8 @@ function resourceFields (fields, resources, enums) {
       }
       createField(this.fields, 1, model, 'userFromEmail', 'userFrom')
       createField(this.fields, 2, model, 'userToEmail', 'userTo')
+      this.fields.push(new f.Checkbox("confirms", def))
+      this.fields.push(new f.String("code", def))
     }
   }
 
