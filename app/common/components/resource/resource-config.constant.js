@@ -24,7 +24,6 @@ const v = {
   Package: {view: 'resource-list', resourceType: 'Package', name: 'Packages', resourceIcon: 'Package'},
   Account: {view: 'resource-list', resourceType: 'Account', name: 'Accounts', resourceIcon: 'Account'},
   Reserve: {view: 'reserve-view', name: 'Reserve', 'class': 'fill-height show', resourceIcon: 'devices:Reserve'},
-  Sell: {view: 'sell-view', name: 'Sell', 'class': 'fill-height show', resourceIcon: 'devices:Sell'},
   Update: {view: 'update-view', resourceType: 'Update', name: 'Updates', resourceIcon: 'Update'},
   DeviceDashboard: {view: 'device-dashboard', name: 'Dashboard', 'class': 'fill-height show', fa: 'fa-dashboard'}
 }
@@ -44,15 +43,14 @@ const RESOURCE_CONFIG = {
     'devices:ToDispose': {manual: true},
     'devices:Dispose': {manual: true},
     'devices:Update': {manual: true},
+    'devices:Trade': {manual: true},
+    'devices:Confirm': {manual: true},
+    'devices:Revoke': {manual: true},
+    'devices:ConfirmRevoke': {manual: true},
     'devices:Reserve': {
       manual: true,
       subviews: [v.Reserve, v.Device, v.Detail],
       subviewSmall: v.Reserve
-    },
-    'devices:Sell': {
-      manual: true,
-      subviews: [v.Sell, v.Device, v.Detail],
-      subviewSmall: v.Sell
     },
     'devices:Snapshot': {
       doNotUse: ['debug', 'version', 'events', 'owners', 'components', 'version', 'snapshotSoftware', 'automatic',

@@ -160,8 +160,6 @@ function getEventDescription (event) {
       return event.rate + ' points'
     case 'devices:BenchmarkProcessor':
       return event.rate + ' points'
-    case 'devices:Sell':
-      return 'OK'
     case 'devices:Price':
       return event.price
     case 'devices:Ready':
@@ -169,6 +167,14 @@ function getEventDescription (event) {
     case 'devices:Prepare':
       return 'OK'
     case 'devices:ToPrepare':
+      return 'OK'
+    case 'devices:Trade':
+      return 'OK'
+    case 'devices:Confirm':
+      return 'OK'
+    case 'devices:Revoke':
+      return 'OK'
+    case 'devices:ConfirmRevoke':
       return 'OK'
   }
   return ''

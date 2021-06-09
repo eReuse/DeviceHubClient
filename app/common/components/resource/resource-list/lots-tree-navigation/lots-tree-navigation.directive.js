@@ -45,10 +45,6 @@ function lotsTreeNavigation (progressBar, $rootScope, $state, selection, resourc
 
         $scope.selected = new LotsSelector()
 
-        $scope.newDeliverynote = () => {
-          $state.go('auth.createDeliveryNote')
-        }
-
         $scope.newLot = $event => {
           $event && $event.preventDefault()
           $event && $event.stopPropagation()
@@ -65,9 +61,9 @@ function lotsTreeNavigation (progressBar, $rootScope, $state, selection, resourc
           resources.Lot.server.get('').then(lots => {
             const arrayLots = new Array(...lots)
             $scope.lots = lots
-            $scope.incoming = arrayLots.filter(l => l.deliverynote && l.deliverynote.receiver.id === session.user.id)
-            $scope.outgoing = arrayLots.filter(l => l.deliverynote && l.deliverynote.supplier.id === session.user.id)
-            $scope.temporary = arrayLots.filter(l => !l.deliverynote)
+            $scope.incoming = arrayLots.filter(l => l.trade && l.trade.userTo.id === session.user.id)
+            $scope.outgoing = arrayLots.filter(l => l.trade && l.trade.userFrom.id === session.user.id)
+            $scope.temporary = arrayLots.filter(l => !l.trade)
           })
         }
 

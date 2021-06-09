@@ -17,28 +17,29 @@
         <!--
           <lot-children-button parent="lotsM.lots[0]" ng-if="lotsM.lots.length === 1"></lot-children-button>
         -->
-        <share-deliverynote-button 
-          ng-if="lotsM.lots.length === 1 && lotsM.lots.length 
-          && lotsM.lots[0].deliverynote
-          && (lotsM.lots[0].deliverynote.supplier.id === user.id)
-          && (lotsM.lots[0].deliverynote.transfer_state === 'Initial')"
-          lot="lotsM.lots[0]" 
-          getter="getter"
-          ng-if="">
-        </share-deliverynote-button>
-        <accept-deliverynote-button 
-          ng-if="lotsM.lots.length === 1 && lotsM.lots.length && lotsM.lots[0].deliverynote 
-          && (lotsM.lots[0].deliverynote.creator.id === user.id)
-          && (lotsM.lots[0].deliverynote.transfer_state === 'Initiated')" 
-          lot="lotsM.lots[0]"
-          getter="getter">
-        </accept-deliverynote-button>
         <delete-lot-button lots="lotsM.lots" manager="lotsM">
         </delete-lot-button>
+        <!-- TODO new-trade: 
+          if single temporary lot is selected, show "add supplier button" 
+          adding supplier Converts the temporary lot to an incoming lot
+        -->
+        <add-supplier-button 
+          ng-if="lotsM.lots.length === 1 && !lotsM.lots[0].trade"
+          lot="lotsM.lots[0]"
+	        manager="lotsM">
+        </add-supplier-button>
+        <!-- TODO new-trade: 
+          if single temporary lot is selected, show "add receiver button"
+          adding receiver Converts the temporary lot to an outgoing lot
+        -->
+        <add-receiver-button 
+          ng-if="lotsM.lots.length === 1 && !lotsM.lots[0].trade"
+          lot="lotsM.lots[0]"
+	        manager="lotsM">
+        </add-receiver-button>
         <button type="button" class="btn btn-link hidden-xs btn-xs" ng-click="lotsM.deselectAll()">
           Deselect all ({{lotsM.lots.length}})
         </button>
-        <!--<lot-transfer-button lot="lotsM.lots[0]" getter="getter"></lot-transfer-button>-->
       </div>
       <div ng-if="lotsM.lots.length === 1">
         <h2>
@@ -64,61 +65,9 @@
                 ng-click="lotXs.show()">
           <i class="fa fa-folder fa-fw"></i>Select lot
         </button>
-        <!--<create-deliverynote-button class="pull-right"></create-deliverynote-button>-->
         <!--<import-button class="pull-right"></import-button>-->
         <snapshot-button class="pull-right"></snapshot-button>
         <h2>{{::'resourceList.allDevices' | translate}}</h2>
-      </div>
-      <div ng-if="lotsM.lots.length === 1 && lotsM.lots[0].deliverynote">
-        <h3>Deliverynote</h3>
-        <ul>
-          <li ng-repeat="Field in ::config.deliverynote"
-          class="{{::Field.cssClasses}}">
-            <span>{{::Field.name}}: </span>
-            <span ng-if="::Field.html">
-              <span ng-bind-html="Field.init(deliverynote).content"></span>
-            </span>
-            <span ng-if="::!Field.html">
-            {{Field.init(deliverynote).content}}
-            </span>
-            <span>
-              {{JSON.stringify(deliverynote)}}
-            </span>
-          </li>
-        </ul>
-        <h4 ng-if="lotsM.lots.length === 1 && lotsM.lots[0].deliverynote">Expected devices ({{expectedDevices.length}}) </h4>
-        <div class="deliverynote-devices">
-          <table id="deliverynote-device-list-table"
-                class="table table-striped table-hover unselectable table-condensed">
-            <thead>
-            <tr>
-              <th ng-repeat="Field in ::config.deliverynoteTable track by Field.type"
-                  class="{{::Field.cssClasses}}"
-              >
-                {{::Field.name}}
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="expectedDevice in expectedDevices track by expectedDevice.serialNumber">
-                <td ng-repeat="Field in ::config.deliverynoteTable track by Field.name"
-                    class="{{::Field.cssClasses}}"
-                >
-                  <span ng-if="::Field.html">
-                    <span ng-bind-html="Field.init(expectedDevice).content"></span>
-                  </span>
-                  <span ng-if="::!Field.html">
-                  {{Field.init(expectedDevice).content}}
-                  </span>
-                  <span>
-                    {{JSON.stringify(expectedDevice)}}
-                  </span>
-
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </div>
       <h3 ng-show="lotsM.lots.length">Devices in lots</h3>
       <resource-search on-update="getter.setSearch(text)"></resource-search>
@@ -207,7 +156,7 @@
     </h3>
     <div class="text-center" ng-if="selected.length">
       <lot-device-button devices="selected" all-lots="lots"></lot-device-button>
-      <manual-actions-button devices="selected"></manual-actions-button>
+      <manual-actions-button devices="selected" trade="lotsM.lots[0].trade"></manual-actions-button>
       <export-button devices="selected"></export-button>
       <tags-button devices="selected"></tags-button>
      <!-- <merge-devices-button devices="selected"></merge-devices-button> -->

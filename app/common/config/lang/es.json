@@ -76,9 +76,9 @@
       }
     }
   },
-  "deliverynotes": {
+  "trade": {
     "create": {
-      "title": "Crear un nuevo Deliverynote"
+      "title": "Crear un nuevo Trade"
     },
     "incoming": {
       "title": "Incoming lots",
@@ -135,18 +135,6 @@
       "url": "El URL no es valido.",
       "min": "El número es demasiado bajo",
       "max": "El número es demasiado alto"
-    }
-  },
-  "acceptTransfer": {
-    "button": "Aceptar la transferencía",
-    "form": {
-      "title": "Aceptar la transferencía"
-    }
-  },
-  "initiateTransfer": {
-    "button": "Iniciar la transferencía",
-    "form": {
-      "title": "Iniciar la transferencía"
     }
   },
   "r": {
@@ -243,18 +231,18 @@
         "d": "El número de serie del dispositivo."
       }
     },
-    "deliverynote": {
+    "trade": {
       "supplierEmail": {
         "l": "Supplier email",
         "d": "Enter the email of the supplier's account"
       },
       "date": {
         "l": "Date",
-        "d": "Enter the date as specified in the delivery note"
+        "d": "Enter the date as specified in the trade"
       },
       "documentID": {
         "l": "Document ID",
-        "d": "Enter the document ID of the delivery note"
+        "d": "Enter the document ID of the trade"
       }
     },
     "event": {

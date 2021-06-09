@@ -47,8 +47,9 @@ function resourceListConfig ($filter, table) {
       const textPhysical = utils.Naming.humanize(resource.physical || '')
       const textTrading = utils.Naming.humanize(resource.trading || '')
       const textUsage = utils.Naming.humanize(resource.usage || '')
+      const textConfirm = utils.Naming.humanize(resource.confirm_status || '')
      
-      const content = [textPhysical, textTrading, textUsage].filter(a => a).join(' / ')
+      const content = [textPhysical, textTrading, textUsage, textConfirm].filter(a => a).join(' / ')
       
       super(resource, content)
     }
@@ -100,12 +101,6 @@ function resourceListConfig ($filter, table) {
     }
   }
 
-  class TransferState extends table.Field {
-    constructor (resource) {
-      super(resource, resource.transfer_state)
-    }
-  }
-
   class Creator extends table.Field {
     constructor (resource) {
       super(resource, resource.creator.email)
@@ -120,8 +115,6 @@ function resourceListConfig ($filter, table) {
 
 
   return {
-    deliverynote: [DocumentID, Date, TransferState, Creator, Supplier],
-    deliverynoteTable: [Title, SerialNumber, SupplierID],
     table: [table.Icon, Title, table.Tags, Rate, Issues, Status, Price, Updated]
   }
 }

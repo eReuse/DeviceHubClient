@@ -3,6 +3,7 @@ const CannotSubmit = require('./cannot-submit.exception')
 
 /**
  * @module fields
+ * IMPORTANT: we are using the formly library for creating forms http://angular-formly.com/
  */
 
 function fieldsFactory ($translate, Notification, $q) {
@@ -171,6 +172,25 @@ function fieldsFactory ($translate, Notification, $q) {
       this.type = 'input'
       this.templateOptions.maxlength = maxLength
       this.templateOptions.minlength = minLength
+
+    }
+  }
+
+  /**
+   * @alias module:fields.String
+   * @extends module:fields.Input
+   * TODO new-trade: label is not shown for this field. should be shown
+   */
+   class StringReadOnly extends Input {
+    constructor (key, {defaultValue = null, maxLength = STR_SIZE, minLength = null, ...rest}) {
+      super(key, rest)
+      this.type = 'input'
+      this.templateOptions.maxlength = maxLength
+      this.templateOptions.minlength = minLength
+      this.expressionProperties = {
+        'templateOptions.disabled': 'true'
+      }
+      this.defaultValue = defaultValue
     }
   }
 
@@ -596,6 +616,7 @@ function fieldsFactory ($translate, Notification, $q) {
     Input: Input,
     Form: Form,
     String: String,
+    StringReadOnly: StringReadOnly,
     URL: URL,
     Number: Number,
     Option: Option,

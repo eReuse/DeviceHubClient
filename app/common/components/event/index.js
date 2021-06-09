@@ -7,9 +7,8 @@ module.exports = angular.module('common.components.event',
     'RecursionHelper'
   ])
   .directive('manualActionsButton', require('./manual-actions-button/manual-actions-button.directive'))
-  .directive('createDeliverynoteButton', require('./create-deliverynote-button/create-deliverynote-button.directive'))
-  .directive('shareDeliverynoteButton', require('./share-deliverynote-button/share-deliverynote-button.directive'))
   .directive('deleteLotButton', require('./delete-lot-button/delete-lot-button.directive'))
-  .directive('acceptDeliverynoteButton', require('./accept-deliverynote-button/accept-deliverynote-button.directive'))
+  .directive('addSupplierButton', require('./add-supplier-button/add-supplier-button.directive'))
+  .directive('addReceiverButton', require('./add-receiver-button/add-receiver-button.directive'))
   .factory('openEventModal', require('./open-event-modal.factory'))
   .directive('snapshotButton', require('./snapshot-button/snapshot-button.directive'))

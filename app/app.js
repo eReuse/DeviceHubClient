@@ -74,47 +74,6 @@ module.exports = window.angular.module('deviceHub', [
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
         controller: 'printTagsCtrl as ptCl'
       }).state({
-        name: 'auth.createDeliveryNote',
-        url: '/deliverynote/new',
-        params: {
-          funs: {}
-        },
-        template: require('./views/deliverynotes/create-deliverynote.controller.html'),
-        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
-        controller: 'createDeliveryCtrl as cdCl'
-      }).state({
-        name: 'auth.shareDeliverynote',
-        url: '/deliverynote/share',
-        params: {
-          devices: {
-            type: 'any',
-            value: []
-          },
-          lot: {
-            type: 'any',
-            value: null
-          }
-        },
-        template: require('./views/deliverynotes/share-deliverynote.controller.html'),
-        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
-        controller: 'shareDeliverynoteCtrl as cdCl'
-      }).state({
-        name: 'auth.acceptDeliverynote',
-        url: '/deliverynote/accept',
-        params: {
-          devices: {
-            type: 'any',
-            value: []
-          },
-          lot: {
-            type: 'any',
-            value: null
-          }
-        },
-        template: require('./views/deliverynotes/accept-deliverynote.controller.html'),
-        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
-        controller: 'acceptDeliverynoteCtrl as cdCl'
-      }).state({
         name: 'auth.workbench',
         url: '/workbench/',
         abstract: true

@@ -345,7 +345,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       weight = null, width = null, height = null, depth = null, actions = [], problems = [], url = null, 
       rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, 
       working = [], brand = null, generation = null, version = null, variant = null, sku = null, image = null, 
-      allocated = null, usage = null, lots = null,
+      allocated = null, usage = null, lots = null, revoke = null,
       ...rest}) {
       super.define(rest)
       /** @type {int} */
@@ -386,6 +386,8 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.price = this._rel(price)
       /** @type {string} */
       this.trading = trading
+      /** @type {string} */
+      this.revoke = revoke
       /** @type {string} */
       this.physical = physical
       /** @type {string} */
@@ -938,6 +940,15 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
 
   }
 
+  /** TODO new-trade: new model Document */
+  class Document extends Thing {
+
+  }
+
+  /** TODO new-trade: new model DocumentAction */
+  /** TODO new-trade: new model ConfirmDocument */
+  /** TODO new-trade: new model RevokeConfirmDocument */
+
   /**
    * Class representing an event.
    * @alias module:resources.Action
@@ -1484,37 +1495,6 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
-   * @alias module:resources.DeliveryNote
-   */
-  class DeliveryNote extends Thing {
-    define ({
-      id = null, creator = null, receiver = null, supplier = null, documentID = null, supplierEmail = null, date = null,
-      expectedDevices = null, transferredDevices = null, transfer_state = "Initial", lot = null, ...rest }) {
-      super.define(rest)
-      this.id = id
-      this.creator = creator
-      this.receiver = receiver
-      this.supplier = supplier
-      this.documentID = documentID
-      this.supplierEmail = supplierEmail
-      this.date = date
-      this.expectedDevices = expectedDevices
-      this.transferredDevices = transferredDevices
-      this.transfer_state = transfer_state
-      this.lot = lot
-      this.amount= 0
-    }
-
-    get title () {
-      return `${super.supplierEmail} — ${this.documentID} ${this.date}`
-    }
-
-    _post () {
-      return this.dump(false)
-    }
-  }
-
-  /**
    */
   class Allocate extends ActionWithMultipleDevices {
     define ({transaction = null, endUsers = null, startTime = null, ...rest}) {
@@ -1551,6 +1531,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   /**
    * @alias module:resources.Ready
    * @extends module:resources.ActionWithMultipleDevices
+   * @deprecated
    */
   class Ready extends ActionWithMultipleDevices {
     static get icon () {
@@ -1581,6 +1562,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   /**
    * @alias module:resources.Organize
    * @extends module:resources.ActionWithMultipleDevices
+   * @deprecated
    */
   class Organize extends ActionWithMultipleDevices {
   }
@@ -1588,6 +1570,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   /**
    * @alias module:resources.Reserve
    * @extends module:resources.Organize
+   * @deprecated
    */
   class Reserve extends Organize {
   }
@@ -1595,72 +1578,61 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   /**
    * @alias module:resources.CancelReservation
    * @extends module:resources.Organize
+   * @deprecated
    */
   class CancelReservation extends Organize {
   }
 
-  /**
+  /** TODO new-trade: remove this Action
    * @alias module:resources.Trade
    * @extends module:resources.ActionWithMultipleDevices
    */
   class Trade extends ActionWithMultipleDevices {
-    define ({shippingDate = null, invoiceNumber = null, price = null, to = null, confirms = null, ...rest}) {
+    define ({date = null, price = null, userToEmail = null, userFromEmail = null, confirms = true, code = null, lot = null, ...rest}) {
       super.define(rest)
-      this.shippingDate = shippingDate
-      this.invoiceNumber = invoiceNumber
+      this.date = date
       this.price = price
-      this.to = to
+      this.userToEmail = userToEmail
+      this.userFromEmail = userFromEmail
       this.confirms = confirms
-    }
-  }
-
-  /**
-   * @alias module:resources.Trade
-   * @extends module:resources.ActionWithMultipleDevices
-   * @deprecated
-   */
-  class InitTransfer extends ActionWithMultipleDevices {
-    define ({shippingDate = null, invoiceNumber = null, to = null, lot = null, ...rest}) {
-      super.define(rest)
-      this.shippingDate = shippingDate
-      this.invoiceNumber = invoiceNumber
-      this.to = to
+      this.code = code
       this.lot = lot
     }
   }
 
+  /** TODO new-trade: change to ConfirmTrade */
   /**
-   * @alias module:resources.Trade
+   * @alias module:resources.ConfirmTrade
    * @extends module:resources.ActionWithMultipleDevices
-   * @deprecated
    */
-  class AcceptTransfer extends ActionWithMultipleDevices {
-    define ({shippingDate = null, invoiceNumber = null, to = null, lot = null, ...rest}) {
+  class Confirm extends ActionWithMultipleDevices {
+    define ({action = null, ...rest}) {
       super.define(rest)
-      this.shippingDate = shippingDate
-      this.invoiceNumber = invoiceNumber
-      this.to = to
-      this.lot = lot
+      this.action = action
     }
   }
 
+  /** TODO new-trade: change to Revoke */
   /**
-   * @alias module:resources.Sell
-   * @extends module:resources.Trade
+   * @alias module:resources.Revoke
+   * @extends module:resources.ActionWithMultipleDevices
    */
-  class Sell extends Trade {
-    static get icon () {
-      return 'money-bill-alt'
+  class Revoke extends ActionWithMultipleDevices {
+    define ({action = null, ...rest}) {
+      super.define(rest)
+      this.action = action
     }
   }
 
+  /** TODO new-trade: change to ConfirmRevokeTrade */
   /**
-   * @alias module:resources.Donate
-   * @extends module:resources.Trade
+   * @alias module:resources.ConfirmRevokeTrade
+   * @extends module:resources.ActionWithMultipleDevices
    */
-  class Donate extends Trade {
-    static get icon () {
-      return 'money-bill'
+  class ConfirmRevoke extends ActionWithMultipleDevices {
+    define ({action = null, ...rest}) {
+      super.define(rest)
+      this.action = action
     }
   }
 
@@ -1672,25 +1644,6 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     static get icon () {
       return 'fa-check-circle'
     }
-  }
-
-  /**
-   * @alias module:resources.Transferred
-   * @extends module:resources.ActionWithMultipleDevices
-   * @deprecated
-   */
-  class Transferred extends ActionWithMultipleDevices {
-    static get icon () {
-      return 'fa-check-circle'
-    }
-  }
-
-  /**
-   * @alias module:resources.CancelTrade
-   * @extends module:resources.Trade
-   */
-  class CancelTrade extends Trade {
-
   }
 
   /**
@@ -1793,7 +1746,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    */
   class Lot extends Thing {
     define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null,
-      deliverynote = null, isVisible = true, ...rest}) {
+      isVisible = true, trade = null, ...rest}) {
       super.define(rest)
       this.id = id
       this.name = name
@@ -1803,7 +1756,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.parents = parents
       this.children = children
       this.url = url
-      this.deliverynote = deliverynote ? new DeliveryNote(deliverynote) : deliverynote
+      this.trade = trade
       this.isVisible = isVisible
     }
 
@@ -2088,7 +2041,6 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     BenchmarkProcessor: BenchmarkProcessor,
     BenchmarkProcessorSysbench: BenchmarkProcessorSysbench,
     BenchmarkRamSysbench: BenchmarkRamSysbench,
-    DeliveryNote: DeliveryNote,
     Allocate: Allocate,
     Deallocate: Deallocate,    
     ToRepair: ToRepair,
@@ -2099,14 +2051,11 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     Organize: Organize,
     Reserve: Reserve,
     CancelReservation: CancelReservation,
-    InitTransfer: InitTransfer,
-    AcceptTransfer: AcceptTransfer,
     Trade: Trade,
-    Sell: Sell,
-    Donate: Donate,
+    Confirm: Confirm,
+    Revoke: Revoke,
+    ConfirmRevoke: ConfirmRevoke,
     MakeAvailable: MakeAvailable,
-    Transferred: Transferred,
-    CancelTrade: CancelTrade,
     Rent: Rent,
     ToDisposeProduct: ToDisposeProduct,
     DisposeProduct: DisposeProduct,
@@ -2133,11 +2082,6 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    * @type {module:server.DevicehubThing}
    */
   Lot.server = new server.DevicehubThing('/lots/', resources)
-  /**
-   * @memberOf {module:resources.DeliveryNote}
-   * @type {module:server.DevicehubThing}
-   */
-  DeliveryNote.server = new server.DevicehubThing('/deliverynotes/', resources)
   /**
    * @alias {module:resources.Tag.server}
    * @type {module:server.DevicehubThing}

@@ -6,7 +6,7 @@
  * @param {module:deviceGetter} deviceGetter
  * @param {module:selection} selection
  */
-function resourceList ($rootScope, session, resourceListConfig, Notification, deviceGetter, selection) {
+function resourceList ($rootScope, $state, session, resourceListConfig, Notification, deviceGetter, selection, resources) {
   return {
     template: require('./resource-list.directive.html'),
     restrict: 'E',
@@ -96,6 +96,16 @@ function resourceList ($rootScope, session, resourceListConfig, Notification, de
           }
         }
 
+        /** TODO new-trade: 
+         *  create SelectedDocuments to allow selection of documents like so:
+         *    class SelectedDocuments extends selection.Selected {
+         *    ...
+         *    }
+         *    const selectedDocuments = $scope.selectedDocuments = new SelectedDocuments()
+         */
+
+
+        /** TODO new-trade: rename to selectedDevices */
         const selected = $scope.selected = new SelectedDevices()
         $scope.onLotsSelectionChanged = lots => {
           getter.setFilter('lot', {id: _.map(lots, 'id')})
@@ -126,19 +136,18 @@ function resourceList ($rootScope, session, resourceListConfig, Notification, de
             $rootScope.$broadcast('lots:reload')
           }
 
+          createTradeForLot(lot, participants = {}) {
+            console.log('creating trade for lot', lot, ', participants', participants)
+            const action = new resources.Trade({devices: lot.devices, lot: lot, userToEmail: participants.to, userFromEmail: participants.from})
+            $state.go('.newAction', {action: action})
+          }
+
           /**
            * @param {module:resources.Lot[]} lots
            */
           updateSelection (lots) {
             this.lots = lots
             this.title = _.map(lots, 'name').join(', ')
-            if(lots.length === 1 && lots[0].deliverynote) {
-              $scope.deliverynote = lots[0].deliverynote
-              $scope.expectedDevices = lots[0].deliverynote.expectedDevices
-            } else {
-              $scope.deliverynote = null
-              $scope.expectedDevices = []
-            }
             // Update filter
             if (lots.length) {
               getter.setFilter('lot', {id: _.map(lots, 'id')})

@@ -1,5 +1,6 @@
 /**
  * @module resourceFields
+ * IMPORTANT: we are using the formly library for creating forms http://angular-formly.com/
  */
 
 /**
@@ -48,7 +49,7 @@ function resourceFields (fields, resources, enums) {
         new f.String('name', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.Datepicker('endTime', def),
         new f.Select('severity',
-          _.defaults({options: enums.Severity.options(f)}, def)),
+          _.defaults({options: enums.Severity .options(f)}, def)),
         new f.Textarea('description', def),
         ...fields
       )
@@ -63,6 +64,7 @@ function resourceFields (fields, resources, enums) {
     constructor (model, ...fields) {
       super(model, ...fields)
       const devices = new f.Resources('devices', {namespace: 'r.eventWithMultipleDevices'})
+      /** TODO new-trade: show selected documents as well */
       this.fields.splice(1, 0, devices)
     }
   }
@@ -144,13 +146,6 @@ function resourceFields (fields, resources, enums) {
   class MakeAvailable extends EventWithMultipleDevices {
   }
 
-    /**
-   * @alias module:resourceFields.Transferred
-   * @extends module:resourceFields.EventWithMultipleDevices
-   */
-  class Transferred extends EventWithMultipleDevices {
-  }
-
   /**
    * @alias module:resourceFields.Rent
    * @extends module:resourceFields.EventWithMultipleDevices
@@ -159,34 +154,55 @@ function resourceFields (fields, resources, enums) {
   }
 
   /**
-   * @alias module:resourceFields.CancelTrade
+   * TODO new-trade: change userTo Trade
    * @extends module:resourceFields.EventWithMultipleDevices
    */
-  class CancelTrade extends EventWithMultipleDevices {
-  }
-  
-  /**
-   * @alias module:resourceFields.InitTransfer
-   * @extends module:resourceFields.EventWithMultipleDevices
-   */
-  class InitTransfer extends EventWithMultipleDevices {
+  class Trade extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       super(model, ...fields)
-      const receiver = new f.String('receiver', {namespace: 'r.receiver'})
-      this.fields.splice(1, 0, receiver)
+      const def = {namespace: 'r.trade'}
+      function createField(fields, position, model, propName, namespace) {
+        const newField = model[propName] ? 
+          new f.StringReadOnly(propName, {defaultValue: model[propName], namespace: namespace})
+          : new f.String(propName, {namespace: namespace})  
+        fields.splice(position, 0, newField)
+      }
+      createField(this.fields, 1, model, 'userFromEmail', 'userFrom')
+      createField(this.fields, 2, model, 'userToEmail', 'userTo')
+      this.fields.push(new f.Checkbox("confirms", def))
+      this.fields.push(new f.String("code", def))
     }
   }
 
   /**
-   * @alias module:resourceFields.AcceptTransfer
+   * TODO new-trade: change userTo ConfirmTrade
    * @extends module:resourceFields.EventWithMultipleDevices
    */
-  class AcceptTransfer extends EventWithMultipleDevices {
+  class Confirm extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       super(model, ...fields)
-      fields.op = this.constructor.PATCH
+      const action = model.action ? 
+        new f.StringReadOnly('action', {defaultValue: model.action.id, namespace: 'r.trade'})
+        : new f.String('action', {namespace: 'r.trade'})
+
+      this.fields.splice(1, 0, action)
     }
   }
+
+  /** TODO new-trade: add RevokeTrade 
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class Revoke extends Confirm {
+  }
+
+  /** TODO new-trade: add ConfirmRevokeTrade 
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class ConfirmRevoke extends Confirm {
+  }
+
+  /** TODO new-trade: new model ConfirmDocument */
+  /** TODO new-trade: new model RevokeConfirmDocument */
 
   return {
     ResourceForm: ResourceForm,
@@ -201,11 +217,11 @@ function resourceFields (fields, resources, enums) {
     ToDisposeProduct: ToDisposeProduct,
     Receive: Receive,
     MakeAvailable: MakeAvailable,
-    Transferred: Transferred,
     Rent: Rent,
-    CancelTrade: CancelTrade,
-    InitTransfer: InitTransfer,
-    AcceptTransfer: AcceptTransfer
+    Trade: Trade,
+    Confirm: Confirm,
+    Revoke: Revoke,
+    ConfirmRevoke: ConfirmRevoke,
   }
 }
 
