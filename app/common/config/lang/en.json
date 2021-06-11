@@ -96,10 +96,10 @@
     },
     "trade": {
       "supplier": {
-        "button": "Add receiver"
+        "button": "Add supplier"
       },
       "receiver": {
-        "button": "Add supplier"
+        "button": "Add receiver"
       }
     }
   },
@@ -349,6 +349,12 @@
         "l": "Supplier email",
         "d": "Enter the email of the supplier's account"
       },
+    "userFrom": {
+      "userFromEmail": {
+        "l": "Supplier email",
+        "d": "Please enter the supplier's email address"
+      }
+    },
       "date": {
         "l": "Date",
         "d": "Enter the date as specified in the trade"
@@ -435,17 +441,17 @@
         "d": ""
       }
     },
+  },
+  "userTo": {
     "userToEmail": {
-      "userToEmail": {
-        "l": "Receiver email",
-        "d": "Please enter the receiver's email address"
-      }
-    },
+      "l": "Receiver email",
+      "d": "Please enter the receiver's email address"
+    }
+  },
+  "userFrom": {
     "userFromEmail": {
-      "userFromEmail": {
-        "l": "Supplier email",
-        "d": "Please enter the supplier's email address"
-      }
+      "l": "Supplier email",
+      "d": "Please enter the supplier's email address"
     }
   },
   "e": {
