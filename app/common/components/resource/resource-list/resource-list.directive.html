@@ -37,11 +37,6 @@
           lot="lotsM.lots[0]"
 	        manager="lotsM">
         </add-receiver-button>
-        <add-document-button 
-          ng-if="lotsM.lots.length === 1 && !lotsM.lots[0].trade"
-          lot="lotsM.lots[0]"
-	        manager="lotsM">
-        </add-document-button>
         <button type="button" class="btn btn-link hidden-xs btn-xs" ng-click="lotsM.deselectAll()">
           Deselect all ({{lotsM.lots.length}})
         </button>
@@ -62,6 +57,15 @@
       <h2 ng-show="lotsM.lots.length > 1">
         {{lotsM.title}}
       </h2>
+    </div>
+    <div ng-if="lotsM.lots.length === 1">
+     <h2 class="pull-left">
+       Files
+     </h2>
+     <div class="pull-right">
+	<add-trade-document-button manager="lotsM"> 
+        </add-trade-document-button>
+     </div>
     </div>
     <div class="col-xs-12 fill-height-bar">
       <div ng-hide="lotsM.lots.length">

@@ -224,6 +224,22 @@ function resourceFields (fields, resources, enums) {
   class RevokeConfirmDocument extends ConfirmDocument {
   }
 
+  /**
+   * @alias module:resourceFields.Event
+   * @extends module:resourceFields.ResourceForm
+   */
+  class TradeDocument extends ResourceForm {
+    constructor (model, ...fields) {
+      const def = {namespace: 'r.tradedocument'}
+      super(model,
+        new f.String('filename', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('url', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('hash', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        ...fields
+      )
+    }
+  }
+
 
   return {
     ResourceForm: ResourceForm,
@@ -245,6 +261,7 @@ function resourceFields (fields, resources, enums) {
     ConfirmRevoke: ConfirmRevoke,
     ConfirmDocument: ConfirmDocument,
     RevokeConfirmDocument: RevokeConfirmDocument,
+    TradeDocument: TradeDocument,
   }
 }
 

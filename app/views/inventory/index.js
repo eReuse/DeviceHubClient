@@ -31,4 +31,5 @@ module.exports = angular.module('views.inventory',
   .controller('snapshotUploadCtrl', require('./upload.snapshot.controller.js'))
   .controller('snapshotManualCtrl', require('./manual.snapshot.controller.js'))
   .controller('importCtrl', require('./import.controller.js'))
+  .controller('newTradeDocumentCtrl', require('./new-trade-document.controller.js'))
 

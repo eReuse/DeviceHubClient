@@ -941,15 +941,16 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   }
 
   /** TODO new-trade: new model Document */
-  class Document extends Thing {
-    define ({document_id = null, date = null, description = null, filename = null, file = null, lot = null, ...rest}) {
+  class TradeDocument extends Thing {
+    define ({filename = null, url = null, hash = null, lot = null, ...rest}) {
       super.define(rest)
-      this.document_id = document_id
-      this.date = date
-      this.date  = date ? new Date(date) : null
+      /** @type {string} */
       this.filename = filename
-      this.file = file
-      this.lot = lot 
+      /** @type {string} */
+      this.url = url
+      /** @type {string} */
+      this.hash = hash
+      this.lot = lot
     }
   }
 
@@ -2109,7 +2110,8 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     Lot: Lot,
     User: User,
     ResourceList: ResourceList,
-    init: init
+    init: init,
+    TradeDocument: TradeDocument
   }, utils.unforgivingHandler)
   // Init servers
   /**

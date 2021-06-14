@@ -142,8 +142,9 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
             $state.go('.newAction', {action: action})
           }
 
-          addDocumentLot(lot, participants = {}) {
-            console.log('creating trade for lot', lot, ', participants', participants)
+          addTradeDocument(lot) {
+            const doc = new resources.TradeDocument({lot: lot})
+            $state.go('.newTradeDocument', {doc: doc})
           }
 
           /**
