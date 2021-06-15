@@ -1800,7 +1800,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    */
   class Lot extends Thing {
     define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null,
-      isVisible = true, trade = null, ...rest}) {
+      isVisible = true, trade = null, documents = null, ...rest}) {
       super.define(rest)
       this.id = id
       this.name = name
@@ -1811,6 +1811,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.children = children
       this.url = url
       this.trade = trade
+      this.documents = documents
       this.isVisible = isVisible
     }
 
