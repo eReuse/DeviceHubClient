@@ -942,7 +942,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
 
   /** TODO new-trade: new model Document */
   class TradeDocument extends Thing {
-    define ({filename = null, url = null, hash = null, lot = null, ...rest}) {
+    define ({filename = null, url = null, hash = null, date = null, documentId = null, description = null, lot = null, ...rest}) {
       super.define(rest)
       /** @type {string} */
       this.filename = filename
@@ -950,7 +950,15 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.url = url
       /** @type {string} */
       this.hash = hash
+      /** @type {Date} */
+      this.date= date ? new Date(date) : null
+      /** @type {string} */
+      this.documentId = documentId
+      /** @type {string} */
+      this.description = description
+      /** @type {Lot} */
       this.lot = lot
+      console.log(this.server)
     }
   }
 
@@ -2134,6 +2142,11 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    * @type {module:server.DevicehubThing}
    */
   Tag.server = new server.DevicehubThing('/tags/', resources)
+  /**
+   * @alias {module:resources.TradeDocument.server}
+   * @type {module:server.DevicehubThing}
+   */
+  TradeDocument.server = new server.DevicehubThing('/trade-documents/', resources)
   return resources
 }
 

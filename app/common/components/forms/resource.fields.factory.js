@@ -235,6 +235,9 @@ function resourceFields (fields, resources, enums) {
         new f.String('filename', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.String('url', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.String('hash', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('documentId', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('description', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.Datepicker('date', def),
         ...fields
       )
     }
