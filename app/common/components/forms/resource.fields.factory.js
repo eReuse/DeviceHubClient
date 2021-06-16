@@ -7,6 +7,8 @@
  * @param {module:fields} fields
  * @param {module:enums} enums
  */
+//import { SHA3 } from "sha3"
+
 function resourceFields (fields, resources, enums) {
   const f = fields
 
@@ -234,12 +236,36 @@ function resourceFields (fields, resources, enums) {
       super(model,
         new f.String('filename', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.String('url', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
-        new f.String('hash', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        //new f.String('hash', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.String('documentId', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.String('description', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.Datepicker('date', def),
+        new f.Upload('file', {
+          accept: '*/*',
+          multiple: false,
+          readAs: f.Upload.READ_AS.TEXT,
+          required: true,
+          namespace: 'r.tradedocument.document',
+          expressions: {
+            disabled: 'form.status.loading'
+          }
+        }),
         ...fields
       )
+    }
+
+    getHash () {
+      return '55555'
+      const sha3 = new SHA3(256)
+      sha3.update(this.model.file.data)
+      console.log(sha3.digest("hex"))
+      return sha3.digest("hex")
+    }
+
+    _submit (op) {
+      this.model.filename = this.model.file.name
+      this.model.hash = this.getHash()
+      return this.model.post()
     }
   }
 
