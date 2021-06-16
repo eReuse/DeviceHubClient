@@ -118,6 +118,7 @@
       "using": "Allocation",
       "physical": "Physical actions",
       "political": "Political actions",
+      "trade": "Trade actions",
       "other": "Other actions"
     }
   },
@@ -344,20 +345,28 @@
         "d": "An URL containing an image of the device."
       }
     },
-    "Trade": {
+    "trade": {
       "supplierEmail": {
         "l": "Supplier email",
         "d": "Enter the email of the supplier's account"
       },
-    "userFrom": {
-      "userFromEmail": {
-        "l": "Supplier email",
-        "d": "Please enter the supplier's email address"
-      }
-    },
+      "userFrom": {
+        "userFromEmail": {
+          "l": "Supplier email",
+          "d": "Please enter the supplier's email address"
+        }
+      },
       "date": {
         "l": "Date",
         "d": "Enter the date as specified in the trade"
+      },
+      "confirms": {
+        "l": "Confirm",
+        "d": "I need confirmation from the other user for every device and document."
+      },
+      "code": {
+        "l": "Code",
+        "d": "If you don't need confirm, you need put a code for trace the user in the statistics."
       },
       "documentID": {
         "l": "Document ID",
