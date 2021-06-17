@@ -244,7 +244,7 @@ function resourceFields (fields, resources, enums) {
           accept: '*/*',
           multiple: false,
           readAs: f.Upload.READ_AS.TEXT,
-          required: true,
+          required: false,
           namespace: 'r.tradedocument.document',
           expressions: {
             disabled: 'form.status.loading'
@@ -255,8 +255,7 @@ function resourceFields (fields, resources, enums) {
     }
 
     getHash () {
-      return '55555'
-      const sha3 = new SHA3(256)
+      const sha3 = new SHA3.SHA3(256)
       sha3.update(this.model.file.data)
       console.log(sha3.digest("hex"))
       return sha3.digest("hex")
@@ -265,6 +264,7 @@ function resourceFields (fields, resources, enums) {
     _submit (op) {
       this.model.filename = this.model.file.name
       this.model.hash = this.getHash()
+      delete this.model.file
       return this.model.post()
     }
   }

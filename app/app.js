@@ -172,6 +172,7 @@ module.exports = window.angular.module('deviceHub', [
    */
   .run(($rootScope, CONSTANTS) => {
     $rootScope._ = window._ // We add lodash for usage in templates
+    $rootScope.SHA3 = window.SHA3
     $rootScope.COMMON = window.COMMON
     $rootScope.COMPONENTS = window.COMPONENTS
     $rootScope.CONSTANTS = CONSTANTS
