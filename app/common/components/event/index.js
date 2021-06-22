@@ -11,5 +11,7 @@ module.exports = angular.module('common.components.event',
   .directive('addSupplierButton', require('./add-supplier-button/add-supplier-button.directive'))
   .directive('addReceiverButton', require('./add-receiver-button/add-receiver-button.directive'))
   .directive('addTradeDocumentButton', require('./add-trade-document-button/add-trade-document-button.directive'))
+  .directive('confirmDocumentButton', require('./confirm-document-button/confirm-document-button.directive'))
+  .directive('revokeDocumentButton', require('./revoke-document-button/revoke-document-button.directive'))
   .factory('openEventModal', require('./open-event-modal.factory'))
   .directive('snapshotButton', require('./snapshot-button/snapshot-button.directive'))

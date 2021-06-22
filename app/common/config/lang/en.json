@@ -103,6 +103,12 @@
       },
       "add_document": {
         "button": "Add file"
+      },
+      "confirm_document": {
+        "button": "Confirm"
+      },
+      "revoke_document": {
+        "button": "Revoke"
       }
     }
   },

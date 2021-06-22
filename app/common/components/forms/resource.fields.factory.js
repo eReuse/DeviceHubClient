@@ -29,6 +29,8 @@ function resourceFields (fields, resources, enums) {
      * @private
      */
     _submit (op) {
+      console.log(this.model)
+      console.log(op)
       switch (op) {
         case this.constructor.POST:
           return this.model.post()
@@ -68,6 +70,18 @@ function resourceFields (fields, resources, enums) {
       const devices = new f.Resources('devices', {namespace: 'r.eventWithMultipleDevices'})
       /** TODO new-trade: show selected documents as well */
       this.fields.splice(1, 0, devices)
+    }
+  }
+
+  /**
+   * @alias module:resourceFields.EventWithMultipleDevices
+   * @extends module:resourceFields.Event
+   */
+  class EventWithOneDocument extends ResourceForm {
+    constructor (model, ...fields) {
+      super(model, ...fields)
+      const doc = new f.Resources('doc', {namespace: 'r.eventWithOneDocument'})
+      this.fields.splice(1, 0, doc)
     }
   }
 
@@ -207,23 +221,34 @@ function resourceFields (fields, resources, enums) {
    * @alias module:resourceFields.ConfirmDocument
    * @extends module:resourceFields.Event
    */
-  class ConfirmDocument extends Event {
+  class ConfirmDocument extends EventWithOneDocument {
     constructor (model, ...fields) {
       super(model, ...fields)
-      const doc = new f.Resources('document', {namespace: 'r.eventWithOneDocument'})
       const action = model.action ? 
         new f.StringReadOnly('action', {defaultValue: model.action.id, namespace: 'r.trade'})
         : new f.String('action', {namespace: 'r.trade'})
 
-      this.fields.splice(1, 0, doc)
-      this.fields.splice(2, 0, action)
+      this.fields.splice(1, 0, action)
     }
   }
 
   /** TODO new-trade: new model RevokeConfirmDocument 
    * @extends module:resourceFields.EventWithMultipleDevices
+  class RevokeConfirmDocument extends Event {
+    constructor (model, ...fields) {
+      super(model, ...fields)
+      const doc = new f.Resources('document', {namespace: 'r.eventWithOneDocument'})
+      this.fields.splice(1, 0, doc)
+    }
+  }
    */
-  class RevokeConfirmDocument extends ConfirmDocument {
+  class RevokeConfirmDocument extends ResourceForm {
+    constructor (model, ...fields) {
+      const def = {namespace: 'r.event'}
+      super(model, ...fields)
+      const doc = new f.Resources('document', {namespace: 'r.eventWithOneDocument'})
+      this.fields.splice(1, 0, doc)
+    }
   }
 
   /**
@@ -251,13 +276,12 @@ function resourceFields (fields, resources, enums) {
           }
         }),
         ...fields
-      )
+	      )
     }
 
     getHash () {
       const sha3 = new SHA3.SHA3(256)
       sha3.update(this.model.file.data)
-      console.log(sha3.digest("hex"))
       return sha3.digest("hex")
     }
 

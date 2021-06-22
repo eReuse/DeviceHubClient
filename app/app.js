@@ -126,6 +126,15 @@ module.exports = window.angular.module('deviceHub', [
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
         controller: 'newTradeDocumentCtrl as ndCl'
       }).state({
+        name: 'auth.inventory.newActionDocument',
+        url: 'new-action-document/',
+        params: {
+	  doc: null
+        },
+        template: require('./views/inventory/new-action-document.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
+        controller: 'newActionDocumentCtrl as nadCl'
+      }).state({
         name: 'auth.inventory.snapshotUpload',
         url: 'upload-snapshot/',
         template: require('./views/inventory/upload.snapshot.controller.html'),

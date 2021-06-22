@@ -942,7 +942,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
 
   /** TODO new-trade: new model Document */
   class TradeDocument extends Thing {
-    define ({filename = null, url = null, hash = null, date = null, documentId = null, description = null, lot = null, ...rest}) {
+    define ({filename = null, url = null, hash = null, date = null, documentId = null, description = null, lot = null, trading, ...rest}) {
       super.define(rest)
       /** @type {string} */
       this.filename = filename
@@ -958,7 +958,8 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.description = description
       /** @type {Lot} */
       this.lot = lot
-      console.log(this.server)
+      this.trading = trading
+      console.log(this.lot)
     }
   }
 
@@ -1094,9 +1095,9 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     _props () {
       const props = super._props()
       props.doc = {
-        get: () => this._getRel(Document, this._doc),
+        get: () => this._getRel(TradeDocument, this._doc),
         set: v => {
-          this._device = this._rel(v)
+          this._doc = this._rel(v)
         },
         enumerable: true
       }
