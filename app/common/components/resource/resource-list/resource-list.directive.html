@@ -100,8 +100,7 @@
             </td>
 	    <td>
               <span ng-if="::document.trading === 'Confirm'">
-		<confirm-document-button manager="lotsM"  doc="::document" 
-			action="lotsM.lots[0].trade"> 
+		<confirm-document-button manager="lotsM"  doc="::document"> 
 		</confirm-document-button>
               </span>
               <span ng-if="::document.trading === 'ToConfirm'">

@@ -8,16 +8,18 @@ function confirmDocumentButton($state, session) {
     restrict: 'E',
     scope: {
       doc: '=',
+      action: '=',
       manager: '='
     },
     /**
      */
     link: $scope => {
-      const trade = $scope.action
+      const action = $scope.manager.lots[0].trade
       const doc = $scope.doc
 
       $scope.confirmDocument= () => {
-        $state.go('.newActionDocument', {doc: doc, action: trade})
+	return $scope.manager.confirmDocument(doc, action)
+        //$state.go('.newActionDocument', {doc: doc, action: action})
       }
     }
   }

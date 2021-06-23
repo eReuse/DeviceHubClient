@@ -147,6 +147,11 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
             $state.go('.newTradeDocument', {doc: doc})
           }
 
+          confirmDocument(doc, action) {
+	    console.log(action)
+            $state.go('.newActionDocument', {doc: doc, action: action})
+          }
+
           /**
            * @param {module:resources.Lot[]} lots
            */
