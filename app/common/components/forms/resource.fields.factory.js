@@ -29,8 +29,6 @@ function resourceFields (fields, resources, enums) {
      * @private
      */
     _submit (op) {
-      console.log(this.model)
-      console.log(op)
       switch (op) {
         case this.constructor.POST:
           return this.model.post()
@@ -80,7 +78,8 @@ function resourceFields (fields, resources, enums) {
   class EventWithOneDocument extends ResourceForm {
     constructor (model, ...fields) {
       super(model, ...fields)
-      const doc = new f.Resources('doc', {namespace: 'r.eventWithOneDocument'})
+      const def = {namespace: 'r.eventWithOneDocument'}
+      const doc = new f.Resources('doc', def)
       this.fields.splice(1, 0, doc)
     }
   }
@@ -220,15 +219,27 @@ function resourceFields (fields, resources, enums) {
   /** TODO new-trade: new model ConfirmDocument 
    * @alias module:resourceFields.ConfirmDocument
    * @extends module:resourceFields.Event
-   */
   class ConfirmDocument extends EventWithOneDocument {
     constructor (model, ...fields) {
       super(model, ...fields)
-      const action = model.action ? 
-        new f.StringReadOnly('action', {defaultValue: model.action.id, namespace: 'r.trade'})
-        : new f.String('action', {namespace: 'r.trade'})
+    }
+  }
+   */
+  class ConfirmDocument extends ResourceForm {
+    constructor (model, ...fields) {
+      const def = {namespace: 'r.tradedocument'}
+      super(model, ...fields)
+      const devices = new f.Resources('devices', {namespace: 'r.eventWithMultipleDevices'})
+      const doc = new f.Resources('documents', def)
+      this.fields.splice(1, 0, doc)
+    }
 
-      this.fields.splice(1, 0, action)
+    _submit (op) {
+	console.log(this.model)
+      this.model.action = this.model.doc.lot.trade
+      this.model.documents = [this.model.doc]
+      delete this.model.doc
+      return this.model.post()
     }
   }
 
@@ -241,13 +252,26 @@ function resourceFields (fields, resources, enums) {
       this.fields.splice(1, 0, doc)
     }
   }
-   */
-  class RevokeConfirmDocument extends ResourceForm {
+
+  class RevokeDocument extends ConfirmDocument {
     constructor (model, ...fields) {
-      const def = {namespace: 'r.event'}
       super(model, ...fields)
-      const doc = new f.Resources('document', {namespace: 'r.eventWithOneDocument'})
-      this.fields.splice(1, 0, doc)
+    }
+  }
+   */
+
+  class RevokeDocument extends ResourceForm {
+    constructor (model, ...fields) {
+      const def = {namespace: 'r.tradedocument'}
+      super(model, ...fields)
+      const documents = new f.Resources('documents', def)
+      this.fields.splice(1, 0, documents)
+    }
+
+    _submit (op) {
+      console.log(this.model)
+      this.model.documents = [this.model.documents[0].id]
+      return this.model.post()
     }
   }
 
@@ -313,7 +337,7 @@ function resourceFields (fields, resources, enums) {
     Revoke: Revoke,
     ConfirmRevoke: ConfirmRevoke,
     ConfirmDocument: ConfirmDocument,
-    RevokeConfirmDocument: RevokeConfirmDocument,
+    RevokeDocument: RevokeDocument,
     TradeDocument: TradeDocument,
   }
 }

@@ -6,8 +6,8 @@
  * @param {module:resources.Action} $stateParams.action
  */
 function revokeDocumentCtrl ($scope, $stateParams, resourceFields, $state) {
-  const doc = $scope.doc = $stateParams.doc
-  const type = 'ConfirmDocument'
+  const documents = $scope.doc = $stateParams.doc
+  const type = 'RevokeDocument'
 
   function leave () {
     $state.go('^')
@@ -23,7 +23,7 @@ function revokeDocumentCtrl ($scope, $stateParams, resourceFields, $state) {
     }
   }
 
-  $scope.form = new RevokeDocumentForm(doc)
+  $scope.form = new RevokeDocumentForm(documents)
 }
 
 module.exports = revokeDocumentCtrl

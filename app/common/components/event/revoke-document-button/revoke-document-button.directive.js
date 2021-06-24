@@ -15,8 +15,8 @@ function revokeDocumentButton($state, session) {
     link: $scope => {
       const doc = $scope.doc
 
-      $scope.revokeDocument = () => {
-        $state.go('.newActionDocument', {doc: doc})
+      $scope.revokeDocument= () => {
+	return $scope.manager.revokeDocument(doc)
       }
     }
   }

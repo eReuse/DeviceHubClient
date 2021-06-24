@@ -126,14 +126,23 @@ module.exports = window.angular.module('deviceHub', [
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
         controller: 'newTradeDocumentCtrl as ndCl'
       }).state({
-        name: 'auth.inventory.newActionDocument',
-        url: 'new-action-document/',
+        name: 'auth.inventory.confirmDocument',
+        url: 'confirm-document/',
         params: {
 	  doc: null
         },
-        template: require('./views/inventory/new-action-document.controller.html'),
+        template: require('./views/inventory/confirm-document.controller.html'),
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
-        controller: 'newActionDocumentCtrl as nadCl'
+        controller: 'confirmDocumentCtrl as confDCl'
+      }).state({
+        name: 'auth.inventory.revokeDocument',
+        url: 'revoke-document/',
+        params: {
+	  doc: null
+        },
+        template: require('./views/inventory/revoke-document.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
+        controller: 'revokeDocumentCtrl as revDCl'
       }).state({
         name: 'auth.inventory.snapshotUpload',
         url: 'upload-snapshot/',
