@@ -963,9 +963,14 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
-  /** TODO new-trade: new model RevokeConfirmDocument */
-  class RevokeConfirmDocument extends ConfirmDocument {
+  /** TODO new-trade: new model ConfirmRevokeDocument */
+  class ConfirmRevokeDocument extends Thing {
+    define ({documents = [], ...rest}) {
+      super.define(rest)
+      this.documents = documents
+    }
   }
+
 
   /** TODO new-trade: new model Document */
   class TradeDocument extends Thing {
@@ -2132,7 +2137,8 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     init: init,
     TradeDocument: TradeDocument,
     ConfirmDocument: ConfirmDocument,
-    RevokeDocument: RevokeDocument
+    RevokeDocument: RevokeDocument,
+    ConfirmRevokeDocument: ConfirmRevokeDocument
   }, utils.unforgivingHandler)
   // Init servers
   /**
@@ -2162,6 +2168,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   TradeDocument.server = new server.DevicehubThing('/trade-documents/', resources)
   ConfirmDocument.server = new server.DevicehubThing('/actions/', resources)
   RevokeDocument.server = new server.DevicehubThing('/actions/', resources)
+  ConfirmRevokeDocument.server = new server.DevicehubThing('/actions/', resources)
   return resources
 }
 

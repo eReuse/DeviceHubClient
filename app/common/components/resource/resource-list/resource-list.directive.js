@@ -150,12 +150,17 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
           confirmDocument(doc) {
 	    //console.log(resources.TradeDocuments)
 	    const confirmdoc = new resources.ConfirmDocument({documents: [doc]})
-	    $state.go('.confirmDocument', {documents: confirmdoc})
+	    $state.go('.confirmDocument', {doc: confirmdoc})
           }
 
           revokeDocument(doc) {
 	    const revokedoc = new resources.RevokeDocument({documents: [doc]})
 	    $state.go('.revokeDocument', {doc: revokedoc})
+          }
+
+          confirmRevokeDocument(doc) {
+	    const confrevokedoc = new resources.ConfirmRevokeDocument({documents: [doc]})
+	    $state.go('.confirmRevokeDocument', {doc: confrevokedoc})
           }
 
           /**

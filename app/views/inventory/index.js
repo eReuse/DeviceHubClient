@@ -30,6 +30,7 @@ module.exports = angular.module('views.inventory',
   .controller('newActionCtrl', require('./new-action.controller.js'))
   .controller('confirmDocumentCtrl', require('./confirm-document.controller.js'))
   .controller('revokeDocumentCtrl', require('./revoke-document.controller.js'))
+  .controller('confirmRevokeDocumentCtrl', require('./confirm-revoke-document.controller.js'))
   .controller('snapshotUploadCtrl', require('./upload.snapshot.controller.js'))
   .controller('snapshotManualCtrl', require('./manual.snapshot.controller.js'))
   .controller('importCtrl', require('./import.controller.js'))

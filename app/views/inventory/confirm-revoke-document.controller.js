@@ -5,16 +5,15 @@
  * @param {module:resourceFields} resourceFields
  * @param {module:resources.Action} $stateParams.action
  */
-function confirmDocumentCtrl ($scope, $stateParams, resourceFields, $state) {
-  console.log($stateParams)
+function confirmRevokeDocumentCtrl ($scope, $stateParams, resourceFields, $state) {
   const documents = $scope.doc = $stateParams.doc
-  const type = 'ConfirmDocument'
+  const type = 'ConfirmRevokeDocument'
 
   function leave () {
     $state.go('^')
   }
 
-  class ConfirmDocumentForm extends resourceFields[type] {
+  class ConfirmRevokeDocumentForm extends resourceFields[type] {
     _submit (op) {
       return super._submit(op).then(leave)
     }
@@ -24,8 +23,8 @@ function confirmDocumentCtrl ($scope, $stateParams, resourceFields, $state) {
     }
   }
 
-  $scope.form = new ConfirmDocumentForm(documents)
+  $scope.form = new ConfirmRevokeDocumentForm(documents)
 }
 
-module.exports = confirmDocumentCtrl
+module.exports = confirmRevokeDocumentCtrl
 

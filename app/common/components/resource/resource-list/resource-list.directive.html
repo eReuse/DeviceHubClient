@@ -99,13 +99,21 @@
               </span>
             </td>
 	    <td>
-              <span ng-if="::document.trading === 'To Confirm'">
+              <span ng-if="::document.trading === 'Confirm'">
 		<revoke-document-button manager="lotsM" doc="::document"> 
 		</revoke-document-button>
               </span>
-              <span ng-if="::document.trading === 'Confirm'">
+              <span ng-if="::document.trading === 'Document Confirmed'">
+		<revoke-document-button manager="lotsM" doc="::document"> 
+		</revoke-document-button>
+              </span>
+              <span ng-if="::document.trading === 'Need Confirmation'">
 		<confirm-document-button manager="lotsM"  doc="::document"> 
 		</confirm-document-button>
+              </span>
+              <span ng-if="::document.trading === 'Revoke'">
+		<confirm-revoke-document-button manager="lotsM" doc="::document"> 
+		</confirm-revoke-document-button>
               </span>
             </td>
           </tr>
