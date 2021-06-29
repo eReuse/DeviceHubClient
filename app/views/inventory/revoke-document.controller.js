@@ -6,7 +6,7 @@
  * @param {module:resources.Action} $stateParams.action
  */
 function revokeDocumentCtrl ($scope, $stateParams, resourceFields, $state) {
-  const documents = $scope.doc = $stateParams.doc
+  const documents = $scope.docs = $stateParams.doc
   const type = 'RevokeDocument'
 
   function leave () {

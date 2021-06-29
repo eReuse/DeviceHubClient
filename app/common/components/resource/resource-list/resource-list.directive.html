@@ -115,6 +115,10 @@
 		<confirm-revoke-document-button manager="lotsM" doc="::document"> 
 		</confirm-revoke-document-button>
               </span>
+              <span ng-if="::!document.trading">
+		<delete-document-button manager="lotsM" doc="::document"> 
+		</delete-document-button>
+              </span>
             </td>
           </tr>
       </tbody>

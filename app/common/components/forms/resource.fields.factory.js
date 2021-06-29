@@ -230,6 +230,7 @@ function resourceFields (fields, resources, enums) {
 
     _submit (op) {
       this.model.documents = this.model.documents.map((x) => x.id)
+      console.log(this.model)
       return this.model.post()
     }
   }

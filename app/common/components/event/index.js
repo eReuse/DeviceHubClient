@@ -14,5 +14,6 @@ module.exports = angular.module('common.components.event',
   .directive('confirmDocumentButton', require('./confirm-document-button/confirm-document-button.directive'))
   .directive('revokeDocumentButton', require('./revoke-document-button/revoke-document-button.directive'))
   .directive('confirmRevokeDocumentButton', require('./confirm-revoke-document-button/confirm-revoke-document-button.directive'))
+  .directive('deleteDocumentButton', require('./delete-document-button/delete-document-button.directive'))
   .factory('openEventModal', require('./open-event-modal.factory'))
   .directive('snapshotButton', require('./snapshot-button/snapshot-button.directive'))

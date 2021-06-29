@@ -16,6 +16,15 @@
       "def": "Undefined error. Please contact the administrator."
     }
   },
+  "revokeDocument": {
+    "title": "Revoke Document"
+  },
+  "confirmDocument": {
+    "title": "Confirm Document"
+  },
+  "confirmRevokeDocument": {
+    "title": "Confirm Revoke Document"
+  },
   "resourceList": {
     "allDevices": "All devices",
     "selectAll": {
@@ -109,6 +118,12 @@
       },
       "revoke_document": {
         "button": "Revoke"
+      },
+      "confirm_revoke_document": {
+        "button": "Confirm Revoke"
+      },
+      "delete_document": {
+        "button": "Delete"
       }
     }
   },
@@ -353,6 +368,12 @@
         "l": "Image",
         "d": "An URL containing an image of the device."
       }
+    },
+    "tradedocument": {
+      "documents": {
+        "l": "Document",
+        "d": ""
+      },
     },
     "trade": {
       "supplierEmail": {
