@@ -62,14 +62,19 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
 	    })
 	    $state.go('.newAction', {action: action})
  	  }
-        } else {
-          $scope.open = Action => {
-            const action = new Action({
-		devices: $scope.devices,
+ 	}
+        $scope.open = Action => {
+          const action = new Action({
+	        devices: $scope.devices,
 		action: $scope.trade.id
-	    })
-            $state.go('.newAction', {action: action})
-	  }
+	  })
+          $state.go('.newAction', {action: action})
+	}
+
+      } else {
+	$scope.open = Action => {
+	  const action = new Action({devices: $scope.devices})
+	  $state.go('.newAction', {action: action})
         }
       }
     }
