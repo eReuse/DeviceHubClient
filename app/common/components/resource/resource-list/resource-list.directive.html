@@ -57,6 +57,19 @@
       <h2 ng-show="lotsM.lots.length > 1">
         {{lotsM.title}}
       </h2>
+      <span ng-if="lotsM.lots[0].trade.userFrom.code">
+	{{lotsM.lots[0].trade.userFrom.code}}
+      </span>
+      <span ng-if="!lotsM.lots[0].trade.userFrom.code">
+	{{lotsM.lots[0].trade.userFrom.email}}
+      </span>
+      <i ng-if="lotsM.lots[0].trade" class="fa fa-arrow-right"></i>
+      <span ng-if="lotsM.lots[0].trade.userTo.code">
+	{{lotsM.lots[0].trade.userTo.code}}
+      </span>
+      <span ng-if="!lotsM.lots[0].trade.userTo.code">
+	{{lotsM.lots[0].trade.userTo.email}}
+      </span>
     </div>
     <div ng-if="lotsM.lots.length === 1">
      <h2 class="pull-left">
@@ -66,7 +79,7 @@
 	<add-trade-document-button manager="lotsM"> 
         </add-trade-document-button>
      </div>
-      <div class="documents">
+     <div ng-if="lotsM.lots[0].documents.length > 0" class="documents">
         <table id="document-list-table"
                class="table table-striped table-hover unselectable table-condensed">
           <thead>

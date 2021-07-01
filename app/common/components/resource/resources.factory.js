@@ -1930,13 +1930,14 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Thing
    */
   class User extends Thing {
-    define ({id = null, email = null, individuals = [], name = null, token = null, inventories = [], ...rest}) {
+    define ({id = null, email = null, individuals = [], name = null, token = null, inventories = [], code = null, ...rest}) {
       super.define(rest)
       this.id = id
       this.email = email
       this.individuals = individuals
       this.name = name
       this.token = token
+      this.code = code
       this.inventories = inventories.map(inventory => new Inventory(inventory))
     }
 
