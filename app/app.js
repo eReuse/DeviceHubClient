@@ -117,6 +117,42 @@ module.exports = window.angular.module('deviceHub', [
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
         controller: 'newActionCtrl as naCl'
       }).state({
+        name: 'auth.inventory.newTradeDocument',
+        url: 'new-trade-document/',
+        params: {
+	  doc: null
+        },
+        template: require('./views/inventory/new-trade-document.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
+        controller: 'newTradeDocumentCtrl as ndCl'
+      }).state({
+        name: 'auth.inventory.confirmDocument',
+        url: 'confirm-document/',
+        params: {
+	  doc: null
+        },
+        template: require('./views/inventory/confirm-document.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
+        controller: 'confirmDocumentCtrl as confDCl'
+      }).state({
+        name: 'auth.inventory.revokeDocument',
+        url: 'revoke-document/',
+        params: {
+	  doc: null
+        },
+        template: require('./views/inventory/revoke-document.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
+        controller: 'revokeDocumentCtrl as revDCl'
+      }).state({
+        name: 'auth.inventory.confirmRevokeDocument',
+        url: 'confirm-revoke-document/',
+        params: {
+	  doc: null
+        },
+        template: require('./views/inventory/confirm-revoke-document.controller.html'),
+        redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
+        controller: 'confirmRevokeDocumentCtrl as confRevDCl'
+      }).state({
         name: 'auth.inventory.snapshotUpload',
         url: 'upload-snapshot/',
         template: require('./views/inventory/upload.snapshot.controller.html'),
@@ -163,6 +199,7 @@ module.exports = window.angular.module('deviceHub', [
    */
   .run(($rootScope, CONSTANTS) => {
     $rootScope._ = window._ // We add lodash for usage in templates
+    $rootScope.SHA3 = window.SHA3
     $rootScope.COMMON = window.COMMON
     $rootScope.COMPONENTS = window.COMPONENTS
     $rootScope.CONSTANTS = CONSTANTS

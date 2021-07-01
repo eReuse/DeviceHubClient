@@ -9,6 +9,7 @@ window.VIEWS = 'views'
 window.$ = window.jQuery = require('jquery') // We globally load jQuery
 window._ = require('lodash')
 window.XLSX = require('xlsx')
+window.SHA3= require('sha3')
 window.appClientVersion = require('../package.json').version
 
 const apiCheck = require('api-check')

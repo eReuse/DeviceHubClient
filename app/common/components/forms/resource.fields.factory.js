@@ -7,6 +7,8 @@
  * @param {module:fields} fields
  * @param {module:enums} enums
  */
+//import { SHA3 } from "sha3"
+
 function resourceFields (fields, resources, enums) {
   const f = fields
 
@@ -66,6 +68,19 @@ function resourceFields (fields, resources, enums) {
       const devices = new f.Resources('devices', {namespace: 'r.eventWithMultipleDevices'})
       /** TODO new-trade: show selected documents as well */
       this.fields.splice(1, 0, devices)
+    }
+  }
+
+  /**
+   * @alias module:resourceFields.EventWithMultipleDevices
+   * @extends module:resourceFields.Event
+   */
+  class EventWithOneDocument extends ResourceForm {
+    constructor (model, ...fields) {
+      super(model, ...fields)
+      const def = {namespace: 'r.eventWithOneDocument'}
+      const doc = new f.Resources('doc', def)
+      this.fields.splice(1, 0, doc)
     }
   }
 
@@ -174,10 +189,6 @@ function resourceFields (fields, resources, enums) {
     }
   }
 
-  /**
-   * TODO new-trade: change userTo ConfirmTrade
-   * @extends module:resourceFields.EventWithMultipleDevices
-   */
   class Confirm extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       super(model, ...fields)
@@ -189,20 +200,98 @@ function resourceFields (fields, resources, enums) {
     }
   }
 
-  /** TODO new-trade: add RevokeTrade 
-   * @extends module:resourceFields.EventWithMultipleDevices
-   */
   class Revoke extends Confirm {
   }
 
-  /** TODO new-trade: add ConfirmRevokeTrade 
-   * @extends module:resourceFields.EventWithMultipleDevices
-   */
   class ConfirmRevoke extends Confirm {
   }
 
-  /** TODO new-trade: new model ConfirmDocument */
-  /** TODO new-trade: new model RevokeConfirmDocument */
+  class ConfirmDocument extends ResourceForm {
+    constructor (model, ...fields) {
+      const def = {namespace: 'r.tradedocument'}
+      super(model, ...fields)
+      const documents = new f.Resources('documents', def)
+      this.fields.splice(1, 0, documents)
+    }
+
+    _submit (op) {
+      this.model.documents = this.model.documents.map((x) => x.id)
+      return this.model.post()
+    }
+  }
+
+  class RevokeDocument extends ResourceForm {
+    constructor (model, ...fields) {
+      const def = {namespace: 'r.tradedocument'}
+      super(model, ...fields)
+      const documents = new f.Resources('documents', def)
+      this.fields.splice(1, 0, documents)
+    }
+
+    _submit (op) {
+      this.model.documents = this.model.documents.map((x) => x.id)
+      console.log(this.model)
+      return this.model.post()
+    }
+  }
+
+  class ConfirmRevokeDocument extends ResourceForm {
+    constructor (model, ...fields) {
+      const def = {namespace: 'r.tradedocument'}
+      super(model, ...fields)
+      const documents = new f.Resources('documents', def)
+      this.fields.splice(1, 0, documents)
+    }
+
+    _submit (op) {
+      console.log(this.model)
+      this.model.documents = this.model.documents.map((x) => x.id)
+      return this.model.post()
+    }
+  }
+
+  /**
+   * @alias module:resourceFields.Event
+   * @extends module:resourceFields.ResourceForm
+   */
+  class TradeDocument extends ResourceForm {
+    constructor (model, ...fields) {
+      const def = {namespace: 'r.tradedocument'}
+      super(model,
+        new f.String('filename', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('url', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        //new f.String('hash', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('documentId', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('description', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.Datepicker('date', def),
+        new f.Upload('file', {
+          accept: '*/*',
+          multiple: false,
+          readAs: f.Upload.READ_AS.TEXT,
+          required: false,
+          namespace: 'r.tradedocument.document',
+          expressions: {
+            disabled: 'form.status.loading'
+          }
+        }),
+        ...fields
+	      )
+    }
+
+    getHash () {
+      const sha3 = new SHA3.SHA3(256)
+      sha3.update(this.model.file.data)
+      return sha3.digest("hex")
+    }
+
+    _submit (op) {
+      this.model.filename = this.model.file.name
+      this.model.hash = this.getHash()
+      delete this.model.file
+      return this.model.post()
+    }
+  }
+
 
   return {
     ResourceForm: ResourceForm,
@@ -222,6 +311,10 @@ function resourceFields (fields, resources, enums) {
     Confirm: Confirm,
     Revoke: Revoke,
     ConfirmRevoke: ConfirmRevoke,
+    ConfirmDocument: ConfirmDocument,
+    RevokeDocument: RevokeDocument,
+    ConfirmRevokeDocument: ConfirmRevokeDocument,
+    TradeDocument: TradeDocument,
   }
 }
 

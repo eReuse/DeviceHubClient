@@ -940,14 +940,59 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
 
   }
 
-  /** TODO new-trade: new model Document */
-  class Document extends Thing {
-
+  /** TODO new-trade: new model ConfirmDocument 
+  class ConfirmDocument2 extends Thing {
+    define ({doc = null, ...rest}) {
+      super.define(rest)
+      this.doc = doc
+    }
+  }
+   * */
+  class ConfirmDocument extends Thing {
+    define ({documents = [], ...rest}) {
+      super.define(rest)
+      this.documents = documents
+    }
   }
 
-  /** TODO new-trade: new model DocumentAction */
-  /** TODO new-trade: new model ConfirmDocument */
-  /** TODO new-trade: new model RevokeConfirmDocument */
+  /** TODO new-trade: new model RevokeDocument */
+  class RevokeDocument extends Thing {
+    define ({documents = [], ...rest}) {
+      super.define(rest)
+      this.documents = documents
+    }
+  }
+
+  /** TODO new-trade: new model ConfirmRevokeDocument */
+  class ConfirmRevokeDocument extends Thing {
+    define ({documents = [], ...rest}) {
+      super.define(rest)
+      this.documents = documents
+    }
+  }
+
+
+  /** TODO new-trade: new model Document */
+  class TradeDocument extends Thing {
+    define ({filename = null, url = null, hash = null, date = null, documentId = null, description = null, lot = null, trading, ...rest}) {
+      super.define(rest)
+      /** @type {string} */
+      this.filename = filename
+      /** @type {string} */
+      this.url = url
+      /** @type {string} */
+      this.hash = hash
+      /** @type {Date} */
+      this.date= date ? new Date(date) : null
+      /** @type {string} */
+      this.documentId = documentId
+      /** @type {string} */
+      this.description = description
+      /** @type {Lot} */
+      this.lot = lot
+      this.trading = trading
+    }
+  }
 
   /**
    * Class representing an event.
@@ -1060,6 +1105,30 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
         get: () => this._getRel(Device, this._device),
         set: v => {
           this._device = this._rel(v)
+        },
+        enumerable: true
+      }
+      return props
+    }
+  }
+
+  /** TODO new-trade: new model DocumentAction */
+  /**
+   * @alias module:resources.ActionWithOneDocument
+   * @extends module:resources.Action
+   */
+  class ActionWithOneDocument extends Action {
+    define ({doc = null, ...rest}) {
+      super.define(rest)
+      this.doc = doc
+    }
+
+    _props () {
+      const props = super._props()
+      props.doc = {
+        get: () => this._getRel(TradeDocument, this._doc),
+        set: v => {
+          this._doc = this._rel(v)
         },
         enumerable: true
       }
@@ -1746,7 +1815,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    */
   class Lot extends Thing {
     define ({id = null, name = null, description = null, closed = null, devices = [], children = [], parents = [], url = null,
-      isVisible = true, trade = null, ...rest}) {
+      isVisible = true, trade = null, documents = null, ...rest}) {
       super.define(rest)
       this.id = id
       this.name = name
@@ -1757,6 +1826,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.children = children
       this.url = url
       this.trade = trade
+      this.documents = documents
       this.isVisible = isVisible
     }
 
@@ -1860,13 +1930,14 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.Thing
    */
   class User extends Thing {
-    define ({id = null, email = null, individuals = [], name = null, token = null, inventories = [], ...rest}) {
+    define ({id = null, email = null, individuals = [], name = null, token = null, inventories = [], code = null, ...rest}) {
       super.define(rest)
       this.id = id
       this.email = email
       this.individuals = individuals
       this.name = name
       this.token = token
+      this.code = code
       this.inventories = inventories.map(inventory => new Inventory(inventory))
     }
 
@@ -2064,7 +2135,11 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     Lot: Lot,
     User: User,
     ResourceList: ResourceList,
-    init: init
+    init: init,
+    TradeDocument: TradeDocument,
+    ConfirmDocument: ConfirmDocument,
+    RevokeDocument: RevokeDocument,
+    ConfirmRevokeDocument: ConfirmRevokeDocument
   }, utils.unforgivingHandler)
   // Init servers
   /**
@@ -2087,6 +2162,14 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    * @type {module:server.DevicehubThing}
    */
   Tag.server = new server.DevicehubThing('/tags/', resources)
+  /**
+   * @alias {module:resources.TradeDocument.server}
+   * @type {module:server.DevicehubThing}
+   */
+  TradeDocument.server = new server.DevicehubThing('/trade-documents/', resources)
+  ConfirmDocument.server = new server.DevicehubThing('/actions/', resources)
+  RevokeDocument.server = new server.DevicehubThing('/actions/', resources)
+  ConfirmRevokeDocument.server = new server.DevicehubThing('/actions/', resources)
   return resources
 }
 

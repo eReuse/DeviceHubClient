@@ -17,7 +17,11 @@ function resources (formlyConfigProvider) {
     },
     link: $scope => {
       const key = $scope.options.key
-      $scope.to._resources = $scope.model[key]
+      if (key == 'documents') {
+	$scope.to._resources = $scope.model[key].map((x) => x.filename)
+      } else {
+        $scope.to._resources = $scope.model[key]
+      }
     }
   })
 }

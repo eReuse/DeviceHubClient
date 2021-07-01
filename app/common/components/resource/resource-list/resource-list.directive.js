@@ -96,15 +96,6 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
           }
         }
 
-        /** TODO new-trade: 
-         *  create SelectedDocuments to allow selection of documents like so:
-         *    class SelectedDocuments extends selection.Selected {
-         *    ...
-         *    }
-         *    const selectedDocuments = $scope.selectedDocuments = new SelectedDocuments()
-         */
-
-
         /** TODO new-trade: rename to selectedDevices */
         const selected = $scope.selected = new SelectedDevices()
         $scope.onLotsSelectionChanged = lots => {
@@ -140,6 +131,33 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
             console.log('creating trade for lot', lot, ', participants', participants)
             const action = new resources.Trade({devices: lot.devices, lot: lot, userToEmail: participants.to, userFromEmail: participants.from})
             $state.go('.newAction', {action: action})
+          }
+
+          addTradeDocument(lot) {
+            const doc = new resources.TradeDocument({lot: lot})
+            $state.go('.newTradeDocument', {doc: doc})
+          }
+
+          confirmDocument(doc) {
+	    const confirmdoc = new resources.ConfirmDocument({documents: [doc]})
+	    $state.go('.confirmDocument', {doc: confirmdoc})
+          }
+
+          revokeDocument(doc) {
+	    const revokedoc = new resources.RevokeDocument({documents: [doc]})
+	    $state.go('.revokeDocument', {doc: revokedoc})
+          }
+
+          confirmRevokeDocument(doc) {
+	    const confrevokedoc = new resources.ConfirmRevokeDocument({documents: [doc]})
+	    $state.go('.confirmRevokeDocument', {doc: confrevokedoc})
+          }
+
+          deleteDocument(doc) {
+            const trade_doc = new resources.TradeDocument(doc)
+            trade_doc.server.delete(doc.id)
+            this.deselectAll()
+            $rootScope.$broadcast('lots:reload')
           }
 
           /**
