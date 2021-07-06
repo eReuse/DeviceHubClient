@@ -374,6 +374,30 @@
         "l": "Document",
         "d": ""
       },
+      "filename": {
+        "l": "File Name",
+        "d": ""
+      },
+      "url": {
+        "l": "Url",
+        "d": "Url where the document resides"
+      },
+      "documentId": {
+        "l": "Document Id",
+        "d": "If you need a number to identify this document"
+      },
+      "description": {
+        "l": "Description",
+        "d": ""
+      },
+      "date": {
+        "l": "Date",
+        "d": "If you need a date to associate with this document"
+      },
+      "file": {
+        "l": "File to upload",
+        "d": "This file is not stored on our servers, it is only used to generate a digital signature and obtain the name of the file."
+      }
     },
     "trade": {
       "supplierEmail": {

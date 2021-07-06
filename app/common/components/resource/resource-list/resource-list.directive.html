@@ -17,7 +17,10 @@
         <!--
           <lot-children-button parent="lotsM.lots[0]" ng-if="lotsM.lots.length === 1"></lot-children-button>
         -->
-        <delete-lot-button lots="lotsM.lots" manager="lotsM">
+        <delete-lot-button 
+          ng-if="lotsM.lots.length === 1 && !lotsM.lots[0].trade"
+	  lots="lotsM.lots" 
+	  manager="lotsM">
         </delete-lot-button>
         <!-- TODO new-trade: 
           if single temporary lot is selected, show "add supplier button" 
