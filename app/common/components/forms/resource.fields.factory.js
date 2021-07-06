@@ -266,7 +266,7 @@ function resourceFields (fields, resources, enums) {
           accept: '*/*',
           multiple: false,
           readAs: f.Upload.READ_AS.TEXT,
-          required: false,
+          required: true,
           namespace: 'r.tradedocument',
           expressions: {
             disabled: 'form.status.loading'
