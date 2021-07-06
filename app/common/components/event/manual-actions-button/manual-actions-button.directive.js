@@ -23,6 +23,7 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         'newAction.button.physical',
         resources.ToPrepare,
         resources.Prepare,
+        resources.ToErased,
         resources.ToRepair,
         resources.Ready,
         /** todo new-trade: add new device actions here */

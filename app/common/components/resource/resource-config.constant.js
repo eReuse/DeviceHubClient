@@ -35,6 +35,7 @@ const RESOURCE_CONFIG = {
     'devices:Allocate': {manual: true},
     'devices:Deallocate': {manual: true},
     'devices:Receive': {manual: true},
+    'devices:ToErased': {manual: true},
     'devices:ToRepair': {manual: true},
     'devices:Repair': {manual: true},
     'devices:ToRecycle': {manual: true},

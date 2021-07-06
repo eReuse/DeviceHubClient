@@ -133,6 +133,40 @@ function resourceFields (fields, resources, enums) {
   class ToRepair extends EventWithMultipleDevices {
   }
 
+  class ToErased extends EventWithMultipleDevices {
+    constructor (model, ...fields) {
+      const def = {namespace: 'r.toerased'}
+      super(model,
+        new f.String('url', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('documentId', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.Upload('file', {
+          accept: '*/*',
+          multiple: false,
+          readAs: f.Upload.READ_AS.TEXT,
+          required: false,
+          namespace: 'r.toerased',
+          expressions: {
+            disabled: 'form.status.loading'
+          }
+        }),
+        ...fields
+	      )
+    }
+
+    getHash () {
+      const sha3 = new SHA3.SHA3(256)
+      sha3.update(this.model.file.data)
+      return sha3.digest("hex")
+    }
+
+    _submit (op) {
+      this.model.filename = this.model.file.name
+      this.model.hash = this.getHash()
+      delete this.model.file
+      return this.model.post()
+    }
+  }
+
   /**
    * @alias module:resourceFields.Ready
    * @extends module:resourceFields.EventWithMultipleDevices
@@ -300,6 +334,7 @@ function resourceFields (fields, resources, enums) {
     Allocate: Allocate,
     Deallocate: Deallocate,
     ToRepair: ToRepair,
+    ToErased: ToErased,
     Ready: Ready,
     ToDisposeProduct: ToDisposeProduct,
     Receive: Receive,
