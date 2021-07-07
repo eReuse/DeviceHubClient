@@ -47,7 +47,9 @@ function uploadSnapshotCtl ($scope, fields, resources, $translate, server, $stat
       }
       // Upload Snapshot
       const snapshot = resources.Snapshot.init(raw, false)
-      snapshot.data = raw.data
+      if (!snapshot.version) {
+        snapshot.data = raw.data
+      }
       return snapshot.post().then(() => {
         this.results.push(new Success(file, snapshot))
       }).catch(e => {
