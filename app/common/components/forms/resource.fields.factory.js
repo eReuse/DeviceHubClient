@@ -143,7 +143,7 @@ function resourceFields (fields, resources, enums) {
           accept: '*/*',
           multiple: false,
           readAs: f.Upload.READ_AS.TEXT,
-          required: false,
+          required: true,
           namespace: 'r.toerased',
           expressions: {
             disabled: 'form.status.loading'
