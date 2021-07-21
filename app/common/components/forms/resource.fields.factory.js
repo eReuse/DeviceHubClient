@@ -258,7 +258,7 @@ function resourceFields (fields, resources, enums) {
     constructor (model, ...fields) {
       const def = {namespace: 'r.tradedocument'}
       super(model,
-        new f.String('url', _.defaults({maxLength: fields.URL_SIZE}, def)),
+        new f.String('url', _.defaults({maxLength: 2048}, def)),
         new f.String('documentId', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.String('description', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.Datepicker('date', def),
