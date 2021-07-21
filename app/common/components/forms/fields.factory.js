@@ -27,6 +27,12 @@ function fieldsFactory ($translate, Notification, $q) {
    * @type {number}
    */
   const STR_XSM_SIZE = 16
+  /**
+   * @alias module:fields.URL_SIZE
+   * The less size for one url is for internet explorer with 2048 characters
+   * @type {number}
+   */
+  const URL_SIZE = 2048
 
   /**
    * Generates formly fields.
