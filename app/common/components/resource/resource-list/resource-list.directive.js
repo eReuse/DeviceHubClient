@@ -174,6 +174,13 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
             }
           }
 
+          unassignSelection () {
+            this.lots = lots
+            this.title = "Unanssign"
+            // Update filter
+            getter.setFilter('lot', {id: null})
+          }
+
           deselectAll () {
             this.lots.deselectAll()
           }
