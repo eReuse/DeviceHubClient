@@ -39,7 +39,6 @@ function exportButton (Notification, clipboard, $translate, CONSTANTS, session, 
 
       $scope.saveSpreadsheet = () => saveFile('devices/', 'csv', 'text/csv', 'spreadsheet')
       $scope.actionsSpreadsheet = () => saveFile('actions/', 'csv', 'text/csv', 'actionspreadsheet')
-      $scope.externalerasureSpreadsheet = () => saveFile('externalErasureDocuments/', 'csv', 'text/csv', 'externalerasureSpreadsheet')
       $scope.saveErasure = () => saveFile('erasures/', 'pdf', 'application/pdf', 'erasure')
 
       class Clipboard {

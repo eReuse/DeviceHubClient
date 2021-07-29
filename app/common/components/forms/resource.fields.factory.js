@@ -133,18 +133,20 @@ function resourceFields (fields, resources, enums) {
   class ToRepair extends EventWithMultipleDevices {
   }
 
-  class ToErased extends EventWithMultipleDevices {
+  class DataWipe extends EventWithMultipleDevices {
     constructor (model, ...fields) {
-      const def = {namespace: 'r.toerased'}
+      const def = {namespace: 'r.datawipe'}
       super(model,
-        new f.String('url', _.defaults({maxLength: 2048}, def)),
+        new f.String('url', {required: true}, _.defaults({maxLength: 2048}, def)),
         new f.String('documentId', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.String('software', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
+        new f.Checkbox('success', def),
         new f.Upload('file', {
           accept: '*/*',
           multiple: false,
           readAs: f.Upload.READ_AS.TEXT,
           required: true,
-          namespace: 'r.toerased',
+          namespace: def.namespace,
           expressions: {
             disabled: 'form.status.loading'
           }
@@ -334,7 +336,7 @@ function resourceFields (fields, resources, enums) {
     Allocate: Allocate,
     Deallocate: Deallocate,
     ToRepair: ToRepair,
-    ToErased: ToErased,
+    DataWipe: DataWipe,
     Ready: Ready,
     ToDisposeProduct: ToDisposeProduct,
     Receive: Receive,

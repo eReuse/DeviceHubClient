@@ -1590,7 +1590,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   class ToRepair extends ActionWithMultipleDevices {
   }
 
-  class ToErased extends ActionWithMultipleDevices {
+  class DataWipe extends ActionWithMultipleDevices {
   }
 
   /**
@@ -2118,7 +2118,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     Allocate: Allocate,
     Deallocate: Deallocate,    
     ToRepair: ToRepair,
-    ToErased: ToErased,
+    DataWipe: DataWipe,
     Repair: Repair,
     Ready: Ready,
     ToPrepare: ToPrepare,
