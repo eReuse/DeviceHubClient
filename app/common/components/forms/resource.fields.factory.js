@@ -137,7 +137,7 @@ function resourceFields (fields, resources, enums) {
     constructor (model, ...fields) {
       const def = {namespace: 'r.datawipe'}
       super(model,
-        new f.String('url', {required: true}, _.defaults({maxLength: 2048}, def)),
+        new f.String('url', _.defaults({maxLength: 2048, required: true}, def)),
         new f.String('documentId', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.String('software', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.Checkbox('success', def),
