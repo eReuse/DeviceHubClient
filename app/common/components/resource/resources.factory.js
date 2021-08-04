@@ -974,7 +974,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
 
   /** TODO new-trade: new model Document */
   class TradeDocument extends Thing {
-    define ({filename = null, url = null, hash = null, date = null, documentId = null, description = null, lot = null, trading, ...rest}) {
+    define ({filename = null, url = null, hash = null, date = null, documentId = null, description = null, lot = null, weight = null, trading, ...rest}) {
       super.define(rest)
       /** @type {string} */
       this.filename = filename
@@ -990,6 +990,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.description = description
       /** @type {Lot} */
       this.lot = lot
+      this.weight = weight
       this.trading = trading
     }
   }
@@ -1920,6 +1921,16 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
         this.define(r.data)
       })
     }
+
+
+    weight = _.map(this.documents, 'weight').reduce(
+      (previous, current) => {
+	if (current){
+	  return previous + current
+    	} else {
+	  return previous
+        }
+      }, 0)
   }
 
   /** @type {Object.<int, module:resources.Lot>} */

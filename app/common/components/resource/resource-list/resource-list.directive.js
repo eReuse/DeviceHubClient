@@ -177,6 +177,7 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
           deselectAll () {
             this.lots.deselectAll()
           }
+
         }
 
         $scope.lotsM = new LotsManager()

@@ -262,6 +262,7 @@ function resourceFields (fields, resources, enums) {
         new f.String('documentId', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.String('description', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.Datepicker('date', def),
+        new f.Number('weight', def),
         new f.Upload('file', {
           accept: '*/*',
           multiple: false,

@@ -88,6 +88,7 @@
           <thead>
           <tr>
 	    <th>File</th> 
+	    <th>Weight (kg)</th> 
 	    <th>Uploaded on</th> 
 	    <th>Status</th> 
 	    <th></th> 
@@ -102,6 +103,11 @@
 		<a href="{{::document.url}}" target="_blank">
               {{::document.filename}}
 	        </a>
+              </span>
+            </td>
+	    <td>
+              <span>
+              {{::document.weight}}
               </span>
             </td>
 	    <td>
@@ -138,6 +144,15 @@
             </td>
           </tr>
       </tbody>
+      <tfoot>
+          <tr>
+	    <th><strong>Total</strong></th> 
+	    <th>{{::lotsM.lots[0].weight}}</th> 
+	    <th></th> 
+	    <th></th> 
+	    <th></th> 
+          </tr>
+      </tfoot>
     </table>
     </div>
     </div>
