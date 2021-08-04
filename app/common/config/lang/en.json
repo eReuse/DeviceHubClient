@@ -276,6 +276,10 @@
 	"l": "Was success?",
 	"d": "The erase was success or not?"
       },
+      "url": {
+	"l": "Url",
+	"d": "Url where the document resides"
+      },
       "file": {
         "l": "File to upload",
         "d": "This file is not stored on our servers, it is only used to generate a digital signature and obtain the name of the file."
