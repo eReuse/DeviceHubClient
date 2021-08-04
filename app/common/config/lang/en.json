@@ -394,6 +394,10 @@
         "l": "Date",
         "d": "If you need a date to associate with this document"
       },
+      "weight": {
+        "l": "Weight",
+        "d": "If you have a container or box, you can defined the weight of them in there. You need express this value in Kg."
+      },
       "file": {
         "l": "File to upload",
         "d": "This file is not stored on our servers, it is only used to generate a digital signature and obtain the name of the file."
