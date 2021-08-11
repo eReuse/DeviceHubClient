@@ -117,6 +117,15 @@ module.exports = window.angular.module('deviceHub', [
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
         controller: 'newActionCtrl as naCl'
       }).state({
+	name: 'auth.inventory.newRecycleDocument',
+	url: 'new-recycle-document/',
+	params: {
+	  doc: null
+	},
+	template: require('./views/inventory/new-recycle-document.controller.html'),
+	redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
+	controller: 'newRecycleDocumentCtrl as recCl'
+      }).state({
         name: 'auth.inventory.newTradeDocument',
         url: 'new-trade-document/',
         params: {

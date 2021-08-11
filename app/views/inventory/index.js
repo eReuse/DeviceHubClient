@@ -35,4 +35,5 @@ module.exports = angular.module('views.inventory',
   .controller('snapshotManualCtrl', require('./manual.snapshot.controller.js'))
   .controller('importCtrl', require('./import.controller.js'))
   .controller('newTradeDocumentCtrl', require('./new-trade-document.controller.js'))
+  .controller('newRecycleDocumentCtrl', require('./new-recycle-document.controller.js'))
 

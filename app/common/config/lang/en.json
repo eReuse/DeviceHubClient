@@ -103,6 +103,11 @@
     "delete": {
       "button": "Delete lot"
     },
+    "recycle": {
+      "add_document": {
+        "button": "Add poof of recycle"
+      }
+    },
     "trade": {
       "supplier": {
         "button": "Add supplier"

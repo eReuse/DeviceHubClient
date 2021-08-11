@@ -133,6 +133,11 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
             $state.go('.newAction', {action: action})
           }
 
+	  addRecycleDocument(lot) {
+	    const doc = new resources.RecycleDocument({lot: lot})
+	    $state.go('.newRecycleDocument', {doc: doc})
+	  }
+
           addTradeDocument(lot) {
             const doc = new resources.TradeDocument({lot: lot})
             $state.go('.newTradeDocument', {doc: doc})

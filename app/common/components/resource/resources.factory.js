@@ -995,6 +995,20 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
   }
 
+
+  /** new-recycle-document: new model Document */
+  class RecycleDocument extends Thing {
+    define ({hash = null, lot = null, weight = null, ...rest}) {
+      super.define(rest)
+      /** @type {string} */
+      this.hash = hash
+      /** @type {Lot} */
+      this.lot = lot
+      this.weight = weight
+    }
+  }
+
+
   /**
    * Class representing an event.
    * @alias module:resources.Action
@@ -2148,6 +2162,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     ResourceList: ResourceList,
     init: init,
     TradeDocument: TradeDocument,
+    RecycleDocument: RecycleDocument,
     ConfirmDocument: ConfirmDocument,
     RevokeDocument: RevokeDocument,
     ConfirmRevokeDocument: ConfirmRevokeDocument
@@ -2181,6 +2196,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   ConfirmDocument.server = new server.DevicehubThing('/actions/', resources)
   RevokeDocument.server = new server.DevicehubThing('/actions/', resources)
   ConfirmRevokeDocument.server = new server.DevicehubThing('/actions/', resources)
+  RecycleDocument.server = new server.DevicehubThing('/documents/recycle/', resources)
   return resources
 }
 

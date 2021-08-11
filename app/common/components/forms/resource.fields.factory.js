@@ -292,6 +292,45 @@ function resourceFields (fields, resources, enums) {
   }
 
 
+  /**
+   * @alias module:resourceFields.Event
+   * @extends module:resourceFields.ResourceForm
+   */
+  class RecycleDocument extends ResourceForm {
+    constructor (model, ...fields) {
+      const def = {namespace: 'r.tradedocument'}
+      console.log('creating recycle for lot', fields)
+      super(model,
+        new f.Number('weight', def),
+        new f.Upload('file', {
+          accept: '*/*',
+          multiple: false,
+          readAs: f.Upload.READ_AS.TEXT,
+          required: true,
+          namespace: 'r.tradedocument',
+          expressions: {
+            disabled: 'form.status.loading'
+          }
+        }),
+        ...fields
+	      )
+    }
+
+    getHash () {
+      const sha3 = new SHA3.SHA3(256)
+      sha3.update(this.model.file.data)
+      return sha3.digest("hex")
+    }
+
+    _submit (op) {
+      this.model.hash = this.getHash()
+      delete this.model.file
+      return this.model.post()
+    }
+  }
+
+
+
   return {
     ResourceForm: ResourceForm,
     Event: Event,
@@ -314,6 +353,7 @@ function resourceFields (fields, resources, enums) {
     RevokeDocument: RevokeDocument,
     ConfirmRevokeDocument: ConfirmRevokeDocument,
     TradeDocument: TradeDocument,
+    RecycleDocument: RecycleDocument,
   }
 }
 
