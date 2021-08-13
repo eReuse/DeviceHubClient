@@ -302,7 +302,7 @@ function resourceFields (fields, resources, enums) {
         new f.Upload('file', {
           accept: '*/*',
           multiple: false,
-          readAs: f.Upload.READ_AS.TEXT,
+          readAs: 'readAsArrayBuffer',
           required: true,
           namespace: 'r.tradedocument',
           expressions: {
