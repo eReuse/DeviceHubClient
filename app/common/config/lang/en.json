@@ -167,7 +167,11 @@
     },
     "fields": {
       "optionYes": "Yes.",
-      "optionNo": "No."
+      "optionNo": "No.",
+      "url": {
+	"l": "url",
+	"d": ""
+      }
     },
     "e": {
       "required": "This field is required.",
@@ -261,6 +265,28 @@
       "bike": "Bike",
       "racket": "Racket",
       "stairs": "Stairs"
+    },
+    "datawipe": {
+      "documentId": {
+	"l": "Document Id",
+	"d": "Identification number of document"
+      },
+      "software": {
+	"l": "Software",
+	"d": "Which software has you use for erase the disks"
+      },
+      "success": {
+	"l": "Was success?",
+	"d": "The erase was success or not?"
+      },
+      "url": {
+	"l": "Url",
+	"d": "Url where the document resides"
+      },
+      "file": {
+        "l": "File to upload",
+        "d": "This file is not stored on our servers, it is only used to generate a digital signature and obtain the name of the file."
+      }
     },
     "thing": {
       "type": {
@@ -506,7 +532,7 @@
         "l": "Start date",
         "d": ""
       }
-    },
+    }
   },
   "userTo": {
     "userToEmail": {

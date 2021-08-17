@@ -133,6 +133,43 @@ function resourceFields (fields, resources, enums) {
   class ToRepair extends EventWithMultipleDevices {
   }
 
+  class DataWipe extends EventWithMultipleDevices {
+    constructor (model, ...fields) {
+      const def = {namespace: 'r.datawipe'}
+      super(model,
+        new f.String('url', _.defaults({maxLength: 2048, required: false}, def)),
+        new f.String('documentId', _.defaults({maxLength: fields.STR_BIG_SIZE, required: false}, def)),
+        new f.String('software', _.defaults({maxLength: fields.STR_BIG_SIZE, required: false}, def)),
+        new f.Checkbox('success', def),
+        new f.Upload('file', {
+          accept: '*/*',
+          multiple: false,
+          readAs: 'readAsArrayBuffer',
+          required: true,
+          namespace: def.namespace,
+          expressions: {
+            disabled: 'form.status.loading'
+          }
+        }),
+        ...fields
+	      )
+    }
+
+    getHash () {
+      return JSSHA3.sha3_256(this.model.file.data)
+    }
+
+
+    _submit (op) {
+      this.model.filename = this.model.file.name
+      this.model.hash = this.getHash()
+      console.log(this.model.file)
+      console.log(this.model.hash)
+      delete this.model.file
+      return this.model.post()
+    }
+  }
+
   /**
    * @alias module:resourceFields.Ready
    * @extends module:resourceFields.EventWithMultipleDevices
@@ -265,7 +302,7 @@ function resourceFields (fields, resources, enums) {
         new f.Upload('file', {
           accept: '*/*',
           multiple: false,
-          readAs: f.Upload.READ_AS.TEXT,
+          readAs: 'readAsArrayBuffer',
           required: true,
           namespace: 'r.tradedocument',
           expressions: {
@@ -277,9 +314,7 @@ function resourceFields (fields, resources, enums) {
     }
 
     getHash () {
-      const sha3 = new SHA3.SHA3(256)
-      sha3.update(this.model.file.data)
-      return sha3.digest("hex")
+      return JSSHA3.sha3_256(this.model.file.data)
     }
 
     _submit (op) {
@@ -300,6 +335,7 @@ function resourceFields (fields, resources, enums) {
     Allocate: Allocate,
     Deallocate: Deallocate,
     ToRepair: ToRepair,
+    DataWipe: DataWipe,
     Ready: Ready,
     ToDisposeProduct: ToDisposeProduct,
     Receive: Receive,
