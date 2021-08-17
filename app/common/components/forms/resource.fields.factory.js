@@ -163,8 +163,6 @@ function resourceFields (fields, resources, enums) {
     _submit (op) {
       this.model.filename = this.model.file.name
       this.model.hash = this.getHash()
-      console.log(this.model.file)
-      console.log(this.model.hash)
       delete this.model.file
       return this.model.post()
     }

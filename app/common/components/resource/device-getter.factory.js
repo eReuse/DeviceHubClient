@@ -25,6 +25,7 @@ function deviceGetterFactory (resources, progressBar) {
         search: '',
         /** @type {object.<string, boolean>} */
         sort: null, // null only when not initialized
+	unassign: 0,
         /**
          * The page requested or null.
          * @type {?number}
