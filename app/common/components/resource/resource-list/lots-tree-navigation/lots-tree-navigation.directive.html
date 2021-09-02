@@ -13,13 +13,13 @@
     </div>
     <div>
         <ol class="lots-list">
-           <button class="btn btn-xs btn-normal"
-                  ng-class="{selected: selected.isSelected('unassign')}"
-                  ng-click="selected.toggle('unassign', $event)">
+           <button class="btn btn-xs btn-normal ng-binding"
+                  ng-click="selected.toggle('unassign', $event)"
+		  style="padding-left:0px; padding-right:0px; background-color: inherit;">
               <h4>{{::'trade.unassign.title' | translate}}</h4>
             </button>
         </ol>
-        <ol class="lots-list">
+        <ol class="lots-list" style="border-top: 1px dotted #b5b5b5;">
             <h4>{{::'trade.incoming.title' | translate}}</h4>
             <li class="lot-content" 
                 ng-repeat="lot in incoming"
