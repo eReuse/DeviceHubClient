@@ -95,6 +95,9 @@
     },
     "outgoing": {
       "title": "Outgoing lots"
+    },
+    "unassign": {
+      "title": "Unassign devices"
     }
   },
   "lots": {

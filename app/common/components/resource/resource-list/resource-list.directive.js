@@ -169,6 +169,13 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
            * @param {module:resources.Lot[]} lots
            */
           updateSelection (lots) {
+	    if (lots == 'unassign') {
+              getter.q.unassign = 1
+	      lots = []
+  	    }
+	    else {
+              getter.q.unassign = 0
+	    }
             this.lots = lots
             this.title = _.map(lots, 'name').join(', ')
             // Update filter
