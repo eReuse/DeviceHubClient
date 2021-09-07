@@ -329,10 +329,9 @@ function resourceFields (fields, resources, enums) {
    * @alias module:resourceFields.Event
    * @extends module:resourceFields.ResourceForm
    */
-  class RecycleDocument extends ResourceForm {
+  class MoveOnDocument extends ResourceForm {
     constructor (model, ...fields) {
       const def = {namespace: 'r.tradedocument'}
-      console.log('creating recycle for lot', fields)
       super(model,
         new f.Number('weight', def),
         new f.Upload('file', {
@@ -350,13 +349,15 @@ function resourceFields (fields, resources, enums) {
     }
 
     getHash () {
+      console.log('creating MoveOnDocument for... ', this.model.file.data)
       const sha3 = new SHA3.SHA3(256)
       sha3.update(this.model.file.data)
       return sha3.digest("hex")
     }
 
     _submit (op) {
-      this.model.hash = this.getHash()
+      //console.log('Model MoveOnDocument ', this)
+      this.model.container_to_hash = this.getHash()
       delete this.model.file
       return this.model.post()
     }
@@ -387,7 +388,7 @@ function resourceFields (fields, resources, enums) {
     RevokeDocument: RevokeDocument,
     ConfirmRevokeDocument: ConfirmRevokeDocument,
     TradeDocument: TradeDocument,
-    RecycleDocument: RecycleDocument,
+    MoveOnDocument: MoveOnDocument,
   }
 }
 

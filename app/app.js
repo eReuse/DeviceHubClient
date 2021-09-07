@@ -117,14 +117,14 @@ module.exports = window.angular.module('deviceHub', [
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
         controller: 'newActionCtrl as naCl'
       }).state({
-	name: 'auth.inventory.newRecycleDocument',
-	url: 'new-recycle-document/',
+	name: 'auth.inventory.newMoveOnDocument',
+	url: 'new-move-on-document/',
 	params: {
 	  doc: null
 	},
-	template: require('./views/inventory/new-recycle-document.controller.html'),
+	template: require('./views/inventory/new-move-on-document.controller.html'),
 	redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
-	controller: 'newRecycleDocumentCtrl as recCl'
+	controller: 'newMoveOnDocumentCtrl as mvCl'
       }).state({
         name: 'auth.inventory.newTradeDocument',
         url: 'new-trade-document/',

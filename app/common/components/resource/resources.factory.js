@@ -940,14 +940,19 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
 
   }
 
-  /** TODO new-trade: new model ConfirmDocument 
-  class ConfirmDocument2 extends Thing {
-    define ({doc = null, ...rest}) {
+
+  /** new-recycle-document: new model Document */
+  class MoveOnDocument extends Thing {
+    define ({container_from = null, container_to_hash = null, weight = null, ...rest}) {
       super.define(rest)
-      this.doc = doc
+      this.container_to_hash = container_to_hash
+      this.container_from = container_from
+      this.weight = weight
     }
   }
-   * */
+
+  /** TODO new-trade: new model ConfirmDocument 
+   */
   class ConfirmDocument extends Thing {
     define ({documents = [], ...rest}) {
       super.define(rest)
@@ -992,19 +997,6 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.lot = lot
       this.weight = weight
       this.trading = trading
-    }
-  }
-
-
-  /** new-recycle-document: new model Document */
-  class RecycleDocument extends Thing {
-    define ({hash = null, lot = null, weight = null, ...rest}) {
-      super.define(rest)
-      /** @type {string} */
-      this.hash = hash
-      /** @type {Lot} */
-      this.lot = lot
-      this.weight = weight
     }
   }
 
@@ -2166,7 +2158,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     ResourceList: ResourceList,
     init: init,
     TradeDocument: TradeDocument,
-    RecycleDocument: RecycleDocument,
+    MoveOnDocument: MoveOnDocument,
     ConfirmDocument: ConfirmDocument,
     RevokeDocument: RevokeDocument,
     ConfirmRevokeDocument: ConfirmRevokeDocument
@@ -2198,9 +2190,9 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    */
   TradeDocument.server = new server.DevicehubThing('/trade-documents/', resources)
   ConfirmDocument.server = new server.DevicehubThing('/actions/', resources)
+  MoveOnDocument.server = new server.DevicehubThing('/actions/', resources)
   RevokeDocument.server = new server.DevicehubThing('/actions/', resources)
   ConfirmRevokeDocument.server = new server.DevicehubThing('/actions/', resources)
-  RecycleDocument.server = new server.DevicehubThing('/documents/recycle/', resources)
   return resources
 }
 

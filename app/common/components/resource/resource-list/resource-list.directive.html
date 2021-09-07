@@ -81,8 +81,6 @@
      <div class="pull-right">
 	<add-trade-document-button manager="lotsM"> 
         </add-trade-document-button>
-	<add-recycle-document-button manager="lotsM"> 
-        </add-recycle-document-button>
      </div>
      <div ng-if="lotsM.lots[0].documents.length > 0" class="documents">
         <table id="document-list-table"
@@ -93,6 +91,7 @@
 	    <th>Weight (kg)</th> 
 	    <th>Uploaded on</th> 
 	    <th>Status</th> 
+	    <th></th> 
 	    <th></th> 
           </tr>
           </thead>
@@ -144,12 +143,19 @@
 		</delete-document-button>
               </span>
             </td>
+	    <td>
+	      <span> 
+		<move-on-document-button manager="lotsM" doc="::document"> 
+		</move-on-document-button>
+              </span>
+            </td>
           </tr>
       </tbody>
       <tfoot>
           <tr>
 	    <th><strong>Total</strong></th> 
 	    <th>{{::lotsM.lots[0].weight}}</th> 
+	    <th></th> 
 	    <th></th> 
 	    <th></th> 
 	    <th></th> 

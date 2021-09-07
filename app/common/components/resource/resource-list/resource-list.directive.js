@@ -133,11 +133,6 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
             $state.go('.newAction', {action: action})
           }
 
-	  addRecycleDocument(lot) {
-	    const doc = new resources.RecycleDocument({lot: lot})
-	    $state.go('.newRecycleDocument', {doc: doc})
-	  }
-
           addTradeDocument(lot) {
             const doc = new resources.TradeDocument({lot: lot})
             $state.go('.newTradeDocument', {doc: doc})
@@ -163,6 +158,11 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
             trade_doc.server.delete(doc.id)
             this.deselectAll()
             $rootScope.$broadcast('lots:reload')
+          }
+
+          moveOnDocument(doc) {
+	    const mvdoc = new resources.MoveOnDocument({container_from: doc})
+	    $state.go('.newMoveOnDocument', {doc: mvdoc})
           }
 
           /**

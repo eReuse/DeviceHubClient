@@ -132,6 +132,9 @@
       },
       "delete_document": {
         "button": "Delete"
+      },
+      "moveon_document": {
+        "button": "Move on"
       }
     }
   },
