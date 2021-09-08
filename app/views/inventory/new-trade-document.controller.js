@@ -8,7 +8,6 @@
 
 function newTradeDocumentCtrl ($scope, $stateParams, resourceFields, $state) {
   const tradeDocument = $scope.tradeDocument = $stateParams.doc
-  //console.log('creating trade for lot', tradeDocument)
 
   function leave () {
     $state.go('^')

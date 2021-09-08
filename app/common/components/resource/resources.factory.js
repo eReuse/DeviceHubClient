@@ -943,10 +943,10 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
 
   /** new-recycle-document: new model Document */
   class MoveOnDocument extends Thing {
-    define ({container_from = null, container_to_hash = null, weight = null, ...rest}) {
+    define ({container_from = null, container_to = null, weight = null, ...rest}) {
       super.define(rest)
-      this.container_to_hash = container_to_hash
-      this.container_from = container_from
+      this.container_to = container_to
+      this.container_from = container_from.id
       this.weight = weight
     }
   }

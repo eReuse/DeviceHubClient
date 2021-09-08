@@ -265,7 +265,6 @@ function resourceFields (fields, resources, enums) {
 
     _submit (op) {
       this.model.documents = this.model.documents.map((x) => x.id)
-      console.log(this.model)
       return this.model.post()
     }
   }
@@ -279,7 +278,6 @@ function resourceFields (fields, resources, enums) {
     }
 
     _submit (op) {
-      console.log(this.model)
       this.model.documents = this.model.documents.map((x) => x.id)
       return this.model.post()
     }
@@ -349,15 +347,11 @@ function resourceFields (fields, resources, enums) {
     }
 
     getHash () {
-      console.log('creating MoveOnDocument for... ', this.model.file.data)
-      const sha3 = new SHA3.SHA3(256)
-      sha3.update(this.model.file.data)
-      return sha3.digest("hex")
+      return JSSHA3.sha3_256(this.model.file.data)
     }
 
     _submit (op) {
-      //console.log('Model MoveOnDocument ', this)
-      this.model.container_to_hash = this.getHash()
+      this.model.container_to = this.getHash()
       delete this.model.file
       return this.model.post()
     }
