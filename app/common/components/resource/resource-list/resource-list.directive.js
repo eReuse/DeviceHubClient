@@ -124,7 +124,7 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
             deleteLotsSerial(lots)
 
             this.deselectAll()
-            $rootScope.$broadcast('lots:reload')
+	    $rootScope.$broadcast('lots:reload')
           }
 
           createTradeForLot(lot, participants = {}) {
@@ -134,7 +134,7 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
 
           addTradeDocument(lot) {
             const doc = new resources.TradeDocument({lot: lot})
-            $state.go('.newTradeDocument', {doc: doc})
+	    $state.go('.newTradeDocument', {doc: doc})
           }
 
           confirmDocument(doc) {
@@ -156,7 +156,7 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
             const trade_doc = new resources.TradeDocument(doc)
             trade_doc.server.delete(doc.id)
             this.deselectAll()
-            $rootScope.$broadcast('lots:reload')
+	    $rootScope.$broadcast('lots:reload')
           }
 
           moveOnDocument(doc) {
@@ -177,6 +177,14 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
 	    }
             this.lots = lots
             this.title = _.map(lots, 'name').join(', ')
+	    this.weight = _.map(this.lots, 'weight').reduce(
+	      (previous, current) => {
+		if (current){
+		  return previous + current
+		} else {
+		  return previous
+		}
+	      }, 0)
             // Update filter
             if (lots.length) {
               getter.setFilter('lot', {id: _.map(lots, 'id')})
@@ -184,7 +192,7 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
               getter.removeFilter('lot')
             }
           }
-
+	 
           deselectAll () {
             this.lots.deselectAll()
           }

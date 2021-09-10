@@ -16,7 +16,7 @@ function addTradeDocumentButton($state, session) {
       const lot = $scope.lot
 
       $scope.addTradeDocument = () => {
-	$scope.manager.addTradeDocument(lot)
+	$scope.manager.addTradeDocument($scope.lot)
       }
     }
   }

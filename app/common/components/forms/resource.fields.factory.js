@@ -327,7 +327,7 @@ function resourceFields (fields, resources, enums) {
    * @alias module:resourceFields.Event
    * @extends module:resourceFields.ResourceForm
    */
-  class MoveOnDocument extends ResourceForm {
+  class MoveOnDocument extends EventWithMultipleDevices {
     constructor (model, ...fields) {
       const def = {namespace: 'r.tradedocument'}
       super(model,

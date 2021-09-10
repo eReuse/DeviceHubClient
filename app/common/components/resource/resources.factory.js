@@ -941,16 +941,6 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   }
 
 
-  /** new-recycle-document: new model Document */
-  class MoveOnDocument extends Thing {
-    define ({container_from = null, container_to = null, weight = null, ...rest}) {
-      super.define(rest)
-      this.container_to = container_to
-      this.container_from = container_from.id
-      this.weight = weight
-    }
-  }
-
   /** TODO new-trade: new model ConfirmDocument 
    */
   class ConfirmDocument extends Thing {
@@ -1142,6 +1132,18 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       return props
     }
   }
+
+
+  /** new-move-on-document: new model Document */
+  class MoveOnDocument extends Action {
+    define ({container_from = null, container_to = null, weight = null, ...rest}) {
+      super.define(rest)
+      this.container_to = container_to
+      this.container_from = container_from.id
+      this.weight = weight
+    }
+  }
+
 
   /**
    * @alias module:resources.Add
@@ -1932,7 +1934,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
 
 
-    weight = _.map(this.documents, 'weight').reduce(
+    weight = _.map(this.documents, 'total_weight').reduce(
       (previous, current) => {
 	if (current){
 	  return previous + current
