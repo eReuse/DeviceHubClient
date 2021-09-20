@@ -1934,14 +1934,16 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     }
 
 
-    weight = _.map(this.documents, 'total_weight').reduce(
+    weight () { 
+      return _.map(this.documents, 'total_weight').reduce(
       (previous, current) => {
 	if (current){
 	  return previous + current
-    	} else {
+	} else {
 	  return previous
-        }
+	}
       }, 0)
+    }
   }
 
   /** @type {Object.<int, module:resources.Lot>} */
