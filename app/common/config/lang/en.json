@@ -240,6 +240,8 @@
       "benchmarkProcessor": "Benchmark processor",
       "benchmarkProcessorSysbench": "Benchmark processor sysbench",
       "benchmarkRamSysbench": "Benchmark ram sysbench",
+      "recycling": "Recycling",
+      "reuse": "Reuse",
       "toRepair": "To repair",
       "repair": "Repair",
       "available": "Available",

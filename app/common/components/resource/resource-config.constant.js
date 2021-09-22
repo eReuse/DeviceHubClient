@@ -30,6 +30,8 @@ const v = {
 const RESOURCE_CONFIG = {
   resources: {
     'devices:ToPrepare': {manual: true},
+    'devices:Reuse': {manual: true},
+    'devices:Recycling': {manual: true},
     'devices:Ready': {manual: true},
     'devices:Locate': {manual: true},
     'devices:Allocate': {manual: true},

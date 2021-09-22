@@ -1613,6 +1613,26 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
+   * @alias module:resources.Recycling
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Recycling extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-tools'
+    }
+  }
+
+  /**
+   * @alias module:resources.Reuse
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Reuse extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-tools'
+    }
+  }
+
+  /**
    * @alias module:resources.ToPrepare
    * @extends module:resources.ActionWithMultipleDevices
    */
@@ -2122,7 +2142,9 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     DataWipe: DataWipe,
     Repair: Repair,
     Ready: Ready,
+    Recycling: Recycling,
     ToPrepare: ToPrepare,
+    Reuse: Reuse,
     Prepare: Prepare,
     Organize: Organize,
     Reserve: Reserve,
