@@ -1618,17 +1618,37 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    */
   class Recycling extends ActionWithMultipleDevices {
     static get icon () {
+      return 'fa-recycle'
+    }
+  }
+
+  /**
+   * @alias module:resources.Use
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Use extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-play-circle'
+    }
+  }
+
+  /**
+   * @alias module:resources.Refurbish
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Refurbish extends ActionWithMultipleDevices {
+    static get icon () {
       return 'fa-tools'
     }
   }
 
   /**
-   * @alias module:resources.Reuse
+   * @alias module:resources.Refurbish
    * @extends module:resources.ActionWithMultipleDevices
    */
-  class Reuse extends ActionWithMultipleDevices {
+  class Management extends ActionWithMultipleDevices {
     static get icon () {
-      return 'fa-tools'
+      return 'fa-theater-masks'
     }
   }
 
@@ -2143,8 +2163,10 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     Repair: Repair,
     Ready: Ready,
     Recycling: Recycling,
+    Use: Use,
+    Refurbish: Refurbish,
+    Management: Management,
     ToPrepare: ToPrepare,
-    Reuse: Reuse,
     Prepare: Prepare,
     Organize: Organize,
     Reserve: Reserve,

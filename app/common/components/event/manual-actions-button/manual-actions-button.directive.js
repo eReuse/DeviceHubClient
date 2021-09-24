@@ -17,9 +17,12 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
      */
     link: $scope => {
       $scope.elements = [
-        resources.Recycling,
-        resources.Reuse,
-        'newAction.button.using',
+        'newAction.button.status',
+	resources.Recycling,
+        resources.Use,
+	resources.Refurbish,
+	resources.Management,
+        'newAction.button.allocate',
         resources.Allocate,
         resources.Deallocate,
         'newAction.button.physical',
