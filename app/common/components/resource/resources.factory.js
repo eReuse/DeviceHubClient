@@ -345,7 +345,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       weight = null, width = null, height = null, depth = null, actions = [], problems = [], url = null, 
       rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, 
       working = [], brand = null, generation = null, version = null, variant = null, sku = null, image = null, 
-      allocated = null, usage = null, lots = null, revoke = null,
+      allocated = null, devicehubID = null, usage = null, lots = null, revoke = null,
       ...rest}) {
       super.define(rest)
       /** @type {int} */
@@ -408,6 +408,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.lots = lots
 
       this.allocated = allocated
+      this.devicehubID = devicehubID
     }
 
     _props () {

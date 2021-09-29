@@ -82,6 +82,12 @@ function resourceListConfig ($filter, table) {
     }
   }
 
+  class DHID extends table.Field {
+    constructor (resource) {
+      super(resource, resource.devicehubID)
+    }
+  }
+
   class SupplierID extends table.Field {
     constructor (resource) {
       super(resource, resource.supplierID)
@@ -115,7 +121,7 @@ function resourceListConfig ($filter, table) {
 
 
   return {
-    table: [table.Icon, Title, table.Tags, Rate, Issues, Status, Price, Updated]
+    table: [table.Icon, Title, DHID, table.Tags, Issues, Status, Updated]
   }
 }
 
