@@ -79,7 +79,7 @@
        Files
      </h2>
      <div class="pull-right">
-	<add-trade-document-button manager="lotsM"> 
+	<add-trade-document-button manager="lotsM" lot="lotsM.lots[0]"> 
         </add-trade-document-button>
      </div>
      <div ng-if="lotsM.lots[0].documents.length > 0" class="documents">
@@ -88,9 +88,11 @@
           <thead>
           <tr>
 	    <th>File</th> 
+	    <th>Weight (kg)</th> 
 	    <th>Uploaded on</th> 
 	    <th>Status</th> 
 	    <th></th> 
+	    <th></th>
           </tr>
           </thead>
           </thead>
@@ -102,6 +104,11 @@
 		<a href="{{::document.url}}" target="_blank">
               {{::document.filename}}
 	        </a>
+              </span>
+            </td>
+	    <td>
+              <span>
+              {{::document.total_weight}}
               </span>
             </td>
 	    <td>
@@ -136,8 +143,24 @@
 		</delete-document-button>
               </span>
             </td>
+	    <td>
+	      <span> 
+		<move-on-document-button manager="lotsM" doc="::document"> 
+		</move-on-document-button>
+              </span>
+            </td>
           </tr>
       </tbody>
+      <tfoot>
+          <tr>
+	    <th><strong>Total</strong></th> 
+	    <th>{{lotsM.lots[0].weight()}}</th> 
+	    <th></th>
+	    <th></th> 
+	    <th></th> 
+	    <th></th> 
+          </tr>
+      </tfoot>
     </table>
     </div>
     </div>

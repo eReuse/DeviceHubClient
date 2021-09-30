@@ -941,14 +941,9 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
 
   }
 
+
   /** TODO new-trade: new model ConfirmDocument 
-  class ConfirmDocument2 extends Thing {
-    define ({doc = null, ...rest}) {
-      super.define(rest)
-      this.doc = doc
-    }
-  }
-   * */
+   */
   class ConfirmDocument extends Thing {
     define ({documents = [], ...rest}) {
       super.define(rest)
@@ -975,7 +970,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
 
   /** TODO new-trade: new model Document */
   class TradeDocument extends Thing {
-    define ({filename = null, url = null, hash = null, date = null, documentId = null, description = null, lot = null, trading, ...rest}) {
+    define ({filename = null, url = null, hash = null, date = null, documentId = null, description = null, lot = null, weight = null, trading, ...rest}) {
       super.define(rest)
       /** @type {string} */
       this.filename = filename
@@ -991,9 +986,11 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       this.description = description
       /** @type {Lot} */
       this.lot = lot
+      this.weight = weight
       this.trading = trading
     }
   }
+
 
   /**
    * Class representing an event.
@@ -1136,6 +1133,18 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       return props
     }
   }
+
+
+  /** new-move-on-document: new model Document */
+  class MoveOnDocument extends Action {
+    define ({container_from = null, container_to = null, weight = null, ...rest}) {
+      super.define(rest)
+      this.container_to = container_to
+      this.container_from = container_from.id
+      this.weight = weight
+    }
+  }
+
 
   /**
    * @alias module:resources.Add
@@ -1964,6 +1973,18 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
         this.define(r.data)
       })
     }
+
+
+    weight () { 
+      return _.map(this.documents, 'total_weight').reduce(
+      (previous, current) => {
+	if (current){
+	  return previous + current
+	} else {
+	  return previous
+	}
+      }, 0)
+    }
   }
 
   /** @type {Object.<int, module:resources.Lot>} */
@@ -2186,6 +2207,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     ResourceList: ResourceList,
     init: init,
     TradeDocument: TradeDocument,
+    MoveOnDocument: MoveOnDocument,
     ConfirmDocument: ConfirmDocument,
     RevokeDocument: RevokeDocument,
     ConfirmRevokeDocument: ConfirmRevokeDocument
@@ -2217,6 +2239,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    */
   TradeDocument.server = new server.DevicehubThing('/trade-documents/', resources)
   ConfirmDocument.server = new server.DevicehubThing('/actions/', resources)
+  MoveOnDocument.server = new server.DevicehubThing('/actions/', resources)
   RevokeDocument.server = new server.DevicehubThing('/actions/', resources)
   ConfirmRevokeDocument.server = new server.DevicehubThing('/actions/', resources)
   return resources

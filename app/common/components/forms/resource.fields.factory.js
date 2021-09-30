@@ -293,7 +293,6 @@ function resourceFields (fields, resources, enums) {
 
     _submit (op) {
       this.model.documents = this.model.documents.map((x) => x.id)
-      console.log(this.model)
       return this.model.post()
     }
   }
@@ -307,7 +306,6 @@ function resourceFields (fields, resources, enums) {
     }
 
     _submit (op) {
-      console.log(this.model)
       this.model.documents = this.model.documents.map((x) => x.id)
       return this.model.post()
     }
@@ -325,6 +323,7 @@ function resourceFields (fields, resources, enums) {
         new f.String('documentId', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.String('description', _.defaults({maxLength: fields.STR_BIG_SIZE}, def)),
         new f.Datepicker('date', def),
+        new f.Number('weight', def),
         new f.Upload('file', {
           accept: '*/*',
           multiple: false,
@@ -350,6 +349,42 @@ function resourceFields (fields, resources, enums) {
       return this.model.post()
     }
   }
+
+
+  /**
+   * @alias module:resourceFields.Event
+   * @extends module:resourceFields.ResourceForm
+   */
+  class MoveOnDocument extends EventWithMultipleDevices {
+    constructor (model, ...fields) {
+      const def = {namespace: 'r.tradedocument'}
+      super(model,
+        new f.Number('weight', def),
+        new f.Upload('file', {
+          accept: '*/*',
+          multiple: false,
+          readAs: 'readAsArrayBuffer',
+          required: true,
+          namespace: 'r.tradedocument',
+          expressions: {
+            disabled: 'form.status.loading'
+          }
+        }),
+        ...fields
+	      )
+    }
+
+    getHash () {
+      return JSSHA3.sha3_256(this.model.file.data)
+    }
+
+    _submit (op) {
+      this.model.container_to = this.getHash()
+      delete this.model.file
+      return this.model.post()
+    }
+  }
+
 
 
   return {
@@ -379,6 +414,7 @@ function resourceFields (fields, resources, enums) {
     RevokeDocument: RevokeDocument,
     ConfirmRevokeDocument: ConfirmRevokeDocument,
     TradeDocument: TradeDocument,
+    MoveOnDocument: MoveOnDocument,
   }
 }
 

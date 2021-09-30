@@ -6,7 +6,6 @@
  * @param {module:resources.Action} $stateParams.action
  */
 function confirmDocumentCtrl ($scope, $stateParams, resourceFields, $state) {
-  console.log($stateParams)
   const documents = $scope.doc = $stateParams.doc
   const type = 'ConfirmDocument'
 

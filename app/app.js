@@ -117,6 +117,15 @@ module.exports = window.angular.module('deviceHub', [
         redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
         controller: 'newActionCtrl as naCl'
       }).state({
+	name: 'auth.inventory.newMoveOnDocument',
+	url: 'new-move-on-document/',
+	params: {
+	  doc: null
+	},
+	template: require('./views/inventory/new-move-on-document.controller.html'),
+	redirectTo: redirectToIfAccessedThroughURLFactory('auth.inventory'),
+	controller: 'newMoveOnDocumentCtrl as mvCl'
+      }).state({
         name: 'auth.inventory.newTradeDocument',
         url: 'new-trade-document/',
         params: {

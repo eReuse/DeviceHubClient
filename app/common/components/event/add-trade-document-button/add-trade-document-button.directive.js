@@ -7,15 +7,16 @@ function addTradeDocumentButton($state, session) {
     template: require('./add-trade-document-button.directive.html'),
     restrict: 'E',
     scope: {
+      lot: '=',
       manager: '='
     },
     /**
      */
     link: $scope => {
-      const lot = $scope.manager.lots[0]
+      const lot = $scope.lot
 
       $scope.addTradeDocument = () => {
-	$scope.manager.addTradeDocument(lot)
+	$scope.manager.addTradeDocument($scope.lot)
       }
     }
   }

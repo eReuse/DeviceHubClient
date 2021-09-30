@@ -6,14 +6,14 @@
  * @param {module:resources.Action} $stateParams.action
  */
 
-function newTradeDocumentCtrl ($scope, $stateParams, resourceFields, $state) {
-  const tradeDocument = $scope.tradeDocument = $stateParams.doc
+function newMoveOnDocumentCtrl ($scope, $stateParams, resourceFields, $state) {
+  const moveOnDocument = $scope.moveOnDocument = $stateParams.doc
 
   function leave () {
     $state.go('^')
   }
 
-  class NewTradeDocumentForm extends resourceFields['TradeDocument'] {
+  class NewMoveOnDocumentForm extends resourceFields['MoveOnDocument'] {
     _submit (op) {
       return super._submit(op).then(leave)
     }
@@ -23,8 +23,8 @@ function newTradeDocumentCtrl ($scope, $stateParams, resourceFields, $state) {
     }
   }
 
-  $scope.form = new NewTradeDocumentForm(tradeDocument)
+  $scope.form = new NewMoveOnDocumentForm(moveOnDocument)
 }
 
-module.exports = newTradeDocumentCtrl
+module.exports = newMoveOnDocumentCtrl
 
