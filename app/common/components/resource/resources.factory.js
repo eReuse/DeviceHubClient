@@ -1626,6 +1626,10 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
    * @extends module:resources.ActionWithMultipleDevices
    */
   class Recycling extends ActionWithMultipleDevices {
+    define ({documents = [], ...rest}) {
+      super.define(rest)
+      this.documents = documents
+    }
     static get icon () {
       return 'fa-recycle'
     }
