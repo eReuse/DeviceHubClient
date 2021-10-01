@@ -160,11 +160,12 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
           }
 
           recyclingDocument(doc) {
-            //const trade_doc = new resources.TradeDocument(doc)
-            //trade_doc.server.delete(doc.id)
-            //this.deselectAll()
-	    //$rootScope.$broadcast('lots:reload')
             const action = new resources.Recycling({devices: [], documents: [doc.id]})
+            $state.go('.newAction', {action: action})
+          }
+
+          refurbishDocument(doc) {
+            const action = new resources.Refurbish({devices: [], documents: [doc.id]})
             $state.go('.newAction', {action: action})
           }
 
