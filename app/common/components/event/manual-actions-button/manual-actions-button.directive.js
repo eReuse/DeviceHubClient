@@ -26,6 +26,8 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
 	resources.DataWipe,
         resources.ToRepair,
         resources.Ready,
+        'newAction.button.delete',
+	resources.Delete,
         /** todo new-trade: add new device actions here */
         /*
         'newAction.button.political',

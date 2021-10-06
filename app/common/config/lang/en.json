@@ -154,6 +154,7 @@
       "physical": "Physical actions",
       "political": "Political actions",
       "trade": "Trade actions",
+      "delete": "Delete devices of the System",
       "other": "Other actions"
     }
   },

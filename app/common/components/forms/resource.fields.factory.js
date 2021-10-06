@@ -92,6 +92,13 @@ function resourceFields (fields, resources, enums) {
   }
 
   /**
+   * @alias module:resourceFields.Delete
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class Delete extends EventWithMultipleDevices {
+  }
+
+  /**
    * @alias module:resourceFields.Prepare
    * @extends module:resourceFields.EventWithMultipleDevices
    */
@@ -364,6 +371,7 @@ function resourceFields (fields, resources, enums) {
     Event: Event,
     EventWithMultipleDevices: EventWithMultipleDevices,
     ToPrepare: ToPrepare,
+    Delete: Delete,
     Prepare: Prepare,
     Allocate: Allocate,
     Deallocate: Deallocate,

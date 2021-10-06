@@ -30,6 +30,7 @@ const v = {
 const RESOURCE_CONFIG = {
   resources: {
     'devices:ToPrepare': {manual: true},
+    'devices:Delete': {manual: true},
     'devices:Ready': {manual: true},
     'devices:Locate': {manual: true},
     'devices:Allocate': {manual: true},
