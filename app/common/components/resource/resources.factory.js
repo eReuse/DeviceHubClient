@@ -1622,6 +1622,54 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
+   * @alias module:resources.Recycling
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Recycling extends ActionWithMultipleDevices {
+    define ({documents = [], ...rest}) {
+      super.define(rest)
+      this.documents = documents
+    }
+    static get icon () {
+      return 'fa-recycle'
+    }
+  }
+
+  /**
+   * @alias module:resources.Use
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Use extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-play-circle'
+    }
+  }
+
+  /**
+   * @alias module:resources.Refurbish
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Refurbish extends ActionWithMultipleDevices {
+    define ({documents = [], ...rest}) {
+      super.define(rest)
+      this.documents = documents
+    }
+    static get icon () {
+      return 'fa-tools'
+    }
+  }
+
+  /**
+   * @alias module:resources.Refurbish
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Management extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-theater-masks'
+    }
+  }
+
+  /**
    * @alias module:resources.ToPrepare
    * @extends module:resources.ActionWithMultipleDevices
    */
@@ -2143,6 +2191,10 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     DataWipe: DataWipe,
     Repair: Repair,
     Ready: Ready,
+    Recycling: Recycling,
+    Use: Use,
+    Refurbish: Refurbish,
+    Management: Management,
     ToPrepare: ToPrepare,
     Prepare: Prepare,
     Organize: Organize,
