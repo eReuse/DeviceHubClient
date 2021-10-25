@@ -133,6 +133,12 @@
       "delete_document": {
         "button": "Delete"
       },
+      "recycling_document": {
+        "button": "Recycling"
+      },
+      "refurbish_document": {
+        "button": "Refurbish"
+      },
       "moveon_document": {
         "button": "Move on"
       }
