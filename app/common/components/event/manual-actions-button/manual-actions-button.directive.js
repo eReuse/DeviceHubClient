@@ -40,12 +40,10 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         resources.Receive
         */
       ]
-      const ids_revoke = new Set($scope.devices.map(d => {
-	return d.revoke
-      }))
-
       const state_trade = new Set($scope.devices.map(d => {
-	return d.trading
+          if ($scope.trade){
+            return d.tradings[$scope.trade.id]
+          }
       }))
 
       if ($scope.trade != null && state_trade.size == 1) {
@@ -59,12 +57,12 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
           $scope.elements.push(resources.Revoke)
 	}
 
-        if (state_trade.has('Revoke') && !ids_revoke.has(null) && ids_revoke.size == 1) {
+        if (state_trade.has('Revoke')) {
           $scope.elements.push(resources.ConfirmRevoke)
   	  $scope.open = Action => {
 	    const action = new Action({
-		devices: $scope.devices, 
-		action: $scope.devices[0].revoke
+		devices: $scope.devices,
+		action: $scope.trade.id
 	    })
 	    $state.go('.newAction', {action: action})
  	  }
