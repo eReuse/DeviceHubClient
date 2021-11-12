@@ -51,21 +51,20 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
 
         if (state_trade.has('NeedConfirmation')) {
           $scope.elements.push(resources.Confirm)
+          $scope.elements.push(resources.Revoke)
+	}
+
+        if (state_trade.has('Revoke')) {
+          $scope.elements.push(resources.Confirm)
 	}
 
         if (state_trade.has('Confirm') | state_trade.has('TradeConfirmed')) {
           $scope.elements.push(resources.Revoke)
 	}
 
-        if (state_trade.has('Revoke')) {
+        if (state_trade.has('NeedConfirmRevoke')) {
           $scope.elements.push(resources.ConfirmRevoke)
-  	  $scope.open = Action => {
-	    const action = new Action({
-		devices: $scope.devices,
-		action: $scope.trade.id
-	    })
-	    $state.go('.newAction', {action: action})
- 	  }
+          $scope.elements.push(resources.Confirm)
  	}
         $scope.open = Action => {
           const action = new Action({
