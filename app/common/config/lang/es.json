@@ -103,9 +103,12 @@
     "submit": "@:forms.submit",
     "cancel": "@:forms.cancel",
     "button": {
-      "physical": "Acciones fisicos",
-      "political": "Acciones politicos",
-      "other": "Otros acciones"
+      "physical": "Acciones fisicas",
+      "political": "Acciones politicas",
+      "other": "Otros acciones",
+      "using": "Asignación",
+      "trade": "Actions comerciales",
+      "delete": "Borrar dispositivos del sistema"
     }
   },
   "forms": {

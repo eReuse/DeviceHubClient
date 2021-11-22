@@ -168,6 +168,8 @@ function getEventDescription (event) {
       return 'OK'
     case 'devices:ToPrepare':
       return 'OK'
+    case 'devices:Delete':
+      return 'OK'
     case 'devices:Trade':
       return 'OK'
     case 'devices:Confirm':

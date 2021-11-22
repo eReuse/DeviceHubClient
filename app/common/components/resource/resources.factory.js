@@ -1601,6 +1601,9 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   }
 
   class DataWipe extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-eraser'
+    }
   }
 
   /**
@@ -1676,6 +1679,16 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   class ToPrepare extends ActionWithMultipleDevices {
     static get icon () {
       return 'fa-tools'
+    }
+  }
+
+  /**
+   * @alias module:resources.Delete
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Delete extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-trash-alt'
     }
   }
 
@@ -2196,6 +2209,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     Refurbish: Refurbish,
     Management: Management,
     ToPrepare: ToPrepare,
+    Delete: Delete,
     Prepare: Prepare,
     Organize: Organize,
     Reserve: Reserve,
