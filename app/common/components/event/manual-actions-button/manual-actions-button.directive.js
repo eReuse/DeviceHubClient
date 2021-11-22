@@ -31,8 +31,6 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
 	resources.DataWipe,
         resources.ToRepair,
         resources.Ready,
-        'newAction.button.delete',
-	resources.Delete,
         /** todo new-trade: add new device actions here */
         /*
         'newAction.button.political',
@@ -47,6 +45,19 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
             return d.tradings[$scope.trade.id]
           }
       }))
+
+      var possible_delete = 0
+
+      $scope.devices.map(d => {
+          if (Object.keys(d.tradings).length == 0) {
+              possible_delete = 1
+          }
+      })
+
+      if ($scope.trade == null && possible_delete == 1) {
+        $scope.elements.push('newAction.button.delete')
+	$scope.elements.push(resources.Delete)
+      }
 
       if ($scope.trade != null && state_trade.size == 1) {
         $scope.elements.push('newAction.button.trade')
