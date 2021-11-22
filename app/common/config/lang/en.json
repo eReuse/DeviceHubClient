@@ -140,7 +140,7 @@
         "button": "Refurbish"
       },
       "moveon_document": {
-        "button": "Move on"
+        "button": "Move weight to a new file"
       }
     }
   },
@@ -150,6 +150,9 @@
     "confirmMerge": "Do you want to move all actions of device \"{{mergedDevice}}\" into the device \"{{baseDevice}}\"? The device \"{{mergedDevice}}\" will be deleted as a result.",
     "mergeCancelled": "Merge cancelled",
     "mergeSuccessfull": "Devices have been merged successfully"
+  },
+  "newMoveOn": {
+    "title": "New move of weight to a new file"
   },
   "newAction": {
     "title": "Create a new {{type}}",
