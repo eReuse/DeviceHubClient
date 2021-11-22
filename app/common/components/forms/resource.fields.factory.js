@@ -85,6 +85,34 @@ function resourceFields (fields, resources, enums) {
   }
 
   /**
+   * @alias module:resourceFields.Recycling
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class Recycling extends EventWithMultipleDevices {
+  }
+
+  /**
+   * @alias module:resourceFields.Use
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class Use extends EventWithMultipleDevices {
+  }
+
+  /**
+   * @alias module:resourceFields.Refurbish
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class Refurbish extends EventWithMultipleDevices {
+  }
+
+  /**
+   * @alias module:resourceFields.Management
+   * @extends module:resourceFields.EventWithMultipleDevices
+   */
+  class Management extends EventWithMultipleDevices {
+  }
+
+  /**
    * @alias module:resourceFields.ToPrepare
    * @extends module:resourceFields.EventWithMultipleDevices
    */
@@ -370,6 +398,10 @@ function resourceFields (fields, resources, enums) {
     ResourceForm: ResourceForm,
     Event: Event,
     EventWithMultipleDevices: EventWithMultipleDevices,
+    Recycling: Recycling,
+    Use: Use,
+    Refurbish: Refurbish,
+    Management: Management,
     ToPrepare: ToPrepare,
     Delete: Delete,
     Prepare: Prepare,

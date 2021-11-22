@@ -343,7 +343,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   class Device extends Thing {
     define ({id = null, hid = null, tags = [], model = null, manufacturer = null, serialNumber = null, 
       weight = null, width = null, height = null, depth = null, actions = [], problems = [], url = null, 
-      rate = null, price = null, trading = null, physical = null, physicalPossessor = null, productionDate = null, 
+      rate = null, price = null, tradings = null, physical = null, physicalPossessor = null, productionDate = null,
       working = [], brand = null, generation = null, version = null, variant = null, sku = null, image = null, 
       allocated = null, devicehubID = null, usage = null, lots = null, revoke = null,
       ...rest}) {
@@ -385,7 +385,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
       /** @type {Price} */
       this.price = this._rel(price)
       /** @type {string} */
-      this.trading = trading
+      this.tradings = tradings
       /** @type {string} */
       this.revoke = revoke
       /** @type {string} */
@@ -439,7 +439,7 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
      * @returns {string}
      */
     get status () {
-      let status = this.physical || this.trading || this.usage || 'Registered'
+      let status = this.physical || this.tradings || this.usage || 'Registered'
       if (this.physical && this.trading && this.usage) {
         status = `${this.trading} / ${this.physical} / ${this.usage}`
       }
@@ -1625,6 +1625,54 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
   }
 
   /**
+   * @alias module:resources.Recycling
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Recycling extends ActionWithMultipleDevices {
+    define ({documents = [], ...rest}) {
+      super.define(rest)
+      this.documents = documents
+    }
+    static get icon () {
+      return 'fa-recycle'
+    }
+  }
+
+  /**
+   * @alias module:resources.Use
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Use extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-play-circle'
+    }
+  }
+
+  /**
+   * @alias module:resources.Refurbish
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Refurbish extends ActionWithMultipleDevices {
+    define ({documents = [], ...rest}) {
+      super.define(rest)
+      this.documents = documents
+    }
+    static get icon () {
+      return 'fa-tools'
+    }
+  }
+
+  /**
+   * @alias module:resources.Refurbish
+   * @extends module:resources.ActionWithMultipleDevices
+   */
+  class Management extends ActionWithMultipleDevices {
+    static get icon () {
+      return 'fa-theater-masks'
+    }
+  }
+
+  /**
    * @alias module:resources.ToPrepare
    * @extends module:resources.ActionWithMultipleDevices
    */
@@ -2151,11 +2199,15 @@ function resourceFactory ($rootScope, server, CONSTANTS, $filter, enums, URL) {
     BenchmarkProcessorSysbench: BenchmarkProcessorSysbench,
     BenchmarkRamSysbench: BenchmarkRamSysbench,
     Allocate: Allocate,
-    Deallocate: Deallocate,    
+    Deallocate: Deallocate,
     ToRepair: ToRepair,
     DataWipe: DataWipe,
     Repair: Repair,
     Ready: Ready,
+    Recycling: Recycling,
+    Use: Use,
+    Refurbish: Refurbish,
+    Management: Management,
     ToPrepare: ToPrepare,
     Delete: Delete,
     Prepare: Prepare,

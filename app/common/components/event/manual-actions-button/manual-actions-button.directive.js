@@ -17,7 +17,12 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
      */
     link: $scope => {
       $scope.elements = [
-        'newAction.button.using',
+        'newAction.button.status',
+	resources.Recycling,
+        resources.Use,
+	resources.Refurbish,
+	resources.Management,
+        'newAction.button.allocate',
         resources.Allocate,
         resources.Deallocate,
         'newAction.button.physical',
@@ -37,12 +42,10 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
         resources.Receive
         */
       ]
-      const ids_revoke = new Set($scope.devices.map(d => {
-	return d.revoke
-      }))
-
       const state_trade = new Set($scope.devices.map(d => {
-	return d.trading
+          if ($scope.trade){
+            return d.tradings[$scope.trade.id]
+          }
       }))
 
       if ($scope.trade != null && state_trade.size == 1) {
@@ -50,21 +53,20 @@ function manualActionsButton (dhModal, resources, $state, session, resourceField
 
         if (state_trade.has('NeedConfirmation')) {
           $scope.elements.push(resources.Confirm)
+          $scope.elements.push(resources.Revoke)
+	}
+
+        if (state_trade.has('Revoke')) {
+          $scope.elements.push(resources.Confirm)
 	}
 
         if (state_trade.has('Confirm') | state_trade.has('TradeConfirmed')) {
           $scope.elements.push(resources.Revoke)
 	}
 
-        if (state_trade.has('Revoke') && !ids_revoke.has(null) && ids_revoke.size == 1) {
+        if (state_trade.has('NeedConfirmRevoke')) {
           $scope.elements.push(resources.ConfirmRevoke)
-  	  $scope.open = Action => {
-	    const action = new Action({
-		devices: $scope.devices, 
-		action: $scope.devices[0].revoke
-	    })
-	    $state.go('.newAction', {action: action})
- 	  }
+          $scope.elements.push(resources.Confirm)
  	}
         $scope.open = Action => {
           const action = new Action({

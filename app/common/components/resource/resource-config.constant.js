@@ -31,6 +31,10 @@ const RESOURCE_CONFIG = {
   resources: {
     'devices:ToPrepare': {manual: true},
     'devices:Delete': {manual: true},
+    'devices:Use': {manual: true},
+    'devices:Recycling': {manual: true},
+    'devices:Refurbish': {manual: true},
+    'devices:Management': {manual: true},
     'devices:Ready': {manual: true},
     'devices:Locate': {manual: true},
     'devices:Allocate': {manual: true},

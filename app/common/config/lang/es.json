@@ -95,6 +95,9 @@
       "button": "Borrar lote"
     }
   },
+  "newMoveOn": {
+    "title": "Nuevo movimiento de peso a un fichero"
+  },
   "newAction": {
     "title": "Crear un nuevo {{type}}",
     "submit": "@:forms.submit",

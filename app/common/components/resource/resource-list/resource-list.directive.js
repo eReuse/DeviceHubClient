@@ -159,6 +159,16 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
 	    $rootScope.$broadcast('lots:reload')
           }
 
+          recyclingDocument(doc) {
+            const action = new resources.Recycling({devices: [], documents: [doc.id]})
+            $state.go('.newAction', {action: action})
+          }
+
+          refurbishDocument(doc) {
+            const action = new resources.Refurbish({devices: [], documents: [doc.id]})
+            $state.go('.newAction', {action: action})
+          }
+
           moveOnDocument(doc) {
 	    const mvdoc = new resources.MoveOnDocument({container_from: doc})
 	    $state.go('.newMoveOnDocument', {doc: mvdoc})

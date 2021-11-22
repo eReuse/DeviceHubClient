@@ -133,8 +133,14 @@
       "delete_document": {
         "button": "Delete"
       },
+      "recycling_document": {
+        "button": "Recycling"
+      },
+      "refurbish_document": {
+        "button": "Refurbish"
+      },
       "moveon_document": {
-        "button": "Move on"
+        "button": "Move weight to a new file"
       }
     }
   },
@@ -145,12 +151,16 @@
     "mergeCancelled": "Merge cancelled",
     "mergeSuccessfull": "Devices have been merged successfully"
   },
+  "newMoveOn": {
+    "title": "New move of weight to a new file"
+  },
   "newAction": {
     "title": "Create a new {{type}}",
     "submit": "@:forms.submit",
     "cancel": "@:forms.cancel",
     "button": {
-      "using": "Allocation",
+      "status": "Status actions",
+      "allocate": "Allocation",
       "physical": "Physical actions",
       "political": "Political actions",
       "trade": "Trade actions",
@@ -249,6 +259,10 @@
       "benchmarkProcessor": "Benchmark processor",
       "benchmarkProcessorSysbench": "Benchmark processor sysbench",
       "benchmarkRamSysbench": "Benchmark ram sysbench",
+      "recycling": "Recycling",
+      "use": "Use",
+      "refurbish": "Refurbish",
+      "management": "Management",
       "toRepair": "To repair",
       "repair": "Repair",
       "available": "Available",
