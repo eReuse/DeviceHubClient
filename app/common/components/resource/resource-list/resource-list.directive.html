@@ -17,25 +17,25 @@
         <!--
           <lot-children-button parent="lotsM.lots[0]" ng-if="lotsM.lots.length === 1"></lot-children-button>
         -->
-        <delete-lot-button 
+        <delete-lot-button
           ng-if="lotsM.lots.length === 1 && !lotsM.lots[0].trade"
-	  lots="lotsM.lots" 
+	  lots="lotsM.lots"
 	  manager="lotsM">
         </delete-lot-button>
-        <!-- TODO new-trade: 
-          if single temporary lot is selected, show "add supplier button" 
+        <!-- TODO new-trade:
+          if single temporary lot is selected, show "add supplier button"
           adding supplier Converts the temporary lot to an incoming lot
         -->
-        <add-supplier-button 
+        <add-supplier-button
           ng-if="lotsM.lots.length === 1 && !lotsM.lots[0].trade"
           lot="lotsM.lots[0]"
 	        manager="lotsM">
         </add-supplier-button>
-        <!-- TODO new-trade: 
+        <!-- TODO new-trade:
           if single temporary lot is selected, show "add receiver button"
           adding receiver Converts the temporary lot to an outgoing lot
         -->
-        <add-receiver-button 
+        <add-receiver-button
           ng-if="lotsM.lots.length === 1 && !lotsM.lots[0].trade"
           lot="lotsM.lots[0]"
 	        manager="lotsM">
@@ -79,19 +79,27 @@
        Files
      </h2>
      <div class="pull-right">
-	<add-trade-document-button manager="lotsM" lot="lotsM.lots[0]"> 
+	<add-trade-document-button manager="lotsM" lot="lotsM.lots[0]">
         </add-trade-document-button>
+        <div ng-if="lotsM.lots[0].trade && getter.devices.length == 0 && lotsM.lots[0].documents.length > 0">
+            Download Metrics
+            <a ng-click="actionsSpreadsheet()">
+                <i class="fa fa-fw fa-table"></i>
+                <span translate="export.actionspreadsheet.button">AA</span>
+                <small class="text-muted">CSV</small>
+            </a>
+        </div>
      </div>
      <div ng-if="lotsM.lots[0].documents.length > 0" class="documents">
         <table id="document-list-table"
                class="table table-striped table-hover unselectable table-condensed">
           <thead>
           <tr>
-	    <th>File</th> 
-	    <th>Weight (kg)</th> 
-	    <th>Uploaded on</th> 
-	    <th>Status</th> 
-	    <th></th> 
+	    <th>File</th>
+	    <th>Weight (kg)</th>
+	    <th>Uploaded on</th>
+	    <th>Status</th>
+	    <th></th>
 	    <th></th>
           </tr>
           </thead>
@@ -123,39 +131,39 @@
             </td>
 	    <td>
               <span ng-if="::document.trading === 'Confirm'">
-		<revoke-document-button manager="lotsM" doc="::document"> 
+		<revoke-document-button manager="lotsM" doc="::document">
 		</revoke-document-button>
               </span>
               <span ng-if="::document.trading === 'Document Confirmed'">
-		<revoke-document-button manager="lotsM" doc="::document"> 
+		<revoke-document-button manager="lotsM" doc="::document">
 		</revoke-document-button>
               </span>
               <span ng-if="::document.trading === 'Need Confirmation'">
-		<confirm-document-button manager="lotsM"  doc="::document"> 
+		<confirm-document-button manager="lotsM"  doc="::document">
 		</confirm-document-button>
               </span>
               <span ng-if="::document.trading === 'Revoke'">
-		<confirm-revoke-document-button manager="lotsM" doc="::document"> 
+		<confirm-revoke-document-button manager="lotsM" doc="::document">
 		</confirm-revoke-document-button>
               </span>
               <span ng-if="::!document.trading">
-		<delete-document-button manager="lotsM" doc="::document"> 
+		<delete-document-button manager="lotsM" doc="::document">
 		</delete-document-button>
               </span>
             </td>
 	    <td>
-	      <span> 
-		<move-on-document-button manager="lotsM" doc="::document"> 
+	      <span>
+		<move-on-document-button manager="lotsM" doc="::document">
 		</move-on-document-button>
               </span>
 	      <br />
-	      <span> 
-		<recycling-document-button manager="lotsM" doc="::document"> 
+	      <span>
+		<recycling-document-button manager="lotsM" doc="::document">
 		</recycling-on-document-button>
               </span>
 	      <br />
-	      <span> 
-		<refurbish-document-button manager="lotsM" doc="::document"> 
+	      <span>
+		<refurbish-document-button manager="lotsM" doc="::document">
 		</refurbish-on-document-button>
               </span>
             </td>
@@ -163,12 +171,12 @@
       </tbody>
       <tfoot>
           <tr>
-	    <th><strong>Total</strong></th> 
-	    <th>{{lotsM.lots[0].weight()}}</th> 
+	    <th><strong>Total</strong></th>
+	    <th>{{lotsM.lots[0].weight()}}</th>
 	    <th></th>
-	    <th></th> 
-	    <th></th> 
-	    <th></th> 
+	    <th></th>
+	    <th></th>
+	    <th></th>
           </tr>
       </tfoot>
     </table>
