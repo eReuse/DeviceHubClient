@@ -54,7 +54,14 @@ function deviceGetterFactory (resources, progressBar) {
 
     /** Override the filters and, if ready, get new devices. */
     setFilters (filters) {
-      this.q.filter = filters
+      if (this.q.filter == null) {
+          this.q.filter = {}
+      }
+      if (!filters.type && this.q.filter.type){
+          delete(this.q.filter['type'])
+      } else if (filters.type) {
+          this.q.filter.type = filters.type
+      }
       if (this.ready) this.get(false)
     }
 

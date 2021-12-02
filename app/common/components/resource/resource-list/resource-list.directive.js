@@ -202,7 +202,7 @@ function resourceList ($rootScope, $state, session, resourceListConfig, Notifica
               getter.removeFilter('lot')
             }
           }
-	 
+
           deselectAll () {
             this.lots.deselectAll()
           }
