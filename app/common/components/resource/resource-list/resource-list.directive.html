@@ -81,14 +81,8 @@
      <div class="pull-right">
 	<add-trade-document-button manager="lotsM" lot="lotsM.lots[0]">
         </add-trade-document-button>
-        <div ng-if="lotsM.lots[0].trade && getter.devices.length == 0 && lotsM.lots[0].documents.length > 0">
-            Download Metrics
-            <a ng-click="actionsSpreadsheet()">
-                <i class="fa fa-fw fa-table"></i>
-                <span translate="export.actionspreadsheet.button">AA</span>
-                <small class="text-muted">CSV</small>
-            </a>
-        </div>
+        <export-metrics-lot lot="lotsM.lots[0]"
+          ng-if="lotsM.lots[0].documents.length > 0 && lotsM.lots[0].trade"></export-metrics-lot>
      </div>
      <div ng-if="lotsM.lots[0].documents.length > 0" class="documents">
         <table id="document-list-table"
