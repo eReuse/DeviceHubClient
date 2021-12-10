@@ -1,11 +1,12 @@
 const FileSaver = require('file-saver')
 
-function exportButton (Notification, clipboard, $translate, CONSTANTS, session, server) {
+function exportMetricsLot (Notification, clipboard, $translate, CONSTANTS, session, server) {
   return {
-    template: require('./export-button.directive.html'),
+    template: require('./export-metrics-lot.directive.html'),
     restrict: 'AE',
     scope: {
-      devices: '='
+      devices: '=',
+      lot: '='
     },
     /**
      * @param $scope
@@ -19,7 +20,8 @@ function exportButton (Notification, clipboard, $translate, CONSTANTS, session, 
         $scope.loading = true
         return docsEndpoint.get(path, {
           params: {
-            filter: {ids: _.map($scope.devices, 'id')},
+            filter: {type: ["Computer"], ids: _.map($scope.devices, 'id')},
+            lot: $scope.lot.id,
             format: format.toUpperCase()
           },
           headers: {Accept: mimeType},
@@ -37,9 +39,7 @@ function exportButton (Notification, clipboard, $translate, CONSTANTS, session, 
         })
       }
 
-      $scope.saveSpreadsheet = () => saveFile('devices/', 'csv', 'text/csv', 'spreadsheet')
       $scope.actionsSpreadsheet = () => saveFile('actions/', 'csv', 'text/csv', 'actionspreadsheet')
-      $scope.saveErasure = () => saveFile('erasures/', 'pdf', 'application/pdf', 'erasure')
 
       class Clipboard {
         constructor () {
@@ -58,4 +58,4 @@ function exportButton (Notification, clipboard, $translate, CONSTANTS, session, 
   }
 }
 
-module.exports = exportButton
+module.exports = exportMetricsLot

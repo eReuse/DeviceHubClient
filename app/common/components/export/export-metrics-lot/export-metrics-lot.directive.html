@@ -1,0 +1,21 @@
+<div class="btn-group" uib-dropdown is-open="dropdown.isopen">
+    <button id="event-button"
+            type="button"
+            class="btn btn-primary"
+            uib-dropdown-toggle
+            dh-submit-button="loading"
+    >
+        <i class="fa fa-share fa-fw"></i>
+        Export
+        <span class="caret"></span>
+    </button>
+    <ul uib-dropdown-menu role="menu" aria-labelledby="event-button" class="dropdown-menu-right">
+        <li>
+            <a ng-click="actionsSpreadsheet()">
+                <i class="fa fa-fw fa-table"></i>
+                <span translate="export.actionspreadsheet.button"></span>
+                <small class="text-muted">CSV</small>
+            </a>
+        </li>
+    </ul>
+</div>
