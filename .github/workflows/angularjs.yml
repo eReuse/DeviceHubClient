@@ -35,6 +35,9 @@ jobs:
             "testing")
               echo "##[set-output name=branch;]$(echo "testing")"
               ;;
+            "trublo")
+              echo "##[set-output name=branch;]$(echo "trublo")"
+              ;;
             *)
               echo "##[set-output name=branch;]$(echo "development")"
               ;;
