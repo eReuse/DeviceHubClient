@@ -67,7 +67,7 @@ trublo:
     appName: USOdy Beta
     blockchain: '127.0.0.1'
     html5mode: true
-    url: https://api.trublo.usody.com
+    url: http://api.trublo.usody.com
     inventories: true
 testing:
   CONSTANTS:
