@@ -89,6 +89,36 @@ function resourceFields (fields, resources, enums) {
    * @extends module:resourceFields.EventWithMultipleDevices
    */
   class Recycling extends EventWithMultipleDevices {
+    constructor (model, ...fields) {
+      const def = {namespace: 'r.action'}
+      super(model,
+        new f.String('url', _.defaults({maxLength: 2048, required: false}, def)),
+        new f.String('documentId', _.defaults({maxLength: fields.STR_BIG_SIZE, required: false}, def)),
+        new f.Upload('file', {
+          accept: '*/*',
+          multiple: false,
+          readAs: 'readAsArrayBuffer',
+          required: true,
+          namespace: def.namespace,
+          expressions: {
+            disabled: 'form.status.loading'
+          }
+        }),
+        ...fields
+	      )
+    }
+
+    getHash () {
+      return JSSHA3.sha3_256(this.model.file.data)
+    }
+
+
+    _submit (op) {
+      this.model.filename = this.model.file.name
+      this.model.hash = this.getHash()
+      delete this.model.file
+      return this.model.post()
+    }
   }
 
   /**
