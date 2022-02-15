@@ -541,7 +541,7 @@
         "l": "Start date",
         "d": ""
       }
-    }, 
+    },
     "deallocate": {
       "transaction": {
         "l": "Transaction",
@@ -557,6 +557,20 @@
       },
       "startTime": {
         "l": "Start date",
+        "d": ""
+      }
+    },
+    "action": {
+      "url": {
+        "l": "Url",
+        "d": ""
+      },
+      "documentId": {
+        "l": "Document Id",
+        "d": ""
+      },
+      "file": {
+        "l": "File",
         "d": ""
       }
     }
